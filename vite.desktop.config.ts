@@ -7,6 +7,11 @@ export default defineConfig({
   root: '.',
   build: {
     outDir: 'dist-desktop',
+    rollupOptions: {
+      input: {
+        main: 'index-desktop.html'
+      }
+    }
   },
   server: {
     port: 1420,
@@ -14,4 +19,10 @@ export default defineConfig({
   },
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
+  publicDir: 'public',
+  appType: 'spa',
+  // 開発サーバーでもデスクトップ版のHTMLファイルを使用
+  optimizeDeps: {
+    include: ['react', 'react-dom']
+  }
 })

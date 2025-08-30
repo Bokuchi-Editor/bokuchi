@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert } from '@mui/material';
 import { Brightness4, Brightness7, FolderOpen, Save, Settings } from '@mui/icons-material';
@@ -24,7 +24,7 @@ function App() {
     tabs,
     activeTabId,
     activeTab,
-    addTab,
+    // addTab,
     removeTab,
     setActiveTab,
     updateTabContent,

@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8080';
+import { invoke } from '@tauri-apps/api/core';
 
 export interface FileResponse {
   content: string;
@@ -16,36 +14,25 @@ export const fileApi = {
   // ファイル読み込み
   async readFile(path: string): Promise<FileResponse> {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/file/read`, { path });
-      return response.data;
+      const content = await invoke<string>('read_file', { path });
+      return { content };
     } catch (error: any) {
-      if (error.response) {
-        return { content: '', error: error.response.data.error || 'Failed to read file' };
-      }
-      return { content: '', error: 'Network error' };
+      return { content: '', error: error.toString() };
     }
   },
 
   // ファイル保存
   async saveFile(path: string, content: string): Promise<SaveResponse> {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/file/save`, { path, content });
-      return response.data;
+      await invoke('save_file', { path, content });
+      return { success: true };
     } catch (error: any) {
-      if (error.response) {
-        return { success: false, error: error.response.data.error || 'Failed to save file' };
-      }
-      return { success: false, error: 'Network error' };
+      return { success: false, error: error.toString() };
     }
   },
 
-  // ヘルスチェック
+  // ヘルスチェック（Tauriでは常にtrue）
   async healthCheck(): Promise<boolean> {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/health`);
-      return response.status === 200;
-    } catch {
-      return false;
-    }
+    return true;
   }
 };

@@ -6,7 +6,20 @@
   "permissions": [
     "core:default",
     "fs:default",
-    "dialog:default"
+    "dialog:default",
+    "fs:read-files",
+    "fs:write-files",
+    "fs:read-dirs",
+    "fs:write-all",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        { "path": "$HOME/**/*" },
+        { "path": "$DESKTOP/**/*" },
+        { "path": "$DOCUMENT/**/*" },
+        { "path": "$DOWNLOAD/**/*" }
+      ]
+    }
   ],
   "platforms": ["macOS", "linux", "windows"]
 }

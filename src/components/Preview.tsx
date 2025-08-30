@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import 'highlight.js/styles/github.css';
-import hljs from 'highlight.js';
+// import hljs from 'highlight.js';
 import { variableApi } from '../api/variableApi';
 
 interface PreviewProps {

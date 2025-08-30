@@ -81,6 +81,16 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'SET_TAB_NEW':
+      return {
+        ...state,
+        tabs: state.tabs.map(tab =>
+          tab.id === action.payload.id
+            ? { ...tab, isNew: action.payload.isNew }
+            : tab
+        ),
+      };
+
     default:
       return state;
   }

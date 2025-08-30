@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8080';
+import { invoke } from '@tauri-apps/api/core';
 
 export interface Variable {
   name: string;
@@ -21,21 +19,18 @@ export const variableApi = {
   // グローバル変数を設定
   async setGlobalVariable(name: string, value: string): Promise<VariableResponse> {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/variables/set`, { name, value });
-      return response.data;
+      await invoke('set_global_variable', { name, value });
+      return { success: true };
     } catch (error: any) {
-      if (error.response) {
-        return { success: false, error: error.response.data.error || 'Failed to set variable' };
-      }
-      return { success: false, error: 'Network error' };
+      return { success: false, error: error.toString() };
     }
   },
 
   // グローバル変数を取得
   async getGlobalVariables(): Promise<Record<string, string>> {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/variables/get`);
-      return response.data.variables || {};
+      const variables = await invoke<Record<string, string>>('get_global_variables');
+      return variables || {};
     } catch (error: any) {
       console.error('Failed to get variables:', error);
       return {};
@@ -45,21 +40,18 @@ export const variableApi = {
   // YAMLから変数を読み込み
   async loadVariablesFromYAML(yamlContent: string): Promise<VariableResponse> {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/variables/load`, { yamlContent });
-      return response.data;
+      await invoke('load_variables_from_yaml', { yamlContent });
+      return { success: true };
     } catch (error: any) {
-      if (error.response) {
-        return { success: false, error: error.response.data.error || 'Failed to load variables' };
-      }
-      return { success: false, error: 'Network error' };
+      return { success: false, error: error.toString() };
     }
   },
 
   // 変数をYAML形式でエクスポート
   async exportVariablesToYAML(): Promise<string> {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/variables/export`);
-      return response.data.yamlContent || '';
+      const yamlContent = await invoke<string>('export_variables_to_yaml');
+      return yamlContent || '';
     } catch (error: any) {
       console.error('Failed to export variables:', error);
       return '';
@@ -69,13 +61,10 @@ export const variableApi = {
   // Markdownを処理（変数展開）
   async processMarkdown(content: string): Promise<ProcessMarkdownResponse> {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/markdown/process`, { content });
-      return response.data;
+      const processedContent = await invoke<string>('process_markdown', { content });
+      return { processedContent };
     } catch (error: any) {
-      if (error.response) {
-        return { processedContent: content, error: error.response.data.error || 'Failed to process markdown' };
-      }
-      return { processedContent: content, error: 'Network error' };
+      return { processedContent: content, error: error.toString() };
     }
   }
 };

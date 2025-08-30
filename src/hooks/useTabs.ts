@@ -1,6 +1,6 @@
 import { useReducer, useCallback } from 'react';
 import { tabReducer, initialTabState } from '../reducers/tabReducer';
-import { Tab, TabAction } from '../types/tab';
+import { Tab } from '../types/tab';
 
 export const useTabs = () => {
   const [state, dispatch] = useReducer(tabReducer, initialTabState);

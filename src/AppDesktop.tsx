@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert } from '@mui/material';
-import { Brightness4, Brightness7, FolderOpen, Save, Settings } from '@mui/icons-material';
+import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
+import { Brightness4, Brightness7, FolderOpen, Save, SaveAlt, Settings, MoreVert } from '@mui/icons-material';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
@@ -12,6 +12,7 @@ import './App.css';
 function AppDesktop() {
   const [darkMode, setDarkMode] = useState(false);
   const [variableSettingsOpen, setVariableSettingsOpen] = useState(false);
+  const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
@@ -27,6 +28,7 @@ function AppDesktop() {
     updateTabContent,
     openFile,
     saveTab,
+    saveTabAs,
     createNewTab,
   } = useTabsDesktop();
 
@@ -57,12 +59,40 @@ function AppDesktop() {
 
   const handleSaveFile = async () => {
     if (activeTab) {
-      const success = await saveTab(activeTab.id);
-      if (success) {
-        setSnackbar({ open: true, message: 'File saved successfully', severity: 'success' });
-      } else {
+      try {
+        const success = await saveTab(activeTab.id);
+        if (success) {
+          setSnackbar({ open: true, message: 'File saved successfully', severity: 'success' });
+        } else {
+          setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+        }
+      } catch (error) {
         setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
       }
+    }
+  };
+
+  const handleSaveFileAs = async () => {
+    console.log('handleSaveFileAs called');
+    console.log('activeTab:', activeTab);
+
+    if (activeTab) {
+      try {
+        console.log('Calling saveTabAs with id:', activeTab.id);
+        const success = await saveTabAs(activeTab.id);
+        console.log('saveTabAs result:', success);
+
+        if (success) {
+          setSnackbar({ open: true, message: 'File saved successfully', severity: 'success' });
+        } else {
+          setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+        }
+      } catch (error) {
+        console.error('Error in handleSaveFileAs:', error);
+        setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+      }
+    } else {
+      console.log('No active tab');
     }
   };
 
@@ -95,6 +125,14 @@ function AppDesktop() {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const handleFileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setFileMenuAnchor(event.currentTarget);
+  };
+
+  const handleFileMenuClose = () => {
+    setFileMenuAnchor(null);
+  };
+
   // 初期タブを作成
   useEffect(() => {
     if (tabs.length === 0) {
@@ -111,6 +149,8 @@ function AppDesktop() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               MD Editor (Desktop)
             </Typography>
+
+            {/* File Menu */}
             <Button
               color="inherit"
               startIcon={<FolderOpen />}
@@ -119,6 +159,7 @@ function AppDesktop() {
             >
               Open
             </Button>
+
             <Button
               color="inherit"
               startIcon={<Save />}
@@ -128,6 +169,20 @@ function AppDesktop() {
             >
               Save
             </Button>
+
+            <Button
+              color="inherit"
+              startIcon={<SaveAlt />}
+              onClick={() => {
+                console.log('Save As button clicked');
+                handleSaveFileAs();
+              }}
+              disabled={!activeTab}
+              sx={{ mr: 1 }}
+            >
+              Save As
+            </Button>
+
             <Button
               color="inherit"
               startIcon={<Settings />}
@@ -136,11 +191,46 @@ function AppDesktop() {
             >
               Variables
             </Button>
+
             <IconButton color="inherit" onClick={toggleDarkMode}>
               {darkMode ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
+
+            <IconButton
+              color="inherit"
+              onClick={handleFileMenuOpen}
+              sx={{ ml: 1 }}
+            >
+              <MoreVert />
+            </IconButton>
           </Toolbar>
         </AppBar>
+
+        {/* File Menu */}
+        <Menu
+          anchorEl={fileMenuAnchor}
+          open={Boolean(fileMenuAnchor)}
+          onClose={handleFileMenuClose}
+        >
+          <MenuItem onClick={() => { handleNewTab(); handleFileMenuClose(); }}>
+            New File
+          </MenuItem>
+          <MenuItem onClick={() => { handleOpenFile(); handleFileMenuClose(); }}>
+            Open File
+          </MenuItem>
+          <MenuItem
+            onClick={() => { handleSaveFile(); handleFileMenuClose(); }}
+            disabled={!activeTab}
+          >
+            Save
+          </MenuItem>
+          <MenuItem
+            onClick={() => { handleSaveFileAs(); handleFileMenuClose(); }}
+            disabled={!activeTab}
+          >
+            Save As
+          </MenuItem>
+        </Menu>
 
         {tabs.length > 0 && (
           <TabBar

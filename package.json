@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "dev:standalone": "npm run build:desktop && npm run tauri:dev"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -19,8 +20,9 @@
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
-    "@tauri-apps/api": "^2",
-    "axios": "^1.11.0",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-dialog": "^2.3.3",
+    "@tauri-apps/plugin-fs": "^2.4.2",
     "highlight.js": "^11.11.1",
     "marked": "^16.2.1",
     "react": "^19.1.0",

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
-import { Search, Replace, Close } from '@mui/icons-material';
+import { Search, Close } from '@mui/icons-material';
 
 interface EditorProps {
   content: string;
@@ -24,13 +24,21 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) 
     editorRef.current = editor;
 
     // 検索・置換のキーボードショートカットを設定
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
-      setSearchOpen(true);
-    });
+    try {
+      // Monaco Editorの正しいキーコードを使用
+      const monaco = (window as any).monaco;
+      if (monaco) {
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
+          setSearchOpen(true);
+        });
 
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
-      setSearchOpen(true);
-    });
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
+          setSearchOpen(true);
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to set keyboard shortcuts:', error);
+    }
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -64,12 +72,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) 
 
       // 検索結果をハイライト
       editorRef.current.deltaDecorations([], matches.map(match => ({
-        range: new monaco.Range(
-          match.range.startLineNumber,
-          match.range.startColumn,
-          match.range.endLineNumber,
-          match.range.endColumn
-        ),
+        range: {
+          startLineNumber: match.range.startLineNumber,
+          startColumn: match.range.startColumn,
+          endLineNumber: match.range.endLineNumber,
+          endColumn: match.range.endColumn
+        },
         options: {
           inlineClassName: 'search-highlight',
           hoverMessage: { value: `Found: ${match.text}` }
@@ -147,7 +155,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) 
             suggestOnTriggerCharacters: false,
             acceptSuggestionOnEnter: 'off',
             tabCompletion: 'off',
-            wordBasedSuggestions: false,
+            wordBasedSuggestions: "off",
             parameterHints: {
               enabled: false
             },
@@ -156,12 +164,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) 
             },
             links: true,
             colorDecorators: true,
-            lightbulb: {
-              enabled: false
-            },
-            codeActionsOnSave: {
-              'source.fixAll': false
-            }
+            // lightbulb: {
+            //   enabled: false
+            // },
+            // codeActionsOnSave: {
+            //   'source.fixAll': false
+            // }
           }}
         />
       </Box>

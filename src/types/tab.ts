@@ -19,4 +19,5 @@ export type TabAction =
   | { type: 'UPDATE_TAB_CONTENT'; payload: { id: string; content: string } }
   | { type: 'UPDATE_TAB_TITLE'; payload: { id: string; title: string } }
   | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
-  | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } };
+  | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } }
+  | { type: 'SET_TAB_NEW'; payload: { id: string; isNew: boolean } };

@@ -39,6 +39,10 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'SET_TAB_FILE_PATH', payload: { id, filePath } });
   }, []);
 
+  const setTabNew = useCallback((id: string, isNew: boolean) => {
+    dispatch({ type: 'SET_TAB_NEW', payload: { id, isNew } });
+  }, []);
+
   const openFile = useCallback(async () => {
     try {
       const result = await desktopApi.openFile();
@@ -47,7 +51,7 @@ export const useTabsDesktop = () => {
       }
 
       // ファイル名を取得（パスから）
-      const fileName = result.filePath ? result.filePath.split('/').pop() || 'Untitled' : 'Untitled';
+      const fileName = result.filePath ? result.filePath.split('/').pop()?.split('\\').pop() || 'Untitled' : 'Untitled';
 
       const tabId = addTab({
         title: fileName,
@@ -57,12 +61,13 @@ export const useTabsDesktop = () => {
         isNew: false,
       });
 
+      setActiveTab(tabId);
       return tabId;
     } catch (error) {
       console.error('Failed to open file:', error);
       throw error;
     }
-  }, [addTab]);
+  }, [addTab, setActiveTab]);
 
   const saveTab = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
@@ -70,7 +75,7 @@ export const useTabsDesktop = () => {
 
     try {
       if (tab.filePath && !tab.isNew) {
-        // 既存ファイルに保存
+        // 既存ファイルに上書き保存（ダイアログなし）
         const result = await desktopApi.saveFileToPath(tab.filePath, tab.content);
         if (result.success) {
           setTabModified(id, false);
@@ -79,13 +84,15 @@ export const useTabsDesktop = () => {
           throw new Error(result.error);
         }
       } else {
-        // 新しいファイルとして保存
-        const result = await desktopApi.saveFileAs(tab.content);
+        // 新しいファイルとして保存（ダイアログあり）
+        const result = await desktopApi.saveFile(tab.content, tab.filePath);
         if (result.success && result.filePath) {
           setTabFilePath(id, result.filePath);
-          const displayName = result.filePath.split('/').pop() || result.filePath;
+          const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
           updateTabTitle(id, displayName);
           setTabModified(id, false);
+          // 新しいファイルとして保存されたので、isNewフラグをfalseに設定
+          setTabNew(id, false);
           return true;
         } else {
           throw new Error(result.error);
@@ -97,14 +104,53 @@ export const useTabsDesktop = () => {
     }
   }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle]);
 
+  const saveTabAs = useCallback(async (id: string) => {
+    console.log('saveTabAs called with id:', id);
+    console.log('Available tabs:', state.tabs.map(t => ({ id: t.id, title: t.title })));
+    const tab = state.tabs.find(t => t.id === id);
+    console.log('Found tab:', tab);
+
+    if (!tab) {
+      console.log('No tab found');
+      return false;
+    }
+
+    try {
+      console.log('Calling desktopApi.saveFileAs with content length:', tab.content.length);
+      // Save Asは常にダイアログを開く（既存のファイルパスは無視）
+      const result = await desktopApi.saveFileAs(tab.content);
+      console.log('desktopApi.saveFileAs result:', result);
+
+      if (result.success && result.filePath) {
+        console.log('Save successful, updating tab');
+        setTabFilePath(id, result.filePath);
+        const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
+        updateTabTitle(id, displayName);
+        setTabModified(id, false);
+        // Save Asでも新しいファイルとして保存されたので、isNewフラグをfalseに設定
+        setTabNew(id, false);
+        return true;
+      } else {
+        console.log('Save failed with error:', result.error);
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error('Failed to save file as:', error);
+      console.error('Error details:', error);
+      return false;
+    }
+  }, [state.tabs, setTabFilePath, updateTabTitle, setTabModified]);
+
   const createNewTab = useCallback(() => {
-    return addTab({
+    const tabId = addTab({
       title: 'Untitled',
       content: '# New Document\n\nStart typing here...',
       isModified: false,
       isNew: true,
     });
-  }, [addTab]);
+    setActiveTab(tabId);
+    return tabId;
+  }, [addTab, setActiveTab]);
 
   const getActiveTab = useCallback(() => {
     return state.tabs.find(tab => tab.id === state.activeTabId) || null;
@@ -121,8 +167,10 @@ export const useTabsDesktop = () => {
     updateTabTitle,
     setTabModified,
     setTabFilePath,
+    setTabNew,
     openFile,
     saveTab,
+    saveTabAs,
     createNewTab,
   };
 };

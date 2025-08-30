@@ -1,6 +1,6 @@
-えらーめっせーじ x# MD Editor
+# MD Editor
 
-A lightweight, cross-platform Markdown editor built with Tauri, React, and Go.
+A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
 ## Features
 
@@ -12,18 +12,9 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Go.
 - **Tab management**: Multiple files editing with tabs
 - **Search and replace**: Built-in search functionality
 - **HTML export**: Export preview as HTML files
+- **Standalone**: No external dependencies or server required
 
 ## Current Status
-
-### Web Version (Current)
-
-- ✅ Basic Markdown editor with real-time preview
-- ✅ Variable system (file-local and global variables)
-- ✅ Tab management
-- ✅ Search and replace functionality
-- ✅ Dark/Light mode
-- ✅ HTML export
-- ⚠️ File operations: Download/Upload via browser (limited by browser security)
 
 ### Desktop Version (Current)
 
@@ -31,14 +22,23 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Go.
 - ✅ Native file operations
 - ✅ System integration
 - ✅ Offline functionality
-- ✅ All web version features
+- ✅ Variable system (file-local and global variables)
+- ✅ Tab management
+- ✅ Search and replace functionality
+- ✅ Dark/Light mode
+- ✅ HTML export
+- ✅ Standalone operation (no HTTP server)
+
+### Web Version (Legacy)
+
+- ⚠️ Limited file operations (browser security restrictions)
+- ⚠️ Requires HTTP server (Go backend)
 
 ## Development
 
 ### Prerequisites
 
 - Node.js 18+
-- Go 1.21+
 - Rust (for Tauri)
 
 ### Setup
@@ -47,29 +47,21 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Go.
 2. Install dependencies:
    ```bash
    npm install
-   cd backend && go mod tidy
    ```
 3. Start development server:
 
    ```bash
-   # Start backend
-   cd backend && go run .
+   # Start standalone desktop app (recommended)
+   npm run dev:standalone
 
-   # Start frontend (in another terminal)
-   npm run dev
+   # Or use separate commands
+   npm run build:desktop
+   npm run tauri:dev
    ```
-
-### Docker Development
-
-For consistent development environment:
-
-```bash
-docker-compose up
-```
 
 ### Desktop Development
 
-For Tauri desktop version:
+For Tauri desktop version (standalone):
 
 ```bash
 npm run tauri:dev
@@ -84,13 +76,12 @@ md-editor/
 │   ├── hooks/          # Custom hooks
 │   ├── reducers/       # State management
 │   ├── types/          # TypeScript types
-│   ├── api/            # API clients
+│   ├── api/            # Tauri API clients
 │   └── App.tsx         # Main app component
-├── backend/            # Go backend
-│   ├── main.go        # Backend server
-│   └── variables.go   # Variable processing
-├── src-tauri/         # Tauri configuration
-└── docker-compose.yml # Docker development setup
+└── src-tauri/          # Tauri configuration and Rust backend
+    ├── src/lib.rs      # Rust backend (variables, file I/O)
+    ├── src/main.rs     # Tauri entry point
+    └── tauri.conf.json # Tauri configuration
 ```
 
 ## Variable System
@@ -110,6 +101,25 @@ Author: {{author}}
 
 Set global variables through the Variables settings panel. These are available across all files.
 
+## Migration from Go Backend
+
+This project has been migrated from a Go HTTP backend to a pure Rust implementation using Tauri:
+
+### Benefits of the Migration
+
+1. **No HTTP Server**: Eliminates port conflicts and network dependencies
+2. **Single Binary**: Easier distribution and installation
+3. **Better Performance**: Direct file system access without network overhead
+4. **Improved Security**: No network exposure, direct system integration
+5. **Simplified Architecture**: Single technology stack (Rust + TypeScript)
+
+### Technical Changes
+
+- **Backend**: Go HTTP server → Rust Tauri commands
+- **API**: HTTP REST endpoints → Tauri invoke commands
+- **File I/O**: Network requests → Direct file system access
+- **Variables**: Server-side processing → Client-side Rust processing
+
 ## Roadmap
 
 - [x] Phase 1: Basic Markdown editor (reading, saving, preview)
@@ -117,9 +127,10 @@ Set global variables through the Variables settings panel. These are available a
 - [x] Phase 3: Variable functionality
 - [x] Phase 4: Tab functionality and search/replace
 - [x] Phase 5: Tauri desktop version with full file system access
-- [ ] Phase 6: Advanced features and optimizations
+- [x] Phase 6: Migration from Go to Rust backend
+- [ ] Phase 7: Advanced features and optimizations
 
-### Phase 6: Advanced Features and Optimizations
+### Phase 7: Advanced Features and Optimizations
 
 #### 1. Enhanced Settings and Customization
 

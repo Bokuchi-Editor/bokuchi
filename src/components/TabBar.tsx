@@ -18,6 +18,48 @@ interface TabBarProps {
   onNewTab: () => void;
 }
 
+// カスタムタブラベルコンポーネント
+const TabLabel: React.FC<{
+  tab: TabType;
+  onClose: (event: React.MouseEvent, tabId: string) => void;
+}> = ({ tab, onClose }) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+    <Box
+      sx={{
+        flex: 1,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {tab.title}
+    </Box>
+    <Badge
+      color="error"
+      variant="dot"
+      invisible={!tab.isModified}
+      sx={{ ml: 1 }}
+    />
+    <Box
+      component="span"
+      onClick={(e) => onClose(e, tab.id)}
+      sx={{
+        ml: 0.5,
+        p: 0.5,
+        cursor: 'pointer',
+        borderRadius: 1,
+        display: 'flex',
+        alignItems: 'center',
+        '&:hover': {
+          bgcolor: 'action.hover',
+        },
+      }}
+    >
+      <Close fontSize="small" />
+    </Box>
+  </Box>
+);
+
 const TabBar: React.FC<TabBarProps> = ({
   tabs,
   activeTabId,
@@ -25,7 +67,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onTabClose,
   onNewTab,
 }) => {
-  const handleTabClick = (event: React.SyntheticEvent, tabId: string) => {
+  const handleTabClick = (_event: React.SyntheticEvent, tabId: string) => {
     onTabChange(tabId);
   };
 
@@ -63,39 +105,7 @@ const TabBar: React.FC<TabBarProps> = ({
             <Tab
               key={tab.id}
               value={tab.id}
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <Box
-                    sx={{
-                      flex: 1,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {tab.title}
-                  </Box>
-                  <Badge
-                    color="error"
-                    variant="dot"
-                    invisible={!tab.isModified}
-                    sx={{ ml: 1 }}
-                  />
-                  <IconButton
-                    size="small"
-                    onClick={(e) => handleTabClose(e, tab.id)}
-                    sx={{
-                      ml: 0.5,
-                      p: 0.5,
-                      '&:hover': {
-                        bgcolor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <Close fontSize="small" />
-                  </IconButton>
-                </Box>
-              }
+              label={<TabLabel tab={tab} onClose={handleTabClose} />}
               sx={{
                 '& .MuiTab-iconWrapper': {
                   display: 'none',
