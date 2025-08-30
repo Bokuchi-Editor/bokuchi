@@ -59,9 +59,9 @@ export const variableApi = {
   },
 
   // Markdownを処理（変数展開）
-  async processMarkdown(content: string): Promise<ProcessMarkdownResponse> {
+  async processMarkdown(content: string, globalVariables: Record<string, string> = {}): Promise<ProcessMarkdownResponse> {
     try {
-      const processedContent = await invoke<string>('process_markdown', { content });
+      const processedContent = await invoke<string>('process_markdown', { content, globalVariables });
       return { processedContent };
     } catch (error: any) {
       return { processedContent: content, error: error.toString() };

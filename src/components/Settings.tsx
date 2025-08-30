@@ -1,0 +1,374 @@
+import React from 'react';
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Divider,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  TextField,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Alert,
+  RadioGroup,
+  Radio,
+  FormControl,
+  FormLabel,
+} from '@mui/material';
+import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn } from '@mui/icons-material';
+import { TransitionProps } from '@mui/material/transitions';
+import { Slide } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+
+interface SettingsProps {
+  open: boolean;
+  onClose: () => void;
+  darkMode: boolean;
+  onDarkModeChange: (darkMode: boolean) => void;
+  globalVariables: Record<string, string>;
+  onGlobalVariablesChange: (variables: Record<string, string>) => void;
+  language: string;
+  onLanguageChange: (language: string) => void;
+  tabLayout: 'horizontal' | 'vertical';
+  onTabLayoutChange: (layout: 'horizontal' | 'vertical') => void;
+}
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<HTMLElement>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const Settings: React.FC<SettingsProps> = ({
+  open,
+  onClose,
+  darkMode,
+  onDarkModeChange,
+  globalVariables,
+  onGlobalVariablesChange,
+  language,
+  onLanguageChange,
+  tabLayout,
+  onTabLayoutChange,
+}) => {
+  const { t } = useTranslation();
+  const [newVariableKey, setNewVariableKey] = React.useState('');
+  const [newVariableValue, setNewVariableValue] = React.useState('');
+  const [error, setError] = React.useState('');
+
+  const handleAddVariable = () => {
+    if (!newVariableKey.trim()) {
+      setError(t('settings.globalVariables.errors.nameRequired'));
+      return;
+    }
+    if (newVariableKey.includes(' ')) {
+      setError(t('settings.globalVariables.errors.noSpaces'));
+      return;
+    }
+    if (globalVariables[newVariableKey]) {
+      setError(t('settings.globalVariables.errors.alreadyExists'));
+      return;
+    }
+
+    const updatedVariables = {
+      ...globalVariables,
+      [newVariableKey]: newVariableValue,
+    };
+    onGlobalVariablesChange(updatedVariables);
+    setNewVariableKey('');
+    setNewVariableValue('');
+    setError('');
+  };
+
+  const handleRemoveVariable = (key: string) => {
+    const updatedVariables = { ...globalVariables };
+    delete updatedVariables[key];
+    onGlobalVariablesChange(updatedVariables);
+  };
+
+  const handleUpdateVariable = (key: string, value: string) => {
+    const updatedVariables = {
+      ...globalVariables,
+      [key]: value,
+    };
+    onGlobalVariablesChange(updatedVariables);
+  };
+
+  return (
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={onClose}
+      TransitionComponent={Transition}
+      PaperProps={{
+        sx: {
+          bgcolor: 'background.default',
+        },
+      }}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Header */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SettingsIcon color="primary" />
+            <Typography variant="h5" component="h2">
+              {t('settings.title')}
+            </Typography>
+          </Box>
+          <IconButton onClick={onClose} size="large">
+            <Close />
+          </IconButton>
+        </Box>
+
+        {/* Content */}
+        <Box sx={{ flex: 1, overflow: 'auto', p: 3 }}>
+          <Grid container spacing={3}>
+            {/* Appearance Settings */}
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardHeader
+                  title={t('settings.appearance.title')}
+                  avatar={<Palette color="primary" />}
+                />
+                <CardContent>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={darkMode}
+                        onChange={(e) => onDarkModeChange(e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {darkMode ? <Brightness7 /> : <Brightness4 />}
+                        <Typography>{t('settings.appearance.darkMode')}</Typography>
+                      </Box>
+                    }
+                  />
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    {t('settings.appearance.darkModeDescription')}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Language Settings */}
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardHeader
+                  title={t('settings.language.title')}
+                  avatar={<Language color="primary" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {t('settings.language.description')}
+                  </Typography>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      value={language}
+                      onChange={(e) => onLanguageChange(e.target.value)}
+                    >
+                      <FormControlLabel
+                        value="en"
+                        control={<Radio />}
+                        label={t('settings.language.english')}
+                      />
+                      <FormControlLabel
+                        value="ja"
+                        control={<Radio />}
+                        label={t('settings.language.japanese')}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Tab Layout Settings */}
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardHeader
+                  title={t('settings.tabLayout.title')}
+                  avatar={<ViewColumn color="primary" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {t('settings.tabLayout.description')}
+                  </Typography>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      value={tabLayout}
+                      onChange={(e) => onTabLayoutChange(e.target.value as 'horizontal' | 'vertical')}
+                    >
+                      <FormControlLabel
+                        value="horizontal"
+                        control={<Radio />}
+                        label={
+                          <Box>
+                            <Typography variant="body1">
+                              {t('settings.tabLayout.horizontal')}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {t('settings.tabLayout.horizontalDescription')}
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                      <FormControlLabel
+                        value="vertical"
+                        control={<Radio />}
+                        label={
+                          <Box>
+                            <Typography variant="body1">
+                              {t('settings.tabLayout.vertical')}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {t('settings.tabLayout.verticalDescription')}
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Global Variables */}
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardHeader
+                  title={t('settings.globalVariables.title')}
+                  avatar={<Code color="primary" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {t('settings.globalVariables.description')}
+                  </Typography>
+
+                  {/* Add new variable */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                      {t('settings.globalVariables.addNewVariable')}
+                    </Typography>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <TextField
+                          fullWidth
+                          label={t('settings.globalVariables.variableName')}
+                          value={newVariableKey}
+                          onChange={(e) => setNewVariableKey(e.target.value)}
+                          placeholder={t('settings.globalVariables.variableNamePlaceholder')}
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={5}>
+                        <TextField
+                          fullWidth
+                          label={t('settings.globalVariables.value')}
+                          value={newVariableValue}
+                          onChange={(e) => setNewVariableValue(e.target.value)}
+                          placeholder={t('settings.globalVariables.valuePlaceholder')}
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={2}>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          onClick={handleAddVariable}
+                          sx={{ height: '40px' }}
+                        >
+                          {t('buttons.add')}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    {error && (
+                      <Alert severity="error" sx={{ mt: 1 }}>
+                        {error}
+                      </Alert>
+                    )}
+                  </Box>
+
+                  <Divider sx={{ my: 2 }} />
+
+                  {/* Existing variables */}
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    {t('settings.globalVariables.existingVariables')}
+                  </Typography>
+                  {Object.keys(globalVariables).length === 0 ? (
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.globalVariables.noVariables')}
+                    </Typography>
+                  ) : (
+                    <List>
+                      {Object.entries(globalVariables).map(([key, value]) => (
+                        <ListItem key={key} sx={{ px: 0 }}>
+                          <ListItemText
+                            primary={
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Chip label={key} size="small" color="primary" />
+                                <Typography variant="body2">
+                                  {t('settings.globalVariables.usageExample').replace('{{variableName}}', `{{${key}}}`)}
+                                </Typography>
+                              </Box>
+                            }
+                            secondary={
+                              <TextField
+                                fullWidth
+                                value={value}
+                                onChange={(e) => handleUpdateVariable(key, e.target.value)}
+                                size="small"
+                                sx={{ mt: 1 }}
+                              />
+                            }
+                          />
+                          <ListItemSecondaryAction>
+                            <Button
+                              color="error"
+                              size="small"
+                              onClick={() => handleRemoveVariable(key)}
+                            >
+                              {t('buttons.delete')}
+                            </Button>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    </Dialog>
+  );
+};
+
+export default Settings;

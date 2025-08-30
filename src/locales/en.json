@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "MD Editor (Desktop)",
+    "loading": "Loading...",
+    "noTabsOpen": "No tabs open. Create a new tab to get started."
+  },
+  "buttons": {
+    "open": "Open",
+    "save": "Save",
+    "saveAs": "Save As",
+    "settings": "Settings",
+    "newFile": "New File",
+    "openFile": "Open File",
+    "add": "Add",
+    "delete": "Delete",
+    "close": "Close"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "darkMode": "Dark Mode",
+      "darkModeDescription": "Enable dark mode to change the editor and preview theme to dark colors."
+    },
+    "globalVariables": {
+      "title": "Global Variables",
+      "description": "Global variables can be used in all files. Reference them in Markdown files as {{variableName}}.",
+      "addNewVariable": "Add New Variable",
+      "variableName": "Variable Name",
+      "variableNamePlaceholder": "e.g., title",
+      "value": "Value",
+      "valuePlaceholder": "e.g., Document Title",
+      "existingVariables": "Existing Variables",
+      "noVariables": "No global variables are set.",
+      "usageExample": "Usage: {{variableName}}",
+      "errors": {
+        "nameRequired": "Please enter a variable name.",
+        "noSpaces": "Variable names cannot contain spaces.",
+        "alreadyExists": "This variable name already exists."
+      }
+    },
+    "language": {
+      "title": "Language",
+      "description": "Select the language for the application interface.",
+      "english": "English",
+      "japanese": "Japanese"
+    },
+    "tabLayout": {
+      "title": "Tab Layout",
+      "description": "Choose how tabs are displayed in the editor.",
+      "horizontal": "Horizontal Tabs",
+      "vertical": "Vertical Tabs",
+      "horizontalDescription": "Tabs are displayed horizontally above the editor.",
+      "verticalDescription": "Tabs are displayed vertically on the left side of the editor."
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "File loaded successfully",
+    "fileLoadFailed": "Failed to load file",
+    "fileSaved": "File saved successfully",
+    "fileSaveFailed": "Failed to save file",
+    "fileNotFound": "File not found.",
+    "closeTab": "Close Tab"
+  },
+  "dialogs": {
+    "saveChanges": "Save changes before closing?",
+    "confirmClose": "Are you sure you want to close this tab?"
+  }
+}

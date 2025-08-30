@@ -1,26 +1,32 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
-import { Brightness4, Brightness7, FolderOpen, Save, SaveAlt, Settings, MoreVert } from '@mui/icons-material';
+import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert } from '@mui/icons-material';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
-import VariableSettings from './components/VariableSettings';
+import Settings from './components/Settings';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
+import { storeApi } from './api/storeApi';
+import { useTranslation } from 'react-i18next';
+import './i18n';
 
 import './App.css';
 
 function AppDesktop() {
+  const { t, i18n } = useTranslation();
   const [darkMode, setDarkMode] = useState(false);
-  const [variableSettingsOpen, setVariableSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
     severity: 'success'
   });
-
-
+  const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
+  const [language, setLanguage] = useState('en');
+  const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
 
   const {
     tabs,
@@ -48,16 +54,133 @@ function AppDesktop() {
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+  const handleSettingsOpen = () => {
+    setSettingsOpen(true);
   };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+  };
+
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
+  };
+
+  const handleDarkModeChange = (newDarkMode: boolean) => {
+    setDarkMode(newDarkMode);
+  };
+
+  // 設定の初期読み込み（一度だけ実行）
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        console.log('Loading settings...');
+
+        // 言語設定を読み込み
+        const savedLanguage = await storeApi.loadLanguage();
+        console.log('Loaded saved language:', savedLanguage);
+        setLanguage(savedLanguage);
+        i18n.changeLanguage(savedLanguage);
+
+        // ダークモード設定を読み込み
+        const savedDarkMode = await storeApi.loadDarkMode();
+        console.log('Loaded saved dark mode:', savedDarkMode);
+        setDarkMode(savedDarkMode);
+
+        // グローバル変数を読み込み
+        const variables = await storeApi.loadGlobalVariables();
+        console.log('Loaded saved global variables:', variables);
+        setGlobalVariables(variables);
+
+        // タブレイアウト設定を読み込み
+        const savedTabLayout = await storeApi.loadTabLayout();
+        console.log('Loaded saved tab layout:', savedTabLayout);
+        setTabLayout(savedTabLayout);
+
+        setIsSettingsLoaded(true);
+        console.log('Settings loaded successfully');
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        setIsSettingsLoaded(true);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  // 言語設定の保存
+  useEffect(() => {
+    if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
+
+    const saveLanguage = async () => {
+      try {
+        console.log('Saving language:', language);
+        await storeApi.saveLanguage(language);
+      } catch (error) {
+        console.error('Failed to save language:', error);
+      }
+    };
+
+    saveLanguage();
+  }, [language, isSettingsLoaded]);
+
+  // ダークモード設定の保存
+  useEffect(() => {
+    if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
+
+    const saveDarkMode = async () => {
+      try {
+        console.log('Saving dark mode:', darkMode);
+        await storeApi.saveDarkMode(darkMode);
+      } catch (error) {
+        console.error('Failed to save dark mode:', error);
+      }
+    };
+
+    saveDarkMode();
+  }, [darkMode, isSettingsLoaded]);
+
+  // グローバル変数の保存
+  useEffect(() => {
+    if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
+
+    const saveGlobalVariables = async () => {
+      try {
+        console.log('Saving global variables:', globalVariables);
+        await storeApi.saveGlobalVariables(globalVariables);
+      } catch (error) {
+        console.error('Failed to save global variables:', error);
+      }
+    };
+
+    if (Object.keys(globalVariables).length > 0) {
+      saveGlobalVariables();
+    }
+  }, [globalVariables, isSettingsLoaded]);
+
+  // タブレイアウト設定の保存
+  useEffect(() => {
+    if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
+
+    const saveTabLayout = async () => {
+      try {
+        console.log('Saving tab layout:', tabLayout);
+        await storeApi.saveTabLayout(tabLayout);
+      } catch (error) {
+        console.error('Failed to save tab layout:', error);
+      }
+    };
+
+    saveTabLayout();
+  }, [tabLayout, isSettingsLoaded]);
 
   const handleOpenFile = async () => {
     try {
       await openFile();
-      setSnackbar({ open: true, message: 'File loaded successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('fileOperations.fileLoaded'), severity: 'success' });
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load file', severity: 'error' });
+      setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
     }
   };
 
@@ -66,12 +189,12 @@ function AppDesktop() {
       try {
         const success = await saveTab(activeTab.id);
         if (success) {
-          setSnackbar({ open: true, message: 'File saved successfully', severity: 'success' });
+          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
         } else {
-          setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+          setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
       } catch (error) {
-        setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+        setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
     }
   };
@@ -87,13 +210,13 @@ function AppDesktop() {
         console.log('saveTabAs result:', success);
 
         if (success) {
-          setSnackbar({ open: true, message: 'File saved successfully', severity: 'success' });
+          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
         } else {
-          setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+          setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
       } catch (error) {
         console.error('Error in handleSaveFileAs:', error);
-        setSnackbar({ open: true, message: 'Failed to save file', severity: 'error' });
+        setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
     } else {
       console.log('No active tab');
@@ -108,7 +231,7 @@ function AppDesktop() {
     const tab = tabs.find(t => t.id === tabId);
     if (tab && tab.isModified) {
       // 変更がある場合は確認ダイアログを表示
-      if (window.confirm('Save changes before closing?')) {
+      if (window.confirm(t('dialogs.saveChanges'))) {
         const success = await saveTab(tabId);
         if (success) {
           removeTab(tabId);
@@ -151,7 +274,7 @@ function AppDesktop() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              MD Editor (Desktop)
+              {t('app.title')}
             </Typography>
 
             {/* File Menu */}
@@ -161,7 +284,7 @@ function AppDesktop() {
               onClick={handleOpenFile}
               sx={{ mr: 1 }}
             >
-              Open
+              {t('buttons.open')}
             </Button>
 
             <Button
@@ -171,7 +294,7 @@ function AppDesktop() {
               disabled={!activeTab}
               sx={{ mr: 1 }}
             >
-              Save
+              {t('buttons.save')}
             </Button>
 
             <Button
@@ -184,21 +307,17 @@ function AppDesktop() {
               disabled={!activeTab}
               sx={{ mr: 1 }}
             >
-              Save As
+              {t('buttons.saveAs')}
             </Button>
 
             <Button
               color="inherit"
-              startIcon={<Settings />}
-              onClick={() => setVariableSettingsOpen(true)}
+              startIcon={<SettingsIcon />}
+              onClick={handleSettingsOpen}
               sx={{ mr: 1 }}
             >
-              Variables
+              {t('buttons.settings')}
             </Button>
-
-            <IconButton color="inherit" onClick={toggleDarkMode}>
-              {darkMode ? <Brightness7 /> : <Brightness4 />}
-            </IconButton>
 
             <IconButton
               color="inherit"
@@ -217,57 +336,72 @@ function AppDesktop() {
           onClose={handleFileMenuClose}
         >
           <MenuItem onClick={() => { handleNewTab(); handleFileMenuClose(); }}>
-            New File
+            {t('buttons.newFile')}
           </MenuItem>
           <MenuItem onClick={() => { handleOpenFile(); handleFileMenuClose(); }}>
-            Open File
+            {t('buttons.openFile')}
           </MenuItem>
           <MenuItem
             onClick={() => { handleSaveFile(); handleFileMenuClose(); }}
             disabled={!activeTab}
           >
-            Save
+            {t('buttons.save')}
           </MenuItem>
           <MenuItem
             onClick={() => { handleSaveFileAs(); handleFileMenuClose(); }}
             disabled={!activeTab}
           >
-            Save As
+            {t('buttons.saveAs')}
           </MenuItem>
         </Menu>
 
-        {tabs.length > 0 && (
-          <TabBar
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onTabChange={handleTabChange}
-            onTabClose={handleTabClose}
-            onNewTab={handleNewTab}
-          />
-        )}
-
         {activeTab && (
           <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-            <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
-              <Editor
-                content={activeTab.content}
-                onChange={handleContentChange}
-                darkMode={darkMode}
-                fileNotFound={
-                  activeTab.isNew && activeTab.filePath
-                    ? {
-                        filePath: activeTab.filePath,
-                        onClose: () => handleTabClose(activeTab.id),
-                      }
-                    : undefined
-                }
+            {tabLayout === 'vertical' && (
+              <TabBar
+                tabs={tabs}
+                activeTabId={activeTabId}
+                onTabChange={handleTabChange}
+                onTabClose={handleTabClose}
+                onNewTab={handleNewTab}
+                layout={tabLayout}
               />
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <Preview
-                content={activeTab.content}
-                darkMode={darkMode}
-              />
+            )}
+            <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+              {tabLayout === 'horizontal' && (
+                <TabBar
+                  tabs={tabs}
+                  activeTabId={activeTabId}
+                  onTabChange={handleTabChange}
+                  onTabClose={handleTabClose}
+                  onNewTab={handleNewTab}
+                  layout={tabLayout}
+                />
+              )}
+              <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
+                  <Editor
+                    content={activeTab.content}
+                    onChange={handleContentChange}
+                    darkMode={darkMode}
+                    fileNotFound={
+                      activeTab.isNew && activeTab.filePath
+                        ? {
+                            filePath: activeTab.filePath,
+                            onClose: () => handleTabClose(activeTab.id),
+                          }
+                        : undefined
+                    }
+                  />
+                </Box>
+                <Box sx={{ flex: 1 }}>
+                  <Preview
+                    content={activeTab.content}
+                    darkMode={darkMode}
+                    globalVariables={globalVariables}
+                  />
+                </Box>
+              </Box>
             </Box>
           </Box>
         )}
@@ -275,7 +409,7 @@ function AppDesktop() {
         {!isInitialized && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <Typography variant="h6" color="text.secondary">
-              Loading...
+              {t('app.loading')}
             </Typography>
           </Box>
         )}
@@ -283,7 +417,7 @@ function AppDesktop() {
         {isInitialized && !activeTab && tabs.length === 0 && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <Typography variant="h6" color="text.secondary">
-              No tabs open. Create a new tab to get started.
+              {t('app.noTabsOpen')}
             </Typography>
           </Box>
         )}
@@ -298,9 +432,17 @@ function AppDesktop() {
           </Alert>
         </Snackbar>
 
-        <VariableSettings
-          open={variableSettingsOpen}
-          onClose={() => setVariableSettingsOpen(false)}
+        <Settings
+          open={settingsOpen}
+          onClose={handleSettingsClose}
+          darkMode={darkMode}
+          onDarkModeChange={handleDarkModeChange}
+          globalVariables={globalVariables}
+          onGlobalVariablesChange={setGlobalVariables}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          tabLayout={tabLayout}
+          onTabLayoutChange={setTabLayout}
         />
       </Box>
     </ThemeProvider>

@@ -6,6 +6,11 @@ import {
   IconButton,
   Tooltip,
   Badge,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
 } from '@mui/material';
 import { Close, Add } from '@mui/icons-material';
 import { Tab as TabType } from '../types/tab';
@@ -16,6 +21,7 @@ interface TabBarProps {
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
+  layout?: 'horizontal' | 'vertical';
 }
 
 // カスタムタブラベルコンポーネント
@@ -66,6 +72,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onTabChange,
   onTabClose,
   onNewTab,
+  layout = 'horizontal',
 }) => {
   const handleTabClick = (_event: React.SyntheticEvent, tabId: string) => {
     onTabChange(tabId);
@@ -75,6 +82,99 @@ const TabBar: React.FC<TabBarProps> = ({
     event.stopPropagation();
     onTabClose(tabId);
   };
+
+  if (layout === 'vertical') {
+    return (
+      <Box
+        sx={{
+          width: 250,
+          borderRight: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>
+          <Tooltip title="New Tab">
+            <IconButton
+              onClick={onNewTab}
+              fullWidth
+              sx={{
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+            >
+              <Add />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
+          {tabs.map((tab, index) => (
+            <React.Fragment key={tab.id}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  selected={tab.id === activeTabId}
+                  onClick={() => onTabChange(tab.id)}
+                  sx={{
+                    py: 1,
+                    px: 2,
+                    '&.Mui-selected': {
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText',
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary={
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box
+                          sx={{
+                            flex: 1,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontSize: '0.875rem',
+                          }}
+                        >
+                          {tab.title}
+                        </Box>
+                        <Badge
+                          color="error"
+                          variant="dot"
+                          invisible={!tab.isModified}
+                          sx={{ ml: 1 }}
+                        />
+                      </Box>
+                    }
+                  />
+                  <IconButton
+                    size="small"
+                    onClick={(e) => handleTabClose(e, tab.id)}
+                    sx={{
+                      ml: 1,
+                      opacity: 0.7,
+                      '&:hover': {
+                        opacity: 1,
+                        bgcolor: 'action.hover',
+                      },
+                    }}
+                  >
+                    <Close fontSize="small" />
+                  </IconButton>
+                </ListItemButton>
+              </ListItem>
+              {index < tabs.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+        </List>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>

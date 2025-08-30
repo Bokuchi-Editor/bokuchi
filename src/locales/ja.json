@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "MD Editor (デスクトップ)",
+    "loading": "読み込み中...",
+    "noTabsOpen": "タブが開かれていません。新しいタブを作成して開始してください。"
+  },
+  "buttons": {
+    "open": "開く",
+    "save": "保存",
+    "saveAs": "名前を付けて保存",
+    "settings": "設定",
+    "newFile": "新規ファイル",
+    "openFile": "ファイルを開く",
+    "add": "追加",
+    "delete": "削除",
+    "close": "閉じる"
+  },
+  "settings": {
+    "title": "設定",
+    "appearance": {
+      "title": "外観",
+      "darkMode": "ダークモード",
+      "darkModeDescription": "ダークモードを有効にすると、エディタとプレビューのテーマが暗い色合いに変更されます。"
+    },
+    "globalVariables": {
+      "title": "グローバル変数",
+      "description": "グローバル変数は全てのファイルで使用できます。Markdownファイル内で {{変数名}} として参照できます。",
+      "addNewVariable": "新しい変数を追加",
+      "variableName": "変数名",
+      "variableNamePlaceholder": "例: title",
+      "value": "値",
+      "valuePlaceholder": "例: ドキュメントタイトル",
+      "existingVariables": "既存の変数",
+      "noVariables": "グローバル変数が設定されていません。",
+      "usageExample": "使用例: {{変数名}}",
+      "errors": {
+        "nameRequired": "変数名を入力してください",
+        "noSpaces": "変数名にスペースは使用できません",
+        "alreadyExists": "この変数名は既に存在します"
+      }
+    },
+    "language": {
+      "title": "言語",
+      "description": "アプリケーションのインターフェース言語を選択してください。",
+      "english": "英語",
+      "japanese": "日本語"
+    },
+    "tabLayout": {
+      "title": "タブレイアウト",
+      "description": "エディターでのタブの表示方法を選択してください。",
+      "horizontal": "水平タブ",
+      "vertical": "垂直タブ",
+      "horizontalDescription": "タブはエディターの上に水平に表示されます。",
+      "verticalDescription": "タブはエディターの左側に垂直に表示されます。"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "ファイルが正常に読み込まれました",
+    "fileLoadFailed": "ファイルの読み込みに失敗しました",
+    "fileSaved": "ファイルが正常に保存されました",
+    "fileSaveFailed": "ファイルの保存に失敗しました",
+    "fileNotFound": "ファイルが見つかりません。",
+    "closeTab": "タブを閉じる"
+  },
+  "dialogs": {
+    "saveChanges": "閉じる前に変更を保存しますか？",
+    "confirmClose": "このタブを閉じてもよろしいですか？"
+  }
+}

@@ -9,9 +9,10 @@ import { variableApi } from '../api/variableApi';
 interface PreviewProps {
   content: string;
   darkMode: boolean;
+  globalVariables?: Record<string, string>;
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVariables = {} }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content);
 
@@ -24,12 +25,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode }) => {
 
     // 変数を展開
     const processContent = async () => {
-      const result = await variableApi.processMarkdown(content);
+      const result = await variableApi.processMarkdown(content, globalVariables);
       setProcessedContent(result.processedContent);
     };
 
     processContent();
-  }, [content]);
+  }, [content, globalVariables]);
 
   useEffect(() => {
     // リンクのクリックイベントを処理

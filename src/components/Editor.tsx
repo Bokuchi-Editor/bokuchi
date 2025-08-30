@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 interface EditorProps {
   content: string;
@@ -14,6 +15,7 @@ interface EditorProps {
 }
 
 const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fileNotFound }) => {
+  const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [replaceText, setReplaceText] = useState('');
@@ -148,7 +150,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
             }}
           >
             <Typography variant="h6" color="error" gutterBottom>
-              ファイルが見つかりません。
+              {t('fileOperations.fileNotFound')}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2, wordBreak: 'break-all' }}>
               {fileNotFound.filePath}
@@ -158,7 +160,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
               color="error"
               onClick={fileNotFound.onClose}
             >
-              タブを閉じる
+              {t('fileOperations.closeTab')}
             </Button>
           </Box>
         ) : (

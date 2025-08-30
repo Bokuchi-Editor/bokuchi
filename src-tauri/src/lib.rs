@@ -3,7 +3,6 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
-use tauri::Manager;
 
 // 変数の定義
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -178,8 +177,17 @@ fn export_variables_to_yaml() -> Result<String, String> {
 
 // Tauriコマンド: Markdownを処理（変数展開）
 #[tauri::command]
-fn process_markdown(content: String) -> Result<String, String> {
-    Ok(VARIABLE_PROCESSOR.process_variables(&content))
+fn process_markdown(
+    content: String,
+    global_variables: HashMap<String, String>,
+) -> Result<String, String> {
+    // グローバル変数を一時的に設定
+    for (name, value) in global_variables {
+        VARIABLE_PROCESSOR.set_global_variable(name, value);
+    }
+
+    let result = VARIABLE_PROCESSOR.process_variables(&content);
+    Ok(result)
 }
 
 // Tauriコマンド: ファイルを読み込み
