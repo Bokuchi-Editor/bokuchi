@@ -1,10 +1,12 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect, useState } from 'react';
 import { tabReducer, initialTabState } from '../reducers/tabReducer';
-import { Tab } from '../types/tab';
+import { Tab, AppState } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
+import { storeApi } from '../api/storeApi';
 
 export const useTabsDesktop = () => {
   const [state, dispatch] = useReducer(tabReducer, initialTabState);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const addTab = useCallback((tab: Omit<Tab, 'id'>) => {
     const newTab: Tab = {
@@ -156,10 +158,84 @@ export const useTabsDesktop = () => {
     return state.tabs.find(tab => tab.id === state.activeTabId) || null;
   }, [state.tabs, state.activeTabId]);
 
+  // 状態を保存
+  const saveState = useCallback(async () => {
+    try {
+      const appState: AppState = {
+        tabs: state.tabs,
+        activeTabId: state.activeTabId,
+        lastOpenedAt: Date.now(),
+      };
+      await storeApi.saveState(appState);
+    } catch (error) {
+      console.error('Failed to save state:', error);
+    }
+  }, [state.tabs, state.activeTabId]);
+
+  // 状態を復元
+  const restoreState = useCallback(async () => {
+    try {
+      console.log('Starting state restoration...');
+      const savedState = await storeApi.loadState();
+      if (savedState) {
+        console.log('Found saved state, restoring...');
+        // 保存済みファイルの内容を再読み込み
+        const restoredTabs = await Promise.all(
+          savedState.tabs.map(async (tab) => {
+            if (!tab.isNew && tab.filePath) {
+              try {
+                console.log(`Loading file: ${tab.filePath}`);
+                const content = await desktopApi.readFileFromPath(tab.filePath);
+                return { ...tab, content };
+              } catch (error) {
+                console.error(`Failed to load file: ${tab.filePath}`, error);
+                return { ...tab, isNew: true, filePath: undefined };
+              }
+            }
+            return tab;
+          })
+        );
+
+        const restoredState: AppState = {
+          ...savedState,
+          tabs: restoredTabs,
+        };
+
+        console.log('Dispatching restored state:', restoredState);
+        dispatch({ type: 'LOAD_STATE', payload: restoredState });
+      } else {
+        console.log('No saved state found, creating initial state');
+        // 初回起動時は初期状態を作成
+        const initialState = storeApi.createInitialState();
+        dispatch({ type: 'LOAD_STATE', payload: initialState });
+      }
+    } catch (error) {
+      console.error('Failed to restore state:', error);
+      // エラー時は初期状態を作成
+      const initialState = storeApi.createInitialState();
+      dispatch({ type: 'LOAD_STATE', payload: initialState });
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // 初期化処理
+  useEffect(() => {
+    restoreState();
+  }, [restoreState]);
+
+  // 状態変更時に自動保存
+  useEffect(() => {
+    if (isInitialized) {
+      console.log('Auto-saving state due to changes');
+      saveState();
+    }
+  }, [state.tabs, state.activeTabId, isInitialized, saveState]);
+
   return {
     tabs: state.tabs,
     activeTabId: state.activeTabId,
     activeTab: getActiveTab(),
+    isInitialized,
     addTab,
     removeTab,
     setActiveTab,

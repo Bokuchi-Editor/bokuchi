@@ -23,6 +23,7 @@
     "@tauri-apps/api": "^2.8.0",
     "@tauri-apps/plugin-dialog": "^2.3.3",
     "@tauri-apps/plugin-fs": "^2.4.2",
+    "@tauri-apps/plugin-store": "^2.3.3",
     "highlight.js": "^11.11.1",
     "marked": "^16.2.1",
     "react": "^19.1.0",

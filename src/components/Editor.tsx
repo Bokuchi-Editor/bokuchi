@@ -7,9 +7,13 @@ interface EditorProps {
   content: string;
   onChange: (content: string) => void;
   darkMode: boolean;
+  fileNotFound?: {
+    filePath: string;
+    onClose: () => void;
+  };
 }
 
-const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) => {
+const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fileNotFound }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [replaceText, setReplaceText] = useState('');
@@ -131,47 +135,75 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode }) 
       </Box>
 
       <Box sx={{ flex: 1, position: 'relative' }}>
-        <Editor
-          height="100%"
-          defaultLanguage="markdown"
-          value={content}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          theme={darkMode ? 'vs-dark' : 'light'}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            wordWrap: 'on',
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            renderWhitespace: 'selection',
-            folding: true,
-            lineDecorationsWidth: 10,
-            lineNumbersMinChars: 3,
-            glyphMargin: true,
-            contextmenu: true,
-            quickSuggestions: false,
-            suggestOnTriggerCharacters: false,
-            acceptSuggestionOnEnter: 'off',
-            tabCompletion: 'off',
-            wordBasedSuggestions: "off",
-            parameterHints: {
-              enabled: false
-            },
-            hover: {
-              enabled: true
-            },
-            links: true,
-            colorDecorators: true,
-            // lightbulb: {
-            //   enabled: false
-            // },
-            // codeActionsOnSave: {
-            //   'source.fixAll': false
-            // }
-          }}
-        />
+        {fileNotFound ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              p: 3,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h6" color="error" gutterBottom>
+              ファイルが見つかりません。
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, wordBreak: 'break-all' }}>
+              {fileNotFound.filePath}
+            </Typography>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={fileNotFound.onClose}
+            >
+              タブを閉じる
+            </Button>
+          </Box>
+        ) : (
+          <Editor
+            height="100%"
+            defaultLanguage="markdown"
+            value={content}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            theme={darkMode ? 'vs-dark' : 'light'}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 14,
+              wordWrap: 'on',
+              lineNumbers: 'on',
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              renderWhitespace: 'selection',
+              folding: true,
+              lineDecorationsWidth: 10,
+              lineNumbersMinChars: 3,
+              glyphMargin: true,
+              contextmenu: true,
+              quickSuggestions: false,
+              suggestOnTriggerCharacters: false,
+              acceptSuggestionOnEnter: 'off',
+              tabCompletion: 'off',
+              wordBasedSuggestions: "off",
+              parameterHints: {
+                enabled: false
+              },
+              hover: {
+                enabled: true
+              },
+              links: true,
+              colorDecorators: true,
+              // lightbulb: {
+              //   enabled: false
+              // },
+              // codeActionsOnSave: {
+              //   'source.fixAll': false
+              // }
+            }}
+          />
+        )}
       </Box>
 
       {/* 検索・置換ダイアログ */}

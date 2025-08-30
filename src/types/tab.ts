@@ -12,6 +12,12 @@ export interface TabState {
   activeTabId: string | null;
 }
 
+export interface AppState {
+  tabs: Tab[];
+  activeTabId: string | null;
+  lastOpenedAt: number;
+}
+
 export type TabAction =
   | { type: 'ADD_TAB'; payload: Tab }
   | { type: 'REMOVE_TAB'; payload: { id: string } }
@@ -20,4 +26,6 @@ export type TabAction =
   | { type: 'UPDATE_TAB_TITLE'; payload: { id: string; title: string } }
   | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
   | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } }
-  | { type: 'SET_TAB_NEW'; payload: { id: string; isNew: boolean } };
+  | { type: 'SET_TAB_NEW'; payload: { id: string; isNew: boolean } }
+  | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
+  | { type: 'LOAD_STATE'; payload: AppState };

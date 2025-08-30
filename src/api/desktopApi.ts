@@ -155,6 +155,17 @@ export const desktopApi = {
     }
   },
 
+  // ファイルパスからファイルを読み込み（復元用）
+  async readFileFromPath(filePath: string): Promise<string> {
+    try {
+      const content = await readTextFile(filePath);
+      return content;
+    } catch (error: any) {
+      console.error('Error reading file from path:', error);
+      throw error;
+    }
+  },
+
   // ファイルパスに保存
   async saveFileToPath(filePath: string, content: string): Promise<SaveResponse> {
     try {

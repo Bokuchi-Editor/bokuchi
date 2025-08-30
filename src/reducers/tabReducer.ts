@@ -91,6 +91,13 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'LOAD_STATE':
+      return {
+        ...state,
+        tabs: action.payload.tabs,
+        activeTabId: action.payload.activeTabId,
+      };
+
     default:
       return state;
   }

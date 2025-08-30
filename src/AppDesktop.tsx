@@ -7,6 +7,7 @@ import Preview from './components/Preview';
 import TabBar from './components/TabBar';
 import VariableSettings from './components/VariableSettings';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
+
 import './App.css';
 
 function AppDesktop() {
@@ -19,10 +20,13 @@ function AppDesktop() {
     severity: 'success'
   });
 
+
+
   const {
     tabs,
     activeTabId,
     activeTab,
+    isInitialized,
     removeTab,
     setActiveTab,
     updateTabContent,
@@ -249,6 +253,14 @@ function AppDesktop() {
                 content={activeTab.content}
                 onChange={handleContentChange}
                 darkMode={darkMode}
+                fileNotFound={
+                  activeTab.isNew && activeTab.filePath
+                    ? {
+                        filePath: activeTab.filePath,
+                        onClose: () => handleTabClose(activeTab.id),
+                      }
+                    : undefined
+                }
               />
             </Box>
             <Box sx={{ flex: 1 }}>
@@ -260,7 +272,15 @@ function AppDesktop() {
           </Box>
         )}
 
-        {!activeTab && tabs.length === 0 && (
+        {!isInitialized && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            <Typography variant="h6" color="text.secondary">
+              Loading...
+            </Typography>
+          </Box>
+        )}
+
+        {isInitialized && !activeTab && tabs.length === 0 && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <Typography variant="h6" color="text.secondary">
               No tabs open. Create a new tab to get started.

@@ -1,8 +1,9 @@
+use anyhow::Result;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
-use regex::Regex;
-use anyhow::Result;
+use tauri::Manager;
 
 // 変数の定義
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -239,6 +240,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             greet,
             set_global_variable,
