@@ -13,21 +13,25 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - **Search and replace**: Built-in search functionality
 - **HTML export**: Export preview as HTML files
 - **Standalone**: No external dependencies or server required
+- **State persistence**: Automatically saves and restores application state
+- **Native file operations**: Full file system access with native dialogs
 
 ## Current Status
 
 ### Desktop Version (Current)
 
-- ✅ Full file system access
-- ✅ Native file operations
+- ✅ Full file system access with native dialogs
+- ✅ Native file operations (Open, Save, Save As)
 - ✅ System integration
 - ✅ Offline functionality
 - ✅ Variable system (file-local and global variables)
-- ✅ Tab management
+- ✅ Tab management with state persistence
 - ✅ Search and replace functionality
 - ✅ Dark/Light mode
 - ✅ HTML export
 - ✅ Standalone operation (no HTTP server)
+- ✅ Application state persistence across sessions
+- ✅ File not found handling for restored tabs
 
 ### Web Version (Legacy)
 
@@ -51,11 +55,7 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 3. Start development server:
 
    ```bash
-   # Start standalone desktop app (recommended)
-   npm run dev:standalone
-
-   # Or use separate commands
-   npm run build:desktop
+   # Start desktop app
    npm run tauri:dev
    ```
 
@@ -73,20 +73,51 @@ npm run tauri:dev
 md-editor/
 ├── src/                 # React frontend
 │   ├── components/      # React components
+│   │   ├── Editor.tsx   # Monaco editor component
+│   │   ├── Preview.tsx  # Markdown preview
+│   │   ├── TabBar.tsx   # Tab management
+│   │   ├── SaveFileDialog.tsx # File save dialog
+│   │   └── VariableSettings.tsx # Variable configuration
 │   ├── hooks/          # Custom hooks
+│   │   ├── useTabs.ts  # Tab management hook (web)
+│   │   └── useTabsDesktop.ts # Tab management hook (desktop)
 │   ├── reducers/       # State management
+│   │   └── tabReducer.ts # Tab state reducer
 │   ├── types/          # TypeScript types
+│   │   └── tab.ts      # Tab and state types
 │   ├── api/            # Tauri API clients
-│   └── App.tsx         # Main app component
+│   │   ├── desktopApi.ts # Desktop file operations
+│   │   ├── fileApi.ts  # File operations (web)
+│   │   ├── variableApi.ts # Variable processing
+│   │   └── storeApi.ts # State persistence
+│   ├── App.tsx         # Main app component (web)
+│   └── AppDesktop.tsx  # Main app component (desktop)
 └── src-tauri/          # Tauri configuration and Rust backend
-    ├── src/lib.rs      # Rust backend (variables, file I/O)
+    ├── src/lib.rs      # Rust backend (variables, file I/O, state persistence)
     ├── src/main.rs     # Tauri entry point
-    └── tauri.conf.json # Tauri configuration
+    ├── tauri.conf.json # Tauri configuration
+    └── capabilities/   # Tauri v2 capabilities
+        └── default.json # File system and store permissions
 ```
 
-## Variable System
+## Key Features
 
-### File-local Variables
+### State Persistence
+
+The application automatically saves and restores its state:
+
+- **First launch**: Creates a single new tab
+- **Subsequent launches**: Restores previous state including:
+  - All open tabs
+  - Active tab selection
+  - Tab content for unsaved files
+  - File paths for saved files
+- **File restoration**: Automatically reloads content from saved file paths
+- **Error handling**: Shows "ファイルが見つかりません。" (File not found) for missing files
+
+### Variable System
+
+#### File-local Variables
 
 ```markdown
 <!-- @var title: My Document -->
@@ -97,9 +128,16 @@ md-editor/
 Author: {{author}}
 ```
 
-### Global Variables
+#### Global Variables
 
 Set global variables through the Variables settings panel. These are available across all files.
+
+### File Operations
+
+- **Open File**: Native file dialog with Markdown file filtering
+- **Save**: Save current tab to its associated file path
+- **Save As**: Save current tab with a new file path
+- **New File**: Create a new untitled tab
 
 ## Migration from Go Backend
 
@@ -112,6 +150,7 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 3. **Better Performance**: Direct file system access without network overhead
 4. **Improved Security**: No network exposure, direct system integration
 5. **Simplified Architecture**: Single technology stack (Rust + TypeScript)
+6. **State Persistence**: Automatic application state saving and restoration
 
 ### Technical Changes
 
@@ -119,6 +158,7 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 - **API**: HTTP REST endpoints → Tauri invoke commands
 - **File I/O**: Network requests → Direct file system access
 - **Variables**: Server-side processing → Client-side Rust processing
+- **State Management**: Manual state → Automatic persistence with Tauri Store
 
 ## Roadmap
 
@@ -128,9 +168,10 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 - [x] Phase 4: Tab functionality and search/replace
 - [x] Phase 5: Tauri desktop version with full file system access
 - [x] Phase 6: Migration from Go to Rust backend
-- [ ] Phase 7: Advanced features and optimizations
+- [x] Phase 7: State persistence and file restoration
+- [ ] Phase 8: Advanced features and optimizations
 
-### Phase 7: Advanced Features and Optimizations
+### Phase 8: Advanced Features and Optimizations
 
 #### 1. Enhanced Settings and Customization
 
