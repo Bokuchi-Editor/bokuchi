@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert } from '@mui/icons-material';
+import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2 } from '@mui/icons-material';
+import { listen } from '@tauri-apps/api/event';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
@@ -26,6 +27,7 @@ function AppDesktop() {
   const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
   const [language, setLanguage] = useState('en');
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
 
   const {
@@ -97,6 +99,11 @@ function AppDesktop() {
         const savedTabLayout = await storeApi.loadTabLayout();
         console.log('Loaded saved tab layout:', savedTabLayout);
         setTabLayout(savedTabLayout);
+
+        // ビューモード設定を読み込み
+        const savedViewMode = await storeApi.loadViewMode();
+        console.log('Loaded saved view mode:', savedViewMode);
+        setViewMode(savedViewMode);
 
         setIsSettingsLoaded(true);
         console.log('Settings loaded successfully');
@@ -174,6 +181,22 @@ function AppDesktop() {
 
     saveTabLayout();
   }, [tabLayout, isSettingsLoaded]);
+
+  // ビューモード設定の保存
+  useEffect(() => {
+    if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
+
+    const saveViewMode = async () => {
+      try {
+        console.log('Saving view mode:', viewMode);
+        await storeApi.saveViewMode(viewMode);
+      } catch (error) {
+        console.error('Failed to save view mode:', error);
+      }
+    };
+
+    saveViewMode();
+  }, [viewMode, isSettingsLoaded]);
 
   const handleOpenFile = async () => {
     try {
@@ -260,6 +283,38 @@ function AppDesktop() {
     setFileMenuAnchor(null);
   };
 
+  // ショートカットキーのハンドラー
+  const handleKeyDown = (event: KeyboardEvent) => {
+    // Command + N: New File
+    if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
+      event.preventDefault();
+      handleNewTab();
+    }
+    // Command + O: Open File
+    else if ((event.metaKey || event.ctrlKey) && event.key === 'o') {
+      event.preventDefault();
+      handleOpenFile();
+    }
+    // Command + S: Save
+    else if ((event.metaKey || event.ctrlKey) && event.key === 's' && !event.shiftKey) {
+      event.preventDefault();
+      handleSaveFile();
+    }
+    // Command + Shift + S: Save As
+    else if ((event.metaKey || event.ctrlKey) && event.key === 'S' && event.shiftKey) {
+      event.preventDefault();
+      handleSaveFileAs();
+    }
+  };
+
+  // ショートカットキーのイベントリスナーを設定
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeTab]); // activeTabが変更されたときにハンドラーを更新
+
   // 初期タブを作成
   useEffect(() => {
     if (tabs.length === 0) {
@@ -277,52 +332,31 @@ function AppDesktop() {
               {t('app.title')}
             </Typography>
 
-            {/* File Menu */}
-            <Button
-              color="inherit"
-              startIcon={<FolderOpen />}
-              onClick={handleOpenFile}
-              sx={{ mr: 1 }}
-            >
-              {t('buttons.open')}
-            </Button>
-
-            <Button
-              color="inherit"
-              startIcon={<Save />}
-              onClick={handleSaveFile}
-              disabled={!activeTab}
-              sx={{ mr: 1 }}
-            >
-              {t('buttons.save')}
-            </Button>
-
-            <Button
-              color="inherit"
-              startIcon={<SaveAlt />}
-              onClick={() => {
-                console.log('Save As button clicked');
-                handleSaveFileAs();
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              onChange={(event, newViewMode) => {
+                if (newViewMode !== null) {
+                  setViewMode(newViewMode);
+                }
               }}
-              disabled={!activeTab}
+              size="small"
               sx={{ mr: 1 }}
             >
-              {t('buttons.saveAs')}
-            </Button>
-
-            <Button
-              color="inherit"
-              startIcon={<SettingsIcon />}
-              onClick={handleSettingsOpen}
-              sx={{ mr: 1 }}
-            >
-              {t('buttons.settings')}
-            </Button>
+              <ToggleButton value="split" aria-label={t('buttons.splitView')}>
+                <ViewColumn />
+              </ToggleButton>
+              <ToggleButton value="editor" aria-label={t('buttons.editorOnly')}>
+                <Edit />
+              </ToggleButton>
+              <ToggleButton value="preview" aria-label={t('buttons.previewOnly')}>
+                <Visibility />
+              </ToggleButton>
+            </ToggleButtonGroup>
 
             <IconButton
               color="inherit"
               onClick={handleFileMenuOpen}
-              sx={{ ml: 1 }}
             >
               <MoreVert />
             </IconButton>
@@ -336,22 +370,50 @@ function AppDesktop() {
           onClose={handleFileMenuClose}
         >
           <MenuItem onClick={() => { handleNewTab(); handleFileMenuClose(); }}>
-            {t('buttons.newFile')}
+            <Add sx={{ mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span>{t('buttons.newFile')}</span>
+              <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+                {t('shortcuts.newFile')}
+              </Typography>
+            </Box>
           </MenuItem>
           <MenuItem onClick={() => { handleOpenFile(); handleFileMenuClose(); }}>
-            {t('buttons.openFile')}
+            <FolderOpen sx={{ mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span>{t('buttons.openFile')}</span>
+              <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+                {t('shortcuts.openFile')}
+              </Typography>
+            </Box>
           </MenuItem>
           <MenuItem
             onClick={() => { handleSaveFile(); handleFileMenuClose(); }}
             disabled={!activeTab}
           >
-            {t('buttons.save')}
+            <Save sx={{ mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span>{t('buttons.save')}</span>
+              <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+                {t('shortcuts.save')}
+              </Typography>
+            </Box>
           </MenuItem>
           <MenuItem
             onClick={() => { handleSaveFileAs(); handleFileMenuClose(); }}
             disabled={!activeTab}
           >
-            {t('buttons.saveAs')}
+            <SaveAlt sx={{ mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span>{t('buttons.saveAs')}</span>
+              <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+                {t('shortcuts.saveAs')}
+              </Typography>
+            </Box>
+          </MenuItem>
+          <MenuItem onClick={() => { handleSettingsOpen(); handleFileMenuClose(); }}>
+            <SettingsIcon2 sx={{ mr: 1 }} />
+            {t('buttons.settings')}
           </MenuItem>
         </Menu>
 
@@ -379,28 +441,58 @@ function AppDesktop() {
                 />
               )}
               <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-                <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
-                  <Editor
-                    content={activeTab.content}
-                    onChange={handleContentChange}
-                    darkMode={darkMode}
-                    fileNotFound={
-                      activeTab.isNew && activeTab.filePath
-                        ? {
-                            filePath: activeTab.filePath,
-                            onClose: () => handleTabClose(activeTab.id),
-                          }
-                        : undefined
-                    }
-                  />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <Preview
-                    content={activeTab.content}
-                    darkMode={darkMode}
-                    globalVariables={globalVariables}
-                  />
-                </Box>
+                {viewMode === 'split' && (
+                  <>
+                    <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
+                      <Editor
+                        content={activeTab.content}
+                        onChange={handleContentChange}
+                        darkMode={darkMode}
+                        fileNotFound={
+                          activeTab.isNew && activeTab.filePath
+                            ? {
+                                filePath: activeTab.filePath,
+                                onClose: () => handleTabClose(activeTab.id),
+                              }
+                            : undefined
+                        }
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Preview
+                        content={activeTab.content}
+                        darkMode={darkMode}
+                        globalVariables={globalVariables}
+                      />
+                    </Box>
+                  </>
+                )}
+                {viewMode === 'editor' && (
+                  <Box sx={{ flex: 1 }}>
+                    <Editor
+                      content={activeTab.content}
+                      onChange={handleContentChange}
+                      darkMode={darkMode}
+                      fileNotFound={
+                        activeTab.isNew && activeTab.filePath
+                          ? {
+                              filePath: activeTab.filePath,
+                              onClose: () => handleTabClose(activeTab.id),
+                            }
+                          : undefined
+                      }
+                    />
+                  </Box>
+                )}
+                {viewMode === 'preview' && (
+                  <Box sx={{ flex: 1 }}>
+                    <Preview
+                      content={activeTab.content}
+                      darkMode={darkMode}
+                      globalVariables={globalVariables}
+                    />
+                  </Box>
+                )}
               </Box>
             </Box>
           </Box>

@@ -13,7 +13,16 @@
     "openFile": "Open File",
     "add": "Add",
     "delete": "Delete",
-    "close": "Close"
+    "close": "Close",
+    "splitView": "Split View",
+    "editorOnly": "Editor Only",
+    "previewOnly": "Preview Only"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
   },
   "settings": {
     "title": "Settings",
@@ -52,6 +61,16 @@
       "vertical": "Vertical Tabs",
       "horizontalDescription": "Tabs are displayed horizontally above the editor.",
       "verticalDescription": "Tabs are displayed vertically on the left side of the editor."
+    },
+    "viewMode": {
+      "title": "View Mode",
+      "description": "Choose how the editor and preview are displayed.",
+      "split": "Split View",
+      "editor": "Editor Only",
+      "preview": "Preview Only",
+      "splitDescription": "Show editor and preview side by side.",
+      "editorDescription": "Show only the editor for focused writing.",
+      "previewDescription": "Show only the preview for reading."
     }
   },
   "fileOperations": {

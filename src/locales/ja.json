@@ -13,7 +13,16 @@
     "openFile": "ファイルを開く",
     "add": "追加",
     "delete": "削除",
-    "close": "閉じる"
+    "close": "閉じる",
+    "splitView": "分割表示",
+    "editorOnly": "エディターのみ",
+    "previewOnly": "プレビューのみ"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
   },
   "settings": {
     "title": "設定",
@@ -52,6 +61,16 @@
       "vertical": "垂直タブ",
       "horizontalDescription": "タブはエディターの上に水平に表示されます。",
       "verticalDescription": "タブはエディターの左側に垂直に表示されます。"
+    },
+    "viewMode": {
+      "title": "ビューモード",
+      "description": "エディターとプレビューの表示方法を選択してください。",
+      "split": "分割表示",
+      "editor": "エディターのみ",
+      "preview": "プレビューのみ",
+      "splitDescription": "エディターとプレビューを横並びで表示します。",
+      "editorDescription": "集中して執筆するためにエディターのみを表示します。",
+      "previewDescription": "読み取り専用でプレビューのみを表示します。"
     }
   },
   "fileOperations": {

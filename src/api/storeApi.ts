@@ -152,6 +152,34 @@ export const storeApi = {
     }
   },
 
+  // ビューモード設定を保存
+  async saveViewMode(viewMode: 'split' | 'editor' | 'preview'): Promise<void> {
+    try {
+      console.log('Saving view mode:', viewMode);
+      const storeInstance = await getStore();
+      await storeInstance.set('viewMode', viewMode);
+      await storeInstance.save();
+      console.log('View mode saved successfully');
+    } catch (error) {
+      console.error('Failed to save view mode:', error);
+      throw error;
+    }
+  },
+
+  // ビューモード設定を読み込み
+  async loadViewMode(): Promise<'split' | 'editor' | 'preview'> {
+    try {
+      console.log('Loading view mode...');
+      const storeInstance = await getStore();
+      const viewMode = await storeInstance.get<'split' | 'editor' | 'preview'>('viewMode');
+      console.log('Loaded view mode:', viewMode);
+      return viewMode || 'split';
+    } catch (error) {
+      console.error('Failed to load view mode:', error);
+      return 'split';
+    }
+  },
+
   // 初期状態を作成
   createInitialState(): AppState {
     return {

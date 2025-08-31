@@ -26,7 +26,7 @@ import {
   FormControl,
   FormLabel,
 } from '@mui/material';
-import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn } from '@mui/icons-material';
+import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn, ViewModule } from '@mui/icons-material';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -258,6 +258,8 @@ const Settings: React.FC<SettingsProps> = ({
                 </CardContent>
               </Card>
             </Grid>
+
+
 
             {/* Global Variables */}
             <Grid item xs={12} md={6}>
