@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "MD Editor",
+  "productName": "Bokuchi",
   "version": "0.1.0",
   "identifier": "com.saita_shinya.md-editor",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "MD Editor",
+        "title": "Bokuchi",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -29,11 +29,11 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
+      "icons/bokuchi-icon_32x32.png",
+      "icons/bokuchi-icon_128x128.png",
+      "icons/bokuchi-icon_128x128@2x.png",
+      "icons/bokuchi.icns",
+      "icons/bokuchi.ico"
     ]
   },
   "plugins": {

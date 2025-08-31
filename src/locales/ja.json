@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "MD Editor (デスクトップ)",
+    "title": "Bokuchi",
     "loading": "読み込み中...",
     "noTabsOpen": "タブが開かれていません。新しいタブを作成して開始してください。"
   },
@@ -30,7 +30,7 @@
     "gettingStarted": {
       "title": "基本的な使い方",
       "basicUsage": "基本的な使い方",
-      "basicUsageDescription": "MD Editorはリアルタイムプレビュー機能を持つ強力なMarkdownエディターです。エディターでMarkdownコンテンツを書き、プレビューパネルでレンダリング結果を即座に確認できます。",
+      "basicUsageDescription": "Bokuchiはリアルタイムプレビュー機能を持つ強力なMarkdownエディターです。エディターでMarkdownコンテンツを書き、プレビューパネルでレンダリング結果を即座に確認できます。",
       "fileOperations": "ファイル操作",
       "newFile": "新規ファイル",
       "newFileDescription": "新しい空のファイルを作成して書き始めます。",

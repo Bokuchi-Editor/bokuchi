@@ -330,35 +330,29 @@ const Settings: React.FC<SettingsProps> = ({
                   ) : (
                     <List>
                       {Object.entries(globalVariables).map(([key, value]) => (
-                        <ListItem key={key} sx={{ px: 0 }}>
-                          <ListItemText
-                            primary={
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <Chip label={key} size="small" color="primary" />
-                                <Typography variant="body2">
-                                  {t('settings.globalVariables.usageExample').replace('{{variableName}}', `{{${key}}}`)}
-                                </Typography>
-                              </Box>
-                            }
-                            secondary={
-                              <TextField
-                                fullWidth
-                                value={value}
-                                onChange={(e) => handleUpdateVariable(key, e.target.value)}
-                                size="small"
-                                sx={{ mt: 1 }}
-                              />
-                            }
-                          />
-                          <ListItemSecondaryAction>
+                        <ListItem key={key} sx={{ px: 0, flexDirection: 'column', alignItems: 'stretch' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <Chip label={key} size="small" color="primary" />
+                            <Typography variant="body2">
+                              {t('settings.globalVariables.usageExample').replace('{{variableName}}', `{{${key}}}`)}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <TextField
+                              fullWidth
+                              value={value}
+                              onChange={(e) => handleUpdateVariable(key, e.target.value)}
+                              size="small"
+                            />
                             <Button
                               color="error"
                               size="small"
                               onClick={() => handleRemoveVariable(key)}
+                              sx={{ minWidth: 'auto', px: 2 }}
                             >
                               {t('buttons.delete')}
                             </Button>
-                          </ListItemSecondaryAction>
+                          </Box>
                         </ListItem>
                       ))}
                     </List>

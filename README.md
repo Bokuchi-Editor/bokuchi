@@ -1,4 +1,4 @@
-# MD Editor
+# Bokuchi
 
 A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
