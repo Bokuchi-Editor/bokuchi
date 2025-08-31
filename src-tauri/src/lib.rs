@@ -190,6 +190,21 @@ fn process_markdown(
     Ok(result)
 }
 
+// Tauriコマンド: 変数展開済みのMarkdownコンテンツを取得
+#[tauri::command]
+fn get_expanded_markdown(
+    content: String,
+    global_variables: HashMap<String, String>,
+) -> Result<String, String> {
+    // グローバル変数を一時的に設定
+    for (name, value) in global_variables {
+        VARIABLE_PROCESSOR.set_global_variable(name, value);
+    }
+
+    let result = VARIABLE_PROCESSOR.process_variables(&content);
+    Ok(result)
+}
+
 // Tauriコマンド: ファイルを読み込み
 #[tauri::command]
 async fn read_file(path: String) -> Result<String, String> {
@@ -256,6 +271,7 @@ pub fn run() {
             load_variables_from_yaml,
             export_variables_to_yaml,
             process_markdown,
+            get_expanded_markdown,
             read_file,
             save_file
         ])

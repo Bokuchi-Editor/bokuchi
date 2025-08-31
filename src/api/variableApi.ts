@@ -66,5 +66,16 @@ export const variableApi = {
     } catch (error: any) {
       return { processedContent: content, error: error.toString() };
     }
+  },
+
+  // 変数展開済みのMarkdownコンテンツを取得
+  async getExpandedMarkdown(content: string, globalVariables: Record<string, string> = {}): Promise<string> {
+    try {
+      const expandedContent = await invoke<string>('get_expanded_markdown', { content, globalVariables });
+      return expandedContent;
+    } catch (error: any) {
+      console.error('Failed to get expanded markdown:', error);
+      throw error;
+    }
   }
 };

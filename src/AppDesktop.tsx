@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2 } from '@mui/icons-material';
+import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
 import { listen } from '@tauri-apps/api/event';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
 import Settings from './components/Settings';
+import HelpDialog from './components/Help';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
 import { storeApi } from './api/storeApi';
+import { variableApi } from './api/variableApi';
+import { desktopApi } from './api/desktopApi';
 import { useTranslation } from 'react-i18next';
 import './i18n';
 
@@ -18,6 +21,7 @@ function AppDesktop() {
   const { t, i18n } = useTranslation();
   const [darkMode, setDarkMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
@@ -62,6 +66,14 @@ function AppDesktop() {
 
   const handleSettingsClose = () => {
     setSettingsOpen(false);
+  };
+
+  const handleHelpOpen = () => {
+    setHelpOpen(true);
+  };
+
+  const handleHelpClose = () => {
+    setHelpOpen(false);
   };
 
   const handleLanguageChange = (newLanguage: string) => {
@@ -246,6 +258,27 @@ function AppDesktop() {
     }
   };
 
+  const handleSaveWithVariables = async () => {
+    if (!activeTab) return;
+
+    try {
+      // 変数展開済みのコンテンツを取得
+      const expandedContent = await variableApi.getExpandedMarkdown(activeTab.content, globalVariables);
+
+      // 保存ダイアログを開く
+      const result = await desktopApi.saveFileAs(expandedContent);
+      if (result.success) {
+        setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+        console.log('File saved with variables applied:', result.filePath);
+      } else {
+        setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
+      }
+    } catch (error) {
+      console.error('Failed to save file with variables:', error);
+      setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
+    }
+  };
+
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
   };
@@ -411,9 +444,22 @@ function AppDesktop() {
               </Typography>
             </Box>
           </MenuItem>
+          <MenuItem
+            onClick={() => { handleSaveWithVariables(); handleFileMenuClose(); }}
+            disabled={!activeTab}
+          >
+            <SaveAlt sx={{ mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span>{t('buttons.saveWithVariables')}</span>
+            </Box>
+          </MenuItem>
           <MenuItem onClick={() => { handleSettingsOpen(); handleFileMenuClose(); }}>
             <SettingsIcon2 sx={{ mr: 1 }} />
             {t('buttons.settings')}
+          </MenuItem>
+          <MenuItem onClick={() => { handleHelpOpen(); handleFileMenuClose(); }}>
+            <HelpOutline sx={{ mr: 1 }} />
+            {t('help.title')}
           </MenuItem>
         </Menu>
 
@@ -535,6 +581,11 @@ function AppDesktop() {
           onLanguageChange={handleLanguageChange}
           tabLayout={tabLayout}
           onTabLayoutChange={setTabLayout}
+        />
+
+        <HelpDialog
+          open={helpOpen}
+          onClose={handleHelpClose}
         />
       </Box>
     </ThemeProvider>
