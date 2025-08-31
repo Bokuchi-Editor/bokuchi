@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
     wholeWord: false,
     regex: false,
   });
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
@@ -56,11 +57,21 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
   const handleSearch = () => {
     if (editorRef.current && searchText) {
       const model = editorRef.current.getModel();
+      if (!model) return;
+
       const searchRegex = searchOptions.regex
         ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
         : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
 
-      const matches = [];
+      const matches: Array<{
+        range: {
+          startLineNumber: number;
+          startColumn: number;
+          endLineNumber: number;
+          endColumn: number;
+        };
+        text: string;
+      }> = [];
       const text = model.getValue();
       let match;
 
@@ -95,6 +106,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
   const handleReplace = () => {
     if (editorRef.current && searchText && replaceText) {
       const model = editorRef.current.getModel();
+      if (!model) return;
+
       const searchRegex = searchOptions.regex
         ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
         : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
@@ -109,6 +122,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
   const handleReplaceAll = () => {
     if (editorRef.current && searchText && replaceText) {
       const model = editorRef.current.getModel();
+      if (!model) return;
+
       const searchRegex = searchOptions.regex
         ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
         : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
