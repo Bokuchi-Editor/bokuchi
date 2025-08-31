@@ -43,9 +43,10 @@ export const desktopApi = {
       const content = await readTextFile(selected);
       console.log('File content length:', content.length);
       return { content, filePath: selected };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error opening file:', error);
-      return { content: '', error: error.message || 'Failed to open file' };
+      const errorMessage = error instanceof Error ? error.message : 'Failed to open file';
+      return { content: '', error: errorMessage };
     }
   },
 
@@ -89,12 +90,15 @@ export const desktopApi = {
       await writeTextFile(selected, content);
       console.log('File saved successfully');
       return { success: true, filePath: selected };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving file:', error);
-      console.error('Error name:', error.name);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-      return { success: false, error: error.message || 'Failed to save file' };
+      if (error instanceof Error) {
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save file';
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -135,12 +139,15 @@ export const desktopApi = {
       await writeTextFile(selected, content);
       console.log('File saved as successfully');
       return { success: true, filePath: selected };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving file as:', error);
-      console.error('Error name:', error.name);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-      return { success: false, error: error.message || 'Failed to save file' };
+      if (error instanceof Error) {
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save file';
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -149,9 +156,10 @@ export const desktopApi = {
     try {
       const content = await readTextFile(filePath);
       return { content, filePath };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error reading file by path:', error);
-      return { content: '', error: error.message || 'Failed to read file' };
+      const errorMessage = error instanceof Error ? error.message : 'Failed to read file';
+      return { content: '', error: errorMessage };
     }
   },
 
@@ -160,7 +168,7 @@ export const desktopApi = {
     try {
       const content = await readTextFile(filePath);
       return content;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error reading file from path:', error);
       throw error;
     }
@@ -171,9 +179,10 @@ export const desktopApi = {
     try {
       await writeTextFile(filePath, content);
       return { success: true, filePath };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving file to path:', error);
-      return { success: false, error: error.message || 'Failed to save file' };
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save file';
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -203,14 +212,15 @@ export const desktopApi = {
         try {
           const content = await readTextFile(filePath);
           results.push({ content, filePath });
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(`Error reading file ${filePath}:`, error);
-          results.push({ content: '', filePath, error: error.message });
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          results.push({ content: '', filePath, error: errorMessage });
         }
       }
 
       return results;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error opening multiple files:', error);
       return [];
     }

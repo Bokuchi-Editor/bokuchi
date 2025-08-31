@@ -21,8 +21,9 @@ export const variableApi = {
     try {
       await invoke('set_global_variable', { name, value });
       return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.toString() };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : error?.toString() || 'Unknown error';
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -31,7 +32,7 @@ export const variableApi = {
     try {
       const variables = await invoke<Record<string, string>>('get_global_variables');
       return variables || {};
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to get variables:', error);
       return {};
     }
@@ -42,8 +43,9 @@ export const variableApi = {
     try {
       await invoke('load_variables_from_yaml', { yamlContent });
       return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.toString() };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : error?.toString() || 'Unknown error';
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -52,7 +54,7 @@ export const variableApi = {
     try {
       const yamlContent = await invoke<string>('export_variables_to_yaml');
       return yamlContent || '';
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to export variables:', error);
       return '';
     }
@@ -63,8 +65,9 @@ export const variableApi = {
     try {
       const processedContent = await invoke<string>('process_markdown', { content, globalVariables });
       return { processedContent };
-    } catch (error: any) {
-      return { processedContent: content, error: error.toString() };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : error?.toString() || 'Unknown error';
+      return { processedContent: content, error: errorMessage };
     }
   },
 
@@ -73,7 +76,7 @@ export const variableApi = {
     try {
       const expandedContent = await invoke<string>('get_expanded_markdown', { content, globalVariables });
       return expandedContent;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to get expanded markdown:', error);
       throw error;
     }

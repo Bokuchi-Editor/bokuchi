@@ -59,6 +59,71 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
    npm run tauri:dev
    ```
 
+### Building the Application
+
+#### Prerequisites
+
+- Node.js 18+
+- Rust (for Tauri)
+- Platform-specific build tools:
+  - **macOS**: Xcode Command Line Tools
+  - **Windows**: Microsoft Visual Studio C++ Build Tools
+  - **Linux**: Build essentials (gcc, make, etc.)
+
+#### Build Commands
+
+**Development Build:**
+
+```bash
+npm run tauri:dev
+```
+
+**Production Build:**
+
+```bash
+npm run tauri:build
+```
+
+**Build for Specific Platform:**
+
+```bash
+# macOS
+npm run tauri:build -- --target universal-apple-darwin
+
+# Windows
+npm run tauri:build -- --target x86_64-pc-windows-msvc
+
+# Linux
+npm run tauri:build -- --target x86_64-unknown-linux-gnu
+```
+
+#### Build Output
+
+After successful build, the application will be available in:
+
+- **macOS**: `src-tauri/target/release/bundle/dmg/` (DMG installer)
+- **Windows**: `src-tauri/target/release/bundle/msi/` (MSI installer)
+- **Linux**: `src-tauri/target/release/bundle/appimage/` (AppImage)
+
+#### Troubleshooting
+
+**Common Build Issues:**
+
+1. **TypeScript Errors**: Run `npm run build:desktop` to check for TypeScript errors
+2. **Rust Dependencies**: Ensure Rust is up to date with `rustup update`
+3. **Platform Tools**: Install required build tools for your platform
+4. **Permissions**: Ensure proper file permissions in the project directory
+
+**Clean Build:**
+
+```bash
+# Clean all build artifacts
+npm run clean
+# or manually
+rm -rf src-tauri/target
+rm -rf dist-desktop
+```
+
 ### Desktop Development
 
 For Tauri desktop version (standalone):

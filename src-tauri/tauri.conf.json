@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Bokuchi",
   "version": "0.1.0",
-  "identifier": "com.saita_shinya.md-editor",
+  "identifier": "com.saita-shinya.bokuchi",
   "build": {
     "beforeDevCommand": "npm run dev:desktop",
     "devUrl": "http://localhost:1420",

@@ -12,7 +12,6 @@ import {
   Divider,
   IconButton,
   Paper,
-  Grid,
   Card,
   CardContent,
   Chip,
@@ -84,8 +83,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.gettingStarted.viewModes')}
       </Typography>
-      <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item xs={12} md={4}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -96,8 +95,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
+        </Box>
+        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -108,8 +107,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
+        </Box>
+        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -120,8 +119,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.gettingStarted.shortcuts')}
@@ -217,8 +216,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.variables.examples')}
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -261,8 +260,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Box>
+        <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -305,8 +304,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.variables.localVariables')}

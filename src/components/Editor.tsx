@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { OnMount } from '@monaco-editor/react';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -26,13 +26,13 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
   });
   const editorRef = useRef<any>(null);
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
 
     // 検索・置換のキーボードショートカットを設定
     try {
       // Monaco Editorの正しいキーコードを使用
-      const monaco = (window as any).monaco;
+      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchOpen(true);

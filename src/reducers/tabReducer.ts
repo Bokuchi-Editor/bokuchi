@@ -14,7 +14,7 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         activeTabId: action.payload.id,
       };
 
-    case 'REMOVE_TAB':
+    case 'REMOVE_TAB': {
       const remainingTabs = state.tabs.filter(tab => tab.id !== action.payload.id);
       let newActiveTabId = state.activeTabId;
 
@@ -34,6 +34,7 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         tabs: remainingTabs,
         activeTabId: newActiveTabId,
       };
+    }
 
     case 'SET_ACTIVE_TAB':
       return {

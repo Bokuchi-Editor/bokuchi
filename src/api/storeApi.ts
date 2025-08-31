@@ -1,12 +1,15 @@
-import { load } from '@tauri-apps/plugin-store';
+import { load, Store } from '@tauri-apps/plugin-store';
 import { AppState } from '../types/tab';
 
-let store: any = null;
+let store: Store | null = null;
 
 const getStore = async () => {
   if (!store) {
     // Create a new store or load the existing one
-    store = await load('.app-state.dat', { autoSave: false });
+    store = await load('.app-state.dat', {
+      autoSave: false,
+      defaults: {}
+    });
   }
   return store;
 };
@@ -31,7 +34,7 @@ export const storeApi = {
     try {
       console.log('Loading state...');
       const storeInstance = await getStore();
-      const state = await storeInstance.get<AppState>('appState');
+      const state = await storeInstance.get('appState') as AppState;
       console.log('Loaded state:', state);
       return state || null;
     } catch (error) {
@@ -59,7 +62,7 @@ export const storeApi = {
     try {
       console.log('Loading global variables...');
       const storeInstance = await getStore();
-      const variables = await storeInstance.get<Record<string, string>>('globalVariables');
+      const variables = await storeInstance.get('globalVariables') as Record<string, string>;
       console.log('Loaded global variables:', variables);
       return variables || {};
     } catch (error) {
@@ -87,7 +90,7 @@ export const storeApi = {
     try {
       console.log('Loading language...');
       const storeInstance = await getStore();
-      const language = await storeInstance.get<string>('language');
+      const language = await storeInstance.get('language') as string;
       console.log('Loaded language:', language);
       return language || 'en';
     } catch (error) {
@@ -115,7 +118,7 @@ export const storeApi = {
     try {
       console.log('Loading dark mode...');
       const storeInstance = await getStore();
-      const darkMode = await storeInstance.get<boolean>('darkMode');
+      const darkMode = await storeInstance.get('darkMode') as boolean;
       console.log('Loaded dark mode:', darkMode);
       return darkMode || false;
     } catch (error) {
@@ -143,7 +146,7 @@ export const storeApi = {
     try {
       console.log('Loading tab layout...');
       const storeInstance = await getStore();
-      const tabLayout = await storeInstance.get<'horizontal' | 'vertical'>('tabLayout');
+      const tabLayout = await storeInstance.get('tabLayout') as 'horizontal' | 'vertical';
       console.log('Loaded tab layout:', tabLayout);
       return tabLayout || 'horizontal';
     } catch (error) {
@@ -171,7 +174,7 @@ export const storeApi = {
     try {
       console.log('Loading view mode...');
       const storeInstance = await getStore();
-      const viewMode = await storeInstance.get<'split' | 'editor' | 'preview'>('viewMode');
+      const viewMode = await storeInstance.get('viewMode') as 'split' | 'editor' | 'preview';
       console.log('Loaded view mode:', viewMode);
       return viewMode || 'split';
     } catch (error) {

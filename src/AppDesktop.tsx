@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, Settings as SettingsIcon, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
-import { listen } from '@tauri-apps/api/event';
+import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
+
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
@@ -308,7 +308,7 @@ function AppDesktop() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleFileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleFileMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setFileMenuAnchor(event.currentTarget);
   };
 
@@ -368,7 +368,7 @@ function AppDesktop() {
             <ToggleButtonGroup
               value={viewMode}
               exclusive
-              onChange={(event, newViewMode) => {
+              onChange={(_, newViewMode) => {
                 if (newViewMode !== null) {
                   setViewMode(newViewMode);
                 }

@@ -99,8 +99,8 @@ const TabBar: React.FC<TabBarProps> = ({
           <Tooltip title="New Tab">
             <IconButton
               onClick={onNewTab}
-              fullWidth
               sx={{
+                width: '100%',
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },

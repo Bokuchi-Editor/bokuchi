@@ -16,8 +16,9 @@ export const fileApi = {
     try {
       const content = await invoke<string>('read_file', { path });
       return { content };
-    } catch (error: any) {
-      return { content: '', error: error.toString() };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : error?.toString() || 'Unknown error';
+      return { content: '', error: errorMessage };
     }
   },
 
@@ -26,8 +27,9 @@ export const fileApi = {
     try {
       await invoke('save_file', { path, content });
       return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.toString() };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : error?.toString() || 'Unknown error';
+      return { success: false, error: errorMessage };
     }
   },
 

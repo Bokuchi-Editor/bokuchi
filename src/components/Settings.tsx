@@ -2,20 +2,15 @@ import React from 'react';
 import {
   Box,
   Dialog,
-  DialogContent,
   IconButton,
   Typography,
   Switch,
   FormControlLabel,
   Divider,
-  Paper,
   List,
   ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   TextField,
   Button,
-  Grid,
   Card,
   CardContent,
   CardHeader,
@@ -24,9 +19,9 @@ import {
   RadioGroup,
   Radio,
   FormControl,
-  FormLabel,
 } from '@mui/material';
-import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn, ViewModule } from '@mui/icons-material';
+
+import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn } from '@mui/icons-material';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -146,9 +141,9 @@ const Settings: React.FC<SettingsProps> = ({
 
         {/* Content */}
         <Box sx={{ flex: 1, overflow: 'auto', p: 3 }}>
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
             {/* Appearance Settings */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
               <Card>
                 <CardHeader
                   title={t('settings.appearance.title')}
@@ -175,10 +170,10 @@ const Settings: React.FC<SettingsProps> = ({
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
 
             {/* Language Settings */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
               <Card>
                 <CardHeader
                   title={t('settings.language.title')}
@@ -207,10 +202,10 @@ const Settings: React.FC<SettingsProps> = ({
                   </FormControl>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
 
             {/* Tab Layout Settings */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
               <Card>
                 <CardHeader
                   title={t('settings.tabLayout.title')}
@@ -257,12 +252,10 @@ const Settings: React.FC<SettingsProps> = ({
                   </FormControl>
                 </CardContent>
               </Card>
-            </Grid>
-
-
+            </Box>
 
             {/* Global Variables */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
               <Card>
                 <CardHeader
                   title={t('settings.globalVariables.title')}
@@ -278,38 +271,31 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="h6" sx={{ mb: 2 }}>
                       {t('settings.globalVariables.addNewVariable')}
                     </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={5}>
-                        <TextField
-                          fullWidth
-                          label={t('settings.globalVariables.variableName')}
-                          value={newVariableKey}
-                          onChange={(e) => setNewVariableKey(e.target.value)}
-                          placeholder={t('settings.globalVariables.variableNamePlaceholder')}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={5}>
-                        <TextField
-                          fullWidth
-                          label={t('settings.globalVariables.value')}
-                          value={newVariableValue}
-                          onChange={(e) => setNewVariableValue(e.target.value)}
-                          placeholder={t('settings.globalVariables.valuePlaceholder')}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={2}>
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          onClick={handleAddVariable}
-                          sx={{ height: '40px' }}
-                        >
-                          {t('buttons.add')}
-                        </Button>
-                      </Grid>
-                    </Grid>
+                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                      <TextField
+                        sx={{ flex: '1 1 200px', minWidth: 0 }}
+                        label={t('settings.globalVariables.variableName')}
+                        value={newVariableKey}
+                        onChange={(e) => setNewVariableKey(e.target.value)}
+                        placeholder={t('settings.globalVariables.variableNamePlaceholder')}
+                        size="small"
+                      />
+                      <TextField
+                        sx={{ flex: '1 1 200px', minWidth: 0 }}
+                        label={t('settings.globalVariables.value')}
+                        value={newVariableValue}
+                        onChange={(e) => setNewVariableValue(e.target.value)}
+                        placeholder={t('settings.globalVariables.valuePlaceholder')}
+                        size="small"
+                      />
+                      <Button
+                        variant="contained"
+                        onClick={handleAddVariable}
+                        sx={{ height: 40, minWidth: 80 }}
+                      >
+                        {t('buttons.add')}
+                      </Button>
+                    </Box>
                     {error && (
                       <Alert severity="error" sx={{ mt: 1 }}>
                         {error}
@@ -359,8 +345,8 @@ const Settings: React.FC<SettingsProps> = ({
                   )}
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Dialog>
