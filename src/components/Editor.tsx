@@ -27,6 +27,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
   });
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
+
+
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
 

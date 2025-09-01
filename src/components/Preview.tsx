@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { Download } from '@mui/icons-material';
+import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-// import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
 import { variableApi } from '../api/variableApi';
 
 interface PreviewProps {
@@ -17,10 +18,27 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVari
   const [processedContent, setProcessedContent] = useState(content);
 
   useEffect(() => {
-    // シンタックスハイライトの設定
+    // シンタックスハイライト用のカスタムレンダラーを設定
+    const renderer = new marked.Renderer();
+
+    renderer.code = function({ text, lang }: { text: string; lang?: string; escaped?: boolean }) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          const highlighted = hljs.highlight(text, { language: lang }).value;
+          return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+        } catch (err) {
+          console.warn('Highlight.js error:', err);
+        }
+      }
+      const highlighted = hljs.highlightAuto(text).value;
+      return `<pre><code class="hljs">${highlighted}</code></pre>`;
+    };
+
+    // markedの設定
     marked.setOptions({
       breaks: true,
       gfm: true,
+      renderer: renderer,
     });
 
     // 変数を展開
@@ -60,9 +78,26 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVari
   }, [processedContent]);
 
   const handleExportHTML = () => {
+    // シンタックスハイライト用のカスタムレンダラーを設定
+    const renderer = new marked.Renderer();
+
+    renderer.code = function({ text, lang }: { text: string; lang?: string; escaped?: boolean }) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          const highlighted = hljs.highlight(text, { language: lang }).value;
+          return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+        } catch (err) {
+          console.warn('Highlight.js error:', err);
+        }
+      }
+      const highlighted = hljs.highlightAuto(text).value;
+      return `<pre><code class="hljs">${highlighted}</code></pre>`;
+    };
+
     const htmlContent = marked(processedContent, {
       breaks: true,
       gfm: true,
+      renderer: renderer,
     });
 
     const fullHTML = `
@@ -203,7 +238,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVari
       >
         <div
           ref={previewRef}
-          className="markdown-preview"
+          className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
