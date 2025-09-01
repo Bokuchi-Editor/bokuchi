@@ -11,8 +11,11 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
+    "tauri:dev:dynamic": "node scripts/tauri-dev.js",
     "tauri:build": "tauri build",
-    "dev:standalone": "npm run build:desktop && npm run tauri:dev"
+    "dev:standalone": "npm run build:desktop && npm run tauri:dev",
+    "get-port": "node scripts/get-port.js",
+    "dev:desktop:dynamic": "PORT=$(npm run get-port --silent) vite --config vite.desktop.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -1,16 +1,9 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import net from 'net';
 
-// @ts-expect-error process is a nodejs global
-const host = process.env.TAURI_DEV_HOST;
-
-// 動的ポート取得関数
-async function getPort(): Promise<number> {
-  // 環境変数からポートが指定されている場合はそれを使用
-  if (process.env.PORT) {
-    return parseInt(process.env.PORT, 10);
-  }
-
+/**
+ * 利用可能なポートを取得する
+ */
+async function getAvailablePort() {
   const isDevelopment = process.env.NODE_ENV === 'development' || process.env.TAURI_DEV;
 
   if (isDevelopment) {
@@ -22,8 +15,7 @@ async function getPort(): Promise<number> {
     const fallbackPorts = [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
 
     // ポートの利用可能性をチェックする関数
-    const isPortAvailable = async (port: number): Promise<boolean> => {
-      const net = await import('net');
+    const isPortAvailable = (port) => {
       return new Promise((resolve) => {
         const server = net.createServer();
 
@@ -60,33 +52,10 @@ async function getPort(): Promise<number> {
   }
 }
 
-// https://vite.dev/config/
-export default defineConfig(async () => {
-  const port = await getPort();
-
-  return {
-    plugins: [react()],
-
-    // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-    //
-    // 1. prevent Vite from obscuring rust errors
-    clearScreen: false,
-    // 2. 動的ポートを使用
-    server: {
-      port: port,
-      strictPort: false, // ポートが使用中の場合は別のポートを試す
-      host: host || false,
-      hmr: host
-        ? {
-            protocol: "ws",
-            host,
-            port: port + 1, // HMRポートはメインポート+1
-          }
-        : undefined,
-      watch: {
-        // 3. tell Vite to ignore watching `src-tauri`
-        ignored: ["**/src-tauri/**"],
-      },
-    },
-  };
+// ポートを取得して出力
+getAvailablePort().then(port => {
+  console.log(port);
+}).catch(error => {
+  console.error('ポート取得エラー:', error);
+  process.exit(1);
 });

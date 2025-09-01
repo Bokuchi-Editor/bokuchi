@@ -15,6 +15,7 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - **Standalone**: No external dependencies or server required
 - **State persistence**: Automatically saves and restores application state
 - **Native file operations**: Full file system access with native dialogs
+- **Dynamic port allocation**: Automatically finds available ports to prevent conflicts
 
 ## Current Status
 
@@ -78,6 +79,12 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 npm run tauri:dev
 ```
 
+**Development (Dynamic Port - Recommended for Production-like Testing):**
+
+```bash
+npm run tauri:dev:dynamic
+```
+
 **Production Build:**
 
 ```bash
@@ -131,6 +138,33 @@ For Tauri desktop version (standalone):
 ```bash
 npm run tauri:dev
 ```
+
+### Dynamic Port Allocation
+
+This application includes a dynamic port allocation system to prevent port conflicts:
+
+**Features:**
+- **Development Mode**: Uses fixed port 1420 for consistency
+- **Production Mode**: Automatically finds available ports (30000+ preferred, 10000+ fallback)
+- **Conflict Resolution**: Automatically tries alternative ports if the preferred port is in use
+- **Random Fallback**: Uses random ports in the 30000-65535 range if all preferred ports are occupied
+
+**Usage:**
+
+```bash
+# Development with fixed port (default)
+npm run tauri:dev
+
+# Development with dynamic port (recommended for production testing)
+npm run tauri:dev:dynamic
+```
+
+**Port Priority:**
+1. **Preferred Range**: 30000-30009 (high port numbers to avoid conflicts)
+2. **Fallback Range**: 10000-10009 (if preferred ports are unavailable)
+3. **Random Range**: 30000-65535 (if all preferred and fallback ports are occupied)
+
+This ensures that multiple instances of the application can run simultaneously without port conflicts, making it ideal for development and testing scenarios.
 
 ## Project Structure
 

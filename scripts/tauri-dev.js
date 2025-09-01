@@ -1,16 +1,10 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { spawn } from 'child_process';
+import net from 'net';
 
-// @ts-expect-error process is a nodejs global
-const host = process.env.TAURI_DEV_HOST;
-
-// 動的ポート取得関数
-async function getPort(): Promise<number> {
-  // 環境変数からポートが指定されている場合はそれを使用
-  if (process.env.PORT) {
-    return parseInt(process.env.PORT, 10);
-  }
-
+/**
+ * 利用可能なポートを取得する
+ */
+async function getAvailablePort() {
   const isDevelopment = process.env.NODE_ENV === 'development' || process.env.TAURI_DEV;
 
   if (isDevelopment) {
@@ -22,8 +16,7 @@ async function getPort(): Promise<number> {
     const fallbackPorts = [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
 
     // ポートの利用可能性をチェックする関数
-    const isPortAvailable = async (port: number): Promise<boolean> => {
-      const net = await import('net');
+    const isPortAvailable = (port) => {
       return new Promise((resolve) => {
         const server = net.createServer();
 
@@ -60,33 +53,40 @@ async function getPort(): Promise<number> {
   }
 }
 
-// https://vite.dev/config/
-export default defineConfig(async () => {
-  const port = await getPort();
+/**
+ * Tauri開発サーバーを起動する
+ */
+async function startTauriDev() {
+  const port = await getAvailablePort();
 
-  return {
-    plugins: [react()],
+  console.log(`使用ポート: ${port}`);
 
-    // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-    //
-    // 1. prevent Vite from obscuring rust errors
-    clearScreen: false,
-    // 2. 動的ポートを使用
-    server: {
-      port: port,
-      strictPort: false, // ポートが使用中の場合は別のポートを試す
-      host: host || false,
-      hmr: host
-        ? {
-            protocol: "ws",
-            host,
-            port: port + 1, // HMRポートはメインポート+1
-          }
-        : undefined,
-      watch: {
-        // 3. tell Vite to ignore watching `src-tauri`
-        ignored: ["**/src-tauri/**"],
-      },
-    },
+  // 環境変数を設定してTauriを起動
+  const env = {
+    ...process.env,
+    PORT: port.toString(),
+    TAURI_DEV_URL: `http://localhost:${port}`
   };
+
+  // Tauri開発サーバーを起動
+  const tauriProcess = spawn('npx', ['tauri', 'dev'], {
+    env,
+    stdio: 'inherit',
+    shell: true
+  });
+
+  tauriProcess.on('error', (error) => {
+    console.error('Tauri起動エラー:', error);
+    process.exit(1);
+  });
+
+  tauriProcess.on('exit', (code) => {
+    console.log(`Tauri終了: ${code}`);
+    process.exit(code);
+  });
+}
+
+startTauriDev().catch(error => {
+  console.error('エラー:', error);
+  process.exit(1);
 });
