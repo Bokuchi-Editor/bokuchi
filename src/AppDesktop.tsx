@@ -8,6 +8,7 @@ import Preview from './components/Preview';
 import TabBar from './components/TabBar';
 import Settings from './components/Settings';
 import HelpDialog from './components/Help';
+import StatusBar from './components/StatusBar';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
 import { storeApi } from './api/storeApi';
 import { variableApi } from './api/variableApi';
@@ -33,6 +34,12 @@ function AppDesktop() {
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
+  const [editorStatus, setEditorStatus] = useState({
+    line: 1,
+    column: 1,
+    totalCharacters: 0,
+    selectedCharacters: 0
+  });
 
   const {
     tabs,
@@ -494,6 +501,7 @@ function AppDesktop() {
                         content={activeTab.content}
                         onChange={handleContentChange}
                         darkMode={darkMode}
+                        onStatusChange={setEditorStatus}
                         fileNotFound={
                           activeTab.isNew && activeTab.filePath
                             ? {
@@ -519,6 +527,7 @@ function AppDesktop() {
                       content={activeTab.content}
                       onChange={handleContentChange}
                       darkMode={darkMode}
+                      onStatusChange={setEditorStatus}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -586,6 +595,15 @@ function AppDesktop() {
         <HelpDialog
           open={helpOpen}
           onClose={handleHelpClose}
+        />
+
+        {/* ステータスバー */}
+        <StatusBar
+          line={editorStatus.line}
+          column={editorStatus.column}
+          totalCharacters={editorStatus.totalCharacters}
+          selectedCharacters={editorStatus.selectedCharacters}
+          darkMode={darkMode}
         />
       </Box>
     </ThemeProvider>

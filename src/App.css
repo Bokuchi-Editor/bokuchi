@@ -253,3 +253,17 @@ body {
 .hljs-dark .hljs-strong {
   font-weight: bold;
 }
+
+/* ステータスバー用のスタイル */
+.status-bar {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.status-bar .MuiTypography-caption {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}

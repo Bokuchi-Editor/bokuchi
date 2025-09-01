@@ -156,5 +156,11 @@
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
     "confirmClose": "このタブを閉じてもよろしいですか？"
+  },
+  "statusBar": {
+    "line": "行",
+    "column": "列",
+    "characters": "文字",
+    "selected": "選択中"
   }
 }

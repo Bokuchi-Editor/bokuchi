@@ -13,9 +13,15 @@ interface EditorProps {
     filePath: string;
     onClose: () => void;
   };
+  onStatusChange?: (status: {
+    line: number;
+    column: number;
+    totalCharacters: number;
+    selectedCharacters: number;
+  }) => void;
 }
 
-const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fileNotFound }) => {
+const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fileNotFound, onStatusChange }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -47,6 +53,50 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
       }
     } catch (error) {
       console.warn('Failed to set keyboard shortcuts:', error);
+    }
+
+    // カーソル位置と選択情報の変更を監視
+    if (onStatusChange) {
+      const updateStatus = () => {
+        const position = editor.getPosition();
+        const selection = editor.getSelection();
+        const model = editor.getModel();
+
+        if (position && model) {
+          const totalCharacters = model.getValue().length;
+          let selectedCharacters = 0;
+
+          if (selection) {
+            const selectedText = model.getValueInRange(selection);
+            selectedCharacters = selectedText.length;
+          }
+
+          onStatusChange({
+            line: position.lineNumber,
+            column: position.column,
+            totalCharacters,
+            selectedCharacters
+          });
+        }
+      };
+
+      // 初期状態を設定
+      updateStatus();
+
+      // カーソル位置の変更を監視
+      editor.onDidChangeCursorPosition(() => {
+        updateStatus();
+      });
+
+      // 選択範囲の変更を監視
+      editor.onDidChangeCursorSelection(() => {
+        updateStatus();
+      });
+
+      // コンテンツの変更を監視
+      editor.onDidChangeModelContent(() => {
+        updateStatus();
+      });
     }
   };
 

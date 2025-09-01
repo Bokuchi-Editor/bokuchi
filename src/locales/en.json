@@ -156,5 +156,11 @@
   "dialogs": {
     "saveChanges": "Save changes before closing?",
     "confirmClose": "Are you sure you want to close this tab?"
+  },
+  "statusBar": {
+    "line": "Ln",
+    "column": "Col",
+    "characters": "characters",
+    "selected": "selected"
   }
 }

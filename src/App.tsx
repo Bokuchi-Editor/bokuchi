@@ -7,13 +7,21 @@ import Preview from './components/Preview';
 import TabBar from './components/TabBar';
 import VariableSettings from './components/VariableSettings';
 import SaveFileDialog from './components/SaveFileDialog';
+import StatusBar from './components/StatusBar';
 import { useTabs } from './hooks/useTabs';
+import './i18n';
 import './App.css';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [variableSettingsOpen, setVariableSettingsOpen] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [editorStatus, setEditorStatus] = useState({
+    line: 1,
+    column: 1,
+    totalCharacters: 0,
+    selectedCharacters: 0
+  });
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
@@ -193,6 +201,7 @@ function App() {
                 content={activeTab.content}
                 onChange={handleContentChange}
                 darkMode={darkMode}
+                onStatusChange={setEditorStatus}
               />
             </Box>
             <Box sx={{ flex: 1 }}>
@@ -232,6 +241,15 @@ function App() {
           onClose={() => setSaveDialogOpen(false)}
           onSave={handleSaveAs}
           defaultFileName={activeTab?.title === 'Untitled' ? 'untitled' : activeTab?.title}
+        />
+
+        {/* ステータスバー */}
+        <StatusBar
+          line={editorStatus.line}
+          column={editorStatus.column}
+          totalCharacters={editorStatus.totalCharacters}
+          selectedCharacters={editorStatus.selectedCharacters}
+          darkMode={darkMode}
         />
       </Box>
     </ThemeProvider>
