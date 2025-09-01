@@ -9,6 +9,7 @@ interface EditorProps {
   content: string;
   onChange: (content: string) => void;
   darkMode: boolean;
+  theme?: string;
   fileNotFound?: {
     filePath: string;
     onClose: () => void;
@@ -21,7 +22,7 @@ interface EditorProps {
   }) => void;
 }
 
-const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fileNotFound, onStatusChange }) => {
+const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, theme, fileNotFound, onStatusChange }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -237,7 +238,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, fi
             value={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={darkMode ? 'vs-dark' : 'light'}
+            theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}
             options={{
               minimap: { enabled: false },
               fontSize: 14,

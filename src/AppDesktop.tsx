@@ -1,5 +1,5 @@
 import { useState, useEffect, MouseEvent } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
 
@@ -14,13 +14,14 @@ import { storeApi } from './api/storeApi';
 import { variableApi } from './api/variableApi';
 import { desktopApi } from './api/desktopApi';
 import { useTranslation } from 'react-i18next';
+import { ThemeName, getThemeByName, applyThemeToDocument } from './themes';
 import './i18n';
 
 import './App.css';
 
 function AppDesktop() {
   const { t, i18n } = useTranslation();
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useState<ThemeName>('default');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
@@ -55,11 +56,7 @@ function AppDesktop() {
     createNewTab,
   } = useTabsDesktop();
 
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? 'dark' : 'light',
-    },
-  });
+  const currentTheme = getThemeByName(theme);
 
   const handleContentChange = (content: string) => {
     if (activeTab) {
@@ -88,8 +85,9 @@ function AppDesktop() {
     i18n.changeLanguage(newLanguage);
   };
 
-  const handleDarkModeChange = (newDarkMode: boolean) => {
-    setDarkMode(newDarkMode);
+  const handleThemeChange = (newTheme: ThemeName) => {
+    setTheme(newTheme);
+    applyThemeToDocument(newTheme);
   };
 
   // 設定の初期読み込み（一度だけ実行）
@@ -104,10 +102,12 @@ function AppDesktop() {
         setLanguage(savedLanguage);
         i18n.changeLanguage(savedLanguage);
 
-        // ダークモード設定を読み込み
-        const savedDarkMode = await storeApi.loadDarkMode();
-        console.log('Loaded saved dark mode:', savedDarkMode);
-        setDarkMode(savedDarkMode);
+        // テーマ設定を読み込み
+        const savedTheme = await storeApi.loadTheme();
+        console.log('Loaded saved theme:', savedTheme);
+        const themeToSet = savedTheme || 'default';
+        setTheme(themeToSet);
+        applyThemeToDocument(themeToSet);
 
         // グローバル変数を読み込み
         const variables = await storeApi.loadGlobalVariables();
@@ -151,21 +151,21 @@ function AppDesktop() {
     saveLanguage();
   }, [language, isSettingsLoaded]);
 
-  // ダークモード設定の保存
+  // テーマ設定の保存
   useEffect(() => {
     if (!isSettingsLoaded) return; // 初期読み込み中は保存しない
 
-    const saveDarkMode = async () => {
+    const saveTheme = async () => {
       try {
-        console.log('Saving dark mode:', darkMode);
-        await storeApi.saveDarkMode(darkMode);
+        console.log('Saving theme:', theme);
+        await storeApi.saveTheme(theme);
       } catch (error) {
-        console.error('Failed to save dark mode:', error);
+        console.error('Failed to save theme:', error);
       }
     };
 
-    saveDarkMode();
-  }, [darkMode, isSettingsLoaded]);
+    saveTheme();
+  }, [theme, isSettingsLoaded]);
 
   // グローバル変数の保存
   useEffect(() => {
@@ -363,7 +363,7 @@ function AppDesktop() {
   }, [tabs.length, createNewTab]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <AppBar position="static">
@@ -500,7 +500,8 @@ function AppDesktop() {
                       <Editor
                         content={activeTab.content}
                         onChange={handleContentChange}
-                        darkMode={darkMode}
+                        darkMode={theme === 'dark'}
+                        theme={theme}
                         onStatusChange={setEditorStatus}
                         fileNotFound={
                           activeTab.isNew && activeTab.filePath
@@ -515,7 +516,8 @@ function AppDesktop() {
                     <Box sx={{ flex: 1 }}>
                       <Preview
                         content={activeTab.content}
-                        darkMode={darkMode}
+                        darkMode={theme === 'dark'}
+                        theme={theme}
                         globalVariables={globalVariables}
                       />
                     </Box>
@@ -526,7 +528,8 @@ function AppDesktop() {
                     <Editor
                       content={activeTab.content}
                       onChange={handleContentChange}
-                      darkMode={darkMode}
+                      darkMode={theme === 'dark'}
+                      theme={theme}
                       onStatusChange={setEditorStatus}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
@@ -543,7 +546,8 @@ function AppDesktop() {
                   <Box sx={{ flex: 1 }}>
                     <Preview
                       content={activeTab.content}
-                      darkMode={darkMode}
+                      darkMode={theme === 'dark'}
+                      theme={theme}
                       globalVariables={globalVariables}
                     />
                   </Box>
@@ -582,8 +586,8 @@ function AppDesktop() {
         <Settings
           open={settingsOpen}
           onClose={handleSettingsClose}
-          darkMode={darkMode}
-          onDarkModeChange={handleDarkModeChange}
+          theme={theme}
+          onThemeChange={handleThemeChange}
           globalVariables={globalVariables}
           onGlobalVariablesChange={setGlobalVariables}
           language={language}
@@ -603,7 +607,9 @@ function AppDesktop() {
           column={editorStatus.column}
           totalCharacters={editorStatus.totalCharacters}
           selectedCharacters={editorStatus.selectedCharacters}
-          darkMode={darkMode}
+          darkMode={theme === 'dark'}
+          theme={theme}
+          onThemeChange={handleThemeChange}
         />
       </Box>
     </ThemeProvider>

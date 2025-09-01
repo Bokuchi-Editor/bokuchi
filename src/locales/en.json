@@ -100,8 +100,15 @@
     "title": "Settings",
     "appearance": {
       "title": "Appearance",
-      "darkMode": "Dark Mode",
-      "darkModeDescription": "Enable dark mode to change the editor and preview theme to dark colors."
+      "theme": "Theme",
+      "themeDescription": "Choose the visual theme for the application interface.",
+      "themes": {
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "darcula": "Darcula"
+      }
     },
     "globalVariables": {
       "title": "Global Variables",

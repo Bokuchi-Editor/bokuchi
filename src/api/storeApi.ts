@@ -1,5 +1,6 @@
 import { load, Store } from '@tauri-apps/plugin-store';
 import { AppState } from '../types/tab';
+import { ThemeName } from '../themes';
 
 let store: Store | null = null;
 
@@ -124,6 +125,34 @@ export const storeApi = {
     } catch (error) {
       console.error('Failed to load dark mode:', error);
       return false;
+    }
+  },
+
+  // テーマ設定を保存
+  async saveTheme(theme: ThemeName): Promise<void> {
+    try {
+      console.log('Saving theme:', theme);
+      const storeInstance = await getStore();
+      await storeInstance.set('theme', theme);
+      await storeInstance.save();
+      console.log('Theme saved successfully');
+    } catch (error) {
+      console.error('Failed to save theme:', error);
+      throw error;
+    }
+  },
+
+  // テーマ設定を読み込み
+  async loadTheme(): Promise<ThemeName> {
+    try {
+      console.log('Loading theme...');
+      const storeInstance = await getStore();
+      const theme = await storeInstance.get('theme') as ThemeName;
+      console.log('Loaded theme:', theme);
+      return theme || 'default';
+    } catch (error) {
+      console.error('Failed to load theme:', error);
+      return 'default';
     }
   },
 

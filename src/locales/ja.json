@@ -100,8 +100,15 @@
     "title": "設定",
     "appearance": {
       "title": "外観",
-      "darkMode": "ダークモード",
-      "darkModeDescription": "ダークモードを有効にすると、エディタとプレビューのテーマが暗い色合いに変更されます。"
+      "theme": "テーマ",
+      "themeDescription": "アプリケーションの視覚テーマが選択できます。",
+      "themes": {
+        "default": "デフォルト",
+        "dark": "ダーク",
+        "pastel": "パステル",
+        "vivid": "ビビッド",
+        "darcula": "ダーキュラ"
+      }
     },
     "globalVariables": {
       "title": "グローバル変数",

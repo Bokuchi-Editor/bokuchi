@@ -10,10 +10,11 @@ import { variableApi } from '../api/variableApi';
 interface PreviewProps {
   content: string;
   darkMode: boolean;
+  theme?: string;
   globalVariables?: Record<string, string>;
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVariables = {} }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {} }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content);
 
@@ -232,13 +233,13 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, globalVari
           flex: 1,
           p: 2,
           overflow: 'auto',
-          backgroundColor: darkMode ? 'grey.900' : 'grey.50',
-          color: darkMode ? 'grey.100' : 'text.primary',
+          backgroundColor: theme === 'darcula' ? '#2B2B2B' : (darkMode ? 'grey.900' : 'grey.50'),
+          color: theme === 'darcula' ? '#A9B7C6' : (darkMode ? 'grey.100' : 'text.primary'),
         }}
       >
         <div
           ref={previewRef}
-          className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
+          className={`markdown-preview ${theme === 'darcula' ? 'hljs-dark' : (darkMode ? 'hljs-dark' : 'hljs-light')}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

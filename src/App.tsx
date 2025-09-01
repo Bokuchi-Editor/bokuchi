@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert } from '@mui/material';
-import { Brightness4, Brightness7, FolderOpen, Save, Settings } from '@mui/icons-material';
+import { Brightness4, FolderOpen, Save, Settings as SettingsIcon } from '@mui/icons-material';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
-import VariableSettings from './components/VariableSettings';
 import SaveFileDialog from './components/SaveFileDialog';
 import StatusBar from './components/StatusBar';
+import Settings from './components/Settings';
 import { useTabs } from './hooks/useTabs';
+import { ThemeName, getThemeByName, applyThemeToDocument } from './themes';
 import './i18n';
 import './App.css';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [variableSettingsOpen, setVariableSettingsOpen] = useState(false);
+  const [theme, setTheme] = useState<ThemeName>('default');
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
+  const [language, setLanguage] = useState('en');
+  const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [editorStatus, setEditorStatus] = useState({
     line: 1,
     column: 1,
@@ -41,11 +45,7 @@ function App() {
     createNewTab,
   } = useTabs();
 
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? 'dark' : 'light',
-    },
-  });
+  const currentTheme = getThemeByName(theme);
 
   const handleContentChange = (content: string) => {
     if (activeTab) {
@@ -53,8 +53,19 @@ function App() {
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+  // 初期化時とテーマが変更されたときにHTML要素にdata-theme属性を設定
+  useEffect(() => {
+    applyThemeToDocument(theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    // Cycle through themes: default -> dark -> pastel -> vivid -> darcula -> default
+    const themeOrder: ThemeName[] = ['default', 'dark', 'pastel', 'vivid', 'darcula'];
+    const currentIndex = themeOrder.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themeOrder.length;
+    const newTheme = themeOrder[nextIndex];
+    setTheme(newTheme);
+    applyThemeToDocument(newTheme);
   };
 
   const handleOpenFile = async () => {
@@ -145,7 +156,7 @@ function App() {
   }, [tabs.length, createNewTab]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <AppBar position="static">
@@ -172,14 +183,14 @@ function App() {
             </Button>
             <Button
               color="inherit"
-              startIcon={<Settings />}
-              onClick={() => setVariableSettingsOpen(true)}
+              startIcon={<SettingsIcon />}
+              onClick={() => setSettingsOpen(true)}
               sx={{ mr: 1 }}
             >
-              Variables
+              Settings
             </Button>
-            <IconButton color="inherit" onClick={toggleDarkMode}>
-              {darkMode ? <Brightness7 /> : <Brightness4 />}
+            <IconButton color="inherit" onClick={toggleTheme}>
+              <Brightness4 />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -200,14 +211,16 @@ function App() {
               <Editor
                 content={activeTab.content}
                 onChange={handleContentChange}
-                darkMode={darkMode}
+                darkMode={theme === 'dark'}
+                theme={theme}
                 onStatusChange={setEditorStatus}
               />
             </Box>
             <Box sx={{ flex: 1 }}>
               <Preview
                 content={activeTab.content}
-                darkMode={darkMode}
+                darkMode={theme === 'dark'}
+                theme={theme}
               />
             </Box>
           </Box>
@@ -231,9 +244,22 @@ function App() {
           </Alert>
         </Snackbar>
 
-        <VariableSettings
-          open={variableSettingsOpen}
-          onClose={() => setVariableSettingsOpen(false)}
+
+
+        <Settings
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          theme={theme}
+          onThemeChange={(newTheme) => {
+            setTheme(newTheme);
+            applyThemeToDocument(newTheme);
+          }}
+          globalVariables={globalVariables}
+          onGlobalVariablesChange={setGlobalVariables}
+          language={language}
+          onLanguageChange={setLanguage}
+          tabLayout={tabLayout}
+          onTabLayoutChange={setTabLayout}
         />
 
         <SaveFileDialog
@@ -249,7 +275,12 @@ function App() {
           column={editorStatus.column}
           totalCharacters={editorStatus.totalCharacters}
           selectedCharacters={editorStatus.selectedCharacters}
-          darkMode={darkMode}
+          darkMode={theme === 'dark'}
+          theme={theme}
+          onThemeChange={(newTheme) => {
+            setTheme(newTheme);
+            applyThemeToDocument(newTheme);
+          }}
         />
       </Box>
     </ThemeProvider>

@@ -4,7 +4,6 @@ import {
   Dialog,
   IconButton,
   Typography,
-  Switch,
   FormControlLabel,
   Divider,
   List,
@@ -19,9 +18,13 @@ import {
   RadioGroup,
   Radio,
   FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from '@mui/material';
 
-import { Close, Brightness4, Brightness7, Settings as SettingsIcon, Code, Palette, Language, ViewColumn } from '@mui/icons-material';
+import { Close, Settings as SettingsIcon, Code, Palette, Language, ViewColumn } from '@mui/icons-material';
+import { ThemeName, themes } from '../themes';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -29,8 +32,8 @@ import { useTranslation } from 'react-i18next';
 interface SettingsProps {
   open: boolean;
   onClose: () => void;
-  darkMode: boolean;
-  onDarkModeChange: (darkMode: boolean) => void;
+  theme: ThemeName;
+  onThemeChange: (theme: ThemeName) => void;
   globalVariables: Record<string, string>;
   onGlobalVariablesChange: (variables: Record<string, string>) => void;
   language: string;
@@ -51,8 +54,8 @@ const Transition = React.forwardRef(function Transition(
 const Settings: React.FC<SettingsProps> = ({
   open,
   onClose,
-  darkMode,
-  onDarkModeChange,
+  theme,
+  onThemeChange,
   globalVariables,
   onGlobalVariablesChange,
   language,
@@ -150,24 +153,24 @@ const Settings: React.FC<SettingsProps> = ({
                   avatar={<Palette color="primary" />}
                 />
                 <CardContent>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={darkMode}
-                        onChange={(e) => onDarkModeChange(e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {darkMode ? <Brightness7 /> : <Brightness4 />}
-                        <Typography>{t('settings.appearance.darkMode')}</Typography>
-                      </Box>
-                    }
-                  />
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    {t('settings.appearance.darkModeDescription')}
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {t('settings.appearance.themeDescription')}
                   </Typography>
+                  <FormControl fullWidth>
+                    <InputLabel id="theme-select-label">{t('settings.appearance.theme')}</InputLabel>
+                    <Select
+                      labelId="theme-select-label"
+                      value={theme}
+                      label={t('settings.appearance.theme')}
+                      onChange={(e) => onThemeChange(e.target.value as ThemeName)}
+                    >
+                      {themes.map((themeOption) => (
+                        <MenuItem key={themeOption.name} value={themeOption.name}>
+                          {themeOption.displayName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </CardContent>
               </Card>
             </Box>
