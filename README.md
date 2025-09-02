@@ -144,6 +144,7 @@ npm run tauri:dev
 This application includes a dynamic port allocation system to prevent port conflicts:
 
 **Features:**
+
 - **Development Mode**: Uses fixed port 1420 for consistency
 - **Production Mode**: Automatically finds available ports (30000+ preferred, 10000+ fallback)
 - **Conflict Resolution**: Automatically tries alternative ports if the preferred port is in use
@@ -160,6 +161,7 @@ npm run tauri:dev:dynamic
 ```
 
 **Port Priority:**
+
 1. **Preferred Range**: 30000-30009 (high port numbers to avoid conflicts)
 2. **Fallback Range**: 10000-10009 (if preferred ports are unavailable)
 3. **Random Range**: 30000-65535 (if all preferred and fallback ports are occupied)

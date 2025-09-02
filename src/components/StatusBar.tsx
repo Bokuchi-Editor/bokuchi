@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Typography, Menu, MenuItem, IconButton } from '@mui/material';
+import { Box, Typography, Menu, MenuItem, IconButton, Tooltip } from '@mui/material';
+import { ZoomIn, ZoomOut, RestartAlt } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, themes } from '../themes';
 
@@ -11,6 +12,12 @@ interface StatusBarProps {
   darkMode: boolean;
   theme?: string;
   onThemeChange?: (theme: ThemeName) => void;
+  zoomPercentage: number;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onResetZoom: () => void;
+  canZoomIn: boolean;
+  canZoomOut: boolean;
 }
 
 const StatusBar: React.FC<StatusBarProps> = ({
@@ -20,7 +27,13 @@ const StatusBar: React.FC<StatusBarProps> = ({
   selectedCharacters,
   darkMode,
   theme,
-  onThemeChange
+  onThemeChange,
+  zoomPercentage,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
+  canZoomIn,
+  canZoomOut
 }) => {
   const { t } = useTranslation();
   const [themeMenuAnchor, setThemeMenuAnchor] = useState<null | HTMLElement>(null);
@@ -65,7 +78,77 @@ const StatusBar: React.FC<StatusBarProps> = ({
         }
       </Typography>
 
-      {/* テーマ表示と切り替え */}
+      {/* ズームコントロール */}
+      <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <Tooltip title={t('tooltips.zoomOut')} placement="top">
+          <IconButton
+            size="small"
+            onClick={onZoomOut}
+            disabled={!canZoomOut}
+            sx={{
+              color: 'inherit',
+              padding: '2px',
+              minWidth: 'auto',
+              opacity: canZoomOut ? 1 : 0.5,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }
+            }}
+          >
+            <ZoomOut sx={{ fontSize: '16px' }} />
+          </IconButton>
+        </Tooltip>
+
+        <Typography
+          variant="caption"
+          sx={{
+            fontFamily: 'monospace',
+            minWidth: '40px',
+            textAlign: 'center',
+            cursor: 'default'
+          }}
+        >
+          {zoomPercentage}%
+        </Typography>
+
+        <Tooltip title={t('tooltips.zoomIn')} placement="top">
+          <IconButton
+            size="small"
+            onClick={onZoomIn}
+            disabled={!canZoomIn}
+            sx={{
+              color: 'inherit',
+              padding: '2px',
+              minWidth: 'auto',
+              opacity: canZoomIn ? 1 : 0.5,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }
+            }}
+          >
+            <ZoomIn sx={{ fontSize: '16px' }} />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title={t('tooltips.resetZoom')} placement="top">
+          <IconButton
+            size="small"
+            onClick={onResetZoom}
+            sx={{
+              color: 'inherit',
+              padding: '2px',
+              minWidth: 'auto',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }
+            }}
+          >
+            <RestartAlt sx={{ fontSize: '16px' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      {/* テーマ表示と切り替え - 右端に配置 */}
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
         <IconButton
           size="small"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Button, Snackbar, Alert } from '@mui/material';
 import { Brightness4, FolderOpen, Save, Settings as SettingsIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import TabBar from './components/TabBar';
@@ -10,10 +11,13 @@ import StatusBar from './components/StatusBar';
 import Settings from './components/Settings';
 import { useTabs } from './hooks/useTabs';
 import { ThemeName, getThemeByName, applyThemeToDocument } from './themes';
+import { useZoom } from './hooks/useZoom';
+import { ZOOM_CONFIG } from './constants/zoom';
 import './i18n';
 import './App.css';
 
 function App() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<ThemeName>('default');
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -46,6 +50,18 @@ function App() {
   } = useTabs();
 
   const currentTheme = getThemeByName(theme);
+
+  // ズーム機能の初期化
+  const {
+    currentZoom,
+    zoomPercentage,
+    isAtLimit,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+    canZoomIn,
+    canZoomOut,
+  } = useZoom(ZOOM_CONFIG);
 
   const handleContentChange = (content: string) => {
     if (activeTab) {
@@ -214,6 +230,7 @@ function App() {
                 darkMode={theme === 'dark'}
                 theme={theme}
                 onStatusChange={setEditorStatus}
+                zoomLevel={currentZoom}
               />
             </Box>
             <Box sx={{ flex: 1 }}>
@@ -221,6 +238,7 @@ function App() {
                 content={activeTab.content}
                 darkMode={theme === 'dark'}
                 theme={theme}
+                zoomLevel={currentZoom}
               />
             </Box>
           </Box>
@@ -241,6 +259,20 @@ function App() {
         >
           <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
             {snackbar.message}
+          </Alert>
+        </Snackbar>
+
+        {/* ズーム制限警告 */}
+        <Snackbar
+          open={isAtLimit}
+          autoHideDuration={2000}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            {currentZoom >= ZOOM_CONFIG.maxZoom
+              ? t('zoom.maxLimitReached', { maxZoom: ZOOM_CONFIG.maxZoom * 100 })
+              : t('zoom.minLimitReached', { minZoom: ZOOM_CONFIG.minZoom * 100 })
+            }
           </Alert>
         </Snackbar>
 
@@ -281,6 +313,12 @@ function App() {
             setTheme(newTheme);
             applyThemeToDocument(newTheme);
           }}
+          zoomPercentage={zoomPercentage}
+          onZoomIn={zoomIn}
+          onZoomOut={zoomOut}
+          onResetZoom={resetZoom}
+          canZoomIn={canZoomIn}
+          canZoomOut={canZoomOut}
         />
       </Box>
     </ThemeProvider>

@@ -12,9 +12,10 @@ interface PreviewProps {
   darkMode: boolean;
   theme?: string;
   globalVariables?: Record<string, string>;
+  zoomLevel?: number;
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {} }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0 }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
 
@@ -246,8 +247,9 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           className={`markdown-preview ${theme === 'darcula' ? 'hljs-dark' : (darkMode ? 'hljs-dark' : 'hljs-light')}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
+            fontSize: `${Math.round(16 * zoomLevel)}px`,
+            lineHeight: `${Math.round(1.6 * zoomLevel)}`,
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            lineHeight: 1.6,
           }}
         />
       </Box>

@@ -12,7 +12,7 @@ interface EditorProps {
   theme?: string;
   fileNotFound?: {
     filePath: string;
-    onClose: () => void;
+  onClose: () => void;
   };
   onStatusChange?: (status: {
     line: number;
@@ -20,9 +20,10 @@ interface EditorProps {
     totalCharacters: number;
     selectedCharacters: number;
   }) => void;
+  zoomLevel?: number;
 }
 
-const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, theme, fileNotFound, onStatusChange }) => {
+const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, theme, fileNotFound, onStatusChange, zoomLevel = 1.0 }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -241,7 +242,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, th
             theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}
             options={{
               minimap: { enabled: false },
-              fontSize: 14,
+              fontSize: Math.round(14 * zoomLevel),
               wordWrap: 'on',
               lineNumbers: 'on',
               scrollBeyondLastLine: false,

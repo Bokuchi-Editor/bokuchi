@@ -174,9 +174,18 @@
     }
   },
   "statusBar": {
-    "line": "Ln",
-    "column": "Col",
+    "line": "Line",
+    "column": "Column",
     "characters": "characters",
     "selected": "selected"
+  },
+  "zoom": {
+    "maxLimitReached": "Maximum zoom level ({{maxZoom}}%) reached",
+    "minLimitReached": "Minimum zoom level ({{minZoom}}%) reached"
+  },
+  "tooltips": {
+    "zoomOut": "Zoom Out (Cmd + -)",
+    "zoomIn": "Zoom In (Cmd + Shift + +)",
+    "resetZoom": "Reset Zoom (Cmd + 0)"
   }
 }

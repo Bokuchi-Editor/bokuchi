@@ -100,6 +100,34 @@ export const storeApi = {
     }
   },
 
+  // ズーム設定を保存
+  async saveZoomLevel(zoomLevel: number): Promise<void> {
+    try {
+      console.log('Saving zoom level:', zoomLevel);
+      const storeInstance = await getStore();
+      await storeInstance.set('zoomLevel', zoomLevel);
+      await storeInstance.save();
+      console.log('Zoom level saved successfully');
+    } catch (error) {
+      console.error('Failed to save zoom level:', error);
+      throw error;
+    }
+  },
+
+  // ズーム設定を読み込み
+  async loadZoomLevel(): Promise<number> {
+    try {
+      console.log('Loading zoom level...');
+      const storeInstance = await getStore();
+      const zoomLevel = await storeInstance.get('zoomLevel') as number;
+      console.log('Loaded zoom level:', zoomLevel);
+      return zoomLevel || 1.0;
+    } catch (error) {
+      console.error('Failed to load zoom level:', error);
+      return 1.0;
+    }
+  },
+
   // ダークモード設定を保存
   async saveDarkMode(darkMode: boolean): Promise<void> {
     try {

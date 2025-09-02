@@ -178,5 +178,14 @@
     "column": "列",
     "characters": "文字",
     "selected": "選択中"
+  },
+  "zoom": {
+    "maxLimitReached": "最大ズームレベル ({{maxZoom}}%) に達しました",
+    "minLimitReached": "最小ズームレベル ({{minZoom}}%) に達しました"
+  },
+  "tooltips": {
+    "zoomOut": "縮小 (Cmd + -)",
+    "zoomIn": "拡大 (Cmd + Shift + +)",
+    "resetZoom": "リセット (Cmd + 0)"
   }
 }
