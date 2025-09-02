@@ -162,7 +162,16 @@
   },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
-    "confirmClose": "このタブを閉じてもよろしいですか？"
+    "confirmClose": "このタブを閉じてもよろしいですか？",
+    "fileChanged": {
+      "title": "ファイルが変更されています",
+      "message": "ファイル「{{fileName}}」が外部で変更されました。",
+      "question": "このファイルを再読み込みしますか？",
+      "reloadDescription": "• はい: ファイルの最新内容を読み込みます（現在の編集内容は失われます）",
+      "keepDescription": "• いいえ: 現在の編集内容を保持します",
+      "yes": "はい",
+      "no": "いいえ"
+    }
   },
   "statusBar": {
     "line": "行",

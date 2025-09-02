@@ -16,7 +16,7 @@ interface PreviewProps {
 
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {} }) => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const [processedContent, setProcessedContent] = useState(content);
+  const [processedContent, setProcessedContent] = useState(content || '');
 
   useEffect(() => {
     // シンタックスハイライト用のカスタムレンダラーを設定
@@ -44,8 +44,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
     // 変数を展開
     const processContent = async () => {
-      const result = await variableApi.processMarkdown(content, globalVariables);
-      setProcessedContent(result.processedContent);
+      if (content) {
+        const result = await variableApi.processMarkdown(content, globalVariables);
+        setProcessedContent(result.processedContent);
+      } else {
+        setProcessedContent('');
+      }
     };
 
     processContent();
@@ -211,7 +215,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   };
 
   // MarkdownをHTMLに変換
-  const htmlContent = marked(processedContent, {
+  const htmlContent = marked(processedContent || '', {
     breaks: true,
     gfm: true,
   });

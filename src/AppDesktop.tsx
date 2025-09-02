@@ -9,6 +9,7 @@ import TabBar from './components/TabBar';
 import Settings from './components/Settings';
 import HelpDialog from './components/Help';
 import StatusBar from './components/StatusBar';
+import FileChangeDialog from './components/FileChangeDialog';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
 import { storeApi } from './api/storeApi';
 import { variableApi } from './api/variableApi';
@@ -40,6 +41,17 @@ function AppDesktop() {
     column: 1,
     totalCharacters: 0,
     selectedCharacters: 0
+  });
+  const [fileChangeDialog, setFileChangeDialog] = useState<{
+    open: boolean;
+    fileName: string;
+    onReload: () => void;
+    onCancel: () => void;
+  }>({
+    open: false,
+    fileName: '',
+    onReload: () => {},
+    onCancel: () => {},
   });
 
   const {
@@ -134,6 +146,45 @@ function AppDesktop() {
 
     loadSettings();
   }, []);
+
+  // ファイル変更検出イベントリスナー
+  useEffect(() => {
+    const handleFileChangeDetected = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { fileName, onReload, onCancel, tabId } = customEvent.detail;
+      setFileChangeDialog({
+        open: true,
+        fileName,
+        onReload: async () => {
+          console.log('File change dialog: Reload button clicked');
+          try {
+            // ファイルから最新のコンテンツを読み込み
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab && tab.filePath && !tab.isNew) {
+              const newContent = await desktopApi.readFileFromPath(tab.filePath);
+              console.log('Loaded new content from file:', newContent.length, 'characters');
+              onReload(newContent);
+            } else {
+              console.error('Tab not found or invalid:', { tabId, tab, hasFilePath: tab?.filePath, isNew: tab?.isNew });
+            }
+          } catch (error) {
+            console.error('Failed to reload file:', error);
+          }
+          setFileChangeDialog(prev => ({ ...prev, open: false }));
+        },
+        onCancel: () => {
+          onCancel();
+          setFileChangeDialog(prev => ({ ...prev, open: false }));
+        },
+      });
+    };
+
+    window.addEventListener('fileChangeDetected', handleFileChangeDetected);
+
+    return () => {
+      window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
+    };
+  }, [tabs, activeTabId]);
 
   // 言語設定の保存
   useEffect(() => {
@@ -599,6 +650,13 @@ function AppDesktop() {
         <HelpDialog
           open={helpOpen}
           onClose={handleHelpClose}
+        />
+
+        <FileChangeDialog
+          open={fileChangeDialog.open}
+          fileName={fileChangeDialog.fileName}
+          onReload={fileChangeDialog.onReload}
+          onCancel={fileChangeDialog.onCancel}
         />
 
         {/* ステータスバー */}

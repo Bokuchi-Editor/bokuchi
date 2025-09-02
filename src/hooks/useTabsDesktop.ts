@@ -3,6 +3,7 @@ import { tabReducer, initialTabState } from '../reducers/tabReducer';
 import { Tab, AppState } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
+import { detectFileChange } from '../utils/fileChangeDetection';
 
 export const useTabsDesktop = () => {
   const [state, dispatch] = useReducer(tabReducer, initialTabState);
@@ -21,9 +22,7 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'REMOVE_TAB', payload: { id } });
   }, []);
 
-  const setActiveTab = useCallback((id: string) => {
-    dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
-  }, []);
+
 
   const updateTabContent = useCallback((id: string, content: string) => {
     dispatch({ type: 'UPDATE_TAB_CONTENT', payload: { id, content } });
@@ -44,6 +43,43 @@ export const useTabsDesktop = () => {
   const setTabNew = useCallback((id: string, isNew: boolean) => {
     dispatch({ type: 'SET_TAB_NEW', payload: { id, isNew } });
   }, []);
+
+  const setActiveTab = useCallback(async (id: string) => {
+    const tab = state.tabs.find(t => t.id === id);
+    if (!tab) {
+      dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
+      return;
+    }
+
+    // 新しいファイルでない場合、ファイル変更をチェック
+    if (!tab.isNew && tab.filePath) {
+      const hasChanged = await detectFileChange(tab);
+      if (hasChanged) {
+        // ファイル変更検出イベントを発火
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: tab.title,
+            tabId: id,
+            onReload: (newContent: string) => {
+              console.log('Reloading file with new content:', newContent.length, 'characters');
+              // コンテンツを更新
+              updateTabContent(id, newContent);
+              setTabModified(id, false);
+              // タブをアクティブにする
+              dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
+            },
+            onCancel: () => {
+              dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
+            },
+          },
+        });
+        window.dispatchEvent(event);
+        return;
+      }
+    }
+
+    dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
+  }, [state.tabs, updateTabContent, setTabModified]);
 
   const openFile = useCallback(async () => {
     try {
@@ -77,13 +113,55 @@ export const useTabsDesktop = () => {
 
     try {
       if (tab.filePath && !tab.isNew) {
-        // 既存ファイルに上書き保存（ダイアログなし）
-        const result = await desktopApi.saveFileToPath(tab.filePath, tab.content);
-        if (result.success) {
-          setTabModified(id, false);
+        // 既存ファイルに上書き保存する前に、ファイル変更をチェック
+        const hasChanged = await detectFileChange(tab);
+        if (hasChanged) {
+          // ファイル変更検出イベントを発火
+          const event = new CustomEvent('fileChangeDetected', {
+            detail: {
+              fileName: tab.title,
+              tabId: id,
+              onReload: (newContent: string) => {
+                console.log('Reloading file before save with new content:', newContent.length, 'characters');
+                // コンテンツを更新
+                updateTabContent(id, newContent);
+                setTabModified(id, false);
+                // 保存を実行
+                desktopApi.saveFileToPath(tab.filePath!, newContent)
+                  .then(result => {
+                    if (result.success) {
+                      setTabModified(id, false);
+                      console.log('File saved successfully after reload');
+                    } else {
+                      throw new Error(result.error);
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Failed to save after reload:', error);
+                  });
+              },
+              onCancel: async () => {
+                // 現在の内容で保存を実行
+                const result = await desktopApi.saveFileToPath(tab.filePath!, tab.content);
+                if (result.success) {
+                  setTabModified(id, false);
+                } else {
+                  throw new Error(result.error);
+                }
+              },
+            },
+          });
+          window.dispatchEvent(event);
           return true;
         } else {
-          throw new Error(result.error);
+          // ファイル変更がない場合は通常の保存
+          const result = await desktopApi.saveFileToPath(tab.filePath, tab.content);
+          if (result.success) {
+            setTabModified(id, false);
+            return true;
+          } else {
+            throw new Error(result.error);
+          }
         }
       } else {
         // 新しいファイルとして保存（ダイアログあり）
@@ -104,7 +182,7 @@ export const useTabsDesktop = () => {
       console.error('Failed to save file:', error);
       return false;
     }
-  }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle]);
+  }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent]);
 
   const saveTabAs = useCallback(async (id: string) => {
     console.log('saveTabAs called with id:', id);

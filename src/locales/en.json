@@ -162,7 +162,16 @@
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",
-    "confirmClose": "Are you sure you want to close this tab?"
+    "confirmClose": "Are you sure you want to close this tab?",
+    "fileChanged": {
+      "title": "File has been changed",
+      "message": "File \"{{fileName}}\" has been modified externally.",
+      "question": "Do you want to reload this file?",
+      "reloadDescription": "• Yes: Load the latest file content (current edits will be lost)",
+      "keepDescription": "• No: Keep current edits",
+      "yes": "Yes",
+      "no": "No"
+    }
   },
   "statusBar": {
     "line": "Ln",
