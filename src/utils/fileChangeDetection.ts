@@ -2,7 +2,7 @@ import { desktopApi } from '../api/desktopApi';
 import { Tab } from '../types/tab';
 
 /**
- * ファイルの変更を検出する
+ * ファイルの変更を検出する（ハッシュ値比較）
  * @param tab チェック対象のタブ
  * @returns ファイルが変更されているかどうか
  */
@@ -12,12 +12,37 @@ export async function detectFileChange(tab: Tab): Promise<boolean> {
     return false;
   }
 
-  try {
-    // ファイルシステムから現在の内容を読み込み
-    const currentFileContent = await desktopApi.readFileFromPath(tab.filePath);
+  // ファイルハッシュ情報がない場合は変更なしとして扱う
+  if (!tab.fileHashInfo) {
+    console.warn('No file hash info available for tab:', tab.id);
+    return false;
+  }
 
-    // エディターの内容と比較
-    return currentFileContent !== tab.content;
+  try {
+    // 現在のファイルハッシュを取得
+    const currentHashInfo = await desktopApi.getFileHash(tab.filePath);
+
+    // 段階的チェック
+    // 1. ファイルサイズチェック（高速）
+    if (currentHashInfo.file_size !== tab.fileHashInfo.file_size) {
+      console.log('File size changed:', tab.filePath);
+      return true;
+    }
+
+    // 2. 最終更新時刻チェック（高速）
+    if (currentHashInfo.modified_time !== tab.fileHashInfo.modified_time) {
+      console.log('File modification time changed:', tab.filePath);
+      return true;
+    }
+
+    // 3. ハッシュ値チェック（必要時のみ）
+    if (currentHashInfo.hash !== tab.fileHashInfo.hash) {
+      console.log('File hash changed:', tab.filePath);
+      return true;
+    }
+
+    // 変更なし
+    return false;
   } catch (error) {
     console.error('Failed to detect file change:', error);
     // エラーの場合は変更なしとして扱う

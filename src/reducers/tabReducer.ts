@@ -92,6 +92,16 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'UPDATE_TAB_FILE_HASH':
+      return {
+        ...state,
+        tabs: state.tabs.map(tab =>
+          tab.id === action.payload.id
+            ? { ...tab, fileHashInfo: action.payload.fileHashInfo }
+            : tab
+        ),
+      };
+
     case 'LOAD_STATE':
       return {
         ...state,

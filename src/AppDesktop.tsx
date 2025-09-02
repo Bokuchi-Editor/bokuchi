@@ -13,6 +13,7 @@ import FileChangeDialog from './components/FileChangeDialog';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
 import { storeApi } from './api/storeApi';
 import { variableApi } from './api/variableApi';
+import { detectFileChange } from './utils/fileChangeDetection';
 import { desktopApi } from './api/desktopApi';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getThemeByName, applyThemeToDocument } from './themes';
@@ -62,6 +63,7 @@ function AppDesktop() {
     removeTab,
     setActiveTab,
     updateTabContent,
+    updateTabFileHash,
     openFile,
     saveTab,
     saveTabAs,
@@ -185,6 +187,50 @@ function AppDesktop() {
       window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
     };
   }, [tabs, activeTabId]);
+
+  // 定期的なファイル変更チェック（5秒間隔）
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const interval = setInterval(async () => {
+      // アクティブなタブのファイル変更をチェック
+      if (activeTab && !activeTab.isNew && activeTab.filePath) {
+        try {
+          const hasChanged = await detectFileChange(activeTab);
+          if (hasChanged) {
+            console.log('File change detected during periodic check:', activeTab.filePath);
+            // ファイル変更検出イベントを発火
+            const event = new CustomEvent('fileChangeDetected', {
+              detail: {
+                fileName: activeTab.title,
+                tabId: activeTab.id,
+                onReload: async (newContent: string) => {
+                  console.log('Reloading file from periodic check:', newContent.length, 'characters');
+                  updateTabContent(activeTab.id, newContent);
+                  // ファイルハッシュ情報を更新
+                  try {
+                    const newHashInfo = await desktopApi.getFileHash(activeTab.filePath!);
+                    updateTabFileHash(activeTab.id, newHashInfo);
+                    console.log('File hash updated after periodic reload:', newHashInfo);
+                  } catch (error) {
+                    console.warn('Failed to update file hash after periodic reload:', error);
+                  }
+                },
+                onCancel: () => {
+                  console.log('File change reload cancelled during periodic check');
+                },
+              },
+            });
+            window.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.warn('Failed to check file change during periodic check:', error);
+        }
+      }
+    }, 5000); // 5秒間隔
+
+    return () => clearInterval(interval);
+  }, [isInitialized, activeTab, updateTabContent, updateTabFileHash]);
 
   // 言語設定の保存
   useEffect(() => {

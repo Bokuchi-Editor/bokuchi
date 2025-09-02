@@ -44,6 +44,10 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'SET_TAB_NEW', payload: { id, isNew } });
   }, []);
 
+  const updateTabFileHash = useCallback((id: string, fileHashInfo: { hash: string; modified_time: number; file_size: number }) => {
+    dispatch({ type: 'UPDATE_TAB_FILE_HASH', payload: { id, fileHashInfo } });
+  }, []);
+
   const setActiveTab = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
     if (!tab) {
@@ -60,11 +64,21 @@ export const useTabsDesktop = () => {
           detail: {
             fileName: tab.title,
             tabId: id,
-            onReload: (newContent: string) => {
+            onReload: async (newContent: string) => {
               console.log('Reloading file with new content:', newContent.length, 'characters');
               // コンテンツを更新
               updateTabContent(id, newContent);
               setTabModified(id, false);
+
+              // ファイルハッシュ情報を更新
+              try {
+                const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
+                updateTabFileHash(id, newHashInfo);
+                console.log('File hash updated after reload:', newHashInfo);
+              } catch (error) {
+                console.warn('Failed to update file hash after reload:', error);
+              }
+
               // タブをアクティブにする
               dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
             },
@@ -91,12 +105,23 @@ export const useTabsDesktop = () => {
       // ファイル名を取得（パスから）
       const fileName = result.filePath ? result.filePath.split('/').pop()?.split('\\').pop() || 'Untitled' : 'Untitled';
 
+      // ファイルハッシュ情報を取得
+      let fileHashInfo = undefined;
+      if (result.filePath) {
+        try {
+          fileHashInfo = await desktopApi.getFileHash(result.filePath);
+        } catch (error) {
+          console.warn('Failed to get file hash, continuing without hash info:', error);
+        }
+      }
+
       const tabId = addTab({
         title: fileName,
         content: result.content,
         filePath: result.filePath,
         isModified: false,
         isNew: false,
+        fileHashInfo,
       });
 
       setActiveTab(tabId);
@@ -121,11 +146,21 @@ export const useTabsDesktop = () => {
             detail: {
               fileName: tab.title,
               tabId: id,
-              onReload: (newContent: string) => {
+              onReload: async (newContent: string) => {
                 console.log('Reloading file before save with new content:', newContent.length, 'characters');
                 // コンテンツを更新
                 updateTabContent(id, newContent);
                 setTabModified(id, false);
+
+                // ファイルハッシュ情報を更新
+                try {
+                  const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
+                  updateTabFileHash(id, newHashInfo);
+                  console.log('File hash updated after reload before save:', newHashInfo);
+                } catch (error) {
+                  console.warn('Failed to update file hash after reload before save:', error);
+                }
+
                 // 保存を実行
                 desktopApi.saveFileToPath(tab.filePath!, newContent)
                   .then(result => {
@@ -145,6 +180,14 @@ export const useTabsDesktop = () => {
                 const result = await desktopApi.saveFileToPath(tab.filePath!, tab.content);
                 if (result.success) {
                   setTabModified(id, false);
+                  // 保存後にファイルハッシュ情報を更新
+                  try {
+                    const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
+                    // ハッシュ情報を更新するアクションを追加する必要があります
+                    console.log('File hash updated after save:', newHashInfo);
+                  } catch (error) {
+                    console.warn('Failed to update file hash after save:', error);
+                  }
                 } else {
                   throw new Error(result.error);
                 }
@@ -158,6 +201,14 @@ export const useTabsDesktop = () => {
           const result = await desktopApi.saveFileToPath(tab.filePath, tab.content);
           if (result.success) {
             setTabModified(id, false);
+            // 保存後にファイルハッシュ情報を更新
+            try {
+              const newHashInfo = await desktopApi.getFileHash(tab.filePath);
+              updateTabFileHash(id, newHashInfo);
+              console.log('File hash updated after save:', newHashInfo);
+            } catch (error) {
+              console.warn('Failed to update file hash after save:', error);
+            }
             return true;
           } else {
             throw new Error(result.error);
@@ -173,6 +224,16 @@ export const useTabsDesktop = () => {
           setTabModified(id, false);
           // 新しいファイルとして保存されたので、isNewフラグをfalseに設定
           setTabNew(id, false);
+
+          // 保存後にファイルハッシュ情報を更新
+          try {
+            const newHashInfo = await desktopApi.getFileHash(result.filePath);
+            updateTabFileHash(id, newHashInfo);
+            console.log('File hash updated after save as:', newHashInfo);
+          } catch (error) {
+            console.warn('Failed to update file hash after save as:', error);
+          }
+
           return true;
         } else {
           throw new Error(result.error);
@@ -264,7 +325,16 @@ export const useTabsDesktop = () => {
               try {
                 console.log(`Loading file: ${tab.filePath}`);
                 const content = await desktopApi.readFileFromPath(tab.filePath);
-                return { ...tab, content };
+
+                // ファイルハッシュ情報も取得
+                let fileHashInfo = undefined;
+                try {
+                  fileHashInfo = await desktopApi.getFileHash(tab.filePath);
+                } catch (error) {
+                  console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
+                }
+
+                return { ...tab, content, fileHashInfo };
               } catch (error) {
                 console.error(`Failed to load file: ${tab.filePath}`, error);
                 return { ...tab, isNew: true, filePath: undefined };
@@ -322,6 +392,7 @@ export const useTabsDesktop = () => {
     setTabModified,
     setTabFilePath,
     setTabNew,
+    updateTabFileHash,
     openFile,
     saveTab,
     saveTabAs,

@@ -1,5 +1,6 @@
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { invoke } from '@tauri-apps/api/core';
 
 export interface FileResponse {
   content: string;
@@ -11,6 +12,12 @@ export interface SaveResponse {
   success: boolean;
   filePath?: string;
   error?: string;
+}
+
+export interface FileHashInfo {
+  hash: string;
+  modified_time: number;
+  file_size: number;
 }
 
 export const desktopApi = {
@@ -223,6 +230,17 @@ export const desktopApi = {
     } catch (error: unknown) {
       console.error('Error opening multiple files:', error);
       return [];
+    }
+  },
+
+  // ファイルハッシュを取得
+  async getFileHash(filePath: string): Promise<FileHashInfo> {
+    try {
+      const hashInfo = await invoke<FileHashInfo>('get_file_hash', { path: filePath });
+      return hashInfo;
+    } catch (error: unknown) {
+      console.error('Error getting file hash:', error);
+      throw error;
     }
   }
 };

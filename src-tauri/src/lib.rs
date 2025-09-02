@@ -1,8 +1,12 @@
 use anyhow::Result;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
 use std::sync::Mutex;
+use std::time::SystemTime;
 
 // 変数の定義
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15,6 +19,14 @@ pub struct Variable {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct VariableSet {
     pub variables: Vec<Variable>,
+}
+
+// ファイルハッシュ情報
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FileHashInfo {
+    pub hash: String,
+    pub modified_time: u64,
+    pub file_size: u64,
 }
 
 // 変数処理器
@@ -205,12 +217,44 @@ fn get_expanded_markdown(
     Ok(result)
 }
 
+// ファイルハッシュを計算
+fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
+    let metadata = fs::metadata(path).map_err(|_| "File not found".to_string())?;
+
+    let modified_time = metadata
+        .modified()
+        .map_err(|_| "Failed to get modified time".to_string())?
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .map_err(|_| "Failed to convert time".to_string())?
+        .as_secs();
+
+    let file_size = metadata.len();
+
+    // ファイルサイズが大きすぎる場合はハッシュ計算をスキップ
+    if file_size > 10 * 1024 * 1024 {
+        return Ok(FileHashInfo {
+            hash: "large_file".to_string(),
+            modified_time,
+            file_size,
+        });
+    }
+
+    // ファイル内容を読み込んでハッシュ計算
+    let content = fs::read_to_string(path).map_err(|_| "Failed to read file".to_string())?;
+    let mut hasher = Sha256::new();
+    hasher.update(content.as_bytes());
+    let hash = format!("{:x}", hasher.finalize());
+
+    Ok(FileHashInfo {
+        hash,
+        modified_time,
+        file_size,
+    })
+}
+
 // Tauriコマンド: ファイルを読み込み
 #[tauri::command]
 async fn read_file(path: String) -> Result<String, String> {
-    use std::fs;
-    use std::path::Path;
-
     // ファイルサイズチェック（10MB制限）
     let metadata = fs::metadata(&path).map_err(|_| "File not found".to_string())?;
     if metadata.len() > 10 * 1024 * 1024 {
@@ -232,9 +276,6 @@ async fn read_file(path: String) -> Result<String, String> {
 // Tauriコマンド: ファイルを保存
 #[tauri::command]
 async fn save_file(path: String, content: String) -> Result<(), String> {
-    use std::fs;
-    use std::path::Path;
-
     // ファイル拡張子チェック
     if let Some(ext) = Path::new(&path).extension() {
         let ext_str = ext.to_string_lossy().to_lowercase();
@@ -250,6 +291,12 @@ async fn save_file(path: String, content: String) -> Result<(), String> {
 
     // ファイル保存
     fs::write(&path, content).map_err(|_| "Failed to save file".to_string())
+}
+
+// Tauriコマンド: ファイルハッシュを取得
+#[tauri::command]
+async fn get_file_hash(path: String) -> Result<FileHashInfo, String> {
+    calculate_file_hash(&path)
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -273,7 +320,8 @@ pub fn run() {
             process_markdown,
             get_expanded_markdown,
             read_file,
-            save_file
+            save_file,
+            get_file_hash
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

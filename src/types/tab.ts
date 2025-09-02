@@ -5,6 +5,11 @@ export interface Tab {
   filePath?: string;
   isModified: boolean;
   isNew: boolean;
+  fileHashInfo?: {
+    hash: string;
+    modified_time: number;
+    file_size: number;
+  };
 }
 
 export interface TabState {
@@ -27,5 +32,5 @@ export type TabAction =
   | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
   | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } }
   | { type: 'SET_TAB_NEW'; payload: { id: string; isNew: boolean } }
-  | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
+  | { type: 'UPDATE_TAB_FILE_HASH'; payload: { id: string; fileHashInfo: { hash: string; modified_time: number; file_size: number } } }
   | { type: 'LOAD_STATE'; payload: AppState };
