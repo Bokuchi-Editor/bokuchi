@@ -1,8 +1,6 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-// @ts-expect-error process is a nodejs global
-const host = process.env.TAURI_DEV_HOST;
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { checker } from 'vite-plugin-checker'
 
 // 動的ポート取得関数
 async function getPort(): Promise<number> {
@@ -60,33 +58,45 @@ async function getPort(): Promise<number> {
   }
 }
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig(async () => {
   const port = await getPort();
 
   return {
-    plugins: [react()],
-
-    // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-    //
-    // 1. prevent Vite from obscuring rust errors
-    clearScreen: false,
-    // 2. 動的ポートを使用
+    plugins: [
+      react(),
+      checker({
+        typescript: true,
+        eslint: {
+          lintCommand: 'eslint . --ext ts,tsx --max-warnings 1',
+        },
+      }),
+    ],
+    root: '.',
+    build: {
+      outDir: 'dist',
+      rollupOptions: {
+        input: {
+          main: 'index.html'
+        },
+        output: {
+          entryFileNames: 'assets/[name]-[hash].js',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]'
+        }
+      }
+    },
     server: {
       port: port,
       strictPort: false, // ポートが使用中の場合は別のポートを試す
-      host: host || false,
-      hmr: host
-        ? {
-            protocol: "ws",
-            host,
-            port: port + 1, // HMRポートはメインポート+1
-          }
-        : undefined,
-      watch: {
-        // 3. tell Vite to ignore watching `src-tauri`
-        ignored: ["**/src-tauri/**"],
-      },
     },
+    clearScreen: false,
+    envPrefix: ['VITE_', 'TAURI_'],
+    publicDir: 'public',
+    appType: 'spa',
+    // 開発サーバーでもデスクトップ版のHTMLファイルを使用
+    optimizeDeps: {
+      include: ['react', 'react-dom']
+    }
   };
-});
+})

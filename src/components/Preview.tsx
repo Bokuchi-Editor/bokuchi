@@ -252,6 +252,112 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         />
+        <style>
+          {`
+            .markdown-preview h1:first-child,
+            .markdown-preview h2:first-child,
+            .markdown-preview h3:first-child,
+            .markdown-preview h4:first-child,
+            .markdown-preview h5:first-child,
+            .markdown-preview h6:first-child {
+              margin-top: 0 !important;
+            }
+
+            .markdown-preview h1,
+            .markdown-preview h2,
+            .markdown-preview h3,
+            .markdown-preview h4,
+            .markdown-preview h5,
+            .markdown-preview h6 {
+              margin-top: 1.5em;
+              margin-bottom: 0.5em;
+              font-weight: 600;
+            }
+
+            .markdown-preview h1 {
+              font-size: 2em;
+              border-bottom: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#eaecef')};
+              padding-bottom: 0.3em;
+            }
+
+            .markdown-preview h2 {
+              font-size: 1.5em;
+              border-bottom: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#eaecef')};
+              padding-bottom: 0.3em;
+            }
+
+            .markdown-preview p {
+              margin-bottom: 1em;
+            }
+
+            .markdown-preview ul,
+            .markdown-preview ol {
+              margin-bottom: 1em;
+              padding-left: 2em;
+            }
+
+            .markdown-preview li {
+              margin-bottom: 0.25em;
+            }
+
+            .markdown-preview blockquote {
+              border-left: 4px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5')};
+              padding-left: 1em;
+              margin: 1em 0;
+              color: ${theme === 'darcula' ? '#a0a0a0' : (darkMode ? '#a0a0a0' : '#6a737d')};
+            }
+
+            .markdown-preview code {
+              background-color: ${theme === 'darcula' ? 'rgba(255,255,255,0.1)' : (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(27,31,35,0.05)')};
+              padding: 0.2em 0.4em;
+              border-radius: 3px;
+              font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+              font-size: 85%;
+              line-height: 1.2;
+            }
+
+                        .markdown-preview pre {
+              background-color: ${theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa')};
+              border-radius: 3px;
+              padding: 16px;
+              overflow: auto;
+              margin: 1em 0;
+              line-height: 1.4;
+            }
+
+            .markdown-preview pre code {
+              background-color: transparent;
+              padding: 0;
+              line-height: 1.4;
+            }
+
+            .markdown-preview table {
+              border-collapse: collapse;
+              width: 100%;
+              margin: 1em 0;
+            }
+
+            .markdown-preview th,
+            .markdown-preview td {
+              border: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5')};
+              padding: 6px 13px;
+            }
+
+            .markdown-preview th {
+              background-color: ${theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa')};
+              font-weight: 600;
+            }
+
+            .markdown-preview a {
+              color: ${theme === 'darcula' ? '#58a6ff' : (darkMode ? '#58a6ff' : '#0366d6')};
+              text-decoration: none;
+            }
+
+            .markdown-preview a:hover {
+              text-decoration: underline;
+            }
+          `}
+        </style>
       </Box>
     </Box>
   );

@@ -34,11 +34,6 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - ✅ Application state persistence across sessions
 - ✅ File not found handling for restored tabs
 
-### Web Version (Legacy)
-
-- ⚠️ Limited file operations (browser security restrictions)
-- ⚠️ Requires HTTP server (Go backend)
-
 ## Development
 
 ### Prerequisites
