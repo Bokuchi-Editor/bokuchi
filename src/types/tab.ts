@@ -33,4 +33,5 @@ export type TabAction =
   | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } }
   | { type: 'SET_TAB_NEW'; payload: { id: string; isNew: boolean } }
   | { type: 'UPDATE_TAB_FILE_HASH'; payload: { id: string; fileHashInfo: { hash: string; modified_time: number; file_size: number } } }
+  | { type: 'REORDER_TABS'; payload: { tabs: Tab[] } }
   | { type: 'LOAD_STATE'; payload: AppState };

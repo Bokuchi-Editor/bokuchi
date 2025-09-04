@@ -282,6 +282,10 @@ export const useTabsDesktop = () => {
     }
   }, [state.tabs, setTabFilePath, updateTabTitle, setTabModified]);
 
+  const reorderTabs = useCallback((reorderedTabs: Tab[]) => {
+    dispatch({ type: 'REORDER_TABS', payload: { tabs: reorderedTabs } });
+  }, []);
+
   const createNewTab = useCallback(() => {
     const tabId = addTab({
       title: 'Untitled',
@@ -393,6 +397,7 @@ export const useTabsDesktop = () => {
     setTabFilePath,
     setTabNew,
     updateTabFileHash,
+    reorderTabs,
     openFile,
     saveTab,
     saveTabAs,

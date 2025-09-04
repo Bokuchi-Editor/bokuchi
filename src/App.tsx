@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemeName, getThemeByName, applyThemeToDocument } from './themes';
 import { useZoom } from './hooks/useZoom';
 import { ZOOM_CONFIG } from './constants/zoom';
+import { Tab } from './types/tab';
 import './i18n';
 
 import './App.css';
@@ -66,6 +67,7 @@ function AppDesktop() {
     setActiveTab,
     updateTabContent,
     updateTabFileHash,
+    reorderTabs,
     openFile,
     saveTab,
     saveTabAs,
@@ -422,6 +424,10 @@ function AppDesktop() {
     createNewTab();
   };
 
+  const handleTabReorder = (reorderedTabs: Tab[]) => {
+    reorderTabs(reorderedTabs);
+  };
+
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
   };
@@ -590,6 +596,7 @@ function AppDesktop() {
                 onTabChange={handleTabChange}
                 onTabClose={handleTabClose}
                 onNewTab={handleNewTab}
+                onTabReorder={handleTabReorder}
                 layout={tabLayout}
               />
             )}
@@ -601,6 +608,7 @@ function AppDesktop() {
                   onTabChange={handleTabChange}
                   onTabClose={handleTabClose}
                   onNewTab={handleNewTab}
+                  onTabReorder={handleTabReorder}
                   layout={tabLayout}
                 />
               )}

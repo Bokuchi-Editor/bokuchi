@@ -9,11 +9,30 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
   Divider,
 } from '@mui/material';
 import { Close, Add } from '@mui/icons-material';
 import { Tab as TabType } from '../types/tab';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface TabBarProps {
   tabs: TabType[];
@@ -21,50 +40,174 @@ interface TabBarProps {
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
+  onTabReorder: (tabs: TabType[]) => void;
   layout?: 'horizontal' | 'vertical';
 }
 
-// カスタムタブラベルコンポーネント
-const TabLabel: React.FC<{
+// SortableTabコンポーネント
+const SortableTab: React.FC<{
   tab: TabType;
+  isActive: boolean;
   onClose: (event: React.MouseEvent, tabId: string) => void;
-}> = ({ tab, onClose }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-    <Box
+  onClick: (tabId: string) => void;
+  layout: 'horizontal' | 'vertical';
+}> = ({ tab, isActive, onClose, onClick, layout }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: tab.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  if (layout === 'vertical') {
+    return (
+      <ListItem
+        ref={setNodeRef}
+        style={style}
+        disablePadding
+        sx={{
+          opacity: isDragging ? 0.5 : 1,
+        }}
+      >
+        <ListItemButton
+          selected={isActive}
+          onClick={() => onClick(tab.id)}
+          sx={{
+            py: 1,
+            px: 2,
+            '&.Mui-selected': {
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+              '&:hover': {
+                bgcolor: 'primary.dark',
+              },
+            },
+          }}
+        >
+          <Box
+            {...attributes}
+            {...listeners}
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'grab',
+              '&:active': {
+                cursor: 'grabbing',
+              },
+            }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                fontSize: '0.875rem',
+              }}
+            >
+              {tab.title}
+            </Box>
+            <Badge
+              color="error"
+              variant="dot"
+              invisible={!tab.isModified}
+              sx={{ ml: 1 }}
+            />
+          </Box>
+          <IconButton
+            size="small"
+            onClick={(e) => onClose(e, tab.id)}
+            sx={{
+              ml: 1,
+              opacity: 0.7,
+              '&:hover': {
+                opacity: 1,
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            <Close fontSize="small" />
+          </IconButton>
+        </ListItemButton>
+      </ListItem>
+    );
+  }
+
+  return (
+    <Tab
+      ref={setNodeRef}
+      style={style}
+      value={tab.id}
+      label={
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <Box
+            {...attributes}
+            {...listeners}
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'grab',
+              '&:active': {
+                cursor: 'grabbing',
+              },
+            }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tab.title}
+            </Box>
+            <Badge
+              color="error"
+              variant="dot"
+              invisible={!tab.isModified}
+              sx={{ ml: 1 }}
+            />
+          </Box>
+          <Box
+            component="span"
+            onClick={(e) => onClose(e, tab.id)}
+            sx={{
+              ml: 0.5,
+              p: 0.5,
+              cursor: 'pointer',
+              borderRadius: 1,
+              display: 'flex',
+              alignItems: 'center',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            <Close fontSize="small" />
+          </Box>
+        </Box>
+      }
       sx={{
-        flex: 1,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {tab.title}
-    </Box>
-    <Badge
-      color="error"
-      variant="dot"
-      invisible={!tab.isModified}
-      sx={{ ml: 1 }}
-    />
-    <Box
-      component="span"
-      onClick={(e) => onClose(e, tab.id)}
-      sx={{
-        ml: 0.5,
-        p: 0.5,
-        cursor: 'pointer',
-        borderRadius: 1,
-        display: 'flex',
-        alignItems: 'center',
-        '&:hover': {
-          bgcolor: 'action.hover',
+        '& .MuiTab-iconWrapper': {
+          display: 'none',
         },
       }}
-    >
-      <Close fontSize="small" />
-    </Box>
-  </Box>
-);
+    />
+  );
+};
+
+
 
 const TabBar: React.FC<TabBarProps> = ({
   tabs,
@@ -72,8 +215,16 @@ const TabBar: React.FC<TabBarProps> = ({
   onTabChange,
   onTabClose,
   onNewTab,
+  onTabReorder,
   layout = 'horizontal',
 }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   const handleTabClick = (_event: React.SyntheticEvent, tabId: string) => {
     onTabChange(tabId);
   };
@@ -81,6 +232,18 @@ const TabBar: React.FC<TabBarProps> = ({
   const handleTabClose = (event: React.MouseEvent, tabId: string) => {
     event.stopPropagation();
     onTabClose(tabId);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = tabs.findIndex((tab) => tab.id === active.id);
+      const newIndex = tabs.findIndex((tab) => tab.id === over.id);
+
+      const reorderedTabs = arrayMove(tabs, oldIndex, newIndex);
+      onTabReorder(reorderedTabs);
+    }
   };
 
   if (layout === 'vertical') {
@@ -110,68 +273,31 @@ const TabBar: React.FC<TabBarProps> = ({
             </IconButton>
           </Tooltip>
         </Box>
-        <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
-          {tabs.map((tab, index) => (
-            <React.Fragment key={tab.id}>
-              <ListItem disablePadding>
-                <ListItemButton
-                  selected={tab.id === activeTabId}
-                  onClick={() => onTabChange(tab.id)}
-                  sx={{
-                    py: 1,
-                    px: 2,
-                    '&.Mui-selected': {
-                      bgcolor: 'primary.main',
-                      color: 'primary.contrastText',
-                      '&:hover': {
-                        bgcolor: 'primary.dark',
-                      },
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Box
-                          sx={{
-                            flex: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            fontSize: '0.875rem',
-                          }}
-                        >
-                          {tab.title}
-                        </Box>
-                        <Badge
-                          color="error"
-                          variant="dot"
-                          invisible={!tab.isModified}
-                          sx={{ ml: 1 }}
-                        />
-                      </Box>
-                    }
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={tabs.map(tab => tab.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
+              {tabs.map((tab, index) => (
+                <React.Fragment key={tab.id}>
+                  <SortableTab
+                    tab={tab}
+                    isActive={tab.id === activeTabId}
+                    onClose={handleTabClose}
+                    onClick={onTabChange}
+                    layout="vertical"
                   />
-                  <IconButton
-                    size="small"
-                    onClick={(e) => handleTabClose(e, tab.id)}
-                    sx={{
-                      ml: 1,
-                      opacity: 0.7,
-                      '&:hover': {
-                        opacity: 1,
-                        bgcolor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <Close fontSize="small" />
-                  </IconButton>
-                </ListItemButton>
-              </ListItem>
-              {index < tabs.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-        </List>
+                  {index < tabs.length - 1 && <Divider />}
+                </React.Fragment>
+              ))}
+            </List>
+          </SortableContext>
+        </DndContext>
       </Box>
     );
   }
@@ -179,41 +305,50 @@ const TabBar: React.FC<TabBarProps> = ({
   return (
     <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Tabs
-          value={activeTabId || false}
-          onChange={handleTabClick}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{
-            flex: 1,
-            '& .MuiTabs-indicator': {
-              backgroundColor: 'primary.main',
-            },
-            '& .MuiTab-root': {
-              minHeight: 48,
-              textTransform: 'none',
-              fontSize: '0.875rem',
-              minWidth: 120,
-              maxWidth: 200,
-              '&.Mui-selected': {
-                fontWeight: 'bold',
-              },
-            },
-          }}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              value={tab.id}
-              label={<TabLabel tab={tab} onClose={handleTabClose} />}
+          <SortableContext
+            items={tabs.map(tab => tab.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            <Tabs
+              value={activeTabId || false}
+              onChange={handleTabClick}
+              variant="scrollable"
+              scrollButtons="auto"
               sx={{
-                '& .MuiTab-iconWrapper': {
-                  display: 'none',
+                flex: 1,
+                '& .MuiTabs-indicator': {
+                  backgroundColor: 'primary.main',
+                },
+                '& .MuiTab-root': {
+                  minHeight: 48,
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  minWidth: 120,
+                  maxWidth: 200,
+                  '&.Mui-selected': {
+                    fontWeight: 'bold',
+                  },
                 },
               }}
-            />
-          ))}
-        </Tabs>
+            >
+              {tabs.map((tab) => (
+                <SortableTab
+                  key={tab.id}
+                  tab={tab}
+                  isActive={tab.id === activeTabId}
+                  onClose={handleTabClose}
+                  onClick={onTabChange}
+                  layout="horizontal"
+                />
+              ))}
+            </Tabs>
+          </SortableContext>
+        </DndContext>
         <Tooltip title="New Tab">
           <IconButton
             onClick={onNewTab}

@@ -125,3 +125,4 @@ export async function detectMultipleFileChanges(tabs: Tab[]): Promise<string[]> 
   await Promise.all(promises);
   return changedTabs;
 }
+

@@ -102,6 +102,12 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'REORDER_TABS':
+      return {
+        ...state,
+        tabs: action.payload.tabs,
+      };
+
     case 'LOAD_STATE':
       return {
         ...state,
