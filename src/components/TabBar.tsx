@@ -33,6 +33,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { dragConfig } from '../config/dragConfig';
 
 interface TabBarProps {
   tabs: TabType[];
@@ -43,6 +44,17 @@ interface TabBarProps {
   onTabReorder: (tabs: TabType[]) => void;
   layout?: 'horizontal' | 'vertical';
 }
+
+// カスタムポインターセンサー（ドラッグ開始の閾値付き）
+const createThresholdPointerSensor = () => {
+  return useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: dragConfig.dragThreshold,
+      delay: dragConfig.dragDelay,
+      tolerance: 5,
+    },
+  });
+};
 
 // SortableTabコンポーネント
 const SortableTab: React.FC<{
@@ -219,7 +231,7 @@ const TabBar: React.FC<TabBarProps> = ({
   layout = 'horizontal',
 }) => {
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    createThresholdPointerSensor(),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
