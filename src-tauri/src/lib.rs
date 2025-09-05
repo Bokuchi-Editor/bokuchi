@@ -7,6 +7,7 @@ use std::fs;
 use std::path::Path;
 use std::sync::Mutex;
 use std::time::SystemTime;
+use tauri::Emitter;
 
 // 変数の定義
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -27,6 +28,12 @@ pub struct FileHashInfo {
     pub hash: String,
     pub modified_time: u64,
     pub file_size: u64,
+}
+
+// ファイル開くイベント
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OpenFileEvent {
+    pub file_path: String,
 }
 
 // 変数処理器
@@ -323,6 +330,50 @@ pub fn run() {
             save_file,
             get_file_hash
         ])
+        .setup(|app| {
+            // コマンドライン引数を取得
+            let args: Vec<String> = std::env::args().collect();
+            println!("Command line args: {:?}", args);
+
+            // ファイルパスが引数として渡された場合
+            if args.len() > 1 {
+                let file_path = &args[1];
+                println!("File path from args: {}", file_path);
+
+                // ファイルが存在し、拡張子がmdまたはtxtの場合
+                if Path::new(file_path).exists() {
+                    println!("File exists: {}", file_path);
+                    if let Some(ext) = Path::new(file_path).extension() {
+                        let ext_str = ext.to_string_lossy().to_lowercase();
+                        println!("File extension: {}", ext_str);
+                        if ext_str == "md" || ext_str == "txt" {
+                            println!("Valid file type, emitting open-file event");
+                            // フロントエンドが準備できるまで少し待ってからイベントを発火
+                            let app_handle = app.handle().clone();
+                            let file_path = file_path.to_string();
+
+                            std::thread::spawn(move || {
+                                std::thread::sleep(std::time::Duration::from_millis(2000));
+                                println!("Emitting open-file event for: {}", file_path);
+                                let _ = app_handle.emit("open-file", OpenFileEvent {
+                                    file_path: file_path,
+                                });
+                            });
+                        } else {
+                            println!("Invalid file extension: {}", ext_str);
+                        }
+                    } else {
+                        println!("No file extension found");
+                    }
+                } else {
+                    println!("File does not exist: {}", file_path);
+                }
+            } else {
+                println!("No command line arguments provided");
+            }
+
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

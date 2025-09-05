@@ -8,12 +8,19 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:dev": "tauri dev",
+    "tauri:dev": "npm run check && tauri dev",
     "tauri:dev:dynamic": "node scripts/tauri-dev.js",
     "tauri:build": "tauri build",
     "dev:standalone": "npm run build && npm run tauri:dev",
     "get-port": "node scripts/get-port.js",
-    "dev:dynamic": "PORT=$(npm run get-port --silent) vite"
+    "dev:dynamic": "PORT=$(npm run get-port --silent) vite",
+    "check": "npm run lint && npm run type-check",
+    "lint": "eslint . --ext ts,tsx --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "build:windows": "./build-windows.sh",
+    "build:macos": "./build-macos.sh",
+    "build:macos:signed": "./build-macos-signed.sh",
+    "notarize": "./notarize.sh"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -51,9 +51,46 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 3. Start development server:
 
    ```bash
-   # Start desktop app
+   # Start desktop app (with quality checks)
    npm run tauri:dev
    ```
+
+### Development Workflow
+
+The development process includes automatic quality checks to ensure code quality:
+
+#### Quality Checks
+
+Before starting the application, the following checks are automatically performed:
+
+- **ESLint**: Code linting with zero warnings policy
+- **TypeScript**: Type checking without emitting files
+
+```bash
+# Manual quality checks
+npm run check        # Run both ESLint and TypeScript checks
+npm run lint         # Run ESLint only
+npm run type-check   # Run TypeScript type checking only
+```
+
+#### Development Commands
+
+```bash
+# Start development with quality checks (recommended)
+npm run tauri:dev
+
+# Start development without quality checks (if needed)
+npm run dev
+
+# Build and start (alternative)
+npm run build && npm run tauri:dev
+```
+
+#### File Watching
+
+- **File watching is disabled** to prevent EMFILE errors
+- **Manual refresh required**: After code changes, manually refresh the browser (F5 or Cmd+R)
+- **Quality checks**: Run `npm run check` before committing changes
 
 ### Building the Application
 
@@ -92,8 +129,8 @@ npm run tauri:build
 # macOS
 npm run tauri:build -- --target universal-apple-darwin
 
-# Windows
-npm run tauri:build -- --target x86_64-pc-windows-msvc
+# Windows (from macOS)
+npm run tauri:build -- --target x86_64-pc-windows-gnu
 
 # Linux
 npm run tauri:build -- --target x86_64-unknown-linux-gnu
@@ -104,8 +141,56 @@ npm run tauri:build -- --target x86_64-unknown-linux-gnu
 After successful build, the application will be available in:
 
 - **macOS**: `src-tauri/target/release/bundle/dmg/` (DMG installer)
-- **Windows**: `src-tauri/target/release/bundle/msi/` (MSI installer)
+- **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/` (NSIS installer)
 - **Linux**: `src-tauri/target/release/bundle/appimage/` (AppImage)
+
+#### Prerequisites for Windows Build (from macOS)
+
+To build Windows binaries from macOS, you need to install additional tools:
+
+```bash
+# Install required tools via Homebrew
+brew install mingw-w64 llvm nsis
+
+# Add Windows GNU target to Rust
+rustup target add x86_64-pc-windows-gnu
+
+# Ensure llvm-rc is available in PATH
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+```
+
+#### Windows Build Commands (from macOS)
+
+**One-time setup:**
+```bash
+# Set up environment variables for Windows cross-compilation
+export CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc
+export CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++
+export AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc
+```
+
+**Build Windows executable:**
+```bash
+# Build Windows version
+npm run tauri:build -- --target x86_64-pc-windows-gnu
+```
+
+**Complete build script:**
+```bash
+#!/bin/bash
+# Set up environment
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc
+export CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++
+export AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc
+
+# Build Windows version
+npm run tauri:build -- --target x86_64-pc-windows-gnu
+```
+
+**Note**: Cross-platform compilation is experimental and may not support all features. For full compatibility, consider using a Windows host or GitHub Actions for Windows builds.
 
 #### Troubleshooting
 
@@ -115,6 +200,13 @@ After successful build, the application will be available in:
 2. **Rust Dependencies**: Ensure Rust is up to date with `rustup update`
 3. **Platform Tools**: Install required build tools for your platform
 4. **Permissions**: Ensure proper file permissions in the project directory
+5. **Windows Build from macOS**:
+   - Use `x86_64-pc-windows-gnu` target instead of `x86_64-pc-windows-msvc`
+   - Ensure `llvm-rc` is available in PATH
+   - Install NSIS for installer generation
+   - **Avoid brew rustup conflicts**: Use only official rustup, not brew version
+   - If you have brew rustup installed, remove it: `brew uninstall rustup-init`
+   - Reinstall official rustup: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y`
 
 **Clean Build:**
 

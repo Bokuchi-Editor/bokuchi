@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { checker } from 'vite-plugin-checker'
 
 // 動的ポート取得関数
 async function getPort(): Promise<number> {
@@ -65,12 +64,13 @@ export default defineConfig(async () => {
   return {
     plugins: [
       react(),
-      checker({
-        typescript: true,
-        eslint: {
-          lintCommand: 'eslint . --ext ts,tsx --max-warnings 1',
-        },
-      }),
+      // checkerプラグインを無効化（ファイル監視を避けるため）
+      // checker({
+      //   typescript: true,
+      //   eslint: {
+      //     lintCommand: 'eslint . --ext ts,tsx --max-warnings 1',
+      //   },
+      // }),
     ],
     root: '.',
     build: {
@@ -89,6 +89,7 @@ export default defineConfig(async () => {
     server: {
       port: port,
       strictPort: false, // ポートが使用中の場合は別のポートを試す
+      watch: false  // ファイル監視を完全に無効化
     },
     clearScreen: false,
     envPrefix: ['VITE_', 'TAURI_'],

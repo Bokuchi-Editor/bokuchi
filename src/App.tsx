@@ -199,10 +199,48 @@ function AppDesktop() {
 
     window.addEventListener('fileChangeDetected', handleFileChangeDetected);
 
+    // ファイル開くイベントのリスナー
+    const handleOpenFile = async (event: { payload: { file_path: string } }) => {
+      const { file_path } = event.payload;
+      console.log('Opening file from command line:', file_path);
+      console.log('Current tabs before opening:', tabs.map(t => ({ id: t.id, filePath: t.filePath, title: t.title })));
+
+      try {
+        // ファイルを開く
+        await openFile(file_path);
+        console.log('File opened successfully:', file_path);
+        setSnackbar({
+          open: true,
+          message: `Opened file: ${file_path}`,
+          severity: 'success'
+        });
+      } catch (error) {
+        console.error('Failed to open file:', error);
+        setSnackbar({
+          open: true,
+          message: `Failed to open file: ${error}`,
+          severity: 'error'
+        });
+      }
+    };
+
+    // Tauriのイベントリスナーを設定
+    let unlisten: (() => void) | undefined;
+
+    const setupTauriListener = async () => {
+      const { listen } = await import('@tauri-apps/api/event');
+      unlisten = await listen('open-file', handleOpenFile);
+    };
+
+    setupTauriListener();
+
     return () => {
       window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
+      if (unlisten) {
+        unlisten();
+      }
     };
-  }, [tabs, activeTabId]);
+  }, []);
 
   // 定期的なファイル変更チェック（5秒間隔）
   useEffect(() => {
@@ -587,9 +625,20 @@ function AppDesktop() {
           </MenuItem>
         </Menu>
 
-        {activeTab && (
-          <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-            {tabLayout === 'vertical' && (
+        <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {tabLayout === 'vertical' && (
+            <TabBar
+              tabs={tabs}
+              activeTabId={activeTabId}
+              onTabChange={handleTabChange}
+              onTabClose={handleTabClose}
+              onNewTab={handleNewTab}
+              onTabReorder={handleTabReorder}
+              layout={tabLayout}
+            />
+          )}
+          <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            {tabLayout === 'horizontal' && (
               <TabBar
                 tabs={tabs}
                 activeTabId={activeTabId}
@@ -600,22 +649,42 @@ function AppDesktop() {
                 layout={tabLayout}
               />
             )}
-            <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              {tabLayout === 'horizontal' && (
-                <TabBar
-                  tabs={tabs}
-                  activeTabId={activeTabId}
-                  onTabChange={handleTabChange}
-                  onTabClose={handleTabClose}
-                  onNewTab={handleNewTab}
-                  onTabReorder={handleTabReorder}
-                  layout={tabLayout}
-                />
-              )}
-              <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-                {viewMode === 'split' && (
-                  <>
-                    <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
+            <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+              {activeTab ? (
+                <>
+                  {viewMode === 'split' && (
+                    <>
+                      <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
+                        <Editor
+                          content={activeTab.content}
+                          onChange={handleContentChange}
+                          darkMode={theme === 'dark'}
+                          theme={theme}
+                          onStatusChange={setEditorStatus}
+                          zoomLevel={currentZoom}
+                          fileNotFound={
+                            activeTab.isNew && activeTab.filePath
+                              ? {
+                                  filePath: activeTab.filePath,
+                                  onClose: () => handleTabClose(activeTab.id),
+                                }
+                              : undefined
+                          }
+                        />
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <Preview
+                          content={activeTab.content}
+                          darkMode={theme === 'dark'}
+                          theme={theme}
+                          globalVariables={globalVariables}
+                          zoomLevel={currentZoom}
+                        />
+                      </Box>
+                    </>
+                  )}
+                  {viewMode === 'editor' && (
+                    <Box sx={{ flex: 1 }}>
                       <Editor
                         content={activeTab.content}
                         onChange={handleContentChange}
@@ -633,6 +702,8 @@ function AppDesktop() {
                         }
                       />
                     </Box>
+                  )}
+                  {viewMode === 'preview' && (
                     <Box sx={{ flex: 1 }}>
                       <Preview
                         content={activeTab.content}
@@ -642,56 +713,23 @@ function AppDesktop() {
                         zoomLevel={currentZoom}
                       />
                     </Box>
-                  </>
-                )}
-                {viewMode === 'editor' && (
-                  <Box sx={{ flex: 1 }}>
-                                        <Editor
-                      content={activeTab.content}
-                      onChange={handleContentChange}
-                      darkMode={theme === 'dark'}
-                      theme={theme}
-                      onStatusChange={setEditorStatus}
-                      zoomLevel={currentZoom}
-                      fileNotFound={
-                        activeTab.isNew && activeTab.filePath
-                          ? {
-                              filePath: activeTab.filePath,
-                              onClose: () => handleTabClose(activeTab.id),
-                            }
-                          : undefined
-                        }
-                      />
-                  </Box>
-                )}
-                {viewMode === 'preview' && (
-                  <Box sx={{ flex: 1 }}>
-                    <Preview
-                      content={activeTab.content}
-                      darkMode={theme === 'dark'}
-                      theme={theme}
-                      globalVariables={globalVariables}
-                      zoomLevel={currentZoom}
-                    />
-                  </Box>
-                )}
-              </Box>
+                  )}
+                </>
+              ) : (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                  <Typography variant="h6" color="text.secondary">
+                    {t('app.noTabsOpen')}
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
-        )}
+        </Box>
 
         {!isInitialized && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <Typography variant="h6" color="text.secondary">
               {t('app.loading')}
-            </Typography>
-          </Box>
-        )}
-
-        {isInitialized && !activeTab && tabs.length === 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <Typography variant="h6" color="text.secondary">
-              {t('app.noTabsOpen')}
             </Typography>
           </Box>
         )}

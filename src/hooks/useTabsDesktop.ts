@@ -95,11 +95,36 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
   }, [state.tabs, updateTabContent, setTabModified]);
 
-  const openFile = useCallback(async () => {
+  const openFile = useCallback(async (filePath?: string) => {
     try {
-      const result = await desktopApi.openFile();
-      if (result.error) {
-        throw new Error(result.error);
+      let result;
+      if (filePath) {
+        // ファイルパスが指定されている場合は、直接ファイルを読み込む
+        const fileResult = await desktopApi.readFileByPath(filePath);
+        if (fileResult.error) {
+          throw new Error(fileResult.error);
+        }
+        result = {
+          content: fileResult.content,
+          filePath: fileResult.filePath || filePath,
+          error: null
+        };
+      } else {
+        // ファイルパスが指定されていない場合は、ファイル選択ダイアログを開く
+        result = await desktopApi.openFile();
+        if (result.error) {
+          throw new Error(result.error);
+        }
+      }
+
+      // 同じファイルが既に開かれているかチェック
+      if (result.filePath) {
+        const existingTab = state.tabs.find(tab => tab.filePath === result.filePath);
+        if (existingTab) {
+          console.log('File already open, switching to existing tab:', result.filePath);
+          setActiveTab(existingTab.id);
+          return existingTab.id;
+        }
       }
 
       // ファイル名を取得（パスから）
@@ -130,7 +155,7 @@ export const useTabsDesktop = () => {
       console.error('Failed to open file:', error);
       throw error;
     }
-  }, [addTab, setActiveTab]);
+  }, [addTab, setActiveTab, state.tabs]);
 
   const saveTab = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
