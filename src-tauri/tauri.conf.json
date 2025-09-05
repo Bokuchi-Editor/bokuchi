@@ -42,8 +42,7 @@
       "signingIdentity": "Developer ID Application: Your Name (TEAM_ID)",
       "providerShortName": "YOUR_TEAM_ID",
       "entitlements": null,
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false
+      "hardenedRuntime": true
     },
     "linux": {
       "deb": {

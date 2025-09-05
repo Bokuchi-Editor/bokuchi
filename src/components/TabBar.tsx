@@ -327,7 +327,7 @@ const TabBar: React.FC<TabBarProps> = ({
             strategy={horizontalListSortingStrategy}
           >
             <Tabs
-              value={activeTabId || false}
+              value={activeTabId && tabs.find(t => t.id === activeTabId) ? activeTabId : false}
               onChange={handleTabClick}
               variant="scrollable"
               scrollButtons="auto"

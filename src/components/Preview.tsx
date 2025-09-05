@@ -122,6 +122,9 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             padding: 20px;
             background-color: ${darkMode ? '#1a1a1a' : '#ffffff'};
             color: ${darkMode ? '#e0e0e0' : '#333333'};
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -159,22 +162,34 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             padding: 16px;
             overflow: auto;
             margin: 1em 0;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
         }
 
         pre code {
             background-color: transparent;
             padding: 0;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
             margin: 1em 0;
+            table-layout: fixed;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         th, td {
             border: 1px solid ${darkMode ? '#404040' : '#dfe2e5'};
             padding: 6px 13px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 0;
         }
 
         th {
@@ -250,10 +265,27 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             fontSize: `${Math.round(16 * zoomLevel)}px`,
             lineHeight: `${Math.round(1.6 * zoomLevel)}`,
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            hyphens: 'auto',
           }}
         />
         <style>
           {`
+            .markdown-preview {
+              word-break: break-word;
+              overflow-wrap: break-word;
+              hyphens: auto;
+              max-width: 100%;
+              overflow-x: hidden;
+            }
+
+            .markdown-preview * {
+              word-break: break-word;
+              overflow-wrap: break-word;
+              max-width: 100%;
+            }
+
             .markdown-preview h1:first-child,
             .markdown-preview h2:first-child,
             .markdown-preview h3:first-child,
@@ -323,24 +355,36 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
               overflow: auto;
               margin: 1em 0;
               line-height: 1.4;
+              word-break: break-word;
+              overflow-wrap: break-word;
+              white-space: pre-wrap;
             }
 
             .markdown-preview pre code {
               background-color: transparent;
               padding: 0;
               line-height: 1.4;
+              word-break: break-word;
+              overflow-wrap: break-word;
+              white-space: pre-wrap;
             }
 
             .markdown-preview table {
               border-collapse: collapse;
               width: 100%;
               margin: 1em 0;
+              table-layout: fixed;
+              word-break: break-word;
+              overflow-wrap: break-word;
             }
 
             .markdown-preview th,
             .markdown-preview td {
               border: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5')};
               padding: 6px 13px;
+              word-break: break-word;
+              overflow-wrap: break-word;
+              max-width: 0;
             }
 
             .markdown-preview th {

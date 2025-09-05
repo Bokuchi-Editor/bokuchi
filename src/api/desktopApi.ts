@@ -86,8 +86,8 @@ export const desktopApi = {
       console.log('Save dialog result:', selected);
 
       if (!selected) {
-        console.log('No save location selected');
-        return { success: false, error: 'No save location selected' };
+        console.log('Save dialog cancelled by user');
+        return { success: false, error: 'Save cancelled by user' };
       }
 
       console.log('Saving file to:', selected);

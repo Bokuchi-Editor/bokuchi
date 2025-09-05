@@ -261,11 +261,13 @@ export const useTabsDesktop = () => {
 
           return true;
         } else {
-          throw new Error(result.error);
+          // ユーザーがキャンセルした場合はfalseを返す（エラーを投げない）
+          return false;
         }
       }
     } catch (error) {
       console.error('Failed to save file:', error);
+      console.error('Error details:', error);
       return false;
     }
   }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent]);

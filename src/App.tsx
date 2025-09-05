@@ -10,6 +10,7 @@ import Settings from './components/Settings';
 import HelpDialog from './components/Help';
 import StatusBar from './components/StatusBar';
 import FileChangeDialog from './components/FileChangeDialog';
+import SaveBeforeCloseDialog from './components/SaveBeforeCloseDialog';
 import { useTabsDesktop } from './hooks/useTabsDesktop';
 import { storeApi } from './api/storeApi';
 import { variableApi } from './api/variableApi';
@@ -56,6 +57,16 @@ function AppDesktop() {
     fileName: '',
     onReload: () => {},
     onCancel: () => {},
+  });
+
+  const [saveBeforeCloseDialog, setSaveBeforeCloseDialog] = useState<{
+    open: boolean;
+    fileName: string;
+    tabId: string | null;
+  }>({
+    open: false,
+    fileName: '',
+    tabId: null,
   });
 
   const {
@@ -441,25 +452,54 @@ function AppDesktop() {
     setActiveTab(tabId);
   };
 
-  const handleTabClose = async (tabId: string) => {
+  const handleTabClose = (tabId: string) => {
     const tab = tabs.find(t => t.id === tabId);
-    if (tab && tab.isModified) {
-      // 変更がある場合は確認ダイアログを表示
-      if (window.confirm(t('dialogs.saveChanges'))) {
-        const success = await saveTab(tabId);
-        if (success) {
-          removeTab(tabId);
-        }
-      } else {
-        removeTab(tabId);
-      }
+    if (!tab) return;
+
+    // 変更がある場合は確認ダイアログを表示
+    if (tab.isModified) {
+      setSaveBeforeCloseDialog({
+        open: true,
+        fileName: tab.title,
+        tabId: tabId,
+      });
     } else {
+      // 変更がない場合はそのままタブを閉じる
       removeTab(tabId);
     }
   };
 
   const handleNewTab = () => {
     createNewTab();
+  };
+
+  const handleSaveBeforeClose = async () => {
+    if (!saveBeforeCloseDialog.tabId) return;
+
+    try {
+      const success = await saveTab(saveBeforeCloseDialog.tabId);
+      if (success) {
+        removeTab(saveBeforeCloseDialog.tabId);
+        setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+      }
+      // 保存に失敗した場合やキャンセルされた場合はタブを閉じない
+    } catch (error) {
+      console.error('Failed to save file before closing:', error);
+      setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
+    } finally {
+      setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
+    }
+  };
+
+  const handleDontSaveBeforeClose = () => {
+    if (saveBeforeCloseDialog.tabId) {
+      removeTab(saveBeforeCloseDialog.tabId);
+    }
+    setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
+  };
+
+  const handleCancelBeforeClose = () => {
+    setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
   };
 
   const handleTabReorder = (reorderedTabs: Tab[]) => {
@@ -776,12 +816,19 @@ function AppDesktop() {
           onClose={handleHelpClose}
         />
 
-        <FileChangeDialog
-          open={fileChangeDialog.open}
-          fileName={fileChangeDialog.fileName}
-          onReload={fileChangeDialog.onReload}
-          onCancel={fileChangeDialog.onCancel}
-        />
+              <FileChangeDialog
+        open={fileChangeDialog.open}
+        fileName={fileChangeDialog.fileName}
+        onReload={fileChangeDialog.onReload}
+        onCancel={fileChangeDialog.onCancel}
+      />
+      <SaveBeforeCloseDialog
+        open={saveBeforeCloseDialog.open}
+        fileName={saveBeforeCloseDialog.fileName}
+        onSave={handleSaveBeforeClose}
+        onDontSave={handleDontSaveBeforeClose}
+        onCancel={handleCancelBeforeClose}
+      />
 
         {/* ステータスバー */}
         <StatusBar
