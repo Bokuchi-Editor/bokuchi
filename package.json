@@ -17,6 +17,7 @@
     "check": "npm run lint && npm run type-check",
     "lint": "eslint . --ext ts,tsx --max-warnings 0",
     "type-check": "tsc --noEmit",
+    "verify-release": "./scripts/verify-release-build.sh",
     "build:windows": "./build-windows.sh",
     "build:macos": "./build-macos.sh",
     "build:macos:signed": "./build-macos-signed.sh",

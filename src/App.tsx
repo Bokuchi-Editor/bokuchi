@@ -1,4 +1,4 @@
-import { useState, useEffect, MouseEvent } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, AppBar, Toolbar, Typography, IconButton, Snackbar, Alert, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
@@ -68,6 +68,8 @@ function AppDesktop() {
     fileName: '',
     tabId: null,
   });
+
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const {
     tabs,
@@ -550,6 +552,76 @@ function AppDesktop() {
     };
   }, [activeTab]); // activeTabが変更されたときにハンドラーを更新
 
+  // ドラッグアンドドロップのイベントハンドラー
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = async (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(event.dataTransfer.files);
+    const markdownFiles = files.filter(file =>
+      file.name.toLowerCase().endsWith('.md') ||
+      file.name.toLowerCase().endsWith('.markdown')
+    );
+
+    if (markdownFiles.length === 0) {
+      setSnackbar({
+        open: true,
+        message: t('fileOperations.noMarkdownFiles'),
+        severity: 'error'
+      });
+      return;
+    }
+
+    // 複数ファイルの場合は最初のファイルを開く
+    const fileToOpen = markdownFiles[0];
+
+    try {
+      // File APIを使用してファイルを読み込む
+      const content = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          resolve(e.target?.result as string || '');
+        };
+        reader.onerror = reject;
+        reader.readAsText(fileToOpen);
+      });
+
+      // 新しいタブを作成してファイルを開く
+      const newTabId = createNewTab();
+      updateTabContent(newTabId, content);
+
+      // ファイル名を設定（パスは含めない）
+      const fileName = fileToOpen.name;
+      console.log('Opened file via drag and drop:', fileName);
+
+      setSnackbar({
+        open: true,
+        message: t('fileOperations.fileLoaded'),
+        severity: 'success'
+      });
+    } catch (error) {
+      console.error('Failed to open dropped file:', error);
+      setSnackbar({
+        open: true,
+        message: t('fileOperations.fileLoadFailed'),
+        severity: 'error'
+      });
+    }
+  };
+
   // 初期タブを作成
   useEffect(() => {
     if (tabs.length === 0) {
@@ -560,7 +632,50 @@ function AppDesktop() {
   return (
     <ThemeProvider theme={currentTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          position: 'relative',
+          ...(isDragOver && {
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+              border: '2px dashed',
+              borderColor: 'primary.main',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+            },
+            '&::after': {
+              content: `"${t('fileOperations.dropMarkdownFile')}"`,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+              padding: 2,
+              borderRadius: 1,
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              zIndex: 1001,
+              pointerEvents: 'none',
+            }
+          })
+        }}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

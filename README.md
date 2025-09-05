@@ -162,6 +162,7 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 #### Windows Build Commands (from macOS)
 
 **One-time setup:**
+
 ```bash
 # Set up environment variables for Windows cross-compilation
 export CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc
@@ -171,12 +172,14 @@ export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc
 ```
 
 **Build Windows executable:**
+
 ```bash
 # Build Windows version
 npm run tauri:build -- --target x86_64-pc-windows-gnu
 ```
 
 **Complete build script:**
+
 ```bash
 #!/bin/bash
 # Set up environment
@@ -424,7 +427,3 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 - [ ] Documentation completion
 - [ ] Performance testing
 - [ ] User acceptance testing
-
-## License
-
-MIT

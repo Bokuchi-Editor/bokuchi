@@ -158,7 +158,9 @@
     "fileSaved": "ファイルが正常に保存されました",
     "fileSaveFailed": "ファイルの保存に失敗しました",
     "fileNotFound": "ファイルが見つかりません。",
-    "closeTab": "タブを閉じる"
+    "closeTab": "タブを閉じる",
+    "noMarkdownFiles": "Markdownファイル（.md または .markdown）をドロップしてください",
+    "dropMarkdownFile": "Markdownファイルをここにドロップ"
   },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",

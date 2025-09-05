@@ -158,7 +158,9 @@
     "fileSaved": "File saved successfully",
     "fileSaveFailed": "Failed to save file",
     "fileNotFound": "File not found.",
-    "closeTab": "Close Tab"
+    "closeTab": "Close Tab",
+    "noMarkdownFiles": "Please drop a Markdown file (.md or .markdown)",
+    "dropMarkdownFile": "Drop Markdown file here"
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",
