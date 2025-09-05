@@ -48,6 +48,19 @@ const darkTheme = createTheme({
       secondary: '#cccccc',
     },
   },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          // Paper overlay効果を無効化
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  },
 });
 
 // Pastel Theme (Soft, gentle colors)
@@ -165,8 +178,8 @@ const darculaTheme = createTheme({
       paper: '#3C3F41', // Slightly lighter for cards
     },
     text: {
-      primary: '#A9B7C6', // Soft light blue-gray for plain text
-      secondary: '#808080', // Medium gray for comments
+      primary: '#bac5d1', // Soft light blue-gray for plain text
+      secondary: '#A0A0A0', // Medium gray for comments
     },
     divider: '#323232',
   },
@@ -224,6 +237,17 @@ const darculaTheme = createTheme({
             '&.Mui-focused fieldset': {
               borderColor: '#CC7832',
             },
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          // Paper overlay効果を無効化
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
           },
         },
       },

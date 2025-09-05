@@ -242,5 +242,43 @@ export const desktopApi = {
       console.error('Error getting file hash:', error);
       throw error;
     }
+  },
+
+  // HTMLファイルを保存
+  async saveHtmlFile(htmlContent: string): Promise<SaveResponse> {
+    try {
+      console.log('Opening HTML save dialog...');
+      console.log('HTML content length:', htmlContent.length);
+
+      const selected = await save({
+        defaultPath: 'markdown-export.html',
+        filters: [
+          {
+            name: 'HTML Files',
+            extensions: ['html', 'htm']
+          },
+          {
+            name: 'All Files',
+            extensions: ['*']
+          }
+        ]
+      });
+
+      console.log('HTML save dialog result:', selected);
+
+      if (!selected) {
+        console.log('HTML save dialog cancelled by user');
+        return { success: false, error: 'Save cancelled by user' };
+      }
+
+      console.log('Saving HTML file to:', selected);
+      await writeTextFile(selected, htmlContent);
+      console.log('HTML file saved successfully');
+      return { success: true, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error saving HTML file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save HTML file';
+      return { success: false, error: errorMessage };
+    }
   }
 };
