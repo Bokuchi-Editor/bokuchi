@@ -261,7 +261,7 @@ This ensures that multiple instances of the application can run simultaneously w
 ## Project Structure
 
 ```
-md-editor/
+bokuchi/
 ├── src/                 # React frontend
 │   ├── components/      # React components
 │   │   ├── Editor.tsx   # Monaco editor component

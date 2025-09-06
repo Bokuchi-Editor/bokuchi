@@ -7,7 +7,7 @@ use std::fs;
 use std::path::Path;
 use std::sync::Mutex;
 use std::time::SystemTime;
-use tauri::Emitter;
+use tauri::{Emitter, Manager};
 
 // 変数の定義
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -312,9 +312,50 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+// macOS用のApple Events処理
+#[cfg(target_os = "macos")]
+fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
+    println!("Handling open file event for: {}", file_path);
+
+    // ファイルが存在し、拡張子がmdまたはtxtの場合
+    if Path::new(&file_path).exists() {
+        if let Some(ext) = Path::new(&file_path).extension() {
+            let ext_str = ext.to_string_lossy().to_lowercase();
+            if ext_str == "md" || ext_str == "txt" {
+                println!("Valid file type, emitting open-file event");
+                let app_handle = app_handle.clone();
+                let file_path = file_path.clone();
+
+                // 即座にイベントを発火（遅延を削除）
+                println!("Emitting open-file event for: {}", file_path);
+                let _ = app_handle.emit(
+                    "open-file",
+                    OpenFileEvent {
+                        file_path: file_path,
+                    },
+                );
+            } else {
+                println!("Invalid file extension: {}", ext_str);
+            }
+        } else {
+            println!("No file extension found");
+        }
+    } else {
+        println!("File does not exist: {}", file_path);
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            // 新しいインスタンスが起動された際に、既存のウィンドウにフォーカスを当てる
+            println!("New instance detected, attempting to focus existing window");
+            if let Some(main_window) = app.get_webview_window("main") {
+                let _ = main_window.unminimize();
+                let _ = main_window.set_focus();
+            }
+        }))
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::default().build())
@@ -335,44 +376,45 @@ pub fn run() {
             let args: Vec<String> = std::env::args().collect();
             println!("Command line args: {:?}", args);
 
+            // 環境変数をデバッグ出力（macOS関連付けのデバッグ用）
+            #[cfg(target_os = "macos")]
+            {
+                println!("Environment variables:");
+                for (key, value) in std::env::vars() {
+                    if key.contains("CF")
+                        || key.contains("APPLE")
+                        || key.contains("BUNDLE")
+                        || key.contains("LAUNCH")
+                    {
+                        println!("  {}: {}", key, value);
+                    }
+                }
+                println!("Process ID: {}", std::process::id());
+                println!("Current directory: {:?}", std::env::current_dir());
+            }
+
             // ファイルパスが引数として渡された場合
             if args.len() > 1 {
                 let file_path = &args[1];
                 println!("File path from args: {}", file_path);
-
-                // ファイルが存在し、拡張子がmdまたはtxtの場合
-                if Path::new(file_path).exists() {
-                    println!("File exists: {}", file_path);
-                    if let Some(ext) = Path::new(file_path).extension() {
-                        let ext_str = ext.to_string_lossy().to_lowercase();
-                        println!("File extension: {}", ext_str);
-                        if ext_str == "md" || ext_str == "txt" {
-                            println!("Valid file type, emitting open-file event");
-                            // フロントエンドが準備できるまで少し待ってからイベントを発火
-                            let app_handle = app.handle().clone();
-                            let file_path = file_path.to_string();
-
-                            std::thread::spawn(move || {
-                                std::thread::sleep(std::time::Duration::from_millis(2000));
-                                println!("Emitting open-file event for: {}", file_path);
-                                let _ = app_handle.emit("open-file", OpenFileEvent {
-                                    file_path: file_path,
-                                });
-                            });
-                        } else {
-                            println!("Invalid file extension: {}", ext_str);
-                        }
-                    } else {
-                        println!("No file extension found");
-                    }
-                } else {
-                    println!("File does not exist: {}", file_path);
-                }
+                handle_open_file_event(app.handle(), file_path.to_string());
             } else {
                 println!("No command line arguments provided");
             }
 
             Ok(())
+        })
+        .on_window_event(|_window, event| {
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::WindowEvent;
+                match event {
+                    WindowEvent::CloseRequested { .. } => {
+                        println!("Window close requested");
+                    }
+                    _ => {}
+                }
+            }
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -61,7 +61,7 @@ npm run tauri:build -- --target x86_64-pc-windows-gnu
 echo "✅ Windows版ビルドが完了しました！"
 echo ""
 echo "📁 ビルド成果物:"
-echo "   実行ファイル: src-tauri/target/x86_64-pc-windows-gnu/release/md-editor.exe"
+echo "   実行ファイル: src-tauri/target/x86_64-pc-windows-gnu/release/bokuchi.exe"
 echo "   インストーラー: src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Bokuchi_0.1.1_x64-setup.exe"
 echo ""
 echo "🎉 ビルドが正常に完了しました！"

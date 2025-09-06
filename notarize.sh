@@ -20,9 +20,9 @@ if [ -z "$APPLE_PASSWORD" ]; then
     exit 1
 fi
 
-if [ -z "$TEAM_ID" ]; then
-    echo "❌ TEAM_ID環境変数が設定されていません"
-    echo "   export TEAM_ID=\"YOUR_TEAM_ID\""
+if [ -z "$APPLE_TEAM_ID" ]; then
+    echo "❌ APPLE_TEAM_ID環境変数が設定されていません"
+    echo "   export APPLE_TEAM_ID=\"YOUR_TEAM_ID\""
     exit 1
 fi
 
@@ -42,7 +42,7 @@ echo "🚀 Appleに公証を送信中..."
 xcrun notarytool submit "$ZIP_PATH" \
     --apple-id "$APPLE_ID" \
     --password "$APPLE_PASSWORD" \
-    --team-id "$TEAM_ID" \
+    --team-id "$APPLE_TEAM_ID" \
     --wait
 
 echo "✅ 公証が完了しました！"
@@ -51,7 +51,7 @@ echo "🔍 公証結果を確認中..."
 xcrun notarytool log \
     --apple-id "$APPLE_ID" \
     --password "$APPLE_PASSWORD" \
-    --team-id "$TEAM_ID" \
+    --team-id "$APPLE_TEAM_ID" \
     --wait
 
 echo "📋 公証ステープルを追加中..."
