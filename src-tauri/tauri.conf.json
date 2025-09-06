@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Bokuchi",
         "width": 1200,
         "height": 800,
@@ -39,9 +40,9 @@
       "frameworks": [],
       "minimumSystemVersion": "10.13",
       "exceptionDomain": null,
-      "signingIdentity": "Developer ID Application: Your Name (TEAM_ID)",
-      "providerShortName": "YOUR_TEAM_ID",
-      "entitlements": null,
+      "signingIdentity": "Developer ID Application: SHINYA SAITA (RNGXZZHG98)",
+      "providerShortName": "RNGXZZHG98",
+      "entitlements": "entitlements.plist",
       "hardenedRuntime": true
     },
     "linux": {
@@ -56,12 +57,14 @@
       {
         "ext": ["md"],
         "mimeType": "text/markdown",
-        "description": "Markdown Document"
+        "description": "Markdown Document",
+        "role": "Editor"
       },
       {
         "ext": ["txt"],
         "mimeType": "text/plain",
-        "description": "Text Document"
+        "description": "Text Document",
+        "role": "Editor"
       }
     ]
   },

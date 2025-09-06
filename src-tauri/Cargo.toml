@@ -1,5 +1,5 @@
 [package]
-name = "md-editor"
+name = "bokuchi"
 version = "0.1.0"
 description = "A lightweight Markdown editor"
 authors = ["saita_shinya"]
@@ -29,3 +29,6 @@ regex = "1.10"
 anyhow = "1.0"
 lazy_static = "1.4"
 sha2 = "0.10"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-single-instance = "2"
