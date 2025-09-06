@@ -15,6 +15,8 @@ interface AppContentProps {
   theme: string;
   globalVariables: Record<string, string>;
   currentZoom: number;
+  isInitialized: boolean;
+  isSettingsLoaded: boolean;
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -37,6 +39,8 @@ const AppContent: React.FC<AppContentProps> = ({
   theme,
   globalVariables,
   currentZoom,
+  isInitialized,
+  isSettingsLoaded,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -71,7 +75,13 @@ const AppContent: React.FC<AppContentProps> = ({
           />
         )}
         <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-          {tabs.length === 0 ? (
+          {!isInitialized || !isSettingsLoaded ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+              <Typography variant="h6" color="text.secondary">
+                {t('app.loading')}
+              </Typography>
+            </Box>
+          ) : tabs.length === 0 ? (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
               <Typography variant="h6" color="text.secondary">
                 {t('app.noTabsOpen')}
@@ -87,7 +97,7 @@ const AppContent: React.FC<AppContentProps> = ({
             <>
               {viewMode === 'split' && (
                 <>
-                  <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider' }}>
+                  <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Editor
                       content={activeTab.content}
                       onChange={onContentChange}
@@ -105,7 +115,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       }
                     />
                   </Box>
-                  <Box sx={{ flex: 1 }}>
+                  <Box sx={{ flex: 1, boxSizing: 'border-box' }}>
                     <Preview
                       content={activeTab.content}
                       darkMode={theme === 'dark'}

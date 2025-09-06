@@ -33,6 +33,7 @@ function AppDesktop() {
     activeTabId,
     activeTab,
     isInitialized,
+    isSettingsLoaded,
     currentTheme,
     currentZoom,
     zoomPercentage,
@@ -158,6 +159,8 @@ function AppDesktop() {
           theme={theme}
           globalVariables={globalVariables}
           currentZoom={currentZoom}
+          isInitialized={isInitialized}
+          isSettingsLoaded={isSettingsLoaded}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
@@ -167,7 +170,7 @@ function AppDesktop() {
           t={t}
         />
 
-        {!isInitialized && (
+        {(!isInitialized || !isSettingsLoaded) && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <Typography variant="h6" color="text.secondary">
               {t('app.loading')}
