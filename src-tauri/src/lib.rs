@@ -9,20 +9,20 @@ use std::sync::Mutex;
 use std::time::SystemTime;
 use tauri::{Emitter, Manager};
 
-// 変数の定義
+// Variable definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Variable {
     pub name: String,
     pub value: String,
 }
 
-// 変数セット
+// Variable set
 #[derive(Debug, Serialize, Deserialize)]
 pub struct VariableSet {
     pub variables: Vec<Variable>,
 }
 
-// ファイルハッシュ情報
+// File hash information
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FileHashInfo {
     pub hash: String,
@@ -30,13 +30,13 @@ pub struct FileHashInfo {
     pub file_size: u64,
 }
 
-// ファイル開くイベント
+// File open event
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenFileEvent {
     pub file_path: String,
 }
 
-// 変数処理器
+// Variable processor
 pub struct VariableProcessor {
     global_variables: Mutex<HashMap<String, String>>,
 }
@@ -48,25 +48,25 @@ impl VariableProcessor {
         }
     }
 
-    // グローバル変数を設定
+    // Set global variable
     pub fn set_global_variable(&self, name: String, value: String) {
         let mut vars = self.global_variables.lock().unwrap();
         vars.insert(name, value);
     }
 
-    // グローバル変数を取得
+    // Get global variable
     pub fn get_global_variable(&self, name: &str) -> Option<String> {
         let vars = self.global_variables.lock().unwrap();
         vars.get(name).cloned()
     }
 
-    // すべてのグローバル変数を取得
+    // Get all global variables
     pub fn get_all_global_variables(&self) -> HashMap<String, String> {
         let vars = self.global_variables.lock().unwrap();
         vars.clone()
     }
 
-    // Markdownから変数定義を抽出
+    // Extract variable definitions from Markdown
     pub fn parse_variables_from_markdown(&self, content: &str) -> (Vec<Variable>, String) {
         let mut variables = Vec::new();
         let lines: Vec<&str> = content.lines().collect();
@@ -75,9 +75,9 @@ impl VariableProcessor {
         for line in lines {
             let trimmed = line.trim();
 
-            // 変数定義のパターンをチェック
+            // Check for variable definition pattern
             if trimmed.starts_with("<!-- @var ") && trimmed.ends_with(" -->") {
-                // <!-- @var name: value --> の形式
+                // <!-- @var name: value --> format
                 let var_content = trimmed
                     .strip_prefix("<!-- @var ")
                     .unwrap()
@@ -90,8 +90,8 @@ impl VariableProcessor {
                     variables.push(Variable { name, value });
                 }
             } else if trimmed.starts_with("<!-- @include:") && trimmed.ends_with(" -->") {
-                // <!-- @include: filename --> の形式（将来実装）
-                // 現在はスキップ
+                // <!-- @include: filename --> format (future implementation)
+                // Currently skipped
             } else {
                 processed_lines.push(line);
             }
@@ -100,25 +100,25 @@ impl VariableProcessor {
         (variables, processed_lines.join("\n"))
     }
 
-    // Markdownコンテンツ内の変数を展開
+    // Expand variables in Markdown content
     pub fn process_variables(&self, content: &str) -> String {
-        // ファイル内の変数定義を抽出
+        // Extract variable definitions from file
         let (file_variables, processed_content) = self.parse_variables_from_markdown(content);
 
-        // ファイル内変数をマップに変換
+        // Convert file variables to map
         let mut file_var_map = HashMap::new();
         for v in file_variables {
             file_var_map.insert(v.name, v.value);
         }
 
-        // 変数展開の正規表現
+        // Regular expression for variable expansion
         let re = Regex::new(r"\{\{([^}]+)\}\}").unwrap();
 
-        // 変数を展開
+        // Expand variables
         let result = re.replace_all(&processed_content, |caps: &regex::Captures| {
             let var_name = caps.get(1).unwrap().as_str().trim();
 
-            // ファイル内変数を優先、次にグローバル変数
+            // Prioritize file variables, then global variables
             if let Some(value) = file_var_map.get(var_name) {
                 return value.clone();
             }
@@ -126,14 +126,14 @@ impl VariableProcessor {
                 return value;
             }
 
-            // 変数が見つからない場合は元の文字列を返す
+            // Return original string if variable not found
             caps[0].to_string()
         });
 
         result.to_string()
     }
 
-    // YAMLファイルから変数を読み込み
+    // Load variables from YAML file
     pub fn load_variables_from_yaml(&self, yaml_content: &str) -> Result<()> {
         let var_set: VariableSet = serde_yaml::from_str(yaml_content)?;
         let mut vars = self.global_variables.lock().unwrap();
@@ -145,7 +145,7 @@ impl VariableProcessor {
         Ok(())
     }
 
-    // 変数をYAML形式でエクスポート
+    // Export variables to YAML format
     pub fn export_variables_to_yaml(&self) -> Result<String> {
         let vars = self.get_all_global_variables();
         let variables: Vec<Variable> = vars
@@ -160,25 +160,25 @@ impl VariableProcessor {
     }
 }
 
-// グローバル変数処理器のインスタンス
+// Global variable processor instance
 lazy_static::lazy_static! {
     static ref VARIABLE_PROCESSOR: VariableProcessor = VariableProcessor::new();
 }
 
-// Tauriコマンド: グローバル変数を設定
+// Tauri command: Set global variable
 #[tauri::command]
 fn set_global_variable(name: String, value: String) -> Result<(), String> {
     VARIABLE_PROCESSOR.set_global_variable(name, value);
     Ok(())
 }
 
-// Tauriコマンド: グローバル変数を取得
+// Tauri command: Get global variables
 #[tauri::command]
 fn get_global_variables() -> Result<HashMap<String, String>, String> {
     Ok(VARIABLE_PROCESSOR.get_all_global_variables())
 }
 
-// Tauriコマンド: YAMLから変数を読み込み
+// Tauri command: Load variables from YAML
 #[tauri::command]
 fn load_variables_from_yaml(yaml_content: String) -> Result<(), String> {
     VARIABLE_PROCESSOR
@@ -186,7 +186,7 @@ fn load_variables_from_yaml(yaml_content: String) -> Result<(), String> {
         .map_err(|e| e.to_string())
 }
 
-// Tauriコマンド: 変数をYAML形式でエクスポート
+// Tauri command: Export variables to YAML format
 #[tauri::command]
 fn export_variables_to_yaml() -> Result<String, String> {
     VARIABLE_PROCESSOR
@@ -194,13 +194,13 @@ fn export_variables_to_yaml() -> Result<String, String> {
         .map_err(|e| e.to_string())
 }
 
-// Tauriコマンド: Markdownを処理（変数展開）
+// Tauri command: Process Markdown (variable expansion)
 #[tauri::command]
 fn process_markdown(
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
-    // グローバル変数を一時的に設定
+    // Temporarily set global variables
     for (name, value) in global_variables {
         VARIABLE_PROCESSOR.set_global_variable(name, value);
     }
@@ -209,13 +209,13 @@ fn process_markdown(
     Ok(result)
 }
 
-// Tauriコマンド: 変数展開済みのMarkdownコンテンツを取得
+// Tauri command: Get expanded Markdown content
 #[tauri::command]
 fn get_expanded_markdown(
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
-    // グローバル変数を一時的に設定
+    // Temporarily set global variables
     for (name, value) in global_variables {
         VARIABLE_PROCESSOR.set_global_variable(name, value);
     }
@@ -224,7 +224,7 @@ fn get_expanded_markdown(
     Ok(result)
 }
 
-// ファイルハッシュを計算
+// Calculate file hash
 fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
     let metadata = fs::metadata(path).map_err(|_| "File not found".to_string())?;
 
@@ -237,7 +237,7 @@ fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
 
     let file_size = metadata.len();
 
-    // ファイルサイズが大きすぎる場合はハッシュ計算をスキップ
+    // Skip hash calculation for large files
     if file_size > 10 * 1024 * 1024 {
         return Ok(FileHashInfo {
             hash: "large_file".to_string(),
@@ -246,7 +246,7 @@ fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
         });
     }
 
-    // ファイル内容を読み込んでハッシュ計算
+    // Read file content and calculate hash
     let content = fs::read_to_string(path).map_err(|_| "Failed to read file".to_string())?;
     let mut hasher = Sha256::new();
     hasher.update(content.as_bytes());
@@ -259,16 +259,16 @@ fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
     })
 }
 
-// Tauriコマンド: ファイルを読み込み
+// Tauri command: Read file
 #[tauri::command]
 async fn read_file(path: String) -> Result<String, String> {
-    // ファイルサイズチェック（10MB制限）
+    // File size check (10MB limit)
     let metadata = fs::metadata(&path).map_err(|_| "File not found".to_string())?;
     if metadata.len() > 10 * 1024 * 1024 {
         return Err("File too large (max 10MB)".to_string());
     }
 
-    // ファイル拡張子チェック
+    // File extension check
     if let Some(ext) = Path::new(&path).extension() {
         let ext_str = ext.to_string_lossy().to_lowercase();
         if ext_str != "md" && ext_str != "txt" {
@@ -276,14 +276,14 @@ async fn read_file(path: String) -> Result<String, String> {
         }
     }
 
-    // ファイル読み込み
+    // Read file
     fs::read_to_string(&path).map_err(|_| "Failed to read file".to_string())
 }
 
-// Tauriコマンド: ファイルを保存
+// Tauri command: Save file
 #[tauri::command]
 async fn save_file(path: String, content: String) -> Result<(), String> {
-    // ファイル拡張子チェック
+    // File extension check
     if let Some(ext) = Path::new(&path).extension() {
         let ext_str = ext.to_string_lossy().to_lowercase();
         if ext_str != "md" && ext_str != "txt" {
@@ -291,16 +291,16 @@ async fn save_file(path: String, content: String) -> Result<(), String> {
         }
     }
 
-    // ディレクトリ作成
+    // Create directory
     if let Some(parent) = Path::new(&path).parent() {
         fs::create_dir_all(parent).map_err(|_| "Failed to create directory".to_string())?;
     }
 
-    // ファイル保存
+    // Save file
     fs::write(&path, content).map_err(|_| "Failed to save file".to_string())
 }
 
-// Tauriコマンド: ファイルハッシュを取得
+// Tauri command: Get file hash
 #[tauri::command]
 async fn get_file_hash(path: String) -> Result<FileHashInfo, String> {
     calculate_file_hash(&path)
@@ -312,12 +312,12 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-// macOS用のApple Events処理
+// macOS Apple Events handling
 #[cfg(target_os = "macos")]
 fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
     println!("Handling open file event for: {}", file_path);
 
-    // ファイルが存在し、拡張子がmdまたはtxtの場合
+    // If file exists and has md or txt extension
     if Path::new(&file_path).exists() {
         if let Some(ext) = Path::new(&file_path).extension() {
             let ext_str = ext.to_string_lossy().to_lowercase();
@@ -326,7 +326,7 @@ fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
                 let app_handle = app_handle.clone();
                 let file_path = file_path.clone();
 
-                // 即座にイベントを発火（遅延を削除）
+                // Emit event immediately (removed delay)
                 println!("Emitting open-file event for: {}", file_path);
                 let _ = app_handle.emit(
                     "open-file",
@@ -349,7 +349,7 @@ fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            // 新しいインスタンスが起動された際に、既存のウィンドウにフォーカスを当てる
+            // Focus existing window when new instance is launched
             println!("New instance detected, attempting to focus existing window");
             if let Some(main_window) = app.get_webview_window("main") {
                 let _ = main_window.unminimize();
@@ -372,11 +372,11 @@ pub fn run() {
             get_file_hash
         ])
         .setup(|app| {
-            // コマンドライン引数を取得
+            // Get command line arguments
             let args: Vec<String> = std::env::args().collect();
             println!("Command line args: {:?}", args);
 
-            // 環境変数をデバッグ出力（macOS関連付けのデバッグ用）
+            // Debug output for environment variables (for macOS file association debugging)
             #[cfg(target_os = "macos")]
             {
                 println!("Environment variables:");
@@ -393,7 +393,7 @@ pub fn run() {
                 println!("Current directory: {:?}", std::env::current_dir());
             }
 
-            // ファイルパスが引数として渡された場合
+            // If file path is passed as argument
             if args.len() > 1 {
                 let file_path = &args[1];
                 println!("File path from args: {}", file_path);

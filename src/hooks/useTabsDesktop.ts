@@ -55,45 +55,9 @@ export const useTabsDesktop = () => {
       return;
     }
 
-    // 新しいファイルでない場合、ファイル変更をチェック
-    if (!tab.isNew && tab.filePath) {
-      const hasChanged = await detectFileChange(tab);
-      if (hasChanged) {
-        // ファイル変更検出イベントを発火
-        const event = new CustomEvent('fileChangeDetected', {
-          detail: {
-            fileName: tab.title,
-            tabId: id,
-            onReload: async (newContent: string) => {
-              console.log('Reloading file with new content:', newContent.length, 'characters');
-              // コンテンツを更新
-              updateTabContent(id, newContent);
-              setTabModified(id, false);
-
-              // ファイルハッシュ情報を更新
-              try {
-                const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
-                updateTabFileHash(id, newHashInfo);
-                console.log('File hash updated after reload:', newHashInfo);
-              } catch (error) {
-                console.warn('Failed to update file hash after reload:', error);
-              }
-
-              // タブをアクティブにする
-              dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
-            },
-            onCancel: () => {
-              dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
-            },
-          },
-        });
-        window.dispatchEvent(event);
-        return;
-      }
-    }
-
+    // ファイル変更検知はuseAppStateの定期的チェックに統一
     dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
-  }, [state.tabs, updateTabContent, setTabModified]);
+  }, [state.tabs]);
 
   const openFile = useCallback(async (filePath?: string) => {
     try {
