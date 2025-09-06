@@ -1,0 +1,151 @@
+/* CSS Variables for theming */
+:root {
+  /* Base colors */
+  --color-primary: #0366d6;
+  --color-primary-hover: #0256cc;
+  --color-background: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-text: #24292e;
+  --color-text-secondary: #6a737d;
+  --color-border: #dfe2e5;
+  --color-border-light: #eaecef;
+
+  /* Code colors */
+  --color-code-background: rgba(27, 31, 35, 0.05);
+  --color-code-text: #24292e;
+  --color-pre-background: #f6f8fa;
+  --color-pre-text: #24292e;
+
+  /* Syntax highlighting colors */
+  --color-syntax-comment: #6a737d;
+  --color-syntax-keyword: #d73a49;
+  --color-syntax-string: #032f62;
+  --color-syntax-number: #005cc5;
+  --color-syntax-function: #6f42c1;
+  --color-syntax-variable: #e36209;
+  --color-syntax-type: #005cc5;
+
+  /* Search highlight */
+  --color-search-highlight: #ffeb3b;
+  --color-search-highlight-text: #000000;
+
+  /* Status bar */
+  --color-status-background: #f6f8fa;
+  --color-status-text: #6a737d;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-background: #0d1117;
+  --color-surface: #161b22;
+  --color-text: #c9d1d9;
+  --color-text-secondary: #8b949e;
+  --color-border: #30363d;
+  --color-border-light: #21262d;
+
+  --color-code-background: rgba(110, 118, 129, 0.4);
+  --color-code-text: #c9d1d9;
+  --color-pre-background: #21262d;
+  --color-pre-text: #c9d1d9;
+
+  --color-syntax-comment: #8b949e;
+  --color-syntax-keyword: #ff7b72;
+  --color-syntax-string: #a5d6ff;
+  --color-syntax-number: #79c0ff;
+  --color-syntax-function: #d2a8ff;
+  --color-syntax-variable: #ffa657;
+  --color-syntax-type: #79c0ff;
+
+  --color-search-highlight: #ffd54f;
+  --color-search-highlight-text: #000000;
+
+  --color-status-background: #161b22;
+  --color-status-text: #8b949e;
+}
+
+/* Pastel theme */
+[data-theme="pastel"] {
+  --color-background: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-text: #495057;
+  --color-text-secondary: #6c757d;
+  --color-border: #e9ecef;
+  --color-border-light: #f1f3f4;
+
+  --color-code-background: #f1f3f4;
+  --color-code-text: #d63384;
+  --color-pre-background: #f8f9fa;
+  --color-pre-text: #495057;
+
+  --color-syntax-comment: #6c757d;
+  --color-syntax-keyword: #d63384;
+  --color-syntax-string: #198754;
+  --color-syntax-number: #fd7e14;
+  --color-syntax-function: #6f42c1;
+  --color-syntax-variable: #fd7e14;
+  --color-syntax-type: #0d6efd;
+
+  --color-search-highlight: #ffeb3b;
+  --color-search-highlight-text: #000000;
+
+  --color-status-background: #f8f9fa;
+  --color-status-text: #6c757d;
+}
+
+/* Vivid theme */
+[data-theme="vivid"] {
+  --color-background: #ffffff;
+  --color-surface: #f7fafc;
+  --color-text: #2d3748;
+  --color-text-secondary: #4a5568;
+  --color-border: #e2e8f0;
+  --color-border-light: #edf2f7;
+
+  --color-code-background: #2d3748;
+  --color-code-text: #ff6b35;
+  --color-pre-background: #1a202c;
+  --color-pre-text: #f7fafc;
+
+  --color-syntax-comment: #a0aec0;
+  --color-syntax-keyword: #ff6b35;
+  --color-syntax-string: #10b981;
+  --color-syntax-number: #fbbf24;
+  --color-syntax-function: #8b5cf6;
+  --color-syntax-variable: #fbbf24;
+  --color-syntax-type: #3b82f6;
+
+  --color-search-highlight: #ffeb3b;
+  --color-search-highlight-text: #000000;
+
+  --color-status-background: #f7fafc;
+  --color-status-text: #4a5568;
+}
+
+/* Darcula theme */
+[data-theme="darcula"] {
+  --color-background: #2b2b2b;
+  --color-surface: #3c3f41;
+  --color-text: #a9b7c6;
+  --color-text-secondary: #808080;
+  --color-border: #323232;
+  --color-border-light: #2b2b2b;
+
+  --color-code-background: #3c3f41;
+  --color-code-text: #cc7832;
+  --color-pre-background: #2b2b2b;
+  --color-pre-text: #a9b7c6;
+
+  --color-syntax-comment: #808080;
+  --color-syntax-keyword: #cc7832;
+  --color-syntax-string: #6a8759;
+  --color-syntax-number: #6897bb;
+  --color-syntax-function: #a9b7c6;
+  --color-syntax-variable: #6897bb;
+  --color-syntax-type: #ffc66d;
+
+  --color-search-highlight: #ffd54f;
+  --color-search-highlight-text: #000000;
+
+  --color-status-background: #3c3f41;
+  --color-status-text: #808080;
+}

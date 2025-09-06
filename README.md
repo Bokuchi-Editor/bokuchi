@@ -7,15 +7,19 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - **Cross-platform**: Runs on Windows, macOS, and Linux
 - **Lightweight**: Built with Tauri for minimal resource usage
 - **Real-time preview**: Live Markdown preview with syntax highlighting
-- **Dark/Light mode**: Toggle between themes
-- **Variable system**: Support for custom variables in Markdown
+- **Multiple themes**: Default, Dark, Pastel, Vivid, and Darcula themes
+- **Variable system**: Support for custom variables in Markdown (local and global)
 - **Tab management**: Multiple files editing with tabs
 - **Search and replace**: Built-in search functionality
 - **HTML export**: Export preview as HTML files
 - **Standalone**: No external dependencies or server required
 - **State persistence**: Automatically saves and restores application state
 - **Native file operations**: Full file system access with native dialogs
-- **Dynamic port allocation**: Automatically finds available ports to prevent conflicts
+- **Single instance**: Prevents multiple application instances
+- **File change detection**: Automatically detects external file changes
+- **Internationalization**: Support for English and Japanese
+- **Zoom functionality**: Adjustable zoom levels for editor and preview
+- **Responsive design**: Optimized for different screen sizes
 
 ## Current Status
 
@@ -28,11 +32,17 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - ✅ Variable system (file-local and global variables)
 - ✅ Tab management with state persistence
 - ✅ Search and replace functionality
-- ✅ Dark/Light mode
+- ✅ Multiple themes (Default, Dark, Pastel, Vivid, Darcula)
 - ✅ HTML export
 - ✅ Standalone operation (no HTTP server)
 - ✅ Application state persistence across sessions
 - ✅ File not found handling for restored tabs
+- ✅ Single instance prevention
+- ✅ File change detection and reload
+- ✅ Internationalization (English/Japanese)
+- ✅ Zoom functionality
+- ✅ Responsive design
+- ✅ Refactored codebase with modular components
 
 ## Development
 
@@ -264,14 +274,27 @@ This ensures that multiple instances of the application can run simultaneously w
 bokuchi/
 ├── src/                 # React frontend
 │   ├── components/      # React components
+│   │   ├── AppHeader.tsx # Application header component
+│   │   ├── AppContent.tsx # Main content component
+│   │   ├── AppDialogs.tsx # Dialog components
 │   │   ├── Editor.tsx   # Monaco editor component
 │   │   ├── Preview.tsx  # Markdown preview
 │   │   ├── TabBar.tsx   # Tab management
 │   │   ├── SaveFileDialog.tsx # File save dialog
 │   │   └── VariableSettings.tsx # Variable configuration
 │   ├── hooks/          # Custom hooks
+│   │   ├── useAppState.ts # Main application state hook
 │   │   ├── useTabs.ts  # Tab management hook (web)
-│   │   └── useTabsDesktop.ts # Tab management hook (desktop)
+│   │   ├── useTabsDesktop.ts # Tab management hook (desktop)
+│   │   └── useZoom.ts  # Zoom functionality hook
+│   ├── styles/         # CSS styles
+│   │   ├── variables.css # CSS variables for theming
+│   │   ├── base.css    # Base styles
+│   │   ├── markdown.css # Markdown preview styles
+│   │   └── syntax.css  # Syntax highlighting styles
+│   ├── locales/        # Internationalization
+│   │   ├── en.json     # English translations
+│   │   └── ja.json     # Japanese translations
 │   ├── reducers/       # State management
 │   │   └── tabReducer.ts # Tab state reducer
 │   ├── types/          # TypeScript types
@@ -281,12 +304,13 @@ bokuchi/
 │   │   ├── fileApi.ts  # File operations (web)
 │   │   ├── variableApi.ts # Variable processing
 │   │   └── storeApi.ts # State persistence
-│   ├── App.tsx         # Main app component (web)
-│   └── AppDesktop.tsx  # Main app component (desktop)
+│   ├── App.tsx         # Main app component
+│   └── i18n.ts         # Internationalization setup
 └── src-tauri/          # Tauri configuration and Rust backend
     ├── src/lib.rs      # Rust backend (variables, file I/O, state persistence)
     ├── src/main.rs     # Tauri entry point
     ├── tauri.conf.json # Tauri configuration
+    ├── entitlements.plist # macOS entitlements
     └── capabilities/   # Tauri v2 capabilities
         └── default.json # File system and store permissions
 ```
@@ -351,6 +375,44 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 - **Variables**: Server-side processing → Client-side Rust processing
 - **State Management**: Manual state → Automatic persistence with Tauri Store
 
+## Recent Updates
+
+### Code Refactoring (Latest)
+
+The codebase has been significantly refactored to improve maintainability and organization:
+
+#### 1. Component Architecture
+
+- **AppHeader**: Extracted header component with menu and controls
+- **AppContent**: Main content area with editor, preview, and tabs
+- **AppDialogs**: Centralized dialog management
+- **useAppState**: Unified application state management hook
+
+#### 2. CSS Organization
+
+- **CSS Variables**: Centralized theming with CSS custom properties
+- **Modular Styles**: Separated base, markdown, and syntax styles
+- **Theme Support**: Enhanced theme system with consistent variables
+
+#### 3. Shell Scripts
+
+- **Directory Independence**: All build scripts now work from any directory
+- **Cross-platform**: Improved Windows and macOS build scripts
+- **Error Handling**: Better error messages and validation
+
+#### 4. Code Quality
+
+- **English Comments**: All code comments translated to English
+- **TypeScript**: Improved type safety and error handling
+- **ESLint**: Zero-warning policy enforced
+
+#### 5. New Features
+
+- **Single Instance**: Prevents multiple application instances
+- **File Change Detection**: Automatic external file change detection
+- **Zoom Functionality**: Adjustable zoom levels for editor and preview
+- **Internationalization**: Full English/Japanese support
+
 ## Roadmap
 
 - [x] Phase 1: Basic Markdown editor (reading, saving, preview)
@@ -360,9 +422,10 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 - [x] Phase 5: Tauri desktop version with full file system access
 - [x] Phase 6: Migration from Go to Rust backend
 - [x] Phase 7: State persistence and file restoration
-- [ ] Phase 8: Advanced features and optimizations
+- [x] Phase 8: Code refactoring and architecture improvements
+- [ ] Phase 9: Advanced features and optimizations
 
-### Phase 8: Advanced Features and Optimizations
+### Phase 9: Advanced Features and Optimizations
 
 #### 1. Enhanced Settings and Customization
 

@@ -1,0 +1,43 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+#root {
+  height: 100vh;
+}
+
+/* Search highlight */
+.search-highlight {
+  background-color: var(--color-search-highlight) !important;
+  color: var(--color-search-highlight-text) !important;
+}
+
+/* Status bar */
+.status-bar {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  background-color: var(--color-status-background);
+  color: var(--color-status-text);
+}
+
+.status-bar .MuiTypography-caption {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}

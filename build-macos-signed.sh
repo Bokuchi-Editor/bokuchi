@@ -5,6 +5,10 @@
 
 set -e  # エラーが発生したら即座に終了
 
+# スクリプトのディレクトリを取得
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 echo "🍎 macOS版署名済みビルドを開始します..."
 
 # 証明書の存在確認
