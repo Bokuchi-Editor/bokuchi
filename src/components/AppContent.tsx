@@ -115,7 +115,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       }
                     />
                   </Box>
-                  <Box sx={{ flex: 1, boxSizing: 'border-box' }}>
+                  <Box sx={{ flex: 1, borderLeft: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Preview
                       content={activeTab.content}
                       darkMode={theme === 'dark'}
