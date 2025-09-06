@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
@@ -34,8 +34,28 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, th
     regex: false,
   });
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
 
+  // ウィンドウリサイズ検知とMonaco Editor再初期化
+  useEffect(() => {
+    let resizeTimeout: number;
 
+    const handleResize = () => {
+      // リサイズ完了を待つ（デバウンス）
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Monaco Editorを再初期化
+        setEditorKey(prev => prev + 1);
+      }, 150);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
@@ -234,6 +254,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, th
           </Box>
         ) : (
           <Editor
+            key={editorKey}
             height="100%"
             defaultLanguage="markdown"
             value={content}
@@ -250,7 +271,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, th
               renderWhitespace: 'selection',
               folding: true,
               lineDecorationsWidth: 10,
-              lineNumbersMinChars: 3,
+              lineNumbersMinChars: 2,
               glyphMargin: true,
               contextmenu: true,
               quickSuggestions: false,
