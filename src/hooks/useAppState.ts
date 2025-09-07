@@ -18,6 +18,7 @@ export const useAppState = () => {
   const [theme, setTheme] = useState<ThemeName>('default');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [recentFilesOpen, setRecentFilesOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
@@ -443,6 +444,23 @@ export const useAppState = () => {
     setHelpOpen(false);
   };
 
+  const handleRecentFileSelect = async (filePath: string) => {
+    try {
+      await openFile(filePath);
+    } catch (error) {
+      console.error('Failed to open recent file:', error);
+      setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
+    }
+  };
+
+  const handleRecentFilesOpen = () => {
+    setRecentFilesOpen(true);
+  };
+
+  const handleRecentFilesClose = () => {
+    setRecentFilesOpen(false);
+  };
+
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
     i18n.changeLanguage(newLanguage);
@@ -721,6 +739,29 @@ export const useAppState = () => {
       event.preventDefault();
       handleSaveFileAs();
     }
+    // Command + R: Recent Files
+    else if ((event.metaKey || event.ctrlKey) && event.key === 'r') {
+      event.preventDefault();
+      handleRecentFilesOpen();
+    }
+    // Ctrl + Tab: Switch Tabs (Next)
+    else if (event.ctrlKey && event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+      if (tabs.length > 1) {
+        const currentIndex = tabs.findIndex(tab => tab.id === activeTabId);
+        const nextIndex = (currentIndex + 1) % tabs.length;
+        setActiveTab(tabs[nextIndex].id);
+      }
+    }
+    // Ctrl + Shift + Tab: Switch Tabs (Previous)
+    else if (event.ctrlKey && event.key === 'Tab' && event.shiftKey) {
+      event.preventDefault();
+      if (tabs.length > 1) {
+        const currentIndex = tabs.findIndex(tab => tab.id === activeTabId);
+        const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        setActiveTab(tabs[prevIndex].id);
+      }
+    }
   };
 
   return {
@@ -728,6 +769,7 @@ export const useAppState = () => {
     theme,
     settingsOpen,
     helpOpen,
+    recentFilesOpen,
     fileMenuAnchor,
     snackbar,
     globalVariables,
@@ -759,6 +801,9 @@ export const useAppState = () => {
     handleSettingsClose,
     handleHelpOpen,
     handleHelpClose,
+    handleRecentFileSelect,
+    handleRecentFilesOpen,
+    handleRecentFilesClose,
     handleLanguageChange,
     handleThemeChange,
     handleAppSettingsChange,

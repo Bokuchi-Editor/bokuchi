@@ -21,6 +21,21 @@
     "editorOnly": "Editor Only",
     "previewOnly": "Preview Only"
   },
+  "recentFiles": {
+    "title": "Recent Files",
+    "dialogTitle": "Recent Files",
+    "searchPlaceholder": "Search by filename or path...",
+    "noResults": "No search results found",
+    "noFiles": "No recent files",
+    "copyPath": "Copy Path",
+    "removeFromRecent": "Remove from Recent Files",
+    "pathCopied": "Path copied to clipboard",
+    "removedFromRecent": "Removed from Recent Files",
+    "fileNotFound": "File not found",
+    "loadFailed": "Failed to load file",
+    "removeFailed": "Failed to remove",
+    "copyFailed": "Failed to copy path"
+  },
   "shortcuts": {
     "newFile": "⌘N",
     "openFile": "⌘O",

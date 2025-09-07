@@ -6,6 +6,7 @@ import AppHeader from './components/AppHeader';
 import AppContent from './components/AppContent';
 import AppDialogs from './components/AppDialogs';
 import StatusBar from './components/StatusBar';
+import RecentFilesDialog from './components/RecentFilesDialog';
 import { useAppState } from './hooks/useAppState';
 import './i18n';
 import './styles/variables.css';
@@ -19,6 +20,7 @@ function AppDesktop() {
     theme,
     settingsOpen,
     helpOpen,
+    recentFilesOpen,
     fileMenuAnchor,
     snackbar,
     globalVariables,
@@ -47,6 +49,8 @@ function AppDesktop() {
     handleSettingsClose,
     handleHelpOpen,
     handleHelpClose,
+    handleRecentFileSelect,
+    handleRecentFilesClose,
     handleThemeChange,
     handleAppSettingsChange,
     handleFileMenuOpen,
@@ -145,6 +149,7 @@ function AppDesktop() {
           onSaveWithVariables={handleSaveWithVariables}
           onSettingsOpen={handleSettingsOpen}
           onHelpOpen={handleHelpOpen}
+          onRecentFileSelect={handleRecentFileSelect}
           t={t}
         />
 
@@ -201,6 +206,13 @@ function AppDesktop() {
           onSaveBeforeClose={handleSaveBeforeClose}
           onDontSaveBeforeClose={handleDontSaveBeforeClose}
           onCancelBeforeClose={handleCancelBeforeClose}
+          t={t}
+        />
+
+        <RecentFilesDialog
+          open={recentFilesOpen}
+          onClose={handleRecentFilesClose}
+          onFileSelect={handleRecentFileSelect}
           t={t}
         />
 

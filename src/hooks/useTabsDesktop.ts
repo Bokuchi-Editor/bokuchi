@@ -114,6 +114,21 @@ export const useTabsDesktop = () => {
       });
 
       setActiveTab(tabId);
+
+      // Recent Filesに追加
+      try {
+        await storeApi.addRecentFile(
+          result.filePath || '',
+          fileName,
+          result.content,
+          fileHashInfo?.file_size,
+          fileHashInfo?.modified_time
+        );
+      } catch (error) {
+        console.error('Failed to add to recent files:', error);
+        // Recent Filesの追加に失敗してもファイルを開く処理は続行
+      }
+
       return tabId;
     } catch (error) {
       console.error('Failed to open file:', error);
@@ -195,6 +210,15 @@ export const useTabsDesktop = () => {
               const newHashInfo = await desktopApi.getFileHash(tab.filePath);
               updateTabFileHash(id, newHashInfo);
               console.log('File hash updated after save:', newHashInfo);
+
+              // Recent Filesに追加
+              await storeApi.addRecentFile(
+                tab.filePath,
+                tab.title,
+                tab.content,
+                newHashInfo.file_size,
+                newHashInfo.modified_time
+              );
             } catch (error) {
               console.warn('Failed to update file hash after save:', error);
             }
@@ -219,6 +243,15 @@ export const useTabsDesktop = () => {
             const newHashInfo = await desktopApi.getFileHash(result.filePath);
             updateTabFileHash(id, newHashInfo);
             console.log('File hash updated after save as:', newHashInfo);
+
+            // Recent Filesに追加
+            await storeApi.addRecentFile(
+              result.filePath,
+              displayName,
+              tab.content,
+              newHashInfo.file_size,
+              newHashInfo.modified_time
+            );
           } catch (error) {
             console.warn('Failed to update file hash after save as:', error);
           }
