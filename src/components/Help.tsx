@@ -451,6 +451,24 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <List>
         <ListItem>
           <ListItemText
+            primary="⌘+ / Ctrl+Shift++"
+            secondary={t('help.keyboardShortcuts.shortcuts.zoomIn')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="⌘- / Ctrl+-"
+            secondary={t('help.keyboardShortcuts.shortcuts.zoomOut')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="⌘0 / Ctrl+0"
+            secondary={t('help.keyboardShortcuts.shortcuts.resetZoom')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
             primary="⌘, / Ctrl+,"
             secondary={t('help.keyboardShortcuts.shortcuts.settings')}
           />
