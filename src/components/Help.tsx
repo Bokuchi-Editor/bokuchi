@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -16,7 +16,7 @@ import {
   CardContent,
   Chip,
 } from '@mui/material';
-import { Close, Help, Code, Book } from '@mui/icons-material';
+import { Close, Help, Code, Book, Keyboard, School } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 interface HelpProps {
@@ -24,11 +24,19 @@ interface HelpProps {
   onClose: () => void;
 }
 
-type HelpPage = 'getting-started' | 'variables';
+type HelpPage = 'getting-started' | 'variables' | 'keyboard-shortcuts' | 'tutorials';
 
 const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState<HelpPage>('getting-started');
+  const dialogContentRef = useRef<HTMLDivElement>(null);
+
+  // タブ切り替え時にスクロール位置をリセット
+  useEffect(() => {
+    if (dialogContentRef.current) {
+      dialogContentRef.current.scrollTop = 0;
+    }
+  }, [currentPage]);
 
   const helpPages = [
     {
@@ -40,6 +48,16 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       id: 'variables' as HelpPage,
       title: t('help.variables.title'),
       icon: <Code />,
+    },
+    {
+      id: 'keyboard-shortcuts' as HelpPage,
+      title: t('help.keyboardShortcuts.title'),
+      icon: <Keyboard />,
+    },
+    {
+      id: 'tutorials' as HelpPage,
+      title: t('help.tutorials.title'),
+      icon: <School />,
     },
   ];
 
@@ -121,32 +139,6 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
           </Card>
         </Box>
       </Box>
-
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        {t('help.gettingStarted.shortcuts')}
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText
-            primary={`⌘N - ${t('help.gettingStarted.shortcutNewFile')}`}
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary={`⌘O - ${t('help.gettingStarted.shortcutOpenFile')}`}
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary={`⌘S - ${t('help.gettingStarted.shortcutSave')}`}
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary={`⌘⇧S - ${t('help.gettingStarted.shortcutSaveAs')}`}
-          />
-        </ListItem>
-      </List>
     </Box>
   );
 
@@ -390,12 +382,227 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
     </Box>
   );
 
+  const renderKeyboardShortcuts = () => (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        {t('help.keyboardShortcuts.title')}
+      </Typography>
+      <Typography paragraph>
+        {t('help.keyboardShortcuts.description')}
+      </Typography>
+
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {t('help.keyboardShortcuts.categories.fileOperations')}
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary="⌘N / Ctrl+N"
+            secondary={t('help.keyboardShortcuts.shortcuts.newFile')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="⌘O / Ctrl+O"
+            secondary={t('help.keyboardShortcuts.shortcuts.openFile')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="⌘S / Ctrl+S"
+            secondary={t('help.keyboardShortcuts.shortcuts.saveFile')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="⌘⇧S / Ctrl+Shift+S"
+            secondary={t('help.keyboardShortcuts.shortcuts.saveAs')}
+          />
+        </ListItem>
+      </List>
+
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {t('help.keyboardShortcuts.categories.navigation')}
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary="⌘R / Ctrl+R"
+            secondary={t('help.keyboardShortcuts.shortcuts.recentFiles')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Tab"
+            secondary={t('help.keyboardShortcuts.shortcuts.nextTab')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+Tab"
+            secondary={t('help.keyboardShortcuts.shortcuts.previousTab')}
+          />
+        </ListItem>
+      </List>
+
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {t('help.keyboardShortcuts.categories.view')}
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary="⌘, / Ctrl+,"
+            secondary={t('help.keyboardShortcuts.shortcuts.settings')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="F1"
+            secondary={t('help.keyboardShortcuts.shortcuts.help')}
+          />
+        </ListItem>
+      </List>
+    </Box>
+  );
+
+  const renderTutorials = () => (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        {t('help.tutorials.title')}
+      </Typography>
+      <Typography paragraph>
+        {t('help.tutorials.description')}
+      </Typography>
+
+      {/* Step 1 */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.tutorials.step1.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.tutorials.step1.description')}
+          </Typography>
+          <List dense>
+            {(t('help.tutorials.step1.instructions', { returnObjects: true }) as string[]).map((instruction: string, index: number) => (
+              <ListItem key={index} sx={{ py: 0.5 }}>
+                <ListItemText
+                  primary={`${index + 1}. ${instruction}`}
+                  primaryTypographyProps={{ variant: 'body2' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+
+      {/* Step 2 */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.tutorials.step2.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.tutorials.step2.description')}
+          </Typography>
+          <List dense>
+            {(t('help.tutorials.step2.instructions', { returnObjects: true }) as string[]).map((instruction: string, index: number) => (
+              <ListItem key={index} sx={{ py: 0.5 }}>
+                <ListItemText
+                  primary={`${index + 1}. ${instruction}`}
+                  primaryTypographyProps={{ variant: 'body2' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+
+      {/* Step 3 */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.tutorials.step3.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.tutorials.step3.description')}
+          </Typography>
+          <List dense>
+            {(t('help.tutorials.step3.instructions', { returnObjects: true }) as string[]).map((instruction: string, index: number) => (
+              <ListItem key={index} sx={{ py: 0.5 }}>
+                <ListItemText
+                  primary={`${index + 1}. ${instruction}`}
+                  primaryTypographyProps={{ variant: 'body2' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+
+      {/* Step 4 */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.tutorials.step4.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.tutorials.step4.description')}
+          </Typography>
+          <List dense>
+            {(t('help.tutorials.step4.instructions', { returnObjects: true }) as string[]).map((instruction: string, index: number) => (
+              <ListItem key={index} sx={{ py: 0.5 }}>
+                <ListItemText
+                  primary={`${index + 1}. ${instruction}`}
+                  primaryTypographyProps={{ variant: 'body2' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+
+      {/* Pro Tips */}
+      <Card>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="secondary">
+            {t('help.tutorials.tips.title')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={`💡 ${t('help.tutorials.tips.tip1')}`}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={`💡 ${t('help.tutorials.tips.tip2')}`}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={`💡 ${t('help.tutorials.tips.tip3')}`}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+          </List>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+
   const renderContent = () => {
     switch (currentPage) {
       case 'getting-started':
         return renderGettingStarted();
       case 'variables':
         return renderVariables();
+      case 'keyboard-shortcuts':
+        return renderKeyboardShortcuts();
+      case 'tutorials':
+        return renderTutorials();
       default:
         return renderGettingStarted();
     }
@@ -448,7 +655,7 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
             ))}
           </List>
         </Box>
-        <Box sx={{ flex: 1, p: 3, overflow: 'auto' }}>
+        <Box ref={dialogContentRef} sx={{ flex: 1, p: 3, overflow: 'auto' }}>
           {renderContent()}
         </Box>
       </DialogContent>

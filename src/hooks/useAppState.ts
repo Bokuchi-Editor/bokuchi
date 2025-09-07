@@ -744,6 +744,16 @@ export const useAppState = () => {
       event.preventDefault();
       handleRecentFilesOpen();
     }
+    // F1: Help
+    else if (event.key === 'F1') {
+      event.preventDefault();
+      handleHelpOpen();
+    }
+    // Command + ,: Settings
+    else if ((event.metaKey || event.ctrlKey) && event.key === ',') {
+      event.preventDefault();
+      handleSettingsOpen();
+    }
     // Ctrl + Tab: Switch Tabs (Next)
     else if (event.ctrlKey && event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();

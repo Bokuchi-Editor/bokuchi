@@ -61,12 +61,7 @@
       "editorOnly": "Editor Only",
       "editorOnlyDescription": "Focus on writing with only the editor visible.",
       "previewOnly": "Preview Only",
-      "previewOnlyDescription": "View the rendered result in full screen.",
-      "shortcuts": "Keyboard Shortcuts",
-      "shortcutNewFile": "Create new file",
-      "shortcutOpenFile": "Open file",
-      "shortcutSave": "Save file",
-      "shortcutSaveAs": "Save file as"
+      "previewOnlyDescription": "View the rendered result in full screen."
     },
     "variables": {
       "title": "Variables",
@@ -111,6 +106,75 @@
       "priority3": "3. Original text (if variable not found)",
       "localVsGlobal": "Local vs Global Variables",
       "localVsGlobalDescription": "Use local variables for file-specific content and global variables for common content across multiple files."
+    },
+    "keyboardShortcuts": {
+      "title": "Keyboard Shortcuts",
+      "description": "Here are all the keyboard shortcuts available in Bokuchi:",
+      "categories": {
+        "fileOperations": "File Operations",
+        "navigation": "Navigation",
+        "editing": "Editing",
+        "view": "View"
+      },
+      "shortcuts": {
+        "newFile": "New File",
+        "openFile": "Open File",
+        "saveFile": "Save File",
+        "saveAs": "Save As",
+        "recentFiles": "Open Recent Files",
+        "nextTab": "Next Tab",
+        "previousTab": "Previous Tab",
+        "settings": "Open Settings",
+        "help": "Open Help"
+      }
+    },
+    "tutorials": {
+      "title": "Quick Start Guide",
+      "description": "Get started with Bokuchi in just a few steps:",
+      "step1": {
+        "title": "Step 1: Create Your First Document",
+        "description": "Start writing immediately",
+        "instructions": [
+          "Press ⌘N (Mac) or Ctrl+N (Windows) to create a new file",
+          "Type your first heading: # My First Document",
+          "Add some content below the heading",
+          "Watch the preview update in real-time on the right"
+        ]
+      },
+      "step2": {
+        "title": "Step 2: Save Your Work",
+        "description": "Keep your documents safe",
+        "instructions": [
+          "Press ⌘S (Mac) or Ctrl+S (Windows) to save",
+          "Choose a location and filename for your document",
+          "Your file will appear in Recent Files for quick access"
+        ]
+      },
+      "step3": {
+        "title": "Step 3: Use Variables for Dynamic Content",
+        "description": "Make your documents reusable",
+        "instructions": [
+          "Open Settings (⌘, or Ctrl+,)",
+          "Go to Global Variables tab",
+          "Add a variable like 'author' with your name",
+          "In your document, use {{author}} where you want your name to appear"
+        ]
+      },
+      "step4": {
+        "title": "Step 4: Navigate Efficiently",
+        "description": "Work with multiple files",
+        "instructions": [
+          "Press ⌘R (Mac) or Ctrl+R (Windows) to open Recent Files",
+          "Use Ctrl+Tab to switch between open tabs",
+          "Use Ctrl+Shift+Tab to go to the previous tab"
+        ]
+      },
+      "tips": {
+        "title": "Pro Tips",
+        "tip1": "Use F1 anytime to open this help system",
+        "tip2": "Try different themes in Settings > Appearance",
+        "tip3": "Use the split view to see your Markdown and preview side by side"
+      }
     }
   },
   "settings": {
