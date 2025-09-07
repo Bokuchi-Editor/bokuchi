@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { Close, Help, Code, Book, Keyboard, School } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { formatKeyboardShortcut, getPlatform } from '../utils/platform';
 
 interface HelpProps {
   open: boolean;
@@ -30,6 +31,16 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState<HelpPage>('getting-started');
   const dialogContentRef = useRef<HTMLDivElement>(null);
+
+  // Helper function to get platform-specific shortcut display
+  const getShortcutDisplay = (key: string, withShift = false): string => {
+    const platform = getPlatform();
+    if (platform === 'mac') {
+      return formatKeyboardShortcut(key, withShift);
+    } else {
+      return formatKeyboardShortcut(key, withShift);
+    }
+  };
 
   // タブ切り替え時にスクロール位置をリセット
   useEffect(() => {
@@ -379,25 +390,25 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <List>
         <ListItem>
           <ListItemText
-            primary="⌘N / Ctrl+N"
+            primary={getShortcutDisplay('N')}
             secondary={t('help.keyboardShortcuts.shortcuts.newFile')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘O / Ctrl+O"
+            primary={getShortcutDisplay('O')}
             secondary={t('help.keyboardShortcuts.shortcuts.openFile')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘S / Ctrl+S"
+            primary={getShortcutDisplay('S')}
             secondary={t('help.keyboardShortcuts.shortcuts.saveFile')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘⇧S / Ctrl+Shift+S"
+            primary={getShortcutDisplay('S', true)}
             secondary={t('help.keyboardShortcuts.shortcuts.saveAs')}
           />
         </ListItem>
@@ -409,7 +420,7 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <List>
         <ListItem>
           <ListItemText
-            primary="⌘R / Ctrl+R"
+            primary={getShortcutDisplay('R')}
             secondary={t('help.keyboardShortcuts.shortcuts.recentFiles')}
           />
         </ListItem>
@@ -457,25 +468,25 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘+ / Ctrl+Shift++"
+            primary={getShortcutDisplay('+')}
             secondary={t('help.keyboardShortcuts.shortcuts.zoomIn')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘- / Ctrl+-"
+            primary={getShortcutDisplay('-')}
             secondary={t('help.keyboardShortcuts.shortcuts.zoomOut')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘0 / Ctrl+0"
+            primary={getShortcutDisplay('0')}
             secondary={t('help.keyboardShortcuts.shortcuts.resetZoom')}
           />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="⌘, / Ctrl+,"
+            primary={getShortcutDisplay(',')}
             secondary={t('help.keyboardShortcuts.shortcuts.settings')}
           />
         </ListItem>

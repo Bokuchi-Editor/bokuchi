@@ -4,6 +4,7 @@ import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add,
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { Tab } from '../types/tab';
+import { formatKeyboardShortcut } from '../utils/platform';
 
 interface AppHeaderProps {
   // State
@@ -114,7 +115,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <Add sx={{ mr: 1 }} />
           <span>{t('buttons.newFile')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
-            ⌘N
+            {formatKeyboardShortcut('N')}
           </span>
         </MenuItem>
 
@@ -122,7 +123,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <FolderOpen sx={{ mr: 1 }} />
           <span>{t('buttons.openFile')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
-            ⌘O
+            {formatKeyboardShortcut('O')}
           </span>
         </MenuItem>
 
@@ -158,7 +159,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <Save sx={{ mr: 1 }} />
           <span>{t('buttons.save')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
-            ⌘S
+            {formatKeyboardShortcut('S')}
           </span>
         </MenuItem>
 
@@ -169,7 +170,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <SaveAlt sx={{ mr: 1 }} />
           <span>{t('buttons.saveAs')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
-            ⌘⇧S
+            {formatKeyboardShortcut('S', true)}
           </span>
         </MenuItem>
 
@@ -185,7 +186,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <SettingsIcon2 sx={{ mr: 1 }} />
           {t('buttons.settings')}
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
-            ⌘,
+            {formatKeyboardShortcut(',')}
           </span>
         </MenuItem>
 

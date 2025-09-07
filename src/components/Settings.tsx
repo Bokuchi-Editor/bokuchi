@@ -351,7 +351,7 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.editor.fontSizeDescription')}
                     </Typography>
-                    <Box sx={{ px: 2 }}>
+                    <Box sx={{ px: 2, maxWidth: 400 }}>
                       <Typography gutterBottom>
                         {t('settings.editor.fontSize')}: {settings.editor.fontSize}px
                       </Typography>
@@ -390,7 +390,7 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.editor.tabSizeDescription')}
                     </Typography>
-                    <Box sx={{ px: 2 }}>
+                    <Box sx={{ px: 2, maxWidth: 400 }}>
                       <Typography gutterBottom>
                         {t('settings.editor.tabSize')}: {settings.editor.tabSize}
                       </Typography>
@@ -506,7 +506,7 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.interface.zoomLevelDescription')}
                     </Typography>
-                    <Box sx={{ px: 2 }}>
+                    <Box sx={{ px: 2, maxWidth: 400 }}>
                       <Typography gutterBottom>
                         {t('settings.interface.zoomLevel')}: {Math.round(settings.interface.zoomLevel * 100)}%
                       </Typography>
