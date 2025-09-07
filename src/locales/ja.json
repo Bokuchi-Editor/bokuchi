@@ -61,12 +61,7 @@
       "editorOnly": "エディターのみ",
       "editorOnlyDescription": "エディターのみを表示して執筆に集中します。",
       "previewOnly": "プレビューのみ",
-      "previewOnlyDescription": "レンダリング結果をフルスクリーンで表示します。",
-      "shortcuts": "キーボードショートカット",
-      "shortcutNewFile": "新規ファイル作成",
-      "shortcutOpenFile": "ファイルを開く",
-      "shortcutSave": "ファイルを保存",
-      "shortcutSaveAs": "名前を付けて保存"
+      "previewOnlyDescription": "レンダリング結果をフルスクリーンで表示します。"
     },
     "variables": {
       "title": "変数機能",
@@ -111,6 +106,75 @@
       "priority3": "3. 元のテキスト（変数が見つからない場合）",
       "localVsGlobal": "ローカル変数とグローバル変数",
       "localVsGlobalDescription": "ファイル固有のコンテンツにはローカル変数を使用し、複数のファイルで共通のコンテンツにはグローバル変数を使用します。"
+    },
+    "keyboardShortcuts": {
+      "title": "キーボードショートカット",
+      "description": "Bokuchiで利用可能なすべてのキーボードショートカットです：",
+      "categories": {
+        "fileOperations": "ファイル操作",
+        "navigation": "ナビゲーション",
+        "editing": "編集",
+        "view": "表示"
+      },
+      "shortcuts": {
+        "newFile": "新規ファイル",
+        "openFile": "ファイルを開く",
+        "saveFile": "ファイルを保存",
+        "saveAs": "名前を付けて保存",
+        "recentFiles": "最近のファイルを開く",
+        "nextTab": "次のタブ",
+        "previousTab": "前のタブ",
+        "settings": "設定を開く",
+        "help": "ヘルプを開く"
+      }
+    },
+    "tutorials": {
+      "title": "クイックスタートガイド",
+      "description": "数ステップでBokuchiを始めましょう：",
+      "step1": {
+        "title": "ステップ1: 最初のドキュメントを作成",
+        "description": "すぐに書き始めましょう",
+        "instructions": [
+          "⌘N（Mac）またはCtrl+N（Windows）を押して新しいファイルを作成",
+          "最初の見出しを入力: # 私の最初のドキュメント",
+          "見出しの下にコンテンツを追加",
+          "右側のプレビューがリアルタイムで更新されるのを確認"
+        ]
+      },
+      "step2": {
+        "title": "ステップ2: 作業を保存",
+        "description": "ドキュメントを安全に保管",
+        "instructions": [
+          "⌘S（Mac）またはCtrl+S（Windows）を押して保存",
+          "ドキュメントの保存場所とファイル名を選択",
+          "ファイルがRecent Filesに表示され、素早くアクセス可能"
+        ]
+      },
+      "step3": {
+        "title": "ステップ3: 動的コンテンツに変数を使用",
+        "description": "ドキュメントを再利用可能に",
+        "instructions": [
+          "設定を開く（⌘, またはCtrl+,）",
+          "グローバル変数タブに移動",
+          "'author'のような変数を自分の名前で追加",
+          "ドキュメント内で名前を表示したい場所に{{author}}を使用"
+        ]
+      },
+      "step4": {
+        "title": "ステップ4: 効率的にナビゲート",
+        "description": "複数のファイルで作業",
+        "instructions": [
+          "⌘R（Mac）またはCtrl+R（Windows）を押してRecent Filesを開く",
+          "Ctrl+Tabで開いているタブ間を切り替え",
+          "Ctrl+Shift+Tabで前のタブに移動"
+        ]
+      },
+      "tips": {
+        "title": "使いこなすために",
+        "tip1": "いつでもF1を押してこのヘルプシステムを開く",
+        "tip2": "設定 > 外観で異なるテーマを試す",
+        "tip3": "分割表示を使用してMarkdownとプレビューを並べて表示"
+      }
     }
   },
   "settings": {

@@ -113,11 +113,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         <MenuItem onClick={() => { onNewTab(); onFileMenuClose(); }}>
           <Add sx={{ mr: 1 }} />
           <span>{t('buttons.newFile')}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            ⌘N
+          </span>
         </MenuItem>
 
         <MenuItem onClick={() => { onOpenFile(); onFileMenuClose(); }}>
           <FolderOpen sx={{ mr: 1 }} />
           <span>{t('buttons.openFile')}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            ⌘O
+          </span>
         </MenuItem>
 
         {/* Recent Files サブメニュー */}
@@ -151,6 +157,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         >
           <Save sx={{ mr: 1 }} />
           <span>{t('buttons.save')}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            ⌘S
+          </span>
         </MenuItem>
 
         <MenuItem
@@ -159,6 +168,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         >
           <SaveAlt sx={{ mr: 1 }} />
           <span>{t('buttons.saveAs')}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            ⌘⇧S
+          </span>
         </MenuItem>
 
         <MenuItem
@@ -172,11 +184,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         <MenuItem onClick={() => { onSettingsOpen(); onFileMenuClose(); }}>
           <SettingsIcon2 sx={{ mr: 1 }} />
           {t('buttons.settings')}
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            ⌘,
+          </span>
         </MenuItem>
 
         <MenuItem onClick={() => { onHelpOpen(); onFileMenuClose(); }}>
           <HelpOutline sx={{ mr: 1 }} />
           {t('help.title')}
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+            F1
+          </span>
         </MenuItem>
       </Menu>
     </AppBar>
