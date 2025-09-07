@@ -2,47 +2,44 @@
 
 A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
+**Version**: 0.2.0
+
 ## Features
+
+### Core Functionality
 
 - **Cross-platform**: Runs on Windows, macOS, and Linux
 - **Lightweight**: Built with Tauri for minimal resource usage
 - **Real-time preview**: Live Markdown preview with syntax highlighting
-- **Multiple themes**: Default, Dark, Pastel, Vivid, and Darcula themes
-- **Variable system**: Support for custom variables in Markdown (local and global)
+- **Standalone**: No external dependencies or server required
+
+### Editor Features
+
 - **Tab management**: Multiple files editing with tabs
 - **Search and replace**: Built-in search functionality
-- **HTML export**: Export preview as HTML files
-- **Standalone**: No external dependencies or server required
-- **State persistence**: Automatically saves and restores application state
-- **Native file operations**: Full file system access with native dialogs
-- **Single instance**: Prevents multiple application instances
-- **File change detection**: Automatically detects external file changes
-- **Internationalization**: Support for English and Japanese
 - **Zoom functionality**: Adjustable zoom levels for editor and preview
+- **Interactive checkboxes**: GitHub-style Markdown checkboxes with clickable preview
+- **State persistence**: Automatically saves and restores application state
+
+### File Operations
+
+- **Native file operations**: Full file system access with native dialogs (Open, Save, Save As)
+- **File change detection**: Automatically detects external file changes
+- **File not found handling**: Graceful handling of restored tabs when files are missing
+- **HTML export**: Export preview as HTML files
+
+### Customization & Themes
+
+- **Multiple themes**: Default, Dark, Pastel, Vivid, and Darcula themes
+- **Variable system**: Support for custom variables in Markdown (local and global)
+- **Internationalization**: Support for English and Japanese
 - **Responsive design**: Optimized for different screen sizes
 
-## Current Status
+### System Integration
 
-### Desktop Version (Current)
-
-- ✅ Full file system access with native dialogs
-- ✅ Native file operations (Open, Save, Save As)
-- ✅ System integration
-- ✅ Offline functionality
-- ✅ Variable system (file-local and global variables)
-- ✅ Tab management with state persistence
-- ✅ Search and replace functionality
-- ✅ Multiple themes (Default, Dark, Pastel, Vivid, Darcula)
-- ✅ HTML export
-- ✅ Standalone operation (no HTTP server)
-- ✅ Application state persistence across sessions
-- ✅ File not found handling for restored tabs
-- ✅ Single instance prevention
-- ✅ File change detection and reload
-- ✅ Internationalization (English/Japanese)
-- ✅ Zoom functionality
-- ✅ Responsive design
-- ✅ Refactored codebase with modular components
+- **Single instance**: Prevents multiple application instances
+- **System integration**: Native OS integration and file associations
+- **Offline functionality**: Works completely offline without internet connection
 
 ## Development
 
@@ -377,7 +374,26 @@ This project has been migrated from a Go HTTP backend to a pure Rust implementat
 
 ## Recent Updates
 
-### Code Refactoring (Latest)
+### Interactive Checkboxes (v0.2.0)
+
+Added GitHub-style interactive Markdown checkboxes with full preview synchronization:
+
+#### Features
+
+- **Clickable Checkboxes**: Checkboxes in preview are now interactive and clickable
+- **Visual Feedback**: Checked items show background color changes for better UX
+- **Editor Synchronization**: Changes in preview are immediately reflected in the editor
+- **Position-based Matching**: Handles duplicate checkbox text correctly using position indexing
+- **Real-time Updates**: Instant visual feedback with immediate editor content updates
+
+#### Technical Implementation
+
+- **HTML Post-processing**: Custom regex-based processing of marked.js output
+- **Event Handling**: Change event listeners for checkbox interactions
+- **State Management**: Position-based content matching for accurate updates
+- **CSS Styling**: Enhanced checkbox styling with hover effects and theme support
+
+### Code Refactoring (Previous)
 
 The codebase has been significantly refactored to improve maintainability and organization:
 
@@ -423,6 +439,7 @@ The codebase has been significantly refactored to improve maintainability and or
 - [x] Phase 6: Migration from Go to Rust backend
 - [x] Phase 7: State persistence and file restoration
 - [x] Phase 8: Code refactoring and architecture improvements
+- [x] Phase 8.1: Interactive checkboxes with preview synchronization
 - [ ] Phase 9: Advanced features and optimizations
 
 ### Phase 9: Advanced Features and Optimizations
