@@ -122,6 +122,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       theme={theme}
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
+                      onContentChange={onContentChange}
                     />
                   </Box>
                 </>
@@ -154,6 +155,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     theme={theme}
                     globalVariables={globalVariables}
                     zoomLevel={currentZoom}
+                    onContentChange={onContentChange}
                   />
                 </Box>
               )}

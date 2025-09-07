@@ -97,3 +97,60 @@
 .markdown-preview a:hover {
   text-decoration: underline;
 }
+
+/* チェックボックススタイル */
+.markdown-preview .checkbox-item {
+  list-style: none;
+  margin: 0.25em 0;
+  padding: 4px 8px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.markdown-preview .markdown-checkbox {
+  margin-right: 0.5em;
+  margin-top: 0.1em;
+  cursor: pointer;
+  transform: scale(1.2);
+  accent-color: #1976d2;
+}
+
+.markdown-preview .checkbox-text {
+  flex: 1;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+}
+
+/* チェックボックスのホバー効果 */
+.markdown-preview .checkbox-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: translateX(2px);
+}
+
+.markdown-preview .checkbox-item.checked:hover {
+  background-color: rgba(25, 118, 210, 0.15);
+}
+
+/* ダークテーマ用のチェックボックススタイル */
+[data-theme="dark"] .markdown-preview .checkbox-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .markdown-preview .checkbox-item.checked {
+  background-color: rgba(25, 118, 210, 0.2);
+  border-left: 3px solid #42a5f5;
+}
+
+[data-theme="dark"] .markdown-preview .checkbox-item.checked .checkbox-text {
+  color: #42a5f5;
+}
+
+[data-theme="dark"] .markdown-preview .checkbox-item.checked:hover {
+  background-color: rgba(25, 118, 210, 0.25);
+}
+
+[data-theme="dark"] .markdown-preview .markdown-checkbox {
+  accent-color: #42a5f5;
+}
