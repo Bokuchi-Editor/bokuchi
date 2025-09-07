@@ -126,6 +126,10 @@
         "previousTab": "Previous Tab",
         "settings": "Open Settings",
         "help": "Open Help",
+        "rotateViewMode": "Rotate View Mode",
+        "splitView": "Split View (2-Column)",
+        "editorOnly": "Editor Only",
+        "previewOnly": "Preview Only",
         "zoomIn": "Zoom In",
         "zoomOut": "Zoom Out",
         "resetZoom": "Reset Zoom"

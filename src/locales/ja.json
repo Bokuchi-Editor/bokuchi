@@ -126,6 +126,10 @@
         "previousTab": "前のタブ",
         "settings": "設定を開く",
         "help": "ヘルプを開く",
+        "rotateViewMode": "ビューモードを順番に切り替え",
+        "splitView": "分割表示（2カラム）",
+        "editorOnly": "エディターのみ",
+        "previewOnly": "プレビューのみ",
         "zoomIn": "ズームイン",
         "zoomOut": "ズームアウト",
         "resetZoom": "ズームリセット"

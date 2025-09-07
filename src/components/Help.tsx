@@ -101,44 +101,26 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.gettingStarted.viewModes')}
       </Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {t('help.gettingStarted.splitView')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('help.gettingStarted.splitViewDescription')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {t('help.gettingStarted.editorOnly')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('help.gettingStarted.editorOnlyDescription')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {t('help.gettingStarted.previewOnly')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('help.gettingStarted.previewOnlyDescription')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-      </Box>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary={t('help.gettingStarted.splitView')}
+            secondary={t('help.gettingStarted.splitViewDescription')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary={t('help.gettingStarted.editorOnly')}
+            secondary={t('help.gettingStarted.editorOnlyDescription')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary={t('help.gettingStarted.previewOnly')}
+            secondary={t('help.gettingStarted.previewOnlyDescription')}
+          />
+        </ListItem>
+      </List>
     </Box>
   );
 
@@ -449,6 +431,30 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
         {t('help.keyboardShortcuts.categories.view')}
       </Typography>
       <List>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+V"
+            secondary={t('help.keyboardShortcuts.shortcuts.rotateViewMode')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+1"
+            secondary={t('help.keyboardShortcuts.shortcuts.splitView')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+2"
+            secondary={t('help.keyboardShortcuts.shortcuts.editorOnly')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+3"
+            secondary={t('help.keyboardShortcuts.shortcuts.previewOnly')}
+          />
+        </ListItem>
         <ListItem>
           <ListItemText
             primary="⌘+ / Ctrl+Shift++"

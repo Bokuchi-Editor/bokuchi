@@ -406,14 +406,6 @@ export const useAppState = () => {
     saveViewMode();
   }, [viewMode, isSettingsLoaded]);
 
-  // ショートカットキーのイベントリスナーを設定
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeTab]); // activeTabが変更されたときにハンドラーを更新
-
   // 初期タブを作成
   useEffect(() => {
     if (tabs.length === 0) {
@@ -717,8 +709,22 @@ export const useAppState = () => {
     }
   };
 
+  // View mode rotation handler
+  const rotateViewMode = useCallback(() => {
+    const viewModes: ('split' | 'editor' | 'preview')[] = ['split', 'editor', 'preview'];
+    const currentIndex = viewModes.indexOf(viewMode);
+    const nextIndex = (currentIndex + 1) % viewModes.length;
+    setViewMode(viewModes[nextIndex]);
+  }, [viewMode]);
+
+  // Direct view mode change handler
+  const changeViewMode = useCallback((mode: 'split' | 'editor' | 'preview') => {
+    setViewMode(mode);
+  }, []);
+
   // Keyboard shortcuts handler
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+
     // Command + N: New File
     if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
       event.preventDefault();
@@ -754,6 +760,26 @@ export const useAppState = () => {
       event.preventDefault();
       handleSettingsOpen();
     }
+    // Ctrl + Shift + V: Rotate View Mode
+    else if (event.ctrlKey && event.shiftKey && event.key === 'V') {
+      event.preventDefault();
+      rotateViewMode();
+    }
+    // Ctrl + Shift + 1: Split View
+    else if (event.ctrlKey && event.shiftKey && (event.key === '1' || event.key === '!' || event.code === 'Digit1')) {
+      event.preventDefault();
+      changeViewMode('split');
+    }
+    // Ctrl + Shift + 2: Editor Only
+    else if (event.ctrlKey && event.shiftKey && (event.key === '2' || event.key === '@' || event.code === 'Digit2')) {
+      event.preventDefault();
+      changeViewMode('editor');
+    }
+    // Ctrl + Shift + 3: Preview Only
+    else if (event.ctrlKey && event.shiftKey && (event.key === '3' || event.key === '#' || event.code === 'Digit3')) {
+      event.preventDefault();
+      changeViewMode('preview');
+    }
     // Ctrl + Tab: Switch Tabs (Next)
     else if (event.ctrlKey && event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();
@@ -772,7 +798,28 @@ export const useAppState = () => {
         setActiveTab(tabs[prevIndex].id);
       }
     }
-  };
+  }, [
+    handleNewTab,
+    handleOpenFile,
+    handleSaveFile,
+    handleSaveFileAs,
+    handleRecentFilesOpen,
+    handleHelpOpen,
+    handleSettingsOpen,
+    rotateViewMode,
+    changeViewMode,
+    tabs,
+    activeTabId,
+    setActiveTab
+  ]);
+
+  // ショートカットキーのイベントリスナーを設定
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]); // handleKeyDownの依存関係のみを含める
 
   return {
     // State
