@@ -138,15 +138,6 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="dark"] .markdown-preview .checkbox-item.checked {
-  background-color: rgba(25, 118, 210, 0.2);
-  border-left: 3px solid #42a5f5;
-}
-
-[data-theme="dark"] .markdown-preview .checkbox-item.checked .checkbox-text {
-  color: #42a5f5;
-}
-
 [data-theme="dark"] .markdown-preview .checkbox-item.checked:hover {
   background-color: rgba(25, 118, 210, 0.25);
 }
