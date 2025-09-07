@@ -164,6 +164,10 @@ const SortableTab: React.FC<{
           <Box
             {...attributes}
             {...listeners}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick(tab.id);
+            }}
             sx={{
               flex: 1,
               display: 'flex',
@@ -214,6 +218,18 @@ const SortableTab: React.FC<{
         '& .MuiTab-iconWrapper': {
           display: 'none',
         },
+        ...(isActive && {
+          bgcolor: 'primary.main',
+          color: 'primary.contrastText',
+          '&:hover': {
+            bgcolor: 'primary.dark',
+          },
+        }),
+        ...(!isActive && {
+          '&:hover': {
+            bgcolor: 'action.hover',
+          },
+        }),
       }}
     />
   );
@@ -334,7 +350,7 @@ const TabBar: React.FC<TabBarProps> = ({
               sx={{
                 flex: 1,
                 '& .MuiTabs-indicator': {
-                  backgroundColor: 'primary.main',
+                  display: 'none', // カスタムスタイリングを使用するため非表示
                 },
                 '& .MuiTab-root': {
                   minHeight: 48,
@@ -342,8 +358,10 @@ const TabBar: React.FC<TabBarProps> = ({
                   fontSize: '0.875rem',
                   minWidth: 120,
                   maxWidth: 200,
-                  '&.Mui-selected': {
-                    fontWeight: 'bold',
+                  borderRight: 1,
+                  borderColor: 'divider',
+                  '&:last-child': {
+                    borderRight: 'none',
                   },
                 },
               }}
