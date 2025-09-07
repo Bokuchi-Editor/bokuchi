@@ -1,6 +1,7 @@
 import { load, Store } from '@tauri-apps/plugin-store';
 import { AppState } from '../types/tab';
 import { ThemeName } from '../themes';
+import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 
 let store: Store | null = null;
 
@@ -253,5 +254,82 @@ export const storeApi = {
       activeTabId: '1',
       lastOpenedAt: Date.now(),
     };
+  },
+
+  // アプリケーション設定を保存
+  async saveAppSettings(settings: AppSettings): Promise<void> {
+    try {
+      console.log('Saving app settings:', settings);
+      const storeInstance = await getStore();
+      await storeInstance.set('appSettings', settings);
+      await storeInstance.save();
+      console.log('App settings saved successfully');
+    } catch (error) {
+      console.error('Failed to save app settings:', error);
+      throw error;
+    }
+  },
+
+  // アプリケーション設定を読み込み
+  async loadAppSettings(): Promise<AppSettings> {
+    try {
+      console.log('Loading app settings...');
+      const storeInstance = await getStore();
+      const settings = await storeInstance.get('appSettings') as AppSettings;
+      console.log('Loaded app settings:', settings);
+
+      // デフォルト設定とマージして、不足している項目を補完
+      const mergedSettings = {
+        ...DEFAULT_APP_SETTINGS,
+        ...settings,
+        editor: { ...DEFAULT_APP_SETTINGS.editor, ...settings?.editor },
+        appearance: { ...DEFAULT_APP_SETTINGS.appearance, ...settings?.appearance },
+        interface: { ...DEFAULT_APP_SETTINGS.interface, ...settings?.interface },
+        advanced: { ...DEFAULT_APP_SETTINGS.advanced, ...settings?.advanced },
+        globalVariables: { ...DEFAULT_APP_SETTINGS.globalVariables, ...settings?.globalVariables },
+      };
+
+      return mergedSettings;
+    } catch (error) {
+      console.error('Failed to load app settings:', error);
+      return DEFAULT_APP_SETTINGS;
+    }
+  },
+
+  // 設定をリセット
+  async resetAppSettings(): Promise<void> {
+    try {
+      console.log('Resetting app settings...');
+      const storeInstance = await getStore();
+      await storeInstance.set('appSettings', DEFAULT_APP_SETTINGS);
+      await storeInstance.save();
+      console.log('App settings reset successfully');
+    } catch (error) {
+      console.error('Failed to reset app settings:', error);
+      throw error;
+    }
+  },
+
+  // 設定をエクスポート
+  async exportAppSettings(): Promise<string> {
+    try {
+      const settings = await this.loadAppSettings();
+      return JSON.stringify(settings, null, 2);
+    } catch (error) {
+      console.error('Failed to export app settings:', error);
+      throw error;
+    }
+  },
+
+  // 設定をインポート
+  async importAppSettings(settingsJson: string): Promise<void> {
+    try {
+      const settings = JSON.parse(settingsJson) as AppSettings;
+      await this.saveAppSettings(settings);
+      console.log('App settings imported successfully');
+    } catch (error) {
+      console.error('Failed to import app settings:', error);
+      throw error;
+    }
   },
 };

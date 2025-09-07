@@ -9,6 +9,7 @@ import { ZOOM_CONFIG } from '../constants/zoom';
 import { Tab } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
+import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 
 export const useAppState = () => {
   const { t, i18n } = useTranslation();
@@ -28,6 +29,9 @@ export const useAppState = () => {
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
+
+  // New unified settings state
+  const [appSettings, setAppSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [editorStatus, setEditorStatus] = useState({
     line: 1,
     column: 1,
@@ -87,39 +91,41 @@ export const useAppState = () => {
 
   const currentTheme = getThemeByName(theme);
 
+  // ズームレベルが変更された時に設定も更新
+  useEffect(() => {
+    if (isSettingsLoaded && appSettings.interface.zoomLevel !== currentZoom) {
+      const updatedSettings = {
+        ...appSettings,
+        interface: {
+          ...appSettings.interface,
+          zoomLevel: currentZoom,
+        },
+      };
+      setAppSettings(updatedSettings);
+      // 永続化はしない（ユーザーが明示的に設定を変更した時のみ永続化）
+    }
+  }, [currentZoom, isSettingsLoaded, appSettings]);
+
   // 設定の初期読み込み（一度だけ実行）
   useEffect(() => {
     const loadSettings = async () => {
       try {
         console.log('Loading settings...');
 
-        // 言語設定を読み込み
-        const savedLanguage = await storeApi.loadLanguage();
-        console.log('Loaded saved language:', savedLanguage);
-        setLanguage(savedLanguage);
-        i18n.changeLanguage(savedLanguage);
+        // 新しい統合設定システムで読み込み
+        const settings = await storeApi.loadAppSettings();
+        console.log('Loaded app settings:', settings);
+        setAppSettings(settings);
 
-        // テーマ設定を読み込み
-        const savedTheme = await storeApi.loadTheme();
-        console.log('Loaded saved theme:', savedTheme);
-        const themeToSet = savedTheme || 'default';
-        setTheme(themeToSet);
-        applyThemeToDocument(themeToSet);
+        // 個別設定も更新（後方互換性のため）
+        setLanguage(settings.interface.language);
+        i18n.changeLanguage(settings.interface.language);
 
-        // グローバル変数を読み込み
-        const variables = await storeApi.loadGlobalVariables();
-        console.log('Loaded saved global variables:', variables);
-        setGlobalVariables(variables);
+        setTheme(settings.appearance.theme as ThemeName);
+        applyThemeToDocument(settings.appearance.theme as ThemeName);
 
-        // タブレイアウト設定を読み込み
-        const savedTabLayout = await storeApi.loadTabLayout();
-        console.log('Loaded saved tab layout:', savedTabLayout);
-        setTabLayout(savedTabLayout);
-
-        // ビューモード設定を読み込み
-        const savedViewMode = await storeApi.loadViewMode();
-        console.log('Loaded saved view mode:', savedViewMode);
-        setViewMode(savedViewMode);
+        setGlobalVariables(settings.globalVariables);
+        setTabLayout(settings.interface.tabLayout);
 
         setIsSettingsLoaded(true);
         console.log('Settings loaded successfully');
@@ -447,6 +453,43 @@ export const useAppState = () => {
     applyThemeToDocument(newTheme);
   };
 
+  // 新しい統合設定変更ハンドラー
+  const handleAppSettingsChange = useCallback(async (newSettings: AppSettings) => {
+    console.log('Saving app settings:', newSettings);
+    setAppSettings(newSettings);
+
+    // 個別設定も更新（後方互換性のため）
+    setLanguage(newSettings.interface.language);
+    i18n.changeLanguage(newSettings.interface.language);
+
+    setTheme(newSettings.appearance.theme as ThemeName);
+    applyThemeToDocument(newSettings.appearance.theme as ThemeName);
+
+    setGlobalVariables(newSettings.globalVariables);
+    setTabLayout(newSettings.interface.tabLayout);
+
+    // ズームレベルが変更された場合、useZoomの状態も更新
+    if (newSettings.interface.zoomLevel !== currentZoom) {
+      // ズームレベルを直接設定（useZoomの内部状態を更新）
+      const zoomDiff = newSettings.interface.zoomLevel - currentZoom;
+      if (zoomDiff > 0) {
+        // ズームイン
+        for (let i = 0; i < Math.abs(zoomDiff) / ZOOM_CONFIG.zoomStep; i++) {
+          zoomIn();
+        }
+      } else if (zoomDiff < 0) {
+        // ズームアウト
+        for (let i = 0; i < Math.abs(zoomDiff) / ZOOM_CONFIG.zoomStep; i++) {
+          zoomOut();
+        }
+      }
+    }
+
+    // 設定を永続化
+    await storeApi.saveAppSettings(newSettings);
+    console.log('App settings saved successfully');
+  }, [i18n, currentZoom, zoomIn, zoomOut]);
+
   const handleFileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setFileMenuAnchor(event.currentTarget);
   };
@@ -707,6 +750,9 @@ export const useAppState = () => {
     canZoomIn,
     canZoomOut,
 
+    // New unified settings
+    appSettings,
+
     // Handlers
     handleContentChange,
     handleSettingsOpen,
@@ -715,6 +761,7 @@ export const useAppState = () => {
     handleHelpClose,
     handleLanguageChange,
     handleThemeChange,
+    handleAppSettingsChange,
     handleFileMenuOpen,
     handleFileMenuClose,
     handleCloseSnackbar,

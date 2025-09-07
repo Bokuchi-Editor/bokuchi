@@ -280,5 +280,79 @@ export const desktopApi = {
       const errorMessage = error instanceof Error ? error.message : 'Failed to save HTML file';
       return { success: false, error: errorMessage };
     }
+  },
+
+  // 設定ファイルをエクスポート
+  async exportSettingsFile(settingsJson: string): Promise<SaveResponse> {
+    try {
+      console.log('Opening settings export dialog...');
+
+      const selected = await save({
+        defaultPath: 'bokuchi-settings.json',
+        filters: [
+          {
+            name: 'JSON Files',
+            extensions: ['json']
+          },
+          {
+            name: 'All Files',
+            extensions: ['*']
+          }
+        ]
+      });
+
+      console.log('Settings export dialog result:', selected);
+
+      if (!selected) {
+        console.log('Settings export dialog cancelled by user');
+        return { success: false, error: 'Export cancelled by user' };
+      }
+
+      console.log('Saving settings file to:', selected);
+      await writeTextFile(selected, settingsJson);
+      console.log('Settings file saved successfully');
+      return { success: true, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error saving settings file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save settings file';
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  // 設定ファイルをインポート
+  async importSettingsFile(): Promise<FileResponse> {
+    try {
+      console.log('Opening settings import dialog...');
+
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'JSON Files',
+            extensions: ['json']
+          },
+          {
+            name: 'All Files',
+            extensions: ['*']
+          }
+        ]
+      });
+
+      console.log('Settings import dialog result:', selected);
+
+      if (!selected || Array.isArray(selected)) {
+        console.log('No settings file selected');
+        return { content: '', error: 'No file selected' };
+      }
+
+      console.log('Reading settings file:', selected);
+      const content = await readTextFile(selected);
+      console.log('Settings file content length:', content.length);
+      return { content, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error importing settings file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to import settings file';
+      return { content: '', error: errorMessage };
+    }
   }
 };
