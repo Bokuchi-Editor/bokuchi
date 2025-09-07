@@ -18,6 +18,16 @@ interface AppContentProps {
   isInitialized: boolean;
   isSettingsLoaded: boolean;
 
+  // Editor settings
+  editorSettings?: {
+    fontSize: number;
+    showLineNumbers: boolean;
+    tabSize: number;
+    wordWrap: boolean;
+    minimap: boolean;
+    showWhitespace: boolean;
+  };
+
   // Handlers
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
@@ -41,6 +51,7 @@ const AppContent: React.FC<AppContentProps> = ({
   currentZoom,
   isInitialized,
   isSettingsLoaded,
+  editorSettings,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -105,6 +116,12 @@ const AppContent: React.FC<AppContentProps> = ({
                       theme={theme}
                       onStatusChange={onStatusChange}
                       zoomLevel={currentZoom}
+                      fontSize={editorSettings?.fontSize}
+                      showLineNumbers={editorSettings?.showLineNumbers}
+                      tabSize={editorSettings?.tabSize}
+                      wordWrap={editorSettings?.wordWrap}
+                      minimap={editorSettings?.minimap}
+                      showWhitespace={editorSettings?.showWhitespace}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -136,6 +153,12 @@ const AppContent: React.FC<AppContentProps> = ({
                     theme={theme}
                     onStatusChange={onStatusChange}
                     zoomLevel={currentZoom}
+                    fontSize={editorSettings?.fontSize}
+                    showLineNumbers={editorSettings?.showLineNumbers}
+                    tabSize={editorSettings?.tabSize}
+                    wordWrap={editorSettings?.wordWrap}
+                    minimap={editorSettings?.minimap}
+                    showWhitespace={editorSettings?.showWhitespace}
                     fileNotFound={
                       activeTab.isNew && activeTab.filePath
                         ? {

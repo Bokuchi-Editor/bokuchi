@@ -15,6 +15,8 @@
     "add": "追加",
     "delete": "削除",
     "close": "閉じる",
+    "cancel": "キャンセル",
+    "reset": "リセット",
     "splitView": "分割表示",
     "editorOnly": "エディターのみ",
     "previewOnly": "プレビューのみ"
@@ -150,6 +152,42 @@
       "splitDescription": "エディターとプレビューを横並びで表示します。",
       "editorDescription": "集中して執筆するためにエディターのみを表示します。",
       "previewDescription": "読み取り専用でプレビューのみを表示します。"
+    },
+    "editor": {
+      "title": "エディター",
+      "fontSize": "フォントサイズ",
+      "fontSizeDescription": "エディターのフォントサイズを調整します。",
+      "showLineNumbers": "行番号を表示",
+      "showLineNumbersDescription": "エディターに行番号を表示します。",
+      "tabSize": "タブサイズ",
+      "tabSizeDescription": "タブインデントのスペース数。",
+      "wordWrap": "ワードラップ",
+      "wordWrapDescription": "エディターで長い行を折り返します。",
+      "minimap": "ミニマップ",
+      "minimapDescription": "ドキュメントのミニマップを表示します。"
+    },
+    "interface": {
+      "title": "インターフェース",
+      "zoomLevel": "ズームレベル",
+      "zoomLevelDescription": "インターフェースのズームレベルを調整します。"
+    },
+    "advanced": {
+      "title": "高度な設定",
+      "autoSave": "自動保存",
+      "autoSaveDescription": "変更を自動的に保存します。",
+      "showWhitespace": "空白文字を表示",
+      "showWhitespaceDescription": "エディターで空白文字を表示します。",
+      "importExport": "設定のインポート/エクスポート",
+      "exportSettings": "設定をエクスポート",
+      "importSettings": "設定をインポート",
+      "resetSettings": "設定をリセット",
+      "resetConfirm": "すべての設定をデフォルトにリセットしてもよろしいですか？この操作は元に戻せません。",
+      "exportSuccess": "設定が正常にエクスポートされました",
+      "exportError": "設定のエクスポートに失敗しました",
+      "importSuccess": "設定が正常にインポートされました",
+      "importError": "設定のインポートに失敗しました",
+      "resetSuccess": "設定が正常にリセットされました",
+      "resetError": "設定のリセットに失敗しました"
     }
   },
   "fileOperations": {

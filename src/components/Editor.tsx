@@ -21,9 +21,30 @@ interface EditorProps {
     selectedCharacters: number;
   }) => void;
   zoomLevel?: number;
+  // New editor settings
+  fontSize?: number;
+  showLineNumbers?: boolean;
+  tabSize?: number;
+  wordWrap?: boolean;
+  minimap?: boolean;
+  showWhitespace?: boolean;
 }
 
-const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, theme, fileNotFound, onStatusChange, zoomLevel = 1.0 }) => {
+const MarkdownEditor: React.FC<EditorProps> = ({
+  content,
+  onChange,
+  darkMode,
+  theme,
+  fileNotFound,
+  onStatusChange,
+  zoomLevel = 1.0,
+  fontSize = 14,
+  showLineNumbers = true,
+  tabSize = 2,
+  wordWrap = true,
+  minimap = false,
+  showWhitespace = false,
+}) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -262,13 +283,16 @@ const MarkdownEditor: React.FC<EditorProps> = ({ content, onChange, darkMode, th
             onMount={handleEditorDidMount}
             theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}
             options={{
-              minimap: { enabled: false },
-              fontSize: Math.round(14 * zoomLevel),
-              wordWrap: 'on',
-              lineNumbers: 'on',
+              minimap: { enabled: minimap },
+              fontSize: Math.round(fontSize * zoomLevel),
+              wordWrap: wordWrap ? 'on' : 'off',
+              lineNumbers: showLineNumbers ? 'on' : 'off',
+              tabSize: tabSize,
+              insertSpaces: true, // タブをスペースに変換
+              detectIndentation: false, // 自動検出を無効化
               scrollBeyondLastLine: false,
               automaticLayout: true,
-              renderWhitespace: 'selection',
+              renderWhitespace: showWhitespace ? 'all' : 'selection',
               folding: true,
               lineDecorationsWidth: 10,
               lineNumbersMinChars: 2,

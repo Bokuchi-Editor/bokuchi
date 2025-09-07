@@ -4,7 +4,7 @@ import Settings from './Settings';
 import HelpDialog from './Help';
 import FileChangeDialog from './FileChangeDialog';
 import SaveBeforeCloseDialog from './SaveBeforeCloseDialog';
-import { ThemeName } from '../themes';
+import { AppSettings } from '../types/settings';
 
 interface AppDialogsProps {
   // Snackbar state
@@ -22,10 +22,7 @@ interface AppDialogsProps {
 
   // Settings dialog state
   settingsOpen: boolean;
-  theme: ThemeName;
-  globalVariables: Record<string, string>;
-  language: string;
-  tabLayout: 'horizontal' | 'vertical';
+  settings: AppSettings;
 
   // Help dialog state
   helpOpen: boolean;
@@ -48,10 +45,7 @@ interface AppDialogsProps {
   // Handlers
   onCloseSnackbar: () => void;
   onSettingsClose: () => void;
-  onThemeChange: (theme: ThemeName) => void;
-  onGlobalVariablesChange: (variables: Record<string, string>) => void;
-  onLanguageChange: (language: string) => void;
-  onTabLayoutChange: (layout: 'horizontal' | 'vertical') => void;
+  onSettingsChange: (settings: AppSettings) => void;
   onHelpClose: () => void;
   onSaveBeforeClose: () => void;
   onDontSaveBeforeClose: () => void;
@@ -67,19 +61,13 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   currentZoom,
   ZOOM_CONFIG,
   settingsOpen,
-  theme,
-  globalVariables,
-  language,
-  tabLayout,
+  settings,
   helpOpen,
   fileChangeDialog,
   saveBeforeCloseDialog,
   onCloseSnackbar,
   onSettingsClose,
-  onThemeChange,
-  onGlobalVariablesChange,
-  onLanguageChange,
-  onTabLayoutChange,
+  onSettingsChange,
   onHelpClose,
   onSaveBeforeClose,
   onDontSaveBeforeClose,
@@ -117,14 +105,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
       <Settings
         open={settingsOpen}
         onClose={onSettingsClose}
-        theme={theme}
-        onThemeChange={onThemeChange}
-        globalVariables={globalVariables}
-        onGlobalVariablesChange={onGlobalVariablesChange}
-        language={language}
-        onLanguageChange={onLanguageChange}
-        tabLayout={tabLayout}
-        onTabLayoutChange={onTabLayoutChange}
+        settings={settings}
+        onSettingsChange={onSettingsChange}
       />
 
       {/* ヘルプダイアログ */}

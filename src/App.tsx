@@ -22,7 +22,6 @@ function AppDesktop() {
     fileMenuAnchor,
     snackbar,
     globalVariables,
-    language,
     tabLayout,
     viewMode,
     editorStatus,
@@ -40,6 +39,7 @@ function AppDesktop() {
     isAtLimit,
     canZoomIn,
     canZoomOut,
+    appSettings,
 
     // Handlers
     handleContentChange,
@@ -47,8 +47,8 @@ function AppDesktop() {
     handleSettingsClose,
     handleHelpOpen,
     handleHelpClose,
-    handleLanguageChange,
     handleThemeChange,
+    handleAppSettingsChange,
     handleFileMenuOpen,
     handleFileMenuClose,
     handleCloseSnackbar,
@@ -75,8 +75,6 @@ function AppDesktop() {
 
     // Setters
     setEditorStatus,
-    setGlobalVariables,
-    setTabLayout,
     setViewMode,
 
     // Translation
@@ -161,6 +159,14 @@ function AppDesktop() {
           currentZoom={currentZoom}
           isInitialized={isInitialized}
           isSettingsLoaded={isSettingsLoaded}
+          editorSettings={{
+            fontSize: appSettings.editor.fontSize,
+            showLineNumbers: appSettings.editor.showLineNumbers,
+            tabSize: appSettings.editor.tabSize,
+            wordWrap: appSettings.editor.wordWrap,
+            minimap: appSettings.editor.minimap,
+            showWhitespace: appSettings.advanced.showWhitespace,
+          }}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
@@ -184,19 +190,13 @@ function AppDesktop() {
           currentZoom={currentZoom}
           ZOOM_CONFIG={ZOOM_CONFIG}
           settingsOpen={settingsOpen}
-          theme={theme}
-          globalVariables={globalVariables}
-          language={language}
-          tabLayout={tabLayout}
+          settings={appSettings}
           helpOpen={helpOpen}
           fileChangeDialog={fileChangeDialog}
           saveBeforeCloseDialog={saveBeforeCloseDialog}
           onCloseSnackbar={handleCloseSnackbar}
           onSettingsClose={handleSettingsClose}
-          onThemeChange={handleThemeChange}
-          onGlobalVariablesChange={setGlobalVariables}
-          onLanguageChange={handleLanguageChange}
-          onTabLayoutChange={setTabLayout}
+          onSettingsChange={handleAppSettingsChange}
           onHelpClose={handleHelpClose}
           onSaveBeforeClose={handleSaveBeforeClose}
           onDontSaveBeforeClose={handleDontSaveBeforeClose}

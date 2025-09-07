@@ -15,6 +15,8 @@
     "add": "Add",
     "delete": "Delete",
     "close": "Close",
+    "cancel": "Cancel",
+    "reset": "Reset",
     "splitView": "Split View",
     "editorOnly": "Editor Only",
     "previewOnly": "Preview Only"
@@ -150,6 +152,42 @@
       "splitDescription": "Show editor and preview side by side.",
       "editorDescription": "Show only the editor for focused writing.",
       "previewDescription": "Show only the preview for reading."
+    },
+    "editor": {
+      "title": "Editor",
+      "fontSize": "Font Size",
+      "fontSizeDescription": "Adjust the font size for the editor.",
+      "showLineNumbers": "Show Line Numbers",
+      "showLineNumbersDescription": "Display line numbers in the editor.",
+      "tabSize": "Tab Size",
+      "tabSizeDescription": "Number of spaces for tab indentation.",
+      "wordWrap": "Word Wrap",
+      "wordWrapDescription": "Wrap long lines in the editor.",
+      "minimap": "Minimap",
+      "minimapDescription": "Show a minimap of the document."
+    },
+    "interface": {
+      "title": "Interface",
+      "zoomLevel": "Zoom Level",
+      "zoomLevelDescription": "Adjust the zoom level for the interface."
+    },
+    "advanced": {
+      "title": "Advanced",
+      "autoSave": "Auto Save",
+      "autoSaveDescription": "Automatically save changes.",
+      "showWhitespace": "Show Whitespace",
+      "showWhitespaceDescription": "Display whitespace characters in the editor.",
+      "importExport": "Import/Export Settings",
+      "exportSettings": "Export Settings",
+      "importSettings": "Import Settings",
+      "resetSettings": "Reset Settings",
+      "resetConfirm": "Are you sure you want to reset all settings to default? This action cannot be undone.",
+      "exportSuccess": "Settings exported successfully",
+      "exportError": "Failed to export settings",
+      "importSuccess": "Settings imported successfully",
+      "importError": "Failed to import settings",
+      "resetSuccess": "Settings reset successfully",
+      "resetError": "Failed to reset settings"
     }
   },
   "fileOperations": {
