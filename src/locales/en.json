@@ -125,7 +125,10 @@
         "nextTab": "Next Tab",
         "previousTab": "Previous Tab",
         "settings": "Open Settings",
-        "help": "Open Help"
+        "help": "Open Help",
+        "zoomIn": "Zoom In",
+        "zoomOut": "Zoom Out",
+        "resetZoom": "Reset Zoom"
       }
     },
     "tutorials": {

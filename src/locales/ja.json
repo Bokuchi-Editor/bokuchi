@@ -125,7 +125,10 @@
         "nextTab": "次のタブ",
         "previousTab": "前のタブ",
         "settings": "設定を開く",
-        "help": "ヘルプを開く"
+        "help": "ヘルプを開く",
+        "zoomIn": "ズームイン",
+        "zoomOut": "ズームアウト",
+        "resetZoom": "ズームリセット"
       }
     },
     "tutorials": {
