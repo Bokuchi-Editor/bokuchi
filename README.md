@@ -1,8 +1,10 @@
 # Bokuchi
 
+![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss.png)
+
 A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
-**Version**: 0.2.0
+**Version**: 0.3.0
 
 ## Features
 
@@ -127,6 +129,10 @@ npm run tauri:dev:dynamic
 **Production Build:**
 
 ```bash
+# macOS (Universal - Apple Silicon + Intel)
+npm run tauri:build -- --target universal-apple-darwin
+
+# macOS (Native only)
 npm run tauri:build
 ```
 
@@ -147,11 +153,13 @@ npm run tauri:build -- --target x86_64-unknown-linux-gnu
 
 After successful build, the application will be available in:
 
-- **macOS**: `src-tauri/target/release/bundle/dmg/` (DMG installer)
+- **macOS**: `src-tauri/target/universal-apple-darwin/release/bundle/dmg/` (Universal DMG installer)
 - **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/` (NSIS installer)
 - **Linux**: `src-tauri/target/release/bundle/appimage/` (AppImage)
 
-#### Prerequisites for Windows Build (from macOS)
+#### Prerequisites for Cross-Platform Builds
+
+**Windows Build (from macOS):**
 
 To build Windows binaries from macOS, you need to install additional tools:
 
@@ -164,6 +172,52 @@ rustup target add x86_64-pc-windows-gnu
 
 # Ensure llvm-rc is available in PATH
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+```
+
+**Linux Build:**
+
+For Linux builds, it's recommended to use an actual Linux environment:
+
+- **Native Linux**: Ubuntu, Fedora, or other Linux distributions
+- **Docker**: Use a Linux container for building
+- **CI/CD**: GitHub Actions or similar services
+
+Cross-compiling from macOS to Linux is complex and not recommended due to dependency issues.
+
+#### Linux Build Commands
+
+**On Linux systems:**
+
+```bash
+# Build Linux version
+./build/build-linux.sh
+```
+
+**Using Docker (from any system):**
+
+```bash
+# Build Linux version using Docker
+./build/build-linux-docker.sh
+```
+
+This script will:
+
+1. Build a Docker image with all necessary dependencies
+2. Run the build process inside the container
+3. Generate the AppImage file
+
+**Manual Docker build:**
+
+```bash
+# Create a Dockerfile for building
+docker run --rm -v "$(pwd)":/workspace -w /workspace ubuntu:22.04 bash -c "
+  apt-get update && apt-get install -y curl build-essential libwebkit2gtk-4.0-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source ~/.cargo/env
+  rustup target add x86_64-unknown-linux-gnu
+  npm install
+  ./build/build-linux.sh
+"
 ```
 
 #### Windows Build Commands (from macOS)

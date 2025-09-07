@@ -7,12 +7,14 @@ set -e  # エラーが発生したら即座に終了
 
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+# プロジェクトルートに移動（buildディレクトリから1つ上）
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "🔍 macOS公証化状態確認を開始します..."
 
 # アプリケーションパス
-APP_PATH="src-tauri/target/release/bundle/macos/Bokuchi.app"
+APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
 
 # アプリケーションの存在確認
 if [ ! -d "$APP_PATH" ]; then

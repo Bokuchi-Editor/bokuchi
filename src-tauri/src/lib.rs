@@ -393,13 +393,19 @@ pub fn run() {
                 println!("Current directory: {:?}", std::env::current_dir());
             }
 
-            // If file path is passed as argument
+            // If file path is passed as argument (macOS only)
+            #[cfg(target_os = "macos")]
             if args.len() > 1 {
                 let file_path = &args[1];
                 println!("File path from args: {}", file_path);
                 handle_open_file_event(app.handle(), file_path.to_string());
             } else {
                 println!("No command line arguments provided");
+            }
+
+            #[cfg(not(target_os = "macos"))]
+            {
+                println!("Command line argument handling is only available on macOS");
             }
 
             Ok(())

@@ -7,7 +7,9 @@ set -e  # エラーが発生したら即座に終了
 
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+# プロジェクトルートに移動（buildディレクトリから1つ上）
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "🍎 macOS版署名済みビルドを開始します..."
 
@@ -43,8 +45,35 @@ sed -i.tmp "s/\"providerShortName\": \".*\"/\"providerShortName\": \"$TEAM_ID\"/
 echo "📦 フロントエンドをビルド中..."
 npm run build
 
-echo "🦀 Rustアプリケーションをビルド中..."
-npm run tauri:build
+echo "🦀 Rustアプリケーションをユニバーサルビルド中..."
+echo "   Apple Silicon (aarch64-apple-darwin) と Intel Mac (x86_64-apple-darwin) の両方に対応"
+
+# 必要なRustターゲットをチェック・インストール
+echo "🎯 必要なRustターゲットをチェック中..."
+
+# rustupがインストールされているかチェック
+if ! command -v rustup &> /dev/null; then
+    echo "📦 rustupをインストール中..."
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source ~/.cargo/env
+fi
+
+# Intel Macターゲットがインストールされているかチェック
+if ! rustup target list --installed | grep -q "x86_64-apple-darwin"; then
+    echo "📦 Intel Macターゲット (x86_64-apple-darwin) をインストール中..."
+    rustup target add x86_64-apple-darwin
+fi
+
+# Apple Siliconターゲットがインストールされているかチェック
+if ! rustup target list --installed | grep -q "aarch64-apple-darwin"; then
+    echo "📦 Apple Siliconターゲット (aarch64-apple-darwin) をインストール中..."
+    rustup target add aarch64-apple-darwin
+fi
+
+echo "✅ 必要なターゲットがすべてインストールされています"
+
+# ユニバーサルビルドの実行
+npm run tauri:build -- --target universal-apple-darwin
 
 # 設定を元に戻す
 echo "🔄 設定を元に戻しています..."
@@ -54,8 +83,8 @@ rm -f src-tauri/tauri.conf.json.tmp
 echo "✅ macOS版署名済みビルドが完了しました！"
 echo ""
 echo "📁 ビルド成果物:"
-echo "   アプリケーション: src-tauri/target/release/bundle/macos/Bokuchi.app"
-echo "   DMGインストーラー: src-tauri/target/release/bundle/dmg/Bokuchi_0.2.0_aarch64.dmg"
+echo "   アプリケーション: src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
+echo "   DMGインストーラー: src-tauri/target/universal-apple-darwin/release/bundle/dmg/Bokuchi_0.3.0_universal.dmg"
 echo ""
 echo "🔐 署名情報:"
 echo "   証明書: $CERT_IDENTITY"

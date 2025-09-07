@@ -7,7 +7,9 @@ set -e  # エラーが発生したら即座に終了
 
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+# プロジェクトルートに移動（buildディレクトリから1つ上）
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "🔐 macOS公証を開始します..."
 
@@ -30,11 +32,11 @@ if [ -z "$APPLE_TEAM_ID" ]; then
     exit 1
 fi
 
-# アプリケーションパスを確認
-APP_PATH="src-tauri/target/release/bundle/macos/Bokuchi.app"
+# アプリケーションパスを確認（ユニバーサル版）
+APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
 if [ ! -d "$APP_PATH" ]; then
     echo "❌ アプリケーションが見つかりません: $APP_PATH"
-    echo "   まず署名済みビルドを実行してください: ./build-macos-signed.sh"
+    echo "   まず署名済みビルドを実行してください: ./build/build-macos-signed.sh"
     exit 1
 fi
 
@@ -43,20 +45,20 @@ ZIP_PATH="Bokuchi.zip"
 ditto -c -k --keepParent "$APP_PATH" "$ZIP_PATH"
 
 echo "🚀 Appleに公証を送信中..."
-xcrun notarytool submit "$ZIP_PATH" \
+SUBMISSION_ID=$(xcrun notarytool submit "$ZIP_PATH" \
     --apple-id "$APPLE_ID" \
     --password "$APPLE_PASSWORD" \
     --team-id "$APPLE_TEAM_ID" \
-    --wait
+    --wait | grep "id:" | head -1 | awk '{print $2}')
 
 echo "✅ 公証が完了しました！"
+echo "📋 Submission ID: $SUBMISSION_ID"
 
 echo "🔍 公証結果を確認中..."
-xcrun notarytool log \
+xcrun notarytool log "$SUBMISSION_ID" \
     --apple-id "$APPLE_ID" \
     --password "$APPLE_PASSWORD" \
-    --team-id "$APPLE_TEAM_ID" \
-    --wait
+    --team-id "$APPLE_TEAM_ID"
 
 echo "📋 公証ステープルを追加中..."
 xcrun stapler staple "$APP_PATH"

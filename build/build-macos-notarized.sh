@@ -7,7 +7,9 @@ set -e  # エラーが発生したら即座に終了
 
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+# プロジェクトルートに移動（buildディレクトリから1つ上）
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "🍎 macOS版署名・公証・DMG作成を開始します..."
 
@@ -71,8 +73,35 @@ sed -i.tmp "s/\"providerShortName\": \".*\"/\"providerShortName\": \"$TEAM_ID\"/
 echo "📦 フロントエンドをビルド中..."
 npm run build
 
-echo "🦀 Rustアプリケーションをビルド中..."
-npm run tauri:build
+echo "🦀 Rustアプリケーションをユニバーサルビルド中..."
+echo "   Apple Silicon (aarch64-apple-darwin) と Intel Mac (x86_64-apple-darwin) の両方に対応"
+
+# 必要なRustターゲットをチェック・インストール
+echo "🎯 必要なRustターゲットをチェック中..."
+
+# rustupがインストールされているかチェック
+if ! command -v rustup &> /dev/null; then
+    echo "📦 rustupをインストール中..."
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source ~/.cargo/env
+fi
+
+# Intel Macターゲットがインストールされているかチェック
+if ! rustup target list --installed | grep -q "x86_64-apple-darwin"; then
+    echo "📦 Intel Macターゲット (x86_64-apple-darwin) をインストール中..."
+    rustup target add x86_64-apple-darwin
+fi
+
+# Apple Siliconターゲットがインストールされているかチェック
+if ! rustup target list --installed | grep -q "aarch64-apple-darwin"; then
+    echo "📦 Apple Siliconターゲット (aarch64-apple-darwin) をインストール中..."
+    rustup target add aarch64-apple-darwin
+fi
+
+echo "✅ 必要なターゲットがすべてインストールされています"
+
+# ユニバーサルビルドの実行
+npm run tauri:build -- --target universal-apple-darwin
 
 # 設定を元に戻す
 echo "🔄 設定を元に戻しています..."
@@ -140,7 +169,7 @@ echo "📋 公証済みアプリケーションをコピー中..."
 cp -R "$APP_PATH" "$DMG_APP_DIR"
 
 # DMG作成
-DMG_NAME="Bokuchi_$(date +%Y%m%d_%H%M%S)_notarized.dmg"
+DMG_NAME="Bokuchi_$(date +%Y%m%d_%H%M%S)_universal_notarized.dmg"
 DMG_PATH="src-tauri/target/release/bundle/dmg/$DMG_NAME"
 
 echo "💿 DMGファイルを作成中: $DMG_NAME"
@@ -163,10 +192,10 @@ echo "🎉 署名・DMG作成が正常に完了しました！"
 echo ""
 echo "📁 成果物:"
 if [ "$NOTARIZE_ENABLED" = true ]; then
-    echo "   公証済みアプリケーション: $APP_PATH"
+    echo "   公証済みアプリケーション: src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
     echo "   公証済みDMG: $DMG_PATH"
 else
-    echo "   署名済みアプリケーション: $APP_PATH"
+    echo "   署名済みアプリケーション: src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
     echo "   署名済みDMG: $DMG_PATH"
 fi
 echo ""
