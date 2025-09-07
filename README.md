@@ -452,7 +452,6 @@ The codebase has been significantly refactored to improve maintainability and or
 - [ ] Advanced settings panel with categories
 - [ ] Customizable editor themes and syntax highlighting
 - [ ] User preferences persistence
-- [ ] Custom CSS for preview styling
 
 #### 2. Recent Files & Navigation
 
@@ -520,6 +519,7 @@ The codebase has been significantly refactored to improve maintainability and or
 - [ ] Context menus and right-click actions
 - [ ] Drag and drop file support
 - [ ] User feedback system
+- [ ] Custom CSS for preview styling
 
 #### 2. Final Polish
 

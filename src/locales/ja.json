@@ -21,6 +21,21 @@
     "editorOnly": "エディターのみ",
     "previewOnly": "プレビューのみ"
   },
+  "recentFiles": {
+    "title": "最近のファイル",
+    "dialogTitle": "最近のファイル",
+    "searchPlaceholder": "ファイル名またはパスで検索...",
+    "noResults": "検索結果が見つかりません",
+    "noFiles": "最近のファイルがありません",
+    "copyPath": "パスをコピー",
+    "removeFromRecent": "最近のファイルから削除",
+    "pathCopied": "パスをクリップボードにコピーしました",
+    "removedFromRecent": "最近のファイルから削除しました",
+    "fileNotFound": "ファイルが見つかりません",
+    "loadFailed": "ファイルの読み込みに失敗しました",
+    "removeFailed": "削除に失敗しました",
+    "copyFailed": "パスのコピーに失敗しました"
+  },
   "shortcuts": {
     "newFile": "⌘N",
     "openFile": "⌘O",

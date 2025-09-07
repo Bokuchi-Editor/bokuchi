@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline } from '@mui/icons-material';
+import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule } from '@mui/icons-material';
+import { RecentFile } from '../types/recentFiles';
+import { storeApi } from '../api/storeApi';
 import { Tab } from '../types/tab';
 
 interface AppHeaderProps {
@@ -20,6 +22,7 @@ interface AppHeaderProps {
   onSaveWithVariables: () => void;
   onSettingsOpen: () => void;
   onHelpOpen: () => void;
+  onRecentFileSelect: (filePath: string) => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -39,8 +42,31 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   onSaveWithVariables,
   onSettingsOpen,
   onHelpOpen,
+  onRecentFileSelect,
   t,
 }) => {
+  const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
+
+  // Recent Filesを読み込み
+  useEffect(() => {
+    const loadRecentFiles = async () => {
+      try {
+        const files = await storeApi.loadRecentFiles();
+        setRecentFiles(files.slice(0, 10)); // メニューには最大10件表示
+      } catch (error) {
+        console.error('Failed to load recent files:', error);
+      }
+    };
+
+    if (fileMenuAnchor) {
+      loadRecentFiles();
+    }
+  }, [fileMenuAnchor]);
+
+  const handleRecentFileSelect = (filePath: string) => {
+    onRecentFileSelect(filePath);
+    onFileMenuClose();
+  };
   return (
     <AppBar position="static">
       <Toolbar>
@@ -93,6 +119,31 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <FolderOpen sx={{ mr: 1 }} />
           <span>{t('buttons.openFile')}</span>
         </MenuItem>
+
+        {/* Recent Files サブメニュー */}
+        {recentFiles.length > 0 && (
+          <MenuItem disabled>
+            <Schedule sx={{ mr: 1 }} />
+            <span>{t('recentFiles.title')}</span>
+          </MenuItem>
+        )}
+        {recentFiles.map((file) => (
+          <MenuItem
+            key={file.id}
+            onClick={() => handleRecentFileSelect(file.filePath)}
+            sx={{
+              pl: 4,
+              '& .MuiMenuItem-root': {
+                fontSize: '0.875rem',
+                lineHeight: 1.2,
+              }
+            }}
+          >
+            <span style={{ fontSize: '0.875rem', lineHeight: 1.2 }}>
+              {file.fileName}
+            </span>
+          </MenuItem>
+        ))}
 
         <MenuItem
           onClick={() => { onSaveFile(); onFileMenuClose(); }}

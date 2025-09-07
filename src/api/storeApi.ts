@@ -2,6 +2,7 @@ import { load, Store } from '@tauri-apps/plugin-store';
 import { AppState } from '../types/tab';
 import { ThemeName } from '../themes';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
+import { RecentFile } from '../types/recentFiles';
 
 let store: Store | null = null;
 
@@ -332,4 +333,101 @@ export const storeApi = {
       throw error;
     }
   },
+
+  // Recent Files関連のメソッド
+  async saveRecentFiles(recentFiles: RecentFile[]): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('recentFiles', recentFiles);
+      await storeInstance.save();
+      console.log('Recent files saved successfully');
+    } catch (error) {
+      console.error('Failed to save recent files:', error);
+      throw error;
+    }
+  },
+
+  async loadRecentFiles(): Promise<RecentFile[]> {
+    try {
+      const storeInstance = await getStore();
+      const recentFiles = await storeInstance.get<RecentFile[]>('recentFiles');
+      return recentFiles || [];
+    } catch (error) {
+      console.error('Failed to load recent files:', error);
+      return [];
+    }
+  },
+
+  async addRecentFile(filePath: string, fileName: string, content: string, fileSize?: number, lastModified?: number): Promise<void> {
+    try {
+      const recentFiles = await this.loadRecentFiles();
+      const appSettings = await this.loadAppSettings();
+      const settings = appSettings.recentFiles;
+
+      // 既存のファイルかチェック
+      const existingIndex = recentFiles.findIndex(file => file.filePath === filePath);
+
+      const now = Date.now();
+      const preview = content.substring(0, settings.previewLength);
+
+      if (existingIndex >= 0) {
+        // 既存ファイルの場合は更新
+        recentFiles[existingIndex] = {
+          ...recentFiles[existingIndex],
+          lastOpened: now,
+          openCount: recentFiles[existingIndex].openCount + 1,
+          lastModified,
+          fileSize,
+          preview,
+        };
+      } else {
+        // 新規ファイルの場合は追加
+        const newFile: RecentFile = {
+          id: `recent-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          filePath,
+          fileName,
+          lastOpened: now,
+          openCount: 1,
+          lastModified,
+          fileSize,
+          preview,
+        };
+        recentFiles.unshift(newFile);
+      }
+
+      // 最終更新時刻順でソート
+      recentFiles.sort((a, b) => b.lastOpened - a.lastOpened);
+
+      // 最大ファイル数を超えた場合は古いものを削除
+      if (recentFiles.length > settings.maxRecentFiles) {
+        recentFiles.splice(settings.maxRecentFiles);
+      }
+
+      await this.saveRecentFiles(recentFiles);
+    } catch (error) {
+      console.error('Failed to add recent file:', error);
+      throw error;
+    }
+  },
+
+  async removeRecentFile(filePath: string): Promise<void> {
+    try {
+      const recentFiles = await this.loadRecentFiles();
+      const filteredFiles = recentFiles.filter(file => file.filePath !== filePath);
+      await this.saveRecentFiles(filteredFiles);
+    } catch (error) {
+      console.error('Failed to remove recent file:', error);
+      throw error;
+    }
+  },
+
+  async clearRecentFiles(): Promise<void> {
+    try {
+      await this.saveRecentFiles([]);
+    } catch (error) {
+      console.error('Failed to clear recent files:', error);
+      throw error;
+    }
+  },
+
 };

@@ -26,12 +26,20 @@ export interface AdvancedSettings {
   showWhitespace: boolean;
 }
 
+// Recent Files設定の型定義
+export interface RecentFilesSettings {
+  maxRecentFiles: number;
+  showPreview: boolean;
+  previewLength: number;
+}
+
 // 全設定の統合型定義
 export interface AppSettings {
   editor: EditorSettings;
   appearance: AppearanceSettings;
   interface: InterfaceSettings;
   advanced: AdvancedSettings;
+  recentFiles: RecentFilesSettings;
   globalVariables: Record<string, string>;
 }
 
@@ -60,10 +68,17 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
   showWhitespace: false,
 };
 
+export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {
+  maxRecentFiles: 20,
+  showPreview: true,
+  previewLength: 100,
+};
+
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   editor: DEFAULT_EDITOR_SETTINGS,
   appearance: DEFAULT_APPEARANCE_SETTINGS,
   interface: DEFAULT_INTERFACE_SETTINGS,
   advanced: DEFAULT_ADVANCED_SETTINGS,
+  recentFiles: DEFAULT_RECENT_FILES_SETTINGS,
   globalVariables: {},
 };
