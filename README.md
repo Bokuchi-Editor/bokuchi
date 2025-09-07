@@ -440,17 +440,48 @@ The codebase has been significantly refactored to improve maintainability and or
 - [x] Phase 7: State persistence and file restoration
 - [x] Phase 8: Code refactoring and architecture improvements
 - [x] Phase 8.1: Interactive checkboxes with preview synchronization
-- [ ] Phase 9: Advanced features and optimizations
+- [ ] Phase 9: User Experience & Core Features
+- [ ] Phase 10: Advanced Editor Features
+- [ ] Phase 11: Export & Sharing Features
+- [ ] Phase 12: Performance & Polish
 
-### Phase 9: Advanced Features and Optimizations
+### Phase 9: User Experience & Core Features
 
-#### 1. Enhanced Settings and Customization
+#### 1. Enhanced Settings Panel
 
 - [ ] Advanced settings panel with categories
 - [ ] Customizable editor themes and syntax highlighting
-- [ ] Configurable keyboard shortcuts
 - [ ] User preferences persistence
 - [ ] Custom CSS for preview styling
+
+#### 2. Recent Files & Navigation
+
+- [ ] Recent files list
+- [ ] Quick file switching
+- [ ] File history tracking
+
+#### 3. Advanced Editor Features
+
+- [ ] Multiple cursor support
+- [ ] Code folding for Markdown
+- [ ] Enhanced text selection
+
+#### 4. Help & Documentation
+
+- [ ] Welcome screen and tutorials
+- [ ] In-app help system
+- [ ] Feature guides and tips
+- [ ] Context-sensitive help
+
+### Phase 10: Advanced Editor Features
+
+#### 1. Enhanced Variable System
+
+- [ ] Variable validation and error handling
+- [ ] Nested variable support
+- [ ] Variable templates and presets
+- [ ] Variable usage statistics
+- [ ] Import/export variable sets
 
 #### 2. Performance Optimizations
 
@@ -460,47 +491,37 @@ The codebase has been significantly refactored to improve maintainability and or
 - [ ] Real-time preview performance tuning
 - [ ] Lazy loading for large documents
 
-#### 3. Advanced Editor Features
-
-- [ ] Auto-save functionality
-- [ ] File change detection and reload
-- [ ] Multiple cursor support
-- [ ] Code folding for Markdown
-- [ ] Git integration (show changes, diff view)
-
-#### 4. Enhanced Variable System
-
-- [ ] Variable validation and error handling
-- [ ] Nested variable support
-- [ ] Variable templates and presets
-- [ ] Variable usage statistics
-- [ ] Import/export variable sets
-
-#### 5. User Experience Improvements
-
-- [ ] Welcome screen and tutorials
-- [ ] Keyboard shortcuts reference
-- [ ] Context menus and right-click actions
-- [ ] Drag and drop file support
-- [ ] Recent files list
-
-#### 6. Export and Sharing Features
-
-- [ ] PDF export
-- [ ] Multiple export formats (HTML, PDF, DOCX)
-- [ ] Custom export templates
-- [ ] Share functionality
-- [ ] Print support
-
-#### 7. Error Handling and Stability
+#### 3. Error Handling and Stability
 
 - [ ] Comprehensive error handling
 - [ ] Crash recovery
 - [ ] Data backup and recovery
 - [ ] Logging and debugging tools
+
+### Phase 11: Export & Sharing Features
+
+#### 1. Export Formats
+
+- [ ] PDF export
+- [ ] Multiple export formats (HTML, PDF, DOCX)
+- [ ] Custom export templates
+- [ ] Print support
+
+#### 2. Sharing & Collaboration
+
+- [ ] Share functionality
+- [ ] Export sharing options
+
+### Phase 12: Performance & Polish
+
+#### 1. User Experience Enhancements
+
+- [ ] Keyboard shortcuts reference
+- [ ] Context menus and right-click actions
+- [ ] Drag and drop file support
 - [ ] User feedback system
 
-#### 8. Final Polish
+#### 2. Final Polish
 
 - [ ] Application icons and branding
 - [ ] Installer creation
