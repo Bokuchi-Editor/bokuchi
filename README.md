@@ -4,7 +4,7 @@
 
 A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
-**Version**: 0.3.0
+**Version**: 0.3.1
 
 ## Features
 
