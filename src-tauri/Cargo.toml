@@ -1,6 +1,6 @@
 [package]
 name = "bokuchi"
-version = "0.3.1"
+version = "0.3.2"
 description = "A lightweight Markdown editor"
 authors = ["saita_shinya"]
 edition = "2024"
