@@ -51,7 +51,7 @@ const createThresholdPointerSensor = () => {
     activationConstraint: {
       distance: dragConfig.dragThreshold,
       delay: dragConfig.dragDelay,
-      tolerance: 5,
+      tolerance: 3,
     },
   });
 };
@@ -159,15 +159,12 @@ const SortableTab: React.FC<{
       ref={setNodeRef}
       style={style}
       value={tab.id}
+      onClick={() => onClick(tab.id)}
       label={
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Box
             {...attributes}
             {...listeners}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick(tab.id);
-            }}
             sx={{
               flex: 1,
               display: 'flex',
