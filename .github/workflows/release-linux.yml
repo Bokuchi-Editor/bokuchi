@@ -70,32 +70,13 @@ jobs:
         id: version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - name: Upload DEB package to release
-        uses: actions/upload-release-asset@v1
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/Bokuchi_${{ steps.version.outputs.version }}_amd64.deb
+            ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/rpm/Bokuchi-${{ steps.version.outputs.version }}-1.x86_64.rpm
+            ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/Bokuchi_${{ steps.version.outputs.version }}_amd64.deb
-          asset_name: Bokuchi_${{ steps.version.outputs.version }}_amd64.deb
-          asset_content_type: application/vnd.debian.binary-package
-
-      - name: Upload RPM package to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/rpm/Bokuchi-${{ steps.version.outputs.version }}-1.x86_64.rpm
-          asset_name: Bokuchi-${{ steps.version.outputs.version }}-1.x86_64.rpm
-          asset_content_type: application/x-rpm
-
-      - name: Upload AppImage to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage
-          asset_name: Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage
-          asset_content_type: application/octet-stream
