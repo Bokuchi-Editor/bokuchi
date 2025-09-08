@@ -86,6 +86,17 @@ if ! command -v rustup &> /dev/null; then
     source ~/.cargo/env
 fi
 
+# 環境変数を確実に設定
+export PATH="$HOME/.cargo/bin:$PATH"
+export CARGO_HOME="$HOME/.cargo"
+export RUSTUP_HOME="$HOME/.rustup"
+
+# 環境変数を確認
+echo "🔧 環境変数を確認中..."
+echo "   PATH: $PATH"
+echo "   CARGO_HOME: $CARGO_HOME"
+echo "   RUSTUP_HOME: $RUSTUP_HOME"
+
 # Intel Macターゲットがインストールされているかチェック
 if ! rustup target list --installed | grep -q "x86_64-apple-darwin"; then
     echo "📦 Intel Macターゲット (x86_64-apple-darwin) をインストール中..."
@@ -101,15 +112,31 @@ fi
 echo "✅ 必要なターゲットがすべてインストールされています"
 
 # ユニバーサルビルドの実行
-npm run tauri:build -- --target universal-apple-darwin
+echo "🚀 ユニバーサルビルドを開始します..."
+echo "   ターゲット: universal-apple-darwin"
+echo "   環境変数: PATH=$PATH"
+
+# 環境変数を確実に設定してからビルド実行
+export PATH="$HOME/.cargo/bin:$PATH"
+export CARGO_HOME="$HOME/.cargo"
+export RUSTUP_HOME="$HOME/.rustup"
+
+# npm run tauri:build を実行し、環境変数を確実に渡す
+env PATH="$PATH" CARGO_HOME="$CARGO_HOME" RUSTUP_HOME="$RUSTUP_HOME" npm run tauri:build -- --target universal-apple-darwin
 
 # 設定を元に戻す
 echo "🔄 設定を元に戻しています..."
 mv src-tauri/tauri.conf.json.backup src-tauri/tauri.conf.json
 rm -f src-tauri/tauri.conf.json.tmp
 
-# アプリケーションパス
-APP_PATH="src-tauri/target/release/bundle/macos/Bokuchi.app"
+# アプリケーションパス（ユニバーサルビルドの場合）
+if [ -d "src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app" ]; then
+    APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
+    echo "✅ ユニバーサルビルドのアプリケーションを発見: $APP_PATH"
+else
+    APP_PATH="src-tauri/target/release/bundle/macos/Bokuchi.app"
+    echo "✅ 通常ビルドのアプリケーションを発見: $APP_PATH"
+fi
 
 # アプリケーションの存在確認
 if [ ! -d "$APP_PATH" ]; then
@@ -192,10 +219,10 @@ echo "🎉 署名・DMG作成が正常に完了しました！"
 echo ""
 echo "📁 成果物:"
 if [ "$NOTARIZE_ENABLED" = true ]; then
-    echo "   公証済みアプリケーション: src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
+    echo "   公証済みアプリケーション: $APP_PATH"
     echo "   公証済みDMG: $DMG_PATH"
 else
-    echo "   署名済みアプリケーション: src-tauri/target/universal-apple-darwin/release/bundle/macos/Bokuchi.app"
+    echo "   署名済みアプリケーション: $APP_PATH"
     echo "   署名済みDMG: $DMG_PATH"
 fi
 echo ""
