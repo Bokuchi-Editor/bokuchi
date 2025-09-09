@@ -284,7 +284,8 @@
     "fileNotFound": "File not found.",
     "closeTab": "Close Tab",
     "noMarkdownFiles": "Please drop a Markdown file (.md or .markdown)",
-    "dropMarkdownFile": "Drop Markdown file here"
+    "dropMarkdownFile": "Drop Markdown file here",
+    "noActiveTab": "No active tab to save. Please open a file first."
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",

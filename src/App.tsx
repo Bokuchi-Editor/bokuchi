@@ -1,4 +1,4 @@
-// import React from 'react';
+import { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Typography } from '@mui/material';
 
@@ -70,6 +70,7 @@ function AppDesktop() {
     handleDragOver,
     handleDragLeave,
     handleDrop,
+    openFile,
 
 
     // Zoom handlers
@@ -87,6 +88,133 @@ function AppDesktop() {
     // Constants
     ZOOM_CONFIG,
   } = useAppState();
+
+  // メニューイベントのリスナーを設定
+  useEffect(() => {
+    console.log('Setting up menu listeners...');
+
+    let unlistenMenu: (() => void) | undefined;
+    let unlistenNewFile: (() => void) | undefined;
+    let unlistenOpenFile: (() => void) | undefined;
+    let unlistenSaveAs: (() => void) | undefined;
+    let unlistenSaveWithVariables: (() => void) | undefined;
+    let unlistenHelp: (() => void) | undefined;
+
+    const setupMenuListeners = async () => {
+      const { listen } = await import('@tauri-apps/api/event');
+
+      // デバウンス処理用の変数（グローバルに移動）
+      const globalDebounce = (window as unknown as {
+        lastMenuEventTime?: number;
+        DEBOUNCE_DELAY: number;
+      });
+
+      if (!globalDebounce.lastMenuEventTime) {
+        globalDebounce.lastMenuEventTime = 0;
+      }
+      globalDebounce.DEBOUNCE_DELAY = 100;
+
+      unlistenMenu = await listen('menu-save', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Save event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Save event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Save event`);
+        handleSaveFile();
+      });
+
+      unlistenNewFile = await listen('menu-new-file', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu New File event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu New File event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu New File event`);
+        handleNewTab();
+      });
+
+      unlistenOpenFile = await listen('menu-open-file', async () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Open File event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Open File event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Open File event`);
+        try {
+          await openFile();
+        } catch (error) {
+          console.error('Failed to open file from menu:', error);
+        }
+      });
+
+      unlistenSaveAs = await listen('menu-save-as', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Save As event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Save As event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Save As event`);
+        handleSaveFileAs();
+      });
+
+      unlistenSaveWithVariables = await listen('menu-save-with-variables', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Save with Variables event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Save with Variables event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Save with Variables event`);
+        handleSaveWithVariables();
+      });
+
+      unlistenHelp = await listen('menu-help', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Help event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Help event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Help event`);
+        handleHelpOpen();
+      });
+    };
+
+    setupMenuListeners();
+
+    return () => {
+      console.log('Cleaning up menu listeners...');
+      if (unlistenMenu) unlistenMenu();
+      if (unlistenNewFile) unlistenNewFile();
+      if (unlistenOpenFile) unlistenOpenFile();
+      if (unlistenSaveAs) unlistenSaveAs();
+      if (unlistenSaveWithVariables) unlistenSaveWithVariables();
+      if (unlistenHelp) unlistenHelp();
+    };
+  }, [handleSaveFileAs, handleSaveWithVariables, handleHelpOpen]); // 依存配列に関数を追加
 
   return (
     <ThemeProvider theme={currentTheme}>

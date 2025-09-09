@@ -322,7 +322,11 @@ export const useTabsDesktop = () => {
   }, [addTab, setActiveTab]);
 
   const getActiveTab = useCallback(() => {
-    return state.tabs.find(tab => tab.id === state.activeTabId) || null;
+    console.log('getActiveTab called - state.tabs:', state.tabs);
+    console.log('getActiveTab called - state.activeTabId:', state.activeTabId);
+    const foundTab = state.tabs.find(tab => tab.id === state.activeTabId);
+    console.log('getActiveTab found tab:', foundTab);
+    return foundTab || null;
   }, [state.tabs, state.activeTabId]);
 
   // 状態を保存
