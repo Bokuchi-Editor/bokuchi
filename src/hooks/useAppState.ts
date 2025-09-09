@@ -539,9 +539,12 @@ export const useAppState = () => {
     }
   };
 
-  const handleSaveFileAs = async () => {
+  const handleSaveFileAs = useCallback(async () => {
     console.log('handleSaveFileAs called');
     console.log('activeTab:', activeTab);
+    console.log('activeTabId:', activeTabId);
+    console.log('tabs:', tabs);
+    console.log('tabs length:', tabs.length);
 
     if (activeTab) {
       try {
@@ -560,11 +563,24 @@ export const useAppState = () => {
       }
     } else {
       console.log('No active tab');
+      setSnackbar({
+        open: true,
+        message: t('fileOperations.noActiveTab') || 'No active tab to save',
+        severity: 'error'
+      });
     }
-  };
+  }, [activeTab, activeTabId, tabs, saveTabAs, setSnackbar, t]);
 
-  const handleSaveWithVariables = async () => {
-    if (!activeTab) return;
+  const handleSaveWithVariables = useCallback(async () => {
+    if (!activeTab) {
+      console.log('No active tab for save with variables');
+      setSnackbar({
+        open: true,
+        message: t('fileOperations.noActiveTab') || 'No active tab to save',
+        severity: 'error'
+      });
+      return;
+    }
 
     try {
       // 変数展開済みのコンテンツを取得
@@ -582,7 +598,7 @@ export const useAppState = () => {
       console.error('Failed to save file with variables:', error);
       setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
     }
-  };
+  }, [activeTab, globalVariables, setSnackbar, t]);
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);

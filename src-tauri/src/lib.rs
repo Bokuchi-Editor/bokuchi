@@ -427,31 +427,67 @@ pub fn run() {
                         if text == "File" || text == "ファイル" {
                             println!("Found File menu, adding custom items...");
 
-                            // 追加したい項目を用意（Cmd/Ctrl+S のショートカット付）
-                            let save = MenuItem::with_id(
-                                app, "save", "Save",
-                                true, Some("CmdOrCtrl+S")
-                            )?;
-                            println!("Created Save menu item");
+                            // デフォルトのFileメニュー項目を確認
+                            println!("Default File menu items:");
+                            for (i, item) in file_sm.items()?.iter().enumerate() {
+                                if let MenuItemKind::MenuItem(menu_item) = item {
+                                    if let Ok(item_text) = menu_item.text() {
+                                        println!("  {}: {}", i, item_text);
+                                    }
+                                }
+                            }
 
-                            // 先頭から1つ後ろに差し込む例（位置はお好みで）
-                            file_sm.insert(&save, 1)?;
-                            println!("Inserted Save menu item at position 1");
-
-                            // 追加のメニュー項目も作成してみる
+                            // 1. New File
                             let new_file = MenuItem::with_id(
                                 app, "new_file", "New File",
                                 true, Some("CmdOrCtrl+N")
                             )?;
-                            file_sm.insert(&new_file, 2)?;
-                            println!("Inserted New File menu item at position 2");
+                            file_sm.insert(&new_file, 1)?;
+                            println!("Inserted New File menu item at position 1");
 
+                            // 2. Open File
                             let open_file = MenuItem::with_id(
                                 app, "open_file", "Open File",
                                 true, Some("CmdOrCtrl+O")
                             )?;
-                            file_sm.insert(&open_file, 3)?;
-                            println!("Inserted Open File menu item at position 3");
+                            file_sm.insert(&open_file, 2)?;
+                            println!("Inserted Open File menu item at position 2");
+
+                            // 3. Save
+                            let save = MenuItem::with_id(
+                                app, "save", "Save",
+                                true, Some("CmdOrCtrl+S")
+                            )?;
+                            file_sm.insert(&save, 3)?;
+                            println!("Inserted Save menu item at position 3");
+
+                            // 4. Save As
+                            let save_as = MenuItem::with_id(
+                                app, "save_as", "Save As",
+                                true, Some("CmdOrCtrl+Shift+S")
+                            )?;
+                            file_sm.insert(&save_as, 4)?;
+                            println!("Inserted Save As menu item at position 4");
+
+                            // 5. Save with Variables
+                            let save_with_variables = MenuItem::with_id(
+                                app, "save_with_variables", "Save with Variables Applied",
+                                true, None::<&str>
+                            )?;
+                            file_sm.insert(&save_with_variables, 5)?;
+                            println!("Inserted Save with Variables menu item at position 5");
+                        }
+                        // Help メニューを探して項目を追加
+                        else if text == "Help" || text == "ヘルプ" {
+                            println!("Found Help menu, adding custom items...");
+
+                            // Help メニュー項目を追加
+                            let help = MenuItem::with_id(
+                                app, "help", "Help",
+                                true, Some("F1")
+                            )?;
+                            file_sm.insert(&help, 0)?; // 先頭に挿入
+                            println!("Inserted Help menu item at position 0");
                         }
                     }
                 }
@@ -484,6 +520,21 @@ pub fn run() {
                         "open_file" => {
                             println!("[{}] Open File menu item clicked - calling frontend function", timestamp);
                             let result = app.emit("menu-open-file", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        "save_as" => {
+                            println!("[{}] Save As menu item clicked - calling frontend function", timestamp);
+                            let result = app.emit("menu-save-as", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        "save_with_variables" => {
+                            println!("[{}] Save with Variables menu item clicked - calling frontend function", timestamp);
+                            let result = app.emit("menu-save-with-variables", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        "help" => {
+                            println!("[{}] Help menu item clicked - calling frontend function", timestamp);
+                            let result = app.emit("menu-help", ());
                             println!("[{}] Emit result: {:?}", timestamp, result);
                         }
                         _ => {

@@ -284,7 +284,8 @@
     "fileNotFound": "ファイルが見つかりません。",
     "closeTab": "タブを閉じる",
     "noMarkdownFiles": "Markdownファイル（.md または .markdown）をドロップしてください",
-    "dropMarkdownFile": "Markdownファイルをここにドロップ"
+    "dropMarkdownFile": "Markdownファイルをここにドロップ",
+    "noActiveTab": "保存するアクティブなタブがありません。まずファイルを開いてください。"
   },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
