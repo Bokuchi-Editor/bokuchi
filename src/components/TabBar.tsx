@@ -45,7 +45,7 @@ interface TabBarProps {
   layout?: 'horizontal' | 'vertical';
 }
 
-// カスタムポインターセンサー（ドラッグ開始の閾値付き）
+// Custom pointer sensor with drag start threshold
 const createThresholdPointerSensor = () => {
   return useSensor(PointerSensor, {
     activationConstraint: {
@@ -112,6 +112,7 @@ const SortableTab: React.FC<{
               display: 'flex',
               alignItems: 'center',
               cursor: 'grab',
+              minWidth: 0, // Set minimum width of flex item to 0
               '&:active': {
                 cursor: 'grabbing',
               },
@@ -119,11 +120,11 @@ const SortableTab: React.FC<{
           >
             <Box
               sx={{
-                flex: 1,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
                 fontSize: '0.875rem',
+                minWidth: 0, // Set minimum width of flex item to 0
               }}
             >
               {tab.title}
@@ -132,7 +133,7 @@ const SortableTab: React.FC<{
               color="error"
               variant="dot"
               invisible={!tab.isModified}
-              sx={{ ml: 1 }}
+              sx={{ ml: 1, flexShrink: 0 }} // Badge should not shrink
             />
           </Box>
           <IconButton
@@ -141,6 +142,7 @@ const SortableTab: React.FC<{
             sx={{
               ml: 1,
               opacity: 0.7,
+              flexShrink: 0, // Close button should not shrink
               '&:hover': {
                 opacity: 1,
                 bgcolor: 'action.hover',
@@ -161,7 +163,7 @@ const SortableTab: React.FC<{
       value={tab.id}
       onClick={() => onClick(tab.id)}
       label={
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 0 }}>
           <Box
             {...attributes}
             {...listeners}
@@ -170,6 +172,7 @@ const SortableTab: React.FC<{
               display: 'flex',
               alignItems: 'center',
               cursor: 'grab',
+              minWidth: 0, // Set minimum width of flex item to 0
               '&:active': {
                 cursor: 'grabbing',
               },
@@ -177,10 +180,10 @@ const SortableTab: React.FC<{
           >
             <Box
               sx={{
-                flex: 1,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                minWidth: 0, // Set minimum width of flex item to 0
               }}
             >
               {tab.title}
@@ -189,7 +192,7 @@ const SortableTab: React.FC<{
               color="error"
               variant="dot"
               invisible={!tab.isModified}
-              sx={{ ml: 1 }}
+              sx={{ ml: 1, flexShrink: 0 }} // Badge should not shrink
             />
           </Box>
           <Box
@@ -202,6 +205,7 @@ const SortableTab: React.FC<{
               borderRadius: 1,
               display: 'flex',
               alignItems: 'center',
+              flexShrink: 0, // Close button should not shrink
               '&:hover': {
                 bgcolor: 'action.hover',
               },
@@ -347,14 +351,14 @@ const TabBar: React.FC<TabBarProps> = ({
               sx={{
                 flex: 1,
                 '& .MuiTabs-indicator': {
-                  display: 'none', // カスタムスタイリングを使用するため非表示
+                  display: 'none', // Hidden to use custom styling
                 },
                 '& .MuiTab-root': {
                   minHeight: 48,
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   minWidth: 120,
-                  maxWidth: 200,
+                  maxWidth: 250, // Slightly increased to accommodate close button space
                   borderRight: 1,
                   borderColor: 'divider',
                   '&:last-child': {
