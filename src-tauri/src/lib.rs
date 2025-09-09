@@ -8,6 +8,7 @@ use std::path::Path;
 use std::sync::Mutex;
 use std::time::SystemTime;
 use tauri::{Emitter, Manager};
+use tauri::menu::{Menu, MenuItem, MenuItemKind};
 
 // Variable definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -406,6 +407,91 @@ pub fn run() {
             #[cfg(not(target_os = "macos"))]
             {
                 println!("Command line argument handling is only available on macOS");
+            }
+
+            // Custom menu setup (macOS only)
+            #[cfg(target_os = "macos")]
+            {
+                println!("Setting up custom menu...");
+
+                // 1) 既定メニューを生成
+                let menu = Menu::default(&app.handle())?;
+                println!("Default menu created");
+
+                // 2) "File" サブメニューを探して中に項目を差し込む
+                for item in menu.items()? {
+                    if let MenuItemKind::Submenu(file_sm) = item {
+                        let text = file_sm.text()?;
+                        println!("Found submenu: {}", text);
+
+                        if text == "File" || text == "ファイル" {
+                            println!("Found File menu, adding custom items...");
+
+                            // 追加したい項目を用意（Cmd/Ctrl+S のショートカット付）
+                            let save = MenuItem::with_id(
+                                app, "save", "Save",
+                                true, Some("CmdOrCtrl+S")
+                            )?;
+                            println!("Created Save menu item");
+
+                            // 先頭から1つ後ろに差し込む例（位置はお好みで）
+                            file_sm.insert(&save, 1)?;
+                            println!("Inserted Save menu item at position 1");
+
+                            // 追加のメニュー項目も作成してみる
+                            let new_file = MenuItem::with_id(
+                                app, "new_file", "New File",
+                                true, Some("CmdOrCtrl+N")
+                            )?;
+                            file_sm.insert(&new_file, 2)?;
+                            println!("Inserted New File menu item at position 2");
+
+                            let open_file = MenuItem::with_id(
+                                app, "open_file", "Open File",
+                                true, Some("CmdOrCtrl+O")
+                            )?;
+                            file_sm.insert(&open_file, 3)?;
+                            println!("Inserted Open File menu item at position 3");
+                        }
+                    }
+                }
+
+                // 3) アプリメニューとして反映
+                app.set_menu(menu)?;
+                println!("Menu set successfully");
+
+                // 4) クリックイベントの受け口
+                app.on_menu_event(|app, ev| {
+                    let timestamp = std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_millis();
+                    println!("[{}] Menu event received: {} (thread: {:?})",
+                        timestamp, ev.id().0, std::thread::current().id());
+
+                    match ev.id().0.as_str() {
+                        "save" => {
+                            println!("[{}] Save menu item clicked - calling frontend function", timestamp);
+                            // フロントエンドの関数を直接呼び出し
+                            let result = app.emit("menu-save", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        "new_file" => {
+                            println!("[{}] New File menu item clicked - calling frontend function", timestamp);
+                            let result = app.emit("menu-new-file", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        "open_file" => {
+                            println!("[{}] Open File menu item clicked - calling frontend function", timestamp);
+                            let result = app.emit("menu-open-file", ());
+                            println!("[{}] Emit result: {:?}", timestamp, result);
+                        }
+                        _ => {
+                            println!("[{}] Unknown menu item clicked: {}", timestamp, ev.id().0);
+                        }
+                    }
+                });
+                println!("Menu event handler set up");
             }
 
             Ok(())

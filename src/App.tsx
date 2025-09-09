@@ -1,4 +1,4 @@
-// import React from 'react';
+import { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Typography } from '@mui/material';
 
@@ -70,6 +70,7 @@ function AppDesktop() {
     handleDragOver,
     handleDragLeave,
     handleDrop,
+    openFile,
 
 
     // Zoom handlers
@@ -87,6 +88,92 @@ function AppDesktop() {
     // Constants
     ZOOM_CONFIG,
   } = useAppState();
+
+  // メニューイベントのリスナーを設定（グローバルフラグで重複登録を完全に防ぐ）
+  useEffect(() => {
+    // グローバルフラグで重複登録を防ぐ
+    if ((window as { menuListenersSetup?: boolean }).menuListenersSetup) {
+      console.log('Menu listeners already set up, skipping...');
+      return;
+    }
+
+    (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup = true;
+    console.log('Setting up menu listeners...');
+
+    let unlistenMenu: (() => void) | undefined;
+    let unlistenNewFile: (() => void) | undefined;
+    let unlistenOpenFile: (() => void) | undefined;
+
+    const setupMenuListeners = async () => {
+      const { listen } = await import('@tauri-apps/api/event');
+
+      // デバウンス処理用の変数（グローバルに移動）
+      const globalDebounce = (window as unknown as {
+        lastMenuEventTime?: number;
+        DEBOUNCE_DELAY: number;
+      });
+
+      if (!globalDebounce.lastMenuEventTime) {
+        globalDebounce.lastMenuEventTime = 0;
+      }
+      globalDebounce.DEBOUNCE_DELAY = 100;
+
+      unlistenMenu = await listen('menu-save', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Save event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Save event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Save event`);
+        handleSaveFile();
+      });
+
+      unlistenNewFile = await listen('menu-new-file', () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu New File event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu New File event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu New File event`);
+        handleNewTab();
+      });
+
+      unlistenOpenFile = await listen('menu-open-file', async () => {
+        const now = Date.now();
+        const timeDiff = now - globalDebounce.lastMenuEventTime!;
+        console.log(`[${now}] Menu Open File event received (time diff: ${timeDiff}ms)`);
+
+        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+          console.log(`[${now}] Menu Open File event debounced`);
+          return;
+        }
+        globalDebounce.lastMenuEventTime = now;
+        console.log(`[${now}] Executing Menu Open File event`);
+        try {
+          await openFile();
+        } catch (error) {
+          console.error('Failed to open file from menu:', error);
+        }
+      });
+    };
+
+    setupMenuListeners();
+
+    return () => {
+      if (unlistenMenu) unlistenMenu();
+      if (unlistenNewFile) unlistenNewFile();
+      if (unlistenOpenFile) unlistenOpenFile();
+      (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup = false;
+    };
+  }, []); // 依存配列を空にして、一度だけ登録
 
   return (
     <ThemeProvider theme={currentTheme}>

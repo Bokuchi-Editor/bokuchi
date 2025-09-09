@@ -232,10 +232,13 @@ export const useAppState = () => {
       }
     };
 
-    // Tauriのイベントリスナーを設定
+    // Tauriのイベントリスナーを設定（グローバル管理で重複を完全に防ぐ）
     let unlisten: (() => void) | undefined;
 
     const setupTauriListener = async () => {
+      // 既存のリスナーをクリーンアップ
+      if (unlisten) unlisten();
+
       const { listen } = await import('@tauri-apps/api/event');
       unlisten = await listen('open-file', handleOpenFile);
     };
