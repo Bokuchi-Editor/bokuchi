@@ -37,7 +37,7 @@ jobs:
 
     - name: Create issue if Tauri updated
       if: failure()
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
           const title = 'Tauri Update Available - glib Security Fix Check';

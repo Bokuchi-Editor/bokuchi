@@ -22,7 +22,7 @@ jobs:
 
     - name: Auto-merge PR
       if: steps.check.outputs.ready == 'true'
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
           // 自動マージを有効化
