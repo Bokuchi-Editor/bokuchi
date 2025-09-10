@@ -1,0 +1,78 @@
+name: Tauri Update Monitor
+
+on:
+  schedule:
+    # 毎週火曜日の午前10時（JST）に実行
+    - cron: '0 1 * * 2'
+  workflow_dispatch:
+
+jobs:
+  check-tauri-updates:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Check for Tauri updates
+      run: |
+        cd src-tauri
+        echo "Current Tauri version:"
+        cargo tree | grep "tauri v" | head -1
+
+        echo "Checking for updates..."
+        cargo outdated --exit-code 1 || echo "Updates available"
+
+    - name: Check glib compatibility
+      run: |
+        cd src-tauri
+        echo "Checking if glib can be updated with current Tauri version..."
+        cargo audit --ignore RUSTSEC-2024-0429 --deny warnings || echo "glib update still not possible"
+
+    - name: Create issue if Tauri updated
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = 'Tauri Update Available - glib Security Fix Check';
+          const body = `
+          Tauriの更新が利用可能になりました。
+
+          **確認事項:**
+          1. glib 0.20.0+ が利用可能か確認
+          2. RUSTSEC-2024-0429 の修正が含まれているか確認
+          3. アプリケーションの動作確認
+
+          **現在の状況:**
+          - Tauri: 2.8.5
+          - glib: 0.18.5 (セキュリティ警告あり)
+
+          **次のステップ:**
+          1. Tauriを最新版に更新
+          2. glibの更新を試行
+          3. セキュリティ監査を実行
+          `;
+
+          // 既存のissueがあるかチェック
+          const issues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: 'tauri-update'
+          });
+
+          if (issues.data.length === 0) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['tauri-update', 'security', 'dependencies']
+            });
+          }
