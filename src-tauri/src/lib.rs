@@ -7,8 +7,8 @@ use std::fs;
 use std::path::Path;
 use std::sync::Mutex;
 use std::time::SystemTime;
-use tauri::{Emitter, Manager};
 use tauri::menu::{Menu, MenuItem, MenuItemKind};
+use tauri::{Emitter, Manager};
 
 // Variable definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -349,6 +349,7 @@ fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             // Focus existing window when new instance is launched
             println!("New instance detected, attempting to focus existing window");
