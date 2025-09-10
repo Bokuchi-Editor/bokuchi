@@ -185,8 +185,10 @@ echo "💿 公証済みアプリケーションからDMGを作成中..."
 DMG_TEMP_DIR="dmg_temp"
 DMG_APP_DIR="$DMG_TEMP_DIR/Bokuchi.app"
 
-# 既存のDMGファイルを削除
-rm -f "src-tauri/target/release/bundle/dmg/"*.dmg
+# 既存のDMGファイルを削除（ディレクトリが存在する場合のみ）
+if [ -d "src-tauri/target/release/bundle/dmg" ]; then
+    rm -f "src-tauri/target/release/bundle/dmg/"*.dmg
+fi
 
 # 一時ディレクトリを作成
 mkdir -p "$DMG_TEMP_DIR"
@@ -198,6 +200,9 @@ cp -R "$APP_PATH" "$DMG_APP_DIR"
 # DMG作成
 DMG_NAME="Bokuchi_$(date +%Y%m%d_%H%M%S)_universal_notarized.dmg"
 DMG_PATH="src-tauri/target/release/bundle/dmg/$DMG_NAME"
+
+# DMG出力ディレクトリを作成（存在しない場合）
+mkdir -p "src-tauri/target/release/bundle/dmg"
 
 echo "💿 DMGファイルを作成中: $DMG_NAME"
 

@@ -35,7 +35,7 @@
 - `src-tauri/Cargo.lock` is auto-generated, so manual updates are not required
 - Build script filenames must match actual build output filenames
 
-## Current Version: 0.3.3
+## Current Version: 0.3.4
 
 Last Updated: $(date)
 

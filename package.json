@@ -1,7 +1,7 @@
 {
   "name": "bokuchi",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "get-port": "node scripts/get-port.js",
     "dev:dynamic": "PORT=$(npm run get-port --silent) vite",
     "check": "npm run lint && npm run type-check",
-    "lint": "eslint . --ext ts,tsx --max-warnings 0",
+    "lint": "eslint . --max-warnings 0",
     "type-check": "tsc --noEmit",
     "audit": "npm audit",
     "audit:fix": "npm audit fix",
