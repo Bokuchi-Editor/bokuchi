@@ -23,9 +23,6 @@ updates:
       # メジャーバージョンアップは手動で確認
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-    # 特定のパッケージを無視（必要に応じて）
-    # - dependency-name: "package-name"
-    #   update-types: ["version-update:semver-major", "version-update:semver-minor"]
 
   # Cargo dependencies
   - package-ecosystem: "cargo"
@@ -50,14 +47,14 @@ updates:
       # メジャーバージョンアップは手動で確認
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-    # Tauri関連の依存関係は慎重に更新
-    - dependency-name: "tauri"
-      update-types: ["version-update:semver-major"]
-    - dependency-name: "tauri-plugin-*"
-      update-types: ["version-update:semver-major"]
-    # glibはTauriの制約により更新できない（Tauri更新時に再検討）
-    - dependency-name: "glib"
-      update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
+      # Tauri関連の依存関係は慎重に更新
+      - dependency-name: "tauri"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tauri-plugin-*"
+        update-types: ["version-update:semver-major"]
+      # glibはTauriの制約により更新できない（Tauri更新時に再検討）
+      - dependency-name: "glib"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
