@@ -20,6 +20,7 @@ interface PreviewProps {
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
+  const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -91,9 +92,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
         console.log('Final HTML:', processedHtml);
 
-        setProcessedContent(processedHtml);
+        setProcessedContent(processedMarkdown);
+        setHtmlContent(processedHtml);
       } else {
         setProcessedContent('');
+        setHtmlContent('');
       }
     };
 
@@ -413,11 +416,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     }
   };
 
-  // MarkdownをHTMLに変換
-  const htmlContent = marked(processedContent || '', {
-    breaks: true,
-    gfm: true,
-  });
+  // htmlContentはuseStateで管理されているため、ここでは削除
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

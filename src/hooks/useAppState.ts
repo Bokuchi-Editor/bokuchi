@@ -519,7 +519,7 @@ export const useAppState = () => {
     try {
       await openFile();
       setSnackbar({ open: true, message: t('fileOperations.fileLoaded'), severity: 'success' });
-    } catch (error) {
+    } catch {
       setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
     }
   };
@@ -533,7 +533,7 @@ export const useAppState = () => {
         } else {
           setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
-      } catch (error) {
+      } catch {
         setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
     }
