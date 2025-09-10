@@ -1,33 +1,34 @@
-# Mac で Windows 版クロスコンパイル - トラブルシューティングガイド
+# Cross-Compilation for Windows on Mac - Troubleshooting Guide
 
-## 概要
+## Overview
 
-このドキュメントは、macOS環境からWindows版のBokuchiアプリケーションをクロスコンパイルする際に発生する可能性のある問題とその解決方法をまとめています。
+This document summarizes potential issues and their solutions when cross-compiling the Bokuchi application for Windows from a macOS environment.
 
-## 前提条件
+## Prerequisites
 
-### 必要なツール
+### Required Tools
 
 ```bash
-# Homebrewでインストール
+# Install via Homebrew
 brew install mingw-w64 llvm nsis
 
-# RustのWindowsターゲットを追加
+# Add Rust Windows target
 rustup target add x86_64-pc-windows-gnu
 ```
 
-### 環境変数の設定
+### Environment Variables
 
 ```bash
-# llvm-rcをPATHに追加
+# Add llvm-rc to PATH
 export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
 ```
 
-## よくある問題と解決方法
+## Common Issues and Solutions
 
-### 1. `can't find crate for 'core'` エラー
+### 1. `can't find crate for 'core'` Error
 
-**症状:**
+**Symptoms:**
+
 ```
 error[E0463]: can't find crate for `core`
   |
@@ -35,12 +36,13 @@ error[E0463]: can't find crate for `core`
   = help: consider downloading the target with `rustup target add x86_64-pc-windows-gnu`
 ```
 
-**原因:**
-HomebrewでインストールしたRustとrustupで管理されたRustが混在している場合に発生します。
+**Cause:**
+This occurs when Homebrew-installed Rust and rustup-managed Rust are mixed.
 
-**解決方法:**
+**Solution:**
 
-1. **現在のRustの状況を確認:**
+1. **Check current Rust status:**
+
    ```bash
    which rustc
    which cargo
@@ -48,176 +50,225 @@ HomebrewでインストールしたRustとrustupで管理されたRustが混在�
    rustup --version
    ```
 
-2. **Homebrew版のRustをアンインストール:**
+2. **If using Homebrew Rust, switch to rustup:**
+
    ```bash
-   brew list | grep rust
+   # Uninstall Homebrew Rust
    brew uninstall rust
-   ```
 
-3. **rustupで管理されたRustが使用されていることを確認:**
-   ```bash
-   which rustc
-   # 出力例: /Users/username/.cargo/bin/rustc
-   which cargo
-   # 出力例: /Users/username/.cargo/bin/cargo
-   ```
+   # Install rustup
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   source ~/.cargo/env
 
-4. **Windowsターゲットを再インストール:**
-   ```bash
-   rustup target remove x86_64-pc-windows-gnu
+   # Add Windows target
    rustup target add x86_64-pc-windows-gnu
    ```
 
-5. **ビルドを再実行:**
-   ```bash
-   export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
-   ./build/build-windows.sh
-   ```
+### 2. `linker 'x86_64-w64-mingw32-gcc' not found` Error
 
-### 2. `llvm-rc` が見つからないエラー
+**Symptoms:**
 
-**症状:**
 ```
-which llvm-rc
-# 出力: llvm-rc not found
+error: linker `x86_64-w64-mingw32-gcc` not found
 ```
 
-**解決方法:**
+**Cause:**
+The MinGW-w64 cross-compiler is not properly installed or not in PATH.
 
-1. **llvm-rcの場所を検索:**
+**Solution:**
+
+1. **Install MinGW-w64:**
+
    ```bash
-   find /opt/homebrew -name "llvm-rc" 2>/dev/null
+   brew install mingw-w64
    ```
 
-2. **最新バージョンのllvm-rcをPATHに追加:**
+2. **Verify installation:**
+
+   ```bash
+   x86_64-w64-mingw32-gcc --version
+   ```
+
+3. **If not found, add to PATH:**
+   ```bash
+   export PATH="/opt/homebrew/bin:$PATH"
+   ```
+
+### 3. `llvm-rc` Not Found Error
+
+**Symptoms:**
+
+```
+error: failed to run custom build command for `embed-resource v3.0.5`
+error: process didn't exit successfully: `llvm-rc` (exit code: 127)
+```
+
+**Cause:**
+The `llvm-rc` tool is not available in PATH.
+
+**Solution:**
+
+1. **Install LLVM:**
+
+   ```bash
+   brew install llvm
+   ```
+
+2. **Add to PATH:**
+
    ```bash
    export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
    ```
 
-3. **確認:**
+3. **Verify installation:**
    ```bash
-   which llvm-rc
-   # 出力例: /opt/homebrew/Cellar/llvm/21.1.0/bin/llvm-rc
+   llvm-rc --version
    ```
 
-### 3. ビルドが途中で失敗する
+### 4. NSIS Installer Creation Fails
 
-**症状:**
-ビルドプロセスが途中で停止し、エラーメッセージが表示される。
+**Symptoms:**
 
-**解決方法:**
+```
+error: failed to bundle project: error running bundle_nsis.sh
+```
 
-1. **Cargoのキャッシュをクリア:**
+**Cause:**
+NSIS is not installed or not properly configured.
+
+**Solution:**
+
+1. **Install NSIS:**
+
    ```bash
-   cd src-tauri
-   cargo clean
-   cd ..
+   brew install nsis
    ```
 
-2. **Rustツールチェーンを更新:**
+2. **Verify installation:**
    ```bash
-   rustup update
+   makensis --version
    ```
 
-3. **Windowsターゲットを再インストール:**
+### 5. WebView2 Runtime Issues
+
+**Symptoms:**
+
+```
+error: WebView2 runtime not found
+```
+
+**Cause:**
+The WebView2 runtime is required for Tauri applications on Windows.
+
+**Solution:**
+
+1. **Download WebView2 runtime:**
+
+   - Download from Microsoft's official site
+   - Or use the bundled version in the build output
+
+2. **Verify in build output:**
    ```bash
-   rustup target remove x86_64-pc-windows-gnu
-   rustup target add x86_64-pc-windows-gnu
+   ls src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
+   # Should include WebView2Loader.dll
    ```
 
-4. **ビルドを再実行:**
-   ```bash
-   export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
-   ./build/build-windows.sh
-   ```
+## Build Process
 
-## 推奨される環境設定
-
-### 1. Rustの管理方法
-
-**推奨:** rustupのみを使用してRustを管理する
+### Complete Build Command
 
 ```bash
-# Homebrew版のRustをアンインストール
-brew uninstall rust
-
-# rustupでRustをインストール（既にインストール済みの場合）
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-### 2. 環境変数の永続化
-
-`.zshrc`または`.bash_profile`に以下を追加:
-
-```bash
-# Windows版クロスコンパイル用
+# Set environment variables
 export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
+
+# Build for Windows
+npm run tauri build -- --target x86_64-pc-windows-gnu
 ```
 
-### 3. 必要なツールの確認
+### Build Script
 
-ビルド前に以下のコマンドで必要なツールが揃っているか確認:
+Create a build script for easier cross-compilation:
 
 ```bash
-# 必要なツールの確認
-which x86_64-w64-mingw32-gcc
-which llvm-rc
-which makensis
-which rustc
-which cargo
+#!/bin/bash
+# build-windows.sh
 
-# Windowsターゲットの確認
-rustup target list --installed | grep x86_64-pc-windows-gnu
+echo "🍎 Building Windows version from macOS..."
+
+# Set environment variables
+export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"
+
+# Verify tools
+echo "🔍 Verifying tools..."
+x86_64-w64-mingw32-gcc --version
+llvm-rc --version
+makensis --version
+
+# Build
+echo "🔨 Building..."
+npm run tauri build -- --target x86_64-pc-windows-gnu
+
+echo "✅ Build complete!"
 ```
 
-## ビルド成功時の出力例
+## Verification
 
-```
-🚀 Windows版ビルドを開始します...
-📋 必要なツールをチェック中...
-🦀 RustのWindowsターゲットをチェック中...
-✅ Windowsターゲットは既にインストールされています
-✅ 必要なツールがすべてインストールされています
-🔧 環境変数を設定中...
-📦 フロントエンドをビルド中...
-🦀 Rustアプリケーションをビルド中...
-✅ Windows版ビルドが完了しました！
+### Check Build Output
 
-📁 ビルド成果物:
-   実行ファイル: src-tauri/target/x86_64-pc-windows-gnu/release/bokuchi.exe
-   インストーラー: src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Bokuchi_0.3.1_x64-setup.exe
+```bash
+# Check if Windows executable was created
+ls -la src-tauri/target/x86_64-pc-windows-gnu/release/
+
+# Check installer
+ls -la src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
 ```
 
-## 注意事項
+### Test on Windows
 
-1. **クロスプラットフォームコンパイルの制限:**
-   - 実験的機能のため、一部の機能が制限される可能性があります
-   - 完全な互換性を求める場合は、Windows環境でのビルドを推奨
+1. Copy the installer to a Windows machine
+2. Run the installer
+3. Verify the application launches correctly
 
-2. **署名について:**
-   - macOSからのビルドでは署名がスキップされます
-   - 署名が必要な場合は、Windows環境でのビルドまたはカスタム署名コマンドの設定が必要
+## Environment Setup Script
 
-3. **パフォーマンス:**
-   - クロスコンパイルは時間がかかる場合があります
-   - 初回ビルド時は依存関係のダウンロードに時間がかかります
+Create a setup script for consistent environment:
 
-## トラブルシューティングチェックリスト
+```bash
+#!/bin/bash
+# setup-cross-compile.sh
 
-- [ ] Homebrew版のRustがアンインストールされているか
-- [ ] rustupで管理されたRustが使用されているか
-- [ ] Windowsターゲットが正しくインストールされているか
-- [ ] llvm-rcがPATHに含まれているか
-- [ ] 必要なツール（mingw-w64, nsis）がインストールされているか
-- [ ] Cargoのキャッシュがクリアされているか（必要に応じて）
+echo "🔧 Setting up cross-compilation environment..."
 
-## 関連ファイル
+# Install required tools
+brew install mingw-w64 llvm nsis
 
-- `build/build-windows.sh` - Windows版ビルドスクリプト
-- `src-tauri/Cargo.toml` - Rustプロジェクト設定
-- `src-tauri/tauri.conf.json` - Tauri設定ファイル
+# Add Rust Windows target
+rustup target add x86_64-pc-windows-gnu
+
+# Set environment variables
+echo 'export PATH="/opt/homebrew/Cellar/llvm/21.1.0/bin:$PATH"' >> ~/.zshrc
+
+echo "✅ Setup complete! Please restart your terminal or run:"
+echo "   source ~/.zshrc"
+```
+
+## Troubleshooting Checklist
+
+- [ ] Rust is installed via rustup (not Homebrew)
+- [ ] Windows target is added: `rustup target add x86_64-pc-windows-gnu`
+- [ ] MinGW-w64 is installed: `brew install mingw-w64`
+- [ ] LLVM is installed: `brew install llvm`
+- [ ] NSIS is installed: `brew install nsis`
+- [ ] Environment variables are set correctly
+- [ ] All tools are in PATH
+
+## Additional Resources
+
+- [Rust Cross-Compilation Guide](https://rust-lang.github.io/rustup/cross-compilation.html)
+- [Tauri Cross-Platform Build](https://tauri.app/v1/guides/building/cross-platform/)
+- [MinGW-w64 Documentation](https://www.mingw-w64.org/)
 
 ---
 
-**最終更新:** 2025年1月
-**対象バージョン:** Bokuchi 0.3.1
+**Last Updated**: September 10, 2025
+**Version**: 1.0

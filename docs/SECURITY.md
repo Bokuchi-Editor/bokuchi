@@ -1,60 +1,65 @@
-# セキュリティ管理
+# Security Management
 
-## 概要
+## Overview
 
-このプロジェクトでは、Tauriフレームワークの制約により、いくつかのセキュリティ警告を無視しています。これらの警告は直接的なセキュリティリスクではありませんが、Tauriの更新により解決される可能性があるため、定期的な監視が必要です。
+This project ignores several security warnings due to Tauri framework constraints. While these warnings do not pose direct security risks, they may be resolved through Tauri updates, requiring regular monitoring.
 
-## 無視している警告
+## Ignored Warnings
 
-### 1. glib関連の警告 (RUSTSEC-2024-0429)
+### 1. glib-related Warning (RUSTSEC-2024-0429)
 
-**問題**: glib 0.18.5 に unsoundness の問題が存在
-**影響**: `glib::VariantStrIter` の `Iterator` と `DoubleEndedIterator` 実装
-**現在の状況**: Tauri の依存関係により glib 0.20.0 への更新が不可能
+**Issue**: glib 0.18.5 has an unsoundness problem
+**Impact**: `glib::VariantStrIter`'s `Iterator` and `DoubleEndedIterator` implementation
+**Current Status**: Unable to update to glib 0.20.0 due to Tauri dependencies
 
-**対応方針**:
-- Dependabot で glib の更新を無視
-- cargo audit で RUSTSEC-2024-0429 を無視
-- Tauri が glib 0.20.0 をサポートするまで待機
+**Response Strategy**:
 
-**リスク評価**: 低リスク（アプリケーションの主要機能に直接影響しない）
+- Ignore glib updates in Dependabot
+- Ignore RUSTSEC-2024-0429 in cargo audit
+- Wait for Tauri to support glib 0.20.0
 
-### 2. GTK3関連の警告 (RUSTSEC-2024-0411〜0420)
+**Risk Assessment**: Low risk (does not directly affect core application functionality)
 
-**影響**: `atk`, `atk-sys`, `gdk`, `gdk-sys`, `gdkwayland-sys`, `gdkx11`, `gdkx11-sys`, `gtk`, `gtk-sys`, `gtk3-macros`
-**理由**: GTK3バインディングがメンテナンスされていない
-**対応**: TauriのWebViewエンジン（wry）がGTK3に依存しているため、直接的な置き換えは不可能
+### 2. GTK3-related Warnings (RUSTSEC-2024-0411~0420)
 
-### 3. その他の非メンテナンス依存関係
+**Impact**: `atk`, `atk-sys`, `gdk`, `gdk-sys`, `gdkwayland-sys`, `gdkx11`, `gdkx11-sys`, `gtk`, `gtk-sys`, `gtk3-macros`
+**Reason**: GTK3 bindings are unmaintained
+**Response**: Direct replacement is impossible as Tauri's WebView engine (wry) depends on GTK3
 
-以下のライブラリは非メンテナンス状態ですが、Tauri の依存関係のため直接制御できません：
+### 3. Other Unmaintained Dependencies
 
-- **derivative** (RUSTSEC-2024-0388): `zbus`経由で使用
-- **fxhash** (RUSTSEC-2025-0057): `selectors`経由で使用
-- **proc-macro-error** (RUSTSEC-2024-0370): `gtk3-macros`経由で使用
+The following libraries are unmaintained but cannot be directly controlled due to Tauri dependencies:
 
-## 対応方針
+- **derivative** (RUSTSEC-2024-0388): Used via `zbus`
+- **fxhash** (RUSTSEC-2025-0057): Used via `selectors`
+- **proc-macro-error** (RUSTSEC-2024-0370): Used via `gtk3-macros`
 
-### 1. 警告の無視設定
-- GitHub Actionsのセキュリティ監査ワークフローで警告を無視
-- Dependabotテストワークフローでも同様の設定を適用
+## Response Strategy
 
-### 2. 監視体制
-- **週次セキュリティ監査**: GitHub Actions で自動実行
-- **Dependabot**: 利用可能な更新を自動検出
-- **Tauri の更新**: `tauri-update-monitor.yml`でTauriの更新を監視
+### 1. Warning Ignore Configuration
 
-### 3. 定期的な確認
-- 月1回程度、これらの警告の状況を確認
-- 新しいTauriバージョンがリリースされた際に、これらの警告の状況を確認
+- Ignore warnings in GitHub Actions security audit workflow
+- Apply similar settings in Dependabot test workflow
 
-### 4. 将来的な対応
-- Tauriが新しいバージョンでこれらの依存関係を更新した場合、対応を検討
-- 将来的にTauriがGTK4や他のUIライブラリに移行した場合、対応を検討
+### 2. Monitoring System
 
-## 技術的詳細
+- **Weekly Security Audits**: Automatically executed via GitHub Actions
+- **Dependabot**: Automatically detects available updates
+- **Tauri Updates**: Monitor Tauri updates with `tauri-update-monitor.yml`
 
-### 無視設定のコマンド例
+### 3. Regular Verification
+
+- Check the status of these warnings approximately once a month
+- Verify warning status when new Tauri versions are released
+
+### 4. Future Response
+
+- Consider response when Tauri updates these dependencies in new versions
+- Consider response if Tauri migrates to GTK4 or other UI libraries in the future
+
+## Technical Details
+
+### Ignore Configuration Command Example
 
 ```bash
 cargo audit --ignore RUSTSEC-2024-0429 \
@@ -67,20 +72,30 @@ cargo audit --ignore RUSTSEC-2024-0429 \
   --ignore RUSTSEC-2025-0057
 ```
 
-### Dependabot設定
+### Dependabot Configuration
 
 ```yaml
-# glibはTauriの制約により更新できない（Tauri更新時に再検討）
+# glib cannot be updated due to Tauri constraints (reconsider when Tauri updates)
 - dependency-name: "glib"
-  update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
+  update-types:
+    [
+      "version-update:semver-major",
+      "version-update:semver-minor",
+      "version-update:semver-patch",
+    ]
 ```
 
-## 注意事項
+## Important Notes
 
-これらの警告は**メンテナンスされていない**または**unsoundness**に関するものであり、直接的なセキュリティリスクではありません。ただし、Tauriの更新により解決される可能性があるため、定期的な確認が必要です。
+These warnings are related to **unmaintained** or **unsoundness** issues and do not pose direct security risks. However, they may be resolved through Tauri updates, requiring regular verification.
 
-## 更新履歴
+## Update History
 
-- 2025-09-10: セキュリティドキュメントを統合・整理
-- 2025-09-10: glib の unsoundness 警告を無視する設定を追加
-- 2025-09-10: GTK3関連の警告を無視する設定を追加
+- 2025-09-10: Integrated and organized security documentation
+- 2025-09-10: Added configuration to ignore glib unsoundness warnings
+- 2025-09-10: Added configuration to ignore GTK3-related warnings
+
+---
+
+**Last Updated**: September 10, 2025
+**Version**: 1.0

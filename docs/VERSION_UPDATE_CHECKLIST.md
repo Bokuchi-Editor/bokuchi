@@ -1,40 +1,45 @@
-# バージョンアップ時のチェックリスト
+# Version Update Checklist
 
-## 更新が必要なファイル
+## Files Requiring Updates
 
-### 1. メインバージョンファイル
+### 1. Main Version Files
 
-- [ ] `package.json` - `"version": "現在のバージョン"` を新しいバージョンに変更
-- [ ] `package-lock.json` - 2 箇所の `"version": "現在のバージョン"` を新しいバージョンに変更
-- [ ] `src-tauri/Cargo.toml` - `version = "現在のバージョン"` を新しいバージョンに変更
-- [ ] `src-tauri/tauri.conf.json` - `"version": "現在のバージョン"` を新しいバージョンに変更
+- [ ] `package.json` - Change `"version": "current_version"` to new version
+- [ ] `package-lock.json` - Change 2 instances of `"version": "current_version"` to new version
+- [ ] `src-tauri/Cargo.toml` - Change `version = "current_version"` to new version
+- [ ] `src-tauri/tauri.conf.json` - Change `"version": "current_version"` to new version
 
-### 2. ビルドスクリプト
+### 2. Build Scripts
 
-- [ ] `build-macos-signed.sh` - DMG ファイル名のバージョン部分を更新
-  - 例: `Bokuchi_0.2_aarch64.dmg` → `Bokuchi_新バージョン_aarch64.dmg`
-- [ ] `build-windows.sh` - インストーラーファイル名のバージョン部分を更新
-  - 例: `Bokuchi_0.2_x64-setup.exe` → `Bokuchi_新バージョン_x64-setup.exe`
+- [ ] `build-macos-signed.sh` - Update version part in DMG filename
+  - Example: `Bokuchi_0.2_aarch64.dmg` → `Bokuchi_new_version_aarch64.dmg`
+- [ ] `build-windows.sh` - Update version part in installer filename
+  - Example: `Bokuchi_0.2_x64-setup.exe` → `Bokuchi_new_version_x64-setup.exe`
 
-### 3. その他の可能性のあるファイル
+### 3. Other Potential Files
 
-- [ ] `README.md` - バージョン情報が記載されている場合は更新
-- [ ] `CHANGELOG.md` - 存在する場合は新しいバージョンのエントリを追加
-- [ ] その他のドキュメントファイル
+- [ ] `README.md` - Update if version information is documented
+- [ ] `CHANGELOG.md` - Add new version entry if it exists
+- [ ] Other documentation files
 
-## 更新手順
+## Update Procedure
 
-1. 上記のファイルを順番に確認・更新
-2. バージョン番号の一貫性を確認
-3. ビルドテストを実行して問題がないことを確認
-4. 必要に応じて `npm install` を実行して package-lock.json を再生成
+1. Check and update the above files in order
+2. Verify version number consistency
+3. Run build tests to ensure no issues
+4. Run `npm install` if necessary to regenerate package-lock.json
 
-## 注意事項
+## Important Notes
 
-- `package-lock.json`は自動生成されるファイルですが、バージョン情報は手動で更新が必要
-- `src-tauri/Cargo.lock`は自動生成されるため、手動更新は不要
-- ビルドスクリプトのファイル名は実際のビルド成果物のファイル名と一致させる必要がある
+- `package-lock.json` is auto-generated but version information requires manual updates
+- `src-tauri/Cargo.lock` is auto-generated, so manual updates are not required
+- Build script filenames must match actual build output filenames
 
-## 現在のバージョン: 0.3.3
+## Current Version: 0.3.3
 
-最終更新日: $(date)
+Last Updated: $(date)
+
+---
+
+**Last Updated**: September 10, 2025
+**Version**: 1.0
