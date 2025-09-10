@@ -1,0 +1,77 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "shinya"
+    assignees:
+      - "shinya"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "npm"
+    ignore:
+      # メジャーバージョンアップは手動で確認
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # 特定のパッケージを無視（必要に応じて）
+    # - dependency-name: "package-name"
+    #   update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
+  # Cargo dependencies
+  - package-ecosystem: "cargo"
+    directory: "/src-tauri"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "shinya"
+    assignees:
+      - "shinya"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "cargo"
+    ignore:
+      # メジャーバージョンアップは手動で確認
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Tauri関連の依存関係は慎重に更新
+    - dependency-name: "tauri"
+      update-types: ["version-update:semver-major"]
+    - dependency-name: "tauri-plugin-*"
+      update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "shinya"
+    assignees:
+      - "shinya"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"

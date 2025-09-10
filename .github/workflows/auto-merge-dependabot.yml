@@ -1,0 +1,42 @@
+name: Auto-merge Dependabot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'dependencies')
+
+    steps:
+    - name: Check if PR is ready
+      id: check
+      run: |
+        # パッチバージョンの更新のみを自動マージ対象とする
+        if [[ "${{ github.event.pull_request.title }}" =~ ^deps.*\(patch\)$ ]]; then
+          echo "ready=true" >> $GITHUB_OUTPUT
+        else
+          echo "ready=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Auto-merge PR
+      if: steps.check.outputs.ready == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // 自動マージを有効化
+          await github.rest.pulls.enableAutoMerge({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+            merge_method: 'squash'
+          });
+
+          // コメントを追加
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🤖 パッチバージョンの更新のため、自動マージを有効化しました。'
+          });

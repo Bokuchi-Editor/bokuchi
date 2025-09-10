@@ -17,6 +17,10 @@
     "check": "npm run lint && npm run type-check",
     "lint": "eslint . --ext ts,tsx --max-warnings 0",
     "type-check": "tsc --noEmit",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "security:check": "npm audit && npm run security:check:cargo",
+    "security:check:cargo": "cd src-tauri && cargo audit",
     "verify-release": "./scripts/verify-release-build.sh",
     "build:windows": "./build-windows.sh",
     "build:macos": "./build-macos.sh",
@@ -56,6 +60,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "typescript": "~5.5.0",
     "vite": "^7.0.4",
-    "vite-plugin-checker": "^0.10.3"
+    "vite-plugin-checker": "^0.10.3",
+    "audit-ci": "^7.0.1"
   }
 }
