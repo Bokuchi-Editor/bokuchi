@@ -57,7 +57,7 @@ updates:
       update-types: ["version-update:semver-major"]
     # glibはTauriの制約により更新できない（Tauri更新時に再検討）
     - dependency-name: "glib"
-      update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
