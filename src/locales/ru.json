@@ -219,10 +219,10 @@
       "title": "Язык",
       "description": "Выберите язык для интерфейса приложения.",
       "selectLanguage": "Выбрать язык",
-      "english": "Английский",
-      "japanese": "Японский",
+      "english": "English",
+      "japanese": "日本語",
       "chinese": "中文 (简体)",
-      "spanish": "Испанский",
+      "spanish": "Español",
       "hindi": "हिन्दी",
       "russian": "Русский",
       "korean": "한국어",
@@ -231,7 +231,7 @@
       "french": "Français",
       "german": "Deutsch",
       "indonesian": "Bahasa Indonesia",
-      "vietnamese": "Вьетнамский"
+      "vietnamese": "Tiếng Việt"
     },
     "tabLayout": {
       "title": "Макет вкладок",
