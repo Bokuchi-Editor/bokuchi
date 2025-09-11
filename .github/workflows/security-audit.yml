@@ -3,11 +3,9 @@ name: Security Audit
 on:
   schedule:
     # 毎週月曜日の午前9時（JST）に実行
-    - cron: '0 0 * * 1'
-  push:
-    branches: [ main ]
+    - cron: "0 0 * * 1"
   pull_request:
-    branches: [ main ]
+    branches: [main]
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
@@ -16,64 +14,64 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
+      - name: Checkout code
+        uses: actions/checkout@v5
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Setup Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        components: rustfmt, clippy
-        override: true
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
 
-    - name: Install cargo-audit
-      run: cargo install cargo-audit
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
 
-    - name: Install npm audit tools
-      run: |
-        npm install -g npm-audit-resolver
-        npm install -g audit-ci
+      - name: Install npm audit tools
+        run: |
+          npm install -g npm-audit-resolver
+          npm install -g audit-ci
 
-    - name: Run npm audit
-      run: |
-        npm audit --audit-level=moderate
-        if [ $? -ne 0 ]; then
-          echo "npm audit found vulnerabilities"
-          npm audit --json > npm-audit-results.json
-          exit 1
-        fi
+      - name: Run npm audit
+        run: |
+          npm audit --audit-level=moderate
+          if [ $? -ne 0 ]; then
+            echo "npm audit found vulnerabilities"
+            npm audit --json > npm-audit-results.json
+            exit 1
+          fi
 
-    - name: Run Rust tests
-      run: |
-        cd src-tauri
-        cargo test --verbose
+      - name: Run Rust tests
+        run: |
+          cd src-tauri
+          cargo test --verbose
 
-    - name: Run cargo audit
-      run: |
-        cd src-tauri
-        # glibのunsoundness警告はTauriの制約により無視
-        cargo audit --ignore RUSTSEC-2024-0429 || echo "cargo audit completed with ignored warnings"
+      - name: Run cargo audit
+        run: |
+          cd src-tauri
+          # glibのunsoundness警告はTauriの制約により無視
+          cargo audit --ignore RUSTSEC-2024-0429 || echo "cargo audit completed with ignored warnings"
 
-    - name: Check for outdated packages
-      run: |
-        echo "Checking for outdated npm packages..."
-        npm outdated || true
+      - name: Check for outdated packages
+        run: |
+          echo "Checking for outdated npm packages..."
+          npm outdated || true
 
-        echo "Checking for outdated cargo packages..."
-        cd src-tauri
-        cargo outdated || true
+          echo "Checking for outdated cargo packages..."
+          cd src-tauri
+          cargo outdated || true
 
-    - name: Upload audit results
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-audit-results
-        path: |
-          npm-audit-results.json
-          src-tauri/Cargo.lock
+      - name: Upload audit results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: |
+            npm-audit-results.json
+            src-tauri/Cargo.lock
