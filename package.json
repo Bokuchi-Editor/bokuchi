@@ -17,6 +17,8 @@
     "check": "npm run lint && npm run type-check",
     "lint": "eslint . --max-warnings 0",
     "type-check": "tsc --noEmit",
+    "test": "cd src-tauri && cargo test",
+    "test:verbose": "cd src-tauri && cargo test --verbose",
     "audit": "npm audit",
     "audit:fix": "npm audit fix",
     "security:check": "npm audit && npm run security:check:cargo",

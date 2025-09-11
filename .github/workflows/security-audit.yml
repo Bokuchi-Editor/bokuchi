@@ -49,6 +49,11 @@ jobs:
           exit 1
         fi
 
+    - name: Run Rust tests
+      run: |
+        cd src-tauri
+        cargo test --verbose
+
     - name: Run cargo audit
       run: |
         cd src-tauri

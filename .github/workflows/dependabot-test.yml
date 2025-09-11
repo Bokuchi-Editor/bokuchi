@@ -40,7 +40,7 @@ jobs:
       run: |
         npm run check
         cd src-tauri
-        cargo test --no-run
+        cargo test --verbose
 
     - name: Build test
       run: |
