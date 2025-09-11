@@ -65,6 +65,8 @@ Bokuchi supports 13 languages for the user interface:
 
 You can change the language in Settings > Language.
 
+**Please submit a pull request if you find any translation errors.**
+
 ## Development
 
 ### Prerequisites
