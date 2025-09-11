@@ -1,0 +1,330 @@
+{
+  "app": {
+    "title": "Bokuchi",
+    "loading": "Memuat...",
+    "noTabsOpen": "Tidak ada tab yang terbuka. Buat tab baru untuk memulai."
+  },
+  "buttons": {
+    "open": "Buka",
+    "save": "Simpan",
+    "saveAs": "Simpan Sebagai",
+    "saveWithVariables": "Simpan dengan Variabel Diterapkan",
+    "settings": "Pengaturan",
+    "newFile": "File Baru",
+    "openFile": "Buka File",
+    "add": "Tambah",
+    "delete": "Hapus",
+    "close": "Tutup",
+    "cancel": "Batal",
+    "reset": "Reset",
+    "splitView": "Tampilan Terbagi",
+    "editorOnly": "Editor Saja",
+    "previewOnly": "Pratinjau Saja"
+  },
+  "recentFiles": {
+    "title": "File Terbaru",
+    "dialogTitle": "File Terbaru",
+    "searchPlaceholder": "Cari berdasarkan nama file atau path...",
+    "noResults": "Tidak ada hasil pencarian ditemukan",
+    "noFiles": "Tidak ada file terbaru",
+    "copyPath": "Salin Path",
+    "removeFromRecent": "Hapus dari File Terbaru",
+    "pathCopied": "Path disalin ke clipboard",
+    "removedFromRecent": "Dihapus dari File Terbaru",
+    "fileNotFound": "File tidak ditemukan",
+    "loadFailed": "Gagal memuat file",
+    "removeFailed": "Gagal menghapus",
+    "copyFailed": "Gagal menyalin path"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
+  },
+  "help": {
+    "title": "Bantuan",
+    "gettingStarted": {
+      "title": "Memulai",
+      "basicUsage": "Penggunaan Dasar",
+      "basicUsageDescription": "Bokuchi adalah editor Markdown yang powerful dengan pratinjau real-time. Anda dapat menulis konten Markdown di editor dan melihat hasil yang dirender secara instan di panel pratinjau.",
+      "fileOperations": "Operasi File",
+      "newFile": "File Baru",
+      "newFileDescription": "Buat file kosong baru untuk mulai menulis.",
+      "openFile": "Buka File",
+      "openFileDescription": "Buka file Markdown yang sudah ada dari komputer Anda.",
+      "saveFile": "Simpan File",
+      "saveFileDescription": "Simpan file saat ini ke disk.",
+      "viewModes": "Mode Tampilan",
+      "splitView": "Tampilan Terbagi",
+      "splitViewDescription": "Tampilkan editor dan pratinjau berdampingan untuk memudahkan pengeditan dan peninjauan.",
+      "editorOnly": "Editor Saja",
+      "editorOnlyDescription": "Fokus menulis dengan hanya editor yang terlihat.",
+      "previewOnly": "Pratinjau Saja",
+      "previewOnlyDescription": "Lihat hasil yang dirender dalam layar penuh."
+    },
+    "variables": {
+      "title": "Variabel",
+      "description": "Variabel memungkinkan Anda menggunakan konten dinamis dalam file Markdown Anda. Anda dapat mendefinisikan variabel di pengaturan dan mereferensikannya dalam dokumen Anda menggunakan sintaks {{variableName}}.",
+      "howToUse": "Cara Menggunakan Variabel",
+      "howToUseDescription": "Untuk menggunakan variabel dalam file Markdown Anda, cukup bungkus nama variabel dengan kurung kurawal ganda. Variabel akan diganti dengan nilainya ketika dokumen dirender.",
+      "settingUp": "Mengatur Variabel",
+      "settingUpDescription": "Ikuti langkah-langkah ini untuk mengatur dan menggunakan variabel:",
+      "step1": "1. Buka Pengaturan",
+      "step1Description": "Klik tombol menu dan pilih 'Pengaturan' untuk membuka dialog pengaturan.",
+      "step2": "2. Tambah Variabel",
+      "step2Description": "Di bagian 'Variabel Global', tambahkan nama variabel dan nilai yang sesuai.",
+      "step3": "3. Gunakan dalam Dokumen",
+      "step3Description": "Referensikan variabel dalam file Markdown Anda menggunakan sintaks {{variableName}}.",
+      "examples": "Contoh",
+      "example1": {
+        "title": "Template Dokumen",
+        "description": "Gunakan variabel untuk metadata dokumen seperti judul, tanggal, dan penulis."
+      },
+      "example2": {
+        "title": "Template Perusahaan",
+        "description": "Gunakan variabel untuk informasi perusahaan seperti nama, departemen, dan versi."
+      },
+      "tips": "Tips",
+      "tip1": "Nama Variabel",
+      "tip1Description": "Nama variabel tidak boleh mengandung spasi. Gunakan camelCase atau snake_case untuk variabel multi-kata.",
+      "tip2": "Sensitivitas Huruf",
+      "tip2Description": "Nama variabel peka terhadap huruf besar/kecil. Pastikan menggunakan huruf yang sama persis dalam dokumen Anda.",
+      "tip3": "Ruang Lingkup Global",
+      "tip3Description": "Variabel bersifat global dan dapat digunakan di semua dokumen Anda. Perubahan pada variabel mempengaruhi semua file yang terbuka.",
+      "codeExample": "# Contoh: Markdown dengan Variabel\n\n## {{title}}\n\nDibuat: {{date}}\nPenulis: {{author}}\n\n### Konten\n{{content}}\n\n---\n*Dokumen ini dibuat oleh {{company}}.*",
+      "localVariables": "Variabel Lokal",
+      "localVariablesDescription": "Anda juga dapat mendefinisikan variabel dalam file individual menggunakan komentar HTML. Variabel lokal ini memiliki prioritas lebih tinggi daripada variabel global.",
+      "localVariablesSyntax": "Sintaks Variabel Lokal",
+      "localVariablesSyntaxDescription": "Definisikan variabel lokal di awal file Markdown Anda menggunakan sintaks berikut:",
+      "localVariablesExample": "<!-- @var variableName: value -->",
+      "localVariablesCodeExample": "<!-- @var title: Judul Dokumen Saya -->\n<!-- @var author: Budi Santoso -->\n<!-- @var date: 2024-01-15 -->\n\n# {{title}}\n\nPenulis: {{author}}\nTanggal: {{date}}",
+      "priorityOrder": "Urutan Prioritas Variabel",
+      "priorityOrderDescription": "Ketika nama variabel yang sama ada di ruang lingkup lokal dan global, urutan prioritas berikut berlaku:",
+      "priority1": "1. Variabel lokal (didefinisikan dalam file)",
+      "priority2": "2. Variabel global (didefinisikan dalam pengaturan)",
+      "priority3": "3. Teks asli (jika variabel tidak ditemukan)",
+      "localVsGlobal": "Variabel Lokal vs Global",
+      "localVsGlobalDescription": "Gunakan variabel lokal untuk konten spesifik file dan variabel global untuk konten umum di beberapa file."
+    },
+    "keyboardShortcuts": {
+      "title": "Pintasan Keyboard",
+      "description": "Berikut adalah semua pintasan keyboard yang tersedia di Bokuchi:",
+      "categories": {
+        "fileOperations": "Operasi File",
+        "navigation": "Navigasi",
+        "editing": "Pengeditan",
+        "view": "Tampilan"
+      },
+      "shortcuts": {
+        "newFile": "File Baru",
+        "openFile": "Buka File",
+        "saveFile": "Simpan File",
+        "saveAs": "Simpan Sebagai",
+        "recentFiles": "Buka File Terbaru",
+        "nextTab": "Tab Berikutnya",
+        "previousTab": "Tab Sebelumnya",
+        "settings": "Buka Pengaturan",
+        "help": "Buka Bantuan",
+        "rotateViewMode": "Putar Mode Tampilan",
+        "splitView": "Tampilan Terbagi (2 Kolom)",
+        "editorOnly": "Editor Saja",
+        "previewOnly": "Pratinjau Saja",
+        "zoomIn": "Perbesar",
+        "zoomOut": "Perkecil",
+        "resetZoom": "Reset Zoom"
+      }
+    },
+    "tutorials": {
+      "title": "Panduan Cepat",
+      "description": "Mulai dengan Bokuchi hanya dalam beberapa langkah:",
+      "step1": {
+        "title": "Langkah 1: Buat Dokumen Pertama Anda",
+        "description": "Mulai menulis segera",
+        "instructions": [
+          "Tekan ⌘N (Mac) atau Ctrl+N (Windows) untuk membuat file baru",
+          "Ketik judul pertama Anda: # Dokumen Pertama Saya",
+          "Tambahkan beberapa konten di bawah judul",
+          "Lihat pratinjau diperbarui secara real-time di sebelah kanan"
+        ]
+      },
+      "step2": {
+        "title": "Langkah 2: Simpan Pekerjaan Anda",
+        "description": "Jaga dokumen Anda tetap aman",
+        "instructions": [
+          "Tekan ⌘S (Mac) atau Ctrl+S (Windows) untuk menyimpan",
+          "Pilih lokasi dan nama file untuk dokumen Anda",
+          "File Anda akan muncul di File Terbaru untuk akses cepat"
+        ]
+      },
+      "step3": {
+        "title": "Langkah 3: Gunakan Variabel untuk Konten Dinamis",
+        "description": "Buat dokumen Anda dapat digunakan kembali",
+        "instructions": [
+          "Buka Pengaturan (⌘, atau Ctrl+,)",
+          "Pergi ke tab Variabel Global",
+          "Tambahkan variabel seperti 'author' dengan nama Anda",
+          "Dalam dokumen Anda, gunakan {{author}} di mana Anda ingin nama Anda muncul"
+        ]
+      },
+      "step4": {
+        "title": "Langkah 4: Navigasi dengan Efisien",
+        "description": "Bekerja dengan beberapa file",
+        "instructions": [
+          "Tekan ⌘R (Mac) atau Ctrl+R (Windows) untuk membuka File Terbaru",
+          "Gunakan Ctrl+Tab untuk beralih antara tab yang terbuka",
+          "Gunakan Ctrl+Shift+Tab untuk pergi ke tab sebelumnya"
+        ]
+      },
+      "tips": {
+        "title": "Tips Pro",
+        "tip1": "Gunakan F1 kapan saja untuk membuka sistem bantuan ini",
+        "tip2": "Coba tema berbeda di Pengaturan > Penampilan",
+        "tip3": "Gunakan tampilan terbagi untuk melihat Markdown dan pratinjau Anda berdampingan"
+      }
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "appearance": {
+      "title": "Penampilan",
+      "theme": "Tema",
+      "themeDescription": "Pilih tema visual untuk antarmuka aplikasi.",
+      "themes": {
+        "default": "Default",
+        "dark": "Gelap",
+        "pastel": "Pastel",
+        "vivid": "Hidup",
+        "darcula": "Darcula"
+      }
+    },
+    "globalVariables": {
+      "title": "Variabel Global",
+      "description": "Variabel global dapat digunakan di semua file. Referensikan mereka dalam file Markdown sebagai {{variableName}}.",
+      "addNewVariable": "Tambah Variabel Baru",
+      "variableName": "Nama Variabel",
+      "variableNamePlaceholder": "mis. judul",
+      "value": "Nilai",
+      "valuePlaceholder": "mis. Judul Dokumen",
+      "existingVariables": "Variabel yang Ada",
+      "noVariables": "Tidak ada variabel global yang diatur.",
+      "usageExample": "Penggunaan: {{variableName}}",
+      "errors": {
+        "nameRequired": "Silakan masukkan nama variabel.",
+        "noSpaces": "Nama variabel tidak boleh mengandung spasi.",
+        "alreadyExists": "Nama variabel ini sudah ada."
+      }
+    },
+    "language": {
+      "title": "Bahasa",
+      "description": "Pilih bahasa untuk antarmuka aplikasi.",
+      "selectLanguage": "Pilih Bahasa",
+      "english": "Inggris",
+      "japanese": "Jepang",
+      "chinese": "中文 (简体)",
+      "spanish": "Spanyol",
+      "hindi": "हिन्दी",
+      "russian": "Rusia",
+      "korean": "한국어",
+      "portuguese": "Portugis (Brasil)",
+      "arabic": "العربية",
+      "french": "Prancis",
+      "german": "Jerman",
+      "indonesian": "Bahasa Indonesia",
+      "vietnamese": "Vietnam"
+    },
+    "tabLayout": {
+      "title": "Tata Letak Tab",
+      "description": "Pilih bagaimana tab ditampilkan di editor.",
+      "horizontal": "Tab Horizontal",
+      "vertical": "Tab Vertikal",
+      "horizontalDescription": "Tab ditampilkan secara horizontal di atas editor.",
+      "verticalDescription": "Tab ditampilkan secara vertikal di sisi kiri editor."
+    },
+    "viewMode": {
+      "title": "Mode Tampilan",
+      "description": "Pilih bagaimana editor dan pratinjau ditampilkan.",
+      "split": "Tampilan Terbagi",
+      "editor": "Editor Saja",
+      "preview": "Pratinjau Saja",
+      "splitDescription": "Tampilkan editor dan pratinjau berdampingan.",
+      "editorDescription": "Tampilkan hanya editor untuk menulis yang fokus.",
+      "previewDescription": "Tampilkan hanya pratinjau untuk membaca."
+    },
+    "editor": {
+      "title": "Editor",
+      "fontSize": "Ukuran Font",
+      "fontSizeDescription": "Sesuaikan ukuran font untuk editor.",
+      "showLineNumbers": "Tampilkan Nomor Baris",
+      "showLineNumbersDescription": "Tampilkan nomor baris di editor.",
+      "tabSize": "Ukuran Tab",
+      "tabSizeDescription": "Jumlah spasi untuk indentasi tab.",
+      "wordWrap": "Bungkus Kata",
+      "wordWrapDescription": "Bungkus baris panjang di editor.",
+      "minimap": "Minimap",
+      "minimapDescription": "Tampilkan minimap dokumen."
+    },
+    "interface": {
+      "title": "Antarmuka",
+      "zoomLevel": "Level Zoom",
+      "zoomLevelDescription": "Sesuaikan level zoom untuk antarmuka."
+    },
+    "advanced": {
+      "title": "Lanjutan",
+      "autoSave": "Simpan Otomatis",
+      "autoSaveDescription": "Simpan perubahan secara otomatis.",
+      "showWhitespace": "Tampilkan Spasi Putih",
+      "showWhitespaceDescription": "Tampilkan karakter spasi putih di editor.",
+      "importExport": "Impor/Ekspor Pengaturan",
+      "exportSettings": "Ekspor Pengaturan",
+      "importSettings": "Impor Pengaturan",
+      "resetSettings": "Reset Pengaturan",
+      "resetConfirm": "Apakah Anda yakin ingin mereset semua pengaturan ke default? Tindakan ini tidak dapat dibatalkan.",
+      "exportSuccess": "Pengaturan berhasil diekspor",
+      "exportError": "Gagal mengekspor pengaturan",
+      "importSuccess": "Pengaturan berhasil diimpor",
+      "importError": "Gagal mengimpor pengaturan",
+      "resetSuccess": "Pengaturan berhasil direset",
+      "resetError": "Gagal mereset pengaturan"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "File berhasil dimuat",
+    "fileLoadFailed": "Gagal memuat file",
+    "fileSaved": "File berhasil disimpan",
+    "fileSaveFailed": "Gagal menyimpan file",
+    "fileNotFound": "File tidak ditemukan.",
+    "closeTab": "Tutup Tab",
+    "noMarkdownFiles": "Silakan letakkan file Markdown (.md atau .markdown)",
+    "dropMarkdownFile": "Letakkan file Markdown di sini",
+    "noActiveTab": "Tidak ada tab aktif untuk disimpan. Silakan buka file terlebih dahulu."
+  },
+  "dialogs": {
+    "saveChanges": "Simpan perubahan sebelum menutup?",
+    "confirmClose": "Apakah Anda yakin ingin menutup tab ini?",
+    "fileChanged": {
+      "title": "File telah diubah",
+      "message": "File \"{{fileName}}\" telah dimodifikasi secara eksternal.",
+      "question": "Apakah Anda ingin memuat ulang file ini?",
+      "reloadDescription": "• Ya: Muat konten file terbaru (edit saat ini akan hilang)",
+      "keepDescription": "• Tidak: Pertahankan edit saat ini",
+      "yes": "Ya",
+      "no": "Tidak"
+    }
+  },
+  "statusBar": {
+    "line": "Baris",
+    "column": "Kolom",
+    "characters": "karakter",
+    "selected": "dipilih"
+  },
+  "zoom": {
+    "maxLimitReached": "Level zoom maksimum ({{maxZoom}}%) tercapai",
+    "minLimitReached": "Level zoom minimum ({{minZoom}}%) tercapai"
+  },
+  "tooltips": {
+    "zoomOut": "Perkecil (Cmd + -)",
+    "zoomIn": "Perbesar (Cmd + Shift + +)",
+    "resetZoom": "Reset Zoom (Cmd + 0)"
+  }
+}

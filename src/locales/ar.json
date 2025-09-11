@@ -1,0 +1,330 @@
+{
+  "app": {
+    "title": "Bokuchi",
+    "loading": "جاري التحميل...",
+    "noTabsOpen": "لا توجد علامات تبويب مفتوحة. أنشئ علامة تبويب جديدة للبدء."
+  },
+  "buttons": {
+    "open": "فتح",
+    "save": "حفظ",
+    "saveAs": "حفظ باسم",
+    "saveWithVariables": "حفظ مع تطبيق المتغيرات",
+    "settings": "الإعدادات",
+    "newFile": "ملف جديد",
+    "openFile": "فتح ملف",
+    "add": "إضافة",
+    "delete": "حذف",
+    "close": "إغلاق",
+    "cancel": "إلغاء",
+    "reset": "إعادة تعيين",
+    "splitView": "عرض مقسم",
+    "editorOnly": "المحرر فقط",
+    "previewOnly": "المعاينة فقط"
+  },
+  "recentFiles": {
+    "title": "الملفات الأخيرة",
+    "dialogTitle": "الملفات الأخيرة",
+    "searchPlaceholder": "البحث باسم الملف أو المسار...",
+    "noResults": "لم يتم العثور على نتائج بحث",
+    "noFiles": "لا توجد ملفات حديثة",
+    "copyPath": "نسخ المسار",
+    "removeFromRecent": "إزالة من الملفات الأخيرة",
+    "pathCopied": "تم نسخ المسار إلى الحافظة",
+    "removedFromRecent": "تم إزالته من الملفات الأخيرة",
+    "fileNotFound": "الملف غير موجود",
+    "loadFailed": "فشل في تحميل الملف",
+    "removeFailed": "فشل في الإزالة",
+    "copyFailed": "فشل في نسخ المسار"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
+  },
+  "help": {
+    "title": "المساعدة",
+    "gettingStarted": {
+      "title": "البدء",
+      "basicUsage": "الاستخدام الأساسي",
+      "basicUsageDescription": "Bokuchi هو محرر Markdown قوي مع معاينة فورية. يمكنك كتابة محتوى Markdown في المحرر ورؤية النتيجة المعروضة فوراً في لوحة المعاينة.",
+      "fileOperations": "عمليات الملفات",
+      "newFile": "ملف جديد",
+      "newFileDescription": "أنشئ ملف فارغ جديد لبدء الكتابة.",
+      "openFile": "فتح ملف",
+      "openFileDescription": "افتح ملف Markdown موجود من جهاز الكمبيوتر الخاص بك.",
+      "saveFile": "حفظ ملف",
+      "saveFileDescription": "احفظ الملف الحالي على القرص.",
+      "viewModes": "أوضاع العرض",
+      "splitView": "عرض مقسم",
+      "splitViewDescription": "اعرض المحرر والمعاينة جنباً إلى جنب للتحرير والمراجعة السهلة.",
+      "editorOnly": "المحرر فقط",
+      "editorOnlyDescription": "ركز على الكتابة مع إظهار المحرر فقط.",
+      "previewOnly": "المعاينة فقط",
+      "previewOnlyDescription": "اعرض النتيجة المعروضة في ملء الشاشة."
+    },
+    "variables": {
+      "title": "المتغيرات",
+      "description": "تسمح لك المتغيرات باستخدام محتوى ديناميكي في ملفات Markdown الخاصة بك. يمكنك تعريف المتغيرات في الإعدادات والرجوع إليها في مستنداتك باستخدام صيغة {{variableName}}.",
+      "howToUse": "كيفية استخدام المتغيرات",
+      "howToUseDescription": "لاستخدام المتغيرات في ملفات Markdown الخاصة بك، ما عليك سوى لف اسم المتغير بأقواس مجعدة مزدوجة. سيتم استبدال المتغير بقيمته عند عرض المستند.",
+      "settingUp": "إعداد المتغيرات",
+      "settingUpDescription": "اتبع هذه الخطوات لإعداد واستخدام المتغيرات:",
+      "step1": "1. فتح الإعدادات",
+      "step1Description": "انقر على زر القائمة واختر 'الإعدادات' لفتح مربع حوار الإعدادات.",
+      "step2": "2. إضافة المتغيرات",
+      "step2Description": "في قسم 'المتغيرات العامة'، أضف أسماء المتغيرات وقيمها المقابلة.",
+      "step3": "3. الاستخدام في المستندات",
+      "step3Description": "ارجع إلى المتغيرات في ملفات Markdown الخاصة بك باستخدام صيغة {{variableName}}.",
+      "examples": "أمثلة",
+      "example1": {
+        "title": "قالب المستند",
+        "description": "استخدم المتغيرات لبيانات المستند الوصفية مثل العنوان والتاريخ والمؤلف."
+      },
+      "example2": {
+        "title": "قالب الشركة",
+        "description": "استخدم المتغيرات لمعلومات الشركة مثل الاسم والقسم والإصدار."
+      },
+      "tips": "نصائح",
+      "tip1": "أسماء المتغيرات",
+      "tip1Description": "لا يمكن أن تحتوي أسماء المتغيرات على مسافات. استخدم camelCase أو snake_case للمتغيرات متعددة الكلمات.",
+      "tip2": "حساسية الأحرف",
+      "tip2Description": "أسماء المتغيرات حساسة للأحرف. تأكد من استخدام نفس الحالة بالضبط في مستنداتك.",
+      "tip3": "النطاق العام",
+      "tip3Description": "المتغيرات عامة ويمكن استخدامها في جميع مستنداتك. تؤثر تغييرات المتغيرات على جميع الملفات المفتوحة.",
+      "codeExample": "# مثال: Markdown مع المتغيرات\n\n## {{title}}\n\nتم الإنشاء: {{date}}\nالمؤلف: {{author}}\n\n### المحتوى\n{{content}}\n\n---\n*تم إنشاء هذا المستند بواسطة {{company}}.*",
+      "localVariables": "المتغيرات المحلية",
+      "localVariablesDescription": "يمكنك أيضاً تعريف المتغيرات داخل الملفات الفردية باستخدام تعليقات HTML. هذه المتغيرات المحلية لها الأولوية على المتغيرات العامة.",
+      "localVariablesSyntax": "صيغة المتغيرات المحلية",
+      "localVariablesSyntaxDescription": "عرف المتغيرات المحلية في بداية ملف Markdown الخاص بك باستخدام الصيغة التالية:",
+      "localVariablesExample": "<!-- @var variableName: value -->",
+      "localVariablesCodeExample": "<!-- @var title: عنوان مستندي -->\n<!-- @var author: أحمد محمد -->\n<!-- @var date: 2024-01-15 -->\n\n# {{title}}\n\nالمؤلف: {{author}}\nالتاريخ: {{date}}",
+      "priorityOrder": "ترتيب أولوية المتغيرات",
+      "priorityOrderDescription": "عندما يوجد نفس اسم المتغير في كل من النطاق المحلي والعام، يطبق ترتيب الأولوية التالي:",
+      "priority1": "1. المتغيرات المحلية (المعرفة في الملف)",
+      "priority2": "2. المتغيرات العامة (المعرفة في الإعدادات)",
+      "priority3": "3. النص الأصلي (إذا لم يتم العثور على المتغير)",
+      "localVsGlobal": "المتغيرات المحلية مقابل العامة",
+      "localVsGlobalDescription": "استخدم المتغيرات المحلية للمحتوى المحدد للملف والمتغيرات العامة للمحتوى المشترك عبر ملفات متعددة."
+    },
+    "keyboardShortcuts": {
+      "title": "اختصارات لوحة المفاتيح",
+      "description": "إليك جميع اختصارات لوحة المفاتيح المتاحة في Bokuchi:",
+      "categories": {
+        "fileOperations": "عمليات الملفات",
+        "navigation": "التنقل",
+        "editing": "التحرير",
+        "view": "العرض"
+      },
+      "shortcuts": {
+        "newFile": "ملف جديد",
+        "openFile": "فتح ملف",
+        "saveFile": "حفظ ملف",
+        "saveAs": "حفظ باسم",
+        "recentFiles": "فتح الملفات الأخيرة",
+        "nextTab": "التبويب التالي",
+        "previousTab": "التبويب السابق",
+        "settings": "فتح الإعدادات",
+        "help": "فتح المساعدة",
+        "rotateViewMode": "تغيير وضع العرض",
+        "splitView": "عرض مقسم (عمودين)",
+        "editorOnly": "المحرر فقط",
+        "previewOnly": "المعاينة فقط",
+        "zoomIn": "تكبير",
+        "zoomOut": "تصغير",
+        "resetZoom": "إعادة تعيين التكبير"
+      }
+    },
+    "tutorials": {
+      "title": "دليل البدء السريع",
+      "description": "ابدأ مع Bokuchi في خطوات قليلة فقط:",
+      "step1": {
+        "title": "الخطوة 1: أنشئ مستندك الأول",
+        "description": "ابدأ الكتابة فوراً",
+        "instructions": [
+          "اضغط ⌘N (Mac) أو Ctrl+N (Windows) لإنشاء ملف جديد",
+          "اكتب عنوانك الأول: # مستندي الأول",
+          "أضف بعض المحتوى تحت العنوان",
+          "راقب المعاينة تتحدث في الوقت الفعلي على اليمين"
+        ]
+      },
+      "step2": {
+        "title": "الخطوة 2: احفظ عملك",
+        "description": "احتفظ بمستنداتك آمنة",
+        "instructions": [
+          "اضغط ⌘S (Mac) أو Ctrl+S (Windows) للحفظ",
+          "اختر موقعاً واسم ملف لمستندك",
+          "سيظهر ملفك في الملفات الأخيرة للوصول السريع"
+        ]
+      },
+      "step3": {
+        "title": "الخطوة 3: استخدم المتغيرات للمحتوى الديناميكي",
+        "description": "اجعل مستنداتك قابلة لإعادة الاستخدام",
+        "instructions": [
+          "افتح الإعدادات (⌘، أو Ctrl+,)",
+          "انتقل إلى تبويب المتغيرات العامة",
+          "أضف متغيراً مثل 'author' مع اسمك",
+          "في مستندك، استخدم {{author}} حيث تريد أن يظهر اسمك"
+        ]
+      },
+      "step4": {
+        "title": "الخطوة 4: تنقل بكفاءة",
+        "description": "اعمل مع ملفات متعددة",
+        "instructions": [
+          "اضغط ⌘R (Mac) أو Ctrl+R (Windows) لفتح الملفات الأخيرة",
+          "استخدم Ctrl+Tab للتبديل بين التبويبات المفتوحة",
+          "استخدم Ctrl+Shift+Tab للذهاب إلى التبويب السابق"
+        ]
+      },
+      "tips": {
+        "title": "نصائح احترافية",
+        "tip1": "استخدم F1 في أي وقت لفتح نظام المساعدة هذا",
+        "tip2": "جرب سمات مختلفة في الإعدادات > المظهر",
+        "tip3": "استخدم العرض المقسم لرؤية Markdown والمعاينة جنباً إلى جنب"
+      }
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "appearance": {
+      "title": "المظهر",
+      "theme": "السمة",
+      "themeDescription": "اختر السمة البصرية لواجهة التطبيق.",
+      "themes": {
+        "default": "افتراضي",
+        "dark": "داكن",
+        "pastel": "باستيل",
+        "vivid": "حيوي",
+        "darcula": "داركولا"
+      }
+    },
+    "globalVariables": {
+      "title": "المتغيرات العامة",
+      "description": "يمكن استخدام المتغيرات العامة في جميع الملفات. أشر إليها في ملفات Markdown كـ {{variableName}}.",
+      "addNewVariable": "إضافة متغير جديد",
+      "variableName": "اسم المتغير",
+      "variableNamePlaceholder": "مثال: title",
+      "value": "القيمة",
+      "valuePlaceholder": "مثال: عنوان المستند",
+      "existingVariables": "المتغيرات الموجودة",
+      "noVariables": "لم يتم تعيين متغيرات عامة.",
+      "usageExample": "الاستخدام: {{variableName}}",
+      "errors": {
+        "nameRequired": "يرجى إدخال اسم المتغير.",
+        "noSpaces": "لا يمكن أن تحتوي أسماء المتغيرات على مسافات.",
+        "alreadyExists": "اسم المتغير هذا موجود بالفعل."
+      }
+    },
+    "language": {
+      "title": "اللغة",
+      "description": "اختر لغة واجهة التطبيق.",
+      "selectLanguage": "اختر اللغة",
+      "english": "الإنجليزية",
+      "japanese": "اليابانية",
+      "chinese": "中文 (简体)",
+      "spanish": "الإسبانية",
+      "hindi": "हिन्दी",
+      "russian": "الروسية",
+      "korean": "الكورية",
+      "portuguese": "البرتغالية (البرازيل)",
+      "arabic": "العربية",
+      "french": "الفرنسية",
+      "german": "الألمانية",
+      "indonesian": "الإندونيسية",
+      "vietnamese": "الفيتنامية"
+    },
+    "tabLayout": {
+      "title": "تخطيط التبويبات",
+      "description": "اختر كيفية عرض التبويبات في المحرر.",
+      "horizontal": "تبويبات أفقية",
+      "vertical": "تبويبات عمودية",
+      "horizontalDescription": "تظهر التبويبات أفقياً فوق المحرر.",
+      "verticalDescription": "تظهر التبويبات عمودياً على الجانب الأيسر من المحرر."
+    },
+    "viewMode": {
+      "title": "وضع العرض",
+      "description": "اختر كيفية عرض المحرر والمعاينة.",
+      "split": "عرض مقسم",
+      "editor": "المحرر فقط",
+      "preview": "المعاينة فقط",
+      "splitDescription": "إظهار المحرر والمعاينة جنباً إلى جنب.",
+      "editorDescription": "إظهار المحرر فقط للكتابة المركزة.",
+      "previewDescription": "إظهار المعاينة فقط للقراءة."
+    },
+    "editor": {
+      "title": "المحرر",
+      "fontSize": "حجم الخط",
+      "fontSizeDescription": "تعديل حجم الخط للمحرر.",
+      "showLineNumbers": "إظهار أرقام الأسطر",
+      "showLineNumbersDescription": "عرض أرقام الأسطر في المحرر.",
+      "tabSize": "حجم المسافة البادئة",
+      "tabSizeDescription": "عدد المسافات لمسافة بادئة للتبويب.",
+      "wordWrap": "التفاف النص",
+      "wordWrapDescription": "التفاف الأسطر الطويلة في المحرر.",
+      "minimap": "الخريطة المصغرة",
+      "minimapDescription": "إظهار خريطة مصغرة للمستند."
+    },
+    "interface": {
+      "title": "الواجهة",
+      "zoomLevel": "مستوى التكبير",
+      "zoomLevelDescription": "تعديل مستوى التكبير للواجهة."
+    },
+    "advanced": {
+      "title": "متقدم",
+      "autoSave": "حفظ تلقائي",
+      "autoSaveDescription": "حفظ التغييرات تلقائياً.",
+      "showWhitespace": "إظهار المسافات البيضاء",
+      "showWhitespaceDescription": "عرض أحرف المسافات البيضاء في المحرر.",
+      "importExport": "استيراد/تصدير الإعدادات",
+      "exportSettings": "تصدير الإعدادات",
+      "importSettings": "استيراد الإعدادات",
+      "resetSettings": "إعادة تعيين الإعدادات",
+      "resetConfirm": "هل أنت متأكد من أنك تريد إعادة تعيين جميع الإعدادات إلى الافتراضية؟ لا يمكن التراجع عن هذا الإجراء.",
+      "exportSuccess": "تم تصدير الإعدادات بنجاح",
+      "exportError": "فشل في تصدير الإعدادات",
+      "importSuccess": "تم استيراد الإعدادات بنجاح",
+      "importError": "فشل في استيراد الإعدادات",
+      "resetSuccess": "تم إعادة تعيين الإعدادات بنجاح",
+      "resetError": "فشل في إعادة تعيين الإعدادات"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "تم تحميل الملف بنجاح",
+    "fileLoadFailed": "فشل في تحميل الملف",
+    "fileSaved": "تم حفظ الملف بنجاح",
+    "fileSaveFailed": "فشل في حفظ الملف",
+    "fileNotFound": "الملف غير موجود.",
+    "closeTab": "إغلاق التبويب",
+    "noMarkdownFiles": "يرجى إسقاط ملف Markdown (.md أو .markdown)",
+    "dropMarkdownFile": "أفلت ملف Markdown هنا",
+    "noActiveTab": "لا يوجد تبويب نشط للحفظ. يرجى فتح ملف أولاً."
+  },
+  "dialogs": {
+    "saveChanges": "حفظ التغييرات قبل الإغلاق؟",
+    "confirmClose": "هل أنت متأكد من أنك تريد إغلاق هذا التبويب؟",
+    "fileChanged": {
+      "title": "تم تغيير الملف",
+      "message": "تم تعديل الملف \"{{fileName}}\" خارجياً.",
+      "question": "هل تريد إعادة تحميل هذا الملف؟",
+      "reloadDescription": "• نعم: تحميل أحدث محتوى الملف (ستفقد التعديلات الحالية)",
+      "keepDescription": "• لا: الاحتفاظ بالتعديلات الحالية",
+      "yes": "نعم",
+      "no": "لا"
+    }
+  },
+  "statusBar": {
+    "line": "السطر",
+    "column": "العمود",
+    "characters": "أحرف",
+    "selected": "محدد"
+  },
+  "zoom": {
+    "maxLimitReached": "تم الوصول إلى الحد الأقصى لمستوى التكبير ({{maxZoom}}%)",
+    "minLimitReached": "تم الوصول إلى الحد الأدنى لمستوى التكبير ({{minZoom}}%)"
+  },
+  "tooltips": {
+    "zoomOut": "تصغير (Cmd + -)",
+    "zoomIn": "تكبير (Cmd + Shift + +)",
+    "resetZoom": "إعادة تعيين التكبير (Cmd + 0)"
+  }
+}

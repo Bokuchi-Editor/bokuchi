@@ -1,0 +1,330 @@
+{
+  "app": {
+    "title": "Bokuchi",
+    "loading": "Carregando...",
+    "noTabsOpen": "Nenhuma aba aberta. Crie uma nova aba para começar."
+  },
+  "buttons": {
+    "open": "Abrir",
+    "save": "Salvar",
+    "saveAs": "Salvar como",
+    "saveWithVariables": "Salvar com variáveis aplicadas",
+    "settings": "Configurações",
+    "newFile": "Novo arquivo",
+    "openFile": "Abrir arquivo",
+    "add": "Adicionar",
+    "delete": "Excluir",
+    "close": "Fechar",
+    "cancel": "Cancelar",
+    "reset": "Redefinir",
+    "splitView": "Visualização dividida",
+    "editorOnly": "Apenas editor",
+    "previewOnly": "Apenas visualização"
+  },
+  "recentFiles": {
+    "title": "Arquivos recentes",
+    "dialogTitle": "Arquivos recentes",
+    "searchPlaceholder": "Pesquisar por nome de arquivo ou caminho...",
+    "noResults": "Nenhum resultado encontrado",
+    "noFiles": "Nenhum arquivo recente",
+    "copyPath": "Copiar caminho",
+    "removeFromRecent": "Remover dos arquivos recentes",
+    "pathCopied": "Caminho copiado para a área de transferência",
+    "removedFromRecent": "Removido dos arquivos recentes",
+    "fileNotFound": "Arquivo não encontrado",
+    "loadFailed": "Falha ao carregar arquivo",
+    "removeFailed": "Falha ao remover",
+    "copyFailed": "Falha ao copiar caminho"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
+  },
+  "help": {
+    "title": "Ajuda",
+    "gettingStarted": {
+      "title": "Primeiros passos",
+      "basicUsage": "Uso básico",
+      "basicUsageDescription": "Bokuchi é um poderoso editor Markdown com visualização em tempo real. Você pode escrever conteúdo Markdown no editor e ver o resultado renderizado instantaneamente no painel de visualização.",
+      "fileOperations": "Operações de arquivo",
+      "newFile": "Novo arquivo",
+      "newFileDescription": "Crie um novo arquivo vazio para começar a escrever.",
+      "openFile": "Abrir arquivo",
+      "openFileDescription": "Abra um arquivo Markdown existente do seu computador.",
+      "saveFile": "Salvar arquivo",
+      "saveFileDescription": "Salve o arquivo atual no disco.",
+      "viewModes": "Modos de visualização",
+      "splitView": "Visualização dividida",
+      "splitViewDescription": "Mostre o editor e a visualização lado a lado para edição e revisão fáceis.",
+      "editorOnly": "Apenas editor",
+      "editorOnlyDescription": "Foque na escrita com apenas o editor visível.",
+      "previewOnly": "Apenas visualização",
+      "previewOnlyDescription": "Visualize o resultado renderizado em tela cheia."
+    },
+    "variables": {
+      "title": "Variáveis",
+      "description": "As variáveis permitem que você use conteúdo dinâmico em seus arquivos Markdown. Você pode definir variáveis nas configurações e referenciá-las em seus documentos usando a sintaxe {{variableName}}.",
+      "howToUse": "Como usar variáveis",
+      "howToUseDescription": "Para usar variáveis em seus arquivos Markdown, simplesmente envolva o nome da variável em chaves duplas. A variável será substituída por seu valor quando o documento for renderizado.",
+      "settingUp": "Configurando variáveis",
+      "settingUpDescription": "Siga estes passos para configurar e usar variáveis:",
+      "step1": "1. Abrir configurações",
+      "step1Description": "Clique no botão do menu e selecione 'Configurações' para abrir o diálogo de configurações.",
+      "step2": "2. Adicionar variáveis",
+      "step2Description": "Na seção 'Variáveis Globais', adicione nomes de variáveis e seus valores correspondentes.",
+      "step3": "3. Usar em documentos",
+      "step3Description": "Referencie variáveis em seus arquivos Markdown usando a sintaxe {{variableName}}.",
+      "examples": "Exemplos",
+      "example1": {
+        "title": "Modelo de documento",
+        "description": "Use variáveis para metadados de documento como título, data e autor."
+      },
+      "example2": {
+        "title": "Modelo de empresa",
+        "description": "Use variáveis para informações da empresa como nome, departamento e versão."
+      },
+      "tips": "Dicas",
+      "tip1": "Nomes de variáveis",
+      "tip1Description": "Nomes de variáveis não podem conter espaços. Use camelCase ou snake_case para variáveis de múltiplas palavras.",
+      "tip2": "Sensibilidade a maiúsculas",
+      "tip2Description": "Nomes de variáveis são sensíveis a maiúsculas. Certifique-se de usar exatamente o mesmo caso em seus documentos.",
+      "tip3": "Escopo global",
+      "tip3Description": "As variáveis são globais e podem ser usadas em todos os seus documentos. Mudanças nas variáveis afetam todos os arquivos abertos.",
+      "codeExample": "# Exemplo: Markdown com variáveis\n\n## {{title}}\n\nCriado: {{date}}\nAutor: {{author}}\n\n### Conteúdo\n{{content}}\n\n---\n*Este documento foi criado por {{company}}.*",
+      "localVariables": "Variáveis locais",
+      "localVariablesDescription": "Você também pode definir variáveis dentro de arquivos individuais usando comentários HTML. Essas variáveis locais têm precedência sobre as variáveis globais.",
+      "localVariablesSyntax": "Sintaxe de variáveis locais",
+      "localVariablesSyntaxDescription": "Defina variáveis locais no início do seu arquivo Markdown usando a seguinte sintaxe:",
+      "localVariablesExample": "<!-- @var variableName: value -->",
+      "localVariablesCodeExample": "<!-- @var title: Meu Título de Documento -->\n<!-- @var author: João Silva -->\n<!-- @var date: 2024-01-15 -->\n\n# {{title}}\n\nAutor: {{author}}\nData: {{date}}",
+      "priorityOrder": "Ordem de prioridade das variáveis",
+      "priorityOrderDescription": "Quando o mesmo nome de variável existe tanto no escopo local quanto global, a seguinte ordem de prioridade se aplica:",
+      "priority1": "1. Variáveis locais (definidas no arquivo)",
+      "priority2": "2. Variáveis globais (definidas nas configurações)",
+      "priority3": "3. Texto original (se a variável não for encontrada)",
+      "localVsGlobal": "Variáveis locais vs globais",
+      "localVsGlobalDescription": "Use variáveis locais para conteúdo específico do arquivo e variáveis globais para conteúdo comum em múltiplos arquivos."
+    },
+    "keyboardShortcuts": {
+      "title": "Atalhos de teclado",
+      "description": "Aqui estão todos os atalhos de teclado disponíveis no Bokuchi:",
+      "categories": {
+        "fileOperations": "Operações de arquivo",
+        "navigation": "Navegação",
+        "editing": "Edição",
+        "view": "Visualização"
+      },
+      "shortcuts": {
+        "newFile": "Novo arquivo",
+        "openFile": "Abrir arquivo",
+        "saveFile": "Salvar arquivo",
+        "saveAs": "Salvar como",
+        "recentFiles": "Abrir arquivos recentes",
+        "nextTab": "Próxima aba",
+        "previousTab": "Aba anterior",
+        "settings": "Abrir configurações",
+        "help": "Abrir ajuda",
+        "rotateViewMode": "Alternar modo de visualização",
+        "splitView": "Visualização dividida (2 colunas)",
+        "editorOnly": "Apenas editor",
+        "previewOnly": "Apenas visualização",
+        "zoomIn": "Aumentar zoom",
+        "zoomOut": "Diminuir zoom",
+        "resetZoom": "Redefinir zoom"
+      }
+    },
+    "tutorials": {
+      "title": "Guia de início rápido",
+      "description": "Comece com o Bokuchi em apenas alguns passos:",
+      "step1": {
+        "title": "Passo 1: Crie seu primeiro documento",
+        "description": "Comece a escrever imediatamente",
+        "instructions": [
+          "Pressione ⌘N (Mac) ou Ctrl+N (Windows) para criar um novo arquivo",
+          "Digite seu primeiro cabeçalho: # Meu Primeiro Documento",
+          "Adicione algum conteúdo abaixo do cabeçalho",
+          "Observe a visualização atualizar em tempo real à direita"
+        ]
+      },
+      "step2": {
+        "title": "Passo 2: Salve seu trabalho",
+        "description": "Mantenha seus documentos seguros",
+        "instructions": [
+          "Pressione ⌘S (Mac) ou Ctrl+S (Windows) para salvar",
+          "Escolha um local e nome de arquivo para seu documento",
+          "Seu arquivo aparecerá em Arquivos Recentes para acesso rápido"
+        ]
+      },
+      "step3": {
+        "title": "Passo 3: Use variáveis para conteúdo dinâmico",
+        "description": "Torne seus documentos reutilizáveis",
+        "instructions": [
+          "Abra Configurações (⌘, ou Ctrl+,)",
+          "Vá para a aba Variáveis Globais",
+          "Adicione uma variável como 'author' com seu nome",
+          "Em seu documento, use {{author}} onde quiser que seu nome apareça"
+        ]
+      },
+      "step4": {
+        "title": "Passo 4: Navegue eficientemente",
+        "description": "Trabalhe com múltiplos arquivos",
+        "instructions": [
+          "Pressione ⌘R (Mac) ou Ctrl+R (Windows) para abrir Arquivos Recentes",
+          "Use Ctrl+Tab para alternar entre abas abertas",
+          "Use Ctrl+Shift+Tab para ir para a aba anterior"
+        ]
+      },
+      "tips": {
+        "title": "Dicas profissionais",
+        "tip1": "Use F1 a qualquer momento para abrir este sistema de ajuda",
+        "tip2": "Experimente diferentes temas em Configurações > Aparência",
+        "tip3": "Use a visualização dividida para ver seu Markdown e visualização lado a lado"
+      }
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "appearance": {
+      "title": "Aparência",
+      "theme": "Tema",
+      "themeDescription": "Escolha o tema visual para a interface da aplicação.",
+      "themes": {
+        "default": "Padrão",
+        "dark": "Escuro",
+        "pastel": "Pastel",
+        "vivid": "Vívido",
+        "darcula": "Darcula"
+      }
+    },
+    "globalVariables": {
+      "title": "Variáveis globais",
+      "description": "As variáveis globais podem ser usadas em todos os arquivos. Referencie-as em arquivos Markdown como {{variableName}}.",
+      "addNewVariable": "Adicionar nova variável",
+      "variableName": "Nome da variável",
+      "variableNamePlaceholder": "ex.: título",
+      "value": "Valor",
+      "valuePlaceholder": "ex.: Título do documento",
+      "existingVariables": "Variáveis existentes",
+      "noVariables": "Nenhuma variável global está definida.",
+      "usageExample": "Uso: {{variableName}}",
+      "errors": {
+        "nameRequired": "Por favor, insira um nome de variável.",
+        "noSpaces": "Nomes de variáveis não podem conter espaços.",
+        "alreadyExists": "Este nome de variável já existe."
+      }
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Selecione o idioma para a interface da aplicação.",
+      "selectLanguage": "Selecionar idioma",
+      "english": "Inglês",
+      "japanese": "Japonês",
+      "chinese": "中文 (简体)",
+      "spanish": "Espanhol",
+      "hindi": "हिन्दी",
+      "russian": "Russo",
+      "korean": "한국어",
+      "portuguese": "Português (Brasil)",
+      "arabic": "العربية",
+      "french": "Français",
+      "german": "Deutsch",
+      "indonesian": "Bahasa Indonesia",
+      "vietnamese": "Vietnamita"
+    },
+    "tabLayout": {
+      "title": "Layout das abas",
+      "description": "Escolha como as abas são exibidas no editor.",
+      "horizontal": "Abas horizontais",
+      "vertical": "Abas verticais",
+      "horizontalDescription": "As abas são exibidas horizontalmente acima do editor.",
+      "verticalDescription": "As abas são exibidas verticalmente no lado esquerdo do editor."
+    },
+    "viewMode": {
+      "title": "Modo de visualização",
+      "description": "Escolha como o editor e a visualização são exibidos.",
+      "split": "Visualização dividida",
+      "editor": "Apenas editor",
+      "preview": "Apenas visualização",
+      "splitDescription": "Mostre o editor e a visualização lado a lado.",
+      "editorDescription": "Mostre apenas o editor para escrita focada.",
+      "previewDescription": "Mostre apenas a visualização para leitura."
+    },
+    "editor": {
+      "title": "Editor",
+      "fontSize": "Tamanho da fonte",
+      "fontSizeDescription": "Ajuste o tamanho da fonte para o editor.",
+      "showLineNumbers": "Mostrar números de linha",
+      "showLineNumbersDescription": "Exiba números de linha no editor.",
+      "tabSize": "Tamanho da tabulação",
+      "tabSizeDescription": "Número de espaços para indentação de tabulação.",
+      "wordWrap": "Quebra de linha",
+      "wordWrapDescription": "Quebre linhas longas no editor.",
+      "minimap": "Minimapa",
+      "minimapDescription": "Mostre um minimapa do documento."
+    },
+    "interface": {
+      "title": "Interface",
+      "zoomLevel": "Nível de zoom",
+      "zoomLevelDescription": "Ajuste o nível de zoom para a interface."
+    },
+    "advanced": {
+      "title": "Avançado",
+      "autoSave": "Salvamento automático",
+      "autoSaveDescription": "Salve alterações automaticamente.",
+      "showWhitespace": "Mostrar espaços em branco",
+      "showWhitespaceDescription": "Exiba caracteres de espaço em branco no editor.",
+      "importExport": "Importar/Exportar configurações",
+      "exportSettings": "Exportar configurações",
+      "importSettings": "Importar configurações",
+      "resetSettings": "Redefinir configurações",
+      "resetConfirm": "Tem certeza de que deseja redefinir todas as configurações para o padrão? Esta ação não pode ser desfeita.",
+      "exportSuccess": "Configurações exportadas com sucesso",
+      "exportError": "Falha ao exportar configurações",
+      "importSuccess": "Configurações importadas com sucesso",
+      "importError": "Falha ao importar configurações",
+      "resetSuccess": "Configurações redefinidas com sucesso",
+      "resetError": "Falha ao redefinir configurações"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "Arquivo carregado com sucesso",
+    "fileLoadFailed": "Falha ao carregar arquivo",
+    "fileSaved": "Arquivo salvo com sucesso",
+    "fileSaveFailed": "Falha ao salvar arquivo",
+    "fileNotFound": "Arquivo não encontrado.",
+    "closeTab": "Fechar aba",
+    "noMarkdownFiles": "Por favor, arraste um arquivo Markdown (.md ou .markdown)",
+    "dropMarkdownFile": "Arraste o arquivo Markdown aqui",
+    "noActiveTab": "Nenhuma aba ativa para salvar. Por favor, abra um arquivo primeiro."
+  },
+  "dialogs": {
+    "saveChanges": "Salvar alterações antes de fechar?",
+    "confirmClose": "Tem certeza de que deseja fechar esta aba?",
+    "fileChanged": {
+      "title": "Arquivo foi alterado",
+      "message": "O arquivo \"{{fileName}}\" foi modificado externamente.",
+      "question": "Deseja recarregar este arquivo?",
+      "reloadDescription": "• Sim: Carregar o conteúdo mais recente do arquivo (as edições atuais serão perdidas)",
+      "keepDescription": "• Não: Manter as edições atuais",
+      "yes": "Sim",
+      "no": "Não"
+    }
+  },
+  "statusBar": {
+    "line": "Linha",
+    "column": "Coluna",
+    "characters": "caracteres",
+    "selected": "selecionado"
+  },
+  "zoom": {
+    "maxLimitReached": "Nível máximo de zoom ({{maxZoom}}%) atingido",
+    "minLimitReached": "Nível mínimo de zoom ({{minZoom}}%) atingido"
+  },
+  "tooltips": {
+    "zoomOut": "Diminuir zoom (Cmd + -)",
+    "zoomIn": "Aumentar zoom (Cmd + Shift + +)",
+    "resetZoom": "Redefinir zoom (Cmd + 0)"
+  }
+}

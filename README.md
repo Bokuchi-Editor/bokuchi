@@ -34,7 +34,7 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
 - **Multiple themes**: Default, Dark, Pastel, Vivid, and Darcula themes
 - **Variable system**: Support for custom variables in Markdown (local and global)
-- **Internationalization**: Support for English and Japanese
+- **Internationalization**: Multi-language support (13 languages)
 - **Responsive design**: Optimized for different screen sizes
 
 ### System Integration
@@ -42,6 +42,28 @@ A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 - **Single instance**: Prevents multiple application instances
 - **System integration**: Native OS integration and file associations
 - **Offline functionality**: Works completely offline without internet connection
+
+## Supported Languages
+
+Bokuchi supports 13 languages for the user interface:
+
+| Language             | Code    | Native Name        |
+| -------------------- | ------- | ------------------ |
+| English              | `en`    | English            |
+| Japanese             | `ja`    | 日本語             |
+| Chinese (Simplified) | `zh-CN` | 中文 (简体)        |
+| Spanish              | `es`    | Español            |
+| Hindi                | `hi`    | हिन्दी             |
+| Russian              | `ru`    | Русский            |
+| Korean               | `ko`    | 한국어             |
+| Portuguese (Brazil)  | `pt-BR` | Português (Brasil) |
+| Arabic               | `ar`    | العربية            |
+| French               | `fr`    | Français           |
+| German               | `de`    | Deutsch            |
+| Indonesian           | `id`    | Bahasa Indonesia   |
+| Vietnamese           | `vi`    | Tiếng Việt         |
+
+You can change the language in Settings > Language.
 
 ## Development
 

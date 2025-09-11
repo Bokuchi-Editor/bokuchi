@@ -1,0 +1,330 @@
+{
+  "app": {
+    "title": "Bokuchi",
+    "loading": "加载中...",
+    "noTabsOpen": "没有打开的标签页。创建新标签页开始使用。"
+  },
+  "buttons": {
+    "open": "打开",
+    "save": "保存",
+    "saveAs": "另存为",
+    "saveWithVariables": "应用变量后保存",
+    "settings": "设置",
+    "newFile": "新建文件",
+    "openFile": "打开文件",
+    "add": "添加",
+    "delete": "删除",
+    "close": "关闭",
+    "cancel": "取消",
+    "reset": "重置",
+    "splitView": "分屏视图",
+    "editorOnly": "仅编辑器",
+    "previewOnly": "仅预览"
+  },
+  "recentFiles": {
+    "title": "最近文件",
+    "dialogTitle": "最近文件",
+    "searchPlaceholder": "按文件名或路径搜索...",
+    "noResults": "未找到搜索结果",
+    "noFiles": "没有最近文件",
+    "copyPath": "复制路径",
+    "removeFromRecent": "从最近文件中移除",
+    "pathCopied": "路径已复制到剪贴板",
+    "removedFromRecent": "已从最近文件中移除",
+    "fileNotFound": "文件未找到",
+    "loadFailed": "加载文件失败",
+    "removeFailed": "移除失败",
+    "copyFailed": "复制路径失败"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
+  },
+  "help": {
+    "title": "帮助",
+    "gettingStarted": {
+      "title": "入门指南",
+      "basicUsage": "基本用法",
+      "basicUsageDescription": "Bokuchi 是一个功能强大的 Markdown 编辑器，具有实时预览功能。您可以在编辑器中编写 Markdown 内容，并在预览面板中即时查看渲染结果。",
+      "fileOperations": "文件操作",
+      "newFile": "新建文件",
+      "newFileDescription": "创建一个新的空文件开始编写。",
+      "openFile": "打开文件",
+      "openFileDescription": "从计算机打开现有的 Markdown 文件。",
+      "saveFile": "保存文件",
+      "saveFileDescription": "将当前文件保存到磁盘。",
+      "viewModes": "视图模式",
+      "splitView": "分屏视图",
+      "splitViewDescription": "并排显示编辑器和预览，便于编辑和查看。",
+      "editorOnly": "仅编辑器",
+      "editorOnlyDescription": "仅显示编辑器，专注于写作。",
+      "previewOnly": "仅预览",
+      "previewOnlyDescription": "全屏查看渲染结果。"
+    },
+    "variables": {
+      "title": "变量",
+      "description": "变量允许您在 Markdown 文件中使用动态内容。您可以在设置中定义变量，并在文档中使用 {{variableName}} 语法引用它们。",
+      "howToUse": "如何使用变量",
+      "howToUseDescription": "要在 Markdown 文件中使用变量，只需用双花括号包围变量名。文档渲染时，变量将被其值替换。",
+      "settingUp": "设置变量",
+      "settingUpDescription": "按照以下步骤设置和使用变量：",
+      "step1": "1. 打开设置",
+      "step1Description": "点击菜单按钮并选择'设置'打开设置对话框。",
+      "step2": "2. 添加变量",
+      "step2Description": "在'全局变量'部分，添加变量名及其对应的值。",
+      "step3": "3. 在文档中使用",
+      "step3Description": "在 Markdown 文件中使用 {{variableName}} 语法引用变量。",
+      "examples": "示例",
+      "example1": {
+        "title": "文档模板",
+        "description": "使用变量处理文档元数据，如标题、日期和作者。"
+      },
+      "example2": {
+        "title": "公司模板",
+        "description": "使用变量处理公司信息，如名称、部门和版本。"
+      },
+      "tips": "提示",
+      "tip1": "变量名",
+      "tip1Description": "变量名不能包含空格。对于多词变量，使用驼峰命名法或下划线命名法。",
+      "tip2": "大小写敏感",
+      "tip2Description": "变量名区分大小写。确保在文档中使用完全相同的大小写。",
+      "tip3": "全局作用域",
+      "tip3Description": "变量是全局的，可以在所有文档中使用。变量更改会影响所有打开的文件。",
+      "codeExample": "# 示例：带变量的 Markdown\n\n## {{title}}\n\n创建时间：{{date}}\n作者：{{author}}\n\n### 内容\n{{content}}\n\n---\n*此文档由 {{company}} 创建。*",
+      "localVariables": "局部变量",
+      "localVariablesDescription": "您还可以使用 HTML 注释在单个文件内定义变量。这些局部变量优先于全局变量。",
+      "localVariablesSyntax": "局部变量语法",
+      "localVariablesSyntaxDescription": "使用以下语法在 Markdown 文件开头定义局部变量：",
+      "localVariablesExample": "<!-- @var variableName: value -->",
+      "localVariablesCodeExample": "<!-- @var title: 我的文档标题 -->\n<!-- @var author: 张三 -->\n<!-- @var date: 2024-01-15 -->\n\n# {{title}}\n\n作者：{{author}}\n日期：{{date}}",
+      "priorityOrder": "变量优先级顺序",
+      "priorityOrderDescription": "当局部和全局作用域中存在相同的变量名时，按以下优先级顺序应用：",
+      "priority1": "1. 局部变量（在文件中定义）",
+      "priority2": "2. 全局变量（在设置中定义）",
+      "priority3": "3. 原始文本（如果找不到变量）",
+      "localVsGlobal": "局部变量与全局变量",
+      "localVsGlobalDescription": "对文件特定内容使用局部变量，对多个文件中的通用内容使用全局变量。"
+    },
+    "keyboardShortcuts": {
+      "title": "键盘快捷键",
+      "description": "以下是 Bokuchi 中可用的所有键盘快捷键：",
+      "categories": {
+        "fileOperations": "文件操作",
+        "navigation": "导航",
+        "editing": "编辑",
+        "view": "视图"
+      },
+      "shortcuts": {
+        "newFile": "新建文件",
+        "openFile": "打开文件",
+        "saveFile": "保存文件",
+        "saveAs": "另存为",
+        "recentFiles": "打开最近文件",
+        "nextTab": "下一个标签页",
+        "previousTab": "上一个标签页",
+        "settings": "打开设置",
+        "help": "打开帮助",
+        "rotateViewMode": "切换视图模式",
+        "splitView": "分屏视图（2列）",
+        "editorOnly": "仅编辑器",
+        "previewOnly": "仅预览",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "resetZoom": "重置缩放"
+      }
+    },
+    "tutorials": {
+      "title": "快速入门指南",
+      "description": "只需几个步骤即可开始使用 Bokuchi：",
+      "step1": {
+        "title": "步骤1：创建您的第一个文档",
+        "description": "立即开始写作",
+        "instructions": [
+          "按 ⌘N（Mac）或 Ctrl+N（Windows）创建新文件",
+          "输入您的第一个标题：# 我的第一个文档",
+          "在标题下方添加一些内容",
+          "观看右侧的预览实时更新"
+        ]
+      },
+      "step2": {
+        "title": "步骤2：保存您的工作",
+        "description": "保护您的文档安全",
+        "instructions": [
+          "按 ⌘S（Mac）或 Ctrl+S（Windows）保存",
+          "为您的文档选择位置和文件名",
+          "您的文件将出现在最近文件中以便快速访问"
+        ]
+      },
+      "step3": {
+        "title": "步骤3：使用变量处理动态内容",
+        "description": "让您的文档可重复使用",
+        "instructions": [
+          "打开设置（⌘, 或 Ctrl+,）",
+          "转到全局变量标签页",
+          "添加一个变量，如'author'，值为您的姓名",
+          "在您的文档中，在想要显示姓名的地方使用 {{author}}"
+        ]
+      },
+      "step4": {
+        "title": "步骤4：高效导航",
+        "description": "处理多个文件",
+        "instructions": [
+          "按 ⌘R（Mac）或 Ctrl+R（Windows）打开最近文件",
+          "使用 Ctrl+Tab 在打开的标签页之间切换",
+          "使用 Ctrl+Shift+Tab 转到上一个标签页"
+        ]
+      },
+      "tips": {
+        "title": "专业提示",
+        "tip1": "随时使用 F1 打开此帮助系统",
+        "tip2": "在设置 > 外观中尝试不同的主题",
+        "tip3": "使用分屏视图并排查看您的 Markdown 和预览"
+      }
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "appearance": {
+      "title": "外观",
+      "theme": "主题",
+      "themeDescription": "选择应用程序界面的视觉主题。",
+      "themes": {
+        "default": "默认",
+        "dark": "深色",
+        "pastel": "柔和",
+        "vivid": "鲜艳",
+        "darcula": "达库拉"
+      }
+    },
+    "globalVariables": {
+      "title": "全局变量",
+      "description": "全局变量可在所有文件中使用。在 Markdown 文件中使用 {{variableName}} 引用它们。",
+      "addNewVariable": "添加新变量",
+      "variableName": "变量名",
+      "variableNamePlaceholder": "例如：title",
+      "value": "值",
+      "valuePlaceholder": "例如：文档标题",
+      "existingVariables": "现有变量",
+      "noVariables": "未设置全局变量。",
+      "usageExample": "用法：{{variableName}}",
+      "errors": {
+        "nameRequired": "请输入变量名。",
+        "noSpaces": "变量名不能包含空格。",
+        "alreadyExists": "此变量名已存在。"
+      }
+    },
+    "language": {
+      "title": "语言",
+      "description": "选择应用程序界面的语言。",
+      "selectLanguage": "选择语言",
+      "english": "英语",
+      "japanese": "日语",
+      "chinese": "中文（简体）",
+      "spanish": "西班牙语",
+      "hindi": "印地语",
+      "russian": "俄语",
+      "korean": "韩语",
+      "portuguese": "葡萄牙语（巴西）",
+      "arabic": "阿拉伯语",
+      "french": "法语",
+      "german": "德语",
+      "indonesian": "印尼语",
+      "vietnamese": "越南语"
+    },
+    "tabLayout": {
+      "title": "标签页布局",
+      "description": "选择标签页在编辑器中的显示方式。",
+      "horizontal": "水平标签页",
+      "vertical": "垂直标签页",
+      "horizontalDescription": "标签页在编辑器上方水平显示。",
+      "verticalDescription": "标签页在编辑器左侧垂直显示。"
+    },
+    "viewMode": {
+      "title": "视图模式",
+      "description": "选择编辑器和预览的显示方式。",
+      "split": "分屏视图",
+      "editor": "仅编辑器",
+      "preview": "仅预览",
+      "splitDescription": "并排显示编辑器和预览。",
+      "editorDescription": "仅显示编辑器，专注写作。",
+      "previewDescription": "仅显示预览，专注阅读。"
+    },
+    "editor": {
+      "title": "编辑器",
+      "fontSize": "字体大小",
+      "fontSizeDescription": "调整编辑器的字体大小。",
+      "showLineNumbers": "显示行号",
+      "showLineNumbersDescription": "在编辑器中显示行号。",
+      "tabSize": "制表符大小",
+      "tabSizeDescription": "制表符缩进的空格数。",
+      "wordWrap": "自动换行",
+      "wordWrapDescription": "在编辑器中自动换行长行。",
+      "minimap": "小地图",
+      "minimapDescription": "显示文档的小地图。"
+    },
+    "interface": {
+      "title": "界面",
+      "zoomLevel": "缩放级别",
+      "zoomLevelDescription": "调整界面的缩放级别。"
+    },
+    "advanced": {
+      "title": "高级",
+      "autoSave": "自动保存",
+      "autoSaveDescription": "自动保存更改。",
+      "showWhitespace": "显示空白字符",
+      "showWhitespaceDescription": "在编辑器中显示空白字符。",
+      "importExport": "导入/导出设置",
+      "exportSettings": "导出设置",
+      "importSettings": "导入设置",
+      "resetSettings": "重置设置",
+      "resetConfirm": "您确定要将所有设置重置为默认值吗？此操作无法撤销。",
+      "exportSuccess": "设置导出成功",
+      "exportError": "设置导出失败",
+      "importSuccess": "设置导入成功",
+      "importError": "设置导入失败",
+      "resetSuccess": "设置重置成功",
+      "resetError": "设置重置失败"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "文件加载成功",
+    "fileLoadFailed": "文件加载失败",
+    "fileSaved": "文件保存成功",
+    "fileSaveFailed": "文件保存失败",
+    "fileNotFound": "文件未找到。",
+    "closeTab": "关闭标签页",
+    "noMarkdownFiles": "请拖放 Markdown 文件（.md 或 .markdown）",
+    "dropMarkdownFile": "将 Markdown 文件拖放到此处",
+    "noActiveTab": "没有活动标签页可保存。请先打开文件。"
+  },
+  "dialogs": {
+    "saveChanges": "关闭前是否保存更改？",
+    "confirmClose": "您确定要关闭此标签页吗？",
+    "fileChanged": {
+      "title": "文件已更改",
+      "message": "文件 \"{{fileName}}\" 已被外部修改。",
+      "question": "您要重新加载此文件吗？",
+      "reloadDescription": "• 是：加载最新文件内容（当前编辑将丢失）",
+      "keepDescription": "• 否：保留当前编辑",
+      "yes": "是",
+      "no": "否"
+    }
+  },
+  "statusBar": {
+    "line": "行",
+    "column": "列",
+    "characters": "字符",
+    "selected": "已选择"
+  },
+  "zoom": {
+    "maxLimitReached": "已达到最大缩放级别（{{maxZoom}}%）",
+    "minLimitReached": "已达到最小缩放级别（{{minZoom}}%）"
+  },
+  "tooltips": {
+    "zoomOut": "缩小（Cmd + -）",
+    "zoomIn": "放大（Cmd + Shift + +）",
+    "resetZoom": "重置缩放（Cmd + 0）"
+  }
+}
