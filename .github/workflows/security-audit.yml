@@ -28,6 +28,17 @@ jobs:
         with:
           components: rustfmt, clippy
 
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Install cargo-audit
         run: cargo install cargo-audit
 
@@ -45,10 +56,15 @@ jobs:
             exit 1
           fi
 
+      - name: Install Rust dependencies
+        run: |
+          cd src-tauri
+          cargo check --verbose
+
       - name: Run Rust tests
         run: |
           cd src-tauri
-          cargo test --verbose
+          cargo test --verbose -- --nocapture
 
       - name: Run cargo audit
         run: |
