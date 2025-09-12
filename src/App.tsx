@@ -56,6 +56,7 @@ function AppDesktop() {
     handleFileMenuOpen,
     handleFileMenuClose,
     handleCloseSnackbar,
+    setSnackbar,
     handleOpenFile,
     handleSaveFile,
     handleSaveFileAs,
@@ -299,6 +300,7 @@ function AppDesktop() {
             wordWrap: appSettings.editor.wordWrap,
             minimap: appSettings.editor.minimap,
             showWhitespace: appSettings.advanced.showWhitespace,
+            tableConversion: appSettings.advanced.tableConversion,
           }}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
@@ -306,6 +308,7 @@ function AppDesktop() {
           onTabReorder={handleTabReorder}
           onContentChange={handleContentChange}
           onStatusChange={setEditorStatus}
+          onSnackbar={(message, severity) => setSnackbar({ open: true, message, severity })}
           t={t}
         />
 

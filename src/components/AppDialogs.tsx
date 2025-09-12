@@ -11,7 +11,7 @@ interface AppDialogsProps {
   snackbar: {
     open: boolean;
     message: string;
-    severity: 'success' | 'error';
+    severity: 'success' | 'error' | 'warning';
   };
   isAtLimit: boolean;
   currentZoom: number;

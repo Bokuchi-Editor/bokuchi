@@ -26,6 +26,7 @@ interface AppContentProps {
     wordWrap: boolean;
     minimap: boolean;
     showWhitespace: boolean;
+    tableConversion: 'auto' | 'confirm' | 'off';
   };
 
   // Handlers
@@ -35,6 +36,7 @@ interface AppContentProps {
   onTabReorder: (tabs: Tab[]) => void;
   onContentChange: (content: string) => void;
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
+  onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -58,6 +60,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onTabReorder,
   onContentChange,
   onStatusChange,
+  onSnackbar,
   t,
 }) => {
   return (
@@ -122,6 +125,8 @@ const AppContent: React.FC<AppContentProps> = ({
                       wordWrap={editorSettings?.wordWrap}
                       minimap={editorSettings?.minimap}
                       showWhitespace={editorSettings?.showWhitespace}
+                      tableConversion={editorSettings?.tableConversion}
+                      onSnackbar={onSnackbar}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -159,6 +164,8 @@ const AppContent: React.FC<AppContentProps> = ({
                     wordWrap={editorSettings?.wordWrap}
                     minimap={editorSettings?.minimap}
                     showWhitespace={editorSettings?.showWhitespace}
+                    tableConversion={editorSettings?.tableConversion}
+                    onSnackbar={onSnackbar}
                     fileNotFound={
                       activeTab.isNew && activeTab.filePath
                         ? {

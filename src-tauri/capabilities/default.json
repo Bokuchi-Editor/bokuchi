@@ -14,6 +14,7 @@
     "fs:write-files",
     "fs:read-dirs",
     "fs:write-all",
+    "clipboard-manager:allow-read-text",
     {
       "identifier": "fs:scope",
       "allow": [
@@ -31,7 +32,8 @@
         }
       ]
     },
-    "window-state:default"
+    "window-state:default",
+    "clipboard-manager:default"
   ],
   "platforms": [
     "macOS",

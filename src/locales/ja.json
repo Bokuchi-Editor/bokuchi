@@ -276,6 +276,11 @@
       "autoSaveDescription": "変更を自動的に保存します。",
       "showWhitespace": "空白文字を表示",
       "showWhitespaceDescription": "エディターで空白文字を表示します。",
+      "tableConversion": "テーブル変換",
+      "tableConversionDescription": "貼り付け時にHTMLテーブルをMarkdownに変換します。",
+      "tableConversionAuto": "自動変換",
+      "tableConversionConfirm": "変換前に確認",
+      "tableConversionOff": "変換しない",
       "importExport": "設定のインポート/エクスポート",
       "exportSettings": "設定をエクスポート",
       "importSettings": "設定をインポート",
@@ -327,5 +332,16 @@
     "zoomOut": "縮小 (Cmd + -)",
     "zoomIn": "拡大 (Cmd + Shift + +)",
     "resetZoom": "リセット (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "テーブルをMarkdownに変換",
+    "dialogMessage": "クリップボードにテーブルが検出されました。Markdown形式に変換しますか？",
+    "previewTitle": "プレビュー：",
+    "dialogNote": "Shift + Cmd/Ctrl + V を使用すると、変換せずにプレーンテキストとして貼り付けることができます。",
+    "cancel": "キャンセル",
+    "convert": "変換",
+    "conversionSuccess": "テーブルがMarkdownに正常に変換されました",
+    "conversionFailed": "テーブルの変換に失敗しました。プレーンテキストとして貼り付けました。",
+    "noTableDetected": "クリップボードデータにテーブルが検出されませんでした"
   }
 }

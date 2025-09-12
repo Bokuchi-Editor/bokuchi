@@ -24,6 +24,7 @@ export interface InterfaceSettings {
 export interface AdvancedSettings {
   autoSave: boolean;
   showWhitespace: boolean;
+  tableConversion: 'auto' | 'confirm' | 'off';
 }
 
 // Recent Files設定の型定義
@@ -66,6 +67,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
   autoSave: true,
   showWhitespace: false,
+  tableConversion: 'confirm',
 };
 
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {
