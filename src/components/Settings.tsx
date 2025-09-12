@@ -438,22 +438,28 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.language.description')}
                     </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
+                    <FormControl fullWidth>
+                      <InputLabel>{t('settings.language.selectLanguage')}</InputLabel>
+                      <Select
                         value={settings.interface.language}
                         onChange={(e) => handleSettingChange('interface', 'language', e.target.value)}
+                        label={t('settings.language.selectLanguage')}
                       >
-                        <FormControlLabel
-                          value="en"
-                          control={<Radio />}
-                          label={t('settings.language.english')}
-                        />
-                        <FormControlLabel
-                          value="ja"
-                          control={<Radio />}
-                          label={t('settings.language.japanese')}
-                        />
-                      </RadioGroup>
+                        <MenuItem value="en">{t('settings.language.english')}</MenuItem>
+                        <MenuItem value="ja">{t('settings.language.japanese')}</MenuItem>
+                        <MenuItem value="zh-CN">{t('settings.language.chinese')}</MenuItem>
+                        <MenuItem value="zh-Hant">{t('settings.language.chineseTraditional')}</MenuItem>
+                        <MenuItem value="es">{t('settings.language.spanish')}</MenuItem>
+                        <MenuItem value="hi">{t('settings.language.hindi')}</MenuItem>
+                        <MenuItem value="ru">{t('settings.language.russian')}</MenuItem>
+                        <MenuItem value="ko">{t('settings.language.korean')}</MenuItem>
+                        <MenuItem value="pt-BR">{t('settings.language.portuguese')}</MenuItem>
+                        <MenuItem value="ar">{t('settings.language.arabic')}</MenuItem>
+                        <MenuItem value="fr">{t('settings.language.french')}</MenuItem>
+                        <MenuItem value="de">{t('settings.language.german')}</MenuItem>
+                        <MenuItem value="id">{t('settings.language.indonesian')}</MenuItem>
+                        <MenuItem value="vi">{t('settings.language.vietnamese')}</MenuItem>
+                      </Select>
                     </FormControl>
                   </CardContent>
                 </Card>

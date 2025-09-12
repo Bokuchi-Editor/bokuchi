@@ -1,0 +1,331 @@
+{
+  "app": {
+    "title": "Bokuchi",
+    "loading": "Đang tải...",
+    "noTabsOpen": "Không có tab nào mở. Tạo tab mới để bắt đầu."
+  },
+  "buttons": {
+    "open": "Mở",
+    "save": "Lưu",
+    "saveAs": "Lưu thành",
+    "saveWithVariables": "Lưu với biến đã áp dụng",
+    "settings": "Cài đặt",
+    "newFile": "Tệp mới",
+    "openFile": "Mở tệp",
+    "add": "Thêm",
+    "delete": "Xóa",
+    "close": "Đóng",
+    "cancel": "Hủy",
+    "reset": "Đặt lại",
+    "splitView": "Chế độ chia đôi",
+    "editorOnly": "Chỉ trình soạn thảo",
+    "previewOnly": "Chỉ xem trước"
+  },
+  "recentFiles": {
+    "title": "Tệp gần đây",
+    "dialogTitle": "Tệp gần đây",
+    "searchPlaceholder": "Tìm kiếm theo tên tệp hoặc đường dẫn...",
+    "noResults": "Không tìm thấy kết quả",
+    "noFiles": "Không có tệp gần đây",
+    "copyPath": "Sao chép đường dẫn",
+    "removeFromRecent": "Xóa khỏi tệp gần đây",
+    "pathCopied": "Đường dẫn đã được sao chép vào clipboard",
+    "removedFromRecent": "Đã xóa khỏi tệp gần đây",
+    "fileNotFound": "Không tìm thấy tệp",
+    "loadFailed": "Không thể tải tệp",
+    "removeFailed": "Không thể xóa",
+    "copyFailed": "Không thể sao chép đường dẫn"
+  },
+  "shortcuts": {
+    "newFile": "⌘N",
+    "openFile": "⌘O",
+    "save": "⌘S",
+    "saveAs": "⌘⇧S"
+  },
+  "help": {
+    "title": "Trợ giúp",
+    "gettingStarted": {
+      "title": "Bắt đầu",
+      "basicUsage": "Sử dụng cơ bản",
+      "basicUsageDescription": "Bokuchi là một trình soạn thảo Markdown mạnh mẽ với chế độ xem trước thời gian thực. Bạn có thể viết nội dung Markdown trong trình soạn thảo và xem kết quả được hiển thị ngay lập tức trong bảng xem trước.",
+      "fileOperations": "Thao tác tệp",
+      "newFile": "Tệp mới",
+      "newFileDescription": "Tạo một tệp trống mới để bắt đầu viết.",
+      "openFile": "Mở tệp",
+      "openFileDescription": "Mở một tệp Markdown có sẵn từ máy tính của bạn.",
+      "saveFile": "Lưu tệp",
+      "saveFileDescription": "Lưu tệp hiện tại vào đĩa.",
+      "viewModes": "Chế độ xem",
+      "splitView": "Chế độ chia đôi",
+      "splitViewDescription": "Hiển thị trình soạn thảo và xem trước cạnh nhau để dễ dàng chỉnh sửa và xem lại.",
+      "editorOnly": "Chỉ trình soạn thảo",
+      "editorOnlyDescription": "Tập trung vào viết với chỉ trình soạn thảo hiển thị.",
+      "previewOnly": "Chỉ xem trước",
+      "previewOnlyDescription": "Xem kết quả được hiển thị ở chế độ toàn màn hình."
+    },
+    "variables": {
+      "title": "Biến",
+      "description": "Biến cho phép bạn sử dụng nội dung động trong các tệp Markdown của mình. Bạn có thể định nghĩa biến trong cài đặt và tham chiếu chúng trong tài liệu của mình bằng cú pháp {{variableName}}.",
+      "howToUse": "Cách sử dụng biến",
+      "howToUseDescription": "Để sử dụng biến trong các tệp Markdown của bạn, chỉ cần bao quanh tên biến bằng dấu ngoặc nhọn kép. Biến sẽ được thay thế bằng giá trị của nó khi tài liệu được hiển thị.",
+      "settingUp": "Thiết lập biến",
+      "settingUpDescription": "Làm theo các bước sau để thiết lập và sử dụng biến:",
+      "step1": "1. Mở cài đặt",
+      "step1Description": "Nhấp vào nút menu và chọn 'Cài đặt' để mở hộp thoại cài đặt.",
+      "step2": "2. Thêm biến",
+      "step2Description": "Trong phần 'Biến toàn cục', thêm tên biến và giá trị tương ứng của chúng.",
+      "step3": "3. Sử dụng trong tài liệu",
+      "step3Description": "Tham chiếu biến trong các tệp Markdown của bạn bằng cú pháp {{variableName}}.",
+      "examples": "Ví dụ",
+      "example1": {
+        "title": "Mẫu tài liệu",
+        "description": "Sử dụng biến cho siêu dữ liệu tài liệu như tiêu đề, ngày tháng và tác giả."
+      },
+      "example2": {
+        "title": "Mẫu công ty",
+        "description": "Sử dụng biến cho thông tin công ty như tên, phòng ban và phiên bản."
+      },
+      "tips": "Mẹo",
+      "tip1": "Tên biến",
+      "tip1Description": "Tên biến không thể chứa khoảng trắng. Sử dụng camelCase hoặc snake_case cho các biến nhiều từ.",
+      "tip2": "Phân biệt chữ hoa chữ thường",
+      "tip2Description": "Tên biến phân biệt chữ hoa chữ thường. Đảm bảo sử dụng cùng một kiểu chữ trong tài liệu của bạn.",
+      "tip3": "Phạm vi toàn cục",
+      "tip3Description": "Biến là toàn cục và có thể được sử dụng trong tất cả tài liệu của bạn. Thay đổi biến sẽ ảnh hưởng đến tất cả các tệp đang mở.",
+      "codeExample": "# Ví dụ: Markdown với biến\n\n## {{title}}\n\nTạo: {{date}}\nTác giả: {{author}}\n\n### Nội dung\n{{content}}\n\n---\n*Tài liệu này được tạo bởi {{company}}.*",
+      "localVariables": "Biến cục bộ",
+      "localVariablesDescription": "Bạn cũng có thể định nghĩa biến trong các tệp riêng lẻ bằng cách sử dụng nhận xét HTML. Các biến cục bộ này có ưu tiên hơn biến toàn cục.",
+      "localVariablesSyntax": "Cú pháp biến cục bộ",
+      "localVariablesSyntaxDescription": "Định nghĩa biến cục bộ ở đầu tệp Markdown của bạn bằng cú pháp sau:",
+      "localVariablesExample": "<!-- @var variableName: value -->",
+      "localVariablesCodeExample": "<!-- @var title: Tiêu đề tài liệu của tôi -->\n<!-- @var author: Nguyễn Văn A -->\n<!-- @var date: 2024-01-15 -->\n\n# {{title}}\n\nTác giả: {{author}}\nNgày: {{date}}",
+      "priorityOrder": "Thứ tự ưu tiên biến",
+      "priorityOrderDescription": "Khi cùng một tên biến tồn tại trong cả phạm vi cục bộ và toàn cục, thứ tự ưu tiên sau được áp dụng:",
+      "priority1": "1. Biến cục bộ (được định nghĩa trong tệp)",
+      "priority2": "2. Biến toàn cục (được định nghĩa trong cài đặt)",
+      "priority3": "3. Văn bản gốc (nếu không tìm thấy biến)",
+      "localVsGlobal": "Biến cục bộ vs Biến toàn cục",
+      "localVsGlobalDescription": "Sử dụng biến cục bộ cho nội dung cụ thể của tệp và biến toàn cục cho nội dung chung trên nhiều tệp."
+    },
+    "keyboardShortcuts": {
+      "title": "Phím tắt",
+      "description": "Đây là tất cả các phím tắt có sẵn trong Bokuchi:",
+      "categories": {
+        "fileOperations": "Thao tác tệp",
+        "navigation": "Điều hướng",
+        "editing": "Chỉnh sửa",
+        "view": "Xem"
+      },
+      "shortcuts": {
+        "newFile": "Tệp mới",
+        "openFile": "Mở tệp",
+        "saveFile": "Lưu tệp",
+        "saveAs": "Lưu thành",
+        "recentFiles": "Mở tệp gần đây",
+        "nextTab": "Tab tiếp theo",
+        "previousTab": "Tab trước đó",
+        "settings": "Mở cài đặt",
+        "help": "Mở trợ giúp",
+        "rotateViewMode": "Xoay chế độ xem",
+        "splitView": "Chế độ chia đôi (2 cột)",
+        "editorOnly": "Chỉ trình soạn thảo",
+        "previewOnly": "Chỉ xem trước",
+        "zoomIn": "Phóng to",
+        "zoomOut": "Thu nhỏ",
+        "resetZoom": "Đặt lại zoom"
+      }
+    },
+    "tutorials": {
+      "title": "Hướng dẫn nhanh",
+      "description": "Bắt đầu với Bokuchi chỉ trong vài bước:",
+      "step1": {
+        "title": "Bước 1: Tạo tài liệu đầu tiên của bạn",
+        "description": "Bắt đầu viết ngay lập tức",
+        "instructions": [
+          "Nhấn ⌘N (Mac) hoặc Ctrl+N (Windows) để tạo tệp mới",
+          "Gõ tiêu đề đầu tiên của bạn: # Tài liệu đầu tiên của tôi",
+          "Thêm một số nội dung bên dưới tiêu đề",
+          "Xem bản xem trước cập nhật theo thời gian thực ở bên phải"
+        ]
+      },
+      "step2": {
+        "title": "Bước 2: Lưu công việc của bạn",
+        "description": "Giữ tài liệu của bạn an toàn",
+        "instructions": [
+          "Nhấn ⌘S (Mac) hoặc Ctrl+S (Windows) để lưu",
+          "Chọn vị trí và tên tệp cho tài liệu của bạn",
+          "Tệp của bạn sẽ xuất hiện trong Tệp gần đây để truy cập nhanh"
+        ]
+      },
+      "step3": {
+        "title": "Bước 3: Sử dụng biến cho nội dung động",
+        "description": "Làm cho tài liệu của bạn có thể tái sử dụng",
+        "instructions": [
+          "Mở Cài đặt (⌘, hoặc Ctrl+,)",
+          "Chuyển đến tab Biến toàn cục",
+          "Thêm một biến như 'author' với tên của bạn",
+          "Trong tài liệu của bạn, sử dụng {{author}} nơi bạn muốn tên của mình xuất hiện"
+        ]
+      },
+      "step4": {
+        "title": "Bước 4: Điều hướng hiệu quả",
+        "description": "Làm việc với nhiều tệp",
+        "instructions": [
+          "Nhấn ⌘R (Mac) hoặc Ctrl+R (Windows) để mở Tệp gần đây",
+          "Sử dụng Ctrl+Tab để chuyển đổi giữa các tab đang mở",
+          "Sử dụng Ctrl+Shift+Tab để chuyển đến tab trước đó"
+        ]
+      },
+      "tips": {
+        "title": "Mẹo chuyên nghiệp",
+        "tip1": "Sử dụng F1 bất cứ lúc nào để mở hệ thống trợ giúp này",
+        "tip2": "Thử các chủ đề khác nhau trong Cài đặt > Giao diện",
+        "tip3": "Sử dụng chế độ chia đôi để xem Markdown và bản xem trước của bạn cạnh nhau"
+      }
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "appearance": {
+      "title": "Giao diện",
+      "theme": "Chủ đề",
+      "themeDescription": "Chọn chủ đề trực quan cho giao diện ứng dụng.",
+      "themes": {
+        "default": "Mặc định",
+        "dark": "Tối",
+        "pastel": "Pastel",
+        "vivid": "Sống động",
+        "darcula": "Darcula"
+      }
+    },
+    "globalVariables": {
+      "title": "Biến toàn cục",
+      "description": "Biến toàn cục có thể được sử dụng trong tất cả các tệp. Tham chiếu chúng trong các tệp Markdown như {{variableName}}.",
+      "addNewVariable": "Thêm biến mới",
+      "variableName": "Tên biến",
+      "variableNamePlaceholder": "ví dụ: title",
+      "value": "Giá trị",
+      "valuePlaceholder": "ví dụ: Tiêu đề tài liệu",
+      "existingVariables": "Biến hiện có",
+      "noVariables": "Không có biến toàn cục nào được đặt.",
+      "usageExample": "Sử dụng: {{variableName}}",
+      "errors": {
+        "nameRequired": "Vui lòng nhập tên biến.",
+        "noSpaces": "Tên biến không thể chứa khoảng trắng.",
+        "alreadyExists": "Tên biến này đã tồn tại."
+      }
+    },
+    "language": {
+      "title": "Ngôn ngữ",
+      "description": "Chọn ngôn ngữ cho giao diện ứng dụng.",
+      "selectLanguage": "Chọn ngôn ngữ",
+      "english": "English",
+      "japanese": "日本語",
+      "chinese": "中文 (简体)",
+      "chineseTraditional": "中文 (繁體)",
+      "spanish": "Español",
+      "hindi": "हिन्दी",
+      "russian": "Русский",
+      "korean": "한국어",
+      "portuguese": "Português (Brasil)",
+      "arabic": "العربية",
+      "french": "Français",
+      "german": "Deutsch",
+      "indonesian": "Bahasa Indonesia",
+      "vietnamese": "Tiếng Việt"
+    },
+    "tabLayout": {
+      "title": "Bố cục tab",
+      "description": "Chọn cách hiển thị tab trong trình soạn thảo.",
+      "horizontal": "Tab ngang",
+      "vertical": "Tab dọc",
+      "horizontalDescription": "Tab được hiển thị ngang phía trên trình soạn thảo.",
+      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo."
+    },
+    "viewMode": {
+      "title": "Chế độ xem",
+      "description": "Chọn cách hiển thị trình soạn thảo và bản xem trước.",
+      "split": "Chế độ chia đôi",
+      "editor": "Chỉ trình soạn thảo",
+      "preview": "Chỉ xem trước",
+      "splitDescription": "Hiển thị trình soạn thảo và bản xem trước cạnh nhau.",
+      "editorDescription": "Chỉ hiển thị trình soạn thảo để tập trung viết.",
+      "previewDescription": "Chỉ hiển thị bản xem trước để đọc."
+    },
+    "editor": {
+      "title": "Trình soạn thảo",
+      "fontSize": "Kích thước phông chữ",
+      "fontSizeDescription": "Điều chỉnh kích thước phông chữ cho trình soạn thảo.",
+      "showLineNumbers": "Hiển thị số dòng",
+      "showLineNumbersDescription": "Hiển thị số dòng trong trình soạn thảo.",
+      "tabSize": "Kích thước tab",
+      "tabSizeDescription": "Số khoảng trắng cho thụt lề tab.",
+      "wordWrap": "Xuống dòng tự động",
+      "wordWrapDescription": "Xuống dòng tự động cho các dòng dài trong trình soạn thảo.",
+      "minimap": "Bản đồ thu nhỏ",
+      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu."
+    },
+    "interface": {
+      "title": "Giao diện",
+      "zoomLevel": "Mức zoom",
+      "zoomLevelDescription": "Điều chỉnh mức zoom cho giao diện."
+    },
+    "advanced": {
+      "title": "Nâng cao",
+      "autoSave": "Tự động lưu",
+      "autoSaveDescription": "Tự động lưu các thay đổi.",
+      "showWhitespace": "Hiển thị khoảng trắng",
+      "showWhitespaceDescription": "Hiển thị các ký tự khoảng trắng trong trình soạn thảo.",
+      "importExport": "Nhập/Xuất cài đặt",
+      "exportSettings": "Xuất cài đặt",
+      "importSettings": "Nhập cài đặt",
+      "resetSettings": "Đặt lại cài đặt",
+      "resetConfirm": "Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định không? Hành động này không thể hoàn tác.",
+      "exportSuccess": "Xuất cài đặt thành công",
+      "exportError": "Không thể xuất cài đặt",
+      "importSuccess": "Nhập cài đặt thành công",
+      "importError": "Không thể nhập cài đặt",
+      "resetSuccess": "Đặt lại cài đặt thành công",
+      "resetError": "Không thể đặt lại cài đặt"
+    }
+  },
+  "fileOperations": {
+    "fileLoaded": "Tải tệp thành công",
+    "fileLoadFailed": "Không thể tải tệp",
+    "fileSaved": "Lưu tệp thành công",
+    "fileSaveFailed": "Không thể lưu tệp",
+    "fileNotFound": "Không tìm thấy tệp.",
+    "closeTab": "Đóng tab",
+    "noMarkdownFiles": "Vui lòng thả tệp Markdown (.md hoặc .markdown)",
+    "dropMarkdownFile": "Thả tệp Markdown vào đây",
+    "noActiveTab": "Không có tab hoạt động để lưu. Vui lòng mở tệp trước."
+  },
+  "dialogs": {
+    "saveChanges": "Lưu thay đổi trước khi đóng?",
+    "confirmClose": "Bạn có chắc chắn muốn đóng tab này không?",
+    "fileChanged": {
+      "title": "Tệp đã được thay đổi",
+      "message": "Tệp \"{{fileName}}\" đã được sửa đổi từ bên ngoài.",
+      "question": "Bạn có muốn tải lại tệp này không?",
+      "reloadDescription": "• Có: Tải nội dung tệp mới nhất (các chỉnh sửa hiện tại sẽ bị mất)",
+      "keepDescription": "• Không: Giữ các chỉnh sửa hiện tại",
+      "yes": "Có",
+      "no": "Không"
+    }
+  },
+  "statusBar": {
+    "line": "Dòng",
+    "column": "Cột",
+    "characters": "ký tự",
+    "selected": "đã chọn"
+  },
+  "zoom": {
+    "maxLimitReached": "Đã đạt mức zoom tối đa ({{maxZoom}}%)",
+    "minLimitReached": "Đã đạt mức zoom tối thiểu ({{minZoom}}%)"
+  },
+  "tooltips": {
+    "zoomOut": "Thu nhỏ (Cmd + -)",
+    "zoomIn": "Phóng to (Cmd + Shift + +)",
+    "resetZoom": "Đặt lại zoom (Cmd + 0)"
+  }
+}

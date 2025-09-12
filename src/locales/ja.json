@@ -218,8 +218,21 @@
     "language": {
       "title": "言語",
       "description": "アプリケーションのインターフェース言語を選択してください。",
-      "english": "英語",
-      "japanese": "日本語"
+      "selectLanguage": "言語を選択",
+      "english": "English",
+      "japanese": "日本語",
+      "chinese": "中文 (简体)",
+      "chineseTraditional": "中文 (繁體)",
+      "spanish": "Español",
+      "hindi": "हिन्दी",
+      "russian": "Русский",
+      "korean": "한국어",
+      "portuguese": "Português (Brasil)",
+      "arabic": "العربية",
+      "french": "Français",
+      "german": "Deutsch",
+      "indonesian": "Bahasa Indonesia",
+      "vietnamese": "Tiếng Việt"
     },
     "tabLayout": {
       "title": "タブレイアウト",
