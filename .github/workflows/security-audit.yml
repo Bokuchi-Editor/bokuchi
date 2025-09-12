@@ -17,6 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
@@ -28,6 +33,12 @@ jobs:
         with:
           components: rustfmt, clippy
           targets: x86_64-unknown-linux-gnu
+
+      - name: Configure Rust environment
+        run: |
+          echo "CARGO_HOME=$HOME/.cargo" >> $GITHUB_ENV
+          echo "RUSTUP_HOME=$HOME/.rustup" >> $GITHUB_ENV
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Cache Rust dependencies
         uses: actions/cache@v4
@@ -60,12 +71,21 @@ jobs:
       - name: Install Rust dependencies
         run: |
           cd src-tauri
-          # より詳細なエラー情報を取得
-          cargo check --verbose 2>&1 || {
-            echo "cargo check failed, trying to get more details..."
-            cargo --version
-            rustc --version
-            cargo check --message-format=json
+          echo "=== Environment Information ==="
+          cargo --version
+          rustc --version
+          echo "=== Current directory ==="
+          pwd
+          ls -la
+          echo "=== Cargo.toml content ==="
+          cat Cargo.toml
+          echo "=== Running cargo check ==="
+          cargo check --verbose --message-format=json 2>&1 || {
+            echo "=== cargo check failed ==="
+            echo "=== Trying cargo build for more details ==="
+            cargo build --verbose 2>&1 || true
+            echo "=== Checking dependencies ==="
+            cargo tree || true
             exit 1
           }
 
