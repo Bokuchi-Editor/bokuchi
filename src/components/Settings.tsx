@@ -448,6 +448,7 @@ const Settings: React.FC<SettingsProps> = ({
                         <MenuItem value="en">{t('settings.language.english')}</MenuItem>
                         <MenuItem value="ja">{t('settings.language.japanese')}</MenuItem>
                         <MenuItem value="zh-CN">{t('settings.language.chinese')}</MenuItem>
+                        <MenuItem value="zh-Hant">{t('settings.language.chineseTraditional')}</MenuItem>
                         <MenuItem value="es">{t('settings.language.spanish')}</MenuItem>
                         <MenuItem value="hi">{t('settings.language.hindi')}</MenuItem>
                         <MenuItem value="ru">{t('settings.language.russian')}</MenuItem>

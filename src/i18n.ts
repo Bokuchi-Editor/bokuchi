@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import enTranslation from './locales/en.json';
 import jaTranslation from './locales/ja.json';
 import zhCNTranslation from './locales/zh-CN.json';
+import zhHantTranslation from './locales/zh-Hant.json';
 import esTranslation from './locales/es.json';
 import hiTranslation from './locales/hi.json';
 import ruTranslation from './locales/ru.json';
@@ -25,6 +26,9 @@ const resources = {
   },
   'zh-CN': {
     translation: zhCNTranslation,
+  },
+  'zh-Hant': {
+    translation: zhHantTranslation,
   },
   es: {
     translation: esTranslation,
