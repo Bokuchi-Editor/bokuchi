@@ -58,7 +58,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
-    clipboardData: DataTransfer | null;
+    clipboardData: { plainText: string; htmlData: string } | null;
   }>({
     open: false,
     markdownTable: '',
@@ -67,10 +67,51 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
   // グローバルな貼り付けイベントリスナーを設定
   useEffect(() => {
+    let isShiftPressed = false;
+
+    // キーボードイベントリスナーでShiftキーの状態を追跡
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      console.log('Key down:', e.key, 'isShiftPressed:', isShiftPressed);
+      if (e.key === 'Shift') {
+        isShiftPressed = true;
+        console.log('Shift key pressed, isShiftPressed set to true');
+      }
+
+      // Shift + Cmd/Ctrl + V の組み合わせを検出して直接処理
+      if (e.key === 'v' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
+        console.log('Shift + Cmd/Ctrl + V combination detected in keydown');
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation(); // 他のイベントリスナーも停止
+
+        // クリップボードからプレーンテキストを取得して貼り付け
+        try {
+          // TauriのクリップボードAPIを使用
+          const { readText } = await import('@tauri-apps/plugin-clipboard-manager');
+          const clipboardText = await readText();
+          console.log('Clipboard text for Shift+V:', clipboardText.substring(0, 200) + '...');
+          insertPlainText(clipboardText);
+        } catch (error) {
+          console.error('Failed to read clipboard:', error);
+          onSnackbar?.('Failed to paste plain text', 'error');
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      console.log('Key up:', e.key, 'isShiftPressed:', isShiftPressed);
+      if (e.key === 'Shift') {
+        isShiftPressed = false;
+        console.log('Shift key released, isShiftPressed set to false');
+      }
+    };
+
     const handleGlobalPaste = async (e: ClipboardEvent) => {
       console.log('Global paste event caught');
       console.log('editorRef.current:', !!editorRef.current);
       console.log('document.activeElement:', document.activeElement);
+      console.log('e.clipboardData:', e.clipboardData);
+      console.log('e.clipboardData.types:', e.clipboardData?.types);
       console.log('editorRef.current?.getDomNode():', editorRef.current?.getDomNode());
 
       // エディターがフォーカスされているかチェック（Monaco Editorの内部構造に対応）
@@ -81,7 +122,23 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
       if (isEditorFocused) {
         console.log('Editor is focused, processing paste');
+        console.log('isShiftPressed:', isShiftPressed);
 
+        // Shift + Ctrl(Cmd) + V の場合はプレーンテキストとして貼り付け
+        if (isShiftPressed) {
+          console.log('Shift + Ctrl/Cmd + V detected, pasting as plain text');
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (e.clipboardData) {
+            const plainText = e.clipboardData.getData('text/plain');
+            console.log('Plain text from paste event:', plainText.substring(0, 200) + '...');
+            insertPlainText(plainText);
+          }
+          return;
+        }
+
+        // 通常の貼り付け処理
         // デフォルトの貼り付け処理を防止
         e.preventDefault();
         e.stopPropagation();
@@ -103,10 +160,14 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     };
 
     document.addEventListener('paste', handleGlobalPaste, true); // capture phase
+    document.addEventListener('keydown', handleKeyDown, true); // capture phase
+    document.addEventListener('keyup', handleKeyUp, true); // capture phase
 
     // クリーンアップ
     return () => {
       document.removeEventListener('paste', handleGlobalPaste, true);
+      document.removeEventListener('keydown', handleKeyDown, true);
+      document.removeEventListener('keyup', handleKeyUp, true);
     };
   }, [tableConversion]);
 
@@ -142,6 +203,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
 
+
     // 検索・置換のキーボードショートカットを設定
     try {
       // Monaco Editorの正しいキーコードを使用
@@ -153,6 +215,23 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
           setSearchOpen(true);
+        });
+
+        // Shift + Cmd/Ctrl + V のデフォルト動作を完全に無効化
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV, () => {
+          console.log('Monaco Editor Shift+V command disabled');
+          // 何もしない（デフォルトの「Paste as Plain Text」を完全に無効化）
+        });
+
+        // より強力な方法で無効化
+        editor.addAction({
+          id: 'disable-shift-v',
+          label: 'Disable Shift+V',
+          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV],
+          run: () => {
+            console.log('Monaco Editor Shift+V action disabled');
+            // 何もしない
+          }
         });
       }
     } catch (error) {
@@ -258,10 +337,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
       } else if (tableConversion === 'confirm') {
         // 確認ダイアログを表示
+        // クリップボードデータを即座に保存（オブジェクトではなくデータを保存）
+        const savedData = {
+          plainText: plainText,
+          htmlData: htmlData
+        };
         setTableConversionDialog({
           open: true,
           markdownTable,
-          clipboardData: null,
+          clipboardData: savedData,
         });
       }
     } catch (error) {
@@ -340,8 +424,22 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   };
 
   const handleTableConversionCancel = () => {
+    console.log('Table conversion cancelled');
+    console.log('clipboardData:', tableConversionDialog.clipboardData);
+
     // プレーンテキストとして貼り付け
-    onSnackbar?.(t('tableConversion.conversionFailed'), 'warning');
+    // 保存されたデータから直接取得
+    const savedData = tableConversionDialog.clipboardData;
+    const plainText = savedData?.plainText || '';
+    console.log('Plain text from saved data:', plainText.substring(0, 200) + '...');
+
+    if (plainText) {
+      console.log('Inserting plain text');
+      insertPlainText(plainText);
+    } else {
+      console.log('No plain text found, cannot paste');
+    }
+    setTableConversionDialog({ open: false, markdownTable: '', clipboardData: null });
   };
 
   const handleSearch = () => {
