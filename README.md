@@ -247,49 +247,12 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 **Linux Build:**
 
-For Linux builds, it's recommended to use an actual Linux environment:
+Linux builds are automatically handled by CI/CD (GitHub Actions). For local development and contributions:
 
-- **Native Linux**: Ubuntu, Fedora, or other Linux distributions
-- **Docker**: Use a Linux container for building
-- **CI/CD**: GitHub Actions or similar services
+- **CI/CD**: Automated builds via GitHub Actions
+- **Local Development**: Use native Linux environment (Ubuntu, Fedora, etc.)
 
 Cross-compiling from macOS to Linux is complex and not recommended due to dependency issues.
-
-#### Linux Build Commands
-
-**On Linux systems:**
-
-```bash
-# Build Linux version
-./build/build-linux.sh
-```
-
-**Using Docker (from any system):**
-
-```bash
-# Build Linux version using Docker
-./build/build-linux-docker.sh
-```
-
-This script will:
-
-1. Build a Docker image with all necessary dependencies
-2. Run the build process inside the container
-3. Generate the AppImage file
-
-**Manual Docker build:**
-
-```bash
-# Create a Dockerfile for building
-docker run --rm -v "$(pwd)":/workspace -w /workspace ubuntu:22.04 bash -c "
-  apt-get update && apt-get install -y curl build-essential libwebkit2gtk-4.0-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  source ~/.cargo/env
-  rustup target add x86_64-unknown-linux-gnu
-  npm install
-  ./build/build-linux.sh
-"
-```
 
 #### Windows Build Commands (from macOS)
 
