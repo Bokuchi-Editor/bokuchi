@@ -327,5 +327,16 @@
     "zoomOut": "Perkecil (Cmd + -)",
     "zoomIn": "Perbesar (Cmd + Shift + +)",
     "resetZoom": "Reset Zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Konversi Tabel ke Markdown",
+    "dialogMessage": "Tabel terdeteksi di clipboard. Apakah Anda ingin mengonversinya ke format Markdown?",
+    "previewTitle": "Pratinjau:",
+    "dialogNote": "Anda dapat menggunakan Shift + Cmd/Ctrl + V untuk menempel sebagai teks biasa tanpa konversi.",
+    "cancel": "Batal",
+    "convert": "Konversi",
+    "conversionSuccess": "Tabel berhasil dikonversi ke Markdown",
+    "conversionFailed": "Konversi tabel gagal. Ditempel sebagai teks biasa.",
+    "noTableDetected": "Tidak ada tabel yang terdeteksi dalam data clipboard"
   }
 }

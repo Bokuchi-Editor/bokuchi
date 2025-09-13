@@ -327,5 +327,16 @@
     "zoomOut": "ज़ूम आउट (Cmd + -)",
     "zoomIn": "ज़ूम इन (Cmd + Shift + +)",
     "resetZoom": "ज़ूम रीसेट करें (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",
+    "dialogMessage": "क्लिपबोर्ड में एक टेबल का पता चला है। क्या आप इसे Markdown प्रारूप में कन्वर्ट करना चाहते हैं?",
+    "previewTitle": "पूर्वावलोकन:",
+    "dialogNote": "आप कन्वर्ज़न के बिना प्लेन टेक्स्ट के रूप में पेस्ट करने के लिए Shift + Cmd/Ctrl + V का उपयोग कर सकते हैं।",
+    "cancel": "रद्द करें",
+    "convert": "कन्वर्ट करें",
+    "conversionSuccess": "टेबल सफलतापूर्वक Markdown में कन्वर्ट हो गई",
+    "conversionFailed": "टेबल कन्वर्ज़न असफल। प्लेन टेक्स्ट के रूप में पेस्ट किया गया।",
+    "noTableDetected": "क्लिपबोर्ड डेटा में कोई टेबल नहीं मिली"
   }
 }

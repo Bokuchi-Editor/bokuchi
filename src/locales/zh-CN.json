@@ -327,5 +327,16 @@
     "zoomOut": "缩小（Cmd + -）",
     "zoomIn": "放大（Cmd + Shift + +）",
     "resetZoom": "重置缩放（Cmd + 0）"
+  },
+  "tableConversion": {
+    "dialogTitle": "将表格转换为 Markdown",
+    "dialogMessage": "在剪贴板中检测到表格。是否要将其转换为 Markdown 格式？",
+    "previewTitle": "预览：",
+    "dialogNote": "您可以使用 Shift + Cmd/Ctrl + V 以纯文本形式粘贴而不进行转换。",
+    "cancel": "取消",
+    "convert": "转换",
+    "conversionSuccess": "表格已成功转换为 Markdown",
+    "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
+    "noTableDetected": "在剪贴板数据中未检测到表格"
   }
 }

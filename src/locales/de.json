@@ -327,5 +327,16 @@
     "zoomOut": "Verkleinern (Cmd + -)",
     "zoomIn": "Vergrößern (Cmd + Shift + +)",
     "resetZoom": "Zoom zurücksetzen (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Tabelle in Markdown konvertieren",
+    "dialogMessage": "Eine Tabelle wurde in der Zwischenablage erkannt. Möchten Sie sie in das Markdown-Format konvertieren?",
+    "previewTitle": "Vorschau:",
+    "dialogNote": "Sie können Shift + Cmd/Ctrl + V verwenden, um als Klartext ohne Konvertierung einzufügen.",
+    "cancel": "Abbrechen",
+    "convert": "Konvertieren",
+    "conversionSuccess": "Tabelle erfolgreich in Markdown konvertiert",
+    "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
+    "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
   }
 }

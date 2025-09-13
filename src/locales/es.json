@@ -327,5 +327,16 @@
     "zoomOut": "Alejar (Cmd + -)",
     "zoomIn": "Acercar (Cmd + Shift + +)",
     "resetZoom": "Restablecer zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Convertir tabla a Markdown",
+    "dialogMessage": "Se detectó una tabla en el portapapeles. ¿Desea convertirla al formato Markdown?",
+    "previewTitle": "Vista previa:",
+    "dialogNote": "Puede usar Shift + Cmd/Ctrl + V para pegar como texto plano sin conversión.",
+    "cancel": "Cancelar",
+    "convert": "Convertir",
+    "conversionSuccess": "Tabla convertida a Markdown exitosamente",
+    "conversionFailed": "Error al convertir la tabla. Pegado como texto plano.",
+    "noTableDetected": "No se detectó ninguna tabla en los datos del portapapeles"
   }
 }

@@ -327,5 +327,16 @@
     "zoomOut": "Thu nhỏ (Cmd + -)",
     "zoomIn": "Phóng to (Cmd + Shift + +)",
     "resetZoom": "Đặt lại zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Chuyển đổi bảng sang Markdown",
+    "dialogMessage": "Đã phát hiện bảng trong clipboard. Bạn có muốn chuyển đổi nó sang định dạng Markdown không?",
+    "previewTitle": "Xem trước:",
+    "dialogNote": "Bạn có thể sử dụng Shift + Cmd/Ctrl + V để dán dưới dạng văn bản thuần túy mà không cần chuyển đổi.",
+    "cancel": "Hủy",
+    "convert": "Chuyển đổi",
+    "conversionSuccess": "Bảng đã được chuyển đổi sang Markdown thành công",
+    "conversionFailed": "Chuyển đổi bảng thất bại. Đã dán dưới dạng văn bản thuần túy.",
+    "noTableDetected": "Không phát hiện bảng nào trong dữ liệu clipboard"
   }
 }
