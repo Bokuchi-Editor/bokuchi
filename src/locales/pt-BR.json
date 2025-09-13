@@ -327,5 +327,16 @@
     "zoomOut": "Diminuir zoom (Cmd + -)",
     "zoomIn": "Aumentar zoom (Cmd + Shift + +)",
     "resetZoom": "Redefinir zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Converter tabela para Markdown",
+    "dialogMessage": "Uma tabela foi detectada na área de transferência. Deseja convertê-la para o formato Markdown?",
+    "previewTitle": "Visualização:",
+    "dialogNote": "Você pode usar Shift + Cmd/Ctrl + V para colar como texto simples sem conversão.",
+    "cancel": "Cancelar",
+    "convert": "Converter",
+    "conversionSuccess": "Tabela convertida para Markdown com sucesso",
+    "conversionFailed": "Falha na conversão da tabela. Colado como texto simples.",
+    "noTableDetected": "Nenhuma tabela detectada nos dados da área de transferência"
   }
 }

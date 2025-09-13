@@ -20,7 +20,7 @@ export const useAppState = () => {
   const [helpOpen, setHelpOpen] = useState(false);
   const [recentFilesOpen, setRecentFilesOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' | 'warning' }>({
     open: false,
     message: '',
     severity: 'success'

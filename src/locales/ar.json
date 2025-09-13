@@ -327,5 +327,16 @@
     "zoomOut": "تصغير (Cmd + -)",
     "zoomIn": "تكبير (Cmd + Shift + +)",
     "resetZoom": "إعادة تعيين التكبير (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "تحويل الجدول إلى Markdown",
+    "dialogMessage": "تم اكتشاف جدول في الحافظة. هل تريد تحويله إلى تنسيق Markdown؟",
+    "previewTitle": "معاينة:",
+    "dialogNote": "يمكنك استخدام Shift + Cmd/Ctrl + V للصق كنص عادي دون تحويل.",
+    "cancel": "إلغاء",
+    "convert": "تحويل",
+    "conversionSuccess": "تم تحويل الجدول إلى Markdown بنجاح",
+    "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
+    "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
   }
 }

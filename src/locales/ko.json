@@ -327,5 +327,16 @@
     "zoomOut": "축소 (Cmd + -)",
     "zoomIn": "확대 (Cmd + Shift + +)",
     "resetZoom": "확대/축소 재설정 (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "표를 Markdown으로 변환",
+    "dialogMessage": "클립보드에서 표가 감지되었습니다. Markdown 형식으로 변환하시겠습니까?",
+    "previewTitle": "미리보기:",
+    "dialogNote": "Shift + Cmd/Ctrl + V를 사용하여 변환 없이 일반 텍스트로 붙여넣을 수 있습니다.",
+    "cancel": "취소",
+    "convert": "변환",
+    "conversionSuccess": "표가 Markdown으로 성공적으로 변환되었습니다",
+    "conversionFailed": "표 변환에 실패했습니다. 일반 텍스트로 붙여넣었습니다.",
+    "noTableDetected": "클립보드 데이터에서 표가 감지되지 않았습니다"
   }
 }

@@ -327,5 +327,16 @@
     "zoomOut": "Zoom arrière (Cmd + -)",
     "zoomIn": "Zoom avant (Cmd + Shift + +)",
     "resetZoom": "Réinitialiser le zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Convertir le tableau en Markdown",
+    "dialogMessage": "Un tableau a été détecté dans le presse-papiers. Souhaitez-vous le convertir au format Markdown ?",
+    "previewTitle": "Aperçu :",
+    "dialogNote": "Vous pouvez utiliser Shift + Cmd/Ctrl + V pour coller en texte brut sans conversion.",
+    "cancel": "Annuler",
+    "convert": "Convertir",
+    "conversionSuccess": "Tableau converti en Markdown avec succès",
+    "conversionFailed": "Échec de la conversion du tableau. Collé en texte brut.",
+    "noTableDetected": "Aucun tableau détecté dans les données du presse-papiers"
   }
 }

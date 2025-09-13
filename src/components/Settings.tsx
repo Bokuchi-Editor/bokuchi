@@ -666,6 +666,38 @@ const Settings: React.FC<SettingsProps> = ({
                   </CardContent>
                 </Card>
 
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                      {t('settings.advanced.tableConversion')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.tableConversionDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.advanced.tableConversion}
+                        onChange={(e) => handleSettingChange('advanced', 'tableConversion', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="auto"
+                          control={<Radio />}
+                          label={t('settings.advanced.tableConversionAuto')}
+                        />
+                        <FormControlLabel
+                          value="confirm"
+                          control={<Radio />}
+                          label={t('settings.advanced.tableConversionConfirm')}
+                        />
+                        <FormControlLabel
+                          value="off"
+                          control={<Radio />}
+                          label={t('settings.advanced.tableConversionOff')}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
 
                 <Card>
                   <CardContent>

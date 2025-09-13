@@ -276,6 +276,11 @@
       "autoSaveDescription": "Automatically save changes.",
       "showWhitespace": "Show Whitespace",
       "showWhitespaceDescription": "Display whitespace characters in the editor.",
+      "tableConversion": "Table Conversion",
+      "tableConversionDescription": "Convert HTML tables to Markdown when pasting.",
+      "tableConversionAuto": "Auto Convert",
+      "tableConversionConfirm": "Ask Before Converting",
+      "tableConversionOff": "Don't Convert",
       "importExport": "Import/Export Settings",
       "exportSettings": "Export Settings",
       "importSettings": "Import Settings",
@@ -327,5 +332,16 @@
     "zoomOut": "Zoom Out (Cmd + -)",
     "zoomIn": "Zoom In (Cmd + Shift + +)",
     "resetZoom": "Reset Zoom (Cmd + 0)"
+  },
+  "tableConversion": {
+    "dialogTitle": "Convert Table to Markdown",
+    "dialogMessage": "A table was detected in the clipboard. Would you like to convert it to Markdown format?",
+    "previewTitle": "Preview:",
+    "dialogNote": "You can use Shift + Cmd/Ctrl + V to paste as plain text without conversion.",
+    "cancel": "Cancel",
+    "convert": "Convert",
+    "conversionSuccess": "Table converted to Markdown successfully",
+    "conversionFailed": "Failed to convert table. Pasted as plain text.",
+    "noTableDetected": "No table detected in clipboard data"
   }
 }
