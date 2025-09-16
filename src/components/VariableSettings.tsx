@@ -83,7 +83,7 @@ const VariableSettings: React.FC<VariableSettingsProps> = ({ open, onClose }) =>
           setSnackbar({ open: true, message: 'Variables exported successfully', severity: 'success' });
         } else {
           if (result.error === 'Save cancelled by user') {
-            // ユーザーがキャンセルした場合は通知しない
+            // Don't show notification if user cancelled
             return;
           }
           setSnackbar({ open: true, message: result.error || 'Failed to export variables', severity: 'error' });
@@ -110,7 +110,7 @@ const VariableSettings: React.FC<VariableSettingsProps> = ({ open, onClose }) =>
         }
       } else {
         if (result.error === 'File selection cancelled by user') {
-          // ユーザーがキャンセルした場合は通知しない
+          // Don't show notification if user cancelled
           return;
         }
         setSnackbar({ open: true, message: result.error || 'Failed to import variables', severity: 'error' });

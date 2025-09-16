@@ -143,7 +143,7 @@ const Settings: React.FC<SettingsProps> = ({
           });
         } else {
           if (result.error === 'Save cancelled by user') {
-            // ユーザーがキャンセルした場合は通知しない
+            // Don't show notification if user cancelled
             return;
           }
           setSnackbar({
@@ -195,7 +195,7 @@ const Settings: React.FC<SettingsProps> = ({
         }
       } else {
         if (result.error === 'File selection cancelled by user') {
-          // ユーザーがキャンセルした場合は通知しない
+          // Don't show notification if user cancelled
           return;
         }
         setSnackbar({
@@ -237,7 +237,7 @@ const Settings: React.FC<SettingsProps> = ({
         });
       } else {
         if (result.error === 'Export cancelled by user') {
-          // ユーザーがキャンセルした場合は通知しない
+          // Don't show notification if user cancelled
           return;
         }
         setSnackbar({
@@ -262,7 +262,7 @@ const Settings: React.FC<SettingsProps> = ({
 
       if (result.error) {
         if (result.error === 'No file selected') {
-          // ユーザーがキャンセルした場合は通知しない
+          // Don't show notification if user cancelled
           return;
         }
         setSnackbar({
