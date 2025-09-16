@@ -19,7 +19,9 @@
     "reset": "Đặt lại",
     "splitView": "Chế độ chia đôi",
     "editorOnly": "Chỉ trình soạn thảo",
-    "previewOnly": "Chỉ xem trước"
+    "previewOnly": "Chỉ xem trước",
+    "import": "Nhập",
+    "export": "Xuất"
   },
   "recentFiles": {
     "title": "Tệp gần đây",
@@ -209,6 +211,10 @@
       "existingVariables": "Biến hiện có",
       "noVariables": "Không có biến toàn cục nào được đặt.",
       "usageExample": "Sử dụng: {{variableName}}",
+      "exportSuccess": "Xuất biến thành công",
+      "exportError": "Lỗi khi xuất biến",
+      "importSuccess": "Nhập biến thành công",
+      "importError": "Lỗi khi nhập biến",
       "errors": {
         "nameRequired": "Vui lòng nhập tên biến.",
         "noSpaces": "Tên biến không thể chứa khoảng trắng.",

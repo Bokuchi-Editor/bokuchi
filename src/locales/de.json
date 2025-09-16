@@ -19,7 +19,9 @@
     "reset": "Zurücksetzen",
     "splitView": "Geteilte Ansicht",
     "editorOnly": "Nur Editor",
-    "previewOnly": "Nur Vorschau"
+    "previewOnly": "Nur Vorschau",
+    "import": "Importieren",
+    "export": "Exportieren"
   },
   "recentFiles": {
     "title": "Kürzliche Dateien",
@@ -209,6 +211,10 @@
       "existingVariables": "Vorhandene Variablen",
       "noVariables": "Keine globalen Variablen festgelegt.",
       "usageExample": "Verwendung: {{variableName}}",
+      "exportSuccess": "Variablen erfolgreich exportiert",
+      "exportError": "Fehler beim Exportieren der Variablen",
+      "importSuccess": "Variablen erfolgreich importiert",
+      "importError": "Fehler beim Importieren der Variablen",
       "errors": {
         "nameRequired": "Bitte geben Sie einen Variablennamen ein.",
         "noSpaces": "Variablennamen können keine Leerzeichen enthalten.",

@@ -19,7 +19,9 @@
     "reset": "रीसेट करें",
     "splitView": "विभाजित दृश्य",
     "editorOnly": "केवल संपादक",
-    "previewOnly": "केवल पूर्वावलोकन"
+    "previewOnly": "केवल पूर्वावलोकन",
+    "import": "आयात करें",
+    "export": "निर्यात करें"
   },
   "recentFiles": {
     "title": "हाल की फ़ाइलें",
@@ -209,6 +211,10 @@
       "existingVariables": "मौजूदा वेरिएबल",
       "noVariables": "कोई ग्लोबल वेरिएबल सेट नहीं हैं।",
       "usageExample": "उपयोग: {{variableName}}",
+      "exportSuccess": "चर सफलतापूर्वक निर्यात किए गए",
+      "exportError": "चर निर्यात करने में विफल",
+      "importSuccess": "चर सफलतापूर्वक आयात किए गए",
+      "importError": "चर आयात करने में विफल",
       "errors": {
         "nameRequired": "कृपया एक वेरिएबल नाम दर्ज करें।",
         "noSpaces": "वेरिएबल नामों में रिक्त स्थान नहीं हो सकते।",

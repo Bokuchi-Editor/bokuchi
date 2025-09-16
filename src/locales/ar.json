@@ -19,7 +19,9 @@
     "reset": "إعادة تعيين",
     "splitView": "عرض مقسم",
     "editorOnly": "المحرر فقط",
-    "previewOnly": "المعاينة فقط"
+    "previewOnly": "المعاينة فقط",
+    "import": "استيراد",
+    "export": "تصدير"
   },
   "recentFiles": {
     "title": "الملفات الأخيرة",
@@ -209,6 +211,10 @@
       "existingVariables": "المتغيرات الموجودة",
       "noVariables": "لم يتم تعيين متغيرات عامة.",
       "usageExample": "الاستخدام: {{variableName}}",
+      "exportSuccess": "تم تصدير المتغيرات بنجاح",
+      "exportError": "فشل في تصدير المتغيرات",
+      "importSuccess": "تم استيراد المتغيرات بنجاح",
+      "importError": "فشل في استيراد المتغيرات",
       "errors": {
         "nameRequired": "يرجى إدخال اسم المتغير.",
         "noSpaces": "لا يمكن أن تحتوي أسماء المتغيرات على مسافات.",

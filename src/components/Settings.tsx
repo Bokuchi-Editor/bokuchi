@@ -28,6 +28,7 @@ import {
   DialogActions,
   Snackbar,
 } from '@mui/material';
+import { Upload, Download } from '@mui/icons-material';
 
 import {
   Close,
@@ -37,8 +38,6 @@ import {
   Edit,
   Computer,
   Tune,
-  Download,
-  Upload,
   Refresh
 } from '@mui/icons-material';
 import { themes } from '../themes';
@@ -48,6 +47,7 @@ import { useTranslation } from 'react-i18next';
 import { AppSettings } from '../types/settings';
 import { storeApi } from '../api/storeApi';
 import { desktopApi } from '../api/desktopApi';
+import { variableApi } from '../api/variableApi';
 
 interface SettingsProps {
   open: boolean;
@@ -128,6 +128,90 @@ const Settings: React.FC<SettingsProps> = ({
       ...settings,
       globalVariables: updatedVariables,
     });
+  };
+
+  const handleExportVariables = async () => {
+    try {
+      const yamlContent = await variableApi.exportVariablesToYAML();
+      if (yamlContent) {
+        const result = await desktopApi.saveYamlFile(yamlContent, 'variables.yaml');
+        if (result.success) {
+          setSnackbar({
+            open: true,
+            message: t('settings.globalVariables.exportSuccess'),
+            severity: 'success'
+          });
+        } else {
+          if (result.error === 'Save cancelled by user') {
+            // ユーザーがキャンセルした場合は通知しない
+            return;
+          }
+          setSnackbar({
+            open: true,
+            message: result.error || t('settings.globalVariables.exportError'),
+            severity: 'error'
+          });
+        }
+      } else {
+        setSnackbar({
+          open: true,
+          message: t('settings.globalVariables.exportError'),
+          severity: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Failed to export variables:', error);
+      setSnackbar({
+        open: true,
+        message: t('settings.globalVariables.exportError'),
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleImportVariables = async () => {
+    try {
+      const result = await desktopApi.openYamlFile();
+      if (result.content) {
+        const importResult = await variableApi.loadVariablesFromYAML(result.content);
+        if (importResult.success) {
+          // グローバル変数を再読み込み
+          const updatedVariables = await variableApi.getGlobalVariables();
+          onSettingsChange({
+            ...settings,
+            globalVariables: updatedVariables,
+          });
+          setSnackbar({
+            open: true,
+            message: t('settings.globalVariables.importSuccess'),
+            severity: 'success'
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: importResult.error || t('settings.globalVariables.importError'),
+            severity: 'error'
+          });
+        }
+      } else {
+        if (result.error === 'File selection cancelled by user') {
+          // ユーザーがキャンセルした場合は通知しない
+          return;
+        }
+        setSnackbar({
+          open: true,
+          message: result.error || t('settings.globalVariables.importError'),
+          severity: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Failed to import variables:', error);
+      setSnackbar({
+        open: true,
+        message: t('settings.globalVariables.importError'),
+        severity: 'error'
+      });
+    }
   };
 
   const handleSettingChange = (category: keyof AppSettings, key: string, value: string | number | boolean) => {
@@ -583,9 +667,28 @@ const Settings: React.FC<SettingsProps> = ({
 
                 <Card>
                   <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.globalVariables.existingVariables')}
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6">
+                        {t('settings.globalVariables.existingVariables')}
+                      </Typography>
+                      <Box>
+                        <Button
+                          startIcon={<Upload />}
+                          onClick={handleImportVariables}
+                          sx={{ mr: 1 }}
+                          size="small"
+                        >
+                          {t('buttons.import')}
+                        </Button>
+                        <Button
+                          startIcon={<Download />}
+                          onClick={handleExportVariables}
+                          size="small"
+                        >
+                          {t('buttons.export')}
+                        </Button>
+                      </Box>
+                    </Box>
                     {Object.keys(settings.globalVariables).length === 0 ? (
                       <Typography variant="body2" color="text.secondary">
                         {t('settings.globalVariables.noVariables')}
@@ -611,7 +714,7 @@ const Settings: React.FC<SettingsProps> = ({
                                 color="error"
                                 size="small"
                                 onClick={() => handleRemoveVariable(key)}
-                                sx={{ minWidth: 'auto', px: 2 }}
+                                sx={{ minWidth: 80, px: 2, flexShrink: 0 }}
                               >
                                 {t('buttons.delete')}
                               </Button>

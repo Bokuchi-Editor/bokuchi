@@ -19,7 +19,9 @@
     "reset": "Reset",
     "splitView": "Tampilan Terbagi",
     "editorOnly": "Editor Saja",
-    "previewOnly": "Pratinjau Saja"
+    "previewOnly": "Pratinjau Saja",
+    "import": "Impor",
+    "export": "Ekspor"
   },
   "recentFiles": {
     "title": "File Terbaru",
@@ -209,6 +211,10 @@
       "existingVariables": "Variabel yang Ada",
       "noVariables": "Tidak ada variabel global yang diatur.",
       "usageExample": "Penggunaan: {{variableName}}",
+      "exportSuccess": "Variabel berhasil diekspor",
+      "exportError": "Gagal mengekspor variabel",
+      "importSuccess": "Variabel berhasil diimpor",
+      "importError": "Gagal mengimpor variabel",
       "errors": {
         "nameRequired": "Silakan masukkan nama variabel.",
         "noSpaces": "Nama variabel tidak boleh mengandung spasi.",

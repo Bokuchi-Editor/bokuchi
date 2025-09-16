@@ -354,5 +354,80 @@ export const desktopApi = {
       const errorMessage = error instanceof Error ? error.message : 'Failed to import settings file';
       return { content: '', error: errorMessage };
     }
+  },
+
+  // YAMLファイルを保存（ダイアログ付き）
+  async saveYamlFile(content: string, defaultFileName?: string): Promise<SaveResponse> {
+    try {
+      console.log('Opening YAML save dialog...');
+      console.log('Content length:', content.length);
+      console.log('Default filename:', defaultFileName);
+
+      const selected = await save({
+        defaultPath: defaultFileName || 'variables.yaml',
+        filters: [
+          {
+            name: 'YAML Files',
+            extensions: ['yaml', 'yml']
+          },
+          {
+            name: 'All Files',
+            extensions: ['*']
+          }
+        ]
+      });
+
+      console.log('YAML save dialog result:', selected);
+
+      if (!selected) {
+        console.log('YAML save dialog cancelled by user');
+        return { success: false, error: 'Save cancelled by user' };
+      }
+
+      console.log('Saving YAML file to:', selected);
+      await writeTextFile(selected, content);
+      console.log('YAML file saved successfully');
+      return { success: true, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error saving YAML file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save YAML file';
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  // YAMLファイルを開く（ダイアログ付き）
+  async openYamlFile(): Promise<FileResponse> {
+    try {
+      console.log('Opening YAML file dialog...');
+
+      const selected = await open({
+        filters: [
+          {
+            name: 'YAML Files',
+            extensions: ['yaml', 'yml']
+          },
+          {
+            name: 'All Files',
+            extensions: ['*']
+          }
+        ]
+      });
+
+      console.log('YAML file dialog result:', selected);
+
+      if (!selected) {
+        console.log('YAML file dialog cancelled by user');
+        return { content: '', error: 'File selection cancelled by user' };
+      }
+
+      console.log('Reading YAML file:', selected);
+      const content = await readTextFile(selected);
+      console.log('YAML file content length:', content.length);
+      return { content, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error opening YAML file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to open YAML file';
+      return { content: '', error: errorMessage };
+    }
   }
 };

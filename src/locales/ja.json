@@ -19,7 +19,9 @@
     "reset": "リセット",
     "splitView": "分割表示",
     "editorOnly": "エディターのみ",
-    "previewOnly": "プレビューのみ"
+    "previewOnly": "プレビューのみ",
+    "import": "インポート",
+    "export": "エクスポート"
   },
   "recentFiles": {
     "title": "最近のファイル",
@@ -209,6 +211,10 @@
       "existingVariables": "既存の変数",
       "noVariables": "グローバル変数が設定されていません。",
       "usageExample": "使用例: {{変数名}}",
+      "exportSuccess": "変数のエクスポートが完了しました",
+      "exportError": "変数のエクスポートに失敗しました",
+      "importSuccess": "変数のインポートが完了しました",
+      "importError": "変数のインポートに失敗しました",
       "errors": {
         "nameRequired": "変数名を入力してください",
         "noSpaces": "変数名にスペースは使用できません",
