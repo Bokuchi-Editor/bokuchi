@@ -19,7 +19,9 @@
     "reset": "Restablecer",
     "splitView": "Vista dividida",
     "editorOnly": "Solo editor",
-    "previewOnly": "Solo vista previa"
+    "previewOnly": "Solo vista previa",
+    "import": "Importar",
+    "export": "Exportar"
   },
   "recentFiles": {
     "title": "Archivos recientes",
@@ -209,6 +211,10 @@
       "existingVariables": "Variables existentes",
       "noVariables": "No hay variables globales configuradas.",
       "usageExample": "Uso: {{variableName}}",
+      "exportSuccess": "Variables exportadas exitosamente",
+      "exportError": "Error al exportar variables",
+      "importSuccess": "Variables importadas exitosamente",
+      "importError": "Error al importar variables",
       "errors": {
         "nameRequired": "Por favor ingresa un nombre de variable.",
         "noSpaces": "Los nombres de variables no pueden contener espacios.",

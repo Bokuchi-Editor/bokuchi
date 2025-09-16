@@ -19,7 +19,9 @@
     "reset": "재설정",
     "splitView": "분할 보기",
     "editorOnly": "편집기만",
-    "previewOnly": "미리보기만"
+    "previewOnly": "미리보기만",
+    "import": "가져오기",
+    "export": "내보내기"
   },
   "recentFiles": {
     "title": "최근 파일",
@@ -209,6 +211,10 @@
       "existingVariables": "기존 변수",
       "noVariables": "설정된 전역 변수가 없습니다.",
       "usageExample": "사용법: {{variableName}}",
+      "exportSuccess": "변수가 성공적으로 내보내졌습니다",
+      "exportError": "변수 내보내기 실패",
+      "importSuccess": "변수가 성공적으로 가져와졌습니다",
+      "importError": "변수 가져오기 실패",
       "errors": {
         "nameRequired": "변수 이름을 입력하세요.",
         "noSpaces": "변수 이름에는 공백을 포함할 수 없습니다.",

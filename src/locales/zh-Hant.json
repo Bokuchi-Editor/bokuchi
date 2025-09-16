@@ -19,7 +19,9 @@
     "reset": "重設",
     "splitView": "分割檢視",
     "editorOnly": "僅編輯器",
-    "previewOnly": "僅預覽"
+    "previewOnly": "僅預覽",
+    "import": "匯入",
+    "export": "匯出"
   },
   "recentFiles": {
     "title": "最近檔案",
@@ -209,6 +211,10 @@
       "existingVariables": "現有變數",
       "noVariables": "未設定全域變數。",
       "usageExample": "用法：{{variableName}}",
+      "exportSuccess": "變數匯出成功",
+      "exportError": "變數匯出失敗",
+      "importSuccess": "變數匯入成功",
+      "importError": "變數匯入失敗",
       "errors": {
         "nameRequired": "請輸入變數名稱。",
         "noSpaces": "變數名稱不能包含空格。",

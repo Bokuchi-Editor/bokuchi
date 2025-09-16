@@ -19,7 +19,9 @@
     "reset": "重置",
     "splitView": "分屏视图",
     "editorOnly": "仅编辑器",
-    "previewOnly": "仅预览"
+    "previewOnly": "仅预览",
+    "import": "导入",
+    "export": "导出"
   },
   "recentFiles": {
     "title": "最近文件",
@@ -209,6 +211,10 @@
       "existingVariables": "现有变量",
       "noVariables": "未设置全局变量。",
       "usageExample": "用法：{{variableName}}",
+      "exportSuccess": "变量导出成功",
+      "exportError": "变量导出失败",
+      "importSuccess": "变量导入成功",
+      "importError": "变量导入失败",
       "errors": {
         "nameRequired": "请输入变量名。",
         "noSpaces": "变量名不能包含空格。",

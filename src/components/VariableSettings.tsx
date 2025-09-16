@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { Delete, Add, Download, Upload } from '@mui/icons-material';
 import { variableApi } from '../api/variableApi';
+import { desktopApi } from '../api/desktopApi';
 
 interface VariableSettingsProps {
   open: boolean;
@@ -74,45 +75,50 @@ const VariableSettings: React.FC<VariableSettingsProps> = ({ open, onClose }) =>
   };
 
   const handleExportVariables = async () => {
-    const yamlContent = await variableApi.exportVariablesToYAML();
-    if (yamlContent) {
-      const blob = new Blob([yamlContent], { type: 'text/yaml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'variables.yaml';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      setSnackbar({ open: true, message: 'Variables exported successfully', severity: 'success' });
-    } else {
+    try {
+      const yamlContent = await variableApi.exportVariablesToYAML();
+      if (yamlContent) {
+        const result = await desktopApi.saveYamlFile(yamlContent, 'variables.yaml');
+        if (result.success) {
+          setSnackbar({ open: true, message: 'Variables exported successfully', severity: 'success' });
+        } else {
+          if (result.error === 'Save cancelled by user') {
+            // Don't show notification if user cancelled
+            return;
+          }
+          setSnackbar({ open: true, message: result.error || 'Failed to export variables', severity: 'error' });
+        }
+      } else {
+        setSnackbar({ open: true, message: 'Failed to export variables', severity: 'error' });
+      }
+    } catch (error) {
+      console.error('Failed to export variables:', error);
       setSnackbar({ open: true, message: 'Failed to export variables', severity: 'error' });
     }
   };
 
-  const handleImportVariables = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.yaml,.yml';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const content = e.target?.result as string;
-          const result = await variableApi.loadVariablesFromYAML(content);
-          if (result.success) {
-            await loadVariables();
-            setSnackbar({ open: true, message: 'Variables imported successfully', severity: 'success' });
-          } else {
-            setSnackbar({ open: true, message: result.error || 'Failed to import variables', severity: 'error' });
-          }
-        };
-        reader.readAsText(file);
+  const handleImportVariables = async () => {
+    try {
+      const result = await desktopApi.openYamlFile();
+      if (result.content) {
+        const importResult = await variableApi.loadVariablesFromYAML(result.content);
+        if (importResult.success) {
+          await loadVariables();
+          setSnackbar({ open: true, message: 'Variables imported successfully', severity: 'success' });
+        } else {
+          setSnackbar({ open: true, message: importResult.error || 'Failed to import variables', severity: 'error' });
+        }
+      } else {
+        if (result.error === 'File selection cancelled by user') {
+          // Don't show notification if user cancelled
+          return;
+        }
+        setSnackbar({ open: true, message: result.error || 'Failed to import variables', severity: 'error' });
       }
-    };
-    input.click();
+    } catch (error) {
+      console.error('Failed to import variables:', error);
+      setSnackbar({ open: true, message: 'Failed to import variables', severity: 'error' });
+    }
   };
 
   const handleCloseSnackbar = () => {
