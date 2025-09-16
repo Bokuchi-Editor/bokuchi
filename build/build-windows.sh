@@ -92,6 +92,15 @@ npm run build
 echo "🦀 Rustアプリケーションをビルド中..."
 npm run tauri:build -- --target x86_64-pc-windows-gnu
 
+# セットアップファイルの生成を確認
+SETUP_FILE="src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Bokuchi_0.4.0_x64-setup.exe"
+if [ -f "$SETUP_FILE" ]; then
+    echo "✅ セットアップファイルが正常に生成されました"
+else
+    echo "❌ セットアップファイルの生成に失敗しました"
+    exit 1
+fi
+
 echo "✅ Windows版ビルドが完了しました！"
 echo ""
 echo "📁 ビルド成果物:"
