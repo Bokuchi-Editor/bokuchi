@@ -21,10 +21,9 @@ export interface FileHashInfo {
 }
 
 export const desktopApi = {
-  // ファイルを開く
+  // Open file
   async openFile(): Promise<FileResponse> {
     try {
-      console.log('Opening file dialog...');
       const selected = await open({
         multiple: false,
         filters: [
@@ -46,9 +45,7 @@ export const desktopApi = {
         return { content: '', error: 'No file selected' };
       }
 
-      console.log('Reading file:', selected);
       const content = await readTextFile(selected);
-      console.log('File content length:', content.length);
       return { content, filePath: selected };
     } catch (error: unknown) {
       console.error('Error opening file:', error);
@@ -57,16 +54,13 @@ export const desktopApi = {
     }
   },
 
-  // ファイルを保存（常にダイアログを開く）
+  // Save file (always open dialog)
   async saveFile(content: string, currentPath?: string): Promise<SaveResponse> {
     try {
-      console.log('Opening save dialog...');
-      console.log('Content length:', content.length);
-      console.log('Current path:', currentPath);
 
-      // 常にダイアログを開く
+      // Always open dialog
       const selected = await save({
-        defaultPath: currentPath, // 既存のパスがある場合はデフォルトとして設定
+        defaultPath: currentPath, // Set existing path as default if available
         filters: [
           {
             name: 'Markdown Files',
@@ -90,12 +84,7 @@ export const desktopApi = {
         return { success: false, error: 'Save cancelled by user' };
       }
 
-      console.log('Saving file to:', selected);
-      console.log('File path type:', typeof selected);
-      console.log('File path length:', selected.length);
-
       await writeTextFile(selected, content);
-      console.log('File saved successfully');
       return { success: true, filePath: selected };
     } catch (error: unknown) {
       console.error('Error saving file:', error);
@@ -109,11 +98,9 @@ export const desktopApi = {
     }
   },
 
-  // ファイルを別名で保存
+  // Save file as
   async saveFileAs(content: string): Promise<SaveResponse> {
     try {
-      console.log('Opening save as dialog...');
-      console.log('Content length:', content.length);
 
       const selected = await save({
         filters: [
@@ -139,12 +126,7 @@ export const desktopApi = {
         return { success: false, error: 'No save location selected' };
       }
 
-      console.log('Saving file as to:', selected);
-      console.log('File path type:', typeof selected);
-      console.log('File path length:', selected.length);
-
       await writeTextFile(selected, content);
-      console.log('File saved as successfully');
       return { success: true, filePath: selected };
     } catch (error: unknown) {
       console.error('Error saving file as:', error);
@@ -158,7 +140,7 @@ export const desktopApi = {
     }
   },
 
-  // ファイルパスからファイルを読み込み
+  // Read file from file path
   async readFileByPath(filePath: string): Promise<FileResponse> {
     try {
       const content = await readTextFile(filePath);
@@ -170,7 +152,7 @@ export const desktopApi = {
     }
   },
 
-  // ファイルパスからファイルを読み込み（復元用）
+  // Read file from file path (for restoration)
   async readFileFromPath(filePath: string): Promise<string> {
     try {
       const content = await readTextFile(filePath);
@@ -181,7 +163,7 @@ export const desktopApi = {
     }
   },
 
-  // ファイルパスに保存
+  // Save to file path
   async saveFileToPath(filePath: string, content: string): Promise<SaveResponse> {
     try {
       await writeTextFile(filePath, content);
@@ -193,7 +175,7 @@ export const desktopApi = {
     }
   },
 
-  // 複数ファイルを開く
+  // Open multiple files
   async openMultipleFiles(): Promise<FileResponse[]> {
     try {
       const selected = await open({
@@ -233,7 +215,7 @@ export const desktopApi = {
     }
   },
 
-  // ファイルハッシュを取得
+  // Get file hash
   async getFileHash(filePath: string): Promise<FileHashInfo> {
     try {
       const hashInfo = await invoke<FileHashInfo>('get_file_hash', { path: filePath });
@@ -244,11 +226,9 @@ export const desktopApi = {
     }
   },
 
-  // HTMLファイルを保存
+  // Save HTML file
   async saveHtmlFile(htmlContent: string): Promise<SaveResponse> {
     try {
-      console.log('Opening HTML save dialog...');
-      console.log('HTML content length:', htmlContent.length);
 
       const selected = await save({
         defaultPath: 'markdown-export.html',
@@ -271,9 +251,7 @@ export const desktopApi = {
         return { success: false, error: 'Save cancelled by user' };
       }
 
-      console.log('Saving HTML file to:', selected);
       await writeTextFile(selected, htmlContent);
-      console.log('HTML file saved successfully');
       return { success: true, filePath: selected };
     } catch (error: unknown) {
       console.error('Error saving HTML file:', error);
@@ -282,10 +260,9 @@ export const desktopApi = {
     }
   },
 
-  // 設定ファイルをエクスポート
+  // Export settings file
   async exportSettingsFile(settingsJson: string): Promise<SaveResponse> {
     try {
-      console.log('Opening settings export dialog...');
 
       const selected = await save({
         defaultPath: 'bokuchi-settings.json',
@@ -308,9 +285,7 @@ export const desktopApi = {
         return { success: false, error: 'Export cancelled by user' };
       }
 
-      console.log('Saving settings file to:', selected);
       await writeTextFile(selected, settingsJson);
-      console.log('Settings file saved successfully');
       return { success: true, filePath: selected };
     } catch (error: unknown) {
       console.error('Error saving settings file:', error);
@@ -319,10 +294,9 @@ export const desktopApi = {
     }
   },
 
-  // 設定ファイルをインポート
+  // Import settings file
   async importSettingsFile(): Promise<FileResponse> {
     try {
-      console.log('Opening settings import dialog...');
 
       const selected = await open({
         multiple: false,
@@ -345,9 +319,7 @@ export const desktopApi = {
         return { content: '', error: 'No file selected' };
       }
 
-      console.log('Reading settings file:', selected);
       const content = await readTextFile(selected);
-      console.log('Settings file content length:', content.length);
       return { content, filePath: selected };
     } catch (error: unknown) {
       console.error('Error importing settings file:', error);
@@ -356,12 +328,9 @@ export const desktopApi = {
     }
   },
 
-  // YAMLファイルを保存（ダイアログ付き）
+  // Save YAML file (with dialog)
   async saveYamlFile(content: string, defaultFileName?: string): Promise<SaveResponse> {
     try {
-      console.log('Opening YAML save dialog...');
-      console.log('Content length:', content.length);
-      console.log('Default filename:', defaultFileName);
 
       const selected = await save({
         defaultPath: defaultFileName || 'variables.yaml',
@@ -384,9 +353,7 @@ export const desktopApi = {
         return { success: false, error: 'Save cancelled by user' };
       }
 
-      console.log('Saving YAML file to:', selected);
       await writeTextFile(selected, content);
-      console.log('YAML file saved successfully');
       return { success: true, filePath: selected };
     } catch (error: unknown) {
       console.error('Error saving YAML file:', error);
@@ -395,10 +362,9 @@ export const desktopApi = {
     }
   },
 
-  // YAMLファイルを開く（ダイアログ付き）
+  // Open YAML file (with dialog)
   async openYamlFile(): Promise<FileResponse> {
     try {
-      console.log('Opening YAML file dialog...');
 
       const selected = await open({
         filters: [
@@ -420,9 +386,7 @@ export const desktopApi = {
         return { content: '', error: 'File selection cancelled by user' };
       }
 
-      console.log('Reading YAML file:', selected);
       const content = await readTextFile(selected);
-      console.log('YAML file content length:', content.length);
       return { content, filePath: selected };
     } catch (error: unknown) {
       console.error('Error opening YAML file:', error);
