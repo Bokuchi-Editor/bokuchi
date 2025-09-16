@@ -131,6 +131,80 @@ which llvm-rc
    ./build/build-windows.sh
    ```
 
+### 4. NSISテンプレートとアイコンの問題
+
+**症状:**
+```
+Error while loading icon from "..\..\..\..\..\icons\bokuchi.ico": can't open file
+Error in script installer.nsi on line X -- aborting creation process
+failed to bundle project: `No such file or directory (os error 2)`
+```
+
+**原因:**
+- NSISテンプレートのアイコンファイルパスが間違っている
+- TauriのNSIS設定とカスタムテンプレートが競合している
+- ファイルパスがNSIS実行ディレクトリからの相対パスになっていない
+
+**解決方法:**
+
+1. **NSISテンプレートのパスを修正:**
+   - アイコンはNSIS実行ディレクトリからの相対パスを使用
+   - Windowsパス形式で `..\..\..\..\..\icons\bokuchi.ico` を使用
+   - 参照前にファイルの存在を確認
+
+2. **TauriのNSIS設定の競合を回避:**
+   - 問題が発生する場合は `tauri.conf.json` からカスタムNSIS設定を削除
+   - TauriにNSIS生成を任せ、必要に応じて手動でファイル移動
+
+3. **ファイルパスの確認:**
+   ```bash
+   # NSIS実行ディレクトリを確認
+   cd src-tauri/target/x86_64-pc-windows-gnu/release/nsis/x64
+   ls -la ../../../../../icons/
+   # bokuchi.icoとその他のアイコンファイルが表示されるはず
+   ```
+
+4. **相対パスが失敗する場合は絶対パスを使用:**
+   ```nsis
+   !define MUI_ICON "C:\full\path\to\icons\bokuchi.ico"
+   ```
+
+### 5. Tauri NSISバンドルプロセスの失敗
+
+**症状:**
+```
+failed to bundle project: `No such file or directory (os error 2)`
+Error failed to bundle project: `No such file or directory (os error 2)`
+```
+
+**原因:**
+- Tauriが生成されたNSISインストーラーを見つけられない、または移動できない
+- 出力ディレクトリ構造の不一致
+- NSISが予期しない場所にファイルを生成している
+
+**解決方法:**
+
+1. **TauriにNSIS生成を任せる:**
+   - `tauri.conf.json` からカスタムNSIS設定を削除
+   - TauriのデフォルトNSISプロセスを使用
+
+2. **必要に応じて手動でファイル処理:**
+   ```bash
+   # Tauriがインストーラーを生成する場所を確認
+   find src-tauri/target -name "*.exe" -type f
+
+   # 必要に応じて期待される場所に移動
+   mkdir -p src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis
+   mv src-tauri/target/x86_64-pc-windows-gnu/release/nsis/x64/Bokuchi_*.exe \
+      src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
+   ```
+
+3. **最終出力の確認:**
+   ```bash
+   ls -la src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
+   # Bokuchi_0.4.0_x64-setup.exe が含まれているはず
+   ```
+
 ## 推奨される環境設定
 
 ### 1. Rustの管理方法
@@ -210,14 +284,42 @@ rustup target list --installed | grep x86_64-pc-windows-gnu
 - [ ] llvm-rcがPATHに含まれているか
 - [ ] 必要なツール（mingw-w64, nsis）がインストールされているか
 - [ ] Cargoのキャッシュがクリアされているか（必要に応じて）
+- [ ] NSISテンプレートのファイルパスがNSIS実行ディレクトリからの相対パスになっているか
+- [ ] アイコンファイルがNSIS実行ディレクトリからアクセス可能か
+- [ ] TauriのNSIS設定がカスタムテンプレートと競合していないか
+- [ ] 生成されたインストーラーが期待される場所（`bundle/nsis/`）にあるか
+
+## 重要な教訓
+
+### NSISテンプレート開発
+1. **ファイルパス**: 常にNSIS実行ディレクトリ（`nsis/x64/`）からの相対パスを使用
+2. **アイコン形式**: `MUI_ICON`には`.ico`ファイルを使用、サポートされていない形式は避ける
+3. **パス検証**: テンプレートで参照する前にファイルパスをテスト
+4. **Tauri統合**: `tauri.conf.json`のカスタムNSIS設定との競合を避ける
+
+### ビルドプロセスの最適化
+1. **TauriにNSIS処理を任せる**: 競合を避けるためカスタムNSIS設定を削除
+2. **ファイル移動**: 生成されたファイルを期待される場所に移動するビルドスクリプトを使用
+3. **エラーハンドリング**: 操作前に常にファイルの存在を確認
+4. **デバッグ**: 正確な失敗ポイントを特定するため詳細ログを使用
+
+### 避けるべき一般的な落とし穴
+- ❌ TauriのNSIS処理とカスタムテンプレートの混在
+- ❌ NSISテンプレートでの絶対パス使用
+- ❌ 検証なしでのファイル場所の仮定
+- ❌ ビルドプロセスの複雑化
+- ✅ シンプルに保つ: Tauriに生成させ、必要に応じて手動移動
+- ✅ 各ステップを個別にテスト
+- ✅ ファイルパスと存在を確認
 
 ## 関連ファイル
 
 - `build/build-windows.sh` - Windows版ビルドスクリプト
 - `src-tauri/Cargo.toml` - Rustプロジェクト設定
 - `src-tauri/tauri.conf.json` - Tauri設定ファイル
+- `src-tauri/templates/installer.nsi` - NSISインストーラーテンプレート
 
 ---
 
-**最終更新:** 2025年1月
-**対象バージョン:** Bokuchi 0.3.1
+**最終更新:** 2024年9月16日
+**対象バージョン:** Bokuchi 0.4.0

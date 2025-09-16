@@ -173,6 +173,82 @@ The WebView2 runtime is required for Tauri applications on Windows.
    # Should include WebView2Loader.dll
    ```
 
+### 6. NSIS Template and Icon Issues
+
+**Symptoms:**
+
+```
+Error while loading icon from "..\..\..\..\..\icons\bokuchi.ico": can't open file
+Error in script installer.nsi on line X -- aborting creation process
+failed to bundle project: `No such file or directory (os error 2)`
+```
+
+**Cause:**
+- NSIS template has incorrect file paths for icons
+- Tauri's NSIS configuration conflicts with custom templates
+- File paths are relative to NSIS execution directory, not project root
+
+**Solution:**
+
+1. **Fix NSIS template paths:**
+   - Icons should use relative paths from NSIS execution directory
+   - Use `..\..\..\..\..\icons\bokuchi.ico` format for Windows paths
+   - Verify file existence before referencing
+
+2. **Avoid Tauri NSIS configuration conflicts:**
+   - Remove custom NSIS settings from `tauri.conf.json` if causing issues
+   - Let Tauri handle NSIS generation, then manually move files if needed
+
+3. **Verify file paths:**
+   ```bash
+   # Check NSIS execution directory
+   cd src-tauri/target/x86_64-pc-windows-gnu/release/nsis/x64
+   ls -la ../../../../../icons/
+   # Should show bokuchi.ico and other icon files
+   ```
+
+4. **Use absolute paths in NSIS template if relative paths fail:**
+   ```nsis
+   !define MUI_ICON "C:\full\path\to\icons\bokuchi.ico"
+   ```
+
+### 7. Tauri NSIS Bundle Process Failures
+
+**Symptoms:**
+
+```
+failed to bundle project: `No such file or directory (os error 2)`
+Error failed to bundle project: `No such file or directory (os error 2)`
+```
+
+**Cause:**
+- Tauri cannot find or move the generated NSIS installer
+- Output directory structure mismatch
+- NSIS generates files in unexpected locations
+
+**Solution:**
+
+1. **Let Tauri handle NSIS generation:**
+   - Remove custom NSIS configuration from `tauri.conf.json`
+   - Use Tauri's default NSIS process
+
+2. **Manual file handling if needed:**
+   ```bash
+   # Check where Tauri generates the installer
+   find src-tauri/target -name "*.exe" -type f
+
+   # Move to expected location if needed
+   mkdir -p src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis
+   mv src-tauri/target/x86_64-pc-windows-gnu/release/nsis/x64/Bokuchi_*.exe \
+      src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
+   ```
+
+3. **Verify final output:**
+   ```bash
+   ls -la src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
+   # Should contain Bokuchi_0.4.0_x64-setup.exe
+   ```
+
 ## Build Process
 
 ### Complete Build Command
@@ -261,6 +337,10 @@ echo "   source ~/.zshrc"
 - [ ] NSIS is installed: `brew install nsis`
 - [ ] Environment variables are set correctly
 - [ ] All tools are in PATH
+- [ ] NSIS template file paths are correct relative to execution directory
+- [ ] Icon files exist and are accessible from NSIS execution directory
+- [ ] Tauri NSIS configuration doesn't conflict with custom templates
+- [ ] Generated installer is in expected location (`bundle/nsis/`)
 
 ## Additional Resources
 
@@ -268,7 +348,30 @@ echo "   source ~/.zshrc"
 - [Tauri Cross-Platform Build](https://tauri.app/v1/guides/building/cross-platform/)
 - [MinGW-w64 Documentation](https://www.mingw-w64.org/)
 
+## Key Lessons Learned
+
+### NSIS Template Development
+1. **File Paths**: Always use relative paths from NSIS execution directory (`nsis/x64/`)
+2. **Icon Format**: Use `.ico` files for `MUI_ICON`, avoid unsupported formats
+3. **Path Verification**: Test file paths before referencing in templates
+4. **Tauri Integration**: Avoid conflicting NSIS configurations in `tauri.conf.json`
+
+### Build Process Optimization
+1. **Let Tauri Handle NSIS**: Remove custom NSIS configs to avoid conflicts
+2. **File Movement**: Use build scripts to move generated files to expected locations
+3. **Error Handling**: Always verify file existence before operations
+4. **Debugging**: Use verbose logging to identify exact failure points
+
+### Common Pitfalls to Avoid
+- ❌ Mixing Tauri's NSIS handling with custom templates
+- ❌ Using absolute paths in NSIS templates
+- ❌ Assuming file locations without verification
+- ❌ Overcomplicating the build process
+- ✅ Keep it simple: Let Tauri generate, manually move if needed
+- ✅ Test each step independently
+- ✅ Verify file paths and existence
+
 ---
 
-**Last Updated**: September 10, 2025
-**Version**: 1.0
+**Last Updated**: September 16, 2024
+**Version**: 2.0

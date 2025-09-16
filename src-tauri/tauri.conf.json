@@ -45,6 +45,11 @@
       "entitlements": "entitlements.plist",
       "hardenedRuntime": true
     },
+    "windows": {
+      "wix": {
+        "language": ["en-US", "ja-JP"]
+      }
+    },
     "linux": {
       "deb": {
         "depends": []
