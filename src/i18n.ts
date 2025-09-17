@@ -73,7 +73,6 @@ i18n
     },
   })
   .then(() => {
-    console.log('i18n initialized successfully');
   })
   .catch((error) => {
     console.error('Failed to initialize i18n:', error);

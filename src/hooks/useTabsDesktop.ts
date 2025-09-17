@@ -85,7 +85,6 @@ export const useTabsDesktop = () => {
       if (result.filePath) {
         const existingTab = state.tabs.find(tab => tab.filePath === result.filePath);
         if (existingTab) {
-          console.log('File already open, switching to existing tab:', result.filePath);
           setActiveTab(existingTab.id);
           return existingTab.id;
         }
@@ -151,7 +150,6 @@ export const useTabsDesktop = () => {
               fileName: tab.title,
               tabId: id,
               onReload: async (newContent: string) => {
-                console.log('Reloading file before save with new content:', newContent.length, 'characters');
                 // コンテンツを更新
                 updateTabContent(id, newContent);
                 setTabModified(id, false);
@@ -160,7 +158,6 @@ export const useTabsDesktop = () => {
                 try {
                   const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
                   updateTabFileHash(id, newHashInfo);
-                  console.log('File hash updated after reload before save:', newHashInfo);
                 } catch (error) {
                   console.warn('Failed to update file hash after reload before save:', error);
                 }
@@ -170,7 +167,6 @@ export const useTabsDesktop = () => {
                   .then(result => {
                     if (result.success) {
                       setTabModified(id, false);
-                      console.log('File saved successfully after reload');
                     } else {
                       throw new Error(result.error);
                     }
@@ -187,8 +183,7 @@ export const useTabsDesktop = () => {
                   // 保存後にファイルハッシュ情報を更新
                   try {
                     const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
-                    // ハッシュ情報を更新するアクションを追加する必要があります
-                    console.log('File hash updated after save:', newHashInfo);
+                    updateTabFileHash(id, newHashInfo);
                   } catch (error) {
                     console.warn('Failed to update file hash after save:', error);
                   }
@@ -209,7 +204,6 @@ export const useTabsDesktop = () => {
             try {
               const newHashInfo = await desktopApi.getFileHash(tab.filePath);
               updateTabFileHash(id, newHashInfo);
-              console.log('File hash updated after save:', newHashInfo);
 
               // Recent Filesに追加
               await storeApi.addRecentFile(
@@ -242,7 +236,6 @@ export const useTabsDesktop = () => {
           try {
             const newHashInfo = await desktopApi.getFileHash(result.filePath);
             updateTabFileHash(id, newHashInfo);
-            console.log('File hash updated after save as:', newHashInfo);
 
             // Recent Filesに追加
             await storeApi.addRecentFile(
@@ -270,24 +263,17 @@ export const useTabsDesktop = () => {
   }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent]);
 
   const saveTabAs = useCallback(async (id: string) => {
-    console.log('saveTabAs called with id:', id);
-    console.log('Available tabs:', state.tabs.map(t => ({ id: t.id, title: t.title })));
     const tab = state.tabs.find(t => t.id === id);
-    console.log('Found tab:', tab);
 
     if (!tab) {
-      console.log('No tab found');
       return false;
     }
 
     try {
-      console.log('Calling desktopApi.saveFileAs with content length:', tab.content.length);
       // Save Asは常にダイアログを開く（既存のファイルパスは無視）
       const result = await desktopApi.saveFileAs(tab.content);
-      console.log('desktopApi.saveFileAs result:', result);
 
       if (result.success && result.filePath) {
-        console.log('Save successful, updating tab');
         setTabFilePath(id, result.filePath);
         const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
         updateTabTitle(id, displayName);
@@ -296,7 +282,6 @@ export const useTabsDesktop = () => {
         setTabNew(id, false);
         return true;
       } else {
-        console.log('Save failed with error:', result.error);
         throw new Error(result.error);
       }
     } catch (error) {
@@ -322,10 +307,7 @@ export const useTabsDesktop = () => {
   }, [addTab, setActiveTab]);
 
   const getActiveTab = useCallback(() => {
-    console.log('getActiveTab called - state.tabs:', state.tabs);
-    console.log('getActiveTab called - state.activeTabId:', state.activeTabId);
     const foundTab = state.tabs.find(tab => tab.id === state.activeTabId);
-    console.log('getActiveTab found tab:', foundTab);
     return foundTab || null;
   }, [state.tabs, state.activeTabId]);
 
@@ -346,16 +328,13 @@ export const useTabsDesktop = () => {
   // 状態を復元
   const restoreState = useCallback(async () => {
     try {
-      console.log('Starting state restoration...');
       const savedState = await storeApi.loadState();
       if (savedState) {
-        console.log('Found saved state, restoring...');
         // 保存済みファイルの内容を再読み込み
         const restoredTabs = await Promise.all(
           savedState.tabs.map(async (tab) => {
             if (!tab.isNew && tab.filePath) {
               try {
-                console.log(`Loading file: ${tab.filePath}`);
                 const content = await desktopApi.readFileFromPath(tab.filePath);
 
                 // ファイルハッシュ情報も取得
@@ -381,10 +360,8 @@ export const useTabsDesktop = () => {
           tabs: restoredTabs,
         };
 
-        console.log('Dispatching restored state:', restoredState);
         dispatch({ type: 'LOAD_STATE', payload: restoredState });
       } else {
-        console.log('No saved state found, creating initial state');
         // 初回起動時は初期状態を作成
         const initialState = storeApi.createInitialState();
         dispatch({ type: 'LOAD_STATE', payload: initialState });
@@ -406,7 +383,6 @@ export const useTabsDesktop = () => {
   // 状態変更時に自動保存
   useEffect(() => {
     if (isInitialized) {
-      console.log('Auto-saving state due to changes');
       saveState();
     }
   }, [state.tabs, state.activeTabId, isInitialized, saveState]);

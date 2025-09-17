@@ -111,11 +111,9 @@ export const useAppState = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        console.log('Loading settings...');
 
         // 新しい統合設定システムで読み込み
         const settings = await storeApi.loadAppSettings();
-        console.log('Loaded app settings:', settings);
         setAppSettings(settings);
 
         // 個別設定も更新（後方互換性のため）
@@ -129,7 +127,6 @@ export const useAppState = () => {
         setTabLayout(settings.interface.tabLayout);
 
         setIsSettingsLoaded(true);
-        console.log('Settings loaded successfully');
       } catch (error) {
         console.error('Failed to load settings:', error);
         setIsSettingsLoaded(true);
@@ -145,20 +142,16 @@ export const useAppState = () => {
   // ファイル変更検出イベントリスナー
   useEffect(() => {
     const handleFileChangeDetected = (event: Event) => {
-      console.log('🔍 [DEBUG] File change detected event received:', event);
       const customEvent = event as CustomEvent;
       const { fileName, onCancel, tabId } = customEvent.detail;
-      console.log('🔍 [DEBUG] Event details:', { fileName, tabId });
       setFileChangeDialog({
         open: true,
         fileName,
         onReload: async () => {
-          console.log('🔍 [DEBUG] onReload called for tabId:', tabId);
           try {
             // タブ情報を取得（最新のtabsを参照）
             const currentTabs = tabs;
             const tab = currentTabs.find(t => t.id === tabId);
-            console.log('🔍 [DEBUG] Found tab:', tab);
 
             if (tab && tab.filePath && !tab.isNew) {
               // ファイルから最新のコンテンツを読み込み
@@ -180,11 +173,9 @@ export const useAppState = () => {
           } catch (error) {
             console.error('Failed to reload file:', error);
           }
-          console.log('🔍 [DEBUG] Closing dialog after reload');
           setFileChangeDialog(prev => ({ ...prev, open: false }));
         },
         onCancel: async () => {
-          console.log('🔍 [DEBUG] onCancel called for tabId:', tabId);
           onCancel();
           // キャンセル時もファイル情報を更新してループ防止
           try {
@@ -199,7 +190,6 @@ export const useAppState = () => {
           }
           // タブをアクティブにする
           setActiveTab(tabId);
-          console.log('🔍 [DEBUG] Closing dialog after cancel');
           setFileChangeDialog(prev => ({ ...prev, open: false }));
         },
       });
@@ -210,13 +200,10 @@ export const useAppState = () => {
     // ファイル開くイベントのリスナー
     const handleOpenFile = async (event: { payload: { file_path: string } }) => {
       const { file_path } = event.payload;
-      console.log('Opening file from command line:', file_path);
-      console.log('Current tabs before opening:', tabs.map(t => ({ id: t.id, filePath: t.filePath, title: t.title })));
 
       try {
         // ファイルを開く
         await openFile(file_path);
-        console.log('File opened successfully:', file_path);
         setSnackbar({
           open: true,
           message: `Opened file: ${file_path}`,
@@ -260,14 +247,12 @@ export const useAppState = () => {
     try {
       const hasChanged = await detectFileChange(tab);
       if (hasChanged) {
-        console.log('🔍 [DEBUG] File change detected, dispatching event from:', source, 'for tab:', tab.id);
         // ファイル変更検出イベントを発火
         const event = new CustomEvent('fileChangeDetected', {
           detail: {
             fileName: tab.title,
             tabId: tab.id,
             onReload: async () => {
-              console.log('🔍 [DEBUG] onReload called from checkFileChange for tab:', tab.id);
               try {
                 // ファイルから最新のコンテンツを読み込み
                 const fileContent = await desktopApi.readFileFromPath(tab.filePath!);
@@ -286,7 +271,6 @@ export const useAppState = () => {
               }
             },
             onCancel: async () => {
-              console.log('🔍 [DEBUG] onCancel called from checkFileChange for tab:', tab.id);
               // キャンセル時もファイル情報を更新してループ防止
               try {
                 const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
@@ -333,7 +317,6 @@ export const useAppState = () => {
 
     const saveLanguage = async () => {
       try {
-        console.log('Saving language:', language);
         await storeApi.saveLanguage(language);
       } catch (error) {
         console.error('Failed to save language:', error);
@@ -349,7 +332,6 @@ export const useAppState = () => {
 
     const saveTheme = async () => {
       try {
-        console.log('Saving theme:', theme);
         await storeApi.saveTheme(theme);
       } catch (error) {
         console.error('Failed to save theme:', error);
@@ -365,7 +347,6 @@ export const useAppState = () => {
 
     const saveGlobalVariables = async () => {
       try {
-        console.log('Saving global variables:', globalVariables);
         await storeApi.saveGlobalVariables(globalVariables);
       } catch (error) {
         console.error('Failed to save global variables:', error);
@@ -383,7 +364,6 @@ export const useAppState = () => {
 
     const saveTabLayout = async () => {
       try {
-        console.log('Saving tab layout:', tabLayout);
         await storeApi.saveTabLayout(tabLayout);
       } catch (error) {
         console.error('Failed to save tab layout:', error);
@@ -399,7 +379,6 @@ export const useAppState = () => {
 
     const saveViewMode = async () => {
       try {
-        console.log('Saving view mode:', viewMode);
         await storeApi.saveViewMode(viewMode);
       } catch (error) {
         console.error('Failed to save view mode:', error);
@@ -468,7 +447,6 @@ export const useAppState = () => {
 
   // 新しい統合設定変更ハンドラー
   const handleAppSettingsChange = useCallback(async (newSettings: AppSettings) => {
-    console.log('Saving app settings:', newSettings);
     setAppSettings(newSettings);
 
     // 個別設定も更新（後方互換性のため）
@@ -500,7 +478,6 @@ export const useAppState = () => {
 
     // 設定を永続化
     await storeApi.saveAppSettings(newSettings);
-    console.log('App settings saved successfully');
   }, [i18n, currentZoom, zoomIn, zoomOut]);
 
   const handleFileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -540,17 +517,10 @@ export const useAppState = () => {
   };
 
   const handleSaveFileAs = useCallback(async () => {
-    console.log('handleSaveFileAs called');
-    console.log('activeTab:', activeTab);
-    console.log('activeTabId:', activeTabId);
-    console.log('tabs:', tabs);
-    console.log('tabs length:', tabs.length);
 
     if (activeTab) {
       try {
-        console.log('Calling saveTabAs with id:', activeTab.id);
         const success = await saveTabAs(activeTab.id);
-        console.log('saveTabAs result:', success);
 
         if (success) {
           setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
@@ -562,7 +532,6 @@ export const useAppState = () => {
         setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
     } else {
-      console.log('No active tab');
       setSnackbar({
         open: true,
         message: t('fileOperations.noActiveTab') || 'No active tab to save',
@@ -573,7 +542,6 @@ export const useAppState = () => {
 
   const handleSaveWithVariables = useCallback(async () => {
     if (!activeTab) {
-      console.log('No active tab for save with variables');
       setSnackbar({
         open: true,
         message: t('fileOperations.noActiveTab') || 'No active tab to save',
@@ -590,7 +558,6 @@ export const useAppState = () => {
       const result = await desktopApi.saveFileAs(expandedContent);
       if (result.success) {
         setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
-        console.log('File saved with variables applied:', result.filePath);
       } else {
         setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
@@ -709,9 +676,6 @@ export const useAppState = () => {
       const newTabId = createNewTab();
       updateTabContent(newTabId, content);
 
-      // ファイル名を設定（パスは含めない）
-      const fileName = fileToOpen.name;
-      console.log('Opened file via drag and drop:', fileName);
 
       setSnackbar({
         open: true,

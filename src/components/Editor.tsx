@@ -71,15 +71,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
     // Track Shift key state with keyboard event listeners
     const handleKeyDown = async (e: KeyboardEvent) => {
-      console.log('Key down:', e.key, 'isShiftPressed:', isShiftPressed);
       if (e.key === 'Shift') {
         isShiftPressed = true;
-        console.log('Shift key pressed, isShiftPressed set to true');
       }
 
       // Detect and handle Shift + Cmd/Ctrl + V combination directly
       if (e.key === 'v' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
-        console.log('Shift + Cmd/Ctrl + V combination detected in keydown');
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation(); // Stop other event listeners as well
@@ -89,7 +86,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           // Use Tauri clipboard API
           const { readText } = await import('@tauri-apps/plugin-clipboard-manager');
           const clipboardText = await readText();
-          console.log('Clipboard text for Shift+V:', clipboardText.substring(0, 200) + '...');
           insertPlainText(clipboardText);
         } catch (error) {
           console.error('Failed to read clipboard:', error);
@@ -99,20 +95,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      console.log('Key up:', e.key, 'isShiftPressed:', isShiftPressed);
       if (e.key === 'Shift') {
         isShiftPressed = false;
-        console.log('Shift key released, isShiftPressed set to false');
       }
     };
 
     const handleGlobalPaste = async (e: ClipboardEvent) => {
-      console.log('Global paste event caught');
-      console.log('editorRef.current:', !!editorRef.current);
-      console.log('document.activeElement:', document.activeElement);
-      console.log('e.clipboardData:', e.clipboardData);
-      console.log('e.clipboardData.types:', e.clipboardData?.types);
-      console.log('editorRef.current?.getDomNode():', editorRef.current?.getDomNode());
 
       // Check if editor is focused (compatible with Monaco Editor internal structure)
       const isEditorFocused = editorRef.current && (
@@ -121,18 +109,14 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       );
 
       if (isEditorFocused) {
-        console.log('Editor is focused, processing paste');
-        console.log('isShiftPressed:', isShiftPressed);
 
         // For Shift + Ctrl(Cmd) + V, paste as plain text
         if (isShiftPressed) {
-          console.log('Shift + Ctrl/Cmd + V detected, pasting as plain text');
           e.preventDefault();
           e.stopPropagation();
 
           if (e.clipboardData) {
             const plainText = e.clipboardData.getData('text/plain');
-            console.log('Plain text from paste event:', plainText.substring(0, 200) + '...');
             insertPlainText(plainText);
           }
           return;
@@ -148,14 +132,9 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           const htmlData = e.clipboardData.getData('text/html');
           const plainText = e.clipboardData.getData('text/plain');
 
-          console.log('HTML data from paste event:', htmlData.substring(0, 200) + '...');
-          console.log('Plain text from paste event:', plainText.substring(0, 200) + '...');
 
           await handlePasteWithData(htmlData, plainText);
         }
-      } else {
-        console.log('Editor is not focused, skipping paste processing');
-        console.log('Active element:', document.activeElement?.tagName, document.activeElement?.className);
       }
     };
 
@@ -219,7 +198,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
         // Completely disable default behavior of Shift + Cmd/Ctrl + V
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV, () => {
-          console.log('Monaco Editor Shift+V command disabled');
           // Do nothing (completely disable default "Paste as Plain Text")
         });
 
@@ -229,7 +207,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           label: 'Disable Shift+V',
           keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV],
           run: () => {
-            console.log('Monaco Editor Shift+V action disabled');
             // Do nothing
           }
         });
@@ -291,12 +268,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   };
 
   const handlePasteWithData = async (htmlData: string, plainText: string) => {
-    console.log('handlePasteWithData called, tableConversion:', tableConversion);
 
     try {
       // If table conversion is disabled, perform normal paste
       if (tableConversion === 'off') {
-        console.log('Table conversion is off, performing normal paste');
         insertPlainText(plainText);
         return;
       }
@@ -305,30 +280,23 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
       // Step 1: Search and convert HTML tables
       if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
-        console.log('HTML table detected, converting...');
         markdownTable = htmlTableToMarkdown(htmlData);
-        console.log('Converted HTML table to markdown:', markdownTable);
       }
       // Step 2: Search and convert TSV/CSV in plain text
       else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-        console.log('TSV/CSV detected in plain text, converting...');
         markdownTable = convertTsvCsvToMarkdown(plainText);
-        console.log('Converted TSV/CSV to markdown:', markdownTable);
       }
       else {
-        console.log('No table data found, performing normal paste');
         insertPlainText(plainText);
         return;
       }
 
       // Validate conversion result
       if (!validateMarkdownTable(markdownTable)) {
-        console.log('Markdown table validation failed, performing normal paste');
         insertPlainText(plainText);
         return;
       }
 
-      console.log('Table conversion successful');
 
       // Process according to settings
       if (tableConversion === 'auto') {
@@ -424,20 +392,14 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   };
 
   const handleTableConversionCancel = () => {
-    console.log('Table conversion cancelled');
-    console.log('clipboardData:', tableConversionDialog.clipboardData);
 
     // Paste as plain text
     // Get directly from saved data
     const savedData = tableConversionDialog.clipboardData;
     const plainText = savedData?.plainText || '';
-    console.log('Plain text from saved data:', plainText.substring(0, 200) + '...');
 
     if (plainText) {
-      console.log('Inserting plain text');
       insertPlainText(plainText);
-    } else {
-      console.log('No plain text found, cannot paste');
     }
     setTableConversionDialog({ open: false, markdownTable: '', clipboardData: null });
   };
