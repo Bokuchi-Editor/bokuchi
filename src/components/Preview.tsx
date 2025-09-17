@@ -64,18 +64,14 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         }
 
         // markedライブラリが生成したチェックボックスを処理
-        console.log('Original HTML:', processedHtml);
 
         // チェックボックスの位置を追跡するためのカウンター
         let checkboxIndex = 0;
 
         // disabled属性を削除し、クリック可能なチェックボックスに変換
         const checkboxPattern = /<li[^>]*>(\s*)<input\s+([^>]*?)(?:disabled="[^"]*")?\s*([^>]*?)type="checkbox"([^>]*?)>(\s*)(.*?)<\/li>/g;
-        const matches = processedHtml.match(checkboxPattern);
-        console.log('Checkbox matches:', matches);
 
-        processedHtml = processedHtml.replace(checkboxPattern, (match: string, indent: string, beforeType: string, between: string, afterType: string, _afterInput: string, text: string) => {
-          console.log('Processing checkbox:', { match, indent, text, index: checkboxIndex });
+        processedHtml = processedHtml.replace(checkboxPattern, (_match: string, indent: string, beforeType: string, between: string, afterType: string, _afterInput: string, text: string) => {
 
           // checked属性があるかチェック
           const isChecked = /checked(?:="[^"]*")?/.test(beforeType + between + afterType);
@@ -85,12 +81,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             ${indent}<input type="checkbox" ${isChecked ? 'checked' : ''} class="markdown-checkbox" data-checkbox-id="${checkboxId}" data-checkbox-index="${checkboxIndex}">
             <span class="checkbox-text">${text}</span>
           </li>`;
-          console.log('Generated HTML:', result);
           checkboxIndex++;
           return result;
         });
 
-        console.log('Final HTML:', processedHtml);
 
         setProcessedContent(processedMarkdown);
         setHtmlContent(processedHtml);
@@ -130,43 +124,28 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
       // チェックボックスのクリックイベントを処理
       const checkboxes = previewRef.current.querySelectorAll('.markdown-checkbox');
-      console.log('Found checkboxes:', checkboxes.length);
-      checkboxes.forEach((checkbox, index) => {
-        console.log('Adding event listener to checkbox:', index);
+      checkboxes.forEach((checkbox) => {
         checkbox.addEventListener('change', (e) => {
-          console.log('Checkbox change event triggered:', index);
           e.stopPropagation();
 
           const checkboxElement = e.target as HTMLInputElement;
           const isChecked = checkboxElement.checked;
-          console.log('Checkbox state:', isChecked);
 
           // 即座に視覚的フィードバックを提供
           const checkboxItem = checkboxElement.closest('.checkbox-item');
           if (checkboxItem) {
-            console.log('Found checkbox item, updating classes');
             if (isChecked) {
               checkboxItem.classList.add('checked');
             } else {
               checkboxItem.classList.remove('checked');
             }
-          } else {
-            console.log('Checkbox item not found');
           }
 
           if (onContentChange) {
-            console.log('Updating content');
             // チェックボックスのテキスト内容と位置情報を取得
-            const checkboxText = checkboxItem?.querySelector('.checkbox-text')?.textContent?.trim();
             const checkboxIndex = checkboxElement.getAttribute('data-checkbox-index');
-            console.log('Checkbox text:', checkboxText);
-            console.log('Checkbox index:', checkboxIndex);
-            console.log('Current content:', content);
             // エディター内容を更新（位置ベース）
             updateCheckboxInContentByIndex(parseInt(checkboxIndex || '0'), isChecked);
-          } else {
-            console.log('onContentChange not available');
-            console.log('onContentChange type:', typeof onContentChange);
           }
         });
       });
@@ -175,15 +154,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // チェックボックスの状態をエディター内容に反映する関数（位置ベース）
   const updateCheckboxInContentByIndex = (checkboxIndex: number, isChecked: boolean) => {
-    console.log('updateCheckboxInContentByIndex called:', { checkboxIndex, isChecked });
     if (!onContentChange) {
-      console.log('onContentChange not available in updateCheckboxInContentByIndex');
       return;
     }
 
     const lines = content.split('\n');
-    console.log('Content lines:', lines);
-    console.log('Looking for checkbox at index:', checkboxIndex);
     let currentCheckboxIndex = 0;
     let updated = false;
 
@@ -194,7 +169,6 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       const match = line.match(checkboxPattern);
 
       if (match) {
-        console.log('Found checkbox line at content index:', i, 'checkbox index:', currentCheckboxIndex);
 
         // 指定されたインデックスのチェックボックスかチェック
         if (currentCheckboxIndex === checkboxIndex) {
@@ -204,7 +178,6 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           const newLine = `${indent}${listMarker}[${newChecked}] ${rest}`;
           lines[i] = newLine;
           updated = true;
-          console.log('Updated line at index:', i, 'new line:', newLine);
           break;
         }
         currentCheckboxIndex++;
@@ -213,12 +186,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
     if (updated) {
       const newContent = lines.join('\n');
-      console.log('New content:', newContent);
-      console.log('Calling onContentChange with new content');
       onContentChange(newContent);
-    } else {
-      console.log('No update made - checkbox index not found:', checkboxIndex);
-      console.log('Total checkboxes found:', currentCheckboxIndex);
     }
   };
 

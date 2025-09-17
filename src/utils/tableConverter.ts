@@ -8,21 +8,18 @@
  * @returns Markdownテーブル文字列
  */
 export function htmlTableToMarkdown(html: string): string {
-  console.log('htmlTableToMarkdown called with HTML:', html.substring(0, 200) + '...');
 
   try {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const table = doc.querySelector('table');
 
-    console.log('Table element found:', !!table);
 
     if (!table) {
       throw new Error('No table found in HTML');
     }
 
     const rows = Array.from(table.querySelectorAll('tr'));
-    console.log('Number of rows found:', rows.length);
 
     if (rows.length === 0) {
       throw new Error('No rows found in table');
@@ -35,17 +32,15 @@ export function htmlTableToMarkdown(html: string): string {
       const row = rows[i];
       const cells = Array.from(row.querySelectorAll('td, th'));
 
-      console.log(`Row ${i}: ${cells.length} cells`);
 
       if (cells.length === 0) {
         continue; // 空の行はスキップ
       }
 
-      const cellContents = cells.map((cell, cellIndex) => {
+      const cellContents = cells.map((cell) => {
         // セルの内容を取得（HTMLタグを除去）
         let content = cell.textContent || '';
 
-        console.log(`Cell ${cellIndex}: "${content}"`);
 
         // 改行をスペースに変換
         content = content.replace(/\n/g, ' ');
@@ -75,7 +70,6 @@ export function htmlTableToMarkdown(html: string): string {
     }
 
     const result = markdownRows.join('\n');
-    console.log('Final markdown result:', result);
 
     return result;
   } catch (error) {
@@ -146,11 +140,9 @@ export function validateMarkdownTable(markdown: string): boolean {
  * @returns Markdownテーブル文字列
  */
 export function convertTsvCsvToMarkdown(text: string): string {
-  console.log('convertTsvCsvToMarkdown called with text:', text.substring(0, 200) + '...');
 
   try {
     const lines = text.trim().split('\n');
-    console.log('Number of lines:', lines.length);
 
     if (lines.length === 0) {
       throw new Error('No lines found');
@@ -164,10 +156,8 @@ export function convertTsvCsvToMarkdown(text: string): string {
     let delimiter = '\t';
     if (hasTabs) {
       delimiter = '\t';
-      console.log('Using tab delimiter');
     } else if (hasCommas) {
       delimiter = ',';
-      console.log('Using comma delimiter');
     } else {
       throw new Error('No delimiter found (tab or comma)');
     }
@@ -181,15 +171,13 @@ export function convertTsvCsvToMarkdown(text: string): string {
 
       // 区切り文字で分割
       const cells = line.split(delimiter);
-      console.log(`Row ${i}: ${cells.length} cells`);
 
       if (cells.length === 0) continue;
 
       // セルの内容を処理
-      const cellContents = cells.map((cell, cellIndex) => {
+      const cellContents = cells.map((cell) => {
         let content = cell.trim();
 
-        console.log(`Cell ${cellIndex}: "${content}"`);
 
         // パイプ文字をエスケープ
         content = content.replace(/\|/g, '\\|');
@@ -210,7 +198,6 @@ export function convertTsvCsvToMarkdown(text: string): string {
     }
 
     const result = markdownRows.join('\n');
-    console.log('Final TSV/CSV markdown result:', result);
 
     return result;
   } catch (error) {

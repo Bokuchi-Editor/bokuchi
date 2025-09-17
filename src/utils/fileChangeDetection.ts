@@ -25,19 +25,16 @@ export async function detectFileChange(tab: Tab): Promise<boolean> {
     // 段階的チェック
     // 1. ファイルサイズチェック（高速）
     if (currentHashInfo.file_size !== tab.fileHashInfo.file_size) {
-      console.log('File size changed:', tab.filePath);
       return true;
     }
 
     // 2. 最終更新時刻チェック（高速）
     if (currentHashInfo.modified_time !== tab.fileHashInfo.modified_time) {
-      console.log('File modification time changed:', tab.filePath);
       return true;
     }
 
     // 3. ハッシュ値チェック（必要時のみ）
     if (currentHashInfo.hash !== tab.fileHashInfo.hash) {
-      console.log('File hash changed:', tab.filePath);
       return true;
     }
 

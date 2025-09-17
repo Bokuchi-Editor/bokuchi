@@ -21,11 +21,9 @@ export const storeApi = {
   // 状態を保存
   async saveState(state: AppState): Promise<void> {
     try {
-      console.log('Saving state:', state);
       const storeInstance = await getStore();
       await storeInstance.set('appState', state);
       await storeInstance.save();
-      console.log('State saved successfully');
     } catch (error) {
       console.error('Failed to save state:', error);
       throw error;
@@ -38,7 +36,6 @@ export const storeApi = {
       console.log('Loading state...');
       const storeInstance = await getStore();
       const state = await storeInstance.get('appState') as AppState;
-      console.log('Loaded state:', state);
       return state || null;
     } catch (error) {
       console.error('Failed to load state:', error);
@@ -49,11 +46,9 @@ export const storeApi = {
   // グローバル変数を保存
   async saveGlobalVariables(variables: Record<string, string>): Promise<void> {
     try {
-      console.log('Saving global variables:', variables);
       const storeInstance = await getStore();
       await storeInstance.set('globalVariables', variables);
       await storeInstance.save();
-      console.log('Global variables saved successfully');
     } catch (error) {
       console.error('Failed to save global variables:', error);
       throw error;
@@ -66,7 +61,6 @@ export const storeApi = {
       console.log('Loading global variables...');
       const storeInstance = await getStore();
       const variables = await storeInstance.get('globalVariables') as Record<string, string>;
-      console.log('Loaded global variables:', variables);
       return variables || {};
     } catch (error) {
       console.error('Failed to load global variables:', error);
@@ -77,11 +71,9 @@ export const storeApi = {
   // 言語設定を保存
   async saveLanguage(language: string): Promise<void> {
     try {
-      console.log('Saving language:', language);
       const storeInstance = await getStore();
       await storeInstance.set('language', language);
       await storeInstance.save();
-      console.log('Language saved successfully');
     } catch (error) {
       console.error('Failed to save language:', error);
       throw error;
@@ -94,7 +86,6 @@ export const storeApi = {
       console.log('Loading language...');
       const storeInstance = await getStore();
       const language = await storeInstance.get('language') as string;
-      console.log('Loaded language:', language);
       return language || 'en';
     } catch (error) {
       console.error('Failed to load language:', error);
@@ -105,11 +96,9 @@ export const storeApi = {
   // ズーム設定を保存
   async saveZoomLevel(zoomLevel: number): Promise<void> {
     try {
-      console.log('Saving zoom level:', zoomLevel);
       const storeInstance = await getStore();
       await storeInstance.set('zoomLevel', zoomLevel);
       await storeInstance.save();
-      console.log('Zoom level saved successfully');
     } catch (error) {
       console.error('Failed to save zoom level:', error);
       throw error;
@@ -122,7 +111,6 @@ export const storeApi = {
       console.log('Loading zoom level...');
       const storeInstance = await getStore();
       const zoomLevel = await storeInstance.get('zoomLevel') as number;
-      console.log('Loaded zoom level:', zoomLevel);
       return zoomLevel || 1.0;
     } catch (error) {
       console.error('Failed to load zoom level:', error);
@@ -133,11 +121,9 @@ export const storeApi = {
   // ダークモード設定を保存
   async saveDarkMode(darkMode: boolean): Promise<void> {
     try {
-      console.log('Saving dark mode:', darkMode);
       const storeInstance = await getStore();
       await storeInstance.set('darkMode', darkMode);
       await storeInstance.save();
-      console.log('Dark mode saved successfully');
     } catch (error) {
       console.error('Failed to save dark mode:', error);
       throw error;
@@ -150,7 +136,6 @@ export const storeApi = {
       console.log('Loading dark mode...');
       const storeInstance = await getStore();
       const darkMode = await storeInstance.get('darkMode') as boolean;
-      console.log('Loaded dark mode:', darkMode);
       return darkMode || false;
     } catch (error) {
       console.error('Failed to load dark mode:', error);
@@ -161,11 +146,9 @@ export const storeApi = {
   // テーマ設定を保存
   async saveTheme(theme: ThemeName): Promise<void> {
     try {
-      console.log('Saving theme:', theme);
       const storeInstance = await getStore();
       await storeInstance.set('theme', theme);
       await storeInstance.save();
-      console.log('Theme saved successfully');
     } catch (error) {
       console.error('Failed to save theme:', error);
       throw error;
@@ -178,7 +161,6 @@ export const storeApi = {
       console.log('Loading theme...');
       const storeInstance = await getStore();
       const theme = await storeInstance.get('theme') as ThemeName;
-      console.log('Loaded theme:', theme);
       return theme || 'default';
     } catch (error) {
       console.error('Failed to load theme:', error);
@@ -189,11 +171,9 @@ export const storeApi = {
   // タブレイアウト設定を保存
   async saveTabLayout(tabLayout: 'horizontal' | 'vertical'): Promise<void> {
     try {
-      console.log('Saving tab layout:', tabLayout);
       const storeInstance = await getStore();
       await storeInstance.set('tabLayout', tabLayout);
       await storeInstance.save();
-      console.log('Tab layout saved successfully');
     } catch (error) {
       console.error('Failed to save tab layout:', error);
       throw error;
@@ -206,7 +186,6 @@ export const storeApi = {
       console.log('Loading tab layout...');
       const storeInstance = await getStore();
       const tabLayout = await storeInstance.get('tabLayout') as 'horizontal' | 'vertical';
-      console.log('Loaded tab layout:', tabLayout);
       return tabLayout || 'horizontal';
     } catch (error) {
       console.error('Failed to load tab layout:', error);
@@ -217,11 +196,9 @@ export const storeApi = {
   // ビューモード設定を保存
   async saveViewMode(viewMode: 'split' | 'editor' | 'preview'): Promise<void> {
     try {
-      console.log('Saving view mode:', viewMode);
       const storeInstance = await getStore();
       await storeInstance.set('viewMode', viewMode);
       await storeInstance.save();
-      console.log('View mode saved successfully');
     } catch (error) {
       console.error('Failed to save view mode:', error);
       throw error;
@@ -234,7 +211,6 @@ export const storeApi = {
       console.log('Loading view mode...');
       const storeInstance = await getStore();
       const viewMode = await storeInstance.get('viewMode') as 'split' | 'editor' | 'preview';
-      console.log('Loaded view mode:', viewMode);
       return viewMode || 'split';
     } catch (error) {
       console.error('Failed to load view mode:', error);
@@ -260,11 +236,9 @@ export const storeApi = {
   // アプリケーション設定を保存
   async saveAppSettings(settings: AppSettings): Promise<void> {
     try {
-      console.log('Saving app settings:', settings);
       const storeInstance = await getStore();
       await storeInstance.set('appSettings', settings);
       await storeInstance.save();
-      console.log('App settings saved successfully');
     } catch (error) {
       console.error('Failed to save app settings:', error);
       throw error;
@@ -277,7 +251,6 @@ export const storeApi = {
       console.log('Loading app settings...');
       const storeInstance = await getStore();
       const settings = await storeInstance.get('appSettings') as AppSettings;
-      console.log('Loaded app settings:', settings);
 
       // デフォルト設定とマージして、不足している項目を補完
       const mergedSettings = {
@@ -304,7 +277,6 @@ export const storeApi = {
       const storeInstance = await getStore();
       await storeInstance.set('appSettings', DEFAULT_APP_SETTINGS);
       await storeInstance.save();
-      console.log('App settings reset successfully');
     } catch (error) {
       console.error('Failed to reset app settings:', error);
       throw error;
@@ -327,7 +299,6 @@ export const storeApi = {
     try {
       const settings = JSON.parse(settingsJson) as AppSettings;
       await this.saveAppSettings(settings);
-      console.log('App settings imported successfully');
     } catch (error) {
       console.error('Failed to import app settings:', error);
       throw error;
@@ -340,7 +311,6 @@ export const storeApi = {
       const storeInstance = await getStore();
       await storeInstance.set('recentFiles', recentFiles);
       await storeInstance.save();
-      console.log('Recent files saved successfully');
     } catch (error) {
       console.error('Failed to save recent files:', error);
       throw error;
