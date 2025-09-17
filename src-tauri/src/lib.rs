@@ -7,8 +7,9 @@ use std::fs;
 use std::path::Path;
 use std::sync::Mutex;
 use std::time::SystemTime;
+use std::sync::OnceLock;
 use tauri::menu::{Menu, MenuItem, MenuItemKind};
-use tauri::{Emitter, Manager};
+use tauri::{Emitter, Manager, RunEvent};
 
 // Variable definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -36,6 +37,9 @@ pub struct FileHashInfo {
 pub struct OpenFileEvent {
     pub file_path: String,
 }
+
+// Global state for buffering file paths received before frontend is ready
+static PENDING_FILE_PATHS: OnceLock<Mutex<Vec<String>>> = OnceLock::new();
 
 // Variable processor
 pub struct VariableProcessor {
@@ -307,6 +311,21 @@ async fn get_file_hash(path: String) -> Result<FileHashInfo, String> {
     calculate_file_hash(&path)
 }
 
+// Get buffered file paths (for frontend to retrieve after initialization)
+#[tauri::command]
+fn get_pending_file_paths() -> Vec<String> {
+    let pending_paths = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
+    if let Ok(mut paths) = pending_paths.lock() {
+        let result = paths.clone();
+        paths.clear(); // Clear buffer after retrieving
+        println!("Retrieved {} pending file paths", result.len());
+        result
+    } else {
+        println!("Failed to lock pending file paths");
+        Vec::new()
+    }
+}
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -323,18 +342,31 @@ fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
         if let Some(ext) = Path::new(&file_path).extension() {
             let ext_str = ext.to_string_lossy().to_lowercase();
             if ext_str == "md" || ext_str == "txt" {
-                println!("Valid file type, emitting open-file event");
-                let app_handle = app_handle.clone();
-                let file_path = file_path.clone();
+                println!("Valid file type, attempting to emit open-file event");
 
-                // Emit event immediately (removed delay)
-                println!("Emitting open-file event for: {}", file_path);
-                let _ = app_handle.emit(
+                // Try to emit event to frontend immediately
+                match app_handle.emit(
                     "open-file",
                     OpenFileEvent {
-                        file_path: file_path,
+                        file_path: file_path.clone(),
                     },
-                );
+                ) {
+                    Ok(_) => {
+                        println!("Successfully emitted open-file event");
+                        return;
+                    }
+                    Err(e) => {
+                        println!("Failed to emit open-file event: {}", e);
+                    }
+                }
+
+                // If immediate emit failed, buffer the file path for later retrieval
+                println!("Buffering file path for later retrieval: {}", file_path);
+                let pending_paths = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
+                if let Ok(mut paths) = pending_paths.lock() {
+                    paths.push(file_path);
+                    println!("File path added to buffer. Total buffered: {}", paths.len());
+                }
             } else {
                 println!("Invalid file extension: {}", ext_str);
             }
@@ -372,7 +404,8 @@ pub fn run() {
             get_expanded_markdown,
             read_file,
             save_file,
-            get_file_hash
+            get_file_hash,
+            get_pending_file_paths
         ])
         .setup(|app| {
             // Get command line arguments
@@ -561,8 +594,30 @@ pub fn run() {
                 }
             }
         })
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app_handle, event| {
+            match event {
+                RunEvent::Ready => {
+                    println!("Tauri app is ready");
+                }
+                #[cfg(target_os = "macos")]
+                RunEvent::Opened { urls } => {
+                    println!("RunEvent::Opened received with {} URLs", urls.len());
+                    for url in urls {
+                        println!("Processing URL: {}", url);
+                        if let Ok(path_buf) = url.to_file_path() {
+                            let file_path = path_buf.to_string_lossy().to_string();
+                            println!("Converted to file path: {}", file_path);
+                            handle_open_file_event(&app_handle, file_path);
+                        } else {
+                            println!("Failed to convert URL to file path: {}", url);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        });
 }
 
 // テストモジュールを追加

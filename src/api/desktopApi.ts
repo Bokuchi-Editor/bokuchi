@@ -21,6 +21,16 @@ export interface FileHashInfo {
 }
 
 export const desktopApi = {
+  // Get pending file paths from Rust backend
+  async getPendingFilePaths(): Promise<string[]> {
+    try {
+      const paths = await invoke<string[]>('get_pending_file_paths');
+      return paths;
+    } catch (error: unknown) {
+      console.error('Error getting pending file paths:', error);
+      return [];
+    }
+  },
   // Open file
   async openFile(): Promise<FileResponse> {
     try {

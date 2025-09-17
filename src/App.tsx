@@ -99,6 +99,7 @@ function AppDesktop() {
     let unlistenSaveAs: (() => void) | undefined;
     let unlistenSaveWithVariables: (() => void) | undefined;
     let unlistenHelp: (() => void) | undefined;
+    let unlistenFileOpen: (() => void) | undefined;
 
     const setupMenuListeners = async () => {
       const { listen } = await import('@tauri-apps/api/event');
@@ -183,6 +184,12 @@ function AppDesktop() {
         globalDebounce.lastMenuEventTime = now;
         handleHelpOpen();
       });
+
+      // File association event listener
+      unlistenFileOpen = await listen('open-file', (event: { payload: { file_path: string } }) => {
+        console.log('File open event received:', event.payload.file_path);
+        openFile(event.payload.file_path);
+      });
     };
 
     setupMenuListeners();
@@ -194,8 +201,36 @@ function AppDesktop() {
       if (unlistenSaveAs) unlistenSaveAs();
       if (unlistenSaveWithVariables) unlistenSaveWithVariables();
       if (unlistenHelp) unlistenHelp();
+      if (unlistenFileOpen) unlistenFileOpen();
     };
-  }, [handleSaveFileAs, handleSaveWithVariables, handleHelpOpen]); // 依存配列に関数を追加
+  }, [handleSaveFileAs, handleSaveWithVariables, handleHelpOpen, openFile]); // 依存配列に関数を追加
+
+  // Check for pending file paths on app startup (macOS file association)
+  useEffect(() => {
+    const checkPendingFiles = async () => {
+      try {
+        const { desktopApi } = await import('./api/desktopApi');
+        const pendingPaths = await desktopApi.getPendingFilePaths();
+
+        if (pendingPaths.length > 0) {
+          console.log('Found pending file paths:', pendingPaths);
+          // Open the first file (in case multiple files were queued)
+          for (const filePath of pendingPaths) {
+            console.log('Opening pending file:', filePath);
+            await openFile(filePath);
+            // Only open the first file to avoid overwhelming the user
+            break;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking pending files:', error);
+      }
+    };
+
+    // Small delay to ensure frontend is ready
+    const timer = setTimeout(checkPendingFiles, 500);
+    return () => clearTimeout(timer);
+  }, [openFile]);
 
   return (
     <ThemeProvider theme={currentTheme}>
