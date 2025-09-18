@@ -332,6 +332,27 @@ fn log_from_frontend(message: String) {
     println!("[FRONTEND] {}", message);
 }
 
+// Check if frontend is ready
+static FRONTEND_READY: OnceLock<Mutex<bool>> = OnceLock::new();
+
+#[tauri::command]
+fn set_frontend_ready() {
+    let ready = FRONTEND_READY.get_or_init(|| Mutex::new(false));
+    if let Ok(mut is_ready) = ready.lock() {
+        *is_ready = true;
+        println!("Frontend is now ready");
+    }
+}
+
+fn is_frontend_ready() -> bool {
+    let ready = FRONTEND_READY.get_or_init(|| Mutex::new(false));
+    if let Ok(is_ready) = ready.lock() {
+        *is_ready
+    } else {
+        false
+    }
+}
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -350,21 +371,26 @@ fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
             if ext_str == "md" || ext_str == "txt" {
                 println!("Valid file type, attempting to emit open-file event");
 
-                // Try to emit event to frontend immediately
-                match app_handle.emit(
-                    "open-file",
-                    OpenFileEvent {
-                        file_path: file_path.clone(),
-                    },
-                ) {
-                    Ok(_) => {
-                        println!("Successfully emitted open-file event");
-                        return;
-                    }
-                    Err(e) => {
-                        println!("Failed to emit open-file event: {}", e);
-                    }
-                }
+                        // Check if frontend is ready before emitting
+                        if is_frontend_ready() {
+                            // Try to emit event to frontend immediately
+                            match app_handle.emit(
+                                "open-file",
+                                OpenFileEvent {
+                                    file_path: file_path.clone(),
+                                },
+                            ) {
+                                Ok(_) => {
+                                    println!("Successfully emitted open-file event (frontend ready)");
+                                    return;
+                                }
+                                Err(e) => {
+                                    println!("Failed to emit open-file event: {}", e);
+                                }
+                            }
+                        } else {
+                            println!("Frontend not ready, will buffer file path");
+                        }
 
                 // If immediate emit failed, buffer the file path for later retrieval
                 println!("Buffering file path for later retrieval: {}", file_path);
@@ -412,7 +438,8 @@ pub fn run() {
             save_file,
             get_file_hash,
             get_pending_file_paths,
-            log_from_frontend
+            log_from_frontend,
+            set_frontend_ready
         ])
         .setup(|app| {
             // Get command line arguments

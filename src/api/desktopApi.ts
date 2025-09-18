@@ -40,6 +40,15 @@ export const desktopApi = {
       console.error('Error logging to Rust:', error);
     }
   },
+
+  // Notify Rust that frontend is ready
+  async setFrontendReady(): Promise<void> {
+    try {
+      await invoke('set_frontend_ready');
+    } catch (error: unknown) {
+      console.error('Error setting frontend ready:', error);
+    }
+  },
   // Open file
   async openFile(): Promise<FileResponse> {
     try {

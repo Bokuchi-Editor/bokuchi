@@ -242,6 +242,15 @@ function AppDesktop() {
 
       console.log('✅ File open event listener set up successfully');
       await desktopApi.logToRust('✅ File open event listener set up successfully');
+
+      // Notify Rust that frontend is ready
+      try {
+        await desktopApi.setFrontendReady();
+        console.log('✅ Frontend ready notification sent to Rust');
+        await desktopApi.logToRust('✅ Frontend ready notification sent to Rust');
+      } catch (error) {
+        console.error('❌ Failed to notify Rust that frontend is ready:', error);
+      }
     };
 
     setupMenuListeners();

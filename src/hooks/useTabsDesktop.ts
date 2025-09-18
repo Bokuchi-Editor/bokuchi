@@ -5,9 +5,32 @@ import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 
+// グローバルなタブ状態管理（重複チェック用）
+let globalTabsState: Tab[] = [];
+
+// グローバル状態を更新する関数
+const updateGlobalTabsState = (tabs: Tab[]) => {
+  globalTabsState = [...tabs];
+};
+
+// グローバル状態から重複チェックを行う関数
+const checkDuplicateFile = (filePath: string): Tab | null => {
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  return globalTabsState.find(tab => {
+    if (!tab.filePath) return false;
+    const normalizedExistingPath = tab.filePath.replace(/\\/g, '/');
+    return normalizedExistingPath === normalizedPath;
+  }) || null;
+};
+
 export const useTabsDesktop = () => {
   const [state, dispatch] = useReducer(tabReducer, initialTabState);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // 状態が更新されるたびにグローバル状態を更新
+  useEffect(() => {
+    updateGlobalTabsState(state.tabs);
+  }, [state.tabs]);
 
   const addTab = useCallback((tab: Omit<Tab, 'id'>) => {
     const newTab: Tab = {
@@ -81,24 +104,25 @@ export const useTabsDesktop = () => {
         }
       }
 
-      // 同じファイルが既に開かれているかチェック（パス正規化）
+      // 同じファイルが既に開かれているかチェック（グローバル状態を使用）
       if (result.filePath) {
         // パスを正規化（絶対パスに変換）
         const normalizedPath = result.filePath.replace(/\\/g, '/');
         console.log('🔍 Checking for existing file with normalized path:', normalizedPath);
         await desktopApi.logToRust(`🔍 Checking for existing file with normalized path: ${normalizedPath}`);
 
-        // 現在のタブ状態を取得（最新の状態を確実に取得）
-        const currentTabs = state.tabs;
-        console.log('🔍 Current tabs count:', currentTabs.length);
-        await desktopApi.logToRust(`🔍 Current tabs count: ${currentTabs.length}`);
+        // グローバル状態から重複チェック
+        const existingTab = checkDuplicateFile(result.filePath);
 
-        const existingTab = currentTabs.find(tab => {
-          if (!tab.filePath) return false;
-          const normalizedExistingPath = tab.filePath.replace(/\\/g, '/');
-          console.log('🔍 Comparing with existing tab path:', normalizedExistingPath);
-          return normalizedExistingPath === normalizedPath;
-        });
+        console.log('🔍 Global tabs count:', globalTabsState.length);
+        await desktopApi.logToRust(`🔍 Global tabs count: ${globalTabsState.length}`);
+
+        // 各タブの詳細をログ出力
+        for (let index = 0; index < globalTabsState.length; index++) {
+          const tab = globalTabsState[index];
+          console.log(`🔍 Global Tab ${index}: ${tab.filePath} (id: ${tab.id})`);
+          await desktopApi.logToRust(`🔍 Global Tab ${index}: ${tab.filePath} (id: ${tab.id})`);
+        }
 
         if (existingTab) {
           console.log('📁 File already open, switching to existing tab:', result.filePath);
@@ -124,10 +148,15 @@ export const useTabsDesktop = () => {
         }
       }
 
+      // ファイルパスを正規化して保存
+      const normalizedFilePath = result.filePath ? result.filePath.replace(/\\/g, '/') : undefined;
+      console.log('📁 Creating new tab with normalized file path:', normalizedFilePath);
+      await desktopApi.logToRust(`📁 Creating new tab with normalized file path: ${normalizedFilePath}`);
+
       const tabId = addTab({
         title: fileName,
         content: result.content,
-        filePath: result.filePath,
+        filePath: normalizedFilePath,
         isModified: false,
         isNew: false,
         fileHashInfo,
