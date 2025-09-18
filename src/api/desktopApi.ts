@@ -21,6 +21,34 @@ export interface FileHashInfo {
 }
 
 export const desktopApi = {
+  // Get pending file paths from Rust backend
+  async getPendingFilePaths(): Promise<string[]> {
+    try {
+      const paths = await invoke<string[]>('get_pending_file_paths');
+      return paths;
+    } catch (error: unknown) {
+      console.error('Error getting pending file paths:', error);
+      return [];
+    }
+  },
+
+  // Log message to Rust console
+  async logToRust(message: string): Promise<void> {
+    try {
+      await invoke('log_from_frontend', { message });
+    } catch (error: unknown) {
+      console.error('Error logging to Rust:', error);
+    }
+  },
+
+  // Notify Rust that frontend is ready
+  async setFrontendReady(): Promise<void> {
+    try {
+      await invoke('set_frontend_ready');
+    } catch (error: unknown) {
+      console.error('Error setting frontend ready:', error);
+    }
+  },
   // Open file
   async openFile(): Promise<FileResponse> {
     try {

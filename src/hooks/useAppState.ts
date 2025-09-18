@@ -197,46 +197,8 @@ export const useAppState = () => {
 
     window.addEventListener('fileChangeDetected', handleFileChangeDetected);
 
-    // ファイル開くイベントのリスナー
-    const handleOpenFile = async (event: { payload: { file_path: string } }) => {
-      const { file_path } = event.payload;
-
-      try {
-        // ファイルを開く
-        await openFile(file_path);
-        setSnackbar({
-          open: true,
-          message: `Opened file: ${file_path}`,
-          severity: 'success'
-        });
-      } catch (error) {
-        console.error('Failed to open file:', error);
-        setSnackbar({
-          open: true,
-          message: `Failed to open file: ${error}`,
-          severity: 'error'
-        });
-      }
-    };
-
-    // Tauriのイベントリスナーを設定（グローバル管理で重複を完全に防ぐ）
-    let unlisten: (() => void) | undefined;
-
-    const setupTauriListener = async () => {
-      // 既存のリスナーをクリーンアップ
-      if (unlisten) unlisten();
-
-      const { listen } = await import('@tauri-apps/api/event');
-      unlisten = await listen('open-file', handleOpenFile);
-    };
-
-    setupTauriListener();
-
     return () => {
       window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
-      if (unlisten) {
-        unlisten();
-      }
     };
   }, [updateTabContent, updateTabFileHash, setActiveTab, isInitialized]);
 
