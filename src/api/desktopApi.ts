@@ -31,6 +31,15 @@ export const desktopApi = {
       return [];
     }
   },
+
+  // Log message to Rust console
+  async logToRust(message: string): Promise<void> {
+    try {
+      await invoke('log_from_frontend', { message });
+    } catch (error: unknown) {
+      console.error('Error logging to Rust:', error);
+    }
+  },
   // Open file
   async openFile(): Promise<FileResponse> {
     try {

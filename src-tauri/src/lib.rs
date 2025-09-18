@@ -318,12 +318,18 @@ fn get_pending_file_paths() -> Vec<String> {
     if let Ok(mut paths) = pending_paths.lock() {
         let result = paths.clone();
         paths.clear(); // Clear buffer after retrieving
-        println!("Retrieved {} pending file paths", result.len());
+        println!("Retrieved {} pending file paths: {:?}", result.len(), result);
         result
     } else {
         println!("Failed to lock pending file paths");
         Vec::new()
     }
+}
+
+// Log message from frontend to Rust console
+#[tauri::command]
+fn log_from_frontend(message: String) {
+    println!("[FRONTEND] {}", message);
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -405,7 +411,8 @@ pub fn run() {
             read_file,
             save_file,
             get_file_hash,
-            get_pending_file_paths
+            get_pending_file_paths,
+            log_from_frontend
         ])
         .setup(|app| {
             // Get command line arguments

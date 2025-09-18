@@ -81,12 +81,33 @@ export const useTabsDesktop = () => {
         }
       }
 
-      // 同じファイルが既に開かれているかチェック
+      // 同じファイルが既に開かれているかチェック（パス正規化）
       if (result.filePath) {
-        const existingTab = state.tabs.find(tab => tab.filePath === result.filePath);
+        // パスを正規化（絶対パスに変換）
+        const normalizedPath = result.filePath.replace(/\\/g, '/');
+        console.log('🔍 Checking for existing file with normalized path:', normalizedPath);
+        await desktopApi.logToRust(`🔍 Checking for existing file with normalized path: ${normalizedPath}`);
+
+        // 現在のタブ状態を取得（最新の状態を確実に取得）
+        const currentTabs = state.tabs;
+        console.log('🔍 Current tabs count:', currentTabs.length);
+        await desktopApi.logToRust(`🔍 Current tabs count: ${currentTabs.length}`);
+
+        const existingTab = currentTabs.find(tab => {
+          if (!tab.filePath) return false;
+          const normalizedExistingPath = tab.filePath.replace(/\\/g, '/');
+          console.log('🔍 Comparing with existing tab path:', normalizedExistingPath);
+          return normalizedExistingPath === normalizedPath;
+        });
+
         if (existingTab) {
+          console.log('📁 File already open, switching to existing tab:', result.filePath);
+          await desktopApi.logToRust(`📁 File already open, switching to existing tab: ${result.filePath} (existing tab: ${existingTab.id})`);
           setActiveTab(existingTab.id);
           return existingTab.id;
+        } else {
+          console.log('📁 File not found in existing tabs, will create new tab');
+          await desktopApi.logToRust(`📁 File not found in existing tabs, will create new tab: ${result.filePath}`);
         }
       }
 

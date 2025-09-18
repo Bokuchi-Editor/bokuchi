@@ -102,6 +102,9 @@ function AppDesktop() {
     let unlistenFileOpen: (() => void) | undefined;
 
     const setupMenuListeners = async () => {
+      console.log('🔧 Setting up menu listeners...');
+      const { desktopApi } = await import('./api/desktopApi');
+      await desktopApi.logToRust('🔧 Setting up menu listeners...');
       const { listen } = await import('@tauri-apps/api/event');
 
       // デバウンス処理用の変数（グローバルに移動）
@@ -185,11 +188,60 @@ function AppDesktop() {
         handleHelpOpen();
       });
 
-      // File association event listener
-      unlistenFileOpen = await listen('open-file', (event: { payload: { file_path: string } }) => {
-        console.log('File open event received:', event.payload.file_path);
-        openFile(event.payload.file_path);
+      // File association event listener with debounce
+      console.log('🔧 Setting up file open event listener...');
+      await desktopApi.logToRust('🔧 Setting up file open event listener...');
+
+      // Debounce for file open events
+      const fileOpenDebounce = (window as unknown as {
+        lastFileOpenTime?: number;
+        lastFilePath?: string;
+        DEBOUNCE_DELAY: number;
       });
+
+      if (!fileOpenDebounce.lastFileOpenTime) {
+        fileOpenDebounce.lastFileOpenTime = 0;
+      }
+      if (!fileOpenDebounce.lastFilePath) {
+        fileOpenDebounce.lastFilePath = '';
+      }
+      fileOpenDebounce.DEBOUNCE_DELAY = 2000; // 2000ms debounce for file open
+
+      unlistenFileOpen = await listen('open-file', async (event: { payload: { file_path: string } }) => {
+        const now = Date.now();
+        const timeDiff = now - fileOpenDebounce.lastFileOpenTime!;
+        const currentFilePath = event.payload.file_path;
+        const isSameFile = currentFilePath === fileOpenDebounce.lastFilePath;
+
+        console.log('🎯 File open event received:', currentFilePath);
+        console.log('🎯 Time since last file open:', timeDiff, 'ms');
+        console.log('🎯 Same file as last:', isSameFile);
+        console.log('🎯 Last file path:', fileOpenDebounce.lastFilePath);
+        await desktopApi.logToRust(`🎯 File open event received: ${currentFilePath} (${timeDiff}ms since last, same file: ${isSameFile})`);
+
+        // Debounce: same file within time limit, or same file regardless of time
+        if (isSameFile && timeDiff < fileOpenDebounce.DEBOUNCE_DELAY) {
+          console.log('🚫 File open event debounced (same file, too soon)');
+          await desktopApi.logToRust(`🚫 File open event debounced (same file: ${currentFilePath}, ${timeDiff}ms < ${fileOpenDebounce.DEBOUNCE_DELAY}ms)`);
+          return;
+        }
+
+        // Additional check: if same file and time difference is reasonable (less than 10 seconds), also debounce
+        if (isSameFile && timeDiff < 10000) {
+          console.log('🚫 File open event debounced (same file, recent)');
+          await desktopApi.logToRust(`🚫 File open event debounced (same file: ${currentFilePath}, ${timeDiff}ms < 10000ms)`);
+          return;
+        }
+
+        fileOpenDebounce.lastFileOpenTime = now;
+        fileOpenDebounce.lastFilePath = currentFilePath;
+        console.log('✅ File open event processed');
+        await desktopApi.logToRust(`✅ File open event processed: ${currentFilePath}`);
+        openFile(currentFilePath);
+      });
+
+      console.log('✅ File open event listener set up successfully');
+      await desktopApi.logToRust('✅ File open event listener set up successfully');
     };
 
     setupMenuListeners();
@@ -203,34 +255,62 @@ function AppDesktop() {
       if (unlistenHelp) unlistenHelp();
       if (unlistenFileOpen) unlistenFileOpen();
     };
-  }, [handleSaveFileAs, handleSaveWithVariables, handleHelpOpen, openFile]); // 依存配列に関数を追加
+  }, []); // 依存配列を空にして、一度だけ実行されるようにする
 
   // Check for pending file paths on app startup (macOS file association)
   useEffect(() => {
     const checkPendingFiles = async () => {
       try {
         const { desktopApi } = await import('./api/desktopApi');
-        const pendingPaths = await desktopApi.getPendingFilePaths();
 
-        if (pendingPaths.length > 0) {
-          console.log('Found pending file paths:', pendingPaths);
-          // Open the first file (in case multiple files were queued)
-          for (const filePath of pendingPaths) {
-            console.log('Opening pending file:', filePath);
-            await openFile(filePath);
-            // Only open the first file to avoid overwhelming the user
-            break;
+        // 複数回チェックして確実にファイルを取得
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          console.log(`🔍 Checking for pending files (attempt ${attempt}/3)...`);
+          await desktopApi.logToRust(`🔍 Checking for pending files (attempt ${attempt}/3)...`);
+
+          const pendingPaths = await desktopApi.getPendingFilePaths();
+
+          if (pendingPaths.length > 0) {
+            console.log('✅ Found pending file paths:', pendingPaths);
+            await desktopApi.logToRust(`✅ Found ${pendingPaths.length} pending file paths: ${JSON.stringify(pendingPaths)}`);
+
+            // すべてのファイルを開く（重複チェックはopenFile内で処理される）
+            for (const filePath of pendingPaths) {
+              console.log('📁 Opening pending file:', filePath);
+              await desktopApi.logToRust(`📁 Opening pending file: ${filePath}`);
+              try {
+                await openFile(filePath);
+              } catch (error) {
+                console.error('❌ Failed to open pending file:', filePath, error);
+                await desktopApi.logToRust(`❌ Failed to open pending file: ${filePath} - ${error}`);
+              }
+            }
+            break; // ファイルが見つかったら終了
+          } else {
+            console.log(`⏳ No pending files found (attempt ${attempt}/3)`);
+            await desktopApi.logToRust(`⏳ No pending files found (attempt ${attempt}/3)`);
+
+            if (attempt < 3) {
+              // 次の試行まで少し待機
+              await new Promise(resolve => setTimeout(resolve, 500));
+            }
           }
         }
       } catch (error) {
-        console.error('Error checking pending files:', error);
+        console.error('❌ Error checking pending files:', error);
+        try {
+          const { desktopApi } = await import('./api/desktopApi');
+          await desktopApi.logToRust(`❌ Error checking pending files: ${error}`);
+        } catch (logError) {
+          console.error('Failed to log error to Rust:', logError);
+        }
       }
     };
 
-    // Small delay to ensure frontend is ready
-    const timer = setTimeout(checkPendingFiles, 500);
+    // より長い遅延で確実にフロントエンドが準備完了するまで待機
+    const timer = setTimeout(checkPendingFiles, 2000); // 2秒に延長
     return () => clearTimeout(timer);
-  }, [openFile]);
+  }, []); // 依存配列を空にして、一度だけ実行されるようにする
 
   return (
     <ThemeProvider theme={currentTheme}>
