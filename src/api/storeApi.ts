@@ -33,7 +33,6 @@ export const storeApi = {
   // 状態を読み込み
   async loadState(): Promise<AppState | null> {
     try {
-      console.log('Loading state...');
       const storeInstance = await getStore();
       const state = await storeInstance.get('appState') as AppState;
       return state || null;
@@ -58,7 +57,6 @@ export const storeApi = {
   // グローバル変数を読み込み
   async loadGlobalVariables(): Promise<Record<string, string>> {
     try {
-      console.log('Loading global variables...');
       const storeInstance = await getStore();
       const variables = await storeInstance.get('globalVariables') as Record<string, string>;
       return variables || {};
@@ -83,7 +81,6 @@ export const storeApi = {
   // 言語設定を読み込み
   async loadLanguage(): Promise<string> {
     try {
-      console.log('Loading language...');
       const storeInstance = await getStore();
       const language = await storeInstance.get('language') as string;
       return language || 'en';
@@ -108,7 +105,6 @@ export const storeApi = {
   // ズーム設定を読み込み
   async loadZoomLevel(): Promise<number> {
     try {
-      console.log('Loading zoom level...');
       const storeInstance = await getStore();
       const zoomLevel = await storeInstance.get('zoomLevel') as number;
       return zoomLevel || 1.0;
@@ -133,7 +129,6 @@ export const storeApi = {
   // ダークモード設定を読み込み
   async loadDarkMode(): Promise<boolean> {
     try {
-      console.log('Loading dark mode...');
       const storeInstance = await getStore();
       const darkMode = await storeInstance.get('darkMode') as boolean;
       return darkMode || false;
@@ -158,7 +153,6 @@ export const storeApi = {
   // テーマ設定を読み込み
   async loadTheme(): Promise<ThemeName> {
     try {
-      console.log('Loading theme...');
       const storeInstance = await getStore();
       const theme = await storeInstance.get('theme') as ThemeName;
       return theme || 'default';
@@ -183,7 +177,6 @@ export const storeApi = {
   // タブレイアウト設定を読み込み
   async loadTabLayout(): Promise<'horizontal' | 'vertical'> {
     try {
-      console.log('Loading tab layout...');
       const storeInstance = await getStore();
       const tabLayout = await storeInstance.get('tabLayout') as 'horizontal' | 'vertical';
       return tabLayout || 'horizontal';
@@ -208,7 +201,6 @@ export const storeApi = {
   // ビューモード設定を読み込み
   async loadViewMode(): Promise<'split' | 'editor' | 'preview'> {
     try {
-      console.log('Loading view mode...');
       const storeInstance = await getStore();
       const viewMode = await storeInstance.get('viewMode') as 'split' | 'editor' | 'preview';
       return viewMode || 'split';
@@ -248,7 +240,6 @@ export const storeApi = {
   // アプリケーション設定を読み込み
   async loadAppSettings(): Promise<AppSettings> {
     try {
-      console.log('Loading app settings...');
       const storeInstance = await getStore();
       const settings = await storeInstance.get('appSettings') as AppSettings;
 
@@ -273,7 +264,6 @@ export const storeApi = {
   // 設定をリセット
   async resetAppSettings(): Promise<void> {
     try {
-      console.log('Resetting app settings...');
       const storeInstance = await getStore();
       await storeInstance.set('appSettings', DEFAULT_APP_SETTINGS);
       await storeInstance.save();

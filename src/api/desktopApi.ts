@@ -66,10 +66,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('File dialog result:', selected);
-
       if (!selected || Array.isArray(selected)) {
-        console.log('No file selected');
         return { content: '', error: 'No file selected' };
       }
 
@@ -105,10 +102,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('Save dialog result:', selected);
-
       if (!selected) {
-        console.log('Save dialog cancelled by user');
         return { success: false, error: 'Save cancelled by user' };
       }
 
@@ -147,10 +141,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('Save as dialog result:', selected);
-
       if (!selected) {
-        console.log('No save location selected for save as');
         return { success: false, error: 'No save location selected' };
       }
 
@@ -272,10 +263,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('HTML save dialog result:', selected);
-
       if (!selected) {
-        console.log('HTML save dialog cancelled by user');
         return { success: false, error: 'Save cancelled by user' };
       }
 
@@ -306,10 +294,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('Settings export dialog result:', selected);
-
       if (!selected) {
-        console.log('Settings export dialog cancelled by user');
         return { success: false, error: 'Export cancelled by user' };
       }
 
@@ -340,10 +325,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('Settings import dialog result:', selected);
-
       if (!selected || Array.isArray(selected)) {
-        console.log('No settings file selected');
         return { content: '', error: 'No file selected' };
       }
 
@@ -374,10 +356,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('YAML save dialog result:', selected);
-
       if (!selected) {
-        console.log('YAML save dialog cancelled by user');
         return { success: false, error: 'Save cancelled by user' };
       }
 
@@ -407,10 +386,7 @@ export const desktopApi = {
         ]
       });
 
-      console.log('YAML file dialog result:', selected);
-
       if (!selected) {
-        console.log('YAML file dialog cancelled by user');
         return { content: '', error: 'File selection cancelled by user' };
       }
 
