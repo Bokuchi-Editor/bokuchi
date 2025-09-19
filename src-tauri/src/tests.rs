@@ -1,3 +1,43 @@
+//! # Tests Module
+//!
+//! This module contains comprehensive unit tests for the Bokuchi application.
+//!
+//! ## Test Coverage
+//!
+//! ### VariableProcessor Tests
+//! - **Initialization**: Test `VariableProcessor::new()` creates empty instance
+//! - **Variable Management**: Test setting, getting, and retrieving global variables
+//! - **Markdown Parsing**: Test parsing variables from Markdown comments
+//! - **Variable Substitution**: Test `{{variable}}` replacement in content
+//! - **YAML Import/Export**: Test loading and saving variables to/from YAML
+//! - **Edge Cases**: Test empty content, malformed comments, and special characters
+//!
+//! ### File Operations Tests
+//! - **Hash Calculation**: Test SHA256 hash generation for file content
+//! - **Large File Handling**: Test behavior with files larger than 10MB
+//! - **Metadata Extraction**: Test file modification time and size retrieval
+//! - **Error Handling**: Test proper error messages for missing files
+//!
+//! ### Integration Tests
+//! - **End-to-End Variable Processing**: Test complete workflow from parsing to substitution
+//! - **Complex Scenarios**: Test multiple variables, nested content, and mixed formats
+//!
+//! ## Running Tests
+//! ```bash
+//! # Run all tests
+//! cargo test
+//!
+//! # Run specific test module
+//! cargo test tests
+//!
+//! # Run with output
+//! cargo test -- --nocapture
+//! ```
+//!
+//! ## Test Data
+//! Tests use various sample Markdown content and variable configurations to ensure
+//! robust functionality across different use cases.
+
 use crate::*;
 use std::collections::HashMap;
 

@@ -1,414 +1,49 @@
-use anyhow::Result;
-use regex::Regex;
-use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
-use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
-use std::sync::Mutex;
-use std::time::SystemTime;
-use std::sync::OnceLock;
+//! # Bokuchi - Main Library
+//!
+//! This is the main entry point for the Bokuchi Markdown editor application.
+//!
+//! ## Architecture
+//! The application is organized into several modules:
+//! - `types`: Core data structures and global state
+//! - `variable_processor`: Variable substitution in Markdown content
+//! - `file_operations`: File-related utility functions
+//! - `file_association`: File association handling (macOS)
+//! - `commands`: Tauri commands for frontend communication
+//!
+//! ## Features
+//! - **Markdown Editing**: Full-featured Markdown editor with live preview
+//! - **Variable Substitution**: Dynamic content with `{{variable}}` syntax
+//! - **File Association**: Open files by double-clicking in Finder (macOS)
+//! - **Multi-tab Interface**: Edit multiple files simultaneously
+//! - **Cross-platform**: Built with Tauri for native performance
+//!
+//! ## Application Lifecycle
+//! 1. `run()` function initializes the Tauri application
+//! 2. Plugins are registered for file system, dialogs, and clipboard access
+//! 3. Custom menu is set up with application-specific items
+//! 4. Event handlers are registered for menu actions and file associations
+//! 5. Application runs with event loop handling user interactions
+
 use tauri::menu::{Menu, MenuItem, MenuItemKind};
 use tauri::{Emitter, Manager, RunEvent};
 
-// Variable definition
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Variable {
-    pub name: String,
-    pub value: String,
-}
+// Module declarations
+mod types;
+mod variable_processor;
+mod file_operations;
+mod file_association;
+mod commands;
 
-// Variable set
-#[derive(Debug, Serialize, Deserialize)]
-pub struct VariableSet {
-    pub variables: Vec<Variable>,
-}
-
-// File hash information
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct FileHashInfo {
-    pub hash: String,
-    pub modified_time: u64,
-    pub file_size: u64,
-}
-
-// File open event
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OpenFileEvent {
-    pub file_path: String,
-}
-
-// Global state for buffering file paths received before frontend is ready
-static PENDING_FILE_PATHS: OnceLock<Mutex<Vec<String>>> = OnceLock::new();
-
-// Variable processor
-pub struct VariableProcessor {
-    global_variables: Mutex<HashMap<String, String>>,
-}
-
-impl VariableProcessor {
-    pub fn new() -> Self {
-        Self {
-            global_variables: Mutex::new(HashMap::new()),
-        }
-    }
-
-    // Set global variable
-    pub fn set_global_variable(&self, name: String, value: String) {
-        let mut vars = self.global_variables.lock().unwrap();
-        vars.insert(name, value);
-    }
-
-    // Get global variable
-    pub fn get_global_variable(&self, name: &str) -> Option<String> {
-        let vars = self.global_variables.lock().unwrap();
-        vars.get(name).cloned()
-    }
-
-    // Get all global variables
-    pub fn get_all_global_variables(&self) -> HashMap<String, String> {
-        let vars = self.global_variables.lock().unwrap();
-        vars.clone()
-    }
-
-    // Extract variable definitions from Markdown
-    pub fn parse_variables_from_markdown(&self, content: &str) -> (Vec<Variable>, String) {
-        let mut variables = Vec::new();
-        let lines: Vec<&str> = content.lines().collect();
-        let mut processed_lines = Vec::new();
-
-        for line in lines {
-            let trimmed = line.trim();
-
-            // Check for variable definition pattern
-            if trimmed.starts_with("<!-- @var ") && trimmed.ends_with(" -->") {
-                // <!-- @var name: value --> format
-                let var_content = trimmed
-                    .strip_prefix("<!-- @var ")
-                    .unwrap()
-                    .strip_suffix(" -->")
-                    .unwrap();
-
-                if let Some(colon_index) = var_content.find(':') {
-                    let name = var_content[..colon_index].trim().to_string();
-                    let value = var_content[colon_index + 1..].trim().to_string();
-                    variables.push(Variable { name, value });
-                }
-            } else if trimmed.starts_with("<!-- @include:") && trimmed.ends_with(" -->") {
-                // <!-- @include: filename --> format (future implementation)
-                // Currently skipped
-            } else {
-                processed_lines.push(line);
-            }
-        }
-
-        (variables, processed_lines.join("\n"))
-    }
-
-    // Expand variables in Markdown content
-    pub fn process_variables(&self, content: &str) -> String {
-        // Extract variable definitions from file
-        let (file_variables, processed_content) = self.parse_variables_from_markdown(content);
-
-        // Convert file variables to map
-        let mut file_var_map = HashMap::new();
-        for v in file_variables {
-            file_var_map.insert(v.name, v.value);
-        }
-
-        // Regular expression for variable expansion
-        let re = Regex::new(r"\{\{([^}]+)\}\}").unwrap();
-
-        // Expand variables
-        let result = re.replace_all(&processed_content, |caps: &regex::Captures| {
-            let var_name = caps.get(1).unwrap().as_str().trim();
-
-            // Prioritize file variables, then global variables
-            if let Some(value) = file_var_map.get(var_name) {
-                return value.clone();
-            }
-            if let Some(value) = self.get_global_variable(var_name) {
-                return value;
-            }
-
-            // Return original string if variable not found
-            caps[0].to_string()
-        });
-
-        result.to_string()
-    }
-
-    // Load variables from YAML file
-    pub fn load_variables_from_yaml(&self, yaml_content: &str) -> Result<()> {
-        let var_set: VariableSet = serde_yaml::from_str(yaml_content)?;
-        let mut vars = self.global_variables.lock().unwrap();
-
-        for v in var_set.variables {
-            vars.insert(v.name, v.value);
-        }
-
-        Ok(())
-    }
-
-    // Export variables to YAML format
-    pub fn export_variables_to_yaml(&self) -> Result<String> {
-        let vars = self.get_all_global_variables();
-        let variables: Vec<Variable> = vars
-            .into_iter()
-            .map(|(name, value)| Variable { name, value })
-            .collect();
-
-        let var_set = VariableSet { variables };
-        let yaml_content = serde_yaml::to_string(&var_set)?;
-
-        Ok(yaml_content)
-    }
-}
-
-// Global variable processor instance
-lazy_static::lazy_static! {
-    static ref VARIABLE_PROCESSOR: VariableProcessor = VariableProcessor::new();
-}
-
-// Tauri command: Set global variable
-#[tauri::command]
-fn set_global_variable(name: String, value: String) -> Result<(), String> {
-    VARIABLE_PROCESSOR.set_global_variable(name, value);
-    Ok(())
-}
-
-// Tauri command: Get global variables
-#[tauri::command]
-fn get_global_variables() -> Result<HashMap<String, String>, String> {
-    Ok(VARIABLE_PROCESSOR.get_all_global_variables())
-}
-
-// Tauri command: Load variables from YAML
-#[tauri::command]
-fn load_variables_from_yaml(yaml_content: String) -> Result<(), String> {
-    VARIABLE_PROCESSOR
-        .load_variables_from_yaml(&yaml_content)
-        .map_err(|e| e.to_string())
-}
-
-// Tauri command: Export variables to YAML format
-#[tauri::command]
-fn export_variables_to_yaml() -> Result<String, String> {
-    VARIABLE_PROCESSOR
-        .export_variables_to_yaml()
-        .map_err(|e| e.to_string())
-}
-
-// Tauri command: Process Markdown (variable expansion)
-#[tauri::command]
-fn process_markdown(
-    content: String,
-    global_variables: HashMap<String, String>,
-) -> Result<String, String> {
-    // Temporarily set global variables
-    for (name, value) in global_variables {
-        VARIABLE_PROCESSOR.set_global_variable(name, value);
-    }
-
-    let result = VARIABLE_PROCESSOR.process_variables(&content);
-    Ok(result)
-}
-
-// Tauri command: Get expanded Markdown content
-#[tauri::command]
-fn get_expanded_markdown(
-    content: String,
-    global_variables: HashMap<String, String>,
-) -> Result<String, String> {
-    // Temporarily set global variables
-    for (name, value) in global_variables {
-        VARIABLE_PROCESSOR.set_global_variable(name, value);
-    }
-
-    let result = VARIABLE_PROCESSOR.process_variables(&content);
-    Ok(result)
-}
-
-// Calculate file hash
-fn calculate_file_hash(path: &str) -> Result<FileHashInfo, String> {
-    let metadata = fs::metadata(path).map_err(|_| "File not found".to_string())?;
-
-    let modified_time = metadata
-        .modified()
-        .map_err(|_| "Failed to get modified time".to_string())?
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .map_err(|_| "Failed to convert time".to_string())?
-        .as_secs();
-
-    let file_size = metadata.len();
-
-    // Skip hash calculation for large files
-    if file_size > 10 * 1024 * 1024 {
-        return Ok(FileHashInfo {
-            hash: "large_file".to_string(),
-            modified_time,
-            file_size,
-        });
-    }
-
-    // Read file content and calculate hash
-    let content = fs::read_to_string(path).map_err(|_| "Failed to read file".to_string())?;
-    let mut hasher = Sha256::new();
-    hasher.update(content.as_bytes());
-    let hash = format!("{:x}", hasher.finalize());
-
-    Ok(FileHashInfo {
-        hash,
-        modified_time,
-        file_size,
-    })
-}
-
-// Tauri command: Read file
-#[tauri::command]
-async fn read_file(path: String) -> Result<String, String> {
-    // File size check (10MB limit)
-    let metadata = fs::metadata(&path).map_err(|_| "File not found".to_string())?;
-    if metadata.len() > 10 * 1024 * 1024 {
-        return Err("File too large (max 10MB)".to_string());
-    }
-
-    // File extension check
-    if let Some(ext) = Path::new(&path).extension() {
-        let ext_str = ext.to_string_lossy().to_lowercase();
-        if ext_str != "md" && ext_str != "txt" {
-            return Err("Unsupported file type. Only .md and .txt files are supported".to_string());
-        }
-    }
-
-    // Read file
-    fs::read_to_string(&path).map_err(|_| "Failed to read file".to_string())
-}
-
-// Tauri command: Save file
-#[tauri::command]
-async fn save_file(path: String, content: String) -> Result<(), String> {
-    // File extension check
-    if let Some(ext) = Path::new(&path).extension() {
-        let ext_str = ext.to_string_lossy().to_lowercase();
-        if ext_str != "md" && ext_str != "txt" {
-            return Err("Unsupported file type. Only .md and .txt files are supported".to_string());
-        }
-    }
-
-    // Create directory
-    if let Some(parent) = Path::new(&path).parent() {
-        fs::create_dir_all(parent).map_err(|_| "Failed to create directory".to_string())?;
-    }
-
-    // Save file
-    fs::write(&path, content).map_err(|_| "Failed to save file".to_string())
-}
-
-// Tauri command: Get file hash
-#[tauri::command]
-async fn get_file_hash(path: String) -> Result<FileHashInfo, String> {
-    calculate_file_hash(&path)
-}
-
-// Get buffered file paths (for frontend to retrieve after initialization)
-#[tauri::command]
-fn get_pending_file_paths() -> Vec<String> {
-    let pending_paths = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
-    if let Ok(mut paths) = pending_paths.lock() {
-        let result = paths.clone();
-        paths.clear(); // Clear buffer after retrieving
-        println!("Retrieved {} pending file paths: {:?}", result.len(), result);
-        result
-    } else {
-        println!("Failed to lock pending file paths");
-        Vec::new()
-    }
-}
-
-// Log message from frontend to Rust console
-#[tauri::command]
-fn log_from_frontend(message: String) {
-    println!("[FRONTEND] {}", message);
-}
-
-// Check if frontend is ready
-static FRONTEND_READY: OnceLock<Mutex<bool>> = OnceLock::new();
-
-#[tauri::command]
-fn set_frontend_ready() {
-    let ready = FRONTEND_READY.get_or_init(|| Mutex::new(false));
-    if let Ok(mut is_ready) = ready.lock() {
-        *is_ready = true;
-        println!("Frontend is now ready");
-    }
-}
-
-fn is_frontend_ready() -> bool {
-    let ready = FRONTEND_READY.get_or_init(|| Mutex::new(false));
-    if let Ok(is_ready) = ready.lock() {
-        *is_ready
-    } else {
-        false
-    }
-}
-
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-// macOS Apple Events handling
-#[cfg(target_os = "macos")]
-fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
-    println!("Handling open file event for: {}", file_path);
-
-    // If file exists and has md or txt extension
-    if Path::new(&file_path).exists() {
-        if let Some(ext) = Path::new(&file_path).extension() {
-            let ext_str = ext.to_string_lossy().to_lowercase();
-            if ext_str == "md" || ext_str == "txt" {
-                println!("Valid file type, attempting to emit open-file event");
-
-                        // Check if frontend is ready before emitting
-                        if is_frontend_ready() {
-                            // Try to emit event to frontend immediately
-                            match app_handle.emit(
-                                "open-file",
-                                OpenFileEvent {
-                                    file_path: file_path.clone(),
-                                },
-                            ) {
-                                Ok(_) => {
-                                    println!("Successfully emitted open-file event (frontend ready)");
-                                    return;
-                                }
-                                Err(e) => {
-                                    println!("Failed to emit open-file event: {}", e);
-                                }
-                            }
-                        } else {
-                            println!("Frontend not ready, will buffer file path");
-                        }
-
-                // If immediate emit failed, buffer the file path for later retrieval
-                println!("Buffering file path for later retrieval: {}", file_path);
-                let pending_paths = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
-                if let Ok(mut paths) = pending_paths.lock() {
-                    paths.push(file_path);
-                    println!("File path added to buffer. Total buffered: {}", paths.len());
-                }
-            } else {
-                println!("Invalid file extension: {}", ext_str);
-            }
-        } else {
-            println!("No file extension found");
-        }
-    } else {
-        println!("File does not exist: {}", file_path);
-    }
-}
+// Re-export types
+pub use types::*;
+// Re-export variable processor
+pub use variable_processor::*;
+// Re-export file operations
+pub use file_operations::*;
+// Re-export file association
+pub use file_association::*;
+// Re-export commands
+pub use commands::*;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -437,9 +72,9 @@ pub fn run() {
             read_file,
             save_file,
             get_file_hash,
-            get_pending_file_paths,
+            get_pending_file_paths_command,
             log_from_frontend,
-            set_frontend_ready
+            set_frontend_ready_command
         ])
         .setup(|app| {
             // Get command line arguments
@@ -637,17 +272,7 @@ pub fn run() {
                 }
                 #[cfg(target_os = "macos")]
                 RunEvent::Opened { urls } => {
-                    println!("RunEvent::Opened received with {} URLs", urls.len());
-                    for url in urls {
-                        println!("Processing URL: {}", url);
-                        if let Ok(path_buf) = url.to_file_path() {
-                            let file_path = path_buf.to_string_lossy().to_string();
-                            println!("Converted to file path: {}", file_path);
-                            handle_open_file_event(&app_handle, file_path);
-                        } else {
-                            println!("Failed to convert URL to file path: {}", url);
-                        }
-                    }
+                    handle_run_event_opened(&app_handle, urls);
                 }
                 _ => {}
             }
