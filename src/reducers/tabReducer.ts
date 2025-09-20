@@ -36,11 +36,14 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
       };
     }
 
-    case 'SET_ACTIVE_TAB':
+    case 'SET_ACTIVE_TAB': {
+      // 存在するタブIDのみを許可
+      const tabExists = state.tabs.some(tab => tab.id === action.payload.id);
       return {
         ...state,
-        activeTabId: action.payload.id,
+        activeTabId: tabExists ? action.payload.id : null,
       };
+    }
 
     case 'UPDATE_TAB_CONTENT':
       return {
@@ -102,18 +105,33 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
-    case 'REORDER_TABS':
-      return {
-        ...state,
-        tabs: action.payload.tabs,
-      };
+    case 'REORDER_TABS': {
+      // アクティブタブIDが存在するかチェック
+      const validActiveTabId = state.activeTabId &&
+        action.payload.tabs.some(tab => tab.id === state.activeTabId)
+        ? state.activeTabId
+        : (action.payload.tabs.length > 0 ? action.payload.tabs[0].id : null);
 
-    case 'LOAD_STATE':
       return {
         ...state,
         tabs: action.payload.tabs,
-        activeTabId: action.payload.activeTabId,
+        activeTabId: validActiveTabId,
       };
+    }
+
+    case 'LOAD_STATE': {
+      // アクティブタブIDが存在するかチェック
+      const validActiveTabId = action.payload.activeTabId &&
+        action.payload.tabs.some(tab => tab.id === action.payload.activeTabId)
+        ? action.payload.activeTabId
+        : (action.payload.tabs.length > 0 ? action.payload.tabs[0].id : null);
+
+      return {
+        ...state,
+        tabs: action.payload.tabs,
+        activeTabId: validActiveTabId,
+      };
+    }
 
     default:
       return state;

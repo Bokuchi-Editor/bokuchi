@@ -254,8 +254,11 @@ const TabBar: React.FC<TabBarProps> = ({
     })
   );
 
-  const handleTabClick = (_event: React.SyntheticEvent, tabId: string) => {
-    onTabChange(tabId);
+  const handleTabClick = (_event: React.SyntheticEvent, tabIndex: number) => {
+    const tab = tabs[tabIndex];
+    if (tab) {
+      onTabChange(tab.id);
+    }
   };
 
   const handleTabClose = (event: React.MouseEvent, tabId: string) => {
@@ -344,7 +347,15 @@ const TabBar: React.FC<TabBarProps> = ({
             strategy={horizontalListSortingStrategy}
           >
             <Tabs
-              value={activeTabId && tabs.find(t => t.id === activeTabId) ? activeTabId : false}
+              value={(() => {
+                if (!activeTabId) return false;
+                const tabIndex = tabs.findIndex(t => t.id === activeTabId);
+                if (tabIndex === -1) {
+                  console.warn('Invalid activeTabId:', activeTabId, 'Available tabs:', tabs.map(t => t.id));
+                  return false;
+                }
+                return tabIndex;
+              })()}
               onChange={handleTabClick}
               variant="scrollable"
               scrollButtons="auto"
