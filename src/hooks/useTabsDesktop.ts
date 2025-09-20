@@ -74,7 +74,12 @@ export const useTabsDesktop = () => {
   const setActiveTab = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
     if (!tab) {
-      dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
+      // 存在しないタブIDの場合は、最初のタブをアクティブにするか、nullにする
+      if (state.tabs.length > 0) {
+        dispatch({ type: 'SET_ACTIVE_TAB', payload: { id: state.tabs[0].id } });
+      } else {
+        dispatch({ type: 'SET_ACTIVE_TAB', payload: { id: null } });
+      }
       return;
     }
 

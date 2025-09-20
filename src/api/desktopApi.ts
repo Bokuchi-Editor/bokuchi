@@ -24,7 +24,7 @@ export const desktopApi = {
   // Get pending file paths from Rust backend
   async getPendingFilePaths(): Promise<string[]> {
     try {
-      const paths = await invoke<string[]>('get_pending_file_paths');
+      const paths = await invoke<string[]>('get_pending_file_paths_command');
       return paths;
     } catch (error: unknown) {
       console.error('Error getting pending file paths:', error);
@@ -44,7 +44,7 @@ export const desktopApi = {
   // Notify Rust that frontend is ready
   async setFrontendReady(): Promise<void> {
     try {
-      await invoke('set_frontend_ready');
+      await invoke('set_frontend_ready_command');
     } catch (error: unknown) {
       console.error('Error setting frontend ready:', error);
     }
