@@ -380,6 +380,16 @@ function AppDesktop() {
           onContentChange={handleContentChange}
           onStatusChange={setEditorStatus}
           onSnackbar={(message, severity) => setSnackbar({ open: true, message, severity })}
+          onTableConversionSettingChange={(newSetting) => {
+            const updatedSettings = {
+              ...appSettings,
+              advanced: {
+                ...appSettings.advanced,
+                tableConversion: newSetting,
+              },
+            };
+            handleAppSettingsChange(updatedSettings);
+          }}
           t={t}
         />
 
