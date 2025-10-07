@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -9,13 +9,15 @@ import {
   Box,
   Paper,
   Divider,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 interface TableConversionDialogProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (convertWithoutAsking?: boolean) => void;
   onCancel: () => void;
   markdownTable: string;
 }
@@ -28,9 +30,10 @@ export const TableConversionDialog: React.FC<TableConversionDialogProps> = ({
   markdownTable,
 }) => {
   const { t } = useTranslation();
+  const [convertWithoutAsking, setConvertWithoutAsking] = useState(false);
 
   const handleConfirm = () => {
-    onConfirm();
+    onConfirm(convertWithoutAsking);
     onClose();
   };
 
@@ -92,6 +95,18 @@ export const TableConversionDialog: React.FC<TableConversionDialogProps> = ({
         <Typography variant="body2" color="text.secondary">
           {t('tableConversion.dialogNote')}
         </Typography>
+
+        <Box sx={{ mt: 2 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={convertWithoutAsking}
+                onChange={(e) => setConvertWithoutAsking(e.target.checked)}
+              />
+            }
+            label={t('tableConversion.convertWithoutAsking')}
+          />
+        </Box>
       </DialogContent>
 
       <DialogActions>

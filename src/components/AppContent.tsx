@@ -37,6 +37,7 @@ interface AppContentProps {
   onContentChange: (content: string) => void;
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
   onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
+  onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -61,6 +62,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onContentChange,
   onStatusChange,
   onSnackbar,
+  onTableConversionSettingChange,
   t,
 }) => {
   return (
@@ -127,6 +129,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       showWhitespace={editorSettings?.showWhitespace}
                       tableConversion={editorSettings?.tableConversion}
                       onSnackbar={onSnackbar}
+                      onTableConversionSettingChange={onTableConversionSettingChange}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -166,6 +169,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     showWhitespace={editorSettings?.showWhitespace}
                     tableConversion={editorSettings?.tableConversion}
                     onSnackbar={onSnackbar}
+                    onTableConversionSettingChange={onTableConversionSettingChange}
                     fileNotFound={
                       activeTab.isNew && activeTab.filePath
                         ? {
