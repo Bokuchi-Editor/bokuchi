@@ -14,7 +14,7 @@ interface EditorProps {
   theme?: string;
   fileNotFound?: {
     filePath: string;
-  onClose: () => void;
+    onClose: () => void;
   };
   onStatusChange?: (status: {
     line: number;
@@ -32,6 +32,7 @@ interface EditorProps {
   showWhitespace?: boolean;
   tableConversion?: 'auto' | 'confirm' | 'off';
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
+  onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
 }
 
 const MarkdownEditor: React.FC<EditorProps> = ({
@@ -50,6 +51,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   showWhitespace = false,
   tableConversion = 'confirm',
   onSnackbar,
+  onTableConversionSettingChange,
 }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -386,9 +388,14 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     }
   };
 
-  const handleTableConversionConfirm = () => {
+  const handleTableConversionConfirm = (convertWithoutAsking?: boolean) => {
     insertMarkdownTable(tableConversionDialog.markdownTable);
     onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
+
+    // If user checked "convert without asking", change setting to 'auto'
+    if (convertWithoutAsking && onTableConversionSettingChange) {
+      onTableConversionSettingChange('auto');
+    }
   };
 
   const handleTableConversionCancel = () => {
