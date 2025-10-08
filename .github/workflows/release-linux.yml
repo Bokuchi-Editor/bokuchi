@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  releases: write
 
 jobs:
   build-linux:
