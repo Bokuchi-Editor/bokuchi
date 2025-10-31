@@ -67,5 +67,8 @@
     "typescript": "~5.9.3",
     "vite": "^7.1.12",
     "vite-plugin-checker": "^0.11.0"
+  },
+  "overrides": {
+    "dompurify": ">=3.2.4"
   }
 }
