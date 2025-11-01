@@ -41,31 +41,34 @@
     "@tauri-apps/api": "^2.8.0",
     "@tauri-apps/plugin-clipboard-manager": "^2.3.1",
     "@tauri-apps/plugin-dialog": "^2.3.3",
-    "@tauri-apps/plugin-fs": "^2.4.2",
+    "@tauri-apps/plugin-fs": "^2.4.3",
     "@tauri-apps/plugin-store": "^2.3.3",
     "@tauri-apps/plugin-window-state": "^2.4.0",
     "highlight.js": "^11.11.1",
     "i18next": "^25.6.0",
     "marked": "^16.3.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-i18next": "^15.7.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.37.0",
     "@tauri-apps/cli": "^2",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.1.9",
-    "@typescript-eslint/eslint-plugin": "^8.45.0",
-    "@typescript-eslint/parser": "^8.46.1",
+    "@types/react-dom": "^19.2.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
     "@vitejs/plugin-react": "^4.6.0",
     "audit-ci": "^7.0.1",
-    "eslint": "^9.37.0",
+    "eslint": "^9.38.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.4.0",
     "typescript": "~5.9.3",
     "vite": "^7.1.12",
     "vite-plugin-checker": "^0.11.0"
+  },
+  "overrides": {
+    "dompurify": ">=3.2.4"
   }
 }
