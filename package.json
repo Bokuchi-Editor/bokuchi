@@ -45,7 +45,7 @@
     "@tauri-apps/plugin-store": "^2.3.3",
     "@tauri-apps/plugin-window-state": "^2.4.0",
     "highlight.js": "^11.11.1",
-    "i18next": "^25.6.1",
+    "i18next": "^25.6.3",
     "marked": "^16.4.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
