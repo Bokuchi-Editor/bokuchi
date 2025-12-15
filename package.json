@@ -66,7 +66,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "vite": "^7.2.2",
-    "vite-plugin-checker": "^0.11.0"
+    "vite-plugin-checker": "^0.12.0"
   },
   "overrides": {
     "dompurify": ">=3.2.4"
