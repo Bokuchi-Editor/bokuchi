@@ -43,7 +43,7 @@ jobs:
             librsvg2-dev
 
       - name: Cache Rust dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry
