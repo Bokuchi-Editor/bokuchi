@@ -47,14 +47,14 @@
     "highlight.js": "^11.11.1",
     "i18next": "^25.7.3",
     "marked": "^16.4.2",
-    "react": "19.2.0",
+    "react": "19.2.3",
     "react-dom": "19.2.0",
     "react-i18next": "^15.7.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@tauri-apps/cli": "^2",
-    "@types/react": "^19.2.2",
+    "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.52.0",
     "@typescript-eslint/parser": "^8.50.1",
