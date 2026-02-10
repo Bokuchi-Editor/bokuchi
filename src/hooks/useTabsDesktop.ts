@@ -71,21 +71,10 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'UPDATE_TAB_FILE_HASH', payload: { id, fileHashInfo } });
   }, []);
 
-  const setActiveTab = useCallback(async (id: string) => {
-    const tab = state.tabs.find(t => t.id === id);
-    if (!tab) {
-      // 存在しないタブIDの場合は、最初のタブをアクティブにするか、nullにする
-      if (state.tabs.length > 0) {
-        dispatch({ type: 'SET_ACTIVE_TAB', payload: { id: state.tabs[0].id } });
-      } else {
-        dispatch({ type: 'SET_ACTIVE_TAB', payload: { id: null } });
-      }
-      return;
-    }
-
-    // ファイル変更検知はuseAppStateの定期的チェックに統一
+  const setActiveTab = useCallback((id: string) => {
+    // バリデーションはリデューサー（SET_ACTIVE_TAB）側で実施
     dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
-  }, [state.tabs]);
+  }, []);
 
   const openFile = useCallback(async (filePath?: string) => {
     try {
@@ -145,7 +134,7 @@ export const useTabsDesktop = () => {
         fileHashInfo,
       });
 
-      setActiveTab(tabId);
+      // ADD_TAB リデューサーが activeTabId を自動設定するため setActiveTab は不要
 
       // Recent Filesに追加
       try {
@@ -166,7 +155,7 @@ export const useTabsDesktop = () => {
       console.error('Failed to open file:', error);
       throw error;
     }
-  }, [addTab, setActiveTab, state.tabs]);
+  }, [addTab, setActiveTab]);
 
   const saveTab = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
@@ -335,9 +324,9 @@ export const useTabsDesktop = () => {
       isModified: false,
       isNew: true,
     });
-    setActiveTab(tabId);
+    // ADD_TAB リデューサーが activeTabId を自動設定するため setActiveTab は不要
     return tabId;
-  }, [addTab, setActiveTab]);
+  }, [addTab]);
 
   const getActiveTab = useCallback(() => {
     const foundTab = state.tabs.find(tab => tab.id === state.activeTabId);

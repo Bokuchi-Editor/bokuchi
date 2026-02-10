@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getThemeByName, applyThemeToDocument } from '../themes';
 import { storeApi } from '../api/storeApi';
@@ -10,6 +10,7 @@ import { Tab } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
+import { useEditorFocus } from './useEditorFocus';
 
 export const useAppState = () => {
   const { t, i18n } = useTranslation();
@@ -89,6 +90,9 @@ export const useAppState = () => {
     canZoomIn,
     canZoomOut,
   } = useZoom(ZOOM_CONFIG);
+
+  // Editor focus management
+  const { focusRequestId, requestEditorFocus } = useEditorFocus();
 
   const currentTheme = getThemeByName(theme);
 
@@ -357,6 +361,37 @@ export const useAppState = () => {
     }
   }, [tabs.length, createNewTab]);
 
+  // Auto-save: debounced save for modified tabs with file paths
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!isSettingsLoaded || !isInitialized || !appSettings.advanced.autoSave) return;
+    if (!activeTab || !activeTab.isModified || activeTab.isNew || !activeTab.filePath) return;
+
+    // Clear previous timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Debounce: save after 3 seconds of inactivity
+    autoSaveTimerRef.current = setTimeout(async () => {
+      try {
+        const success = await saveTab(activeTab.id);
+        if (success) {
+          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+        }
+      } catch (error) {
+        console.error('Auto-save failed:', error);
+      }
+    }, 3000);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [activeTab?.content, activeTab?.id, activeTab?.isModified, activeTab?.isNew, activeTab?.filePath, appSettings.advanced.autoSave, isSettingsLoaded, isInitialized, saveTab, t]);
+
   // Handlers
   const handleContentChange = (content: string) => {
     if (activeTab) {
@@ -383,6 +418,7 @@ export const useAppState = () => {
   const handleRecentFileSelect = async (filePath: string) => {
     try {
       await openFile(filePath);
+      requestEditorFocus();
     } catch (error) {
       console.error('Failed to open recent file:', error);
       setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
@@ -458,6 +494,7 @@ export const useAppState = () => {
     try {
       await openFile();
       setSnackbar({ open: true, message: t('fileOperations.fileLoaded'), severity: 'success' });
+      requestEditorFocus();
     } catch {
       setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
     }
@@ -531,6 +568,7 @@ export const useAppState = () => {
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
+    requestEditorFocus();
   };
 
   const handleTabClose = (tabId: string) => {
@@ -552,6 +590,7 @@ export const useAppState = () => {
 
   const handleNewTab = () => {
     createNewTab();
+    requestEditorFocus();
   };
 
   const handleSaveBeforeClose = async () => {
@@ -637,7 +676,7 @@ export const useAppState = () => {
       // 新しいタブを作成してファイルを開く
       const newTabId = createNewTab();
       updateTabContent(newTabId, content);
-
+      requestEditorFocus();
 
       setSnackbar({
         open: true,
@@ -653,6 +692,16 @@ export const useAppState = () => {
       });
     }
   };
+
+  // Focus editor when switching to a mode that shows the editor
+  useEffect(() => {
+    if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
+      const timer = setTimeout(() => {
+        requestEditorFocus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [viewMode, isSettingsLoaded, requestEditorFocus]);
 
   // View mode rotation handler
   const rotateViewMode = useCallback(() => {
@@ -796,6 +845,10 @@ export const useAppState = () => {
 
     // New unified settings
     appSettings,
+
+    // Editor focus
+    focusRequestId,
+    requestEditorFocus,
 
     // Handlers
     handleContentChange,

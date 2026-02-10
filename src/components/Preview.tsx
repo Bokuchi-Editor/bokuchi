@@ -15,10 +15,12 @@ interface PreviewProps {
   globalVariables?: Record<string, string>;
   zoomLevel?: number;
   onContentChange?: (newContent: string) => void;
+  scrollFraction?: number;
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction }) => {
   const previewRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
@@ -191,6 +193,17 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   };
 
 
+
+  // Sync scroll from editor
+  useEffect(() => {
+    if (scrollFraction !== undefined && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const maxScroll = container.scrollHeight - container.clientHeight;
+      if (maxScroll > 0) {
+        container.scrollTop = scrollFraction * maxScroll;
+      }
+    }
+  }, [scrollFraction]);
 
   const handleExportHTML = async () => {
     try {
@@ -399,6 +412,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         </Tooltip>
       </Box>
       <Box
+        ref={scrollContainerRef}
         sx={{
           flex: 1,
           p: 2,

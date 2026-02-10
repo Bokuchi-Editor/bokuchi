@@ -339,6 +339,24 @@
     "zoomIn": "拡大 (Cmd + Shift + +)",
     "resetZoom": "リセット (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "太字",
+    "italic": "斜体",
+    "heading": "見出し",
+    "heading1": "見出し 1",
+    "heading2": "見出し 2",
+    "heading3": "見出し 3",
+    "unorderedList": "箇条書き",
+    "orderedList": "番号付きリスト",
+    "checkList": "チェックリスト",
+    "link": "リンク",
+    "image": "画像",
+    "codeBlock": "コードブロック",
+    "quote": "引用",
+    "horizontalRule": "水平線",
+    "table": "テーブル",
+    "strikethrough": "取り消し線"
+  },
   "tableConversion": {
     "dialogTitle": "テーブルをMarkdownに変換",
     "dialogMessage": "クリップボードにテーブルが検出されました。Markdown形式に変換しますか？",

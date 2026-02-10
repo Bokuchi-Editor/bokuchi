@@ -339,6 +339,24 @@
     "zoomIn": "Zoom In (Cmd + Shift + +)",
     "resetZoom": "Reset Zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "heading": "Heading",
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "unorderedList": "Unordered List",
+    "orderedList": "Ordered List",
+    "checkList": "Check List",
+    "link": "Link",
+    "image": "Image",
+    "codeBlock": "Code Block",
+    "quote": "Quote",
+    "horizontalRule": "Horizontal Rule",
+    "table": "Table",
+    "strikethrough": "Strikethrough"
+  },
   "tableConversion": {
     "dialogTitle": "Convert Table to Markdown",
     "dialogMessage": "A table was detected in the clipboard. Would you like to convert it to Markdown format?",
