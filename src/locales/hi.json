@@ -339,6 +339,24 @@
     "zoomIn": "ज़ूम इन (Cmd + Shift + +)",
     "resetZoom": "ज़ूम रीसेट करें (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "बोल्ड",
+    "italic": "इटैलिक",
+    "heading": "शीर्षक",
+    "heading1": "शीर्षक 1",
+    "heading2": "शीर्षक 2",
+    "heading3": "शीर्षक 3",
+    "unorderedList": "अक्रमित सूची",
+    "orderedList": "क्रमित सूची",
+    "checkList": "चेकलिस्ट",
+    "link": "लिंक",
+    "image": "छवि",
+    "codeBlock": "कोड ब्लॉक",
+    "quote": "उद्धरण",
+    "horizontalRule": "क्षैतिज रेखा",
+    "table": "तालिका",
+    "strikethrough": "स्ट्राइकथ्रू"
+  },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",
     "dialogMessage": "क्लिपबोर्ड में एक टेबल का पता चला है। क्या आप इसे Markdown प्रारूप में कन्वर्ट करना चाहते हैं?",

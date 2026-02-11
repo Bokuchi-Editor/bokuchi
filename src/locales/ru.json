@@ -339,6 +339,24 @@
     "zoomIn": "Увеличить (Cmd + Shift + +)",
     "resetZoom": "Сбросить масштаб (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Жирный",
+    "italic": "Курсив",
+    "heading": "Заголовок",
+    "heading1": "Заголовок 1",
+    "heading2": "Заголовок 2",
+    "heading3": "Заголовок 3",
+    "unorderedList": "Маркированный список",
+    "orderedList": "Нумерованный список",
+    "checkList": "Чек-лист",
+    "link": "Ссылка",
+    "image": "Изображение",
+    "codeBlock": "Блок кода",
+    "quote": "Цитата",
+    "horizontalRule": "Горизонтальная линия",
+    "table": "Таблица",
+    "strikethrough": "Зачёркнутый"
+  },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",
     "dialogMessage": "В буфере обмена обнаружена таблица. Хотите ли вы конвертировать её в формат Markdown?",

@@ -339,6 +339,24 @@
     "zoomIn": "放大（Cmd + Shift + +）",
     "resetZoom": "重設縮放（Cmd + 0）"
   },
+  "toolbar": {
+    "bold": "粗體",
+    "italic": "斜體",
+    "heading": "標題",
+    "heading1": "標題 1",
+    "heading2": "標題 2",
+    "heading3": "標題 3",
+    "unorderedList": "無序清單",
+    "orderedList": "有序清單",
+    "checkList": "核取清單",
+    "link": "連結",
+    "image": "圖片",
+    "codeBlock": "程式碼區塊",
+    "quote": "引用",
+    "horizontalRule": "水平線",
+    "table": "表格",
+    "strikethrough": "刪除線"
+  },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",
     "dialogMessage": "在剪貼簿中偵測到表格。是否要將其轉換為 Markdown 格式？",

@@ -339,6 +339,24 @@
     "zoomIn": "Zoom avant (Cmd + Shift + +)",
     "resetZoom": "Réinitialiser le zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Gras",
+    "italic": "Italique",
+    "heading": "Titre",
+    "heading1": "Titre 1",
+    "heading2": "Titre 2",
+    "heading3": "Titre 3",
+    "unorderedList": "Liste à puces",
+    "orderedList": "Liste numérotée",
+    "checkList": "Liste de contrôle",
+    "link": "Lien",
+    "image": "Image",
+    "codeBlock": "Bloc de code",
+    "quote": "Citation",
+    "horizontalRule": "Ligne horizontale",
+    "table": "Tableau",
+    "strikethrough": "Barré"
+  },
   "tableConversion": {
     "dialogTitle": "Convertir le tableau en Markdown",
     "dialogMessage": "Un tableau a été détecté dans le presse-papiers. Souhaitez-vous le convertir au format Markdown ?",

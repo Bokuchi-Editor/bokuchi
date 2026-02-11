@@ -339,6 +339,24 @@
     "zoomIn": "확대 (Cmd + Shift + +)",
     "resetZoom": "확대/축소 재설정 (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "굵게",
+    "italic": "기울임",
+    "heading": "제목",
+    "heading1": "제목 1",
+    "heading2": "제목 2",
+    "heading3": "제목 3",
+    "unorderedList": "순서 없는 목록",
+    "orderedList": "순서 있는 목록",
+    "checkList": "체크리스트",
+    "link": "링크",
+    "image": "이미지",
+    "codeBlock": "코드 블록",
+    "quote": "인용",
+    "horizontalRule": "수평선",
+    "table": "표",
+    "strikethrough": "취소선"
+  },
   "tableConversion": {
     "dialogTitle": "표를 Markdown으로 변환",
     "dialogMessage": "클립보드에서 표가 감지되었습니다. Markdown 형식으로 변환하시겠습니까?",
