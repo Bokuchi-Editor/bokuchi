@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import Editor from './Editor';
 import Preview from './Preview';
@@ -38,6 +38,7 @@ interface AppContentProps {
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
   onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
+  focusRequestId?: number;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -63,8 +64,15 @@ const AppContent: React.FC<AppContentProps> = ({
   onStatusChange,
   onSnackbar,
   onTableConversionSettingChange,
+  focusRequestId,
   t,
 }) => {
+  const [scrollFraction, setScrollFraction] = useState(0);
+
+  const handleEditorScrollChange = useCallback((fraction: number) => {
+    setScrollFraction(fraction);
+  }, []);
+
   return (
     <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
       {tabLayout === 'vertical' && (
@@ -121,6 +129,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       theme={theme}
                       onStatusChange={onStatusChange}
                       zoomLevel={currentZoom}
+                      focusRequestId={focusRequestId}
                       fontSize={editorSettings?.fontSize}
                       showLineNumbers={editorSettings?.showLineNumbers}
                       tabSize={editorSettings?.tabSize}
@@ -130,6 +139,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       tableConversion={editorSettings?.tableConversion}
                       onSnackbar={onSnackbar}
                       onTableConversionSettingChange={onTableConversionSettingChange}
+                      onScrollChange={handleEditorScrollChange}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -148,6 +158,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
                       onContentChange={onContentChange}
+                      scrollFraction={scrollFraction}
                     />
                   </Box>
                 </>
@@ -161,6 +172,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     theme={theme}
                     onStatusChange={onStatusChange}
                     zoomLevel={currentZoom}
+                    focusRequestId={focusRequestId}
                     fontSize={editorSettings?.fontSize}
                     showLineNumbers={editorSettings?.showLineNumbers}
                     tabSize={editorSettings?.tabSize}

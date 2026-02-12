@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
@@ -6,6 +6,7 @@ import { Search, Close } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { TableConversionDialog } from './TableConversionDialog';
 import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
+import MarkdownToolbar from './MarkdownToolbar';
 
 interface EditorProps {
   content: string;
@@ -23,6 +24,7 @@ interface EditorProps {
     selectedCharacters: number;
   }) => void;
   zoomLevel?: number;
+  focusRequestId?: number;
   // New editor settings
   fontSize?: number;
   showLineNumbers?: boolean;
@@ -33,6 +35,7 @@ interface EditorProps {
   tableConversion?: 'auto' | 'confirm' | 'off';
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
+  onScrollChange?: (scrollFraction: number) => void;
 }
 
 const MarkdownEditor: React.FC<EditorProps> = ({
@@ -43,6 +46,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   fileNotFound,
   onStatusChange,
   zoomLevel = 1.0,
+  focusRequestId = 0,
   fontSize = 14,
   showLineNumbers = true,
   tabSize = 2,
@@ -52,6 +56,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   tableConversion = 'confirm',
   onSnackbar,
   onTableConversionSettingChange,
+  onScrollChange,
 }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -158,32 +163,46 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     regex: false,
   });
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-  const [editorKey, setEditorKey] = useState(0);
 
-  // Window resize detection and Monaco Editor re-initialization
-  useEffect(() => {
-    let resizeTimeout: number;
+  // Robust focus function with Tauri window focus + retry
+  const focusEditor = useCallback(async (editorInstance?: editor.IStandaloneCodeEditor) => {
+    const target = editorInstance || editorRef.current;
+    if (!target) return;
 
-    const handleResize = () => {
-      // Wait for resize completion (debounce)
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        // Re-initialize Monaco Editor
-        setEditorKey(prev => prev + 1);
-      }, 150);
-    };
+    // Ensure the Tauri window has OS-level focus (critical for file association & menu interactions)
+    try {
+      const { getCurrentWindow } = await import('@tauri-apps/api/window');
+      await getCurrentWindow().setFocus();
+    } catch {
+      // Non-fatal: webview may already be focused
+    }
 
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
+    // Retry focus with increasing delays, exit early on success
+    const delays = [0, 50, 150];
+    for (const delay of delays) {
+      await new Promise<void>(resolve => {
+        setTimeout(() => {
+          try { target.focus(); } catch { /* editor may be disposed */ }
+          resolve();
+        }, delay);
+      });
+      const dom = target.getDomNode();
+      if (dom && dom.contains(document.activeElement)) return;
+    }
   }, []);
+
+  // Focus editor when focusRequestId changes
+  useEffect(() => {
+    if (focusRequestId > 0) {
+      focusEditor();
+    }
+  }, [focusRequestId, focusEditor]);
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
 
+    // Focus using the editor instance directly (avoids race condition with editorRef)
+    focusEditor(editor);
 
     // Set up search and replace keyboard shortcuts
     try {
@@ -258,6 +277,19 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       // Monitor content changes
       editor.onDidChangeModelContent(() => {
         updateStatus();
+      });
+    }
+
+    // Sync scroll: notify parent of scroll position
+    if (onScrollChange) {
+      editor.onDidScrollChange(() => {
+        const scrollTop = editor.getScrollTop();
+        const scrollHeight = editor.getScrollHeight();
+        const clientHeight = editor.getLayoutInfo().height;
+        const maxScroll = scrollHeight - clientHeight;
+        if (maxScroll > 0) {
+          onScrollChange(scrollTop / maxScroll);
+        }
       });
     }
 
@@ -508,6 +540,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         </Box>
       </Box>
 
+      <MarkdownToolbar editorRef={editorRef} />
+
       <Box sx={{ flex: 1, position: 'relative' }}>
         {fileNotFound ? (
           <Box
@@ -537,7 +571,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           </Box>
         ) : (
           <Editor
-            key={editorKey}
             height="100%"
             defaultLanguage="markdown"
             value={content}

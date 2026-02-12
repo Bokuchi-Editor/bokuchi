@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Typography } from '@mui/material';
 
@@ -74,6 +74,10 @@ function AppDesktop() {
     openFile,
 
 
+    // Focus
+    focusRequestId,
+    requestEditorFocus,
+
     // Zoom handlers
     zoomIn,
     zoomOut,
@@ -89,6 +93,18 @@ function AppDesktop() {
     // Constants
     ZOOM_CONFIG,
   } = useAppState();
+
+  // Ref to always hold the latest handlers, avoiding stale closures in event listeners
+  const handlersRef = useRef({
+    handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
+    handleHelpOpen, openFile, requestEditorFocus,
+  });
+  useEffect(() => {
+    handlersRef.current = {
+      handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
+      handleHelpOpen, openFile, requestEditorFocus,
+    };
+  });
 
   // メニューイベントのリスナーを設定
   useEffect(() => {
@@ -124,7 +140,7 @@ function AppDesktop() {
           return;
         }
         globalDebounce.lastMenuEventTime = now;
-        handleSaveFile();
+        handlersRef.current.handleSaveFile();
       });
 
       unlistenNewFile = await listen('menu-new-file', () => {
@@ -135,7 +151,7 @@ function AppDesktop() {
           return;
         }
         globalDebounce.lastMenuEventTime = now;
-        handleNewTab();
+        handlersRef.current.handleNewTab();
       });
 
       unlistenOpenFile = await listen('menu-open-file', async () => {
@@ -147,7 +163,7 @@ function AppDesktop() {
         }
         globalDebounce.lastMenuEventTime = now;
         try {
-          await openFile();
+          await handlersRef.current.openFile();
         } catch (error) {
           console.error('Failed to open file from menu:', error);
         }
@@ -161,7 +177,7 @@ function AppDesktop() {
           return;
         }
         globalDebounce.lastMenuEventTime = now;
-        handleSaveFileAs();
+        handlersRef.current.handleSaveFileAs();
       });
 
       unlistenSaveWithVariables = await listen('menu-save-with-variables', () => {
@@ -172,7 +188,7 @@ function AppDesktop() {
           return;
         }
         globalDebounce.lastMenuEventTime = now;
-        handleSaveWithVariables();
+        handlersRef.current.handleSaveWithVariables();
       });
 
       unlistenHelp = await listen('menu-help', () => {
@@ -183,7 +199,7 @@ function AppDesktop() {
           return;
         }
         globalDebounce.lastMenuEventTime = now;
-        handleHelpOpen();
+        handlersRef.current.handleHelpOpen();
       });
 
       // File association event listener with debounce
@@ -221,7 +237,8 @@ function AppDesktop() {
 
         fileOpenDebounce.lastFileOpenTime = now;
         fileOpenDebounce.lastFilePath = currentFilePath;
-        openFile(currentFilePath);
+        await handlersRef.current.openFile(currentFilePath);
+        handlersRef.current.requestEditorFocus();
       });
 
       // Notify Rust that frontend is ready
@@ -259,11 +276,12 @@ function AppDesktop() {
             // すべてのファイルを開く（重複チェックはopenFile内で処理される）
             for (const filePath of pendingPaths) {
               try {
-                await openFile(filePath);
+                await handlersRef.current.openFile(filePath);
               } catch (error) {
                 console.error('❌ Failed to open pending file:', filePath, error);
               }
             }
+            handlersRef.current.requestEditorFocus();
             break; // ファイルが見つかったら終了
           } else {
             if (attempt < 3) {
@@ -390,6 +408,7 @@ function AppDesktop() {
             };
             handleAppSettingsChange(updatedSettings);
           }}
+          focusRequestId={focusRequestId}
           t={t}
         />
 

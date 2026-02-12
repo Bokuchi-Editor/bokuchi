@@ -339,6 +339,24 @@
     "zoomIn": "Acercar (Cmd + Shift + +)",
     "resetZoom": "Restablecer zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "heading": "Encabezado",
+    "heading1": "Encabezado 1",
+    "heading2": "Encabezado 2",
+    "heading3": "Encabezado 3",
+    "unorderedList": "Lista sin orden",
+    "orderedList": "Lista ordenada",
+    "checkList": "Lista de verificación",
+    "link": "Enlace",
+    "image": "Imagen",
+    "codeBlock": "Bloque de código",
+    "quote": "Cita",
+    "horizontalRule": "Línea horizontal",
+    "table": "Tabla",
+    "strikethrough": "Tachado"
+  },
   "tableConversion": {
     "dialogTitle": "Convertir tabla a Markdown",
     "dialogMessage": "Se detectó una tabla en el portapapeles. ¿Desea convertirla al formato Markdown?",

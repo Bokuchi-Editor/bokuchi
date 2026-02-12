@@ -339,6 +339,24 @@
     "zoomIn": "Perbesar (Cmd + Shift + +)",
     "resetZoom": "Reset Zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Tebal",
+    "italic": "Miring",
+    "heading": "Judul",
+    "heading1": "Judul 1",
+    "heading2": "Judul 2",
+    "heading3": "Judul 3",
+    "unorderedList": "Daftar Tak Berurutan",
+    "orderedList": "Daftar Berurutan",
+    "checkList": "Daftar Centang",
+    "link": "Tautan",
+    "image": "Gambar",
+    "codeBlock": "Blok Kode",
+    "quote": "Kutipan",
+    "horizontalRule": "Garis Horizontal",
+    "table": "Tabel",
+    "strikethrough": "Coret"
+  },
   "tableConversion": {
     "dialogTitle": "Konversi Tabel ke Markdown",
     "dialogMessage": "Tabel terdeteksi di clipboard. Apakah Anda ingin mengonversinya ke format Markdown?",

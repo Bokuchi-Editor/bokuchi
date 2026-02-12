@@ -339,6 +339,24 @@
     "zoomIn": "تكبير (Cmd + Shift + +)",
     "resetZoom": "إعادة تعيين التكبير (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "غامق",
+    "italic": "مائل",
+    "heading": "عنوان",
+    "heading1": "عنوان 1",
+    "heading2": "عنوان 2",
+    "heading3": "عنوان 3",
+    "unorderedList": "قائمة غير مرتبة",
+    "orderedList": "قائمة مرتبة",
+    "checkList": "قائمة تحقق",
+    "link": "رابط",
+    "image": "صورة",
+    "codeBlock": "كتلة برمجية",
+    "quote": "اقتباس",
+    "horizontalRule": "خط أفقي",
+    "table": "جدول",
+    "strikethrough": "يتوسطه خط"
+  },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",
     "dialogMessage": "تم اكتشاف جدول في الحافظة. هل تريد تحويله إلى تنسيق Markdown؟",

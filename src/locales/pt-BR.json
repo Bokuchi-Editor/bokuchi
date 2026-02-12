@@ -339,6 +339,24 @@
     "zoomIn": "Aumentar zoom (Cmd + Shift + +)",
     "resetZoom": "Redefinir zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "Negrito",
+    "italic": "Itálico",
+    "heading": "Título",
+    "heading1": "Título 1",
+    "heading2": "Título 2",
+    "heading3": "Título 3",
+    "unorderedList": "Lista não ordenada",
+    "orderedList": "Lista ordenada",
+    "checkList": "Lista de verificação",
+    "link": "Link",
+    "image": "Imagem",
+    "codeBlock": "Bloco de código",
+    "quote": "Citação",
+    "horizontalRule": "Linha horizontal",
+    "table": "Tabela",
+    "strikethrough": "Tachado"
+  },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",
     "dialogMessage": "Uma tabela foi detectada na área de transferência. Deseja convertê-la para o formato Markdown?",

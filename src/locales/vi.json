@@ -339,6 +339,24 @@
     "zoomIn": "Phóng to (Cmd + Shift + +)",
     "resetZoom": "Đặt lại zoom (Cmd + 0)"
   },
+  "toolbar": {
+    "bold": "In đậm",
+    "italic": "In nghiêng",
+    "heading": "Tiêu đề",
+    "heading1": "Tiêu đề 1",
+    "heading2": "Tiêu đề 2",
+    "heading3": "Tiêu đề 3",
+    "unorderedList": "Danh sách không thứ tự",
+    "orderedList": "Danh sách có thứ tự",
+    "checkList": "Danh sách kiểm tra",
+    "link": "Liên kết",
+    "image": "Hình ảnh",
+    "codeBlock": "Khối mã",
+    "quote": "Trích dẫn",
+    "horizontalRule": "Đường kẻ ngang",
+    "table": "Bảng",
+    "strikethrough": "Gạch ngang"
+  },
   "tableConversion": {
     "dialogTitle": "Chuyển đổi bảng sang Markdown",
     "dialogMessage": "Đã phát hiện bảng trong clipboard. Bạn có muốn chuyển đổi nó sang định dạng Markdown không?",
