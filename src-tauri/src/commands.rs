@@ -34,6 +34,8 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
+use tauri::Emitter;
+
 use crate::variable_processor::VARIABLE_PROCESSOR;
 use crate::file_operations::calculate_file_hash;
 use crate::file_association::{get_pending_file_paths, set_frontend_ready};
@@ -157,10 +159,22 @@ pub fn log_from_frontend(message: String) {
     println!("[FRONTEND] {}", message);
 }
 
-// Tauri command: Set frontend ready
+// Tauri command: Set frontend ready and emit any buffered file paths
 #[tauri::command]
-pub fn set_frontend_ready_command() {
+pub fn set_frontend_ready_command(app_handle: tauri::AppHandle) {
     set_frontend_ready();
+
+    // Emit any buffered pending file paths immediately
+    let pending = get_pending_file_paths();
+    if !pending.is_empty() {
+        println!("Emitting {} buffered file paths after frontend ready", pending.len());
+        for file_path in pending {
+            let _ = app_handle.emit(
+                "open-file",
+                crate::types::OpenFileEvent { file_path },
+            );
+        }
+    }
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

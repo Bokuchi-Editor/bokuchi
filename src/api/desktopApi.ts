@@ -159,14 +159,14 @@ export const desktopApi = {
     }
   },
 
-  // Read file from file path
+  // Read file from file path (uses Rust command to bypass FS plugin scope restrictions)
   async readFileByPath(filePath: string): Promise<FileResponse> {
     try {
-      const content = await readTextFile(filePath);
+      const content = await invoke<string>('read_file', { path: filePath });
       return { content, filePath };
     } catch (error: unknown) {
       console.error('Error reading file by path:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to read file';
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return { content: '', error: errorMessage };
     }
   },
