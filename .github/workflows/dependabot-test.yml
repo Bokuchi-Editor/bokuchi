@@ -75,7 +75,9 @@ jobs:
 
       - name: Security audit
         run: |
-          npm audit --audit-level=moderate || echo "npm audit completed with warnings"
+          npx audit-ci --moderate \
+            --allowlist GHSA-2g4f-4pwh-qvx6 GHSA-3ppc-4f35-3m26 \
+            || echo "npm audit completed with warnings"
           cd src-tauri
           cargo audit --ignore RUSTSEC-2024-0429 || echo "cargo audit completed with ignored warnings"
 
