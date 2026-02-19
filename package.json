@@ -48,7 +48,7 @@
     "i18next": "^25.7.3",
     "marked": "^16.4.2",
     "react": "19.2.4",
-    "react-dom": "19.2.0",
+    "react-dom": "19.2.4",
     "react-i18next": "^15.7.4"
   },
   "devDependencies": {
