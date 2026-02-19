@@ -118,7 +118,6 @@ function AppDesktop() {
     let unlistenFileOpen: (() => void) | undefined;
 
     const setupMenuListeners = async () => {
-      const { desktopApi } = await import('./api/desktopApi');
       const { listen } = await import('@tauri-apps/api/event');
 
       // デバウンス処理用の変数（グローバルに移動）
@@ -225,13 +224,8 @@ function AppDesktop() {
         const currentFilePath = event.payload.file_path;
         const isSameFile = currentFilePath === fileOpenDebounce.lastFilePath;
 
-        // Debounce: same file within time limit, or same file regardless of time
+        // Debounce: same file within time limit
         if (isSameFile && timeDiff < fileOpenDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-
-        // Additional check: if same file and time difference is reasonable (less than 10 seconds), also debounce
-        if (isSameFile && timeDiff < 10000) {
           return;
         }
 
@@ -241,12 +235,7 @@ function AppDesktop() {
         handlersRef.current.requestEditorFocus();
       });
 
-      // Notify Rust that frontend is ready
-      try {
-        await desktopApi.setFrontendReady();
-      } catch (error) {
-        console.error('❌ Failed to notify Rust that frontend is ready:', error);
-      }
+      // Note: setFrontendReady() is called separately after isInitialized becomes true
     };
 
     setupMenuListeners();
@@ -262,49 +251,24 @@ function AppDesktop() {
     };
   }, []); // 依存配列を空にして、一度だけ実行されるようにする
 
-  // Check for pending file paths on app startup (macOS file association)
+  // Notify Rust that frontend is ready AFTER state restoration is complete.
+  // This prevents a race condition where file association tabs are added
+  // before LOAD_STATE overwrites the entire state.
   useEffect(() => {
-    const checkPendingFiles = async () => {
+    if (!isInitialized) return;
+
+    const notifyAndOpenPending = async () => {
       try {
         const { desktopApi } = await import('./api/desktopApi');
-
-        // 複数回チェックして確実にファイルを取得
-        for (let attempt = 1; attempt <= 3; attempt++) {
-          const pendingPaths = await desktopApi.getPendingFilePaths();
-
-          if (pendingPaths.length > 0) {
-            // すべてのファイルを開く（重複チェックはopenFile内で処理される）
-            for (const filePath of pendingPaths) {
-              try {
-                await handlersRef.current.openFile(filePath);
-              } catch (error) {
-                console.error('❌ Failed to open pending file:', filePath, error);
-              }
-            }
-            handlersRef.current.requestEditorFocus();
-            break; // ファイルが見つかったら終了
-          } else {
-            if (attempt < 3) {
-              // 次の試行まで少し待機
-              await new Promise(resolve => setTimeout(resolve, 500));
-            }
-          }
-        }
+        // setFrontendReady also emits any buffered pending file paths as open-file events
+        await desktopApi.setFrontendReady();
       } catch (error) {
-        console.error('❌ Error checking pending files:', error);
-        try {
-          const { desktopApi } = await import('./api/desktopApi');
-          await desktopApi.logToRust(`❌ Error checking pending files: ${error}`);
-        } catch (logError) {
-          console.error('Failed to log error to Rust:', logError);
-        }
+        console.error('❌ Failed to notify Rust that frontend is ready:', error);
       }
     };
 
-    // より長い遅延で確実にフロントエンドが準備完了するまで待機
-    const timer = setTimeout(checkPendingFiles, 2000); // 2秒に延長
-    return () => clearTimeout(timer);
-  }, []); // 依存配列を空にして、一度だけ実行されるようにする
+    notifyAndOpenPending();
+  }, [isInitialized]);
 
   return (
     <ThemeProvider theme={currentTheme}>
