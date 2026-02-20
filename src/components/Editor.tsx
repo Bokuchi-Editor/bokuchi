@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
-import { Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Tooltip } from '@mui/material';
-import { Search, Close } from '@mui/icons-material';
+import { Box, Typography, IconButton, Tooltip } from '@mui/material';
+import { Search } from '@mui/icons-material';
+import SearchReplacePanel from './SearchReplacePanel';
 import { useTranslation } from 'react-i18next';
 import { TableConversionDialog } from './TableConversionDialog';
 import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
@@ -60,8 +61,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [replaceText, setReplaceText] = useState('');
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -157,11 +156,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     };
   }, [tableConversion]);
 
-  const [searchOptions, setSearchOptions] = useState({
-    caseSensitive: false,
-    wholeWord: false,
-    regex: false,
-  });
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   // Robust focus function with Tauri window focus + retry
@@ -443,88 +437,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     setTableConversionDialog({ open: false, markdownTable: '', clipboardData: null });
   };
 
-  const handleSearch = () => {
-    if (editorRef.current && searchText) {
-      const model = editorRef.current.getModel();
-      if (!model) return;
-
-      const searchRegex = searchOptions.regex
-        ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
-        : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
-
-      const matches: Array<{
-        range: {
-          startLineNumber: number;
-          startColumn: number;
-          endLineNumber: number;
-          endColumn: number;
-        };
-        text: string;
-      }> = [];
-      const text = model.getValue();
-      let match;
-
-      while ((match = searchRegex.exec(text)) !== null) {
-        matches.push({
-          range: {
-            startLineNumber: text.substring(0, match.index).split('\n').length,
-            startColumn: match.index - text.lastIndexOf('\n', match.index - 1),
-            endLineNumber: text.substring(0, match.index + match[0].length).split('\n').length,
-            endColumn: match.index + match[0].length - text.lastIndexOf('\n', match.index + match[0].length - 1),
-          },
-          text: match[0]
-        });
-      }
-
-      // Highlight search results
-      editorRef.current.deltaDecorations([], matches.map(match => ({
-        range: {
-          startLineNumber: match.range.startLineNumber,
-          startColumn: match.range.startColumn,
-          endLineNumber: match.range.endLineNumber,
-          endColumn: match.range.endColumn
-        },
-        options: {
-          inlineClassName: 'search-highlight',
-          hoverMessage: { value: `Found: ${match.text}` }
-        }
-      })));
-    }
-  };
-
-  const handleReplace = () => {
-    if (editorRef.current && searchText && replaceText) {
-      const model = editorRef.current.getModel();
-      if (!model) return;
-
-      const searchRegex = searchOptions.regex
-        ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
-        : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
-
-      const text = model.getValue();
-      const newText = text.replace(searchRegex, replaceText);
-      model.setValue(newText);
-      onChange(newText);
-    }
-  };
-
-  const handleReplaceAll = () => {
-    if (editorRef.current && searchText && replaceText) {
-      const model = editorRef.current.getModel();
-      if (!model) return;
-
-      const searchRegex = searchOptions.regex
-        ? new RegExp(searchText, searchOptions.caseSensitive ? 'g' : 'gi')
-        : new RegExp(searchOptions.wholeWord ? `\\b${searchText}\\b` : searchText, searchOptions.caseSensitive ? 'g' : 'gi');
-
-      const text = model.getValue();
-      const newText = text.replace(searchRegex, replaceText);
-      model.setValue(newText);
-      onChange(newText);
-      setSearchOpen(false);
-    }
-  };
-
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -543,6 +455,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       <MarkdownToolbar editorRef={editorRef} />
 
       <Box sx={{ flex: 1, position: 'relative' }}>
+        <SearchReplacePanel
+          editorRef={editorRef}
+          open={searchOpen}
+          onClose={() => { setSearchOpen(false); focusEditor(); }}
+          onChange={onChange}
+        />
         {fileNotFound ? (
           <Box
             sx={{
@@ -561,13 +479,19 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2, wordBreak: 'break-all' }}>
               {fileNotFound.filePath}
             </Typography>
-            <Button
-              variant="outlined"
-              color="error"
+            <button
               onClick={fileNotFound.onClose}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid var(--color-border)',
+                borderRadius: '4px',
+                backgroundColor: 'transparent',
+                color: 'var(--color-text)',
+                cursor: 'pointer',
+              }}
             >
               {t('fileOperations.closeTab')}
-            </Button>
+            </button>
           </Box>
         ) : (
           <Editor
@@ -606,78 +530,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
               },
               links: true,
               colorDecorators: true,
-              // lightbulb: {
-              //   enabled: false
-              // },
-              // codeActionsOnSave: {
-              //   'source.fixAll': false
-              // }
             }}
           />
         )}
       </Box>
-
-      {/* Search and Replace Dialog */}
-      <Dialog open={searchOpen} onClose={() => setSearchOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          Search and Replace
-          <IconButton
-            aria-label="close"
-            onClick={() => setSearchOpen(false)}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-            <TextField
-              label="Search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              fullWidth
-              autoFocus
-            />
-            <TextField
-              label="Replace"
-              value={replaceText}
-              onChange={(e) => setReplaceText(e.target.value)}
-              fullWidth
-            />
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setSearchOptions({ ...searchOptions, caseSensitive: !searchOptions.caseSensitive })}
-                sx={{ fontSize: '0.75rem' }}
-              >
-                {searchOptions.caseSensitive ? 'Aa' : 'Aa'}
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setSearchOptions({ ...searchOptions, wholeWord: !searchOptions.wholeWord })}
-                sx={{ fontSize: '0.75rem' }}
-              >
-                Word
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setSearchOptions({ ...searchOptions, regex: !searchOptions.regex })}
-                sx={{ fontSize: '0.75rem' }}
-              >
-                .*
-              </Button>
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSearch}>Search</Button>
-          <Button onClick={handleReplace}>Replace</Button>
-          <Button onClick={handleReplaceAll} variant="contained">Replace All</Button>
-        </DialogActions>
-      </Dialog>
 
       {/* Table Conversion Dialog */}
       <TableConversionDialog
