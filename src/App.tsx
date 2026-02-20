@@ -43,6 +43,12 @@ function AppDesktop() {
     canZoomOut,
     appSettings,
 
+    // Update state
+    updateDialogOpen,
+    updateDialogPhase,
+    updateInfo,
+    updateDownloadProgress,
+
     // Handlers
     handleContentChange,
     handleSettingsOpen,
@@ -71,6 +77,8 @@ function AppDesktop() {
     handleDragOver,
     handleDragLeave,
     handleDrop,
+    handleCheckForUpdate,
+    handleDismissUpdate,
     openFile,
 
 
@@ -394,6 +402,10 @@ function AppDesktop() {
           helpOpen={helpOpen}
           fileChangeDialog={fileChangeDialog}
           saveBeforeCloseDialog={saveBeforeCloseDialog}
+          updateDialogOpen={updateDialogOpen}
+          updateDialogPhase={updateDialogPhase}
+          updateInfo={updateInfo}
+          updateDownloadProgress={updateDownloadProgress}
           onCloseSnackbar={handleCloseSnackbar}
           onSettingsClose={handleSettingsClose}
           onSettingsChange={handleAppSettingsChange}
@@ -401,6 +413,8 @@ function AppDesktop() {
           onSaveBeforeClose={handleSaveBeforeClose}
           onDontSaveBeforeClose={handleDontSaveBeforeClose}
           onCancelBeforeClose={handleCancelBeforeClose}
+          onUpdate={handleCheckForUpdate}
+          onDismissUpdate={handleDismissUpdate}
           t={t}
         />
 

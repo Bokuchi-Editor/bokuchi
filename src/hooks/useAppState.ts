@@ -11,6 +11,9 @@ import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { useEditorFocus } from './useEditorFocus';
+import { updaterApi, UpdateInfo, DownloadProgress } from '../api/updaterApi';
+import { Update } from '@tauri-apps/plugin-updater';
+import { UpdateDialogPhase } from '../components/UpdateDialog';
 
 export const useAppState = () => {
   const { t, i18n } = useTranslation();
@@ -61,6 +64,13 @@ export const useAppState = () => {
     tabId: null,
   });
   const [isDragOver, setIsDragOver] = useState(false);
+
+  // Update state
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [updateDialogPhase, setUpdateDialogPhase] = useState<UpdateDialogPhase>('notify');
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
+  const [updateDownloadProgress, setUpdateDownloadProgress] = useState<DownloadProgress | null>(null);
+  const pendingUpdateRef = useRef<Update | null>(null);
 
   // Tab management
   const {
@@ -142,6 +152,27 @@ export const useAppState = () => {
       loadSettings();
     }
   }, [isInitialized]);
+
+  // Auto-check for updates after initialization
+  useEffect(() => {
+    if (!isInitialized || !isSettingsLoaded) return;
+
+    const checkUpdate = async () => {
+      try {
+        const { info, update } = await updaterApi.checkForUpdate();
+        if (info.available && update) {
+          setUpdateInfo(info);
+          pendingUpdateRef.current = update;
+          setUpdateDialogPhase('notify');
+          setUpdateDialogOpen(true);
+        }
+      } catch (error) {
+        console.warn('Update check failed:', error);
+      }
+    };
+
+    checkUpdate();
+  }, [isInitialized, isSettingsLoaded]);
 
   // File change detection event listener
   useEffect(() => {
@@ -693,6 +724,33 @@ export const useAppState = () => {
     }
   };
 
+  // Update handlers
+  const handleCheckForUpdate = useCallback(async () => {
+    if (!pendingUpdateRef.current) return;
+
+    setUpdateDialogPhase('downloading');
+    setUpdateDownloadProgress(null);
+
+    try {
+      await updaterApi.downloadAndInstall(
+        pendingUpdateRef.current,
+        (progress) => {
+          setUpdateDownloadProgress(progress);
+        },
+      );
+      // relaunch is called inside downloadAndInstall, so we won't reach here normally
+    } catch (error) {
+      console.error('Update failed:', error);
+      setUpdateDialogOpen(false);
+      setSnackbar({ open: true, message: t('dialogs.update.checkFailed'), severity: 'error' });
+    }
+  }, [t]);
+
+  const handleDismissUpdate = useCallback(() => {
+    setUpdateDialogOpen(false);
+    pendingUpdateRef.current = null;
+  }, []);
+
   // Focus editor when switching to a mode that shows the editor
   useEffect(() => {
     if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
@@ -846,6 +904,12 @@ export const useAppState = () => {
     // New unified settings
     appSettings,
 
+    // Update state
+    updateDialogOpen,
+    updateDialogPhase,
+    updateInfo,
+    updateDownloadProgress,
+
     // Editor focus
     focusRequestId,
     requestEditorFocus,
@@ -879,6 +943,8 @@ export const useAppState = () => {
     handleDragOver,
     handleDragLeave,
     handleDrop,
+    handleCheckForUpdate,
+    handleDismissUpdate,
     handleKeyDown,
 
     // Tab handlers

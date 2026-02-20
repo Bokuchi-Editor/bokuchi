@@ -322,6 +322,17 @@
       "keepDescription": "• لا: الاحتفاظ بالتعديلات الحالية",
       "yes": "نعم",
       "no": "لا"
+    },
+    "update": {
+      "title": "تحديث متاح",
+      "newVersion": "الإصدار {{version}} متاح",
+      "releaseNotes": "ملاحظات الإصدار",
+      "downloading": "جارٍ تنزيل التحديث...",
+      "installing": "جارٍ تثبيت التحديث...",
+      "updateNow": "التحديث الآن",
+      "later": "لاحقاً",
+      "upToDate": "أنت تستخدم أحدث إصدار",
+      "checkFailed": "فشل التحقق من التحديثات"
     }
   },
   "statusBar": {

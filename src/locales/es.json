@@ -322,6 +322,17 @@
       "keepDescription": "• No: Mantener las ediciones actuales",
       "yes": "Sí",
       "no": "No"
+    },
+    "update": {
+      "title": "Actualización disponible",
+      "newVersion": "La versión {{version}} está disponible",
+      "releaseNotes": "Notas de la versión",
+      "downloading": "Descargando actualización...",
+      "installing": "Instalando actualización...",
+      "updateNow": "Actualizar ahora",
+      "later": "Más tarde",
+      "upToDate": "Estás usando la última versión",
+      "checkFailed": "Error al buscar actualizaciones"
     }
   },
   "statusBar": {

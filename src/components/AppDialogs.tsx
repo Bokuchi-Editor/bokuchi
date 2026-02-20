@@ -4,7 +4,9 @@ import Settings from './Settings';
 import HelpDialog from './Help';
 import FileChangeDialog from './FileChangeDialog';
 import SaveBeforeCloseDialog from './SaveBeforeCloseDialog';
+import UpdateDialog, { UpdateDialogPhase } from './UpdateDialog';
 import { AppSettings } from '../types/settings';
+import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
 
 interface AppDialogsProps {
   // Snackbar state
@@ -42,6 +44,12 @@ interface AppDialogsProps {
     tabId: string | null;
   };
 
+  // Update dialog state
+  updateDialogOpen: boolean;
+  updateDialogPhase: UpdateDialogPhase;
+  updateInfo: UpdateInfo | null;
+  updateDownloadProgress: DownloadProgress | null;
+
   // Handlers
   onCloseSnackbar: () => void;
   onSettingsClose: () => void;
@@ -50,6 +58,8 @@ interface AppDialogsProps {
   onSaveBeforeClose: () => void;
   onDontSaveBeforeClose: () => void;
   onCancelBeforeClose: () => void;
+  onUpdate: () => void;
+  onDismissUpdate: () => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -65,6 +75,10 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   helpOpen,
   fileChangeDialog,
   saveBeforeCloseDialog,
+  updateDialogOpen,
+  updateDialogPhase,
+  updateInfo,
+  updateDownloadProgress,
   onCloseSnackbar,
   onSettingsClose,
   onSettingsChange,
@@ -72,6 +86,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   onSaveBeforeClose,
   onDontSaveBeforeClose,
   onCancelBeforeClose,
+  onUpdate,
+  onDismissUpdate,
   t,
 }) => {
   return (
@@ -130,6 +146,16 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onSave={onSaveBeforeClose}
         onDontSave={onDontSaveBeforeClose}
         onCancel={onCancelBeforeClose}
+      />
+
+      {/* Update dialog */}
+      <UpdateDialog
+        open={updateDialogOpen}
+        phase={updateDialogPhase}
+        updateInfo={updateInfo}
+        downloadProgress={updateDownloadProgress}
+        onUpdate={onUpdate}
+        onDismiss={onDismissUpdate}
       />
     </>
   );

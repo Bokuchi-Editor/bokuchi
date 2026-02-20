@@ -322,6 +322,17 @@
       "keepDescription": "• Tidak: Pertahankan edit saat ini",
       "yes": "Ya",
       "no": "Tidak"
+    },
+    "update": {
+      "title": "Pembaruan Tersedia",
+      "newVersion": "Versi {{version}} tersedia",
+      "releaseNotes": "Catatan Rilis",
+      "downloading": "Mengunduh pembaruan...",
+      "installing": "Menginstal pembaruan...",
+      "updateNow": "Perbarui Sekarang",
+      "later": "Nanti",
+      "upToDate": "Anda menggunakan versi terbaru",
+      "checkFailed": "Gagal memeriksa pembaruan"
     }
   },
   "statusBar": {
