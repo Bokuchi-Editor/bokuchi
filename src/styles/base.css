@@ -26,6 +26,11 @@ body {
   color: var(--color-search-highlight-text) !important;
 }
 
+.search-current-highlight {
+  background-color: var(--color-search-current-highlight) !important;
+  color: var(--color-search-current-highlight-text) !important;
+}
+
 /* Status bar */
 .status-bar {
   user-select: none;

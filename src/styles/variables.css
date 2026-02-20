@@ -28,6 +28,8 @@
   /* Search highlight */
   --color-search-highlight: #ffeb3b;
   --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
 
   /* Status bar */
   --color-status-background: #f6f8fa;
@@ -58,6 +60,8 @@
 
   --color-search-highlight: #ffd54f;
   --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
 
   --color-status-background: #161b22;
   --color-status-text: #8b949e;
@@ -87,6 +91,8 @@
 
   --color-search-highlight: #ffeb3b;
   --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
 
   --color-status-background: #f8f9fa;
   --color-status-text: #6c757d;
@@ -116,6 +122,8 @@
 
   --color-search-highlight: #ffeb3b;
   --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
 
   --color-status-background: #f7fafc;
   --color-status-text: #4a5568;
@@ -145,6 +153,8 @@
 
   --color-search-highlight: #ffd54f;
   --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
 
   --color-status-background: #3c3f41;
   --color-status-text: #808080;
