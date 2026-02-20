@@ -322,6 +322,17 @@
       "keepDescription": "• 否：保留当前编辑",
       "yes": "是",
       "no": "否"
+    },
+    "update": {
+      "title": "有可用更新",
+      "newVersion": "版本 {{version}} 已可用",
+      "releaseNotes": "发行说明",
+      "downloading": "正在下载更新...",
+      "installing": "正在安装更新...",
+      "updateNow": "立即更新",
+      "later": "稍后",
+      "upToDate": "您正在使用最新版本",
+      "checkFailed": "检查更新失败"
     }
   },
   "statusBar": {

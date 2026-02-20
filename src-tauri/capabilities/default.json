@@ -33,7 +33,9 @@
       ]
     },
     "window-state:default",
-    "clipboard-manager:default"
+    "clipboard-manager:default",
+    "updater:default",
+    "process:allow-restart"
   ],
   "platforms": [
     "macOS",

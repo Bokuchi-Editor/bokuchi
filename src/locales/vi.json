@@ -322,6 +322,17 @@
       "keepDescription": "• Không: Giữ các chỉnh sửa hiện tại",
       "yes": "Có",
       "no": "Không"
+    },
+    "update": {
+      "title": "Có bản cập nhật",
+      "newVersion": "Phiên bản {{version}} đã có sẵn",
+      "releaseNotes": "Ghi chú phát hành",
+      "downloading": "Đang tải xuống bản cập nhật...",
+      "installing": "Đang cài đặt bản cập nhật...",
+      "updateNow": "Cập nhật ngay",
+      "later": "Để sau",
+      "upToDate": "Bạn đang sử dụng phiên bản mới nhất",
+      "checkFailed": "Không thể kiểm tra cập nhật"
     }
   },
   "statusBar": {

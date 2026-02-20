@@ -322,6 +322,17 @@
       "keepDescription": "• 아니오: 현재 편집 내용 유지",
       "yes": "예",
       "no": "아니오"
+    },
+    "update": {
+      "title": "업데이트 사용 가능",
+      "newVersion": "버전 {{version}}을(를) 사용할 수 있습니다",
+      "releaseNotes": "릴리스 노트",
+      "downloading": "업데이트 다운로드 중...",
+      "installing": "업데이트 설치 중...",
+      "updateNow": "지금 업데이트",
+      "later": "나중에",
+      "upToDate": "최신 버전을 사용하고 있습니다",
+      "checkFailed": "업데이트 확인 실패"
     }
   },
   "statusBar": {

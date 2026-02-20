@@ -322,6 +322,17 @@
       "keepDescription": "• いいえ: 現在の編集内容を保持します",
       "yes": "はい",
       "no": "いいえ"
+    },
+    "update": {
+      "title": "アップデートがあります",
+      "newVersion": "バージョン {{version}} が利用可能です",
+      "releaseNotes": "リリースノート",
+      "downloading": "アップデートをダウンロード中...",
+      "installing": "アップデートをインストール中...",
+      "updateNow": "今すぐ更新",
+      "later": "後で",
+      "upToDate": "最新バージョンを使用しています",
+      "checkFailed": "アップデートの確認に失敗しました"
     }
   },
   "statusBar": {

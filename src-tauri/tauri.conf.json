@@ -58,6 +58,7 @@
         "bundleMediaFramework": false
       }
     },
+    "createUpdaterArtifacts": true,
     "fileAssociations": [
       {
         "ext": ["md"],
@@ -76,6 +77,15 @@
   "plugins": {
     "fs": {
       "requireLiteralLeadingDot": false
+    },
+    "updater": {
+      "pubkey": "",
+      "endpoints": [
+        "https://github.com/Bokuchi-Editor/bokuchi/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }
