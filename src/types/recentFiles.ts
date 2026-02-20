@@ -4,15 +4,15 @@ export interface RecentFile {
   fileName: string;
   lastOpened: number; // timestamp
   openCount: number;
-  lastModified?: number; // ファイルの最終更新時刻
+  lastModified?: number; // File last modified time
   fileSize?: number;
-  preview?: string; // ファイルの最初の数行（プレビュー用）
+  preview?: string; // First few lines of the file (for preview)
 }
 
 export interface RecentFilesSettings {
-  maxRecentFiles: number; // 保持する最大ファイル数（デフォルト: 20）
-  showPreview: boolean; // プレビュー表示の有無
-  previewLength: number; // プレビューの文字数（デフォルト: 100）
+  maxRecentFiles: number; // Maximum number of files to keep (default: 20)
+  showPreview: boolean; // Whether to show preview
+  previewLength: number; // Preview character count (default: 100)
 }
 
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {

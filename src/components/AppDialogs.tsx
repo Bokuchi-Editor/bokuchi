@@ -76,7 +76,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
 }) => {
   return (
     <>
-      {/* メイン通知 */}
+      {/* Main notification */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -87,7 +87,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         </Alert>
       </Snackbar>
 
-      {/* ズーム制限警告 */}
+      {/* Zoom limit warning */}
       <Snackbar
         open={isAtLimit}
         autoHideDuration={2000}
@@ -101,7 +101,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         </Alert>
       </Snackbar>
 
-      {/* 設定ダイアログ */}
+      {/* Settings dialog */}
       <Settings
         open={settingsOpen}
         onClose={onSettingsClose}
@@ -109,13 +109,13 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onSettingsChange={onSettingsChange}
       />
 
-      {/* ヘルプダイアログ */}
+      {/* Help dialog */}
       <HelpDialog
         open={helpOpen}
         onClose={onHelpClose}
       />
 
-      {/* ファイル変更ダイアログ */}
+      {/* File change dialog */}
       <FileChangeDialog
         open={fileChangeDialog.open}
         fileName={fileChangeDialog.fileName}
@@ -123,7 +123,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onCancel={fileChangeDialog.onCancel}
       />
 
-      {/* 保存確認ダイアログ */}
+      {/* Save before close dialog */}
       <SaveBeforeCloseDialog
         open={saveBeforeCloseDialog.open}
         fileName={saveBeforeCloseDialog.fileName}

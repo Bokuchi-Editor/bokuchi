@@ -18,11 +18,11 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
       const remainingTabs = state.tabs.filter(tab => tab.id !== action.payload.id);
       let newActiveTabId = state.activeTabId;
 
-      // 削除されたタブがアクティブだった場合、次のタブをアクティブにする
+      // If the removed tab was active, activate the next tab
       if (state.activeTabId === action.payload.id) {
         const currentIndex = state.tabs.findIndex(tab => tab.id === action.payload.id);
         if (remainingTabs.length > 0) {
-          // 次のタブを選択、なければ前のタブを選択
+          // Select the next tab, or the previous one if none exists
           newActiveTabId = remainingTabs[Math.min(currentIndex, remainingTabs.length - 1)]?.id || null;
         } else {
           newActiveTabId = null;
@@ -37,7 +37,7 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
     }
 
     case 'SET_ACTIVE_TAB': {
-      // 存在するタブIDのみを許可
+      // Only allow existing tab IDs
       const tabExists = state.tabs.some(tab => tab.id === action.payload.id);
       return {
         ...state,
@@ -106,7 +106,7 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
       };
 
     case 'REORDER_TABS': {
-      // アクティブタブIDが存在するかチェック
+      // Check if the active tab ID exists
       const validActiveTabId = state.activeTabId &&
         action.payload.tabs.some(tab => tab.id === state.activeTabId)
         ? state.activeTabId
@@ -120,7 +120,7 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
     }
 
     case 'LOAD_STATE': {
-      // アクティブタブIDが存在するかチェック
+      // Check if the active tab ID exists
       const validActiveTabId = action.payload.activeTabId &&
         action.payload.tabs.some(tab => tab.id === action.payload.activeTabId)
         ? action.payload.activeTabId

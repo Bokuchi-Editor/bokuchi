@@ -16,7 +16,7 @@ export interface ProcessMarkdownResponse {
 }
 
 export const variableApi = {
-  // グローバル変数を設定
+  // Set a global variable
   async setGlobalVariable(name: string, value: string): Promise<VariableResponse> {
     try {
       await invoke('set_global_variable', { name, value });
@@ -27,7 +27,7 @@ export const variableApi = {
     }
   },
 
-  // グローバル変数を取得
+  // Get all global variables
   async getGlobalVariables(): Promise<Record<string, string>> {
     try {
       const variables = await invoke<Record<string, string>>('get_global_variables');
@@ -38,7 +38,7 @@ export const variableApi = {
     }
   },
 
-  // YAMLから変数を読み込み
+  // Load variables from YAML
   async loadVariablesFromYAML(yamlContent: string): Promise<VariableResponse> {
     try {
       await invoke('load_variables_from_yaml', { yamlContent });
@@ -49,7 +49,7 @@ export const variableApi = {
     }
   },
 
-  // 変数をYAML形式でエクスポート
+  // Export variables as YAML
   async exportVariablesToYAML(): Promise<string> {
     try {
       const yamlContent = await invoke<string>('export_variables_to_yaml');
@@ -60,7 +60,7 @@ export const variableApi = {
     }
   },
 
-  // Markdownを処理（変数展開）
+  // Process Markdown (variable expansion)
   async processMarkdown(content: string, globalVariables: Record<string, string> = {}): Promise<ProcessMarkdownResponse> {
     try {
       const processedContent = await invoke<string>('process_markdown', { content, globalVariables });
@@ -71,7 +71,7 @@ export const variableApi = {
     }
   },
 
-  // 変数展開済みのMarkdownコンテンツを取得
+  // Get Markdown content with variables expanded
   async getExpandedMarkdown(content: string, globalVariables: Record<string, string> = {}): Promise<string> {
     try {
       const expandedContent = await invoke<string>('get_expanded_markdown', { content, globalVariables });

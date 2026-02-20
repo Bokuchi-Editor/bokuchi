@@ -52,7 +52,7 @@ const darkTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          // Paper overlay効果を無効化
+          // Disable Paper overlay effect
           backgroundImage: 'none',
           '&::before': {
             display: 'none',
@@ -101,7 +101,7 @@ const pastelTheme = createTheme({
       },
     },
   },
-  // カスタムCSS変数でコードシンタックスハイライトの視認性を向上
+  // Improve code syntax highlight visibility with custom CSS variables
   shape: {
     borderRadius: 8,
   },
@@ -157,7 +157,7 @@ const vividTheme = createTheme({
       },
     },
   },
-  // カスタムCSS変数でコードシンタックスハイライトの視認性を向上
+  // Improve code syntax highlight visibility with custom CSS variables
   shape: {
     borderRadius: 12,
   },
@@ -244,7 +244,7 @@ const darculaTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          // Paper overlay効果を無効化
+          // Disable Paper overlay effect
           backgroundImage: 'none',
           '&::before': {
             display: 'none',
@@ -296,7 +296,7 @@ export const getThemeDisplayName = (name: ThemeName): string => {
   return themeConfig ? themeConfig.displayName : 'Default';
 };
 
-// HTML要素にdata-theme属性を設定する関数
+// Set the data-theme attribute on the HTML element
 export const applyThemeToDocument = (themeName: ThemeName): void => {
   if (typeof document !== 'undefined') {
     document.documentElement.setAttribute('data-theme', themeName);

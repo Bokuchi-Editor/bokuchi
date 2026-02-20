@@ -5,15 +5,15 @@ import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 
-// グローバルなタブ状態管理（重複チェック用）
+// Global tab state management (for duplicate checking)
 let globalTabsState: Tab[] = [];
 
-// グローバル状態を更新する関数
+// Update global tabs state
 const updateGlobalTabsState = (tabs: Tab[]) => {
   globalTabsState = [...tabs];
 };
 
-// グローバル状態から重複チェックを行う関数
+// Check for duplicate files using global state
 const checkDuplicateFile = (filePath: string): Tab | null => {
   const normalizedPath = filePath.replace(/\\/g, '/');
   return globalTabsState.find(tab => {
@@ -27,7 +27,7 @@ export const useTabsDesktop = () => {
   const [state, dispatch] = useReducer(tabReducer, initialTabState);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 状態が更新されるたびにグローバル状態を更新
+  // Update global state whenever state changes
   useEffect(() => {
     updateGlobalTabsState(state.tabs);
   }, [state.tabs]);
@@ -72,7 +72,7 @@ export const useTabsDesktop = () => {
   }, []);
 
   const setActiveTab = useCallback((id: string) => {
-    // バリデーションはリデューサー（SET_ACTIVE_TAB）側で実施
+    // Validation is handled by the reducer (SET_ACTIVE_TAB)
     dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
   }, []);
 
@@ -80,7 +80,7 @@ export const useTabsDesktop = () => {
     try {
       let result;
       if (filePath) {
-        // ファイルパスが指定されている場合は、直接ファイルを読み込む
+        // If file path is provided, read the file directly
         const fileResult = await desktopApi.readFileByPath(filePath);
         if (fileResult.error) {
           throw new Error(fileResult.error);
@@ -91,16 +91,16 @@ export const useTabsDesktop = () => {
           error: null
         };
       } else {
-        // ファイルパスが指定されていない場合は、ファイル選択ダイアログを開く
+        // If no file path is provided, open the file selection dialog
         result = await desktopApi.openFile();
         if (result.error) {
           throw new Error(result.error);
         }
       }
 
-      // 同じファイルが既に開かれているかチェック（グローバル状態を使用）
+      // Check if the same file is already open (using global state)
       if (result.filePath) {
-        // グローバル状態から重複チェック
+        // Check for duplicates from global state
         const existingTab = checkDuplicateFile(result.filePath);
 
         if (existingTab) {
@@ -109,10 +109,10 @@ export const useTabsDesktop = () => {
         }
       }
 
-      // ファイル名を取得（パスから）
+      // Extract file name from path
       const fileName = result.filePath ? result.filePath.split('/').pop()?.split('\\').pop() || 'Untitled' : 'Untitled';
 
-      // ファイルハッシュ情報を取得
+      // Get file hash info
       let fileHashInfo = undefined;
       if (result.filePath) {
         try {
@@ -122,7 +122,7 @@ export const useTabsDesktop = () => {
         }
       }
 
-      // ファイルパスを正規化して保存
+      // Normalize and store file path
       const normalizedFilePath = result.filePath ? result.filePath.replace(/\\/g, '/') : undefined;
 
       const tabId = addTab({
@@ -134,9 +134,9 @@ export const useTabsDesktop = () => {
         fileHashInfo,
       });
 
-      // ADD_TAB リデューサーが activeTabId を自動設定するため setActiveTab は不要
+      // No need for setActiveTab since ADD_TAB reducer sets activeTabId automatically
 
-      // Recent Filesに追加
+      // Add to recent files
       try {
         await storeApi.addRecentFile(
           result.filePath || '',
@@ -147,7 +147,7 @@ export const useTabsDesktop = () => {
         );
       } catch (error) {
         console.error('Failed to add to recent files:', error);
-        // Recent Filesの追加に失敗してもファイルを開く処理は続行
+        // Continue opening the file even if adding to recent files fails
       }
 
       return tabId;
@@ -163,20 +163,20 @@ export const useTabsDesktop = () => {
 
     try {
       if (tab.filePath && !tab.isNew) {
-        // 既存ファイルに上書き保存する前に、ファイル変更をチェック
+        // Check for file changes before overwriting existing file
         const hasChanged = await detectFileChange(tab);
         if (hasChanged) {
-          // ファイル変更検出イベントを発火
+          // Fire file change detection event
           const event = new CustomEvent('fileChangeDetected', {
             detail: {
               fileName: tab.title,
               tabId: id,
               onReload: async (newContent: string) => {
-                // コンテンツを更新
+                // Update content
                 updateTabContent(id, newContent);
                 setTabModified(id, false);
 
-                // ファイルハッシュ情報を更新
+                // Update file hash info
                 try {
                   const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
                   updateTabFileHash(id, newHashInfo);
@@ -184,7 +184,7 @@ export const useTabsDesktop = () => {
                   console.warn('Failed to update file hash after reload before save:', error);
                 }
 
-                // 保存を実行
+                // Execute save
                 desktopApi.saveFileToPath(tab.filePath!, newContent)
                   .then(result => {
                     if (result.success) {
@@ -198,11 +198,11 @@ export const useTabsDesktop = () => {
                   });
               },
               onCancel: async () => {
-                // 現在の内容で保存を実行
+                // Save with current content
                 const result = await desktopApi.saveFileToPath(tab.filePath!, tab.content);
                 if (result.success) {
                   setTabModified(id, false);
-                  // 保存後にファイルハッシュ情報を更新
+                  // Update file hash info after save
                   try {
                     const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
                     updateTabFileHash(id, newHashInfo);
@@ -218,16 +218,16 @@ export const useTabsDesktop = () => {
           window.dispatchEvent(event);
           return true;
         } else {
-          // ファイル変更がない場合は通常の保存
+          // Normal save if no file changes detected
           const result = await desktopApi.saveFileToPath(tab.filePath, tab.content);
           if (result.success) {
             setTabModified(id, false);
-            // 保存後にファイルハッシュ情報を更新
+            // Update file hash info after save
             try {
               const newHashInfo = await desktopApi.getFileHash(tab.filePath);
               updateTabFileHash(id, newHashInfo);
 
-              // Recent Filesに追加
+              // Add to recent files
               await storeApi.addRecentFile(
                 tab.filePath,
                 tab.title,
@@ -244,22 +244,22 @@ export const useTabsDesktop = () => {
           }
         }
       } else {
-        // 新しいファイルとして保存（ダイアログあり）
+        // Save as new file (with dialog)
         const result = await desktopApi.saveFile(tab.content, tab.filePath);
         if (result.success && result.filePath) {
           setTabFilePath(id, result.filePath);
           const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
           updateTabTitle(id, displayName);
           setTabModified(id, false);
-          // 新しいファイルとして保存されたので、isNewフラグをfalseに設定
+          // Set isNew flag to false since file was saved as new
           setTabNew(id, false);
 
-          // 保存後にファイルハッシュ情報を更新
+          // Update file hash info after save
           try {
             const newHashInfo = await desktopApi.getFileHash(result.filePath);
             updateTabFileHash(id, newHashInfo);
 
-            // Recent Filesに追加
+            // Add to recent files
             await storeApi.addRecentFile(
               result.filePath,
               displayName,
@@ -273,7 +273,7 @@ export const useTabsDesktop = () => {
 
           return true;
         } else {
-          // ユーザーがキャンセルした場合はfalseを返す（エラーを投げない）
+          // Return false if user cancelled (don't throw error)
           return false;
         }
       }
@@ -292,7 +292,7 @@ export const useTabsDesktop = () => {
     }
 
     try {
-      // Save Asは常にダイアログを開く（既存のファイルパスは無視）
+      // Save As always opens a dialog (ignores existing file path)
       const result = await desktopApi.saveFileAs(tab.content);
 
       if (result.success && result.filePath) {
@@ -300,7 +300,7 @@ export const useTabsDesktop = () => {
         const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
         updateTabTitle(id, displayName);
         setTabModified(id, false);
-        // Save Asでも新しいファイルとして保存されたので、isNewフラグをfalseに設定
+        // Set isNew flag to false since file was saved via Save As
         setTabNew(id, false);
         return true;
       } else {
@@ -324,7 +324,7 @@ export const useTabsDesktop = () => {
       isModified: false,
       isNew: true,
     });
-    // ADD_TAB リデューサーが activeTabId を自動設定するため setActiveTab は不要
+    // No need for setActiveTab since ADD_TAB reducer sets activeTabId automatically
     return tabId;
   }, [addTab]);
 
@@ -333,7 +333,7 @@ export const useTabsDesktop = () => {
     return foundTab || null;
   }, [state.tabs, state.activeTabId]);
 
-  // 状態を保存
+  // Save state
   const saveState = useCallback(async () => {
     try {
       const appState: AppState = {
@@ -347,19 +347,19 @@ export const useTabsDesktop = () => {
     }
   }, [state.tabs, state.activeTabId]);
 
-  // 状態を復元
+  // Restore state
   const restoreState = useCallback(async () => {
     try {
       const savedState = await storeApi.loadState();
       if (savedState) {
-        // 保存済みファイルの内容を再読み込み
+        // Reload content of saved files
         const restoredTabs = await Promise.all(
           savedState.tabs.map(async (tab) => {
             if (!tab.isNew && tab.filePath) {
               try {
                 const content = await desktopApi.readFileFromPath(tab.filePath);
 
-                // ファイルハッシュ情報も取得
+                // Also get file hash info
                 let fileHashInfo = undefined;
                 try {
                   fileHashInfo = await desktopApi.getFileHash(tab.filePath);
@@ -384,25 +384,25 @@ export const useTabsDesktop = () => {
 
         dispatch({ type: 'LOAD_STATE', payload: restoredState });
       } else {
-        // 初回起動時は初期状態を作成
+        // Create initial state on first launch
         const initialState = storeApi.createInitialState();
         dispatch({ type: 'LOAD_STATE', payload: initialState });
       }
     } catch (error) {
       console.error('Failed to restore state:', error);
-      // エラー時は初期状態を作成
+      // Create initial state on error
       const initialState = storeApi.createInitialState();
       dispatch({ type: 'LOAD_STATE', payload: initialState });
     }
     setIsInitialized(true);
   }, []);
 
-  // 初期化処理
+  // Initialization
   useEffect(() => {
     restoreState();
   }, [restoreState]);
 
-  // 状態変更時に自動保存
+  // Auto-save on state changes
   useEffect(() => {
     if (isInitialized) {
       saveState();

@@ -56,14 +56,14 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
     severity: 'success'
   });
 
-  // ダイアログが開かれた時にRecent Filesを読み込み
+  // Load recent files when dialog opens
   useEffect(() => {
     if (open) {
       loadRecentFiles();
     }
   }, [open]);
 
-  // 検索クエリに基づいてファイルをフィルタリング
+  // Filter files based on search query
   useEffect(() => {
     if (!searchQuery.trim()) {
       setFilteredFiles(recentFiles);
@@ -92,7 +92,7 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
 
   const handleFileSelect = async (file: RecentFile) => {
     try {
-      // ファイルが存在するかチェック
+      // Check if file exists
       const result = await desktopApi.readFileByPath(file.filePath);
       if (result.error) {
         setSnackbar({
@@ -100,7 +100,7 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
           message: t('recentFiles.fileNotFound'),
           severity: 'error'
         });
-        // 存在しないファイルはRecent Filesから削除
+        // Remove non-existent files from recent files
         await storeApi.removeRecentFile(file.filePath);
         await loadRecentFiles();
         return;
@@ -178,13 +178,13 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 1) {
-      return '数分前';
+      return 'a few minutes ago';
     } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)}時間前`;
+      return `${Math.floor(diffInHours)} hour${Math.floor(diffInHours) === 1 ? '' : 's'} ago`;
     } else if (diffInHours < 24 * 7) {
-      return `${Math.floor(diffInHours / 24)}日前`;
+      return `${Math.floor(diffInHours / 24)} day${Math.floor(diffInHours / 24) === 1 ? '' : 's'} ago`;
     } else {
-      return date.toLocaleDateString('ja-JP');
+      return date.toLocaleDateString('en-US');
     }
   };
 
@@ -296,7 +296,7 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
                     }
                   />
                   <ListItemSecondaryAction>
-                    <Tooltip title="ファイルを開く">
+                    <Tooltip title="Open file">
                       <IconButton
                         edge="end"
                         onClick={(e) => {
@@ -321,7 +321,7 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
         </DialogActions>
       </Dialog>
 
-      {/* コンテキストメニュー */}
+      {/* Context menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -337,7 +337,7 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
         </MenuItem>
       </Menu>
 
-      {/* スナックバー */}
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

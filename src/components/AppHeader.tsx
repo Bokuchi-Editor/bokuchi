@@ -48,12 +48,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 }) => {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
 
-  // Recent Filesを読み込み
+  // Load recent files
   useEffect(() => {
     const loadRecentFiles = async () => {
       try {
         const files = await storeApi.loadRecentFiles();
-        setRecentFiles(files.slice(0, 10)); // メニューには最大10件表示
+        setRecentFiles(files.slice(0, 10)); // Show max 10 items in menu
       } catch (error) {
         console.error('Failed to load recent files:', error);
       }
@@ -127,7 +127,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </span>
         </MenuItem>
 
-        {/* Recent Files サブメニュー */}
+        {/* Recent files submenu */}
         {recentFiles.length > 0 && (
           <MenuItem disabled>
             <Schedule sx={{ mr: 1 }} />

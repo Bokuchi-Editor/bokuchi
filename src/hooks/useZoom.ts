@@ -12,7 +12,7 @@ export const useZoom = (config: ZoomConfig) => {
   const [currentZoom, setCurrentZoom] = useState(config.defaultZoom);
   const [isAtLimit, setIsAtLimit] = useState(false);
 
-  // 保存されたズーム設定を読み込み
+  // Load saved zoom level
   useEffect(() => {
     const loadSavedZoom = async () => {
       try {
@@ -27,65 +27,65 @@ export const useZoom = (config: ZoomConfig) => {
     loadSavedZoom();
   }, [config.minZoom, config.maxZoom]);
 
-  // ズームイン（拡大）
+  // Zoom in
   const zoomIn = useCallback(() => {
     const newZoom = Math.min(currentZoom + config.zoomStep, config.maxZoom);
     if (newZoom === config.maxZoom && currentZoom < config.maxZoom) {
       setIsAtLimit(true);
-      setTimeout(() => setIsAtLimit(false), 2000); // 2秒後に警告を消す
+      setTimeout(() => setIsAtLimit(false), 2000); // Clear warning after 2 seconds
     }
     setCurrentZoom(newZoom);
 
-    // ズーム設定を保存
+    // Save zoom level
     storeApi.saveZoomLevel(newZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
   }, [currentZoom, config.maxZoom, config.zoomStep]);
 
-  // ズームアウト（縮小）
+  // Zoom out
   const zoomOut = useCallback(() => {
     const newZoom = Math.max(currentZoom - config.zoomStep, config.minZoom);
     if (newZoom === config.minZoom && currentZoom > config.minZoom) {
       setIsAtLimit(true);
-      setTimeout(() => setIsAtLimit(false), 2000); // 2秒後に警告を消す
+      setTimeout(() => setIsAtLimit(false), 2000); // Clear warning after 2 seconds
     }
     setCurrentZoom(newZoom);
 
-    // ズーム設定を保存
+    // Save zoom level
     storeApi.saveZoomLevel(newZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
   }, [currentZoom, config.minZoom, config.zoomStep]);
 
-  // デフォルトサイズに戻す
+  // Reset to default size
   const resetZoom = useCallback(() => {
     setCurrentZoom(config.defaultZoom);
     setIsAtLimit(false);
 
-    // ズーム設定を保存
+    // Save zoom level
     storeApi.saveZoomLevel(config.defaultZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
   }, [config.defaultZoom]);
 
-  // キーボードショートカットの処理
+  // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
 
-      // macOS: Cmd + キー、Windows/Linux: Ctrl + キー
+      // macOS: Cmd + key, Windows/Linux: Ctrl + key
       if (event.metaKey || event.ctrlKey) {
 
-                // JIS配列キーボードに対応した拡張キー判定
-        // JIS配列では、;キーが+の入力に使用される
+                // Extended key detection for JIS keyboard layout
+        // On JIS layout, semicolon key is used for +
         const isZoomInKey = event.key === '=' || event.key === '+' ||
                            event.code === 'Equal' || event.code === 'Plus' ||
-                           (event.code === 'Semicolon' && event.shiftKey); // JIS配列の+キー
+                           (event.code === 'Semicolon' && event.shiftKey); // + key on JIS layout
 
         const isZoomOutKey = event.key === '-' || event.code === 'Minus';
         const isResetKey = event.key === '0' || event.code === 'Digit0';
 
         if (isZoomInKey) {
-          // 拡大: Cmd + Shift + + または Cmd + = または JIS配列の+キー
+          // Zoom in: Cmd + Shift + + or Cmd + = or JIS layout + key
           if (event.shiftKey || event.key === '=' || event.key === '+' ||
               (event.code === 'Semicolon' && event.shiftKey)) {
             event.preventDefault();
@@ -93,14 +93,14 @@ export const useZoom = (config: ZoomConfig) => {
             zoomIn();
           }
         } else if (isZoomOutKey) {
-          // 縮小: Cmd + - (Shift不要)
+          // Zoom out: Cmd + - (no Shift needed)
           if (!event.shiftKey) {
             event.preventDefault();
             event.stopPropagation();
             zoomOut();
           }
         } else if (isResetKey) {
-          // リセット: Cmd + 0 (Shift不要)
+          // Reset: Cmd + 0 (no Shift needed)
           if (!event.shiftKey) {
             event.preventDefault();
             event.stopPropagation();
@@ -110,12 +110,12 @@ export const useZoom = (config: ZoomConfig) => {
       }
     };
 
-    // キャプチャフェーズでイベントを処理（優先度を上げる）
+    // Process events in capture phase (higher priority)
     window.addEventListener('keydown', handleKeyDown, true);
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [zoomIn, zoomOut, resetZoom]);
 
-  // ズームレベルをパーセンテージで取得
+  // Get zoom level as percentage
   const zoomPercentage = Math.round(currentZoom * 100);
 
   return {

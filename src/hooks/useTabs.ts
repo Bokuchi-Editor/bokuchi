@@ -63,7 +63,7 @@ export const useTabs = () => {
     if (!tab) return false;
 
     try {
-      // ファイルをダウンロードとして保存
+      // Save file as download
       const filePath = fileName || tab.filePath || 'untitled.md';
       const blob = new Blob([tab.content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
@@ -75,7 +75,7 @@ export const useTabs = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      // タブ情報を更新
+      // Update tab info
       setTabFilePath(id, filePath);
       const displayName = filePath.split('/').pop() || filePath;
       updateTabTitle(id, displayName);

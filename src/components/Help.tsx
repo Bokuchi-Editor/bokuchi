@@ -42,7 +42,7 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
     }
   };
 
-  // タブ切り替え時にスクロール位置をリセット
+  // Reset scroll position when switching tabs
   useEffect(() => {
     if (dialogContentRef.current) {
       dialogContentRef.current.scrollTop = 0;

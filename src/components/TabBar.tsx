@@ -56,7 +56,7 @@ const createThresholdPointerSensor = () => {
   });
 };
 
-// SortableTabコンポーネント
+// SortableTab component
 const SortableTab: React.FC<{
   tab: TabType;
   isActive: boolean;

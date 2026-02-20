@@ -2,57 +2,57 @@ import { desktopApi } from '../api/desktopApi';
 import { Tab } from '../types/tab';
 
 /**
- * ファイルの変更を検出する（ハッシュ値比較）
- * @param tab チェック対象のタブ
- * @returns ファイルが変更されているかどうか
+ * Detect file changes (hash comparison)
+ * @param tab The tab to check
+ * @returns Whether the file has been changed
  */
 export async function detectFileChange(tab: Tab): Promise<boolean> {
-  // 新しいファイル（isNew: true）の場合は変更検出しない
+  // Skip change detection for new files (isNew: true)
   if (tab.isNew || !tab.filePath) {
     return false;
   }
 
-  // ファイルハッシュ情報がない場合は変更なしとして扱う
+  // Treat as unchanged if no file hash info is available
   if (!tab.fileHashInfo) {
     console.warn('No file hash info available for tab:', tab.id);
     return false;
   }
 
   try {
-    // 現在のファイルハッシュを取得
+    // Get current file hash
     const currentHashInfo = await desktopApi.getFileHash(tab.filePath);
 
-    // 段階的チェック
-    // 1. ファイルサイズチェック（高速）
+    // Incremental checks
+    // 1. File size check (fast)
     if (currentHashInfo.file_size !== tab.fileHashInfo.file_size) {
       return true;
     }
 
-    // 2. 最終更新時刻チェック（高速）
+    // 2. Last modified time check (fast)
     if (currentHashInfo.modified_time !== tab.fileHashInfo.modified_time) {
       return true;
     }
 
-    // 3. ハッシュ値チェック（必要時のみ）
+    // 3. Hash value check (only when needed)
     if (currentHashInfo.hash !== tab.fileHashInfo.hash) {
       return true;
     }
 
-    // 変更なし
+    // No changes
     return false;
   } catch (error) {
     console.error('Failed to detect file change:', error);
-    // エラーの場合は変更なしとして扱う
+    // Treat as unchanged on error
     return false;
   }
 }
 
 /**
- * ファイルの変更を検出し、必要に応じてユーザーに確認を求める
- * @param tab チェック対象のタブ
- * @param onReload 再読み込み時のコールバック
- * @param onCancel キャンセル時のコールバック
- * @returns 再読み込みが実行されたかどうか
+ * Detect file changes and prompt the user for confirmation if needed
+ * @param tab The tab to check
+ * @param onReload Callback when reloading
+ * @param onCancel Callback when cancelled
+ * @returns Whether a reload was performed
  */
 export async function checkFileChangeAndReload(
   tab: Tab,
@@ -65,12 +65,12 @@ export async function checkFileChangeAndReload(
     return false;
   }
 
-  // ファイルが変更されている場合、ユーザーに確認を求める
+  // If file has changed, prompt user for confirmation
   const shouldReload = await showFileChangeDialog(tab.title || 'Untitled');
 
   if (shouldReload) {
     try {
-      // ファイルを再読み込み
+      // Reload file
       const newContent = await desktopApi.readFileFromPath(tab.filePath!);
       onReload(newContent);
       return true;
@@ -86,13 +86,13 @@ export async function checkFileChangeAndReload(
 }
 
 /**
- * ファイル変更確認ダイアログを表示する
- * @param fileName ファイル名
- * @returns 再読み込みするかどうか
+ * Show file change confirmation dialog
+ * @param fileName The file name
+ * @returns Whether to reload
  */
 async function showFileChangeDialog(fileName: string): Promise<boolean> {
   return new Promise((resolve) => {
-    // カスタムダイアログイベントを発火
+    // Fire custom dialog event
     const event = new CustomEvent('fileChangeDetected', {
       detail: {
         fileName,
@@ -106,9 +106,9 @@ async function showFileChangeDialog(fileName: string): Promise<boolean> {
 }
 
 /**
- * 複数のタブのファイル変更を一括検出する
- * @param tabs チェック対象のタブ配列
- * @returns 変更されたタブのID配列
+ * Detect file changes for multiple tabs at once
+ * @param tabs Array of tabs to check
+ * @returns Array of changed tab IDs
  */
 export async function detectMultipleFileChanges(tabs: Tab[]): Promise<string[]> {
   const changedTabs: string[] = [];

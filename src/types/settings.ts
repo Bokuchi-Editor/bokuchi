@@ -1,4 +1,4 @@
-// エディター設定の型定義
+// Editor settings type definition
 export interface EditorSettings {
   fontSize: number;
   showLineNumbers: boolean;
@@ -7,34 +7,34 @@ export interface EditorSettings {
   minimap: boolean;
 }
 
-// 外観設定の型定義
+// Appearance settings type definition
 export interface AppearanceSettings {
   theme: string;
   showLineNumbers: boolean;
 }
 
-// インターフェース設定の型定義
+// Interface settings type definition
 export interface InterfaceSettings {
   language: string;
   tabLayout: 'horizontal' | 'vertical';
   zoomLevel: number;
 }
 
-// 高度な設定の型定義
+// Advanced settings type definition
 export interface AdvancedSettings {
   autoSave: boolean;
   showWhitespace: boolean;
   tableConversion: 'auto' | 'confirm' | 'off';
 }
 
-// Recent Files設定の型定義
+// Recent files settings type definition
 export interface RecentFilesSettings {
   maxRecentFiles: number;
   showPreview: boolean;
   previewLength: number;
 }
 
-// 全設定の統合型定義
+// Combined application settings type definition
 export interface AppSettings {
   editor: EditorSettings;
   appearance: AppearanceSettings;
@@ -44,7 +44,7 @@ export interface AppSettings {
   globalVariables: Record<string, string>;
 }
 
-// デフォルト設定
+// Default settings
 export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   fontSize: 14,
   showLineNumbers: true,

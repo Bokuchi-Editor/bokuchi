@@ -1,11 +1,11 @@
 /**
- * HTMLテーブルをMarkdownテーブルに変換するユーティリティ
+ * Utility for converting HTML tables to Markdown tables
  */
 
 /**
- * HTMLテーブルをMarkdownテーブルに変換
- * @param html HTMLテーブル文字列
- * @returns Markdownテーブル文字列
+ * Convert HTML table to Markdown table
+ * @param html HTML table string
+ * @returns Markdown table string
  */
 export function htmlTableToMarkdown(html: string): string {
 
@@ -27,42 +27,42 @@ export function htmlTableToMarkdown(html: string): string {
 
     const markdownRows: string[] = [];
 
-    // 各行を処理
+    // Process each row
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
       const cells = Array.from(row.querySelectorAll('td, th'));
 
 
       if (cells.length === 0) {
-        continue; // 空の行はスキップ
+        continue; // Skip empty rows
       }
 
       const cellContents = cells.map((cell) => {
-        // セルの内容を取得（HTMLタグを除去）
+        // Get cell content (strip HTML tags)
         let content = cell.textContent || '';
 
 
-        // 改行をスペースに変換
+        // Convert newlines to spaces
         content = content.replace(/\n/g, ' ');
 
-        // 複数のスペースを単一スペースに変換
+        // Collapse multiple spaces to single space
         content = content.replace(/\s+/g, ' ');
 
-        // 前後の空白を削除
+        // Trim whitespace
         content = content.trim();
 
-        // パイプ文字をエスケープ
+        // Escape pipe characters
         content = content.replace(/\|/g, '\\|');
 
-        // 空のセルはスペース1つに
+        // Empty cells become a single space
         return content || ' ';
       });
 
-      // Markdown行を作成
+      // Create Markdown row
       const markdownRow = '| ' + cellContents.join(' | ') + ' |';
       markdownRows.push(markdownRow);
 
-      // 最初の行の後にヘッダー区切り行を追加
+      // Add header separator row after the first row
       if (i === 0) {
         const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
         markdownRows.push(separator);
@@ -79,19 +79,19 @@ export function htmlTableToMarkdown(html: string): string {
 }
 
 /**
- * クリップボードデータからHTMLテーブルを検出
- * @param clipboardData クリップボードデータ
- * @returns HTMLテーブル文字列またはnull
+ * Detect HTML table from clipboard data
+ * @param clipboardData Clipboard data
+ * @returns HTML table string or null
  */
 export function detectHtmlTable(clipboardData: DataTransfer): string | null {
   try {
-    // HTMLデータを取得
+    // Get HTML data
     const htmlData = clipboardData.getData('text/html');
     if (!htmlData) {
       return null;
     }
 
-    // テーブルタグが含まれているかチェック
+    // Check if table tags are present
     if (!htmlData.includes('<table') || !htmlData.includes('</table>')) {
       return null;
     }
@@ -104,9 +104,9 @@ export function detectHtmlTable(clipboardData: DataTransfer): string | null {
 }
 
 /**
- * テーブル変換の結果を検証
- * @param markdown Markdownテーブル文字列
- * @returns 有効なMarkdownテーブルかどうか
+ * Validate table conversion result
+ * @param markdown Markdown table string
+ * @returns Whether it is a valid Markdown table
  */
 export function validateMarkdownTable(markdown: string): boolean {
   try {
@@ -115,13 +115,13 @@ export function validateMarkdownTable(markdown: string): boolean {
       return false;
     }
 
-    // 最初の行がヘッダー行かチェック
+    // Check if the first row is a header row
     const headerLine = lines[0];
     if (!headerLine.startsWith('|') || !headerLine.endsWith('|')) {
       return false;
     }
 
-    // 2行目が区切り行かチェック
+    // Check if the second row is a separator row
     const separatorLine = lines[1];
     if (!separatorLine.includes('---')) {
       return false;
@@ -135,9 +135,9 @@ export function validateMarkdownTable(markdown: string): boolean {
 }
 
 /**
- * TSV/CSVテキストをMarkdownテーブルに変換
- * @param text TSV/CSVテキスト
- * @returns Markdownテーブル文字列
+ * Convert TSV/CSV text to Markdown table
+ * @param text TSV/CSV text
+ * @returns Markdown table string
  */
 export function convertTsvCsvToMarkdown(text: string): string {
 
@@ -148,7 +148,7 @@ export function convertTsvCsvToMarkdown(text: string): string {
       throw new Error('No lines found');
     }
 
-    // 区切り文字を判定（タブまたはカンマ）
+    // Determine delimiter (tab or comma)
     const firstLine = lines[0];
     const hasTabs = firstLine.includes('\t');
     const hasCommas = firstLine.includes(',');
@@ -164,33 +164,33 @@ export function convertTsvCsvToMarkdown(text: string): string {
 
     const markdownRows: string[] = [];
 
-    // 各行を処理
+    // Process each row
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      if (!line) continue; // 空行をスキップ
+      if (!line) continue; // Skip empty lines
 
-      // 区切り文字で分割
+      // Split by delimiter
       const cells = line.split(delimiter);
 
       if (cells.length === 0) continue;
 
-      // セルの内容を処理
+      // Process cell contents
       const cellContents = cells.map((cell) => {
         let content = cell.trim();
 
 
-        // パイプ文字をエスケープ
+        // Escape pipe characters
         content = content.replace(/\|/g, '\\|');
 
-        // 空のセルはスペース1つに
+        // Empty cells become a single space
         return content || ' ';
       });
 
-      // Markdown行を作成
+      // Create Markdown row
       const markdownRow = '| ' + cellContents.join(' | ') + ' |';
       markdownRows.push(markdownRow);
 
-      // 最初の行の後にヘッダー区切り行を追加
+      // Add header separator row after the first row
       if (i === 0) {
         const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
         markdownRows.push(separator);

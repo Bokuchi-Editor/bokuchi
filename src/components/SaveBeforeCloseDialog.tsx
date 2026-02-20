@@ -40,7 +40,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
     >
       <DialogTitle>
         <Typography variant="h6" component="div">
-          変更を保存しますか？
+          Save changes?
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -48,7 +48,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           <Box component="span" sx={{ fontWeight: 'bold' }}>
             {fileName}
           </Box>
-          に変更が加えられています。変更を保存しますか？
+          {' '}has unsaved changes. Do you want to save them?
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ p: 2, gap: 1 }}>
@@ -58,7 +58,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           variant="outlined"
           color="inherit"
         >
-          キャンセル
+          Cancel
         </Button>
         <Button
           onClick={onDontSave}
@@ -66,7 +66,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           variant="outlined"
           color="warning"
         >
-          保存しない
+          Don't Save
         </Button>
         <Button
           onClick={onSave}
@@ -75,7 +75,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           color="primary"
           autoFocus
         >
-          保存
+          Save
         </Button>
       </DialogActions>
     </Dialog>

@@ -18,7 +18,7 @@ const getStore = async () => {
 };
 
 export const storeApi = {
-  // 状態を保存
+  // Save state
   async saveState(state: AppState): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -30,7 +30,7 @@ export const storeApi = {
     }
   },
 
-  // 状態を読み込み
+  // Load state
   async loadState(): Promise<AppState | null> {
     try {
       const storeInstance = await getStore();
@@ -42,7 +42,7 @@ export const storeApi = {
     }
   },
 
-  // グローバル変数を保存
+  // Save global variables
   async saveGlobalVariables(variables: Record<string, string>): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -54,7 +54,7 @@ export const storeApi = {
     }
   },
 
-  // グローバル変数を読み込み
+  // Load global variables
   async loadGlobalVariables(): Promise<Record<string, string>> {
     try {
       const storeInstance = await getStore();
@@ -66,7 +66,7 @@ export const storeApi = {
     }
   },
 
-  // 言語設定を保存
+  // Save language setting
   async saveLanguage(language: string): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -78,7 +78,7 @@ export const storeApi = {
     }
   },
 
-  // 言語設定を読み込み
+  // Load language setting
   async loadLanguage(): Promise<string> {
     try {
       const storeInstance = await getStore();
@@ -90,7 +90,7 @@ export const storeApi = {
     }
   },
 
-  // ズーム設定を保存
+  // Save zoom level
   async saveZoomLevel(zoomLevel: number): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -102,7 +102,7 @@ export const storeApi = {
     }
   },
 
-  // ズーム設定を読み込み
+  // Load zoom level
   async loadZoomLevel(): Promise<number> {
     try {
       const storeInstance = await getStore();
@@ -114,7 +114,7 @@ export const storeApi = {
     }
   },
 
-  // ダークモード設定を保存
+  // Save dark mode setting
   async saveDarkMode(darkMode: boolean): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -126,7 +126,7 @@ export const storeApi = {
     }
   },
 
-  // ダークモード設定を読み込み
+  // Load dark mode setting
   async loadDarkMode(): Promise<boolean> {
     try {
       const storeInstance = await getStore();
@@ -138,7 +138,7 @@ export const storeApi = {
     }
   },
 
-  // テーマ設定を保存
+  // Save theme setting
   async saveTheme(theme: ThemeName): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -150,7 +150,7 @@ export const storeApi = {
     }
   },
 
-  // テーマ設定を読み込み
+  // Load theme setting
   async loadTheme(): Promise<ThemeName> {
     try {
       const storeInstance = await getStore();
@@ -162,7 +162,7 @@ export const storeApi = {
     }
   },
 
-  // タブレイアウト設定を保存
+  // Save tab layout setting
   async saveTabLayout(tabLayout: 'horizontal' | 'vertical'): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -174,7 +174,7 @@ export const storeApi = {
     }
   },
 
-  // タブレイアウト設定を読み込み
+  // Load tab layout setting
   async loadTabLayout(): Promise<'horizontal' | 'vertical'> {
     try {
       const storeInstance = await getStore();
@@ -186,7 +186,7 @@ export const storeApi = {
     }
   },
 
-  // ビューモード設定を保存
+  // Save view mode setting
   async saveViewMode(viewMode: 'split' | 'editor' | 'preview'): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -198,7 +198,7 @@ export const storeApi = {
     }
   },
 
-  // ビューモード設定を読み込み
+  // Load view mode setting
   async loadViewMode(): Promise<'split' | 'editor' | 'preview'> {
     try {
       const storeInstance = await getStore();
@@ -210,7 +210,7 @@ export const storeApi = {
     }
   },
 
-  // 初期状態を作成
+  // Create initial state
   createInitialState(): AppState {
     return {
       tabs: [{
@@ -225,7 +225,7 @@ export const storeApi = {
     };
   },
 
-  // アプリケーション設定を保存
+  // Save application settings
   async saveAppSettings(settings: AppSettings): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -237,13 +237,13 @@ export const storeApi = {
     }
   },
 
-  // アプリケーション設定を読み込み
+  // Load application settings
   async loadAppSettings(): Promise<AppSettings> {
     try {
       const storeInstance = await getStore();
       const settings = await storeInstance.get('appSettings') as AppSettings;
 
-      // デフォルト設定とマージして、不足している項目を補完
+      // Merge with default settings to fill in missing fields
       const mergedSettings = {
         ...DEFAULT_APP_SETTINGS,
         ...settings,
@@ -261,7 +261,7 @@ export const storeApi = {
     }
   },
 
-  // 設定をリセット
+  // Reset settings
   async resetAppSettings(): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -273,7 +273,7 @@ export const storeApi = {
     }
   },
 
-  // 設定をエクスポート
+  // Export settings
   async exportAppSettings(): Promise<string> {
     try {
       const settings = await this.loadAppSettings();
@@ -284,7 +284,7 @@ export const storeApi = {
     }
   },
 
-  // 設定をインポート
+  // Import settings
   async importAppSettings(settingsJson: string): Promise<void> {
     try {
       const settings = JSON.parse(settingsJson) as AppSettings;
@@ -295,7 +295,7 @@ export const storeApi = {
     }
   },
 
-  // Recent Files関連のメソッド
+  // Recent files methods
   async saveRecentFiles(recentFiles: RecentFile[]): Promise<void> {
     try {
       const storeInstance = await getStore();
@@ -324,14 +324,14 @@ export const storeApi = {
       const appSettings = await this.loadAppSettings();
       const settings = appSettings.recentFiles;
 
-      // 既存のファイルかチェック
+      // Check if the file already exists
       const existingIndex = recentFiles.findIndex(file => file.filePath === filePath);
 
       const now = Date.now();
       const preview = content.substring(0, settings.previewLength);
 
       if (existingIndex >= 0) {
-        // 既存ファイルの場合は更新
+        // Update existing file
         recentFiles[existingIndex] = {
           ...recentFiles[existingIndex],
           lastOpened: now,
@@ -341,7 +341,7 @@ export const storeApi = {
           preview,
         };
       } else {
-        // 新規ファイルの場合は追加
+        // Add new file
         const newFile: RecentFile = {
           id: `recent-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           filePath,
@@ -355,10 +355,10 @@ export const storeApi = {
         recentFiles.unshift(newFile);
       }
 
-      // 最終更新時刻順でソート
+      // Sort by last opened time
       recentFiles.sort((a, b) => b.lastOpened - a.lastOpened);
 
-      // 最大ファイル数を超えた場合は古いものを削除
+      // Remove old entries if exceeding max count
       if (recentFiles.length > settings.maxRecentFiles) {
         recentFiles.splice(settings.maxRecentFiles);
       }

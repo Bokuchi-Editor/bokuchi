@@ -78,7 +78,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         }
       </Typography>
 
-      {/* ズームコントロール */}
+      {/* Zoom controls */}
       <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Tooltip title={t('tooltips.zoomOut')} placement="top">
           <IconButton
@@ -148,7 +148,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         </Tooltip>
       </Box>
 
-      {/* テーマ表示と切り替え - 右端に配置 */}
+      {/* Theme display and toggle - positioned at right end */}
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
         <IconButton
           size="small"

@@ -106,7 +106,7 @@ function AppDesktop() {
     };
   });
 
-  // メニューイベントのリスナーを設定
+  // Set up menu event listeners
   useEffect(() => {
 
     let unlistenMenu: (() => void) | undefined;
@@ -120,7 +120,7 @@ function AppDesktop() {
     const setupMenuListeners = async () => {
       const { listen } = await import('@tauri-apps/api/event');
 
-      // デバウンス処理用の変数（グローバルに移動）
+      // Debounce variables (moved to global scope)
       const globalDebounce = (window as unknown as {
         lastMenuEventTime?: number;
         DEBOUNCE_DELAY: number;
@@ -249,7 +249,7 @@ function AppDesktop() {
       if (unlistenHelp) unlistenHelp();
       if (unlistenFileOpen) unlistenFileOpen();
     };
-  }, []); // 依存配列を空にして、一度だけ実行されるようにする
+  }, []); // Empty dependency array to run only once
 
   // Notify Rust that frontend is ready AFTER state restoration is complete.
   // This prevents a race condition where file association tabs are added
@@ -411,7 +411,7 @@ function AppDesktop() {
           t={t}
         />
 
-      {/* ステータスバー */}
+      {/* Status bar */}
       <StatusBar
         line={editorStatus.line}
         column={editorStatus.column}

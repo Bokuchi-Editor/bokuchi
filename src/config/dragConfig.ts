@@ -1,13 +1,13 @@
 /**
- * ドラッグ&ドロップ機能の設定
+ * Drag & drop configuration
  */
 export const dragConfig = {
-  // ドラッグ開始の閾値（ピクセル）
-  // この距離以上マウスを動かした場合のみドラッグ開始
+  // Drag start threshold (pixels)
+  // Dragging only starts when the mouse moves beyond this distance
   dragThreshold: 8,
 
-  // ドラッグ開始までの待機時間（ミリ秒）
-  // この時間内に閾値を超えた場合のみドラッグ開始
+  // Drag start delay (milliseconds)
+  // Dragging only starts if the threshold is exceeded within this time
   dragDelay: 150,
 } as const;
 

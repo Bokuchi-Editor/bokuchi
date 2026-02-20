@@ -175,7 +175,7 @@ const Settings: React.FC<SettingsProps> = ({
       if (result.content) {
         const importResult = await variableApi.loadVariablesFromYAML(result.content);
         if (importResult.success) {
-          // グローバル変数を再読み込み
+          // Reload global variables
           const updatedVariables = await variableApi.getGlobalVariables();
           onSettingsChange({
             ...settings,
@@ -275,7 +275,7 @@ const Settings: React.FC<SettingsProps> = ({
 
       await storeApi.importAppSettings(result.content);
 
-      // 設定を再読み込み
+      // Reload settings
       const newSettings = await storeApi.loadAppSettings();
       onSettingsChange(newSettings);
 
