@@ -27,7 +27,8 @@
     "build:windows": "./build-windows.sh",
     "build:macos": "./build-macos.sh",
     "build:macos:signed": "./build-macos-signed.sh",
-    "notarize": "./notarize.sh"
+    "notarize": "./notarize.sh",
+    "generate-latest-json": "node scripts/generate-latest-json.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
