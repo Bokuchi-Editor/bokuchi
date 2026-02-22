@@ -1,7 +1,7 @@
 {
   "name": "bokuchi",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -69,6 +69,7 @@
     "vite-plugin-checker": "^0.12.0"
   },
   "overrides": {
-    "dompurify": ">=3.2.4"
+    "dompurify": ">=3.2.4",
+    "minimatch": ">=10.2.1"
   }
 }

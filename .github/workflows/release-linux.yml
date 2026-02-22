@@ -10,13 +10,18 @@ permissions:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+    env:
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
@@ -39,25 +44,15 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev
 
+      - name: Verify updater signing key
+        run: bash scripts/verify-updater-signing-key.sh
+
       - name: Build application
         run: npm run tauri:build -- --target x86_64-unknown-linux-gnu
 
-      - name: Get version from package.json
+      - name: Get version
         id: version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: List build artifacts
-        run: |
-          echo "=== Build artifacts ==="
-          find src-tauri/target/x86_64-unknown-linux-gnu/release/bundle -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" | head -10
-          echo "=== Bundle directory contents ==="
-          ls -la src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/
-          echo "=== DEB directory ==="
-          ls -la src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/ || echo "DEB directory not found"
-          echo "=== RPM directory ==="
-          ls -la src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/rpm/ || echo "RPM directory not found"
-          echo "=== AppImage directory ==="
-          ls -la src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/ || echo "AppImage directory not found"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
@@ -67,6 +62,14 @@ jobs:
             ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/Bokuchi_${{ steps.version.outputs.version }}_amd64.deb
             ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/rpm/Bokuchi-${{ steps.version.outputs.version }}-1.x86_64.rpm
             ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage
+            ./src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage.sig
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload .sig as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: updater-sigs-linux-${{ github.event.release.tag_name }}
+          path: src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/Bokuchi_${{ steps.version.outputs.version }}_amd64.AppImage.sig
+          retention-days: 90

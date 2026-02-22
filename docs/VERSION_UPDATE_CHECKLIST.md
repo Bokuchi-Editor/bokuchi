@@ -19,7 +19,10 @@
 ### 3. Other Potential Files
 
 - [ ] `README.md` - Update if version information is documented
-- [ ] `CHANGELOG.md` - Add new version entry if it exists
+- [ ] `CHANGELOG.md` - Update for the new release:
+  1. Rename the `[Unreleased]` section to `[X.Y.Z] - YYYY-MM-DD` (new version and date)
+  2. Add a new empty `## [Unreleased]` section at the top (for future changes)
+  3. Update the compare links at the bottom: `[Unreleased]` → `vX.Y.Z...HEAD`, add `[X.Y.Z]` → `vPrevious...vX.Y.Z`
 - [ ] Other documentation files
 
 ## Update Procedure
@@ -35,11 +38,11 @@
 - `src-tauri/Cargo.lock` is auto-generated, so manual updates are not required
 - Build script filenames must match actual build output filenames
 
-## Current Version: 0.4.0
+## Current Version: 0.5.0
 
-Last Updated: $(date)
+Last Updated: February 22, 2025
 
 ---
 
-**Last Updated**: January 8, 2025
+**Last Updated**: February 22, 2025
 **Version**: 1.0

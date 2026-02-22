@@ -11,6 +11,7 @@ This directory contains documentation for the Bokuchi project.
 
 - [Cross Compile Troubleshooting](./CROSS_COMPILE_TROUBLESHOOTING.md)
 - [macOS Notarization Guide](./MACOS_NOTARIZATION_GUIDE.md)
+- [Updater Signing (Tauri v2)](./UPDATER_SIGNING.md)
 - [Menu System Guide](./MENU_SYSTEM_GUIDE.md)
 - [Security](./SECURITY.md)
 - [Version Update Checklist](./VERSION_UPDATE_CHECKLIST.md)
