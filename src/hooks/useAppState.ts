@@ -472,6 +472,17 @@ export const useAppState = () => {
   const handleThemeChange = (newTheme: ThemeName) => {
     setTheme(newTheme);
     applyThemeToDocument(newTheme);
+    // Keep settings UI and persistence in sync when theme is changed from the status bar
+    setAppSettings((prev) => {
+      const next: AppSettings = {
+        ...prev,
+        appearance: { ...prev.appearance, theme: newTheme },
+      };
+      storeApi.saveAppSettings(next).catch((err) =>
+        console.error('Failed to save theme to app settings:', err)
+      );
+      return next;
+    });
   };
 
   // New unified settings change handler
