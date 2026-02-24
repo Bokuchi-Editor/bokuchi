@@ -274,7 +274,13 @@
     "interface": {
       "title": "Antarmuka",
       "zoomLevel": "Level Zoom",
-      "zoomLevelDescription": "Sesuaikan level zoom untuk antarmuka."
+      "zoomLevelDescription": "Sesuaikan level zoom untuk antarmuka.",
+      "outlineDisplayMode": "Panel kerangka",
+      "outlineDisplayModeDescription": "Pilih cara panel kerangka ditampilkan.",
+      "outlineDisplayModePersistent": "Selalu terlihat",
+      "outlineDisplayModePersistentDescription": "Panel kerangka selalu ditampilkan sebagai bagian dari tata letak.",
+      "outlineDisplayModeOverlay": "Overlay",
+      "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay."
     },
     "advanced": {
       "title": "Lanjutan",
@@ -367,6 +373,11 @@
     "horizontalRule": "Garis Horizontal",
     "table": "Tabel",
     "strikethrough": "Coret"
+  },
+  "outline": {
+    "title": "Kerangka",
+    "noHeadings": "Tidak ada judul yang ditemukan",
+    "toggleOutline": "Beralih kerangka (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Konversi Tabel ke Markdown",

@@ -274,7 +274,13 @@
     "interface": {
       "title": "Interface",
       "zoomLevel": "Niveau de zoom",
-      "zoomLevelDescription": "Ajuster le niveau de zoom pour l'interface."
+      "zoomLevelDescription": "Ajuster le niveau de zoom pour l'interface.",
+      "outlineDisplayMode": "Panneau du plan",
+      "outlineDisplayModeDescription": "Choisissez comment le panneau du plan est affiché.",
+      "outlineDisplayModePersistent": "Toujours visible",
+      "outlineDisplayModePersistentDescription": "Le panneau du plan est toujours affiché comme partie de la mise en page.",
+      "outlineDisplayModeOverlay": "Superposition",
+      "outlineDisplayModeOverlayDescription": "Le panneau du plan glisse depuis la droite en superposition."
     },
     "advanced": {
       "title": "Avancé",
@@ -367,6 +373,11 @@
     "horizontalRule": "Ligne horizontale",
     "table": "Tableau",
     "strikethrough": "Barré"
+  },
+  "outline": {
+    "title": "Plan",
+    "noHeadings": "Aucun titre trouvé",
+    "toggleOutline": "Basculer le plan (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Convertir le tableau en Markdown",

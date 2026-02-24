@@ -274,7 +274,13 @@
     "interface": {
       "title": "인터페이스",
       "zoomLevel": "확대/축소 수준",
-      "zoomLevelDescription": "인터페이스의 확대/축소 수준을 조정하세요."
+      "zoomLevelDescription": "인터페이스의 확대/축소 수준을 조정하세요.",
+      "outlineDisplayMode": "개요 패널",
+      "outlineDisplayModeDescription": "개요 패널의 표시 방법을 선택하세요.",
+      "outlineDisplayModePersistent": "항상 표시",
+      "outlineDisplayModePersistentDescription": "개요 패널이 레이아웃의 일부로 항상 표시됩니다.",
+      "outlineDisplayModeOverlay": "오버레이",
+      "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다."
     },
     "advanced": {
       "title": "고급",
@@ -367,6 +373,11 @@
     "horizontalRule": "수평선",
     "table": "표",
     "strikethrough": "취소선"
+  },
+  "outline": {
+    "title": "개요",
+    "noHeadings": "제목을 찾을 수 없습니다",
+    "toggleOutline": "개요 전환 (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "표를 Markdown으로 변환",

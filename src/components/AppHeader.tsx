@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule } from '@mui/icons-material';
+import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule, FormatListBulleted } from '@mui/icons-material';
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { Tab } from '../types/tab';
 import { formatKeyboardShortcut } from '../utils/platform';
+import { Tooltip } from '@mui/material';
 
 interface AppHeaderProps {
   // State
   viewMode: 'split' | 'editor' | 'preview';
   fileMenuAnchor: HTMLElement | null;
   activeTab: Tab | null;
+  outlinePanelOpen: boolean;
 
   // Handlers
   onViewModeChange: (newViewMode: 'split' | 'editor' | 'preview') => void;
@@ -24,6 +26,7 @@ interface AppHeaderProps {
   onSettingsOpen: () => void;
   onHelpOpen: () => void;
   onRecentFileSelect: (filePath: string) => void;
+  onOutlineToggle: () => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -33,6 +36,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   viewMode,
   fileMenuAnchor,
   activeTab,
+  outlinePanelOpen,
   onViewModeChange,
   onFileMenuOpen,
   onFileMenuClose,
@@ -44,6 +48,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   onSettingsOpen,
   onHelpOpen,
   onRecentFileSelect,
+  onOutlineToggle,
   t,
 }) => {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
@@ -96,6 +101,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <Visibility />
           </ToggleButton>
         </ToggleButtonGroup>
+
+        <Tooltip title={t('outline.toggleOutline')}>
+          <IconButton
+            color="inherit"
+            onClick={onOutlineToggle}
+            sx={{
+              mr: 0.5,
+              opacity: outlinePanelOpen ? 1 : 0.5,
+            }}
+          >
+            <FormatListBulleted />
+          </IconButton>
+        </Tooltip>
 
         <IconButton
           color="inherit"

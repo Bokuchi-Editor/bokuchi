@@ -274,7 +274,13 @@
     "interface": {
       "title": "الواجهة",
       "zoomLevel": "مستوى التكبير",
-      "zoomLevelDescription": "تعديل مستوى التكبير للواجهة."
+      "zoomLevelDescription": "تعديل مستوى التكبير للواجهة.",
+      "outlineDisplayMode": "لوحة المخطط",
+      "outlineDisplayModeDescription": "اختر كيفية عرض لوحة المخطط.",
+      "outlineDisplayModePersistent": "مرئي دائمًا",
+      "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
+      "outlineDisplayModeOverlay": "تراكب",
+      "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب."
     },
     "advanced": {
       "title": "متقدم",
@@ -367,6 +373,11 @@
     "horizontalRule": "خط أفقي",
     "table": "جدول",
     "strikethrough": "يتوسطه خط"
+  },
+  "outline": {
+    "title": "المخطط",
+    "noHeadings": "لم يتم العثور على عناوين",
+    "toggleOutline": "تبديل المخطط (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",

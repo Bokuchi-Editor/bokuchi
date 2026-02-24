@@ -134,7 +134,8 @@
         "previewOnly": "Preview Only",
         "zoomIn": "Zoom In",
         "zoomOut": "Zoom Out",
-        "resetZoom": "Reset Zoom"
+        "resetZoom": "Reset Zoom",
+        "toggleOutline": "Toggle Outline"
       }
     },
     "tutorials": {
@@ -274,7 +275,13 @@
     "interface": {
       "title": "Interface",
       "zoomLevel": "Zoom Level",
-      "zoomLevelDescription": "Adjust the zoom level for the interface."
+      "zoomLevelDescription": "Adjust the zoom level for the interface.",
+      "outlineDisplayMode": "Outline Panel",
+      "outlineDisplayModeDescription": "Choose how the outline panel is displayed.",
+      "outlineDisplayModePersistent": "Always visible",
+      "outlineDisplayModePersistentDescription": "The outline panel is always shown as part of the layout.",
+      "outlineDisplayModeOverlay": "Overlay",
+      "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay."
     },
     "advanced": {
       "title": "Advanced",
@@ -367,6 +374,11 @@
     "horizontalRule": "Horizontal Rule",
     "table": "Table",
     "strikethrough": "Strikethrough"
+  },
+  "outline": {
+    "title": "Outline",
+    "noHeadings": "No headings found",
+    "toggleOutline": "Toggle Outline (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Convert Table to Markdown",

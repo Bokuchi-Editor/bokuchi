@@ -274,7 +274,13 @@
     "interface": {
       "title": "Interface",
       "zoomLevel": "Nível de zoom",
-      "zoomLevelDescription": "Ajuste o nível de zoom para a interface."
+      "zoomLevelDescription": "Ajuste o nível de zoom para a interface.",
+      "outlineDisplayMode": "Painel de esboço",
+      "outlineDisplayModeDescription": "Escolha como o painel de esboço é exibido.",
+      "outlineDisplayModePersistent": "Sempre visível",
+      "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
+      "outlineDisplayModeOverlay": "Sobreposição",
+      "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição."
     },
     "advanced": {
       "title": "Avançado",
@@ -367,6 +373,11 @@
     "horizontalRule": "Linha horizontal",
     "table": "Tabela",
     "strikethrough": "Tachado"
+  },
+  "outline": {
+    "title": "Esboço",
+    "noHeadings": "Nenhum título encontrado",
+    "toggleOutline": "Alternar esboço (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",

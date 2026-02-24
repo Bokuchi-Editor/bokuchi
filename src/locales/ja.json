@@ -134,7 +134,8 @@
         "previewOnly": "プレビューのみ",
         "zoomIn": "ズームイン",
         "zoomOut": "ズームアウト",
-        "resetZoom": "ズームリセット"
+        "resetZoom": "ズームリセット",
+        "toggleOutline": "アウトラインの切り替え"
       }
     },
     "tutorials": {
@@ -274,7 +275,13 @@
     "interface": {
       "title": "インターフェース",
       "zoomLevel": "ズームレベル",
-      "zoomLevelDescription": "インターフェースのズームレベルを調整します。"
+      "zoomLevelDescription": "インターフェースのズームレベルを調整します。",
+      "outlineDisplayMode": "アウトラインパネル",
+      "outlineDisplayModeDescription": "アウトラインパネルの表示方法を選択してください。",
+      "outlineDisplayModePersistent": "常時表示",
+      "outlineDisplayModePersistentDescription": "アウトラインパネルをレイアウトの一部として常に表示します。",
+      "outlineDisplayModeOverlay": "オーバーレイ",
+      "outlineDisplayModeOverlayDescription": "アウトラインパネルを右側からスライドインするオーバーレイとして表示します。"
     },
     "advanced": {
       "title": "高度な設定",
@@ -367,6 +374,11 @@
     "horizontalRule": "水平線",
     "table": "テーブル",
     "strikethrough": "取り消し線"
+  },
+  "outline": {
+    "title": "アウトライン",
+    "noHeadings": "見出しが見つかりません",
+    "toggleOutline": "アウトラインの切り替え (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "テーブルをMarkdownに変換",

@@ -274,7 +274,13 @@
     "interface": {
       "title": "इंटरफेस",
       "zoomLevel": "ज़ूम स्तर",
-      "zoomLevelDescription": "इंटरफेस के लिए ज़ूम स्तर समायोजित करें।"
+      "zoomLevelDescription": "इंटरफेस के लिए ज़ूम स्तर समायोजित करें।",
+      "outlineDisplayMode": "रूपरेखा पैनल",
+      "outlineDisplayModeDescription": "रूपरेखा पैनल कैसे प्रदर्शित हो, चुनें।",
+      "outlineDisplayModePersistent": "हमेशा दिखाएं",
+      "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
+      "outlineDisplayModeOverlay": "ओवरले",
+      "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।"
     },
     "advanced": {
       "title": "उन्नत",
@@ -367,6 +373,11 @@
     "horizontalRule": "क्षैतिज रेखा",
     "table": "तालिका",
     "strikethrough": "स्ट्राइकथ्रू"
+  },
+  "outline": {
+    "title": "रूपरेखा",
+    "noHeadings": "कोई शीर्षक नहीं मिला",
+    "toggleOutline": "रूपरेखा टॉगल करें (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",

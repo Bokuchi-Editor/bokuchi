@@ -274,7 +274,13 @@
     "interface": {
       "title": "Giao diện",
       "zoomLevel": "Mức zoom",
-      "zoomLevelDescription": "Điều chỉnh mức zoom cho giao diện."
+      "zoomLevelDescription": "Điều chỉnh mức zoom cho giao diện.",
+      "outlineDisplayMode": "Bảng dàn ý",
+      "outlineDisplayModeDescription": "Chọn cách hiển thị bảng dàn ý.",
+      "outlineDisplayModePersistent": "Luôn hiển thị",
+      "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
+      "outlineDisplayModeOverlay": "Lớp phủ",
+      "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ."
     },
     "advanced": {
       "title": "Nâng cao",
@@ -367,6 +373,11 @@
     "horizontalRule": "Đường kẻ ngang",
     "table": "Bảng",
     "strikethrough": "Gạch ngang"
+  },
+  "outline": {
+    "title": "Dàn ý",
+    "noHeadings": "Không tìm thấy tiêu đề",
+    "toggleOutline": "Chuyển đổi dàn ý (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Chuyển đổi bảng sang Markdown",

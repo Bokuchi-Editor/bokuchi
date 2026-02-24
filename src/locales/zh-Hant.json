@@ -274,7 +274,13 @@
     "interface": {
       "title": "介面",
       "zoomLevel": "縮放層級",
-      "zoomLevelDescription": "調整介面的縮放層級。"
+      "zoomLevelDescription": "調整介面的縮放層級。",
+      "outlineDisplayMode": "大綱面板",
+      "outlineDisplayModeDescription": "選擇大綱面板的顯示方式。",
+      "outlineDisplayModePersistent": "始終顯示",
+      "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
+      "outlineDisplayModeOverlay": "覆蓋層",
+      "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。"
     },
     "advanced": {
       "title": "進階",
@@ -367,6 +373,11 @@
     "horizontalRule": "水平線",
     "table": "表格",
     "strikethrough": "刪除線"
+  },
+  "outline": {
+    "title": "大綱",
+    "noHeadings": "未找到標題",
+    "toggleOutline": "切換大綱 (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",

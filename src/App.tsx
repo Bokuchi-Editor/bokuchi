@@ -82,6 +82,9 @@ function AppDesktop() {
     openFile,
 
 
+    // Outline
+    outlinePanelOpen,
+
     // Focus
     focusRequestId,
     requestEditorFocus,
@@ -94,6 +97,7 @@ function AppDesktop() {
     // Setters
     setEditorStatus,
     setViewMode,
+    setOutlinePanelOpen,
 
     // Translation
     t,
@@ -329,6 +333,7 @@ function AppDesktop() {
           viewMode={viewMode}
           fileMenuAnchor={fileMenuAnchor}
           activeTab={activeTab}
+          outlinePanelOpen={outlinePanelOpen}
           onViewModeChange={setViewMode}
           onFileMenuOpen={handleFileMenuOpen}
           onFileMenuClose={handleFileMenuClose}
@@ -340,6 +345,7 @@ function AppDesktop() {
           onSettingsOpen={handleSettingsOpen}
           onHelpOpen={handleHelpOpen}
           onRecentFileSelect={handleRecentFileSelect}
+          onOutlineToggle={() => setOutlinePanelOpen(prev => !prev)}
           t={t}
         />
 
@@ -363,6 +369,9 @@ function AppDesktop() {
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}
+          outlineDisplayMode={appSettings.interface.outlineDisplayMode}
+          outlinePanelOpen={outlinePanelOpen}
+          onOutlinePanelClose={() => setOutlinePanelOpen(false)}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}

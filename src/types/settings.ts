@@ -1,3 +1,5 @@
+import { OutlineDisplayMode } from './outline';
+
 // Editor settings type definition
 export interface EditorSettings {
   fontSize: number;
@@ -18,6 +20,7 @@ export interface InterfaceSettings {
   language: string;
   tabLayout: 'horizontal' | 'vertical';
   zoomLevel: number;
+  outlineDisplayMode: OutlineDisplayMode;
 }
 
 // Advanced settings type definition
@@ -62,6 +65,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   language: 'en',
   tabLayout: 'horizontal',
   zoomLevel: 1.0,
+  outlineDisplayMode: 'persistent',
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
