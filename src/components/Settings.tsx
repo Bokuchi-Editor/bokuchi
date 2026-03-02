@@ -591,7 +591,7 @@ const Settings: React.FC<SettingsProps> = ({
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card sx={{ mb: 3 }}>
                   <CardContent>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.interface.zoomLevelDescription')}
@@ -611,6 +611,52 @@ const Settings: React.FC<SettingsProps> = ({
                         valueLabelFormat={(value) => `${Math.round(value * 100)}%`}
                       />
                     </Box>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {t('settings.interface.outlineDisplayMode')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.interface.outlineDisplayModeDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.outlineDisplayMode}
+                        onChange={(e) => handleSettingChange('interface', 'outlineDisplayMode', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="persistent"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.outlineDisplayModePersistent')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.outlineDisplayModePersistentDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="overlay"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.outlineDisplayModeOverlay')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.outlineDisplayModeOverlayDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
                   </CardContent>
                 </Card>
               </Box>

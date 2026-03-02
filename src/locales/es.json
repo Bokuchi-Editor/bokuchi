@@ -274,7 +274,13 @@
     "interface": {
       "title": "Interfaz",
       "zoomLevel": "Nivel de zoom",
-      "zoomLevelDescription": "Ajustar el nivel de zoom para la interfaz."
+      "zoomLevelDescription": "Ajustar el nivel de zoom para la interfaz.",
+      "outlineDisplayMode": "Panel de esquema",
+      "outlineDisplayModeDescription": "Elija cómo se muestra el panel de esquema.",
+      "outlineDisplayModePersistent": "Siempre visible",
+      "outlineDisplayModePersistentDescription": "El panel de esquema siempre se muestra como parte del diseño.",
+      "outlineDisplayModeOverlay": "Superposición",
+      "outlineDisplayModeOverlayDescription": "El panel de esquema se desliza desde la derecha como una superposición."
     },
     "advanced": {
       "title": "Avanzado",
@@ -367,6 +373,11 @@
     "horizontalRule": "Línea horizontal",
     "table": "Tabla",
     "strikethrough": "Tachado"
+  },
+  "outline": {
+    "title": "Esquema",
+    "noHeadings": "No se encontraron encabezados",
+    "toggleOutline": "Alternar esquema (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Convertir tabla a Markdown",
