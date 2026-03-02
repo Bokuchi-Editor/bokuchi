@@ -64,6 +64,7 @@ export const useAppState = () => {
     tabId: null,
   });
   const [isDragOver, setIsDragOver] = useState(false);
+  const [outlinePanelOpen, setOutlinePanelOpen] = useState(true);
 
   // Update state
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
@@ -516,6 +517,11 @@ export const useAppState = () => {
       }
     }
 
+    // Auto-open outline panel when switching to persistent mode
+    if (newSettings.interface.outlineDisplayMode === 'persistent') {
+      setOutlinePanelOpen(true);
+    }
+
     // Persist settings
     await storeApi.saveAppSettings(newSettings);
   }, [i18n, currentZoom, zoomIn, zoomOut]);
@@ -843,6 +849,11 @@ export const useAppState = () => {
       event.preventDefault();
       changeViewMode('preview');
     }
+    // Ctrl + Shift + O: Toggle Outline Panel
+    else if (event.ctrlKey && event.shiftKey && (event.key === 'O' || event.key === 'o') && !event.metaKey) {
+      event.preventDefault();
+      setOutlinePanelOpen(prev => !prev);
+    }
     // Ctrl + Tab: Switch Tabs (Next)
     else if (event.ctrlKey && event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();
@@ -912,6 +923,9 @@ export const useAppState = () => {
     canZoomIn,
     canZoomOut,
 
+    // Outline panel
+    outlinePanelOpen,
+
     // New unified settings
     appSettings,
 
@@ -980,6 +994,7 @@ export const useAppState = () => {
     setFileChangeDialog,
     setSaveBeforeCloseDialog,
     setIsDragOver,
+    setOutlinePanelOpen,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

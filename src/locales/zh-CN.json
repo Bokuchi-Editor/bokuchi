@@ -274,7 +274,13 @@
     "interface": {
       "title": "界面",
       "zoomLevel": "缩放级别",
-      "zoomLevelDescription": "调整界面的缩放级别。"
+      "zoomLevelDescription": "调整界面的缩放级别。",
+      "outlineDisplayMode": "大纲面板",
+      "outlineDisplayModeDescription": "选择大纲面板的显示方式。",
+      "outlineDisplayModePersistent": "始终显示",
+      "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
+      "outlineDisplayModeOverlay": "覆盖层",
+      "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。"
     },
     "advanced": {
       "title": "高级",
@@ -367,6 +373,11 @@
     "horizontalRule": "水平线",
     "table": "表格",
     "strikethrough": "删除线"
+  },
+  "outline": {
+    "title": "大纲",
+    "noHeadings": "未找到标题",
+    "toggleOutline": "切换大纲 (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "将表格转换为 Markdown",
