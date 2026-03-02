@@ -59,11 +59,7 @@ jobs:
 
       - name: Run npm audit
         run: |
-          npx audit-ci --moderate \
-            --allowlist GHSA-2g4f-4pwh-qvx6 GHSA-3ppc-4f35-3m26
-          # Allowlisted (dev-only, no fix available):
-          #   GHSA-2g4f-4pwh-qvx6: ajv <8.18.0 ReDoS (moderate) - eslint direct dep
-          #   GHSA-3ppc-4f35-3m26: minimatch <10.2.1 ReDoS (high) - @typescript-eslint/typescript-estree
+          npx audit-ci --moderate
 
       - name: Install Rust dependencies
         run: |

@@ -274,7 +274,13 @@
     "interface": {
       "title": "Интерфейс",
       "zoomLevel": "Уровень масштаба",
-      "zoomLevelDescription": "Настройте уровень масштаба для интерфейса."
+      "zoomLevelDescription": "Настройте уровень масштаба для интерфейса.",
+      "outlineDisplayMode": "Панель структуры",
+      "outlineDisplayModeDescription": "Выберите способ отображения панели структуры.",
+      "outlineDisplayModePersistent": "Всегда видимая",
+      "outlineDisplayModePersistentDescription": "Панель структуры всегда отображается как часть макета.",
+      "outlineDisplayModeOverlay": "Наложение",
+      "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение."
     },
     "advanced": {
       "title": "Дополнительно",
@@ -367,6 +373,11 @@
     "horizontalRule": "Горизонтальная линия",
     "table": "Таблица",
     "strikethrough": "Зачёркнутый"
+  },
+  "outline": {
+    "title": "Структура",
+    "noHeadings": "Заголовки не найдены",
+    "toggleOutline": "Переключить структуру (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",
