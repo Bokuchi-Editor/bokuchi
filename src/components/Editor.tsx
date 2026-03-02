@@ -26,6 +26,7 @@ interface EditorProps {
   }) => void;
   zoomLevel?: number;
   focusRequestId?: number;
+  revealLineRequest?: { lineNumber: number; requestId: number };
   // New editor settings
   fontSize?: number;
   showLineNumbers?: boolean;
@@ -48,6 +49,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   onStatusChange,
   zoomLevel = 1.0,
   focusRequestId = 0,
+  revealLineRequest,
   fontSize = 14,
   showLineNumbers = true,
   tabSize = 2,
@@ -191,6 +193,17 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       focusEditor();
     }
   }, [focusRequestId, focusEditor]);
+
+  // Reveal line when revealLineRequest changes (outline panel heading click)
+  useEffect(() => {
+    if (!revealLineRequest || revealLineRequest.requestId === 0) return;
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    editor.revealLineInCenter(revealLineRequest.lineNumber);
+    editor.setPosition({ lineNumber: revealLineRequest.lineNumber, column: 1 });
+    editor.focus();
+  }, [revealLineRequest?.requestId]);
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;

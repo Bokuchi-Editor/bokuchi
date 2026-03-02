@@ -274,7 +274,13 @@
     "interface": {
       "title": "Oberfläche",
       "zoomLevel": "Zoom-Stufe",
-      "zoomLevelDescription": "Passen Sie die Zoom-Stufe für die Oberfläche an."
+      "zoomLevelDescription": "Passen Sie die Zoom-Stufe für die Oberfläche an.",
+      "outlineDisplayMode": "Gliederungspanel",
+      "outlineDisplayModeDescription": "Wählen Sie, wie das Gliederungspanel angezeigt wird.",
+      "outlineDisplayModePersistent": "Immer sichtbar",
+      "outlineDisplayModePersistentDescription": "Das Gliederungspanel wird immer als Teil des Layouts angezeigt.",
+      "outlineDisplayModeOverlay": "Überlagerung",
+      "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein."
     },
     "advanced": {
       "title": "Erweitert",
@@ -367,6 +373,11 @@
     "horizontalRule": "Horizontale Linie",
     "table": "Tabelle",
     "strikethrough": "Durchgestrichen"
+  },
+  "outline": {
+    "title": "Gliederung",
+    "noHeadings": "Keine Überschriften gefunden",
+    "toggleOutline": "Gliederung umschalten (Ctrl+Shift+O)"
   },
   "tableConversion": {
     "dialogTitle": "Tabelle in Markdown konvertieren",

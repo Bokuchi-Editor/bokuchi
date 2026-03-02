@@ -1,9 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Box, Typography, Drawer } from '@mui/material';
 import Editor from './Editor';
 import Preview from './Preview';
 import TabBar from './TabBar';
+import OutlinePanel from './OutlinePanel';
 import { Tab } from '../types/tab';
+import { OutlineDisplayMode } from '../types/outline';
+import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 
 interface AppContentProps {
   // State
@@ -28,6 +31,11 @@ interface AppContentProps {
     showWhitespace: boolean;
     tableConversion: 'auto' | 'confirm' | 'off';
   };
+
+  // Outline
+  outlineDisplayMode: OutlineDisplayMode;
+  outlinePanelOpen: boolean;
+  onOutlinePanelClose: () => void;
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -56,6 +64,9 @@ const AppContent: React.FC<AppContentProps> = ({
   isInitialized,
   isSettingsLoaded,
   editorSettings,
+  outlineDisplayMode,
+  outlinePanelOpen,
+  onOutlinePanelClose,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -68,10 +79,30 @@ const AppContent: React.FC<AppContentProps> = ({
   t,
 }) => {
   const [scrollFraction, setScrollFraction] = useState(0);
+  const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
+
+  const headings = useOutlineHeadings(activeTab?.content);
 
   const handleEditorScrollChange = useCallback((fraction: number) => {
     setScrollFraction(fraction);
   }, []);
+
+  const handleHeadingClick = useCallback((lineNumber: number) => {
+    setRevealLineRequest(prev => ({ lineNumber, requestId: prev.requestId + 1 }));
+  }, []);
+
+  const showPersistentOutline = outlineDisplayMode === 'persistent' && outlinePanelOpen && activeTab;
+  const showOverlayOutline = outlineDisplayMode === 'overlay' && activeTab;
+
+  // Force Monaco Editor to recalculate layout when persistent outline panel toggles
+  useEffect(() => {
+    if (outlineDisplayMode === 'persistent') {
+      const timer = setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [outlinePanelOpen, outlineDisplayMode]);
 
   return (
     <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
@@ -86,7 +117,7 @@ const AppContent: React.FC<AppContentProps> = ({
           layout={tabLayout}
         />
       )}
-      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
         {tabLayout === 'horizontal' && (
           <TabBar
             tabs={tabs}
@@ -121,7 +152,7 @@ const AppContent: React.FC<AppContentProps> = ({
             <>
               {viewMode === 'split' && (
                 <>
-                  <Box sx={{ flex: 1, borderRight: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
+                  <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden', borderRight: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Editor
                       content={activeTab.content}
                       onChange={onContentChange}
@@ -130,6 +161,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       onStatusChange={onStatusChange}
                       zoomLevel={currentZoom}
                       focusRequestId={focusRequestId}
+                      revealLineRequest={revealLineRequest.requestId > 0 ? revealLineRequest : undefined}
                       fontSize={editorSettings?.fontSize}
                       showLineNumbers={editorSettings?.showLineNumbers}
                       tabSize={editorSettings?.tabSize}
@@ -150,7 +182,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       }
                     />
                   </Box>
-                  <Box sx={{ flex: 1, borderLeft: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
+                  <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden', borderLeft: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Preview
                       content={activeTab.content}
                       darkMode={theme === 'dark'}
@@ -164,7 +196,7 @@ const AppContent: React.FC<AppContentProps> = ({
                 </>
               )}
               {viewMode === 'editor' && (
-                <Box sx={{ flex: 1 }}>
+                <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                   <Editor
                     content={activeTab.content}
                     onChange={onContentChange}
@@ -173,6 +205,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     onStatusChange={onStatusChange}
                     zoomLevel={currentZoom}
                     focusRequestId={focusRequestId}
+                    revealLineRequest={revealLineRequest.requestId > 0 ? revealLineRequest : undefined}
                     fontSize={editorSettings?.fontSize}
                     showLineNumbers={editorSettings?.showLineNumbers}
                     tabSize={editorSettings?.tabSize}
@@ -194,7 +227,7 @@ const AppContent: React.FC<AppContentProps> = ({
                 </Box>
               )}
               {viewMode === 'preview' && (
-                <Box sx={{ flex: 1 }}>
+                <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                   <Preview
                     content={activeTab.content}
                     darkMode={theme === 'dark'}
@@ -204,6 +237,32 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                   />
                 </Box>
+              )}
+
+              {/* Persistent outline panel */}
+              {showPersistentOutline && (
+                <OutlinePanel
+                  headings={headings}
+                  onHeadingClick={handleHeadingClick}
+                />
+              )}
+
+              {/* Overlay outline drawer */}
+              {showOverlayOutline && (
+                <Drawer
+                  anchor="right"
+                  variant="temporary"
+                  open={outlinePanelOpen}
+                  onClose={onOutlinePanelClose}
+                  PaperProps={{ sx: { width: 280 } }}
+                >
+                  <OutlinePanel
+                    headings={headings}
+                    onHeadingClick={handleHeadingClick}
+                    onClose={onOutlinePanelClose}
+                    width={280}
+                  />
+                </Drawer>
               )}
             </>
           )}
