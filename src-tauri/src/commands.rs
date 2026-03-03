@@ -177,6 +177,69 @@ pub fn set_frontend_ready_command(app_handle: tauri::AppHandle) {
     }
 }
 
+// Tauri command: Read directory entries (for folder tree)
+#[tauri::command]
+pub async fn read_directory(path: String, show_all_files: bool) -> Result<Vec<crate::types::DirEntry>, String> {
+    let dir_path = Path::new(&path);
+    if !dir_path.is_dir() {
+        return Err("Path is not a directory".to_string());
+    }
+
+    let entries = fs::read_dir(dir_path).map_err(|e| format!("Failed to read directory: {}", e))?;
+
+    let mut dirs: Vec<crate::types::DirEntry> = Vec::new();
+    let mut files: Vec<crate::types::DirEntry> = Vec::new();
+
+    for entry in entries {
+        let entry = match entry {
+            Ok(e) => e,
+            Err(_) => continue,
+        };
+
+        let file_name = entry.file_name().to_string_lossy().to_string();
+
+        // Skip hidden files (starting with '.')
+        if file_name.starts_with('.') {
+            continue;
+        }
+
+        let file_path = entry.path().to_string_lossy().to_string();
+        let is_dir = entry.path().is_dir();
+
+        if is_dir {
+            dirs.push(crate::types::DirEntry {
+                name: file_name,
+                path: file_path,
+                is_directory: true,
+            });
+        } else {
+            // Filter files based on show_all_files flag
+            if !show_all_files {
+                let ext = Path::new(&file_name)
+                    .extension()
+                    .map(|e| e.to_string_lossy().to_lowercase())
+                    .unwrap_or_default();
+                if ext != "md" && ext != "txt" && ext != "markdown" {
+                    continue;
+                }
+            }
+
+            files.push(crate::types::DirEntry {
+                name: file_name,
+                path: file_path,
+                is_directory: false,
+            });
+        }
+    }
+
+    // Sort: directories first (alphabetical), then files (alphabetical)
+    dirs.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    files.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+
+    dirs.append(&mut files);
+    Ok(dirs)
+}
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 pub fn greet(name: &str) -> String {

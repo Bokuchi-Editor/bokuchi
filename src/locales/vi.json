@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Luôn hiển thị",
       "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
       "outlineDisplayModeOverlay": "Lớp phủ",
-      "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ."
+      "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Nâng cao",
@@ -378,6 +390,15 @@
     "title": "Dàn ý",
     "noHeadings": "Không tìm thấy tiêu đề",
     "toggleOutline": "Chuyển đổi dàn ý (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Trình khám phá",
+    "openFolder": "Mở thư mục",
+    "closeFolder": "Đóng thư mục",
+    "refresh": "Làm mới",
+    "noFolderOpen": "Chưa mở thư mục nào",
+    "emptyFolder": "Thư mục này trống",
+    "toggleExplorer": "Bật/tắt trình khám phá (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Chuyển đổi bảng sang Markdown",

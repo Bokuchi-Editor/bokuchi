@@ -281,7 +281,19 @@
       "outlineDisplayModePersistent": "常時表示",
       "outlineDisplayModePersistentDescription": "アウトラインパネルをレイアウトの一部として常に表示します。",
       "outlineDisplayModeOverlay": "オーバーレイ",
-      "outlineDisplayModeOverlayDescription": "アウトラインパネルを右側からスライドインするオーバーレイとして表示します。"
+      "outlineDisplayModeOverlayDescription": "アウトラインパネルを右側からスライドインするオーバーレイとして表示します。",
+      "folderTreeDisplayMode": "エクスプローラーパネル",
+      "folderTreeDisplayModeDescription": "エクスプローラー（フォルダツリー）パネルの表示方法を選択してください。",
+      "folderTreeDisplayModePersistent": "常時表示",
+      "folderTreeDisplayModePersistentDescription": "エクスプローラーパネルをレイアウトの一部として常に表示します。",
+      "folderTreeDisplayModeOverlay": "オーバーレイ",
+      "folderTreeDisplayModeOverlayDescription": "エクスプローラーパネルを左側からスライドインするオーバーレイとして表示します。",
+      "folderTreeDisplayModeOff": "オフ",
+      "folderTreeDisplayModeOffDescription": "エクスプローラーパネルを非表示にします。",
+      "folderTreeFileFilter": "エクスプローラーファイルフィルター",
+      "folderTreeFileFilterDescription": "エクスプローラーに表示するファイルの種類を選択してください。",
+      "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "すべてのファイル"
     },
     "advanced": {
       "title": "高度な設定",
@@ -379,6 +391,15 @@
     "title": "アウトライン",
     "noHeadings": "見出しが見つかりません",
     "toggleOutline": "アウトラインの切り替え (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "エクスプローラー",
+    "openFolder": "フォルダを開く",
+    "closeFolder": "フォルダを閉じる",
+    "refresh": "更新",
+    "noFolderOpen": "フォルダが開かれていません",
+    "emptyFolder": "このフォルダは空です",
+    "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "テーブルをMarkdownに変換",

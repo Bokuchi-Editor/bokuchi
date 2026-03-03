@@ -43,6 +43,7 @@ interface TabBarProps {
   onNewTab: () => void;
   onTabReorder: (tabs: TabType[]) => void;
   layout?: 'horizontal' | 'vertical';
+  embedded?: boolean;
 }
 
 // Custom pointer sensor with drag start threshold
@@ -246,6 +247,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onNewTab,
   onTabReorder,
   layout = 'horizontal',
+  embedded = false,
 }) => {
   const sensors = useSensors(
     createThresholdPointerSensor(),
@@ -282,12 +284,15 @@ const TabBar: React.FC<TabBarProps> = ({
     return (
       <Box
         sx={{
-          width: 250,
-          borderRight: 1,
-          borderColor: 'divider',
+          ...(!embedded && {
+            width: 250,
+            borderRight: 1,
+            borderColor: 'divider',
+          }),
           bgcolor: 'background.paper',
           display: 'flex',
           flexDirection: 'column',
+          ...(embedded && { maxHeight: '40%', minHeight: 100 }),
         }}
       >
         <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>

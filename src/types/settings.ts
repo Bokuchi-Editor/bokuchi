@@ -1,4 +1,5 @@
 import { OutlineDisplayMode } from './outline';
+import { FolderTreeDisplayMode } from './folderTree';
 
 // Editor settings type definition
 export interface EditorSettings {
@@ -21,6 +22,8 @@ export interface InterfaceSettings {
   tabLayout: 'horizontal' | 'vertical';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
+  folderTreeDisplayMode: FolderTreeDisplayMode;
+  folderTreeFileFilter: 'markdown' | 'all';
 }
 
 // Advanced settings type definition
@@ -66,6 +69,8 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   tabLayout: 'horizontal',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
+  folderTreeDisplayMode: 'off',
+  folderTreeFileFilter: 'markdown',
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {

@@ -85,6 +85,14 @@ function AppDesktop() {
     // Outline
     outlinePanelOpen,
 
+    // Folder tree
+    folderTreePanelOpen,
+    folderTreeRootFolderName,
+    folderTree,
+    folderTreeIsLoading,
+    handleFolderTreeFileClick,
+    handleOpenFolder,
+
     // Focus
     focusRequestId,
     requestEditorFocus,
@@ -98,6 +106,10 @@ function AppDesktop() {
     setEditorStatus,
     setViewMode,
     setOutlinePanelOpen,
+    setFolderTreePanelOpen,
+    folderTreeCloseFolder,
+    folderTreeToggleExpand,
+    folderTreeRefreshTree,
 
     // Translation
     t,
@@ -334,11 +346,14 @@ function AppDesktop() {
           fileMenuAnchor={fileMenuAnchor}
           activeTab={activeTab}
           outlinePanelOpen={outlinePanelOpen}
+          folderTreePanelOpen={folderTreePanelOpen}
+          folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}
           onViewModeChange={setViewMode}
           onFileMenuOpen={handleFileMenuOpen}
           onFileMenuClose={handleFileMenuClose}
           onNewTab={handleNewTab}
           onOpenFile={handleOpenFile}
+          onOpenFolder={handleOpenFolder}
           onSaveFile={handleSaveFile}
           onSaveFileAs={handleSaveFileAs}
           onSaveWithVariables={handleSaveWithVariables}
@@ -346,6 +361,7 @@ function AppDesktop() {
           onHelpOpen={handleHelpOpen}
           onRecentFileSelect={handleRecentFileSelect}
           onOutlineToggle={() => setOutlinePanelOpen(prev => !prev)}
+          onFolderTreeToggle={() => setFolderTreePanelOpen(prev => !prev)}
           t={t}
         />
 
@@ -372,6 +388,17 @@ function AppDesktop() {
           outlineDisplayMode={appSettings.interface.outlineDisplayMode}
           outlinePanelOpen={outlinePanelOpen}
           onOutlinePanelClose={() => setOutlinePanelOpen(false)}
+          folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}
+          folderTreePanelOpen={folderTreePanelOpen}
+          folderTreeRootFolderName={folderTreeRootFolderName}
+          folderTree={folderTree}
+          folderTreeIsLoading={folderTreeIsLoading}
+          onFolderTreeFileClick={handleFolderTreeFileClick}
+          onFolderTreeToggleExpand={folderTreeToggleExpand}
+          onFolderTreeOpenFolder={handleOpenFolder}
+          onFolderTreeCloseFolder={folderTreeCloseFolder}
+          onFolderTreeRefresh={folderTreeRefreshTree}
+          onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}

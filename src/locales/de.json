@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Immer sichtbar",
       "outlineDisplayModePersistentDescription": "Das Gliederungspanel wird immer als Teil des Layouts angezeigt.",
       "outlineDisplayModeOverlay": "Überlagerung",
-      "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein."
+      "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Erweitert",
@@ -378,6 +390,15 @@
     "title": "Gliederung",
     "noHeadings": "Keine Überschriften gefunden",
     "toggleOutline": "Gliederung umschalten (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorer",
+    "openFolder": "Ordner öffnen",
+    "closeFolder": "Ordner schließen",
+    "refresh": "Aktualisieren",
+    "noFolderOpen": "Kein Ordner geöffnet",
+    "emptyFolder": "Dieser Ordner ist leer",
+    "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Tabelle in Markdown konvertieren",

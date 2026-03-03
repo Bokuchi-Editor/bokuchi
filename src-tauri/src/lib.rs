@@ -76,7 +76,8 @@ pub fn run() {
             get_file_hash,
             get_pending_file_paths_command,
             log_from_frontend,
-            set_frontend_ready_command
+            set_frontend_ready_command,
+            read_directory
         ])
         .setup(|app| {
             // Get command line arguments

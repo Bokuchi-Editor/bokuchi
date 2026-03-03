@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "हमेशा दिखाएं",
       "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
       "outlineDisplayModeOverlay": "ओवरले",
-      "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।"
+      "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "उन्नत",
@@ -378,6 +390,15 @@
     "title": "रूपरेखा",
     "noHeadings": "कोई शीर्षक नहीं मिला",
     "toggleOutline": "रूपरेखा टॉगल करें (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "एक्सप्लोरर",
+    "openFolder": "फ़ोल्डर खोलें",
+    "closeFolder": "फ़ोल्डर बंद करें",
+    "refresh": "रीफ़्रेश",
+    "noFolderOpen": "कोई फ़ोल्डर नहीं खोला गया",
+    "emptyFolder": "यह फ़ोल्डर खाली है",
+    "toggleExplorer": "एक्सप्लोरर टॉगल करें (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",

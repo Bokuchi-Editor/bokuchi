@@ -43,6 +43,14 @@ pub struct OpenFileEvent {
     pub file_path: String,
 }
 
+// Directory entry for folder tree
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DirEntry {
+    pub name: String,
+    pub path: String,
+    pub is_directory: bool,
+}
+
 // Global state for buffering file paths received before frontend is ready
 pub static PENDING_FILE_PATHS: OnceLock<Mutex<Vec<String>>> = OnceLock::new();
 

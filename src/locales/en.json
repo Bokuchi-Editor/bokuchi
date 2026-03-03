@@ -281,7 +281,19 @@
       "outlineDisplayModePersistent": "Always visible",
       "outlineDisplayModePersistentDescription": "The outline panel is always shown as part of the layout.",
       "outlineDisplayModeOverlay": "Overlay",
-      "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay."
+      "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Advanced",
@@ -379,6 +391,15 @@
     "title": "Outline",
     "noHeadings": "No headings found",
     "toggleOutline": "Toggle Outline (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorer",
+    "openFolder": "Open Folder",
+    "closeFolder": "Close Folder",
+    "refresh": "Refresh",
+    "noFolderOpen": "No folder opened",
+    "emptyFolder": "This folder is empty",
+    "toggleExplorer": "Toggle Explorer (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Convert Table to Markdown",

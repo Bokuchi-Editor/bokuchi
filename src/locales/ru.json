@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Всегда видимая",
       "outlineDisplayModePersistentDescription": "Панель структуры всегда отображается как часть макета.",
       "outlineDisplayModeOverlay": "Наложение",
-      "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение."
+      "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Дополнительно",
@@ -378,6 +390,15 @@
     "title": "Структура",
     "noHeadings": "Заголовки не найдены",
     "toggleOutline": "Переключить структуру (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Проводник",
+    "openFolder": "Открыть папку",
+    "closeFolder": "Закрыть папку",
+    "refresh": "Обновить",
+    "noFolderOpen": "Папка не открыта",
+    "emptyFolder": "Эта папка пуста",
+    "toggleExplorer": "Переключить проводник (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",

@@ -390,4 +390,28 @@ export const storeApi = {
     }
   },
 
+  // Save folder tree root path
+  async saveFolderTreeRoot(rootPath: string | null): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('folderTreeRoot', rootPath);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save folder tree root:', error);
+      throw error;
+    }
+  },
+
+  // Load folder tree root path
+  async loadFolderTreeRoot(): Promise<string | null> {
+    try {
+      const storeInstance = await getStore();
+      const rootPath = await storeInstance.get('folderTreeRoot') as string | null;
+      return rootPath || null;
+    } catch (error) {
+      console.error('Failed to load folder tree root:', error);
+      return null;
+    }
+  },
+
 };

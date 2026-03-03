@@ -4,8 +4,10 @@ import Editor from './Editor';
 import Preview from './Preview';
 import TabBar from './TabBar';
 import OutlinePanel from './OutlinePanel';
+import FolderTreePanel from './FolderTreePanel';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
+import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 
 interface AppContentProps {
@@ -37,6 +39,19 @@ interface AppContentProps {
   outlinePanelOpen: boolean;
   onOutlinePanelClose: () => void;
 
+  // Folder tree
+  folderTreeDisplayMode: FolderTreeDisplayMode;
+  folderTreePanelOpen: boolean;
+  folderTreeRootFolderName: string | null;
+  folderTree: FolderTreeNode[];
+  folderTreeIsLoading: boolean;
+  onFolderTreeFileClick: (filePath: string) => void;
+  onFolderTreeToggleExpand: (nodePath: string) => void;
+  onFolderTreeOpenFolder: () => void;
+  onFolderTreeCloseFolder: () => void;
+  onFolderTreeRefresh: () => void;
+  onFolderTreePanelClose: () => void;
+
   // Handlers
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
@@ -67,6 +82,17 @@ const AppContent: React.FC<AppContentProps> = ({
   outlineDisplayMode,
   outlinePanelOpen,
   onOutlinePanelClose,
+  folderTreeDisplayMode,
+  folderTreePanelOpen,
+  folderTreeRootFolderName,
+  folderTree,
+  folderTreeIsLoading,
+  onFolderTreeFileClick,
+  onFolderTreeToggleExpand,
+  onFolderTreeOpenFolder,
+  onFolderTreeCloseFolder,
+  onFolderTreeRefresh,
+  onFolderTreePanelClose,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -94,19 +120,72 @@ const AppContent: React.FC<AppContentProps> = ({
   const showPersistentOutline = outlineDisplayMode === 'persistent' && outlinePanelOpen && activeTab;
   const showOverlayOutline = outlineDisplayMode === 'overlay' && activeTab;
 
-  // Force Monaco Editor to recalculate layout when persistent outline panel toggles
+  const showPersistentFolderTree =
+    folderTreeDisplayMode === 'persistent' &&
+    folderTreePanelOpen;
+  const showOverlayFolderTree = folderTreeDisplayMode === 'overlay';
+
+  // When persistent folder tree is active with vertical tabs, they merge into one sidebar
+  const showMergedLeftSidebar = showPersistentFolderTree && tabLayout === 'vertical';
+  // Show standalone vertical tab bar only when folder tree is not persistent or panel is closed
+  const showStandaloneVerticalTabs = tabLayout === 'vertical' && !showMergedLeftSidebar;
+
+  // Force Monaco Editor to recalculate layout when persistent panels toggle
   useEffect(() => {
-    if (outlineDisplayMode === 'persistent') {
-      const timer = setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [outlinePanelOpen, outlineDisplayMode]);
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
 
   return (
     <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-      {tabLayout === 'vertical' && (
+      {/* Merged left sidebar: vertical tabs + folder tree */}
+      {showMergedLeftSidebar && (
+        <Box
+          sx={{
+            width: 280,
+            minWidth: 280,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            borderRight: 1,
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Open Editors section (vertical tabs) */}
+          <TabBar
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onTabChange={onTabChange}
+            onTabClose={onTabClose}
+            onNewTab={onNewTab}
+            onTabReorder={onTabReorder}
+            layout="vertical"
+            embedded
+          />
+          {/* Explorer section */}
+          <Box sx={{ flex: 1, overflow: 'hidden', borderTop: 1, borderColor: 'divider' }}>
+            <FolderTreePanel
+              rootFolderName={folderTreeRootFolderName}
+              tree={folderTree}
+              isLoading={folderTreeIsLoading}
+              activeFilePath={activeTab?.filePath}
+              onFileClick={onFolderTreeFileClick}
+              onToggleExpand={onFolderTreeToggleExpand}
+              onOpenFolder={onFolderTreeOpenFolder}
+              onCloseFolder={onFolderTreeCloseFolder}
+              onRefresh={onFolderTreeRefresh}
+              width={280}
+            />
+          </Box>
+        </Box>
+      )}
+
+      {/* Standalone vertical tab bar */}
+      {showStandaloneVerticalTabs && (
         <TabBar
           tabs={tabs}
           activeTabId={activeTabId}
@@ -117,6 +196,22 @@ const AppContent: React.FC<AppContentProps> = ({
           layout={tabLayout}
         />
       )}
+
+      {/* Standalone persistent folder tree (horizontal tab mode) */}
+      {showPersistentFolderTree && tabLayout === 'horizontal' && (
+        <FolderTreePanel
+          rootFolderName={folderTreeRootFolderName}
+          tree={folderTree}
+          isLoading={folderTreeIsLoading}
+          activeFilePath={activeTab?.filePath}
+          onFileClick={onFolderTreeFileClick}
+          onToggleExpand={onFolderTreeToggleExpand}
+          onOpenFolder={onFolderTreeOpenFolder}
+          onCloseFolder={onFolderTreeCloseFolder}
+          onRefresh={onFolderTreeRefresh}
+        />
+      )}
+
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
         {tabLayout === 'horizontal' && (
           <TabBar
@@ -268,6 +363,34 @@ const AppContent: React.FC<AppContentProps> = ({
           )}
         </Box>
       </Box>
+
+      {/* Overlay folder tree drawer */}
+      {showOverlayFolderTree && (
+        <Drawer
+          anchor="left"
+          variant="temporary"
+          open={folderTreePanelOpen}
+          onClose={onFolderTreePanelClose}
+          PaperProps={{ sx: { width: 280 } }}
+        >
+          <FolderTreePanel
+            rootFolderName={folderTreeRootFolderName}
+            tree={folderTree}
+            isLoading={folderTreeIsLoading}
+            activeFilePath={activeTab?.filePath}
+            onFileClick={(filePath) => {
+              onFolderTreeFileClick(filePath);
+              onFolderTreePanelClose();
+            }}
+            onToggleExpand={onFolderTreeToggleExpand}
+            onOpenFolder={onFolderTreeOpenFolder}
+            onCloseFolder={onFolderTreeCloseFolder}
+            onRefresh={onFolderTreeRefresh}
+            onClose={onFolderTreePanelClose}
+            width={280}
+          />
+        </Drawer>
+      )}
     </Box>
   );
 };

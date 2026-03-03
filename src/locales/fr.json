@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Toujours visible",
       "outlineDisplayModePersistentDescription": "Le panneau du plan est toujours affiché comme partie de la mise en page.",
       "outlineDisplayModeOverlay": "Superposition",
-      "outlineDisplayModeOverlayDescription": "Le panneau du plan glisse depuis la droite en superposition."
+      "outlineDisplayModeOverlayDescription": "Le panneau du plan glisse depuis la droite en superposition.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Avancé",
@@ -378,6 +390,15 @@
     "title": "Plan",
     "noHeadings": "Aucun titre trouvé",
     "toggleOutline": "Basculer le plan (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorateur",
+    "openFolder": "Ouvrir un dossier",
+    "closeFolder": "Fermer le dossier",
+    "refresh": "Actualiser",
+    "noFolderOpen": "Aucun dossier ouvert",
+    "emptyFolder": "Ce dossier est vide",
+    "toggleExplorer": "Basculer l'explorateur (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Convertir le tableau en Markdown",

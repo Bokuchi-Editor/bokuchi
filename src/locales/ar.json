@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "مرئي دائمًا",
       "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
       "outlineDisplayModeOverlay": "تراكب",
-      "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب."
+      "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "متقدم",
@@ -378,6 +390,15 @@
     "title": "المخطط",
     "noHeadings": "لم يتم العثور على عناوين",
     "toggleOutline": "تبديل المخطط (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "المستكشف",
+    "openFolder": "فتح مجلد",
+    "closeFolder": "إغلاق المجلد",
+    "refresh": "تحديث",
+    "noFolderOpen": "لم يتم فتح أي مجلد",
+    "emptyFolder": "هذا المجلد فارغ",
+    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",

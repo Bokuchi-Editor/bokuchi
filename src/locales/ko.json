@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "항상 표시",
       "outlineDisplayModePersistentDescription": "개요 패널이 레이아웃의 일부로 항상 표시됩니다.",
       "outlineDisplayModeOverlay": "오버레이",
-      "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다."
+      "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "고급",
@@ -378,6 +390,15 @@
     "title": "개요",
     "noHeadings": "제목을 찾을 수 없습니다",
     "toggleOutline": "개요 전환 (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "탐색기",
+    "openFolder": "폴더 열기",
+    "closeFolder": "폴더 닫기",
+    "refresh": "새로고침",
+    "noFolderOpen": "열린 폴더가 없습니다",
+    "emptyFolder": "이 폴더는 비어 있습니다",
+    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "표를 Markdown으로 변환",

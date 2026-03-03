@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Sempre visível",
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
-      "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição."
+      "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Avançado",
@@ -378,6 +390,15 @@
     "title": "Esboço",
     "noHeadings": "Nenhum título encontrado",
     "toggleOutline": "Alternar esboço (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorador",
+    "openFolder": "Abrir pasta",
+    "closeFolder": "Fechar pasta",
+    "refresh": "Atualizar",
+    "noFolderOpen": "Nenhuma pasta aberta",
+    "emptyFolder": "Esta pasta está vazia",
+    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",

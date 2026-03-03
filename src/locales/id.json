@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "Selalu terlihat",
       "outlineDisplayModePersistentDescription": "Panel kerangka selalu ditampilkan sebagai bagian dari tata letak.",
       "outlineDisplayModeOverlay": "Overlay",
-      "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay."
+      "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Lanjutan",
@@ -378,6 +390,15 @@
     "title": "Kerangka",
     "noHeadings": "Tidak ada judul yang ditemukan",
     "toggleOutline": "Beralih kerangka (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Penjelajah",
+    "openFolder": "Buka Folder",
+    "closeFolder": "Tutup Folder",
+    "refresh": "Segarkan",
+    "noFolderOpen": "Tidak ada folder yang dibuka",
+    "emptyFolder": "Folder ini kosong",
+    "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Konversi Tabel ke Markdown",

@@ -280,7 +280,19 @@
       "outlineDisplayModePersistent": "始終顯示",
       "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
       "outlineDisplayModeOverlay": "覆蓋層",
-      "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。"
+      "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "進階",
@@ -378,6 +390,15 @@
     "title": "大綱",
     "noHeadings": "未找到標題",
     "toggleOutline": "切換大綱 (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "檔案總管",
+    "openFolder": "開啟資料夾",
+    "closeFolder": "關閉資料夾",
+    "refresh": "重新整理",
+    "noFolderOpen": "未開啟資料夾",
+    "emptyFolder": "此資料夾為空",
+    "toggleExplorer": "切換檔案總管 (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",
