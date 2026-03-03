@@ -109,6 +109,56 @@
       "localVsGlobal": "Lokale vs. globale Variablen",
       "localVsGlobalDescription": "Verwenden Sie lokale Variablen für dateispezifische Inhalte und globale Variablen für gemeinsame Inhalte über mehrere Dateien hinweg."
     },
+    "features": {
+      "title": "Funktionen",
+      "description": "Bokuchi bietet mehrere leistungsstarke Funktionen, um Ihre Markdown-Bearbeitungserfahrung zu verbessern.",
+      "explorer": {
+        "title": "Explorer (Ordnerbaum)",
+        "description": "Durchsuchen und öffnen Sie Dateien direkt über die Ordnerbaum-Seitenleiste. Öffnen Sie einen Ordner, um seine Verzeichnisstruktur anzuzeigen und schnell zwischen Dateien zu navigieren.",
+        "displayModes": "Anzeigemodi",
+        "persistent": "Immer sichtbar",
+        "persistentDescription": "Das Explorer-Panel wird immer als Teil des Layouts angezeigt. Wenn vertikale Tabs aktiviert sind, wird es in eine einzelne Seitenleiste mit einem verstellbaren Trenner zusammengeführt.",
+        "overlay": "Überlagerung",
+        "overlayDescription": "Das Explorer-Panel gleitet von links als temporäre Schublade ein.",
+        "off": "Aus",
+        "offDescription": "Das Explorer-Panel ist ausgeblendet. Klicken Sie auf die Explorer-Schaltfläche in der Kopfzeile, um einen Ordner zu öffnen und es zu aktivieren.",
+        "highlights": "Hauptmerkmale",
+        "highlight1": "Verzögertes Laden: Unterverzeichnisse werden bei Bedarf beim Erweitern geladen",
+        "highlight2": "Dateifilter: Nur Markdown-Dateien oder alle Dateien anzeigen",
+        "highlight3": "Aktive Dateihervorhebung: Die aktuell geöffnete Datei wird im Baum hervorgehoben",
+        "highlight4": "Zusammengeführte Seitenleiste: Kombiniert sich mit vertikalen Tabs in einem einzelnen verstellbaren Panel",
+        "shortcutDescription": "Explorer-Panel umschalten"
+      },
+      "outline": {
+        "title": "Gliederung (Inhaltsverzeichnis)",
+        "description": "Navigieren Sie durch die Struktur Ihres Dokuments mit einem Gliederungspanel, das alle Überschriften anzeigt. Klicken Sie auf eine beliebige Überschrift, um im Editor zu diesem Abschnitt zu springen.",
+        "displayModes": "Anzeigemodi",
+        "persistent": "Immer sichtbar",
+        "persistentDescription": "Das Gliederungspanel wird immer auf der rechten Seite des Editors angezeigt.",
+        "overlay": "Überlagerung",
+        "overlayDescription": "Das Gliederungspanel gleitet von rechts als temporäre Schublade ein.",
+        "highlights": "Hauptmerkmale",
+        "highlight1": "Automatische Überschriftenerkennung: Überschriften (H1-H6) werden in Echtzeit beim Tippen extrahiert",
+        "highlight2": "Klicken zum Navigieren: Klicken Sie auf eine beliebige Überschrift, um den Editor an diese Position zu scrollen",
+        "highlight3": "Eingerückte Hierarchie: Überschriften werden mit Einrückung entsprechend ihrem Level angezeigt",
+        "shortcutDescription": "Gliederungspanel umschalten"
+      },
+      "tableConversion": {
+        "title": "Tabellen-Konvertierung beim Einfügen",
+        "description": "Konvertieren Sie HTML-Tabellen beim Einfügen aus Tabellenkalkulationen, Webseiten oder anderen Quellen automatisch in Markdown-Format.",
+        "modes": "Konvertierungsmodi",
+        "auto": "Automatische Konvertierung",
+        "autoDescription": "Tabellen werden beim Einfügen automatisch in Markdown konvertiert.",
+        "confirm": "Vor Konvertierung fragen",
+        "confirmDescription": "Ein Bestätigungsdialog mit Vorschau wird vor der Konvertierung der Tabelle angezeigt.",
+        "off": "Nicht konvertieren",
+        "offDescription": "Tabellen werden ohne Konvertierung als Klartext eingefügt.",
+        "highlights": "Hauptmerkmale",
+        "highlight1": "Erkennt automatisch HTML-Tabellendaten in der Zwischenablage",
+        "highlight2": "Vorschau der konvertierten Markdown-Tabelle vor dem Anwenden",
+        "highlight3": "Verwenden Sie Shift+Cmd/Ctrl+V, um als Klartext ohne Konvertierung einzufügen"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Tastenkürzel",
       "description": "Hier sind alle in Bokuchi verfügbaren Tastenkürzel:",
@@ -134,7 +184,9 @@
         "previewOnly": "Nur Vorschau",
         "zoomIn": "Vergrößern",
         "zoomOut": "Verkleinern",
-        "resetZoom": "Zoom zurücksetzen"
+        "resetZoom": "Zoom zurücksetzen",
+        "toggleExplorer": "Explorer umschalten",
+        "toggleOutline": "Gliederung umschalten"
       }
     },
     "tutorials": {

@@ -292,7 +292,7 @@ const TabBar: React.FC<TabBarProps> = ({
           bgcolor: 'background.paper',
           display: 'flex',
           flexDirection: 'column',
-          ...(embedded && { maxHeight: '40%', minHeight: 100 }),
+          ...(embedded && { overflow: 'hidden' }),
         }}
       >
         <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>

@@ -16,7 +16,7 @@ import {
   CardContent,
   Chip,
 } from '@mui/material';
-import { Close, Help, Code, Book, Keyboard, School } from '@mui/icons-material';
+import { Close, Help, Code, Book, Keyboard, School, Extension } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { formatKeyboardShortcut, getPlatform } from '../utils/platform';
 
@@ -25,7 +25,7 @@ interface HelpProps {
   onClose: () => void;
 }
 
-type HelpPage = 'getting-started' | 'variables' | 'keyboard-shortcuts' | 'tutorials';
+type HelpPage = 'getting-started' | 'features' | 'variables' | 'keyboard-shortcuts' | 'tutorials';
 
 const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
   const { t } = useTranslation();
@@ -54,6 +54,11 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       id: 'getting-started' as HelpPage,
       title: t('help.gettingStarted.title'),
       icon: <Book />,
+    },
+    {
+      id: 'features' as HelpPage,
+      title: t('help.features.title'),
+      icon: <Extension />,
     },
     {
       id: 'variables' as HelpPage,
@@ -375,6 +380,221 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
     </Box>
   );
 
+  const renderFeatures = () => (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        {t('help.features.title')}
+      </Typography>
+      <Typography paragraph>
+        {t('help.features.description')}
+      </Typography>
+
+      {/* Explorer (Folder Tree) */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.features.explorer.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.features.explorer.description')}
+          </Typography>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.explorer.displayModes')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.persistent')}
+                secondary={t('help.features.explorer.persistentDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.overlay')}
+                secondary={t('help.features.explorer.overlayDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.off')}
+                secondary={t('help.features.explorer.offDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+          </List>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.explorer.highlights')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.highlight1')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.highlight2')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.highlight3')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.explorer.highlight4')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+          </List>
+          <Box sx={{ mt: 1 }}>
+            <Chip
+              label="Ctrl+Shift+E"
+              size="small"
+              variant="outlined"
+              sx={{ mr: 1 }}
+            />
+            <Typography variant="caption" color="text.secondary">
+              {t('help.features.explorer.shortcutDescription')}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Outline (TOC) */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.features.outline.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.features.outline.description')}
+          </Typography>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.outline.displayModes')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.outline.persistent')}
+                secondary={t('help.features.outline.persistentDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.outline.overlay')}
+                secondary={t('help.features.outline.overlayDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+          </List>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.outline.highlights')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.outline.highlight1')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.outline.highlight2')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.outline.highlight3')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+          </List>
+          <Box sx={{ mt: 1 }}>
+            <Chip
+              label="Ctrl+Shift+O"
+              size="small"
+              variant="outlined"
+              sx={{ mr: 1 }}
+            />
+            <Typography variant="caption" color="text.secondary">
+              {t('help.features.outline.shortcutDescription')}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Table Conversion Paste */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom color="primary">
+            {t('help.features.tableConversion.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {t('help.features.tableConversion.description')}
+          </Typography>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.tableConversion.modes')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.auto')}
+                secondary={t('help.features.tableConversion.autoDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.confirm')}
+                secondary={t('help.features.tableConversion.confirmDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.off')}
+                secondary={t('help.features.tableConversion.offDescription')}
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+              />
+            </ListItem>
+          </List>
+          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+            {t('help.features.tableConversion.highlights')}
+          </Typography>
+          <List dense>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.highlight1')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.highlight2')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemText
+                primary={t('help.features.tableConversion.highlight3')}
+                primaryTypographyProps={{ variant: 'body2' }}
+              />
+            </ListItem>
+          </List>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+
   const renderKeyboardShortcuts = () => (
     <Box>
       <Typography variant="h5" gutterBottom>
@@ -488,6 +708,18 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
           <ListItemText
             primary={getShortcutDisplay(',')}
             secondary={t('help.keyboardShortcuts.shortcuts.settings')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+E"
+            secondary={t('help.keyboardShortcuts.shortcuts.toggleExplorer')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Ctrl+Shift+O"
+            secondary={t('help.keyboardShortcuts.shortcuts.toggleOutline')}
           />
         </ListItem>
         <ListItem>
@@ -632,6 +864,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
     switch (currentPage) {
       case 'getting-started':
         return renderGettingStarted();
+      case 'features':
+        return renderFeatures();
       case 'variables':
         return renderVariables();
       case 'keyboard-shortcuts':

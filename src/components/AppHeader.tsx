@@ -111,20 +111,18 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </ToggleButton>
         </ToggleButtonGroup>
 
-        {folderTreeDisplayMode !== 'off' && (
-          <Tooltip title={t('folderTree.toggleExplorer')}>
-            <IconButton
-              color="inherit"
-              onClick={onFolderTreeToggle}
-              sx={{
-                mr: 0.5,
-                opacity: folderTreePanelOpen ? 1 : 0.5,
-              }}
-            >
-              <AccountTree />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Tooltip title={folderTreeDisplayMode === 'off' ? t('folderTree.openFolder') : t('folderTree.toggleExplorer')}>
+          <IconButton
+            color="inherit"
+            onClick={folderTreeDisplayMode === 'off' ? onOpenFolder : onFolderTreeToggle}
+            sx={{
+              mr: 0.5,
+              opacity: folderTreeDisplayMode === 'off' ? 0.5 : folderTreePanelOpen ? 1 : 0.5,
+            }}
+          >
+            <AccountTree />
+          </IconButton>
+        </Tooltip>
 
         <Tooltip title={t('outline.toggleOutline')}>
           <IconButton

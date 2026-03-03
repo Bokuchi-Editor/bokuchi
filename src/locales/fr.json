@@ -109,6 +109,56 @@
       "localVsGlobal": "Variables locales vs globales",
       "localVsGlobalDescription": "Utilisez des variables locales pour le contenu spécifique au fichier et des variables globales pour le contenu commun à plusieurs fichiers."
     },
+    "features": {
+      "title": "Fonctionnalites",
+      "description": "Bokuchi propose plusieurs fonctionnalites puissantes pour ameliorer votre experience d'edition Markdown.",
+      "explorer": {
+        "title": "Explorateur (Arborescence de dossiers)",
+        "description": "Parcourez et ouvrez des fichiers directement depuis la barre laterale de l'arborescence de dossiers. Ouvrez un dossier pour afficher sa structure de repertoires et naviguer rapidement entre les fichiers.",
+        "displayModes": "Modes d'affichage",
+        "persistent": "Toujours visible",
+        "persistentDescription": "Le panneau de l'explorateur est toujours affiche comme partie de la mise en page. Lorsque les onglets verticaux sont actives, il fusionne en une seule barre laterale avec un separateur redimensionnable.",
+        "overlay": "Superposition",
+        "overlayDescription": "Le panneau de l'explorateur glisse depuis la gauche comme un tiroir temporaire.",
+        "off": "Desactive",
+        "offDescription": "Le panneau de l'explorateur est masque. Cliquez sur le bouton Explorateur dans l'en-tete pour ouvrir un dossier et l'activer.",
+        "highlights": "Fonctionnalites cles",
+        "highlight1": "Chargement paresseux : Les sous-repertoires sont charges a la demande lors de l'expansion",
+        "highlight2": "Filtre de fichiers : Afficher uniquement les fichiers Markdown ou tous les fichiers",
+        "highlight3": "Mise en evidence du fichier actif : Le fichier actuellement ouvert est mis en evidence dans l'arborescence",
+        "highlight4": "Barre laterale fusionnee : Se combine avec les onglets verticaux dans un seul panneau redimensionnable",
+        "shortcutDescription": "Basculer le panneau de l'explorateur"
+      },
+      "outline": {
+        "title": "Plan (Table des matieres)",
+        "description": "Naviguez dans la structure de votre document avec un panneau de plan qui affiche tous les titres. Cliquez sur n'importe quel titre pour acceder a cette section dans l'editeur.",
+        "displayModes": "Modes d'affichage",
+        "persistent": "Toujours visible",
+        "persistentDescription": "Le panneau du plan est toujours affiche sur le cote droit de l'editeur.",
+        "overlay": "Superposition",
+        "overlayDescription": "Le panneau du plan glisse depuis la droite comme un tiroir temporaire.",
+        "highlights": "Fonctionnalites cles",
+        "highlight1": "Detection automatique des titres : Les titres (H1-H6) sont extraits en temps reel pendant la saisie",
+        "highlight2": "Clic pour naviguer : Cliquez sur n'importe quel titre pour faire defiler l'editeur a cette position",
+        "highlight3": "Hierarchie indentee : Les titres sont affiches avec une indentation refletant leur niveau",
+        "shortcutDescription": "Basculer le panneau du plan"
+      },
+      "tableConversion": {
+        "title": "Collage avec conversion de tableau",
+        "description": "Convertir automatiquement les tableaux HTML au format Markdown lors du collage depuis des feuilles de calcul, des pages web ou d'autres sources.",
+        "modes": "Modes de conversion",
+        "auto": "Conversion automatique",
+        "autoDescription": "Les tableaux sont automatiquement convertis en Markdown lors du collage.",
+        "confirm": "Demander avant de convertir",
+        "confirmDescription": "Un dialogue de confirmation avec un apercu est affiche avant de convertir le tableau.",
+        "off": "Ne pas convertir",
+        "offDescription": "Les tableaux sont colles en texte brut sans conversion.",
+        "highlights": "Fonctionnalites cles",
+        "highlight1": "Detecte automatiquement les donnees de tableau HTML dans le presse-papiers",
+        "highlight2": "Apercu du tableau Markdown converti avant application",
+        "highlight3": "Utilisez Shift+Cmd/Ctrl+V pour coller en texte brut sans conversion"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Raccourcis clavier",
       "description": "Voici tous les raccourcis clavier disponibles dans Bokuchi :",
@@ -134,7 +184,9 @@
         "previewOnly": "Aperçu uniquement",
         "zoomIn": "Zoom avant",
         "zoomOut": "Zoom arrière",
-        "resetZoom": "Réinitialiser le zoom"
+        "resetZoom": "Réinitialiser le zoom",
+        "toggleExplorer": "Basculer l'explorateur",
+        "toggleOutline": "Basculer le plan"
       }
     },
     "tutorials": {

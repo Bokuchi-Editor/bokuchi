@@ -109,6 +109,56 @@
       "localVsGlobal": "Variables locales vs globales",
       "localVsGlobalDescription": "Usa variables locales para contenido específico del archivo y variables globales para contenido común en múltiples archivos."
     },
+    "features": {
+      "title": "Funcionalidades",
+      "description": "Bokuchi ofrece varias funcionalidades potentes para mejorar tu experiencia de edición de Markdown.",
+      "explorer": {
+        "title": "Explorador (Árbol de carpetas)",
+        "description": "Navega y abre archivos directamente desde la barra lateral del árbol de carpetas. Abre una carpeta para mostrar su estructura de directorios y navegar rápidamente entre archivos.",
+        "displayModes": "Modos de visualización",
+        "persistent": "Siempre visible",
+        "persistentDescription": "El panel del explorador siempre se muestra como parte del diseño. Cuando las pestañas verticales están habilitadas, se fusiona en una sola barra lateral con un divisor redimensionable.",
+        "overlay": "Superposición",
+        "overlayDescription": "El panel del explorador se desliza desde la izquierda como un cajón temporal.",
+        "off": "Desactivado",
+        "offDescription": "El panel del explorador está oculto. Haz clic en el botón Explorador en el encabezado para abrir una carpeta y habilitarlo.",
+        "highlights": "Características clave",
+        "highlight1": "Carga diferida: Los subdirectorios se cargan bajo demanda al expandirlos",
+        "highlight2": "Filtro de archivos: Muestra solo archivos Markdown o todos los archivos",
+        "highlight3": "Resaltado de archivo activo: El archivo abierto actualmente se resalta en el árbol",
+        "highlight4": "Barra lateral fusionada: Se combina con las pestañas verticales en un solo panel redimensionable",
+        "shortcutDescription": "Alternar el panel del explorador"
+      },
+      "outline": {
+        "title": "Esquema (Tabla de contenidos)",
+        "description": "Navega por la estructura de tu documento con un panel de esquema que muestra todos los encabezados. Haz clic en cualquier encabezado para saltar a esa sección en el editor.",
+        "displayModes": "Modos de visualización",
+        "persistent": "Siempre visible",
+        "persistentDescription": "El panel de esquema siempre se muestra en el lado derecho del editor.",
+        "overlay": "Superposición",
+        "overlayDescription": "El panel de esquema se desliza desde la derecha como un cajón temporal.",
+        "highlights": "Características clave",
+        "highlight1": "Detección automática de encabezados: Los encabezados (H1-H6) se extraen en tiempo real mientras escribes",
+        "highlight2": "Clic para navegar: Haz clic en cualquier encabezado para desplazar el editor a esa posición",
+        "highlight3": "Jerarquía con sangría: Los encabezados se muestran con sangría que refleja su nivel",
+        "shortcutDescription": "Alternar el panel de esquema"
+      },
+      "tableConversion": {
+        "title": "Pegado con conversión de tabla",
+        "description": "Convierte automáticamente tablas HTML a formato Markdown al pegar desde hojas de cálculo, páginas web u otras fuentes.",
+        "modes": "Modos de conversión",
+        "auto": "Conversión automática",
+        "autoDescription": "Las tablas se convierten automáticamente a Markdown al pegarlas.",
+        "confirm": "Preguntar antes de convertir",
+        "confirmDescription": "Se muestra un diálogo de confirmación con vista previa antes de convertir la tabla.",
+        "off": "No convertir",
+        "offDescription": "Las tablas se pegan como texto plano sin conversión.",
+        "highlights": "Características clave",
+        "highlight1": "Detecta automáticamente datos de tablas HTML en el portapapeles",
+        "highlight2": "Vista previa de la tabla Markdown convertida antes de aplicar",
+        "highlight3": "Usa Shift+Cmd/Ctrl+V para pegar como texto plano sin conversión"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Atajos de teclado",
       "description": "Aquí están todos los atajos de teclado disponibles en Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "Solo vista previa",
         "zoomIn": "Acercar",
         "zoomOut": "Alejar",
-        "resetZoom": "Restablecer zoom"
+        "resetZoom": "Restablecer zoom",
+        "toggleExplorer": "Alternar explorador",
+        "toggleOutline": "Alternar esquema"
       }
     },
     "tutorials": {

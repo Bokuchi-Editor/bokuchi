@@ -494,8 +494,20 @@ export const useAppState = () => {
     const selected = await folderTreeOpenFolder();
     if (selected) {
       setFolderTreePanelOpen(true);
+      // Auto-switch from 'off' to 'persistent' when a folder is opened
+      if (appSettings.interface.folderTreeDisplayMode === 'off') {
+        const updatedSettings = {
+          ...appSettings,
+          interface: {
+            ...appSettings.interface,
+            folderTreeDisplayMode: 'persistent' as const,
+          },
+        };
+        setAppSettings(updatedSettings);
+        storeApi.saveAppSettings(updatedSettings);
+      }
     }
-  }, [folderTreeOpenFolder]);
+  }, [folderTreeOpenFolder, appSettings]);
 
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);

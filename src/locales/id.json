@@ -109,6 +109,56 @@
       "localVsGlobal": "Variabel Lokal vs Global",
       "localVsGlobalDescription": "Gunakan variabel lokal untuk konten spesifik file dan variabel global untuk konten umum di beberapa file."
     },
+    "features": {
+      "title": "Fitur",
+      "description": "Bokuchi menyediakan beberapa fitur canggih untuk meningkatkan pengalaman pengeditan Markdown Anda.",
+      "explorer": {
+        "title": "Penjelajah (Pohon Folder)",
+        "description": "Jelajahi dan buka file langsung dari sidebar pohon folder. Buka folder untuk menampilkan struktur direktorinya dan navigasi cepat antar file.",
+        "displayModes": "Mode Tampilan",
+        "persistent": "Selalu Terlihat",
+        "persistentDescription": "Panel penjelajah selalu ditampilkan sebagai bagian dari tata letak. Saat tab vertikal diaktifkan, panel ini bergabung menjadi sidebar tunggal dengan pembagi yang dapat diubah ukurannya.",
+        "overlay": "Overlay",
+        "overlayDescription": "Panel penjelajah meluncur dari kiri sebagai laci sementara.",
+        "off": "Mati",
+        "offDescription": "Panel penjelajah disembunyikan. Klik tombol Penjelajah di header untuk membuka folder dan mengaktifkannya.",
+        "highlights": "Fitur Utama",
+        "highlight1": "Pemuatan malas: Subdirektori dimuat sesuai permintaan saat diperluas",
+        "highlight2": "Filter file: Tampilkan hanya file Markdown atau semua file",
+        "highlight3": "Penyorotan file aktif: File yang sedang dibuka disorot di pohon",
+        "highlight4": "Sidebar gabungan: Bergabung dengan tab vertikal dalam panel tunggal yang dapat diubah ukurannya",
+        "shortcutDescription": "Beralih panel penjelajah"
+      },
+      "outline": {
+        "title": "Kerangka (Daftar Isi)",
+        "description": "Navigasi struktur dokumen Anda dengan panel kerangka yang menampilkan semua judul. Klik judul mana pun untuk melompat ke bagian tersebut di editor.",
+        "displayModes": "Mode Tampilan",
+        "persistent": "Selalu Terlihat",
+        "persistentDescription": "Panel kerangka selalu ditampilkan di sisi kanan editor.",
+        "overlay": "Overlay",
+        "overlayDescription": "Panel kerangka meluncur dari kanan sebagai laci sementara.",
+        "highlights": "Fitur Utama",
+        "highlight1": "Deteksi judul otomatis: Judul (H1-H6) diekstrak secara real-time saat Anda mengetik",
+        "highlight2": "Klik untuk navigasi: Klik judul mana pun untuk menggulir editor ke posisi tersebut",
+        "highlight3": "Hierarki berindentasi: Judul ditampilkan dengan indentasi yang mencerminkan levelnya",
+        "shortcutDescription": "Beralih panel kerangka"
+      },
+      "tableConversion": {
+        "title": "Tempel dengan Konversi Tabel",
+        "description": "Konversi tabel HTML secara otomatis ke format Markdown saat menempel dari spreadsheet, halaman web, atau sumber lainnya.",
+        "modes": "Mode Konversi",
+        "auto": "Konversi Otomatis",
+        "autoDescription": "Tabel secara otomatis dikonversi ke Markdown saat ditempel.",
+        "confirm": "Tanya Sebelum Mengonversi",
+        "confirmDescription": "Dialog konfirmasi dengan pratinjau ditampilkan sebelum mengonversi tabel.",
+        "off": "Jangan Konversi",
+        "offDescription": "Tabel ditempel sebagai teks biasa tanpa konversi.",
+        "highlights": "Fitur Utama",
+        "highlight1": "Mendeteksi data tabel HTML di clipboard secara otomatis",
+        "highlight2": "Pratinjau tabel Markdown yang dikonversi sebelum diterapkan",
+        "highlight3": "Gunakan Shift+Cmd/Ctrl+V untuk menempel sebagai teks biasa tanpa konversi"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Pintasan Keyboard",
       "description": "Berikut adalah semua pintasan keyboard yang tersedia di Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "Pratinjau Saja",
         "zoomIn": "Perbesar",
         "zoomOut": "Perkecil",
-        "resetZoom": "Reset Zoom"
+        "resetZoom": "Reset Zoom",
+        "toggleExplorer": "Beralih Penjelajah",
+        "toggleOutline": "Beralih Kerangka"
       }
     },
     "tutorials": {

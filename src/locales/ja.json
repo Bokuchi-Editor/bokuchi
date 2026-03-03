@@ -109,6 +109,56 @@
       "localVsGlobal": "ローカル変数とグローバル変数",
       "localVsGlobalDescription": "ファイル固有のコンテンツにはローカル変数を使用し、複数のファイルで共通のコンテンツにはグローバル変数を使用します。"
     },
+    "features": {
+      "title": "機能紹介",
+      "description": "BokuchiはMarkdown編集体験を向上させるさまざまな機能を提供しています。",
+      "explorer": {
+        "title": "エクスプローラー（フォルダツリー）",
+        "description": "サイドバーのフォルダツリーからファイルを直接閲覧・オープンできます。フォルダを開くとディレクトリ構造が表示され、ファイル間を素早く移動できます。",
+        "displayModes": "表示モード",
+        "persistent": "常時表示",
+        "persistentDescription": "エクスプローラーパネルがレイアウトの一部として常に表示されます。垂直タブが有効な場合、リサイズ可能な仕切りで1つのサイドバーに統合されます。",
+        "overlay": "オーバーレイ",
+        "overlayDescription": "エクスプローラーパネルが左側から一時的なドロワーとしてスライドインします。",
+        "off": "オフ",
+        "offDescription": "エクスプローラーパネルが非表示になります。ヘッダーのエクスプローラーボタンをクリックしてフォルダを開くと有効になります。",
+        "highlights": "主な機能",
+        "highlight1": "遅延読み込み：サブディレクトリは展開時にオンデマンドで読み込まれます",
+        "highlight2": "ファイルフィルター：Markdownファイルのみまたはすべてのファイルを表示",
+        "highlight3": "アクティブファイルのハイライト：現在開いているファイルがツリー内でハイライトされます",
+        "highlight4": "統合サイドバー：垂直タブとリサイズ可能な1つのパネルに統合",
+        "shortcutDescription": "エクスプローラーパネルの切り替え"
+      },
+      "outline": {
+        "title": "アウトライン（目次）",
+        "description": "すべての見出しを表示するアウトラインパネルでドキュメント構造をナビゲートします。見出しをクリックすると、エディター内のそのセクションにジャンプします。",
+        "displayModes": "表示モード",
+        "persistent": "常時表示",
+        "persistentDescription": "アウトラインパネルがエディターの右側に常に表示されます。",
+        "overlay": "オーバーレイ",
+        "overlayDescription": "アウトラインパネルが右側から一時的なドロワーとしてスライドインします。",
+        "highlights": "主な機能",
+        "highlight1": "自動見出し検出：見出し（H1〜H6）が入力中にリアルタイムで抽出されます",
+        "highlight2": "クリックでナビゲート：見出しをクリックするとエディターがその位置にスクロールします",
+        "highlight3": "インデント階層：見出しがレベルに応じたインデントで表示されます",
+        "shortcutDescription": "アウトラインパネルの切り替え"
+      },
+      "tableConversion": {
+        "title": "テーブル変換貼り付け",
+        "description": "スプレッドシートやWebページなどからペースト時に、HTMLテーブルを自動的にMarkdown形式に変換します。",
+        "modes": "変換モード",
+        "auto": "自動変換",
+        "autoDescription": "ペースト時にテーブルが自動的にMarkdownに変換されます。",
+        "confirm": "変換前に確認",
+        "confirmDescription": "テーブルを変換する前にプレビュー付きの確認ダイアログが表示されます。",
+        "off": "変換しない",
+        "offDescription": "テーブルは変換されずプレーンテキストとして貼り付けられます。",
+        "highlights": "主な機能",
+        "highlight1": "クリップボードのHTMLテーブルデータを自動検出",
+        "highlight2": "適用前に変換後のMarkdownテーブルをプレビュー",
+        "highlight3": "Shift+Cmd/Ctrl+V で変換せずにプレーンテキストとして貼り付け可能"
+      }
+    },
     "keyboardShortcuts": {
       "title": "キーボードショートカット",
       "description": "Bokuchiで利用可能なすべてのキーボードショートカットです：",
@@ -135,6 +185,7 @@
         "zoomIn": "ズームイン",
         "zoomOut": "ズームアウト",
         "resetZoom": "ズームリセット",
+        "toggleExplorer": "エクスプローラーの切り替え",
         "toggleOutline": "アウトラインの切り替え"
       }
     },

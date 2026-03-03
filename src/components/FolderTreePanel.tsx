@@ -16,6 +16,7 @@ import {
   Refresh,
   Folder,
   FolderOpen,
+  FolderOff,
   InsertDriveFile,
   ExpandMore,
   ChevronRight,
@@ -35,6 +36,8 @@ interface FolderTreePanelProps {
   onCloseFolder: () => void;
   onRefresh: () => void;
   onClose?: () => void;
+  onHeaderClick?: () => void;
+  collapsed?: boolean;
   width?: number;
 }
 
@@ -139,6 +142,8 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
   onCloseFolder,
   onRefresh,
   onClose,
+  onHeaderClick,
+  collapsed = false,
   width = 280,
 }) => {
   const { t } = useTranslation();
@@ -164,21 +169,37 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
           justifyContent: 'space-between',
           px: 1.5,
           py: 1,
-          borderBottom: 1,
+          borderBottom: collapsed ? 0 : 1,
           borderColor: 'divider',
+          ...(onHeaderClick && {
+            cursor: 'pointer',
+            '&:hover': { bgcolor: 'action.hover' },
+          }),
         }}
+        onClick={onHeaderClick}
       >
+        {onHeaderClick && (
+          <ExpandMore
+            sx={{
+              fontSize: 16,
+              mr: 0.5,
+              color: 'text.secondary',
+              transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s',
+            }}
+          />
+        )}
         <Typography variant="subtitle2" color="text.secondary" noWrap sx={{ flex: 1 }}>
           {rootFolderName || t('folderTree.explorer')}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          {rootFolderName && (
+        <Box sx={{ display: 'flex', gap: 0.5 }} onClick={(e) => e.stopPropagation()}>
+          {rootFolderName && !collapsed && (
             <>
               <IconButton size="small" onClick={onRefresh} title={t('folderTree.refresh')}>
                 <Refresh fontSize="small" />
               </IconButton>
               <IconButton size="small" onClick={onCloseFolder} title={t('folderTree.closeFolder')}>
-                <Close fontSize="small" />
+                <FolderOff fontSize="small" />
               </IconButton>
             </>
           )}
@@ -191,7 +212,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
       </Box>
 
       {/* Body */}
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
+      {!collapsed && <Box sx={{ flex: 1, overflow: 'auto' }}>
         {!rootFolderName ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3, gap: 2 }}>
             <Typography variant="body2" color="text.secondary" textAlign="center">
@@ -230,7 +251,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
             ))}
           </List>
         )}
-      </Box>
+      </Box>}
     </Box>
   );
 };

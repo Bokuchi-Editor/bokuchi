@@ -109,6 +109,56 @@
       "localVsGlobal": "區域變數與全域變數",
       "localVsGlobalDescription": "對檔案特定內容使用區域變數，對多個檔案中的通用內容使用全域變數。"
     },
+    "features": {
+      "title": "功能",
+      "description": "Bokuchi 提供了多種強大的功能來增強您的 Markdown 編輯體驗。",
+      "explorer": {
+        "title": "檔案總管（資料夾樹）",
+        "description": "透過資料夾樹側邊欄直接瀏覽和開啟檔案。開啟資料夾以顯示其目錄結構，快速在檔案之間導航。",
+        "displayModes": "顯示模式",
+        "persistent": "始終顯示",
+        "persistentDescription": "檔案總管面板始終作為佈局的一部分顯示。啟用垂直標籤頁時，它會合併到一個可調整大小的分隔欄的側邊欄中。",
+        "overlay": "覆蓋層",
+        "overlayDescription": "檔案總管面板從左側滑入作為臨時抽屜。",
+        "off": "關閉",
+        "offDescription": "檔案總管面板已隱藏。點擊標題列中的「檔案總管」按鈕開啟資料夾並啟用它。",
+        "highlights": "主要特性",
+        "highlight1": "延遲載入：子目錄在展開時按需載入",
+        "highlight2": "檔案篩選：僅顯示 Markdown 檔案或所有檔案",
+        "highlight3": "活動檔案醒目提示：目前開啟的檔案在樹狀結構中醒目提示",
+        "highlight4": "合併側邊欄：與垂直標籤頁合併到單一可調整大小的面板中",
+        "shortcutDescription": "切換檔案總管面板"
+      },
+      "outline": {
+        "title": "大綱（目錄）",
+        "description": "透過顯示所有標題的大綱面板導航您的文件結構。點擊任意標題即可跳轉到編輯器中的該部分。",
+        "displayModes": "顯示模式",
+        "persistent": "始終顯示",
+        "persistentDescription": "大綱面板始終顯示在編輯器的右側。",
+        "overlay": "覆蓋層",
+        "overlayDescription": "大綱面板從右側滑入作為臨時抽屜。",
+        "highlights": "主要特性",
+        "highlight1": "自動標題偵測：標題（H1-H6）在您輸入時即時擷取",
+        "highlight2": "點擊導航：點擊任意標題即可將編輯器捲動到該位置",
+        "highlight3": "縮排層級：標題按其層級縮排顯示",
+        "shortcutDescription": "切換大綱面板"
+      },
+      "tableConversion": {
+        "title": "表格轉換貼上",
+        "description": "從試算表、網頁或其他來源貼上時，自動將 HTML 表格轉換為 Markdown 格式。",
+        "modes": "轉換模式",
+        "auto": "自動轉換",
+        "autoDescription": "貼上時自動將表格轉換為 Markdown。",
+        "confirm": "轉換前詢問",
+        "confirmDescription": "在轉換表格之前顯示帶有預覽的確認對話方塊。",
+        "off": "不轉換",
+        "offDescription": "表格以純文字貼上，不進行轉換。",
+        "highlights": "主要特性",
+        "highlight1": "自動偵測剪貼簿中的 HTML 表格資料",
+        "highlight2": "在套用之前預覽轉換後的 Markdown 表格",
+        "highlight3": "使用 Shift+Cmd/Ctrl+V 以純文字貼上而不進行轉換"
+      }
+    },
     "keyboardShortcuts": {
       "title": "鍵盤快速鍵",
       "description": "以下是 Bokuchi 中可用的所有鍵盤快速鍵：",
@@ -134,7 +184,9 @@
         "previewOnly": "僅預覽",
         "zoomIn": "放大",
         "zoomOut": "縮小",
-        "resetZoom": "重設縮放"
+        "resetZoom": "重設縮放",
+        "toggleExplorer": "切換檔案總管",
+        "toggleOutline": "切換大綱"
       }
     },
     "tutorials": {

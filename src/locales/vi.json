@@ -109,6 +109,56 @@
       "localVsGlobal": "Biến cục bộ vs Biến toàn cục",
       "localVsGlobalDescription": "Sử dụng biến cục bộ cho nội dung cụ thể của tệp và biến toàn cục cho nội dung chung trên nhiều tệp."
     },
+    "features": {
+      "title": "Tính năng",
+      "description": "Bokuchi cung cấp nhiều tính năng mạnh mẽ để nâng cao trải nghiệm chỉnh sửa Markdown của bạn.",
+      "explorer": {
+        "title": "Trình khám phá (Cây thư mục)",
+        "description": "Duyệt và mở tệp trực tiếp từ thanh bên cây thư mục. Mở một thư mục để hiển thị cấu trúc thư mục và điều hướng nhanh giữa các tệp.",
+        "displayModes": "Chế độ hiển thị",
+        "persistent": "Luôn hiển thị",
+        "persistentDescription": "Bảng trình khám phá luôn được hiển thị như một phần của bố cục. Khi tab dọc được bật, nó hợp nhất thành một thanh bên duy nhất với thanh chia có thể thay đổi kích thước.",
+        "overlay": "Lớp phủ",
+        "overlayDescription": "Bảng trình khám phá trượt vào từ bên trái như một ngăn kéo tạm thời.",
+        "off": "Tắt",
+        "offDescription": "Bảng trình khám phá bị ẩn. Nhấp vào nút Trình khám phá trong tiêu đề để mở thư mục và kích hoạt nó.",
+        "highlights": "Tính năng chính",
+        "highlight1": "Tải chậm: Các thư mục con được tải theo yêu cầu khi mở rộng",
+        "highlight2": "Bộ lọc tệp: Chỉ hiển thị tệp Markdown hoặc tất cả tệp",
+        "highlight3": "Đánh dấu tệp đang hoạt động: Tệp đang mở hiện tại được đánh dấu trong cây",
+        "highlight4": "Thanh bên hợp nhất: Kết hợp với tab dọc trong một bảng duy nhất có thể thay đổi kích thước",
+        "shortcutDescription": "Bật/tắt bảng trình khám phá"
+      },
+      "outline": {
+        "title": "Dàn ý (Mục lục)",
+        "description": "Điều hướng cấu trúc tài liệu của bạn với bảng dàn ý hiển thị tất cả các tiêu đề. Nhấp vào bất kỳ tiêu đề nào để chuyển đến phần đó trong trình soạn thảo.",
+        "displayModes": "Chế độ hiển thị",
+        "persistent": "Luôn hiển thị",
+        "persistentDescription": "Bảng dàn ý luôn được hiển thị ở phía bên phải của trình soạn thảo.",
+        "overlay": "Lớp phủ",
+        "overlayDescription": "Bảng dàn ý trượt vào từ bên phải như một ngăn kéo tạm thời.",
+        "highlights": "Tính năng chính",
+        "highlight1": "Phát hiện tiêu đề tự động: Các tiêu đề (H1-H6) được trích xuất theo thời gian thực khi bạn gõ",
+        "highlight2": "Nhấp để điều hướng: Nhấp vào bất kỳ tiêu đề nào để cuộn trình soạn thảo đến vị trí đó",
+        "highlight3": "Phân cấp thụt lề: Các tiêu đề được hiển thị với thụt lề phản ánh cấp độ của chúng",
+        "shortcutDescription": "Bật/tắt bảng dàn ý"
+      },
+      "tableConversion": {
+        "title": "Dán với chuyển đổi bảng",
+        "description": "Tự động chuyển đổi bảng HTML sang định dạng Markdown khi dán từ bảng tính, trang web hoặc các nguồn khác.",
+        "modes": "Chế độ chuyển đổi",
+        "auto": "Tự động chuyển đổi",
+        "autoDescription": "Bảng được tự động chuyển đổi sang Markdown khi dán.",
+        "confirm": "Hỏi trước khi chuyển đổi",
+        "confirmDescription": "Hộp thoại xác nhận với bản xem trước được hiển thị trước khi chuyển đổi bảng.",
+        "off": "Không chuyển đổi",
+        "offDescription": "Bảng được dán dưới dạng văn bản thuần túy mà không chuyển đổi.",
+        "highlights": "Tính năng chính",
+        "highlight1": "Tự động phát hiện dữ liệu bảng HTML trong clipboard",
+        "highlight2": "Xem trước bảng Markdown đã chuyển đổi trước khi áp dụng",
+        "highlight3": "Sử dụng Shift+Cmd/Ctrl+V để dán dưới dạng văn bản thuần túy mà không chuyển đổi"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Phím tắt",
       "description": "Đây là tất cả các phím tắt có sẵn trong Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "Chỉ xem trước",
         "zoomIn": "Phóng to",
         "zoomOut": "Thu nhỏ",
-        "resetZoom": "Đặt lại zoom"
+        "resetZoom": "Đặt lại zoom",
+        "toggleExplorer": "Bật/tắt trình khám phá",
+        "toggleOutline": "Bật/tắt dàn ý"
       }
     },
     "tutorials": {

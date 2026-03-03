@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Box, Typography, Drawer } from '@mui/material';
 import Editor from './Editor';
 import Preview from './Preview';
@@ -130,6 +130,70 @@ const AppContent: React.FC<AppContentProps> = ({
   // Show standalone vertical tab bar only when folder tree is not persistent or panel is closed
   const showStandaloneVerticalTabs = tabLayout === 'vertical' && !showMergedLeftSidebar;
 
+  // Resizable divider state for merged sidebar
+  const [tabSectionHeight, setTabSectionHeight] = useState(200);
+  const [explorerCollapsed, setExplorerCollapsed] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const explorerHeightBeforeCollapse = useRef(0);
+  const isDraggingRef = useRef(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const handleExplorerHeaderClick = useCallback(() => {
+    if (explorerCollapsed) {
+      // Restore previous height (or default)
+      const restoreH = explorerHeightBeforeCollapse.current || 200;
+      if (sidebarRef.current) {
+        const maxH = sidebarRef.current.getBoundingClientRect().height - 120;
+        setTabSectionHeight(Math.min(restoreH, maxH));
+      } else {
+        setTabSectionHeight(restoreH);
+      }
+      setExplorerCollapsed(false);
+    } else {
+      // Save current height then collapse explorer (body hidden, header stays)
+      explorerHeightBeforeCollapse.current = tabSectionHeight;
+      // Set tab section to fill, leaving room for explorer header + divider
+      if (sidebarRef.current) {
+        const totalH = sidebarRef.current.getBoundingClientRect().height;
+        setTabSectionHeight(totalH - 48);
+      }
+      setExplorerCollapsed(true);
+    }
+  }, [explorerCollapsed, tabSectionHeight]);
+
+  const handleDividerMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    setIsDragging(true);
+
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!isDraggingRef.current || !sidebarRef.current) return;
+      const sidebarRect = sidebarRef.current.getBoundingClientRect();
+      const newHeight = ev.clientY - sidebarRect.top;
+      const minH = 80;
+      // Explorer header (~40px) + divider (4px) = 44px must always remain
+      const maxH = sidebarRect.height - 48;
+      const clamped = Math.max(minH, Math.min(maxH, newHeight));
+      setTabSectionHeight(clamped);
+      // Un-collapse when user drags to give explorer more space
+      setExplorerCollapsed(false);
+    };
+
+    const onMouseUp = () => {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, []);
+
   // Force Monaco Editor to recalculate layout when persistent panels toggle
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -143,6 +207,7 @@ const AppContent: React.FC<AppContentProps> = ({
       {/* Merged left sidebar: vertical tabs + folder tree */}
       {showMergedLeftSidebar && (
         <Box
+          ref={sidebarRef}
           sx={{
             width: 280,
             minWidth: 280,
@@ -156,18 +221,41 @@ const AppContent: React.FC<AppContentProps> = ({
           }}
         >
           {/* Open Editors section (vertical tabs) */}
-          <TabBar
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onTabChange={onTabChange}
-            onTabClose={onTabClose}
-            onNewTab={onNewTab}
-            onTabReorder={onTabReorder}
-            layout="vertical"
-            embedded
+          <Box sx={{
+            height: tabSectionHeight,
+            minHeight: 0,
+            overflow: 'hidden',
+            transition: isDragging ? 'none' : 'height 0.2s ease',
+          }}>
+            <TabBar
+              tabs={tabs}
+              activeTabId={activeTabId}
+              onTabChange={onTabChange}
+              onTabClose={onTabClose}
+              onNewTab={onNewTab}
+              onTabReorder={onTabReorder}
+              layout="vertical"
+              embedded
+            />
+          </Box>
+          {/* Draggable divider */}
+          <Box
+            onMouseDown={handleDividerMouseDown}
+            sx={{
+              height: 4,
+              cursor: 'row-resize',
+              flexShrink: 0,
+              bgcolor: 'divider',
+              '&:hover': { bgcolor: 'primary.main' },
+              transition: 'background-color 0.15s',
+            }}
           />
           {/* Explorer section */}
-          <Box sx={{ flex: 1, overflow: 'hidden', borderTop: 1, borderColor: 'divider' }}>
+          <Box sx={{
+            flex: 1,
+            minHeight: 0,
+            overflow: 'hidden',
+          }}>
             <FolderTreePanel
               rootFolderName={folderTreeRootFolderName}
               tree={folderTree}
@@ -178,6 +266,9 @@ const AppContent: React.FC<AppContentProps> = ({
               onOpenFolder={onFolderTreeOpenFolder}
               onCloseFolder={onFolderTreeCloseFolder}
               onRefresh={onFolderTreeRefresh}
+              onClose={onFolderTreePanelClose}
+              onHeaderClick={handleExplorerHeaderClick}
+              collapsed={explorerCollapsed}
               width={280}
             />
           </Box>
@@ -209,6 +300,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onOpenFolder={onFolderTreeOpenFolder}
           onCloseFolder={onFolderTreeCloseFolder}
           onRefresh={onFolderTreeRefresh}
+          onClose={onFolderTreePanelClose}
         />
       )}
 
