@@ -77,7 +77,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           minHeight: 28,
         }}
       >
-        {node.isDirectory && (
+        {node.isDirectory ? (
           <ListItemIcon sx={{ minWidth: 20 }}>
             {node.isLoading ? (
               <CircularProgress size={14} />
@@ -87,13 +87,15 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               <ChevronRight sx={{ fontSize: 16 }} />
             )}
           </ListItemIcon>
+        ) : (
+          <Box sx={{ minWidth: 20 }} />
         )}
         <ListItemIcon sx={{ minWidth: 24 }}>
           {node.isDirectory ? (
             node.isExpanded ? (
               <FolderOpen sx={{ fontSize: 18 }} color="primary" />
             ) : (
-              <Folder sx={{ fontSize: 18 }} color="action" />
+              <Folder sx={{ fontSize: 18 }} color="primary" />
             )
           ) : (
             <InsertDriveFile sx={{ fontSize: 18 }} color="action" />

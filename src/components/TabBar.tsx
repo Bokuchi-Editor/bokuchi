@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Tabs,
@@ -74,6 +74,18 @@ const SortableTab: React.FC<{
     isDragging,
   } = useSortable({ id: tab.id });
 
+  const localRef = useRef<HTMLLIElement>(null);
+  const mergedRef = useCallback((node: HTMLLIElement | null) => {
+    setNodeRef(node);
+    (localRef as React.MutableRefObject<HTMLLIElement | null>).current = node;
+  }, [setNodeRef]);
+
+  useEffect(() => {
+    if (isActive && layout === 'vertical' && localRef.current) {
+      localRef.current.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isActive, layout]);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -83,7 +95,7 @@ const SortableTab: React.FC<{
   if (layout === 'vertical') {
     return (
       <ListItem
-        ref={setNodeRef}
+        ref={mergedRef}
         style={style}
         disablePadding
         sx={{
@@ -285,14 +297,14 @@ const TabBar: React.FC<TabBarProps> = ({
       <Box
         sx={{
           ...(!embedded && {
-            width: 250,
+            width: 280,
             borderRight: 1,
             borderColor: 'divider',
           }),
           bgcolor: 'background.paper',
           display: 'flex',
           flexDirection: 'column',
-          ...(embedded && { overflow: 'hidden' }),
+          ...(embedded && { overflow: 'hidden', height: '100%' }),
         }}
       >
         <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>

@@ -154,8 +154,6 @@ Set global variables through the Variables settings panel. These are available a
 
 ## Roadmap
 
-- [ ] Outline / TOC panel
-- [ ] Folder tree sidebar
 - [ ] KaTeX math rendering
 - [ ] PDF export
 - [ ] Command palette
