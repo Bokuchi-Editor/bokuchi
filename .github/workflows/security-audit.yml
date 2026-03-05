@@ -59,7 +59,9 @@ jobs:
 
       - name: Run npm audit
         run: |
-          npx audit-ci --moderate
+          # GHSA-v2wj-7wpq-c8vv: dompurify XSS (transitive via monaco-editor)
+          # No upstream fix available yet — allowlisted until dompurify > 3.3.1 is released
+          npx audit-ci --moderate --allowlist GHSA-v2wj-7wpq-c8vv
 
       - name: Install Rust dependencies
         run: |
