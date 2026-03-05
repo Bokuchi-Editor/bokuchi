@@ -109,6 +109,56 @@
       "localVsGlobal": "المتغيرات المحلية مقابل العامة",
       "localVsGlobalDescription": "استخدم المتغيرات المحلية للمحتوى المحدد للملف والمتغيرات العامة للمحتوى المشترك عبر ملفات متعددة."
     },
+    "features": {
+      "title": "الميزات",
+      "description": "يوفر Bokuchi العديد من الميزات القوية لتحسين تجربة تحرير Markdown الخاصة بك.",
+      "explorer": {
+        "title": "المستكشف (شجرة المجلدات)",
+        "description": "تصفح وافتح الملفات مباشرة من الشريط الجانبي لشجرة المجلدات. افتح مجلدًا لعرض هيكل الدليل الخاص به والتنقل بسرعة بين الملفات.",
+        "displayModes": "أوضاع العرض",
+        "persistent": "مرئي دائمًا",
+        "persistentDescription": "لوحة المستكشف تظهر دائمًا كجزء من التخطيط. عند تفعيل التبويبات العمودية، تندمج في شريط جانبي واحد مع فاصل قابل لتغيير الحجم.",
+        "overlay": "تراكب",
+        "overlayDescription": "لوحة المستكشف تنزلق من اليسار كدرج مؤقت.",
+        "off": "إيقاف",
+        "offDescription": "لوحة المستكشف مخفية. انقر على زر المستكشف في الرأس لفتح مجلد وتفعيلها.",
+        "highlights": "الميزات الرئيسية",
+        "highlight1": "التحميل الكسول: يتم تحميل الأدلة الفرعية عند الطلب عند التوسيع",
+        "highlight2": "مرشح الملفات: عرض ملفات Markdown فقط أو جميع الملفات",
+        "highlight3": "تمييز الملف النشط: يتم تمييز الملف المفتوح حاليًا في الشجرة",
+        "highlight4": "شريط جانبي مدمج: يجمع مع التبويبات العمودية في لوحة واحدة قابلة لتغيير الحجم",
+        "shortcutDescription": "تبديل لوحة المستكشف"
+      },
+      "outline": {
+        "title": "المخطط (جدول المحتويات)",
+        "description": "تنقل في هيكل مستندك باستخدام لوحة المخطط التي تعرض جميع العناوين. انقر على أي عنوان للانتقال إلى ذلك القسم في المحرر.",
+        "displayModes": "أوضاع العرض",
+        "persistent": "مرئي دائمًا",
+        "persistentDescription": "لوحة المخطط تظهر دائمًا على الجانب الأيمن من المحرر.",
+        "overlay": "تراكب",
+        "overlayDescription": "لوحة المخطط تنزلق من اليمين كدرج مؤقت.",
+        "highlights": "الميزات الرئيسية",
+        "highlight1": "اكتشاف العناوين تلقائيًا: يتم استخراج العناوين (H1-H6) في الوقت الفعلي أثناء الكتابة",
+        "highlight2": "انقر للتنقل: انقر على أي عنوان لتمرير المحرر إلى ذلك الموضع",
+        "highlight3": "تسلسل هرمي بمسافة بادئة: تُعرض العناوين بمسافة بادئة تعكس مستواها",
+        "shortcutDescription": "تبديل لوحة المخطط"
+      },
+      "tableConversion": {
+        "title": "لصق مع تحويل الجدول",
+        "description": "تحويل جداول HTML تلقائيًا إلى تنسيق Markdown عند اللصق من جداول البيانات أو صفحات الويب أو مصادر أخرى.",
+        "modes": "أوضاع التحويل",
+        "auto": "تحويل تلقائي",
+        "autoDescription": "يتم تحويل الجداول تلقائيًا إلى Markdown عند اللصق.",
+        "confirm": "السؤال قبل التحويل",
+        "confirmDescription": "يتم عرض مربع حوار تأكيد مع معاينة قبل تحويل الجدول.",
+        "off": "عدم التحويل",
+        "offDescription": "يتم لصق الجداول كنص عادي دون تحويل.",
+        "highlights": "الميزات الرئيسية",
+        "highlight1": "يكتشف بيانات جدول HTML في الحافظة تلقائيًا",
+        "highlight2": "معاينة جدول Markdown المحول قبل التطبيق",
+        "highlight3": "استخدم Shift+Cmd/Ctrl+V للصق كنص عادي دون تحويل"
+      }
+    },
     "keyboardShortcuts": {
       "title": "اختصارات لوحة المفاتيح",
       "description": "إليك جميع اختصارات لوحة المفاتيح المتاحة في Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "المعاينة فقط",
         "zoomIn": "تكبير",
         "zoomOut": "تصغير",
-        "resetZoom": "إعادة تعيين التكبير"
+        "resetZoom": "إعادة تعيين التكبير",
+        "toggleExplorer": "تبديل المستكشف",
+        "toggleOutline": "تبديل المخطط"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "مرئي دائمًا",
       "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
       "outlineDisplayModeOverlay": "تراكب",
-      "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب."
+      "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "متقدم",
@@ -378,6 +442,15 @@
     "title": "المخطط",
     "noHeadings": "لم يتم العثور على عناوين",
     "toggleOutline": "تبديل المخطط (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "المستكشف",
+    "openFolder": "فتح مجلد",
+    "closeFolder": "إغلاق المجلد",
+    "refresh": "تحديث",
+    "noFolderOpen": "لم يتم فتح أي مجلد",
+    "emptyFolder": "هذا المجلد فارغ",
+    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",

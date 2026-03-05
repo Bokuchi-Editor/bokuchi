@@ -109,6 +109,56 @@
       "localVsGlobal": "지역 변수 vs 전역 변수",
       "localVsGlobalDescription": "파일별 콘텐츠에는 지역 변수를 사용하고 여러 파일에 걸친 공통 콘텐츠에는 전역 변수를 사용하세요."
     },
+    "features": {
+      "title": "기능",
+      "description": "Bokuchi는 Markdown 편집 경험을 향상시키기 위한 여러 강력한 기능을 제공합니다.",
+      "explorer": {
+        "title": "탐색기 (폴더 트리)",
+        "description": "폴더 트리 사이드바에서 직접 파일을 탐색하고 열 수 있습니다. 폴더를 열어 디렉토리 구조를 표시하고 파일 간에 빠르게 탐색할 수 있습니다.",
+        "displayModes": "표시 모드",
+        "persistent": "항상 표시",
+        "persistentDescription": "탐색기 패널이 레이아웃의 일부로 항상 표시됩니다. 수직 탭이 활성화되면 크기 조절 가능한 구분선이 있는 단일 사이드바로 병합됩니다.",
+        "overlay": "오버레이",
+        "overlayDescription": "탐색기 패널이 왼쪽에서 임시 서랍으로 슬라이드됩니다.",
+        "off": "끄기",
+        "offDescription": "탐색기 패널이 숨겨져 있습니다. 헤더의 탐색기 버튼을 클릭하여 폴더를 열고 활성화하세요.",
+        "highlights": "주요 기능",
+        "highlight1": "지연 로딩: 하위 디렉토리가 확장 시 필요에 따라 로드됩니다",
+        "highlight2": "파일 필터: Markdown 파일만 또는 모든 파일을 표시합니다",
+        "highlight3": "활성 파일 강조: 현재 열려 있는 파일이 트리에서 강조 표시됩니다",
+        "highlight4": "병합된 사이드바: 수직 탭과 단일 크기 조절 가능한 패널로 결합됩니다",
+        "shortcutDescription": "탐색기 패널 전환"
+      },
+      "outline": {
+        "title": "개요 (목차)",
+        "description": "모든 제목을 표시하는 개요 패널로 문서 구조를 탐색하세요. 제목을 클릭하면 편집기에서 해당 섹션으로 이동합니다.",
+        "displayModes": "표시 모드",
+        "persistent": "항상 표시",
+        "persistentDescription": "개요 패널이 편집기 오른쪽에 항상 표시됩니다.",
+        "overlay": "오버레이",
+        "overlayDescription": "개요 패널이 오른쪽에서 임시 서랍으로 슬라이드됩니다.",
+        "highlights": "주요 기능",
+        "highlight1": "자동 제목 감지: 입력하는 동안 제목(H1-H6)이 실시간으로 추출됩니다",
+        "highlight2": "클릭하여 탐색: 제목을 클릭하면 편집기가 해당 위치로 스크롤됩니다",
+        "highlight3": "들여쓰기 계층: 제목이 레벨에 따라 들여쓰기로 표시됩니다",
+        "shortcutDescription": "개요 패널 전환"
+      },
+      "tableConversion": {
+        "title": "표 변환 붙여넣기",
+        "description": "스프레드시트, 웹 페이지 또는 기타 소스에서 붙여넣을 때 HTML 표를 Markdown 형식으로 자동 변환합니다.",
+        "modes": "변환 모드",
+        "auto": "자동 변환",
+        "autoDescription": "붙여넣을 때 표가 자동으로 Markdown으로 변환됩니다.",
+        "confirm": "변환 전에 묻기",
+        "confirmDescription": "표를 변환하기 전에 미리보기가 포함된 확인 대화상자가 표시됩니다.",
+        "off": "변환하지 않음",
+        "offDescription": "표가 변환 없이 일반 텍스트로 붙여넣어집니다.",
+        "highlights": "주요 기능",
+        "highlight1": "클립보드의 HTML 표 데이터를 자동으로 감지합니다",
+        "highlight2": "적용하기 전에 변환된 Markdown 표를 미리 봅니다",
+        "highlight3": "Shift+Cmd/Ctrl+V를 사용하여 변환 없이 일반 텍스트로 붙여넣기"
+      }
+    },
     "keyboardShortcuts": {
       "title": "키보드 단축키",
       "description": "Bokuchi에서 사용할 수 있는 모든 키보드 단축키입니다:",
@@ -134,7 +184,9 @@
         "previewOnly": "미리보기만",
         "zoomIn": "확대",
         "zoomOut": "축소",
-        "resetZoom": "확대/축소 재설정"
+        "resetZoom": "확대/축소 재설정",
+        "toggleExplorer": "탐색기 전환",
+        "toggleOutline": "개요 전환"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "항상 표시",
       "outlineDisplayModePersistentDescription": "개요 패널이 레이아웃의 일부로 항상 표시됩니다.",
       "outlineDisplayModeOverlay": "오버레이",
-      "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다."
+      "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "고급",
@@ -378,6 +442,15 @@
     "title": "개요",
     "noHeadings": "제목을 찾을 수 없습니다",
     "toggleOutline": "개요 전환 (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "탐색기",
+    "openFolder": "폴더 열기",
+    "closeFolder": "폴더 닫기",
+    "refresh": "새로고침",
+    "noFolderOpen": "열린 폴더가 없습니다",
+    "emptyFolder": "이 폴더는 비어 있습니다",
+    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "표를 Markdown으로 변환",

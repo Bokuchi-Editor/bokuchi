@@ -109,6 +109,56 @@
       "localVsGlobal": "Local vs Global Variables",
       "localVsGlobalDescription": "Use local variables for file-specific content and global variables for common content across multiple files."
     },
+    "features": {
+      "title": "Features",
+      "description": "Bokuchi provides several powerful features to enhance your Markdown editing experience.",
+      "explorer": {
+        "title": "Explorer (Folder Tree)",
+        "description": "Browse and open files directly from a folder tree sidebar. Open a folder to display its directory structure and quickly navigate between files.",
+        "displayModes": "Display Modes",
+        "persistent": "Always Visible",
+        "persistentDescription": "The explorer panel is always shown as part of the layout. When vertical tabs are enabled, it merges into a single sidebar with a resizable divider.",
+        "overlay": "Overlay",
+        "overlayDescription": "The explorer panel slides in from the left as a temporary drawer.",
+        "off": "Off",
+        "offDescription": "The explorer panel is hidden. Click the Explorer button in the header to open a folder and enable it.",
+        "highlights": "Key Features",
+        "highlight1": "Lazy loading: Subdirectories are loaded on demand when expanded",
+        "highlight2": "File filter: Show only Markdown files or all files",
+        "highlight3": "Active file highlighting: The currently open file is highlighted in the tree",
+        "highlight4": "Merged sidebar: Combines with vertical tabs in a single resizable panel",
+        "shortcutDescription": "Toggle the explorer panel"
+      },
+      "outline": {
+        "title": "Outline (Table of Contents)",
+        "description": "Navigate your document structure with an outline panel that displays all headings. Click any heading to jump to that section in the editor.",
+        "displayModes": "Display Modes",
+        "persistent": "Always Visible",
+        "persistentDescription": "The outline panel is always shown on the right side of the editor.",
+        "overlay": "Overlay",
+        "overlayDescription": "The outline panel slides in from the right as a temporary drawer.",
+        "highlights": "Key Features",
+        "highlight1": "Automatic heading detection: Headings (H1-H6) are extracted in real-time as you type",
+        "highlight2": "Click-to-navigate: Click any heading to scroll the editor to that position",
+        "highlight3": "Indented hierarchy: Headings are displayed with indentation reflecting their level",
+        "shortcutDescription": "Toggle the outline panel"
+      },
+      "tableConversion": {
+        "title": "Table Conversion Paste",
+        "description": "Automatically convert HTML tables to Markdown format when pasting from spreadsheets, web pages, or other sources.",
+        "modes": "Conversion Modes",
+        "auto": "Auto Convert",
+        "autoDescription": "Tables are automatically converted to Markdown when pasted.",
+        "confirm": "Ask Before Converting",
+        "confirmDescription": "A confirmation dialog with a preview is shown before converting the table.",
+        "off": "Don't Convert",
+        "offDescription": "Tables are pasted as plain text without conversion.",
+        "highlights": "Key Features",
+        "highlight1": "Detects HTML table data in the clipboard automatically",
+        "highlight2": "Preview the converted Markdown table before applying",
+        "highlight3": "Use Shift+Cmd/Ctrl+V to paste as plain text without conversion"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Keyboard Shortcuts",
       "description": "Here are all the keyboard shortcuts available in Bokuchi:",
@@ -135,6 +185,7 @@
         "zoomIn": "Zoom In",
         "zoomOut": "Zoom Out",
         "resetZoom": "Reset Zoom",
+        "toggleExplorer": "Toggle Explorer",
         "toggleOutline": "Toggle Outline"
       }
     },
@@ -281,7 +332,19 @@
       "outlineDisplayModePersistent": "Always visible",
       "outlineDisplayModePersistentDescription": "The outline panel is always shown as part of the layout.",
       "outlineDisplayModeOverlay": "Overlay",
-      "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay."
+      "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Advanced",
@@ -379,6 +442,15 @@
     "title": "Outline",
     "noHeadings": "No headings found",
     "toggleOutline": "Toggle Outline (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorer",
+    "openFolder": "Open Folder",
+    "closeFolder": "Close Folder",
+    "refresh": "Refresh",
+    "noFolderOpen": "No folder opened",
+    "emptyFolder": "This folder is empty",
+    "toggleExplorer": "Toggle Explorer (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Convert Table to Markdown",

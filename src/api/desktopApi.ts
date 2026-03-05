@@ -2,6 +2,12 @@ import { open, save } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { invoke } from '@tauri-apps/api/core';
 
+export interface DirEntry {
+  name: string;
+  path: string;
+  is_directory: boolean;
+}
+
 export interface FileResponse {
   content: string;
   filePath?: string;
@@ -397,5 +403,38 @@ export const desktopApi = {
       const errorMessage = error instanceof Error ? error.message : 'Failed to open YAML file';
       return { content: '', error: errorMessage };
     }
-  }
+  },
+
+  // Open folder dialog
+  async openFolder(): Promise<string | null> {
+    try {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+      });
+
+      if (!selected || Array.isArray(selected)) {
+        return null;
+      }
+
+      return selected;
+    } catch (error: unknown) {
+      console.error('Error opening folder:', error);
+      return null;
+    }
+  },
+
+  // Read directory entries (via Rust command)
+  async readDirectory(path: string, showAllFiles: boolean): Promise<DirEntry[]> {
+    try {
+      const entries = await invoke<DirEntry[]>('read_directory', {
+        path,
+        showAllFiles,
+      });
+      return entries;
+    } catch (error: unknown) {
+      console.error('Error reading directory:', error);
+      return [];
+    }
+  },
 };

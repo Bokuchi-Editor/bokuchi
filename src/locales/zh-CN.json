@@ -109,6 +109,56 @@
       "localVsGlobal": "局部变量与全局变量",
       "localVsGlobalDescription": "对文件特定内容使用局部变量，对多个文件中的通用内容使用全局变量。"
     },
+    "features": {
+      "title": "功能",
+      "description": "Bokuchi 提供了多种强大的功能来增强您的 Markdown 编辑体验。",
+      "explorer": {
+        "title": "资源管理器（文件夹树）",
+        "description": "通过文件夹树侧边栏直接浏览和打开文件。打开文件夹以显示其目录结构，快速在文件之间导航。",
+        "displayModes": "显示模式",
+        "persistent": "始终显示",
+        "persistentDescription": "资源管理器面板始终作为布局的一部分显示。启用垂直标签页时，它会合并到一个可调整大小的分隔栏的侧边栏中。",
+        "overlay": "覆盖层",
+        "overlayDescription": "资源管理器面板从左侧滑入作为临时抽屉。",
+        "off": "关闭",
+        "offDescription": "资源管理器面板已隐藏。点击标题栏中的「资源管理器」按钮打开文件夹并启用它。",
+        "highlights": "主要特性",
+        "highlight1": "延迟加载：子目录在展开时按需加载",
+        "highlight2": "文件过滤：仅显示 Markdown 文件或所有文件",
+        "highlight3": "活动文件高亮：当前打开的文件在树中高亮显示",
+        "highlight4": "合并侧边栏：与垂直标签页合并到单个可调整大小的面板中",
+        "shortcutDescription": "切换资源管理器面板"
+      },
+      "outline": {
+        "title": "大纲（目录）",
+        "description": "通过显示所有标题的大纲面板导航您的文档结构。点击任意标题即可跳转到编辑器中的该部分。",
+        "displayModes": "显示模式",
+        "persistent": "始终显示",
+        "persistentDescription": "大纲面板始终显示在编辑器的右侧。",
+        "overlay": "覆盖层",
+        "overlayDescription": "大纲面板从右侧滑入作为临时抽屉。",
+        "highlights": "主要特性",
+        "highlight1": "自动标题检测：标题（H1-H6）在您输入时实时提取",
+        "highlight2": "点击导航：点击任意标题即可将编辑器滚动到该位置",
+        "highlight3": "缩进层级：标题按其级别缩进显示",
+        "shortcutDescription": "切换大纲面板"
+      },
+      "tableConversion": {
+        "title": "表格转换粘贴",
+        "description": "从电子表格、网页或其他来源粘贴时，自动将 HTML 表格转换为 Markdown 格式。",
+        "modes": "转换模式",
+        "auto": "自动转换",
+        "autoDescription": "粘贴时自动将表格转换为 Markdown。",
+        "confirm": "转换前询问",
+        "confirmDescription": "在转换表格之前显示带有预览的确认对话框。",
+        "off": "不转换",
+        "offDescription": "表格以纯文本粘贴，不进行转换。",
+        "highlights": "主要特性",
+        "highlight1": "自动检测剪贴板中的 HTML 表格数据",
+        "highlight2": "在应用之前预览转换后的 Markdown 表格",
+        "highlight3": "使用 Shift+Cmd/Ctrl+V 以纯文本粘贴而不进行转换"
+      }
+    },
     "keyboardShortcuts": {
       "title": "键盘快捷键",
       "description": "以下是 Bokuchi 中可用的所有键盘快捷键：",
@@ -134,7 +184,9 @@
         "previewOnly": "仅预览",
         "zoomIn": "放大",
         "zoomOut": "缩小",
-        "resetZoom": "重置缩放"
+        "resetZoom": "重置缩放",
+        "toggleExplorer": "切换资源管理器",
+        "toggleOutline": "切换大纲"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "始终显示",
       "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
       "outlineDisplayModeOverlay": "覆盖层",
-      "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。"
+      "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "高级",
@@ -378,6 +442,15 @@
     "title": "大纲",
     "noHeadings": "未找到标题",
     "toggleOutline": "切换大纲 (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "资源管理器",
+    "openFolder": "打开文件夹",
+    "closeFolder": "关闭文件夹",
+    "refresh": "刷新",
+    "noFolderOpen": "未打开文件夹",
+    "emptyFolder": "此文件夹为空",
+    "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "将表格转换为 Markdown",

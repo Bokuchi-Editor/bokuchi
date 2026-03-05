@@ -109,6 +109,56 @@
       "localVsGlobal": "स्थानीय बनाम ग्लोबल वेरिएबल",
       "localVsGlobalDescription": "फ़ाइल-विशिष्ट सामग्री के लिए स्थानीय वेरिएबल और कई फ़ाइलों में सामान्य सामग्री के लिए ग्लोबल वेरिएबल का उपयोग करें।"
     },
+    "features": {
+      "title": "सुविधाएँ",
+      "description": "Bokuchi आपके Markdown संपादन अनुभव को बेहतर बनाने के लिए कई शक्तिशाली सुविधाएँ प्रदान करता है।",
+      "explorer": {
+        "title": "एक्सप्लोरर (फ़ोल्डर ट्री)",
+        "description": "फ़ोल्डर ट्री साइडबार से सीधे फ़ाइलें ब्राउज़ करें और खोलें। अपनी डायरेक्टरी संरचना प्रदर्शित करने और फ़ाइलों के बीच तेज़ी से नेविगेट करने के लिए एक फ़ोल्डर खोलें।",
+        "displayModes": "प्रदर्शन मोड",
+        "persistent": "हमेशा दिखाएं",
+        "persistentDescription": "एक्सप्लोरर पैनल लेआउट के हिस्से के रूप में हमेशा दिखाया जाता है। जब ऊर्ध्वाधर टैब सक्षम होते हैं, तो यह एक आकार बदलने योग्य विभाजक के साथ एकल साइडबार में विलीन हो जाता है।",
+        "overlay": "ओवरले",
+        "overlayDescription": "एक्सप्लोरर पैनल बाईं ओर से अस्थायी दराज के रूप में स्लाइड करता है।",
+        "off": "बंद",
+        "offDescription": "एक्सप्लोरर पैनल छिपा हुआ है। फ़ोल्डर खोलने और इसे सक्षम करने के लिए हेडर में एक्सप्लोरर बटन पर क्लिक करें।",
+        "highlights": "प्रमुख सुविधाएँ",
+        "highlight1": "आलसी लोडिंग: उप-डायरेक्टरियाँ विस्तार करने पर माँग पर लोड होती हैं",
+        "highlight2": "फ़ाइल फ़िल्टर: केवल Markdown फ़ाइलें या सभी फ़ाइलें दिखाएं",
+        "highlight3": "सक्रिय फ़ाइल हाइलाइटिंग: वर्तमान में खुली फ़ाइल ट्री में हाइलाइट होती है",
+        "highlight4": "मर्ज किया गया साइडबार: ऊर्ध्वाधर टैब के साथ एकल आकार बदलने योग्य पैनल में मिलता है",
+        "shortcutDescription": "एक्सप्लोरर पैनल टॉगल करें"
+      },
+      "outline": {
+        "title": "रूपरेखा (विषय-सूची)",
+        "description": "सभी शीर्षकों को प्रदर्शित करने वाले रूपरेखा पैनल के साथ अपने दस्तावेज़ की संरचना में नेविगेट करें। संपादक में उस अनुभाग पर जाने के लिए किसी भी शीर्षक पर क्लिक करें।",
+        "displayModes": "प्रदर्शन मोड",
+        "persistent": "हमेशा दिखाएं",
+        "persistentDescription": "रूपरेखा पैनल संपादक के दाईं ओर हमेशा दिखाया जाता है।",
+        "overlay": "ओवरले",
+        "overlayDescription": "रूपरेखा पैनल दाईं ओर से अस्थायी दराज के रूप में स्लाइड करता है।",
+        "highlights": "प्रमुख सुविधाएँ",
+        "highlight1": "स्वचालित शीर्षक पहचान: शीर्षक (H1-H6) टाइप करते समय वास्तविक समय में निकाले जाते हैं",
+        "highlight2": "नेविगेट करने के लिए क्लिक करें: संपादक को उस स्थिति पर स्क्रॉल करने के लिए किसी भी शीर्षक पर क्लिक करें",
+        "highlight3": "इंडेंटेड पदानुक्रम: शीर्षक उनके स्तर को दर्शाते हुए इंडेंटेशन के साथ प्रदर्शित होते हैं",
+        "shortcutDescription": "रूपरेखा पैनल टॉगल करें"
+      },
+      "tableConversion": {
+        "title": "टेबल कन्वर्ज़न पेस्ट",
+        "description": "स्प्रेडशीट, वेब पेज या अन्य स्रोतों से पेस्ट करते समय HTML टेबल को स्वचालित रूप से Markdown प्रारूप में कन्वर्ट करें।",
+        "modes": "कन्वर्ज़न मोड",
+        "auto": "ऑटो कन्वर्ट",
+        "autoDescription": "पेस्ट करते समय टेबल स्वचालित रूप से Markdown में कन्वर्ट हो जाती हैं।",
+        "confirm": "कन्वर्ट करने से पहले पूछें",
+        "confirmDescription": "टेबल कन्वर्ट करने से पहले पूर्वावलोकन के साथ एक पुष्टिकरण संवाद दिखाया जाता है।",
+        "off": "कन्वर्ट न करें",
+        "offDescription": "टेबल बिना कन्वर्ज़न के प्लेन टेक्स्ट के रूप में पेस्ट की जाती हैं।",
+        "highlights": "प्रमुख सुविधाएँ",
+        "highlight1": "क्लिपबोर्ड में HTML टेबल डेटा को स्वचालित रूप से पहचानता है",
+        "highlight2": "लागू करने से पहले कन्वर्ट की गई Markdown टेबल का पूर्वावलोकन करें",
+        "highlight3": "कन्वर्ज़न के बिना प्लेन टेक्स्ट के रूप में पेस्ट करने के लिए Shift+Cmd/Ctrl+V का उपयोग करें"
+      }
+    },
     "keyboardShortcuts": {
       "title": "कीबोर्ड शॉर्टकट",
       "description": "यहाँ Bokuchi में उपलब्ध सभी कीबोर्ड शॉर्टकट हैं:",
@@ -134,7 +184,9 @@
         "previewOnly": "केवल पूर्वावलोकन",
         "zoomIn": "ज़ूम इन",
         "zoomOut": "ज़ूम आउट",
-        "resetZoom": "ज़ूम रीसेट करें"
+        "resetZoom": "ज़ूम रीसेट करें",
+        "toggleExplorer": "एक्सप्लोरर टॉगल करें",
+        "toggleOutline": "रूपरेखा टॉगल करें"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "हमेशा दिखाएं",
       "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
       "outlineDisplayModeOverlay": "ओवरले",
-      "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।"
+      "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "उन्नत",
@@ -378,6 +442,15 @@
     "title": "रूपरेखा",
     "noHeadings": "कोई शीर्षक नहीं मिला",
     "toggleOutline": "रूपरेखा टॉगल करें (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "एक्सप्लोरर",
+    "openFolder": "फ़ोल्डर खोलें",
+    "closeFolder": "फ़ोल्डर बंद करें",
+    "refresh": "रीफ़्रेश",
+    "noFolderOpen": "कोई फ़ोल्डर नहीं खोला गया",
+    "emptyFolder": "यह फ़ोल्डर खाली है",
+    "toggleExplorer": "एक्सप्लोरर टॉगल करें (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",

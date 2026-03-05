@@ -659,6 +659,96 @@ const Settings: React.FC<SettingsProps> = ({
                     </FormControl>
                   </CardContent>
                 </Card>
+
+                {/* Explorer Panel Display Mode */}
+                <Card sx={{ mt: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {t('settings.interface.folderTreeDisplayMode')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.interface.folderTreeDisplayModeDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.folderTreeDisplayMode}
+                        onChange={(e) => handleSettingChange('interface', 'folderTreeDisplayMode', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="persistent"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.folderTreeDisplayModePersistent')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.folderTreeDisplayModePersistentDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="overlay"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.folderTreeDisplayModeOverlay')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.folderTreeDisplayModeOverlayDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="off"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.folderTreeDisplayModeOff')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.folderTreeDisplayModeOffDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+
+                {/* Explorer File Filter */}
+                <Card sx={{ mt: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {t('settings.interface.folderTreeFileFilter')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.interface.folderTreeFileFilterDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.folderTreeFileFilter}
+                        onChange={(e) => handleSettingChange('interface', 'folderTreeFileFilter', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="markdown"
+                          control={<Radio />}
+                          label={t('settings.interface.folderTreeFileFilterMarkdown')}
+                        />
+                        <FormControlLabel
+                          value="all"
+                          control={<Radio />}
+                          label={t('settings.interface.folderTreeFileFilterAll')}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
               </Box>
             )}
 

@@ -109,6 +109,56 @@
       "localVsGlobal": "Variáveis locais vs globais",
       "localVsGlobalDescription": "Use variáveis locais para conteúdo específico do arquivo e variáveis globais para conteúdo comum em múltiplos arquivos."
     },
+    "features": {
+      "title": "Funcionalidades",
+      "description": "O Bokuchi oferece diversas funcionalidades poderosas para aprimorar sua experiência de edição Markdown.",
+      "explorer": {
+        "title": "Explorador (Árvore de pastas)",
+        "description": "Navegue e abra arquivos diretamente pela barra lateral da árvore de pastas. Abra uma pasta para exibir sua estrutura de diretórios e navegar rapidamente entre os arquivos.",
+        "displayModes": "Modos de exibição",
+        "persistent": "Sempre visível",
+        "persistentDescription": "O painel do explorador é sempre mostrado como parte do layout. Quando as abas verticais estão ativadas, ele se mescla em uma única barra lateral com um divisor redimensionável.",
+        "overlay": "Sobreposição",
+        "overlayDescription": "O painel do explorador desliza da esquerda como uma gaveta temporária.",
+        "off": "Desativado",
+        "offDescription": "O painel do explorador está oculto. Clique no botão Explorador no cabeçalho para abrir uma pasta e ativá-lo.",
+        "highlights": "Recursos principais",
+        "highlight1": "Carregamento sob demanda: Subdiretórios são carregados quando expandidos",
+        "highlight2": "Filtro de arquivos: Mostrar apenas arquivos Markdown ou todos os arquivos",
+        "highlight3": "Destaque do arquivo ativo: O arquivo aberto atualmente é destacado na árvore",
+        "highlight4": "Barra lateral mesclada: Combina com abas verticais em um único painel redimensionável",
+        "shortcutDescription": "Alternar o painel do explorador"
+      },
+      "outline": {
+        "title": "Esboço (Sumário)",
+        "description": "Navegue pela estrutura do seu documento com um painel de esboço que exibe todos os cabeçalhos. Clique em qualquer cabeçalho para ir até essa seção no editor.",
+        "displayModes": "Modos de exibição",
+        "persistent": "Sempre visível",
+        "persistentDescription": "O painel de esboço é sempre mostrado no lado direito do editor.",
+        "overlay": "Sobreposição",
+        "overlayDescription": "O painel de esboço desliza da direita como uma gaveta temporária.",
+        "highlights": "Recursos principais",
+        "highlight1": "Detecção automática de cabeçalhos: Cabeçalhos (H1-H6) são extraídos em tempo real enquanto você digita",
+        "highlight2": "Clique para navegar: Clique em qualquer cabeçalho para rolar o editor até essa posição",
+        "highlight3": "Hierarquia recuada: Os cabeçalhos são exibidos com recuo refletindo seu nível",
+        "shortcutDescription": "Alternar o painel de esboço"
+      },
+      "tableConversion": {
+        "title": "Colagem com conversão de tabela",
+        "description": "Converta automaticamente tabelas HTML para o formato Markdown ao colar de planilhas, páginas web ou outras fontes.",
+        "modes": "Modos de conversão",
+        "auto": "Conversão automática",
+        "autoDescription": "As tabelas são convertidas automaticamente para Markdown ao colar.",
+        "confirm": "Perguntar antes de converter",
+        "confirmDescription": "Um diálogo de confirmação com visualização é mostrado antes de converter a tabela.",
+        "off": "Não converter",
+        "offDescription": "As tabelas são coladas como texto simples sem conversão.",
+        "highlights": "Recursos principais",
+        "highlight1": "Detecta automaticamente dados de tabela HTML na área de transferência",
+        "highlight2": "Visualize a tabela Markdown convertida antes de aplicar",
+        "highlight3": "Use Shift+Cmd/Ctrl+V para colar como texto simples sem conversão"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Atalhos de teclado",
       "description": "Aqui estão todos os atalhos de teclado disponíveis no Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "Apenas visualização",
         "zoomIn": "Aumentar zoom",
         "zoomOut": "Diminuir zoom",
-        "resetZoom": "Redefinir zoom"
+        "resetZoom": "Redefinir zoom",
+        "toggleExplorer": "Alternar explorador",
+        "toggleOutline": "Alternar esboço"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "Sempre visível",
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
-      "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição."
+      "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Avançado",
@@ -378,6 +442,15 @@
     "title": "Esboço",
     "noHeadings": "Nenhum título encontrado",
     "toggleOutline": "Alternar esboço (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Explorador",
+    "openFolder": "Abrir pasta",
+    "closeFolder": "Fechar pasta",
+    "refresh": "Atualizar",
+    "noFolderOpen": "Nenhuma pasta aberta",
+    "emptyFolder": "Esta pasta está vazia",
+    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",

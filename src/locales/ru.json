@@ -109,6 +109,56 @@
       "localVsGlobal": "Локальные против глобальных переменных",
       "localVsGlobalDescription": "Используйте локальные переменные для содержимого, специфичного для файла, и глобальные переменные для общего содержимого в нескольких файлах."
     },
+    "features": {
+      "title": "Функции",
+      "description": "Bokuchi предоставляет несколько мощных функций для улучшения вашего опыта редактирования Markdown.",
+      "explorer": {
+        "title": "Проводник (Дерево папок)",
+        "description": "Просматривайте и открывайте файлы прямо из боковой панели дерева папок. Откройте папку, чтобы отобразить её структуру каталогов и быстро переходить между файлами.",
+        "displayModes": "Режимы отображения",
+        "persistent": "Всегда видимый",
+        "persistentDescription": "Панель проводника всегда отображается как часть макета. При включённых вертикальных вкладках она объединяется в одну боковую панель с изменяемым разделителем.",
+        "overlay": "Наложение",
+        "overlayDescription": "Панель проводника выдвигается слева как временная выдвижная панель.",
+        "off": "Выключено",
+        "offDescription": "Панель проводника скрыта. Нажмите кнопку «Проводник» в заголовке, чтобы открыть папку и активировать его.",
+        "highlights": "Ключевые возможности",
+        "highlight1": "Ленивая загрузка: Подкаталоги загружаются по требованию при раскрытии",
+        "highlight2": "Фильтр файлов: Показывать только файлы Markdown или все файлы",
+        "highlight3": "Подсветка активного файла: Текущий открытый файл подсвечивается в дереве",
+        "highlight4": "Объединённая боковая панель: Объединяется с вертикальными вкладками в одну панель с изменяемым размером",
+        "shortcutDescription": "Переключить панель проводника"
+      },
+      "outline": {
+        "title": "Структура (Оглавление)",
+        "description": "Навигируйте по структуре документа с помощью панели структуры, которая отображает все заголовки. Нажмите на любой заголовок, чтобы перейти к этому разделу в редакторе.",
+        "displayModes": "Режимы отображения",
+        "persistent": "Всегда видимый",
+        "persistentDescription": "Панель структуры всегда отображается справа от редактора.",
+        "overlay": "Наложение",
+        "overlayDescription": "Панель структуры выдвигается справа как временная выдвижная панель.",
+        "highlights": "Ключевые возможности",
+        "highlight1": "Автоматическое определение заголовков: Заголовки (H1-H6) извлекаются в реальном времени при вводе",
+        "highlight2": "Навигация по клику: Нажмите на любой заголовок, чтобы прокрутить редактор к этой позиции",
+        "highlight3": "Иерархия с отступами: Заголовки отображаются с отступами, отражающими их уровень",
+        "shortcutDescription": "Переключить панель структуры"
+      },
+      "tableConversion": {
+        "title": "Вставка с конвертацией таблиц",
+        "description": "Автоматическая конвертация HTML-таблиц в формат Markdown при вставке из электронных таблиц, веб-страниц или других источников.",
+        "modes": "Режимы конвертации",
+        "auto": "Автоматическая конвертация",
+        "autoDescription": "Таблицы автоматически конвертируются в Markdown при вставке.",
+        "confirm": "Спрашивать перед конвертацией",
+        "confirmDescription": "Перед конвертацией таблицы отображается диалог подтверждения с предпросмотром.",
+        "off": "Не конвертировать",
+        "offDescription": "Таблицы вставляются как обычный текст без конвертации.",
+        "highlights": "Ключевые возможности",
+        "highlight1": "Автоматическое обнаружение данных HTML-таблиц в буфере обмена",
+        "highlight2": "Предварительный просмотр конвертированной Markdown-таблицы перед применением",
+        "highlight3": "Используйте Shift+Cmd/Ctrl+V для вставки как обычного текста без конвертации"
+      }
+    },
     "keyboardShortcuts": {
       "title": "Горячие клавиши",
       "description": "Вот все горячие клавиши, доступные в Bokuchi:",
@@ -134,7 +184,9 @@
         "previewOnly": "Только предпросмотр",
         "zoomIn": "Увеличить",
         "zoomOut": "Уменьшить",
-        "resetZoom": "Сбросить масштаб"
+        "resetZoom": "Сбросить масштаб",
+        "toggleExplorer": "Переключить проводник",
+        "toggleOutline": "Переключить структуру"
       }
     },
     "tutorials": {
@@ -280,7 +332,19 @@
       "outlineDisplayModePersistent": "Всегда видимая",
       "outlineDisplayModePersistentDescription": "Панель структуры всегда отображается как часть макета.",
       "outlineDisplayModeOverlay": "Наложение",
-      "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение."
+      "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение.",
+      "folderTreeDisplayMode": "Explorer Panel",
+      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
+      "folderTreeDisplayModePersistent": "Always visible",
+      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayModeOverlay": "Overlay",
+      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
+      "folderTreeDisplayModeOff": "Off",
+      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
+      "folderTreeFileFilter": "Explorer File Filter",
+      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
       "title": "Дополнительно",
@@ -378,6 +442,15 @@
     "title": "Структура",
     "noHeadings": "Заголовки не найдены",
     "toggleOutline": "Переключить структуру (Ctrl+Shift+O)"
+  },
+  "folderTree": {
+    "explorer": "Проводник",
+    "openFolder": "Открыть папку",
+    "closeFolder": "Закрыть папку",
+    "refresh": "Обновить",
+    "noFolderOpen": "Папка не открыта",
+    "emptyFolder": "Эта папка пуста",
+    "toggleExplorer": "Переключить проводник (Ctrl+Shift+E)"
   },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",

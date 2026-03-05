@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Tabs,
@@ -43,6 +43,7 @@ interface TabBarProps {
   onNewTab: () => void;
   onTabReorder: (tabs: TabType[]) => void;
   layout?: 'horizontal' | 'vertical';
+  embedded?: boolean;
 }
 
 // Custom pointer sensor with drag start threshold
@@ -73,6 +74,18 @@ const SortableTab: React.FC<{
     isDragging,
   } = useSortable({ id: tab.id });
 
+  const localRef = useRef<HTMLLIElement>(null);
+  const mergedRef = useCallback((node: HTMLLIElement | null) => {
+    setNodeRef(node);
+    (localRef as React.MutableRefObject<HTMLLIElement | null>).current = node;
+  }, [setNodeRef]);
+
+  useEffect(() => {
+    if (isActive && layout === 'vertical' && localRef.current) {
+      localRef.current.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isActive, layout]);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -82,7 +95,7 @@ const SortableTab: React.FC<{
   if (layout === 'vertical') {
     return (
       <ListItem
-        ref={setNodeRef}
+        ref={mergedRef}
         style={style}
         disablePadding
         sx={{
@@ -246,6 +259,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onNewTab,
   onTabReorder,
   layout = 'horizontal',
+  embedded = false,
 }) => {
   const sensors = useSensors(
     createThresholdPointerSensor(),
@@ -282,12 +296,15 @@ const TabBar: React.FC<TabBarProps> = ({
     return (
       <Box
         sx={{
-          width: 250,
-          borderRight: 1,
-          borderColor: 'divider',
+          ...(!embedded && {
+            width: 280,
+            borderRight: 1,
+            borderColor: 'divider',
+          }),
           bgcolor: 'background.paper',
           display: 'flex',
           flexDirection: 'column',
+          ...(embedded && { overflow: 'hidden', height: '100%' }),
         }}
       >
         <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>

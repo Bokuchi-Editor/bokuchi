@@ -11,6 +11,7 @@ import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { useEditorFocus } from './useEditorFocus';
+import { useFolderTree } from './useFolderTree';
 import { updaterApi, UpdateInfo, DownloadProgress } from '../api/updaterApi';
 import { Update } from '@tauri-apps/plugin-updater';
 import { UpdateDialogPhase } from '../components/UpdateDialog';
@@ -65,6 +66,7 @@ export const useAppState = () => {
   });
   const [isDragOver, setIsDragOver] = useState(false);
   const [outlinePanelOpen, setOutlinePanelOpen] = useState(true);
+  const [folderTreePanelOpen, setFolderTreePanelOpen] = useState(false);
 
   // Update state
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
@@ -104,6 +106,18 @@ export const useAppState = () => {
 
   // Editor focus management
   const { focusRequestId, requestEditorFocus } = useEditorFocus();
+
+  // Folder tree management
+  const {
+    rootPath: folderTreeRootPath,
+    rootFolderName: folderTreeRootFolderName,
+    tree: folderTree,
+    isLoading: folderTreeIsLoading,
+    openFolder: folderTreeOpenFolder,
+    closeFolder: folderTreeCloseFolder,
+    toggleExpand: folderTreeToggleExpand,
+    refreshTree: folderTreeRefreshTree,
+  } = useFolderTree(appSettings.interface.folderTreeFileFilter === 'all');
 
   const currentTheme = getThemeByName(theme);
 
@@ -465,6 +479,36 @@ export const useAppState = () => {
     setRecentFilesOpen(false);
   };
 
+  // Folder tree handlers
+  const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
+    try {
+      await openFile(filePath);
+      requestEditorFocus();
+    } catch (error) {
+      console.error('Failed to open file from folder tree:', error);
+      setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
+    }
+  }, [openFile, requestEditorFocus, t]);
+
+  const handleOpenFolder = useCallback(async () => {
+    const selected = await folderTreeOpenFolder();
+    if (selected) {
+      setFolderTreePanelOpen(true);
+      // Auto-switch from 'off' to 'persistent' when a folder is opened
+      if (appSettings.interface.folderTreeDisplayMode === 'off') {
+        const updatedSettings = {
+          ...appSettings,
+          interface: {
+            ...appSettings.interface,
+            folderTreeDisplayMode: 'persistent' as const,
+          },
+        };
+        setAppSettings(updatedSettings);
+        storeApi.saveAppSettings(updatedSettings);
+      }
+    }
+  }, [folderTreeOpenFolder, appSettings]);
+
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
     i18n.changeLanguage(newLanguage);
@@ -520,6 +564,11 @@ export const useAppState = () => {
     // Auto-open outline panel when switching to persistent mode
     if (newSettings.interface.outlineDisplayMode === 'persistent') {
       setOutlinePanelOpen(true);
+    }
+
+    // Auto-open folder tree panel when switching to persistent mode
+    if (newSettings.interface.folderTreeDisplayMode === 'persistent') {
+      setFolderTreePanelOpen(true);
     }
 
     // Persist settings
@@ -849,6 +898,13 @@ export const useAppState = () => {
       event.preventDefault();
       changeViewMode('preview');
     }
+    // Ctrl + Shift + E: Toggle Folder Tree Panel
+    else if (event.ctrlKey && event.shiftKey && (event.key === 'E' || event.key === 'e') && !event.metaKey) {
+      event.preventDefault();
+      if (appSettings.interface.folderTreeDisplayMode !== 'off') {
+        setFolderTreePanelOpen(prev => !prev);
+      }
+    }
     // Ctrl + Shift + O: Toggle Outline Panel
     else if (event.ctrlKey && event.shiftKey && (event.key === 'O' || event.key === 'o') && !event.metaKey) {
       event.preventDefault();
@@ -884,7 +940,8 @@ export const useAppState = () => {
     changeViewMode,
     tabs,
     activeTabId,
-    setActiveTab
+    setActiveTab,
+    appSettings.interface.folderTreeDisplayMode,
   ]);
 
   // Set up keyboard shortcut event listener
@@ -925,6 +982,13 @@ export const useAppState = () => {
 
     // Outline panel
     outlinePanelOpen,
+
+    // Folder tree
+    folderTreePanelOpen,
+    folderTreeRootPath,
+    folderTreeRootFolderName,
+    folderTree,
+    folderTreeIsLoading,
 
     // New unified settings
     appSettings,
@@ -971,6 +1035,8 @@ export const useAppState = () => {
     handleCheckForUpdate,
     handleDismissUpdate,
     handleKeyDown,
+    handleFolderTreeFileClick,
+    handleOpenFolder,
 
     // Tab handlers
     removeTab,
@@ -995,6 +1061,10 @@ export const useAppState = () => {
     setSaveBeforeCloseDialog,
     setIsDragOver,
     setOutlinePanelOpen,
+    setFolderTreePanelOpen,
+    folderTreeCloseFolder,
+    folderTreeToggleExpand,
+    folderTreeRefreshTree,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

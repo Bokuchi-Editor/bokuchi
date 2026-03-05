@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule, FormatListBulleted } from '@mui/icons-material';
+import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule, FormatListBulleted, AccountTree } from '@mui/icons-material';
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { Tab } from '../types/tab';
+import { FolderTreeDisplayMode } from '../types/folderTree';
 import { formatKeyboardShortcut } from '../utils/platform';
 import { Tooltip } from '@mui/material';
 
@@ -13,6 +14,8 @@ interface AppHeaderProps {
   fileMenuAnchor: HTMLElement | null;
   activeTab: Tab | null;
   outlinePanelOpen: boolean;
+  folderTreePanelOpen: boolean;
+  folderTreeDisplayMode: FolderTreeDisplayMode;
 
   // Handlers
   onViewModeChange: (newViewMode: 'split' | 'editor' | 'preview') => void;
@@ -20,6 +23,7 @@ interface AppHeaderProps {
   onFileMenuClose: () => void;
   onNewTab: () => void;
   onOpenFile: () => void;
+  onOpenFolder: () => void;
   onSaveFile: () => void;
   onSaveFileAs: () => void;
   onSaveWithVariables: () => void;
@@ -27,6 +31,7 @@ interface AppHeaderProps {
   onHelpOpen: () => void;
   onRecentFileSelect: (filePath: string) => void;
   onOutlineToggle: () => void;
+  onFolderTreeToggle: () => void;
 
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -37,11 +42,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   fileMenuAnchor,
   activeTab,
   outlinePanelOpen,
+  folderTreePanelOpen,
+  folderTreeDisplayMode,
   onViewModeChange,
   onFileMenuOpen,
   onFileMenuClose,
   onNewTab,
   onOpenFile,
+  onOpenFolder,
   onSaveFile,
   onSaveFileAs,
   onSaveWithVariables,
@@ -49,6 +57,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   onHelpOpen,
   onRecentFileSelect,
   onOutlineToggle,
+  onFolderTreeToggle,
   t,
 }) => {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
@@ -102,6 +111,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </ToggleButton>
         </ToggleButtonGroup>
 
+        <Tooltip title={folderTreeDisplayMode === 'off' ? t('folderTree.openFolder') : t('folderTree.toggleExplorer')}>
+          <IconButton
+            color="inherit"
+            onClick={folderTreeDisplayMode === 'off' ? onOpenFolder : onFolderTreeToggle}
+            sx={{
+              mr: 0.5,
+              opacity: folderTreeDisplayMode === 'off' ? 0.5 : folderTreePanelOpen ? 1 : 0.5,
+            }}
+          >
+            <AccountTree />
+          </IconButton>
+        </Tooltip>
+
         <Tooltip title={t('outline.toggleOutline')}>
           <IconButton
             color="inherit"
@@ -143,6 +165,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
             {formatKeyboardShortcut('O')}
           </span>
+        </MenuItem>
+
+        <MenuItem onClick={() => { onOpenFolder(); onFileMenuClose(); }}>
+          <AccountTree sx={{ mr: 1 }} />
+          <span>{t('folderTree.openFolder')}</span>
         </MenuItem>
 
         {/* Recent files submenu */}
