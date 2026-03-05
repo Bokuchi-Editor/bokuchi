@@ -191,6 +191,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       zoomLevel={currentZoom}
                       onContentChange={onContentChange}
                       scrollFraction={scrollFraction}
+                      filePath={activeTab.filePath}
                     />
                   </Box>
                 </>
@@ -235,6 +236,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     globalVariables={globalVariables}
                     zoomLevel={currentZoom}
                     onContentChange={onContentChange}
+                    filePath={activeTab.filePath}
                   />
                 </Box>
               )}

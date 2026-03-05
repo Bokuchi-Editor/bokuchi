@@ -7,6 +7,8 @@ import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
 import { variableApi } from '../api/variableApi';
 import { desktopApi } from '../api/desktopApi';
+import { openUrl } from '@tauri-apps/plugin-opener';
+import { readFile } from '@tauri-apps/plugin-fs';
 
 interface PreviewProps {
   content: string;
@@ -16,14 +18,32 @@ interface PreviewProps {
   zoomLevel?: number;
   onContentChange?: (newContent: string) => void;
   scrollFraction?: number;
+  filePath?: string;
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction }) => {
+/** Resolve a relative path against a base directory path */
+function resolveRelativePath(baseDirPath: string, relativePath: string): string {
+  // Normalize separators to /
+  const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);
+  const resolved: string[] = [];
+  for (const part of parts) {
+    if (part === '.') continue;
+    if (part === '..') {
+      resolved.pop();
+    } else {
+      resolved.push(part);
+    }
+  }
+  return '/' + resolved.join('/');
+}
+
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
+  const blobUrlsRef = useRef<string[]>([]);
 
   useEffect(() => {
     // Set up custom renderer for syntax highlighting
@@ -88,6 +108,50 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         });
 
 
+        // Resolve relative image paths to blob URLs
+        if (filePath) {
+          const baseDir = filePath.substring(0, filePath.lastIndexOf('/'));
+          const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
+          let imgMatch;
+          const replacements = new Map<string, string>();
+
+          const imgPromises: Promise<void>[] = [];
+          while ((imgMatch = imgRegex.exec(processedHtml)) !== null) {
+            const src = imgMatch[1];
+            if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:') && !src.startsWith('blob:')) {
+              const absolutePath = resolveRelativePath(baseDir, src);
+              imgPromises.push(
+                readFile(absolutePath).then(data => {
+                  const ext = src.split('.').pop()?.toLowerCase() || '';
+                  const mimeMap: Record<string, string> = {
+                    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+                    gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
+                    bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
+                  };
+                  const mime = mimeMap[ext] || 'application/octet-stream';
+                  const blob = new Blob([data], { type: mime });
+                  const blobUrl = URL.createObjectURL(blob);
+                  replacements.set(src, blobUrl);
+                }).catch(err => {
+                  console.warn('Failed to load image:', absolutePath, err);
+                })
+              );
+            }
+          }
+
+          await Promise.all(imgPromises);
+
+          // Revoke previous blob URLs
+          for (const url of blobUrlsRef.current) {
+            URL.revokeObjectURL(url);
+          }
+          blobUrlsRef.current = Array.from(replacements.values());
+
+          for (const [original, blobUrl] of replacements) {
+            processedHtml = processedHtml.split(`src="${original}"`).join(`src="${blobUrl}"`);
+          }
+        }
+
         setProcessedContent(processedMarkdown);
         setHtmlContent(processedHtml);
       } else {
@@ -97,61 +161,66 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     };
 
     processContent();
-  }, [content, globalVariables]);
+  }, [content, globalVariables, filePath]);
 
   useEffect(() => {
+    if (!previewRef.current) return;
+
+    const cleanupFns: (() => void)[] = [];
+
     // Handle link click events
-    if (previewRef.current) {
-      const links = previewRef.current.querySelectorAll('a');
-      links.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const href = link.getAttribute('href');
-          if (href) {
-            // Open external links in a new tab
-            if (href.startsWith('http://') || href.startsWith('https://')) {
-              window.open(href, '_blank', 'noopener,noreferrer');
-            } else if (href.startsWith('mailto:')) {
-              window.location.href = href;
-            } else if (href.startsWith('#')) {
-              // Anchor link
-              const target = document.querySelector(href);
-              if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-              }
+    const links = previewRef.current.querySelectorAll('a');
+    links.forEach(link => {
+      const handler = (e: Event) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        if (href) {
+          if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
+            openUrl(href).catch(err => {
+              console.error('Failed to open URL:', href, err);
+            });
+          } else if (href.startsWith('#')) {
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
             }
           }
-        });
-      });
+        }
+      };
+      link.addEventListener('click', handler);
+      cleanupFns.push(() => link.removeEventListener('click', handler));
+    });
 
-      // Handle checkbox click events
-      const checkboxes = previewRef.current.querySelectorAll('.markdown-checkbox');
-      checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', (e) => {
-          e.stopPropagation();
+    // Handle checkbox click events
+    const checkboxes = previewRef.current.querySelectorAll('.markdown-checkbox');
+    checkboxes.forEach((checkbox) => {
+      const handler = (e: Event) => {
+        e.stopPropagation();
 
-          const checkboxElement = e.target as HTMLInputElement;
-          const isChecked = checkboxElement.checked;
+        const checkboxElement = e.target as HTMLInputElement;
+        const isChecked = checkboxElement.checked;
 
-          // Provide immediate visual feedback
-          const checkboxItem = checkboxElement.closest('.checkbox-item');
-          if (checkboxItem) {
-            if (isChecked) {
-              checkboxItem.classList.add('checked');
-            } else {
-              checkboxItem.classList.remove('checked');
-            }
+        const checkboxItem = checkboxElement.closest('.checkbox-item');
+        if (checkboxItem) {
+          if (isChecked) {
+            checkboxItem.classList.add('checked');
+          } else {
+            checkboxItem.classList.remove('checked');
           }
+        }
 
-          if (onContentChange) {
-            // Get checkbox text content and position info
-            const checkboxIndex = checkboxElement.getAttribute('data-checkbox-index');
-            // Update editor content (position-based)
-            updateCheckboxInContentByIndex(parseInt(checkboxIndex || '0'), isChecked);
-          }
-        });
-      });
-    }
+        if (onContentChange) {
+          const checkboxIndex = checkboxElement.getAttribute('data-checkbox-index');
+          updateCheckboxInContentByIndex(parseInt(checkboxIndex || '0'), isChecked);
+        }
+      };
+      checkbox.addEventListener('change', handler);
+      cleanupFns.push(() => checkbox.removeEventListener('change', handler));
+    });
+
+    return () => {
+      cleanupFns.forEach(fn => fn());
+    };
   }, [processedContent, onContentChange]);
 
   // Function to reflect checkbox state in editor content (position-based)
@@ -448,6 +517,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
               word-break: break-word;
               overflow-wrap: break-word;
               max-width: 100%;
+            }
+
+            .markdown-preview img {
+              max-width: 100%;
+              height: auto;
             }
 
             .markdown-preview h1:first-child,
