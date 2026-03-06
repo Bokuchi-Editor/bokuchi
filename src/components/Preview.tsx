@@ -45,6 +45,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const [exportError, setExportError] = useState<string | null>(null);
   const blobUrlsRef = useRef<string[]>([]);
 
+  const contentRef = useRef(content);
+  const onContentChangeRef = useRef(onContentChange);
+  contentRef.current = content;
+  onContentChangeRef.current = onContentChange;
+
   useEffect(() => {
     // Set up custom renderer for syntax highlighting
     const renderer = new marked.Renderer();
@@ -163,12 +168,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     processContent();
   }, [content, globalVariables, filePath]);
 
+  // Handle link clicks: re-attach when DOM changes
   useEffect(() => {
     if (!previewRef.current) return;
 
     const cleanupFns: (() => void)[] = [];
 
-    // Handle link click events
     const links = previewRef.current.querySelectorAll('a');
     links.forEach(link => {
       const handler = (e: Event) => {
@@ -191,75 +196,54 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       cleanupFns.push(() => link.removeEventListener('click', handler));
     });
 
-    // Handle checkbox click events
-    const checkboxes = previewRef.current.querySelectorAll('.markdown-checkbox');
-    checkboxes.forEach((checkbox) => {
-      const handler = (e: Event) => {
-        e.stopPropagation();
-
-        const checkboxElement = e.target as HTMLInputElement;
-        const isChecked = checkboxElement.checked;
-
-        const checkboxItem = checkboxElement.closest('.checkbox-item');
-        if (checkboxItem) {
-          if (isChecked) {
-            checkboxItem.classList.add('checked');
-          } else {
-            checkboxItem.classList.remove('checked');
-          }
-        }
-
-        if (onContentChange) {
-          const checkboxIndex = checkboxElement.getAttribute('data-checkbox-index');
-          updateCheckboxInContentByIndex(parseInt(checkboxIndex || '0'), isChecked);
-        }
-      };
-      checkbox.addEventListener('change', handler);
-      cleanupFns.push(() => checkbox.removeEventListener('change', handler));
-    });
-
     return () => {
       cleanupFns.forEach(fn => fn());
     };
-  }, [processedContent, onContentChange]);
+  }, [htmlContent]);
 
-  // Function to reflect checkbox state in editor content (position-based)
-  const updateCheckboxInContentByIndex = (checkboxIndex: number, isChecked: boolean) => {
-    if (!onContentChange) {
-      return;
-    }
+  // Handle checkbox toggle via event delegation on the container.
+  // The container element itself persists across dangerouslySetInnerHTML updates,
+  // so a single listener reliably catches events from dynamically replaced children.
+  useEffect(() => {
+    const container = previewRef.current;
+    if (!container) return;
 
-    const lines = content.split('\n');
-    let currentCheckboxIndex = 0;
-    let updated = false;
+    const handleCheckboxChange = (e: Event) => {
+      const target = e.target;
+      if (!(target instanceof HTMLInputElement) || !target.classList.contains('markdown-checkbox')) return;
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      // Regex pattern including list markers (- or *)
-      const checkboxPattern = /^(\s*)([-*]\s+)(\[([ x])\]\s*)(.*)$/;
-      const match = line.match(checkboxPattern);
+      e.stopPropagation();
+      const isChecked = target.checked;
 
-      if (match) {
-
-        // Check if this is the checkbox at the specified index
-        if (currentCheckboxIndex === checkboxIndex) {
-          const [, indent, listMarker, , , rest] = match;
-          // Update checkbox state
-          const newChecked = isChecked ? 'x' : ' ';
-          const newLine = `${indent}${listMarker}[${newChecked}] ${rest}`;
-          lines[i] = newLine;
-          updated = true;
-          break;
-        }
-        currentCheckboxIndex++;
+      const checkboxItem = target.closest('.checkbox-item');
+      if (checkboxItem) {
+        checkboxItem.classList.toggle('checked', isChecked);
       }
-    }
 
-    if (updated) {
-      const newContent = lines.join('\n');
-      onContentChange(newContent);
-    }
-  };
+      const currentOnContentChange = onContentChangeRef.current;
+      if (!currentOnContentChange) return;
+
+      const checkboxIndex = parseInt(target.getAttribute('data-checkbox-index') || '0');
+      const lines = contentRef.current.split('\n');
+      let currentIndex = 0;
+
+      for (let i = 0; i < lines.length; i++) {
+        const match = lines[i].match(/^(\s*)([-*]\s+)\[([ x])\]\s*(.*)$/);
+        if (match) {
+          if (currentIndex === checkboxIndex) {
+            const [, indent, listMarker, , rest] = match;
+            lines[i] = `${indent}${listMarker}[${isChecked ? 'x' : ' '}] ${rest}`;
+            currentOnContentChange(lines.join('\n'));
+            return;
+          }
+          currentIndex++;
+        }
+      }
+    };
+
+    container.addEventListener('change', handleCheckboxChange);
+    return () => container.removeEventListener('change', handleCheckboxChange);
+  }, []);
 
 
 
