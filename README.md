@@ -1,6 +1,6 @@
 # Bokuchi
 
-![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss.png)
+![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss2.png)
 
 A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
 
@@ -136,6 +136,7 @@ npm run tauri:build -- --target x86_64-unknown-linux-gnu
 ```
 
 Build output locations:
+
 - **macOS**: `src-tauri/target/universal-apple-darwin/release/bundle/dmg/`
 - **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/`
 - **Linux**: `src-tauri/target/release/bundle/appimage/`
