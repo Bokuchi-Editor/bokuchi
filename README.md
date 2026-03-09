@@ -106,8 +106,13 @@ npm run lint           # Run ESLint only
 npm run type-check     # Run TypeScript type checking only
 
 # Testing
-npm run test           # Run Rust tests
-npm run test:verbose   # Run Rust tests with verbose output
+npm run test:all           # Run all tests (Rust + TypeScript)
+npm run test:unit          # Run TypeScript unit tests (Vitest)
+npm run test:unit:watch    # Run TypeScript tests in watch mode
+npm run test:unit:coverage # Run TypeScript tests with coverage report
+npm run test:rust          # Run Rust unit tests
+npm run test:rust:verbose  # Run Rust tests with verbose output
+npm run test:e2e           # Run E2E tests (requires built binary)
 
 # Build
 npm run build          # TypeScript + Vite build
@@ -135,6 +140,72 @@ Build output locations:
 - **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/`
 - **Linux**: `src-tauri/target/release/bundle/appimage/`
 
+### Testing
+
+The project has three tiers of tests. Day-to-day development only requires Tier 1 and 2.
+
+#### Tier 1 & 2: Unit / Integration Tests (no build required)
+
+```bash
+# Run everything except E2E — this is the everyday command
+npm run test:all
+```
+
+This runs Rust unit tests (`cargo test`) followed by TypeScript unit + integration tests (Vitest).
+
+**TypeScript tests only:**
+
+```bash
+npm run test:unit          # Single run
+npm run test:unit:watch    # Watch mode (re-runs on file changes)
+npm run test:unit:coverage # With coverage report (outputs to coverage/)
+```
+
+**Rust tests only:**
+
+```bash
+npm run test:rust          # Standard run
+npm run test:rust:verbose  # With verbose output
+```
+
+Test files are located at:
+
+| Category | Location | Count |
+|----------|----------|-------|
+| Rust unit tests | `src-tauri/src/tests.rs` | 59 |
+| TS utility tests | `src/utils/__tests__/*.test.ts` | 37 |
+| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 16 |
+| TS component tests | `src/components/__tests__/*.test.tsx` | 7 |
+| TS integration tests | `src/__tests__/integration/*.test.tsx` | 30 |
+
+#### Tier 3: E2E Tests (requires built binary)
+
+E2E tests use WebDriverIO + tauri-driver to interact with the actual application.
+
+**Prerequisites:**
+
+```bash
+# 1. Install tauri-driver (one-time setup)
+cargo install tauri-driver
+
+# 2. Build the app binary
+npm run tauri:build
+```
+
+**Run:**
+
+```bash
+# Start tauri-driver in a separate terminal
+tauri-driver
+
+# Run E2E tests
+npm run test:e2e
+```
+
+E2E test files are located at `tests/e2e/`.
+
+> **Note:** E2E tests require macOS or a platform where the built binary can run. In CI, these are typically run on macOS runners only.
+
 ## Variable System
 
 ### File-local Variables
@@ -161,7 +232,7 @@ Set global variables through the Variables settings panel. These are available a
 - [ ] Split editor (two files side by side)
 - [ ] Tab pinning
 - [ ] Image paste / drop management
-- [ ] Frontend tests (Vitest + Testing Library)
+- [x] Frontend tests (Vitest + Testing Library)
 - [ ] Cross-tab search
 - [ ] File rename from tab
 - [ ] Standalone HTML export (inline CSS)
