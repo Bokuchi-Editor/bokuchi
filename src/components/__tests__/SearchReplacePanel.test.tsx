@@ -18,7 +18,7 @@ function getOffset(content: string, lineNumber: number, column: number): number 
 
 function createMockEditor(content: string) {
   let currentContent = content;
-  const listeners: Record<string, Function[]> = {};
+  // listeners reserved for future event simulation
 
   const model = {
     getValue: () => currentContent,
@@ -39,7 +39,7 @@ function createMockEditor(content: string) {
     deltaDecorations: vi.fn().mockReturnValue([]),
     revealLineInCenter: vi.fn(),
     setSelection: vi.fn(),
-    executeEdits: vi.fn().mockImplementation((_source: string, edits: any[]) => {
+    executeEdits: vi.fn().mockImplementation((_source: string, edits: { range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number }; text: string }[]) => {
       // Apply edits in reverse to preserve offsets
       const sortedEdits = [...edits].sort((a, b) => {
         const aOffset =
@@ -78,7 +78,7 @@ describe('SearchReplacePanel', () => {
   // T-SR-01: finds matches for basic search term
   it('T-SR-01: finds matches for a basic search term', () => {
     const editor = createMockEditor('hello world\nhello again\ngoodbye');
-    const editorRef = { current: editor } as any;
+    const editorRef = { current: editor } as React.RefObject<never>;
     const onClose = vi.fn();
     const onChange = vi.fn();
 
@@ -97,7 +97,7 @@ describe('SearchReplacePanel', () => {
   // T-SR-02: case-sensitive search distinguishes case
   it('T-SR-02: case-sensitive search distinguishes case', () => {
     const editor = createMockEditor('Hello world\nhello again\nHELLO there');
-    const editorRef = { current: editor } as any;
+    const editorRef = { current: editor } as React.RefObject<never>;
     const onClose = vi.fn();
     const onChange = vi.fn();
 
@@ -128,7 +128,7 @@ describe('SearchReplacePanel', () => {
   // T-SR-03: regex search works
   it('T-SR-03: regex search works', () => {
     const editor = createMockEditor('cat 123\ndog 456\ncat 789');
-    const editorRef = { current: editor } as any;
+    const editorRef = { current: editor } as React.RefObject<never>;
     const onClose = vi.fn();
     const onChange = vi.fn();
 
@@ -152,7 +152,7 @@ describe('SearchReplacePanel', () => {
   // T-SR-04: replace all replaces all occurrences
   it('T-SR-04: replace all replaces all occurrences', () => {
     const editor = createMockEditor('foo bar foo baz foo');
-    const editorRef = { current: editor } as any;
+    const editorRef = { current: editor } as React.RefObject<never>;
     const onClose = vi.fn();
     const onChange = vi.fn();
 

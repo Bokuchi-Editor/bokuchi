@@ -112,7 +112,6 @@ npm run test:unit:watch    # Run TypeScript tests in watch mode
 npm run test:unit:coverage # Run TypeScript tests with coverage report
 npm run test:rust          # Run Rust unit tests
 npm run test:rust:verbose  # Run Rust tests with verbose output
-npm run test:e2e           # Run E2E tests (requires built binary)
 
 # Build
 npm run build          # TypeScript + Vite build
@@ -179,33 +178,11 @@ Test files are located at:
 | TS component tests | `src/components/__tests__/*.test.tsx` | 7 |
 | TS integration tests | `src/__tests__/integration/*.test.tsx` | 30 |
 
-#### Tier 3: E2E Tests (requires built binary)
+#### Tier 3: E2E Tests (suspended)
 
-E2E tests use WebDriverIO + tauri-driver to interact with the actual application.
+E2E test code exists in `tests/e2e/` and `wdio.conf.ts` but is currently **not executable**. `tauri-driver` (the WebDriver proxy for Tauri apps) only supports Linux (WebKitGTK) and has compatibility concerns with Tauri v2. The npm scripts and wdio dependencies have been removed.
 
-**Prerequisites:**
-
-```bash
-# 1. Install tauri-driver (one-time setup)
-cargo install tauri-driver
-
-# 2. Build the app binary
-npm run tauri:build
-```
-
-**Run:**
-
-```bash
-# Start tauri-driver in a separate terminal
-tauri-driver
-
-# Run E2E tests
-npm run test:e2e
-```
-
-E2E test files are located at `tests/e2e/`.
-
-> **Note:** E2E tests require macOS or a platform where the built binary can run. In CI, these are typically run on macOS runners only.
+Test coverage for UI logic and component interactions is handled by Tier 1 & 2 (Vitest + RTL) instead.
 
 ## Variable System
 
