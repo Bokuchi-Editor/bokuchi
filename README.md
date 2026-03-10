@@ -70,6 +70,42 @@ You can change the language in Settings > Language.
 
 **Please submit a pull request if you find any translation errors.**
 
+## Variable System
+
+### File-local Variables
+
+```markdown
+<!-- @var title: My Document -->
+<!-- @var author: John Doe -->
+
+# {{title}}
+
+Author: {{author}}
+```
+
+### Global Variables
+
+Set global variables through the Variables settings panel. These are available across all files.
+
+## Roadmap
+
+- [ ] KaTeX math rendering
+- [ ] PDF export
+- [ ] Command palette
+- [ ] Mermaid / PlantUML diagrams
+- [ ] Split editor (two files side by side)
+- [ ] Tab pinning
+- [ ] Image paste / drop management
+- [x] Frontend tests (Vitest + Testing Library)
+- [ ] Cross-tab search
+- [ ] File rename from tab
+- [ ] Standalone HTML export (inline CSS)
+- [ ] Word / character count with reading time
+- [ ] Undo / redo history persistence
+- [ ] Markdown snippets / templates
+
+---
+
 ## Development
 
 ### Prerequisites
@@ -105,18 +141,21 @@ npm run check          # Run both ESLint and TypeScript checks
 npm run lint           # Run ESLint only
 npm run type-check     # Run TypeScript type checking only
 
-# Testing
-npm run test:all           # Run all tests (Rust + TypeScript)
-npm run test:unit          # Run TypeScript unit tests (Vitest)
-npm run test:unit:watch    # Run TypeScript tests in watch mode
-npm run test:unit:coverage # Run TypeScript tests with coverage report
-npm run test:rust          # Run Rust unit tests
-npm run test:rust:verbose  # Run Rust tests with verbose output
-
 # Build
 npm run build          # TypeScript + Vite build
 npm run tauri:build    # Production native app build
 ```
+
+### Testing
+
+```bash
+npm run test:all           # Run all tests (Rust + TypeScript)
+npm run test:unit          # Run TypeScript unit tests (Vitest)
+npm run test:rust          # Run Rust unit tests
+npm run test:unit:coverage # Run TypeScript tests with coverage report
+```
+
+For details on test tiers, file locations, and CI configuration, see [docs/TESTING.md](docs/TESTING.md).
 
 ### Building for Production
 
@@ -140,80 +179,14 @@ Build output locations:
 - **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/`
 - **Linux**: `src-tauri/target/release/bundle/appimage/`
 
-### Testing
+### Documentation
 
-The project has three tiers of tests. Day-to-day development only requires Tier 1 and 2.
+Developer documentation is available in the [`docs/`](docs/) directory:
 
-#### Tier 1 & 2: Unit / Integration Tests (no build required)
-
-```bash
-# Run everything except E2E — this is the everyday command
-npm run test:all
-```
-
-This runs Rust unit tests (`cargo test`) followed by TypeScript unit + integration tests (Vitest).
-
-**TypeScript tests only:**
-
-```bash
-npm run test:unit          # Single run
-npm run test:unit:watch    # Watch mode (re-runs on file changes)
-npm run test:unit:coverage # With coverage report (outputs to coverage/)
-```
-
-**Rust tests only:**
-
-```bash
-npm run test:rust          # Standard run
-npm run test:rust:verbose  # With verbose output
-```
-
-Test files are located at:
-
-| Category | Location | Count |
-|----------|----------|-------|
-| Rust unit tests | `src-tauri/src/tests.rs` | 59 |
-| TS utility tests | `src/utils/__tests__/*.test.ts` | 37 |
-| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 16 |
-| TS component tests | `src/components/__tests__/*.test.tsx` | 7 |
-| TS integration tests | `src/__tests__/integration/*.test.tsx` | 30 |
-
-#### Tier 3: E2E Tests (suspended)
-
-E2E test code exists in `tests/e2e/` and `wdio.conf.ts` but is currently **not executable**. `tauri-driver` (the WebDriver proxy for Tauri apps) only supports Linux (WebKitGTK) and has compatibility concerns with Tauri v2. The npm scripts and wdio dependencies have been removed.
-
-Test coverage for UI logic and component interactions is handled by Tier 1 & 2 (Vitest + RTL) instead.
-
-## Variable System
-
-### File-local Variables
-
-```markdown
-<!-- @var title: My Document -->
-<!-- @var author: John Doe -->
-
-# {{title}}
-
-Author: {{author}}
-```
-
-### Global Variables
-
-Set global variables through the Variables settings panel. These are available across all files.
-
-## Roadmap
-
-- [ ] KaTeX math rendering
-- [ ] PDF export
-- [ ] Command palette
-- [ ] Mermaid / PlantUML diagrams
-- [ ] Split editor (two files side by side)
-- [ ] Tab pinning
-- [ ] Image paste / drop management
-- [x] Frontend tests (Vitest + Testing Library)
-- [ ] Cross-tab search
-- [ ] File rename from tab
-- [ ] Standalone HTML export (inline CSS)
-- [ ] Word / character count with reading time
-- [ ] Undo / redo history persistence
-- [ ] Markdown snippets / templates
+- [Testing Guide](docs/TESTING.md) — Test architecture, running tests, CI
+- [Test Strategy](docs/TEST_STRATEGY.md) — Planned test cases and implementation approach
+- [Menu System Guide](docs/MENU_SYSTEM_GUIDE.md) — Menu architecture and customization
+- [Security](docs/SECURITY.md) — Security policy and reporting
+- [Cross Compile Troubleshooting](docs/CROSS_COMPILE_TROUBLESHOOTING.md)
+- [macOS Notarization Guide](docs/MACOS_NOTARIZATION_GUIDE.md)
+- [Version Update Checklist](docs/VERSION_UPDATE_CHECKLIST.md)
