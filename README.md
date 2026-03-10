@@ -1,8 +1,12 @@
-# Bokuchi
+![Bokuchi](https://raw.githubusercontent.com/shinya/image-storage/refs/heads/master/bokuchi/hero.png)
+
+Built with Tauri, React, and Rust.
+
+## Screen Shot
 
 ![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss2.png)
 
-A lightweight, cross-platform Markdown editor built with Tauri, React, and Rust.
+
 
 ## Features
 
