@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   htmlTableToMarkdown,
+  detectHtmlTable,
   validateMarkdownTable,
   convertTsvCsvToMarkdown,
 } from '../tableConverter';
@@ -68,6 +69,23 @@ describe('htmlTableToMarkdown', () => {
     expect(() => htmlTableToMarkdown('<div>no table</div>')).toThrow('No table found in HTML');
   });
 
+  it('throws when table has no rows', () => {
+    expect(() => htmlTableToMarkdown('<table></table>')).toThrow('No rows found in table');
+  });
+
+  it('skips rows with no cells', () => {
+    const html = `
+      <table>
+        <tr><th>A</th></tr>
+        <tr></tr>
+        <tr><td>1</td></tr>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(3);
+  });
+
   // T-TC-06
   it('handles cells with whitespace and newlines', () => {
     const html = `
@@ -79,6 +97,39 @@ describe('htmlTableToMarkdown', () => {
     const result = htmlTableToMarkdown(html);
     // Newlines and multiple spaces should be collapsed
     expect(result).not.toContain('\nline2');
+  });
+});
+
+describe('detectHtmlTable', () => {
+  function mockDataTransfer(htmlData: string | null): DataTransfer {
+    return { getData: (type: string) => (type === 'text/html' ? htmlData ?? '' : '') } as unknown as DataTransfer;
+  }
+
+  // T-TC-DH-01
+  it('returns HTML when clipboard contains a table', () => {
+    const html = '<table><tr><td>A</td></tr></table>';
+    expect(detectHtmlTable(mockDataTransfer(html))).toBe(html);
+  });
+
+  // T-TC-DH-02
+  it('returns null when clipboard has no text/html', () => {
+    expect(detectHtmlTable(mockDataTransfer(''))).toBeNull();
+  });
+
+  // T-TC-DH-03
+  it('returns null when HTML does not contain table tags', () => {
+    expect(detectHtmlTable(mockDataTransfer('<div>no table</div>'))).toBeNull();
+  });
+
+  // T-TC-DH-04
+  it('returns null when only opening table tag is present', () => {
+    expect(detectHtmlTable(mockDataTransfer('<table><tr><td>A</td></tr>'))).toBeNull();
+  });
+
+  // T-TC-DH-05
+  it('returns null when getData throws', () => {
+    const broken = { getData: () => { throw new Error('denied'); } } as unknown as DataTransfer;
+    expect(detectHtmlTable(broken)).toBeNull();
   });
 });
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getPlatform, formatKeyboardShortcut } from '../platform';
+import { getPlatform, getModifierKey, getShiftKey, formatKeyboardShortcut } from '../platform';
 
 function mockUserAgent(ua: string, platform = '') {
   Object.defineProperty(window.navigator, 'userAgent', {
@@ -39,6 +39,30 @@ describe('getPlatform', () => {
   it('returns unknown for unrecognized', () => {
     mockUserAgent('', '');
     expect(getPlatform()).toBe('unknown');
+  });
+});
+
+describe('getModifierKey', () => {
+  it('returns Ctrl for unknown platform', () => {
+    mockUserAgent('', '');
+    expect(getModifierKey()).toBe('Ctrl');
+  });
+});
+
+describe('getShiftKey', () => {
+  it('returns Shift for unknown platform', () => {
+    mockUserAgent('', '');
+    expect(getShiftKey()).toBe('Shift');
+  });
+
+  it('returns ⇧ for mac', () => {
+    mockUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
+    expect(getShiftKey()).toBe('⇧');
+  });
+
+  it('returns Shift for linux', () => {
+    mockUserAgent('Mozilla/5.0 (X11; Linux x86_64)');
+    expect(getShiftKey()).toBe('Shift');
   });
 });
 

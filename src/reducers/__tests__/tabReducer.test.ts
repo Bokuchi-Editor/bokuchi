@@ -84,9 +84,10 @@ describe('tabReducer', () => {
   });
 
   // T-TR-07
-  it('UPDATE_TAB_CONTENT sets content and isModified', () => {
-    const tab = createTab({ id: 't1', content: 'old', isModified: false });
-    const state = stateWith(tab);
+  it('UPDATE_TAB_CONTENT sets content and isModified, leaves other tabs unchanged', () => {
+    const tab1 = createTab({ id: 't1', content: 'old', isModified: false });
+    const tab2 = createTab({ id: 't2', content: 'keep', isModified: false });
+    const state = stateWith(tab1, tab2);
 
     const result = tabReducer(state, {
       type: 'UPDATE_TAB_CONTENT',
@@ -94,18 +95,22 @@ describe('tabReducer', () => {
     });
     expect(result.tabs[0].content).toBe('new content');
     expect(result.tabs[0].isModified).toBe(true);
+    expect(result.tabs[1].content).toBe('keep');
+    expect(result.tabs[1].isModified).toBe(false);
   });
 
   // T-TR-08
-  it('UPDATE_TAB_TITLE updates title', () => {
-    const tab = createTab({ id: 't1', title: 'Old Title' });
-    const state = stateWith(tab);
+  it('UPDATE_TAB_TITLE updates title and leaves other tabs unchanged', () => {
+    const tab1 = createTab({ id: 't1', title: 'Old Title' });
+    const tab2 = createTab({ id: 't2', title: 'Other' });
+    const state = stateWith(tab1, tab2);
 
     const result = tabReducer(state, {
       type: 'UPDATE_TAB_TITLE',
       payload: { id: 't1', title: 'New Title' },
     });
     expect(result.tabs[0].title).toBe('New Title');
+    expect(result.tabs[1].title).toBe('Other');
   });
 
   // T-TR-09
@@ -206,6 +211,44 @@ describe('tabReducer', () => {
       },
     });
     expect(result.activeTabId).toBe('t1');
+  });
+
+  it('REORDER_TABS with empty tabs sets activeTabId to null', () => {
+    const tab1 = createTab({ id: 't1' });
+    const state: TabState = { tabs: [tab1], activeTabId: 't1' };
+
+    const result = tabReducer(state, {
+      type: 'REORDER_TABS',
+      payload: { tabs: [] },
+    });
+    expect(result.activeTabId).toBeNull();
+  });
+
+  it('LOAD_STATE with valid activeTabId preserves it', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+
+    const result = tabReducer(initialTabState, {
+      type: 'LOAD_STATE',
+      payload: {
+        tabs: [tab1, tab2],
+        activeTabId: 't2',
+        lastOpenedAt: Date.now(),
+      },
+    });
+    expect(result.activeTabId).toBe('t2');
+  });
+
+  it('LOAD_STATE with empty tabs sets activeTabId to null', () => {
+    const result = tabReducer(initialTabState, {
+      type: 'LOAD_STATE',
+      payload: {
+        tabs: [],
+        activeTabId: null,
+        lastOpenedAt: Date.now(),
+      },
+    });
+    expect(result.activeTabId).toBeNull();
   });
 
   // T-TR-16

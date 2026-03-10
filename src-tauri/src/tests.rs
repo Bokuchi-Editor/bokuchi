@@ -41,6 +41,7 @@
 use crate::*;
 use std::collections::HashMap;
 use std::io::Write;
+use std::sync::Mutex;
 use tempfile::TempDir;
 
 // VariableProcessor tests
@@ -760,25 +761,56 @@ fn test_calculate_file_hash_not_found() {
 // R-FA-01 & R-FA-02
 // Note: file_association uses OnceLock globals, so these tests observe
 // the state after all tests that may have called set_frontend_ready().
-// We test the functions exist and behave correctly.
+// R-FA-01 & R-FA-02
+// Uses global OnceLock state; run with --test-threads=1 for deterministic results.
 #[test]
 fn test_frontend_ready_functions() {
-    // After set_frontend_ready is called, is_frontend_ready should return true
+    use crate::types::FRONTEND_READY;
+
+    // Reset to known state so we can verify the initial false path
+    let ready = FRONTEND_READY.get_or_init(|| Mutex::new(false));
+    if let Ok(mut is_ready) = ready.lock() {
+        *is_ready = false;
+    }
+
+    // R-FA-01: Before set_frontend_ready, should return false
+    assert!(!is_frontend_ready());
+
+    // R-FA-02: After set_frontend_ready, should return true
     set_frontend_ready();
     assert!(is_frontend_ready());
 }
 
 // R-FA-03 & R-FA-04
+// Uses global OnceLock state; run with --test-threads=1 for deterministic results.
 #[test]
 fn test_get_pending_file_paths_clears() {
-    // Get pending paths — this also clears the buffer
-    let paths = get_pending_file_paths();
-    // The buffer should be empty after retrieval (or was already empty)
-    assert!(paths.is_empty() || !paths.is_empty()); // just verifying it doesn't panic
+    use crate::types::PENDING_FILE_PATHS;
 
-    // After getting, buffer should be cleared
-    let paths2 = get_pending_file_paths();
-    assert!(paths2.is_empty());
+    // Reset buffer to known empty state
+    let pending = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
+    if let Ok(mut paths) = pending.lock() {
+        paths.clear();
+    }
+
+    // R-FA-03: Empty buffer returns empty vec
+    let paths = get_pending_file_paths();
+    assert!(paths.is_empty());
+
+    // Push test data into the buffer
+    if let Ok(mut paths) = pending.lock() {
+        paths.push("/test/file1.md".to_string());
+        paths.push("/test/file2.md".to_string());
+    }
+
+    // R-FA-04: Retrieval returns buffered paths and clears buffer
+    let paths = get_pending_file_paths();
+    assert_eq!(paths.len(), 2);
+    assert_eq!(paths[0], "/test/file1.md");
+    assert_eq!(paths[1], "/test/file2.md");
+
+    let paths_after = get_pending_file_paths();
+    assert!(paths_after.is_empty());
 }
 
 // R-FA-05
