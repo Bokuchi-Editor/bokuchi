@@ -33,6 +33,10 @@ lazy_static = "1.4"
 sha2 = "0.10"
 url = "2.5"
 
+[dev-dependencies]
+tempfile = "3"
+pollster = "0.4"
+
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = "2"
 tauri-plugin-window-state = "2"

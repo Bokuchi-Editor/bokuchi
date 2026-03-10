@@ -70,6 +70,42 @@ You can change the language in Settings > Language.
 
 **Please submit a pull request if you find any translation errors.**
 
+## Variable System
+
+### File-local Variables
+
+```markdown
+<!-- @var title: My Document -->
+<!-- @var author: John Doe -->
+
+# {{title}}
+
+Author: {{author}}
+```
+
+### Global Variables
+
+Set global variables through the Variables settings panel. These are available across all files.
+
+## Roadmap
+
+- [ ] KaTeX math rendering
+- [ ] PDF export
+- [ ] Command palette
+- [ ] Mermaid / PlantUML diagrams
+- [ ] Split editor (two files side by side)
+- [ ] Tab pinning
+- [ ] Image paste / drop management
+- [x] Frontend tests (Vitest + Testing Library)
+- [ ] Cross-tab search
+- [ ] File rename from tab
+- [ ] Standalone HTML export (inline CSS)
+- [ ] Word / character count with reading time
+- [ ] Undo / redo history persistence
+- [ ] Markdown snippets / templates
+
+---
+
 ## Development
 
 ### Prerequisites
@@ -105,14 +141,21 @@ npm run check          # Run both ESLint and TypeScript checks
 npm run lint           # Run ESLint only
 npm run type-check     # Run TypeScript type checking only
 
-# Testing
-npm run test           # Run Rust tests
-npm run test:verbose   # Run Rust tests with verbose output
-
 # Build
 npm run build          # TypeScript + Vite build
 npm run tauri:build    # Production native app build
 ```
+
+### Testing
+
+```bash
+npm run test:all           # Run all tests (Rust + TypeScript)
+npm run test:unit          # Run TypeScript unit tests (Vitest)
+npm run test:rust          # Run Rust unit tests
+npm run test:unit:coverage # Run TypeScript tests with coverage report
+```
+
+For details on test tiers, file locations, and CI configuration, see [docs/TESTING.md](docs/TESTING.md).
 
 ### Building for Production
 
@@ -136,36 +179,14 @@ Build output locations:
 - **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/`
 - **Linux**: `src-tauri/target/release/bundle/appimage/`
 
-## Variable System
+### Documentation
 
-### File-local Variables
+Developer documentation is available in the [`docs/`](docs/) directory:
 
-```markdown
-<!-- @var title: My Document -->
-<!-- @var author: John Doe -->
-
-# {{title}}
-
-Author: {{author}}
-```
-
-### Global Variables
-
-Set global variables through the Variables settings panel. These are available across all files.
-
-## Roadmap
-
-- [ ] KaTeX math rendering
-- [ ] PDF export
-- [ ] Command palette
-- [ ] Mermaid / PlantUML diagrams
-- [ ] Split editor (two files side by side)
-- [ ] Tab pinning
-- [ ] Image paste / drop management
-- [ ] Frontend tests (Vitest + Testing Library)
-- [ ] Cross-tab search
-- [ ] File rename from tab
-- [ ] Standalone HTML export (inline CSS)
-- [ ] Word / character count with reading time
-- [ ] Undo / redo history persistence
-- [ ] Markdown snippets / templates
+- [Testing Guide](docs/TESTING.md) — Test architecture, running tests, CI
+- [Test Strategy](docs/TEST_STRATEGY.md) — Planned test cases and implementation approach
+- [Menu System Guide](docs/MENU_SYSTEM_GUIDE.md) — Menu architecture and customization
+- [Security](docs/SECURITY.md) — Security policy and reporting
+- [Cross Compile Troubleshooting](docs/CROSS_COMPILE_TROUBLESHOOTING.md)
+- [macOS Notarization Guide](docs/MACOS_NOTARIZATION_GUIDE.md)
+- [Version Update Checklist](docs/VERSION_UPDATE_CHECKLIST.md)
