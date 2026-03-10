@@ -40,8 +40,8 @@
       "frameworks": [],
       "minimumSystemVersion": "10.13",
       "exceptionDomain": null,
-      "signingIdentity": "Developer ID Application: SHINYA SAITA (RNGXZZHG98)",
-      "providerShortName": "RNGXZZHG98",
+      "signingIdentity": null,
+      "providerShortName": null,
       "entitlements": "entitlements.plist",
       "hardenedRuntime": true
     },

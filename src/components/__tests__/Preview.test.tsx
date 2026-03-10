@@ -38,7 +38,7 @@ vi.mock('marked', () => {
     code: unknown;
   }
 
-  function simpleMarked(src: string, _options?: unknown): string {
+  function simpleMarked(src: string): string {
     const lines = src.split('\n');
     const items = lines.map((line) => {
       const unchecked = line.match(/^- \[ \] (.+)$/);
@@ -73,7 +73,7 @@ import MarkdownPreview from '../Preview';
 async function renderPreview(props: {
   content: string;
   darkMode: boolean;
-  onContentChange: ReturnType<typeof vi.fn>;
+  onContentChange: (newContent: string) => void;
 }) {
   const result = render(
     <MarkdownPreview
@@ -93,10 +93,10 @@ async function renderPreview(props: {
 }
 
 describe('MarkdownPreview – checkbox toggle', () => {
-  let onContentChange: ReturnType<typeof vi.fn>;
+  let onContentChange: (newContent: string) => void;
 
   beforeEach(() => {
-    onContentChange = vi.fn();
+    onContentChange = vi.fn<(newContent: string) => void>();
     vi.clearAllMocks();
   });
 
