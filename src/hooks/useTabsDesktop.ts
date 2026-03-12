@@ -4,6 +4,7 @@ import { Tab, AppState } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
+import { normalizeFilePath, extractFileNameFromPath, checkDuplicateFileInTabs } from '../utils/pathUtils';
 
 // Global tab state management (for duplicate checking)
 let globalTabsState: Tab[] = [];
@@ -15,12 +16,7 @@ const updateGlobalTabsState = (tabs: Tab[]) => {
 
 // Check for duplicate files using global state
 const checkDuplicateFile = (filePath: string): Tab | null => {
-  const normalizedPath = filePath.replace(/\\/g, '/');
-  return globalTabsState.find(tab => {
-    if (!tab.filePath) return false;
-    const normalizedExistingPath = tab.filePath.replace(/\\/g, '/');
-    return normalizedExistingPath === normalizedPath;
-  }) || null;
+  return checkDuplicateFileInTabs(filePath, globalTabsState);
 };
 
 export const useTabsDesktop = () => {
@@ -110,7 +106,7 @@ export const useTabsDesktop = () => {
       }
 
       // Extract file name from path
-      const fileName = result.filePath ? result.filePath.split('/').pop()?.split('\\').pop() || 'Untitled' : 'Untitled';
+      const fileName = result.filePath ? extractFileNameFromPath(result.filePath) : 'Untitled';
 
       // Get file hash info
       let fileHashInfo = undefined;
@@ -123,7 +119,7 @@ export const useTabsDesktop = () => {
       }
 
       // Normalize and store file path
-      const normalizedFilePath = result.filePath ? result.filePath.replace(/\\/g, '/') : undefined;
+      const normalizedFilePath = result.filePath ? normalizeFilePath(result.filePath) : undefined;
 
       const tabId = addTab({
         title: fileName,
@@ -248,7 +244,7 @@ export const useTabsDesktop = () => {
         const result = await desktopApi.saveFile(tab.content, tab.filePath);
         if (result.success && result.filePath) {
           setTabFilePath(id, result.filePath);
-          const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
+          const displayName = extractFileNameFromPath(result.filePath);
           updateTabTitle(id, displayName);
           setTabModified(id, false);
           // Set isNew flag to false since file was saved as new
@@ -297,7 +293,7 @@ export const useTabsDesktop = () => {
 
       if (result.success && result.filePath) {
         setTabFilePath(id, result.filePath);
-        const displayName = result.filePath.split('/').pop()?.split('\\').pop() || result.filePath;
+        const displayName = extractFileNameFromPath(result.filePath);
         updateTabTitle(id, displayName);
         setTabModified(id, false);
         // Set isNew flag to false since file was saved via Save As
