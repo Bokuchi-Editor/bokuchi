@@ -17,6 +17,12 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import type { editor } from 'monaco-editor';
+import {
+  buildWrapEdit,
+  buildLinePrefixEdits,
+  buildBlockInsertEdit,
+  buildHeadingEdit,
+} from '../utils/markdownToolbarActions';
 
 interface MarkdownToolbarProps {
   editorRef: React.RefObject<editor.IStandaloneCodeEditor | null>;
@@ -34,26 +40,12 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     if (!selection) return;
 
     const selectedText = ed.getModel()?.getValueInRange(selection) || '';
-    const text = selectedText || placeholder;
-    const newText = `${before}${text}${after}`;
+    const { edit, newSelection } = buildWrapEdit(selection, selectedText, before, after, placeholder);
 
-    ed.executeEdits('toolbar', [{
-      range: selection,
-      text: newText,
-      forceMoveMarkers: true,
-    }]);
+    ed.executeEdits('toolbar', [edit]);
 
-    // If placeholder was used (no selection), select it for easy replacement
-    if (!selectedText && placeholder) {
-      const startLine = selection.startLineNumber;
-      const startCol = selection.startColumn + before.length;
-      const endCol = startCol + placeholder.length;
-      ed.setSelection({
-        startLineNumber: startLine,
-        startColumn: startCol,
-        endLineNumber: startLine,
-        endColumn: endCol,
-      });
+    if (newSelection) {
+      ed.setSelection(newSelection);
     }
 
     ed.focus();
@@ -69,23 +61,12 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     const model = ed.getModel();
     if (!model) return;
 
-    const startLine = selection.startLineNumber;
-    const endLine = selection.endLineNumber;
-
-    const edits: editor.IIdentifiedSingleEditOperation[] = [];
-    for (let line = startLine; line <= endLine; line++) {
-      const lineContent = model.getLineContent(line);
-      edits.push({
-        range: {
-          startLineNumber: line,
-          startColumn: 1,
-          endLineNumber: line,
-          endColumn: lineContent.length + 1,
-        },
-        text: `${prefix}${lineContent}`,
-        forceMoveMarkers: true,
-      });
-    }
+    const edits = buildLinePrefixEdits(
+      selection.startLineNumber,
+      selection.endLineNumber,
+      (line) => model.getLineContent(line),
+      prefix,
+    );
 
     ed.executeEdits('toolbar', edits);
     ed.focus();
@@ -101,22 +82,10 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     const model = ed.getModel();
     if (!model) return;
 
-    // Ensure block is on its own line
     const currentLineContent = model.getLineContent(position.lineNumber);
-    const needsNewlineBefore = currentLineContent.trim().length > 0;
-    const insertText = `${needsNewlineBefore ? '\n' : ''}${text}\n`;
+    const edit = buildBlockInsertEdit(position.lineNumber, currentLineContent, text);
 
-    ed.executeEdits('toolbar', [{
-      range: {
-        startLineNumber: position.lineNumber,
-        startColumn: currentLineContent.length + 1,
-        endLineNumber: position.lineNumber,
-        endColumn: currentLineContent.length + 1,
-      },
-      text: insertText,
-      forceMoveMarkers: true,
-    }]);
-
+    ed.executeEdits('toolbar', [edit]);
     ed.focus();
   };
 
@@ -129,7 +98,6 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
   };
 
   const handleHeadingSelect = (level: number) => {
-    const prefix = '#'.repeat(level) + ' ';
     const ed = editorRef.current;
     if (!ed) return;
 
@@ -140,21 +108,9 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     if (!model) return;
 
     const lineContent = model.getLineContent(selection.startLineNumber);
-    // Remove existing heading prefix if any
-    const cleaned = lineContent.replace(/^#{1,6}\s*/, '');
-    const newContent = `${prefix}${cleaned}`;
+    const edit = buildHeadingEdit(selection.startLineNumber, lineContent, level);
 
-    ed.executeEdits('toolbar', [{
-      range: {
-        startLineNumber: selection.startLineNumber,
-        startColumn: 1,
-        endLineNumber: selection.startLineNumber,
-        endColumn: lineContent.length + 1,
-      },
-      text: newContent,
-      forceMoveMarkers: true,
-    }]);
-
+    ed.executeEdits('toolbar', [edit]);
     ed.focus();
     handleHeadingClose();
   };

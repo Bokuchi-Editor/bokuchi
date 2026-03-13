@@ -321,6 +321,79 @@ describe('storeApi.clearRecentFiles', () => {
 });
 
 // ---------------------------------------------------------------------------
+// addRecentFile
+// ---------------------------------------------------------------------------
+describe('storeApi.addRecentFile', () => {
+  it('adds a new file to empty recent files list', async () => {
+    // loadRecentFiles returns []
+    // loadAppSettings returns defaults
+    mockStore.get
+      .mockResolvedValueOnce([]) // recentFiles
+      .mockResolvedValueOnce(DEFAULT_APP_SETTINGS); // appSettings
+
+    await storeApi.addRecentFile('/a.md', 'a.md', 'content', 100, 1000);
+    expect(mockStore.set).toHaveBeenCalledWith('recentFiles', expect.arrayContaining([
+      expect.objectContaining({ filePath: '/a.md', fileName: 'a.md', openCount: 1 }),
+    ]));
+  });
+
+  it('updates existing file instead of duplicating', async () => {
+    const existing = [
+      { id: 'r1', filePath: '/a.md', fileName: 'a.md', lastOpened: 100, openCount: 1, preview: '' },
+    ];
+    mockStore.get
+      .mockResolvedValueOnce(existing) // recentFiles
+      .mockResolvedValueOnce(DEFAULT_APP_SETTINGS); // appSettings
+
+    await storeApi.addRecentFile('/a.md', 'a.md', 'new content');
+
+    const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string; openCount: number }>;
+    expect(savedFiles).toHaveLength(1);
+    expect(savedFiles[0].openCount).toBe(2);
+  });
+
+  it('enforces max recent files limit', async () => {
+    const maxFiles = DEFAULT_APP_SETTINGS.recentFiles.maxRecentFiles;
+    const existing = Array.from({ length: maxFiles }, (_, i) => ({
+      id: `r${i}`,
+      filePath: `/file${i}.md`,
+      fileName: `file${i}.md`,
+      lastOpened: 1000 - i,
+      openCount: 1,
+      preview: '',
+    }));
+
+    mockStore.get
+      .mockResolvedValueOnce(existing)
+      .mockResolvedValueOnce(DEFAULT_APP_SETTINGS);
+
+    await storeApi.addRecentFile('/new.md', 'new.md', 'content');
+
+    const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string }>;
+    expect(savedFiles.length).toBeLessThanOrEqual(maxFiles);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// removeRecentFile
+// ---------------------------------------------------------------------------
+describe('storeApi.removeRecentFile', () => {
+  it('removes specified file from recent files', async () => {
+    const files = [
+      { id: 'r1', filePath: '/a.md', fileName: 'a.md', lastOpened: 100, openCount: 1 },
+      { id: 'r2', filePath: '/b.md', fileName: 'b.md', lastOpened: 200, openCount: 1 },
+    ];
+    mockStore.get.mockResolvedValueOnce(files);
+
+    await storeApi.removeRecentFile('/a.md');
+
+    const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string }>;
+    expect(savedFiles).toHaveLength(1);
+    expect(savedFiles[0].filePath).toBe('/b.md');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Folder tree root
 // ---------------------------------------------------------------------------
 describe('storeApi.saveFolderTreeRoot', () => {

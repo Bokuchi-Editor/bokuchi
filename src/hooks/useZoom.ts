@@ -1,5 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { storeApi } from '../api/storeApi';
+import {
+  calculateZoomIn,
+  calculateZoomOut,
+  isHittingMaxLimit,
+  isHittingMinLimit,
+  zoomToPercentage,
+} from '../utils/zoomCalculations';
 
 export interface ZoomConfig {
   minZoom: number;
@@ -29,14 +36,13 @@ export const useZoom = (config: ZoomConfig) => {
 
   // Zoom in
   const zoomIn = useCallback(() => {
-    const newZoom = Math.min(currentZoom + config.zoomStep, config.maxZoom);
-    if (newZoom === config.maxZoom && currentZoom < config.maxZoom) {
+    const newZoom = calculateZoomIn(currentZoom, config.zoomStep, config.maxZoom);
+    if (isHittingMaxLimit(currentZoom, newZoom, config.maxZoom)) {
       setIsAtLimit(true);
-      setTimeout(() => setIsAtLimit(false), 2000); // Clear warning after 2 seconds
+      setTimeout(() => setIsAtLimit(false), 2000);
     }
     setCurrentZoom(newZoom);
 
-    // Save zoom level
     storeApi.saveZoomLevel(newZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
@@ -44,14 +50,13 @@ export const useZoom = (config: ZoomConfig) => {
 
   // Zoom out
   const zoomOut = useCallback(() => {
-    const newZoom = Math.max(currentZoom - config.zoomStep, config.minZoom);
-    if (newZoom === config.minZoom && currentZoom > config.minZoom) {
+    const newZoom = calculateZoomOut(currentZoom, config.zoomStep, config.minZoom);
+    if (isHittingMinLimit(currentZoom, newZoom, config.minZoom)) {
       setIsAtLimit(true);
-      setTimeout(() => setIsAtLimit(false), 2000); // Clear warning after 2 seconds
+      setTimeout(() => setIsAtLimit(false), 2000);
     }
     setCurrentZoom(newZoom);
 
-    // Save zoom level
     storeApi.saveZoomLevel(newZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
@@ -62,7 +67,6 @@ export const useZoom = (config: ZoomConfig) => {
     setCurrentZoom(config.defaultZoom);
     setIsAtLimit(false);
 
-    // Save zoom level
     storeApi.saveZoomLevel(config.defaultZoom).catch(error => {
       console.warn('Failed to save zoom level:', error);
     });
@@ -85,7 +89,6 @@ export const useZoom = (config: ZoomConfig) => {
         const isResetKey = event.key === '0' || event.code === 'Digit0';
 
         if (isZoomInKey) {
-          // Zoom in: Cmd + Shift + + or Cmd + = or JIS layout + key
           if (event.shiftKey || event.key === '=' || event.key === '+' ||
               (event.code === 'Semicolon' && event.shiftKey)) {
             event.preventDefault();
@@ -93,14 +96,12 @@ export const useZoom = (config: ZoomConfig) => {
             zoomIn();
           }
         } else if (isZoomOutKey) {
-          // Zoom out: Cmd + - (no Shift needed)
           if (!event.shiftKey) {
             event.preventDefault();
             event.stopPropagation();
             zoomOut();
           }
         } else if (isResetKey) {
-          // Reset: Cmd + 0 (no Shift needed)
           if (!event.shiftKey) {
             event.preventDefault();
             event.stopPropagation();
@@ -115,8 +116,7 @@ export const useZoom = (config: ZoomConfig) => {
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [zoomIn, zoomOut, resetZoom]);
 
-  // Get zoom level as percentage
-  const zoomPercentage = Math.round(currentZoom * 100);
+  const zoomPercentage = zoomToPercentage(currentZoom);
 
   return {
     currentZoom,

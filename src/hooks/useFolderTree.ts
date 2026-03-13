@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { FolderTreeNode } from '../types/folderTree';
 import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
+import { findNodeInTree, updateTreeNode, toggleNodeExpand } from '../utils/folderTreeUtils';
+import { extractFolderNameFromPath } from '../utils/pathUtils';
 
 export const useFolderTree = (showAllFiles: boolean) => {
   const [rootPath, setRootPath] = useState<string | null>(null);
@@ -56,72 +58,22 @@ export const useFolderTree = (showAllFiles: boolean) => {
   // Toggle expand/collapse for a directory node
   const toggleExpand = useCallback(async (nodePath: string) => {
     // First pass: mark loading or toggle
-    setTree(prev => {
-      // We need to do this synchronously for the UI update
-      const syncUpdate = (nodes: FolderTreeNode[]): FolderTreeNode[] => {
-        return nodes.map(node => {
-          if (node.path === nodePath) {
-            if (node.isExpanded) {
-              return { ...node, isExpanded: false };
-            } else if (node.children === null) {
-              return { ...node, isLoading: true };
-            } else {
-              return { ...node, isExpanded: true };
-            }
-          } else if (node.children && node.children.length > 0) {
-            return { ...node, children: syncUpdate(node.children) };
-          }
-          return node;
-        });
-      };
-      return syncUpdate(prev);
-    });
+    setTree(prev => updateTreeNode(prev, nodePath, toggleNodeExpand));
 
     // Find the node and load children if needed
-    const findNode = (nodes: FolderTreeNode[]): FolderTreeNode | null => {
-      for (const node of nodes) {
-        if (node.path === nodePath) return node;
-        if (node.children) {
-          const found = findNode(node.children);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-
-    const targetNode = findNode(tree);
+    const targetNode = findNodeInTree(tree, nodePath);
     if (targetNode && !targetNode.isExpanded && targetNode.children === null) {
       // Load children
       try {
         const children = await loadDirectory(nodePath);
-        setTree(prev => {
-          const updateWithChildren = (nodes: FolderTreeNode[]): FolderTreeNode[] => {
-            return nodes.map(node => {
-              if (node.path === nodePath) {
-                return { ...node, children, isExpanded: true, isLoading: false };
-              } else if (node.children && node.children.length > 0) {
-                return { ...node, children: updateWithChildren(node.children) };
-              }
-              return node;
-            });
-          };
-          return updateWithChildren(prev);
-        });
+        setTree(prev => updateTreeNode(prev, nodePath, (node) => ({
+          ...node, children, isExpanded: true, isLoading: false,
+        })));
       } catch (error) {
         console.error('Failed to load directory children:', error);
-        setTree(prev => {
-          const markError = (nodes: FolderTreeNode[]): FolderTreeNode[] => {
-            return nodes.map(node => {
-              if (node.path === nodePath) {
-                return { ...node, children: [], isExpanded: false, isLoading: false };
-              } else if (node.children && node.children.length > 0) {
-                return { ...node, children: markError(node.children) };
-              }
-              return node;
-            });
-          };
-          return markError(prev);
-        });
+        setTree(prev => updateTreeNode(prev, nodePath, (node) => ({
+          ...node, children: [], isExpanded: false, isLoading: false,
+        })));
       }
     }
   }, [tree, loadDirectory]);
@@ -152,7 +104,7 @@ export const useFolderTree = (showAllFiles: boolean) => {
     }
   }, [showAllFiles]);
 
-  const rootFolderName = rootPath ? rootPath.split('/').pop() || rootPath : null;
+  const rootFolderName = extractFolderNameFromPath(rootPath);
 
   return {
     rootPath,
