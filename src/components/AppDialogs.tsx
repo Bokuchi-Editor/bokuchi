@@ -8,7 +8,7 @@ import UpdateDialog, { UpdateDialogPhase } from './UpdateDialog';
 import { AppSettings } from '../types/settings';
 import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
 
-interface AppDialogsProps {
+export interface AppDialogsProps {
   // Snackbar state
   snackbar: {
     open: boolean;

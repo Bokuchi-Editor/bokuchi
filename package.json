@@ -83,6 +83,7 @@
   },
   "overrides": {
     "dompurify": ">=3.2.4",
+    "flatted": ">=3.4.0",
     "minimatch": ">=10.2.1"
   }
 }

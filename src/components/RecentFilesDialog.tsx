@@ -31,6 +31,7 @@ import {
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { desktopApi } from '../api/desktopApi';
+import { formatDate, formatFileSize } from '../utils/formatters';
 
 interface RecentFilesDialogProps {
   open: boolean;
@@ -170,29 +171,6 @@ const RecentFilesDialog: React.FC<RecentFilesDialogProps> = ({
       }
     }
     handleContextMenuClose();
-  };
-
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-
-    if (diffInHours < 1) {
-      return 'a few minutes ago';
-    } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)} hour${Math.floor(diffInHours) === 1 ? '' : 's'} ago`;
-    } else if (diffInHours < 24 * 7) {
-      return `${Math.floor(diffInHours / 24)} day${Math.floor(diffInHours / 24) === 1 ? '' : 's'} ago`;
-    } else {
-      return date.toLocaleDateString('en-US');
-    }
-  };
-
-  const formatFileSize = (bytes?: number) => {
-    if (!bytes) return '';
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   return (
