@@ -9,6 +9,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import MarkdownToolbar from '../MarkdownToolbar';
+import type { editor } from 'monaco-editor';
 
 function createMockEditor() {
   return {
@@ -29,25 +30,27 @@ function createMockEditor() {
   };
 }
 
+type MockEditor = ReturnType<typeof createMockEditor>;
+
 describe('MarkdownToolbar', () => {
-  let mockEditor: ReturnType<typeof createMockEditor>;
-  let editorRef: React.RefObject<any>;
+  let mockEditor: MockEditor;
+  let editorRef: React.RefObject<MockEditor | null>;
 
   beforeEach(() => {
     mockEditor = createMockEditor();
-    editorRef = { current: mockEditor } as React.RefObject<any>;
+    editorRef = { current: mockEditor };
   });
 
   // T-MT-01: renders toolbar buttons
   it('T-MT-01: renders toolbar with buttons', () => {
-    render(<MarkdownToolbar editorRef={editorRef} />);
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThan(5);
   });
 
   // T-MT-02: bold button calls executeEdits
   it('T-MT-02: bold button inserts bold markers', () => {
-    render(<MarkdownToolbar editorRef={editorRef} />);
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
     // Bold button has tooltip containing "toolbar.bold"
     const buttons = screen.getAllByRole('button');
     // Bold is the 2nd button (after heading)
@@ -59,7 +62,7 @@ describe('MarkdownToolbar', () => {
 
   // T-MT-03: heading menu opens on click
   it('T-MT-03: heading button opens heading menu', () => {
-    render(<MarkdownToolbar editorRef={editorRef} />);
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
     const buttons = screen.getAllByRole('button');
     // Heading is the first button
     fireEvent.click(buttons[0]);
@@ -70,7 +73,7 @@ describe('MarkdownToolbar', () => {
 
   // T-MT-04: selecting heading level calls executeEdits
   it('T-MT-04: selecting H1 from menu inserts heading', () => {
-    render(<MarkdownToolbar editorRef={editorRef} />);
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
     const buttons = screen.getAllByRole('button');
     fireEvent.click(buttons[0]); // open menu
     fireEvent.click(screen.getByText('toolbar.heading1'));
@@ -81,7 +84,7 @@ describe('MarkdownToolbar', () => {
 
   // T-MT-05: no-op when editor ref is null
   it('T-MT-05: does not crash when editorRef.current is null', () => {
-    const nullRef = { current: null } as React.RefObject<any>;
+    const nullRef: React.RefObject<editor.IStandaloneCodeEditor | null> = { current: null };
     render(<MarkdownToolbar editorRef={nullRef} />);
     const buttons = screen.getAllByRole('button');
     // Click bold - should not throw

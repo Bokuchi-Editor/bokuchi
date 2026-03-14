@@ -8,6 +8,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import { TableConversionDialog } from '../TableConversionDialog';
+import { asMock } from '../../test-utils';
 
 describe('TableConversionDialog', () => {
   let onClose: ReturnType<typeof vi.fn>;
@@ -26,9 +27,9 @@ describe('TableConversionDialog', () => {
     render(
       <TableConversionDialog
         open={open}
-        onClose={onClose}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
+        onClose={asMock<() => void>(onClose)}
+        onConfirm={asMock<(convertWithoutAsking?: boolean) => void>(onConfirm)}
+        onCancel={asMock<() => void>(onCancel)}
         markdownTable={sampleTable}
       />,
     );

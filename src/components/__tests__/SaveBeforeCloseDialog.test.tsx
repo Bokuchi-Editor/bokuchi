@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import SaveBeforeCloseDialog from '../SaveBeforeCloseDialog';
+import { asMock } from '../../test-utils';
 
 describe('SaveBeforeCloseDialog', () => {
   let onSave: ReturnType<typeof vi.fn>;
@@ -19,9 +20,9 @@ describe('SaveBeforeCloseDialog', () => {
       <SaveBeforeCloseDialog
         open={open}
         fileName={fileName}
-        onSave={onSave}
-        onDontSave={onDontSave}
-        onCancel={onCancel}
+        onSave={asMock<() => void>(onSave)}
+        onDontSave={asMock<() => void>(onDontSave)}
+        onCancel={asMock<() => void>(onCancel)}
       />,
     );
 

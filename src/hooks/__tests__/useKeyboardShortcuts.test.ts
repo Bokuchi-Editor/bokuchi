@@ -1,8 +1,10 @@
+import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useKeyboardShortcuts } from '../useKeyboardShortcuts';
 import { DEFAULT_APP_SETTINGS } from '../../types/settings';
 import type { Tab } from '../../types/tab';
+import { asMock } from '../../test-utils';
 
 describe('useKeyboardShortcuts', () => {
   let onNewTab: ReturnType<typeof vi.fn>;
@@ -40,21 +42,21 @@ describe('useKeyboardShortcuts', () => {
   });
 
   const defaultParams = () => ({
-    onNewTab,
-    onOpenFile,
-    onSaveFile,
-    onSaveFileAs,
-    onRecentFilesOpen,
-    onHelpOpen,
-    onSettingsOpen,
-    onRotateViewMode,
-    onChangeViewMode,
+    onNewTab: asMock<() => void>(onNewTab),
+    onOpenFile: asMock<() => void>(onOpenFile),
+    onSaveFile: asMock<() => void>(onSaveFile),
+    onSaveFileAs: asMock<() => void>(onSaveFileAs),
+    onRecentFilesOpen: asMock<() => void>(onRecentFilesOpen),
+    onHelpOpen: asMock<() => void>(onHelpOpen),
+    onSettingsOpen: asMock<() => void>(onSettingsOpen),
+    onRotateViewMode: asMock<() => void>(onRotateViewMode),
+    onChangeViewMode: asMock<(mode: 'split' | 'editor' | 'preview') => void>(onChangeViewMode),
     tabs,
     activeTabId: 'tab1',
-    setActiveTab,
+    setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
     appSettings: DEFAULT_APP_SETTINGS,
-    setOutlinePanelOpen,
-    setFolderTreePanelOpen,
+    setOutlinePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setOutlinePanelOpen),
+    setFolderTreePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setFolderTreePanelOpen),
   });
 
   const fireKeydown = (key: string, modifiers: Partial<KeyboardEvent> = {}) => {

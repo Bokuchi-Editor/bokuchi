@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { Tab as TabType } from '../../types/tab';
@@ -39,6 +40,7 @@ vi.mock('@dnd-kit/utilities', () => ({
 Element.prototype.scrollIntoView = vi.fn();
 
 import TabBar from '../TabBar';
+import { asMock } from '../../test-utils';
 
 describe('TabBar', () => {
   let onTabChange: ReturnType<typeof vi.fn>;
@@ -61,10 +63,10 @@ describe('TabBar', () => {
   const defaultProps = () => ({
     tabs: sampleTabs,
     activeTabId: 'tab1',
-    onTabChange,
-    onTabClose,
-    onNewTab,
-    onTabReorder,
+    onTabChange: asMock<(tabId: string) => void>(onTabChange),
+    onTabClose: asMock<(tabId: string) => void>(onTabClose),
+    onNewTab: asMock<() => void>(onNewTab),
+    onTabReorder: asMock<(tabs: TabType[]) => void>(onTabReorder),
   });
 
   // T-TB-01: renders tab titles

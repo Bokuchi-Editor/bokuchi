@@ -9,6 +9,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import OutlinePanel from '../OutlinePanel';
+import { asMock } from '../../test-utils';
 
 describe('OutlinePanel', () => {
   let onHeadingClick: ReturnType<typeof vi.fn>;
@@ -28,7 +29,7 @@ describe('OutlinePanel', () => {
   // T-OP-01: renders heading list
   it('T-OP-01: renders all headings', () => {
     render(
-      <OutlinePanel headings={sampleHeadings} onHeadingClick={onHeadingClick} />,
+      <OutlinePanel headings={sampleHeadings} onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)} />,
     );
     expect(screen.getByText('Title')).toBeInTheDocument();
     expect(screen.getByText('Section A')).toBeInTheDocument();
@@ -38,7 +39,7 @@ describe('OutlinePanel', () => {
   // T-OP-02: empty state when no headings
   it('T-OP-02: shows empty message when no headings', () => {
     render(
-      <OutlinePanel headings={[]} onHeadingClick={onHeadingClick} />,
+      <OutlinePanel headings={[]} onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)} />,
     );
     expect(screen.getByText('outline.noHeadings')).toBeInTheDocument();
   });
@@ -46,7 +47,7 @@ describe('OutlinePanel', () => {
   // T-OP-03: clicking heading calls onHeadingClick with lineNumber
   it('T-OP-03: calls onHeadingClick with lineNumber when heading is clicked', () => {
     render(
-      <OutlinePanel headings={sampleHeadings} onHeadingClick={onHeadingClick} />,
+      <OutlinePanel headings={sampleHeadings} onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)} />,
     );
     fireEvent.click(screen.getByText('Section A'));
     expect(onHeadingClick).toHaveBeenCalledWith(5);
@@ -57,8 +58,8 @@ describe('OutlinePanel', () => {
     render(
       <OutlinePanel
         headings={sampleHeadings}
-        onHeadingClick={onHeadingClick}
-        onClose={onClose}
+        onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)}
+        onClose={asMock<() => void>(onClose)}
       />,
     );
     // The close button has a CloseIcon inside
@@ -70,7 +71,7 @@ describe('OutlinePanel', () => {
   // T-OP-05: no close button when onClose not provided
   it('T-OP-05: does not render close button when onClose is not provided', () => {
     render(
-      <OutlinePanel headings={[]} onHeadingClick={onHeadingClick} />,
+      <OutlinePanel headings={[]} onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)} />,
     );
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
@@ -78,7 +79,7 @@ describe('OutlinePanel', () => {
   // T-OP-06: renders title
   it('T-OP-06: renders the outline title', () => {
     render(
-      <OutlinePanel headings={sampleHeadings} onHeadingClick={onHeadingClick} />,
+      <OutlinePanel headings={sampleHeadings} onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)} />,
     );
     expect(screen.getByText('outline.title')).toBeInTheDocument();
   });
@@ -88,7 +89,7 @@ describe('OutlinePanel', () => {
     const { container } = render(
       <OutlinePanel
         headings={sampleHeadings}
-        onHeadingClick={onHeadingClick}
+        onHeadingClick={asMock<(lineNumber: number) => void>(onHeadingClick)}
         width={300}
       />,
     );

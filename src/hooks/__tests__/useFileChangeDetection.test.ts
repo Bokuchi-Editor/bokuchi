@@ -14,6 +14,7 @@ vi.mock('../../utils/fileChangeDetection', () => ({
 
 import { useFileChangeDetection } from '../useFileChangeDetection';
 import type { Tab } from '../../types/tab';
+import { asMock } from '../../test-utils';
 
 describe('useFileChangeDetection', () => {
   let updateTabContent: ReturnType<typeof vi.fn>;
@@ -34,9 +35,9 @@ describe('useFileChangeDetection', () => {
     tabs,
     activeTab: tabs[0],
     isInitialized: true,
-    updateTabContent,
-    updateTabFileHash,
-    setActiveTab,
+    updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
+    updateTabFileHash: asMock<(tabId: string) => void>(updateTabFileHash),
+    setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
   });
 
   // T-FCD-01: initial state

@@ -1,5 +1,7 @@
+import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import type { ThemeName } from '../../themes';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -35,6 +37,7 @@ vi.mock('../../api/storeApi', () => ({
 import { useSettings } from '../useSettings';
 import { storeApi } from '../../api/storeApi';
 import { applyThemeToDocument } from '../../themes';
+import { asMock } from '../../test-utils';
 
 describe('useSettings', () => {
   let setOutlinePanelOpen: ReturnType<typeof vi.fn>;
@@ -49,11 +52,11 @@ describe('useSettings', () => {
   const defaultParams = () => ({
     isInitialized: true,
     currentZoom: 1.0,
-    zoomIn: vi.fn(),
-    zoomOut: vi.fn(),
+    zoomIn: asMock<() => void>(vi.fn()),
+    zoomOut: asMock<() => void>(vi.fn()),
     viewMode: 'split' as const,
-    setOutlinePanelOpen,
-    setFolderTreePanelOpen,
+    setOutlinePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setOutlinePanelOpen),
+    setFolderTreePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setFolderTreePanelOpen),
   });
 
   // T-SETT-01: initial default state
@@ -93,7 +96,7 @@ describe('useSettings', () => {
     });
 
     act(() => {
-      result.current.handleThemeChange('darcula' as any);
+      result.current.handleThemeChange('darcula' as ThemeName);
     });
 
     expect(result.current.theme).toBe('darcula');

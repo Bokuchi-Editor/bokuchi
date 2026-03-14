@@ -4,7 +4,7 @@ import { desktopApi } from '../api/desktopApi';
 import { variableApi } from '../api/variableApi';
 import { isMarkdownFile } from '../utils/pathUtils';
 
-interface UseFileOperationsParams {
+export interface UseFileOperationsParams {
   activeTab: Tab | null;
   tabs: Tab[];
   globalVariables: Record<string, string>;

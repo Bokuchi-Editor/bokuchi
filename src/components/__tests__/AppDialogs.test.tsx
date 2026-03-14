@@ -63,9 +63,11 @@ vi.mock('../UpdateDialog', () => ({
 }));
 
 import AppDialogs from '../AppDialogs';
+import type { AppDialogsProps } from '../AppDialogs';
+import { asMock } from '../../test-utils';
 
 describe('AppDialogs', () => {
-  const createDefaultProps = () => ({
+  const createDefaultProps = (): AppDialogsProps => ({
     snackbar: { open: false, message: '', severity: 'success' as const },
     isAtLimit: false,
     currentZoom: 1.0,
@@ -76,8 +78,8 @@ describe('AppDialogs', () => {
     fileChangeDialog: {
       open: false,
       fileName: '',
-      onReload: vi.fn(),
-      onCancel: vi.fn(),
+      onReload: asMock<() => void>(vi.fn()),
+      onCancel: asMock<() => void>(vi.fn()),
     },
     saveBeforeCloseDialog: {
       open: false,
@@ -88,15 +90,15 @@ describe('AppDialogs', () => {
     updateDialogPhase: 'notify' as const,
     updateInfo: null,
     updateDownloadProgress: null,
-    onCloseSnackbar: vi.fn(),
-    onSettingsClose: vi.fn(),
-    onSettingsChange: vi.fn(),
-    onHelpClose: vi.fn(),
-    onSaveBeforeClose: vi.fn(),
-    onDontSaveBeforeClose: vi.fn(),
-    onCancelBeforeClose: vi.fn(),
-    onUpdate: vi.fn(),
-    onDismissUpdate: vi.fn(),
+    onCloseSnackbar: asMock<() => void>(vi.fn()),
+    onSettingsClose: asMock<() => void>(vi.fn()),
+    onSettingsChange: asMock<() => void>(vi.fn()),
+    onHelpClose: asMock<() => void>(vi.fn()),
+    onSaveBeforeClose: asMock<() => void>(vi.fn()),
+    onDontSaveBeforeClose: asMock<() => void>(vi.fn()),
+    onCancelBeforeClose: asMock<() => void>(vi.fn()),
+    onUpdate: asMock<() => void>(vi.fn()),
+    onDismissUpdate: asMock<() => void>(vi.fn()),
     t: (key: string) => key,
   });
 
@@ -165,7 +167,7 @@ describe('AppDialogs', () => {
 
   // T-AD-08: save before close callbacks
   it('T-AD-08: save before close dialog callbacks work', () => {
-    props.saveBeforeCloseDialog = { open: true, fileName: 'test.md', tabId: 'tab1' };
+    props.saveBeforeCloseDialog = { open: true, fileName: 'test.md', tabId: 'tab1' as string | null };
     render(<AppDialogs {...props} />);
     fireEvent.click(screen.getByText('save'));
     expect(props.onSaveBeforeClose).toHaveBeenCalledTimes(1);

@@ -9,6 +9,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import FolderTreePanel from '../FolderTreePanel';
+import { asMock } from '../../test-utils';
 
 describe('FolderTreePanel', () => {
   let onFileClick: ReturnType<typeof vi.fn>;
@@ -59,12 +60,12 @@ describe('FolderTreePanel', () => {
     rootFolderName: 'project',
     tree: sampleTree,
     isLoading: false,
-    onFileClick,
-    onToggleExpand,
-    onOpenFolder,
-    onCloseFolder,
-    onRefresh,
-    onClose,
+    onFileClick: asMock<(path: string) => void>(onFileClick),
+    onToggleExpand: asMock<(path: string) => void>(onToggleExpand),
+    onOpenFolder: asMock<() => void>(onOpenFolder),
+    onCloseFolder: asMock<() => void>(onCloseFolder),
+    onRefresh: asMock<() => void>(onRefresh),
+    onClose: asMock<() => void>(onClose),
   });
 
   const renderPanel = (overrides = {}) =>

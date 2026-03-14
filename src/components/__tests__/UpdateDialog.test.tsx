@@ -15,6 +15,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import UpdateDialog from '../UpdateDialog';
+import { asMock } from '../../test-utils';
 
 describe('UpdateDialog', () => {
   let onUpdate: ReturnType<typeof vi.fn>;
@@ -44,8 +45,8 @@ describe('UpdateDialog', () => {
         phase={phase}
         updateInfo={updateInfo}
         downloadProgress={downloadProgress}
-        onUpdate={onUpdate}
-        onDismiss={onDismiss}
+        onUpdate={asMock<() => void>(onUpdate)}
+        onDismiss={asMock<() => void>(onDismiss)}
       />,
     );
 

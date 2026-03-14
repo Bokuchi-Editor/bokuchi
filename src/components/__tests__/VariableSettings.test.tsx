@@ -19,6 +19,7 @@ vi.mock('../../api/desktopApi', () => ({
 
 import VariableSettings from '../VariableSettings';
 import { variableApi } from '../../api/variableApi';
+import { asMock } from '../../test-utils';
 
 describe('VariableSettings', () => {
   let onClose: ReturnType<typeof vi.fn>;
@@ -30,20 +31,20 @@ describe('VariableSettings', () => {
 
   // T-VS-01: renders dialog when open
   it('T-VS-01: renders dialog when open', async () => {
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     expect(screen.getByText('Global Variables')).toBeInTheDocument();
   });
 
   // T-VS-02: hidden when closed
   it('T-VS-02: does not render when closed', () => {
-    render(<VariableSettings open={false} onClose={onClose} />);
+    render(<VariableSettings open={false} onClose={asMock<() => void>(onClose)} />);
     expect(screen.queryByText('Global Variables')).not.toBeInTheDocument();
   });
 
   // T-VS-03: loads variables on open
   it('T-VS-03: loads variables when dialog opens', async () => {
     vi.mocked(variableApi.getGlobalVariables).mockResolvedValue({ title: 'My Doc' });
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     await waitFor(() => {
       expect(screen.getByText('title')).toBeInTheDocument();
     });
@@ -51,7 +52,7 @@ describe('VariableSettings', () => {
 
   // T-VS-04: shows no variables message
   it('T-VS-04: shows empty state when no variables', async () => {
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     await waitFor(() => {
       expect(screen.getByText(/No variables defined/)).toBeInTheDocument();
     });
@@ -59,7 +60,7 @@ describe('VariableSettings', () => {
 
   // T-VS-05: add variable with empty name shows error
   it('T-VS-05: shows error for empty variable name', async () => {
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     // The Add button is disabled when name is empty, so we check that
     const addButton = screen.getByRole('button', { name: /Add/i });
     expect(addButton).toBeDisabled();
@@ -67,14 +68,14 @@ describe('VariableSettings', () => {
 
   // T-VS-06: close button calls onClose
   it('T-VS-06: calls onClose when Close button is clicked', () => {
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     fireEvent.click(screen.getByText('Close'));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   // T-VS-07: displays usage example
   it('T-VS-07: shows usage example section', () => {
-    render(<VariableSettings open={true} onClose={onClose} />);
+    render(<VariableSettings open={true} onClose={asMock<() => void>(onClose)} />);
     expect(screen.getByText('Usage Example:')).toBeInTheDocument();
   });
 });

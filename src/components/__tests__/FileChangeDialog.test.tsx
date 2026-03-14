@@ -13,6 +13,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import FileChangeDialog from '../FileChangeDialog';
+import { asMock } from '../../test-utils';
 
 describe('FileChangeDialog', () => {
   let onReload: ReturnType<typeof vi.fn>;
@@ -28,8 +29,8 @@ describe('FileChangeDialog', () => {
       <FileChangeDialog
         open={open}
         fileName={fileName}
-        onReload={onReload}
-        onCancel={onCancel}
+        onReload={asMock<() => void>(onReload)}
+        onCancel={asMock<() => void>(onCancel)}
       />,
     );
 

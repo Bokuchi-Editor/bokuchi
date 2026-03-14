@@ -58,12 +58,12 @@ describe('useTabs', () => {
   it('T-UT-04: setActiveTab changes the active tab', () => {
     const { result } = renderHook(() => useTabs());
 
-    let id1: string, id2: string;
+    let id1: string;
     act(() => {
       id1 = result.current.addTab({ title: 'Tab1', content: '', isModified: false, isNew: true });
     });
     act(() => {
-      id2 = result.current.addTab({ title: 'Tab2', content: '', isModified: false, isNew: true });
+      result.current.addTab({ title: 'Tab2', content: '', isModified: false, isNew: true });
     });
     act(() => {
       result.current.setActiveTab(id1!);

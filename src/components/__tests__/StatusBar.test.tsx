@@ -16,6 +16,8 @@ vi.mock('../../themes', () => ({
 }));
 
 import StatusBar from '../StatusBar';
+import { asMock } from '../../test-utils';
+import type { ThemeName } from '../../themes';
 
 describe('StatusBar', () => {
   let onZoomIn: ReturnType<typeof vi.fn>;
@@ -37,11 +39,11 @@ describe('StatusBar', () => {
     selectedCharacters: 0,
     darkMode: false,
     theme: 'default' as const,
-    onThemeChange,
+    onThemeChange: asMock<(theme: ThemeName) => void>(onThemeChange),
     zoomPercentage: 100,
-    onZoomIn,
-    onZoomOut,
-    onResetZoom,
+    onZoomIn: asMock<() => void>(onZoomIn),
+    onZoomOut: asMock<() => void>(onZoomOut),
+    onResetZoom: asMock<() => void>(onResetZoom),
     canZoomIn: true,
     canZoomOut: true,
   });

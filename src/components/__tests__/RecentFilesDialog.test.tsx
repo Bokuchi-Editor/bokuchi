@@ -16,6 +16,7 @@ vi.mock('../../api/desktopApi', () => ({
 
 import RecentFilesDialog from '../RecentFilesDialog';
 import { storeApi } from '../../api/storeApi';
+import { asMock } from '../../test-utils';
 
 const sampleFiles = [
   {
@@ -51,8 +52,8 @@ describe('RecentFilesDialog', () => {
     render(
       <RecentFilesDialog
         open={open}
-        onClose={onClose}
-        onFileSelect={onFileSelect}
+        onClose={asMock<() => void>(onClose)}
+        onFileSelect={asMock<(filePath: string) => void>(onFileSelect)}
         t={(key: string) => key}
       />,
     );

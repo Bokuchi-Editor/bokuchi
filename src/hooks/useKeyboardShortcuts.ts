@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, type Dispatch, type SetStateAction } from 'react';
 import { Tab } from '../types/tab';
 import { AppSettings } from '../types/settings';
 import { getNextTabIndex } from '../utils/viewModeUtils';
@@ -17,8 +17,8 @@ interface UseKeyboardShortcutsParams {
   activeTabId: string | null;
   setActiveTab: (tabId: string) => void;
   appSettings: AppSettings;
-  setOutlinePanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setFolderTreePanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOutlinePanelOpen: Dispatch<SetStateAction<boolean>>;
+  setFolderTreePanelOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const useKeyboardShortcuts = ({

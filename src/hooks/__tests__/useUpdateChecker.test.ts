@@ -15,6 +15,8 @@ vi.mock('@tauri-apps/plugin-updater', () => ({}));
 
 import { useUpdateChecker } from '../useUpdateChecker';
 import { updaterApi } from '../../api/updaterApi';
+import type { UpdateInfo } from '../../api/updaterApi';
+import { asMock } from '../../test-utils';
 
 describe('useUpdateChecker', () => {
   let setSnackbar: ReturnType<typeof vi.fn>;
@@ -28,7 +30,7 @@ describe('useUpdateChecker', () => {
   const defaultParams = () => ({
     isInitialized: true,
     isSettingsLoaded: true,
-    setSnackbar,
+    setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'error' | 'success' | 'warning' }) => void>(setSnackbar),
     t,
   });
 
@@ -57,15 +59,15 @@ describe('useUpdateChecker', () => {
   it('T-UC-04: opens dialog when update is available', async () => {
     const mockUpdate = { version: '2.0.0' };
     vi.mocked(updaterApi.checkForUpdate).mockResolvedValue({
-      info: { available: true, version: '2.0.0', notes: 'New version' },
-      update: mockUpdate as any,
+      info: { available: true, version: '2.0.0', body: 'New version' } as UpdateInfo,
+      update: mockUpdate as import('@tauri-apps/plugin-updater').Update,
     });
 
     const { result } = renderHook(() => useUpdateChecker(defaultParams()));
 
     await waitFor(() => {
       expect(result.current.updateDialogOpen).toBe(true);
-      expect(result.current.updateInfo).toEqual({ available: true, version: '2.0.0', notes: 'New version' });
+      expect(result.current.updateInfo).toEqual({ available: true, version: '2.0.0', body: 'New version' });
     });
   });
 
@@ -73,8 +75,8 @@ describe('useUpdateChecker', () => {
   it('T-UC-05: handleDismissUpdate closes dialog', async () => {
     const mockUpdate = { version: '2.0.0' };
     vi.mocked(updaterApi.checkForUpdate).mockResolvedValue({
-      info: { available: true, version: '2.0.0', notes: '' },
-      update: mockUpdate as any,
+      info: { available: true, version: '2.0.0', body: '' } as UpdateInfo,
+      update: mockUpdate as import('@tauri-apps/plugin-updater').Update,
     });
 
     const { result } = renderHook(() => useUpdateChecker(defaultParams()));

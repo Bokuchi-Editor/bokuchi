@@ -3,6 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useAutoSave } from '../useAutoSave';
 import { DEFAULT_APP_SETTINGS } from '../../types/settings';
 import type { Tab } from '../../types/tab';
+import { asMock } from '../../test-utils';
 
 describe('useAutoSave', () => {
   let saveTab: ReturnType<typeof vi.fn>;
@@ -33,8 +34,8 @@ describe('useAutoSave', () => {
     appSettings: { ...DEFAULT_APP_SETTINGS, advanced: { ...DEFAULT_APP_SETTINGS.advanced, autoSave: true } },
     isSettingsLoaded: true,
     isInitialized: true,
-    saveTab,
-    setSnackbar,
+    saveTab: asMock<(tabId: string) => Promise<boolean>>(saveTab),
+    setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void>(setSnackbar),
     t,
   });
 

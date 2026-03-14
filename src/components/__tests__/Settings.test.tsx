@@ -35,6 +35,8 @@ vi.mock('../../api/variableApi', () => ({
 
 import Settings from '../Settings';
 import { DEFAULT_APP_SETTINGS } from '../../types/settings';
+import type { AppSettings } from '../../types/settings';
+import { asMock } from '../../test-utils';
 
 describe('Settings', () => {
   let onClose: ReturnType<typeof vi.fn>;
@@ -47,9 +49,9 @@ describe('Settings', () => {
 
   const defaultProps = () => ({
     open: true,
-    onClose,
+    onClose: asMock<() => void>(onClose),
     settings: { ...DEFAULT_APP_SETTINGS },
-    onSettingsChange,
+    onSettingsChange: asMock<(settings: AppSettings) => void>(onSettingsChange),
   });
 
   // T-SET-01: renders when open

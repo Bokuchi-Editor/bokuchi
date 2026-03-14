@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getThemeByName, applyThemeToDocument } from '../themes';
 import { storeApi } from '../api/storeApi';
@@ -11,8 +11,8 @@ interface UseSettingsParams {
   zoomIn: () => void;
   zoomOut: () => void;
   viewMode: 'split' | 'editor' | 'preview';
-  setOutlinePanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setFolderTreePanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOutlinePanelOpen: Dispatch<SetStateAction<boolean>>;
+  setFolderTreePanelOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const useSettings = ({

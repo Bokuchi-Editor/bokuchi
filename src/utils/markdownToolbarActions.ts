@@ -1,4 +1,4 @@
-import type { editor, IRange, Selection } from 'monaco-editor';
+import type { IRange } from 'monaco-editor';
 
 export interface EditOperation {
   range: IRange;

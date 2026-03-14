@@ -1,3 +1,4 @@
+import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
@@ -14,7 +15,9 @@ vi.mock('../../api/variableApi', () => ({
 }));
 
 import { useFileOperations } from '../useFileOperations';
+import type { UseFileOperationsParams } from '../useFileOperations';
 import type { Tab } from '../../types/tab';
+import { asMock } from '../../test-utils';
 
 describe('useFileOperations', () => {
   let openFile: ReturnType<typeof vi.fn>;
@@ -52,18 +55,18 @@ describe('useFileOperations', () => {
     setSnackbar = vi.fn();
   });
 
-  const defaultParams = () => ({
+  const defaultParams = (): UseFileOperationsParams => ({
     activeTab,
     tabs,
     globalVariables: {},
-    openFile,
-    saveTab,
-    saveTabAs,
-    removeTab,
-    createNewTab,
-    updateTabContent,
-    requestEditorFocus,
-    setSnackbar,
+    openFile: asMock<(filePath?: string) => Promise<string>>(openFile),
+    saveTab: asMock<(tabId: string) => Promise<boolean>>(saveTab),
+    saveTabAs: asMock<(tabId: string) => Promise<boolean>>(saveTabAs),
+    removeTab: asMock<(tabId: string) => void>(removeTab),
+    createNewTab: asMock<() => string>(createNewTab),
+    updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
+    requestEditorFocus: asMock<() => void>(requestEditorFocus),
+    setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void>(setSnackbar),
     t,
   });
 
@@ -105,7 +108,7 @@ describe('useFileOperations', () => {
 
   // T-FO-04: handleSaveFileAs with no active tab shows error
   it('T-FO-04: handleSaveFileAs shows error when no active tab', async () => {
-    const params = defaultParams();
+    const params: UseFileOperationsParams = defaultParams();
     params.activeTab = null;
     const { result } = renderHook(() => useFileOperations(params));
 
@@ -178,7 +181,7 @@ describe('useFileOperations', () => {
     const { result } = renderHook(() => useFileOperations(defaultParams()));
 
     act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as any;
+      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
       result.current.handleDragOver(event);
     });
 
@@ -190,12 +193,12 @@ describe('useFileOperations', () => {
     const { result } = renderHook(() => useFileOperations(defaultParams()));
 
     act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as any;
+      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
       result.current.handleDragOver(event);
     });
 
     act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as any;
+      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
       result.current.handleDragLeave(event);
     });
 
