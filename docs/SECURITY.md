@@ -47,7 +47,7 @@ The following libraries are unmaintained but cannot be directly controlled due t
 
 | Dependency | Version | Notes |
 |---|---|---|
-| Tauri | 2.10.2 | Core framework |
+| Tauri | 2.10.3 | Core framework |
 | wry | 0.54.1 | WebView engine (depends on GTK3 on Linux) |
 | glib | 0.18.5 | Cannot update due to Tauri constraints |
 | gtk | 0.18.2 | GTK3 bindings (unmaintained) |

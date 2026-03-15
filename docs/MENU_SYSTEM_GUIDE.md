@@ -12,7 +12,11 @@ This document explains important considerations and best practices when implemen
 4. [Preventing Duplicate Registration](#preventing-duplicate-registration)
 5. [Platform-Specific Considerations](#platform-specific-considerations)
 6. [Troubleshooting](#troubleshooting)
-7. [Best Practices](#best-practices)
+7. [Keyboard Shortcut Conflict Avoidance](#keyboard-shortcut-conflict-avoidance)
+8. [Thread Safety and Timing Control](#thread-safety-and-timing-control)
+9. [Development Environment Considerations](#development-environment-considerations)
+10. [Performance Optimization](#performance-optimization)
+11. [Best Practices](#best-practices)
 
 ## Basic System Menu Structure
 
@@ -396,6 +400,399 @@ useEffect(() => {
 }, [handleSave]);
 ```
 
+#### 4. Menu Items Not Appearing
+
+**Symptoms**: Custom menu items are not displayed.
+
+**Causes**: Menu insertion position or text mismatch.
+
+**Diagnostic Steps**:
+
+```rust
+// Debug logging in the backend
+for item in menu.items()? {
+    if let MenuItemKind::Submenu(file_sm) = item {
+        let text = file_sm.text()?;
+        println!("Found submenu: {}", text); // Check this log
+
+        if text == "File" || text == "ファイル" {
+            println!("Found File menu, adding custom items...");
+            // Menu item addition
+        }
+    }
+}
+```
+
+**Solutions**:
+
+- Verify submenu text ("File" vs localized variants)
+- Verify insertion index positions
+- Confirm menu structure
+
+**Fix Example**:
+
+```rust
+// More flexible text matching
+if text.to_lowercase().contains("file") || text.contains("ファイル") {
+    println!("Found File menu, adding custom items...");
+    // Menu item addition
+}
+```
+
+#### 5. Keyboard Shortcut Conflicts
+
+**Symptoms**: Both the menu and keyboard shortcut fire simultaneously.
+
+**Causes**: Event priority is not configured appropriately.
+
+**Diagnostic Steps**:
+
+```typescript
+// Check keyboard event logs
+const handleKeyDown = useCallback(
+  (event: KeyboardEvent) => {
+    console.log(
+      "Key pressed:",
+      event.key,
+      "metaKey:",
+      event.metaKey,
+      "ctrlKey:",
+      event.ctrlKey
+    );
+
+    if ((event.metaKey || event.ctrlKey) && event.key === "S") {
+      console.log("Save shortcut triggered");
+      event.preventDefault();
+      handleSaveFile();
+    }
+  },
+  [handleSaveFile]
+);
+```
+
+**Solutions**:
+
+- Adjust event priority
+- Verify `preventDefault()` calls
+- Handle events in the capture phase
+
+**Fix Example**:
+
+```typescript
+// Handle events in the capture phase
+window.addEventListener("keydown", handleKeyDown, true);
+
+// Stop event propagation
+if ((event.metaKey || event.ctrlKey) && event.key === "S") {
+  event.preventDefault();
+  event.stopPropagation();
+  handleSaveFile();
+}
+```
+
+#### 6. Duplicate Execution Under React Strict Mode
+
+**Symptoms**: Menu events execute twice in the development environment.
+
+**Causes**: React Strict Mode running useEffect twice.
+
+**Diagnostic Steps**:
+
+```typescript
+// Check the duplicate registration prevention flag
+if ((window as { menuListenersSetup?: boolean }).menuListenersSetup) {
+  console.log("Menu listeners already set up, skipping...");
+  return;
+}
+```
+
+**Solutions**:
+
+- Prevent duplicate registration with a global flag
+- Implement proper cleanup handling
+
+**Fix Example**:
+
+```typescript
+useEffect(() => {
+  // Prevent duplicate registration
+  if ((window as { menuListenersSetup?: boolean }).menuListenersSetup) {
+    return;
+  }
+
+  (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+    true;
+
+  // Set up listeners...
+
+  return () => {
+    // Cleanup
+    (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+      false;
+  };
+}, []); // Empty dependency array to register only once
+```
+
+### Debug Log Configuration
+
+#### Backend (Rust) Logging
+
+```rust
+// Detailed log output
+app.on_menu_event(|app, ev| {
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
+
+    println!("[{}] Menu event received: {} (thread: {:?})",
+        timestamp, ev.id().0, std::thread::current().id());
+
+    match ev.id().0.as_str() {
+        "save" => {
+            println!("[{}] Save menu item clicked", timestamp);
+            let result = app.emit("menu-save", ());
+            println!("[{}] Emit result: {:?}", timestamp, result);
+        }
+        _ => {
+            println!("[{}] Unknown menu item: {}", timestamp, ev.id().0);
+        }
+    }
+});
+```
+
+#### Frontend (TypeScript) Logging
+
+```typescript
+// Debounce processing logs
+const unlisten = await listen("menu-save", () => {
+  const now = Date.now();
+  const timeDiff = now - globalDebounce.lastMenuEventTime!;
+
+  console.log(`[${now}] Menu Save event received (time diff: ${timeDiff}ms)`);
+
+  if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+    console.log(`[${now}] Menu Save event debounced`);
+    return;
+  }
+
+  globalDebounce.lastMenuEventTime = now;
+  console.log(`[${now}] Executing Menu Save event`);
+  handleSaveFile();
+});
+```
+
+### Performance Monitoring
+
+#### Menu Event Response Time Measurement
+
+```typescript
+// Performance measurement
+const unlisten = await listen("menu-save", () => {
+  const startTime = performance.now();
+
+  handleSaveFile().then(() => {
+    const endTime = performance.now();
+    console.log(`Menu save operation took ${endTime - startTime} milliseconds`);
+  });
+});
+```
+
+#### Memory Usage Monitoring
+
+```typescript
+// Memory leak monitoring
+const checkMemoryUsage = () => {
+  if (performance.memory) {
+    console.log("Memory usage:", {
+      used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + " MB",
+      total:
+        Math.round(performance.memory.totalJSHeapSize / 1024 / 1024) + " MB",
+      limit:
+        Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024) + " MB",
+    });
+  }
+};
+
+// Periodically check memory usage
+setInterval(checkMemoryUsage, 30000); // Every 30 seconds
+```
+
+## Keyboard Shortcut Conflict Avoidance
+
+### Problem
+
+When system menu shortcuts and frontend keyboard shortcuts overlap, the following issues can arise:
+
+1. **Double execution**: Both the menu and the keyboard shortcut fire
+2. **Unexpected behavior**: Debounce processing does not work correctly
+3. **Degraded user experience**: Operations are executed redundantly
+
+### Solutions
+
+#### 1. Unifying Menu and Keyboard Shortcuts
+
+```rust
+// Backend: Set shortcuts on menu items
+let save = MenuItem::with_id(
+    app, "save", "Save",
+    true, Some("CmdOrCtrl+S")  // Same shortcut as the frontend
+)?;
+```
+
+```typescript
+// Frontend: Keyboard shortcut handling
+const handleKeyDown = useCallback(
+  (event: KeyboardEvent) => {
+    // Command + S: Save
+    if (
+      (event.metaKey || event.ctrlKey) &&
+      event.key === "S" &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
+      handleSaveFile(); // Same handler as the menu
+    }
+  },
+  [handleSaveFile]
+);
+```
+
+#### 2. Event Priority Control
+
+```typescript
+// Handle events in the capture phase (raises priority)
+window.addEventListener("keydown", handleKeyDown, true);
+```
+
+### Platform-Specific Shortcut Handling
+
+```typescript
+// Display shortcuts based on platform
+const formatKeyboardShortcut = (key: string, shift = false) => {
+  const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+  const modifier = isMac ? "⌘" : "Ctrl";
+  const shiftModifier = shift ? "⇧" : "";
+  return `${modifier}${shiftModifier}${key}`;
+};
+```
+
+## Thread Safety and Timing Control
+
+### Timestamp Management in the Backend
+
+```rust
+app.on_menu_event(|app, ev| {
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
+
+    println!("[{}] Menu event received: {} (thread: {:?})",
+        timestamp, ev.id().0, std::thread::current().id());
+
+    // Emit the event
+    let result = app.emit("menu-save", ());
+    println!("[{}] Emit result: {:?}", timestamp, result);
+});
+```
+
+### Synchronization on the Frontend
+
+```typescript
+// Global debounce variables (thread-safe)
+const globalDebounce = window as unknown as {
+  lastMenuEventTime?: number;
+  DEBOUNCE_DELAY: number;
+};
+
+// Timestamp-based debounce
+const now = Date.now();
+const timeDiff = now - globalDebounce.lastMenuEventTime!;
+
+if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
+  console.log(`[${now}] Event debounced (time diff: ${timeDiff}ms)`);
+  return;
+}
+
+globalDebounce.lastMenuEventTime = now;
+console.log(`[${now}] Executing event`);
+```
+
+## Development Environment Considerations
+
+### React Strict Mode
+
+```typescript
+// Prevent duplicate execution under Strict Mode
+useEffect(() => {
+  // Use a global flag to prevent duplicate registration
+  if ((window as { menuListenersSetup?: boolean }).menuListenersSetup) {
+    console.log("Menu listeners already set up, skipping...");
+    return;
+  }
+
+  (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+    true;
+
+  // Set up listeners...
+
+  return () => {
+    // Reset the flag during cleanup
+    (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+      false;
+  };
+}, []); // Empty dependency array to register only once
+```
+
+### Hot Reload
+
+```typescript
+// Properly clean up listeners during hot reload in development
+const setupMenuListeners = async () => {
+  // Clean up existing listeners
+  if (window.menuUnlisteners) {
+    window.menuUnlisteners.forEach((unlisten) => unlisten());
+  }
+
+  // Set up new listeners
+  const unlisteners = [];
+  // ... listener setup ...
+
+  window.menuUnlisteners = unlisteners;
+};
+```
+
+## Performance Optimization
+
+### Lazy Imports
+
+```typescript
+const setupMenuListeners = async () => {
+  // Import the Tauri API only when needed
+  const { listen } = await import("@tauri-apps/api/event");
+
+  // Set up listeners...
+};
+```
+
+### Memory Leak Prevention
+
+```typescript
+// Proper cleanup
+return () => {
+  if (unlistenMenu) unlistenMenu();
+  if (unlistenNewFile) unlistenNewFile();
+  if (unlistenOpenFile) unlistenOpenFile();
+
+  // Clean up global variables
+  (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+    false;
+  delete (window as unknown as { lastMenuEventTime?: number })
+    .lastMenuEventTime;
+};
+```
+
 ## Best Practices
 
 ### 1. Event Handler Design
@@ -529,6 +926,66 @@ describe("Menu System", () => {
 });
 ```
 
+### 6. Log Output
+
+```rust
+println!("[{}] Menu event received: {} (thread: {:?})",
+    timestamp, ev.id().0, std::thread::current().id());
+```
+
+```typescript
+console.log(`[${now}] Menu Save event received (time diff: ${timeDiff}ms)`);
+```
+
+### 7. Type Safety
+
+```typescript
+(window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+  true;
+```
+
+### 8. Thorough Cleanup
+
+```typescript
+return () => {
+  if (unlistenMenu) unlistenMenu();
+  if (unlistenNewFile) unlistenNewFile();
+  if (unlistenOpenFile) unlistenOpenFile();
+  (window as unknown as { menuListenersSetup: boolean }).menuListenersSetup =
+    false;
+};
+```
+
+### 9. Detailed Debug Information
+
+```typescript
+// Output detailed debug information
+console.log("Key Analysis:", {
+  isZoomInKey,
+  isZoomOutKey,
+  isResetKey,
+  key: event.key,
+  code: event.code,
+  shiftKey: event.shiftKey,
+  semicolonWithShift: event.code === "Semicolon" && event.shiftKey,
+});
+```
+
+### 10. Platform-Specific Processing
+
+```rust
+#[cfg(target_os = "macos")]
+{
+    // macOS-specific menu implementation
+    println!("Setting up custom menu for macOS...");
+}
+
+#[cfg(not(target_os = "macos"))]
+{
+    println!("Menu system is only available on macOS");
+}
+```
+
 ## Performance Considerations
 
 ### 1. Event Listener Cleanup
@@ -594,5 +1051,4 @@ Implementing system menus in Tauri applications requires careful attention to ev
 
 ---
 
-**Last Updated**: September 10, 2025
-**Version**: 1.0
+_This document was created based on implementation experience from the Bokuchi project._

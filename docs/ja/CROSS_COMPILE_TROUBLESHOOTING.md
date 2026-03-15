@@ -202,7 +202,7 @@ Error failed to bundle project: `No such file or directory (os error 2)`
 3. **最終出力の確認:**
    ```bash
    ls -la src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
-   # Bokuchi_0.4.0_x64-setup.exe が含まれているはず
+   # Bokuchi_X.Y.Z_x64-setup.exe が含まれているはず
    ```
 
 ## 推奨される環境設定
@@ -259,7 +259,7 @@ rustup target list --installed | grep x86_64-pc-windows-gnu
 
 📁 ビルド成果物:
    実行ファイル: src-tauri/target/x86_64-pc-windows-gnu/release/bokuchi.exe
-   インストーラー: src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Bokuchi_0.3.1_x64-setup.exe
+   インストーラー: src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Bokuchi_X.Y.Z_x64-setup.exe
 ```
 
 ## 注意事項
@@ -321,5 +321,5 @@ rustup target list --installed | grep x86_64-pc-windows-gnu
 
 ---
 
-**最終更新:** 2024年9月16日
-**対象バージョン:** Bokuchi 0.4.0
+**最終更新:** 2026年3月16日
+**バージョン:** 2.1

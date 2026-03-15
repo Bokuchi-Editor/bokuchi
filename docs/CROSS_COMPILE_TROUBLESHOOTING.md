@@ -246,7 +246,7 @@ Error failed to bundle project: `No such file or directory (os error 2)`
 3. **Verify final output:**
    ```bash
    ls -la src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/
-   # Should contain Bokuchi_0.4.0_x64-setup.exe
+   # Should contain Bokuchi_X.Y.Z_x64-setup.exe
    ```
 
 ## Build Process
@@ -373,5 +373,5 @@ echo "   source ~/.zshrc"
 
 ---
 
-**Last Updated**: September 16, 2024
-**Version**: 2.0
+**Last Updated**: March 16, 2026
+**Version**: 2.1
