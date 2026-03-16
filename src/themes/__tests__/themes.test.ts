@@ -64,8 +64,8 @@ describe('applyThemeToDocument', () => {
 });
 
 describe('themes array', () => {
-  it('contains exactly 5 themes', () => {
-    expect(themes).toHaveLength(5);
+  it('contains exactly 6 themes', () => {
+    expect(themes).toHaveLength(6);
   });
 
   it('each entry has name, displayName, and theme', () => {

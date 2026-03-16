@@ -15,6 +15,8 @@ import { useFileOperations } from './useFileOperations';
 import { useAutoSave } from './useAutoSave';
 import { useUpdateChecker } from './useUpdateChecker';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
+import { useEasterEggs } from './useEasterEggs';
+import { useWhatsNew } from './useWhatsNew';
 
 export const useAppState = () => {
   const { t } = useTranslation();
@@ -94,6 +96,13 @@ export const useAppState = () => {
     setOutlinePanelOpen,
     setFolderTreePanelOpen,
   });
+
+  // Easter eggs
+  const {
+    as400Unlocked,
+    showUnlockAnimation,
+    isLateNight,
+  } = useEasterEggs(isInitialized, handleThemeChange);
 
   // Folder tree management
   const {
@@ -177,6 +186,13 @@ export const useAppState = () => {
     setSnackbar,
     t,
   });
+
+  // What's New dialog
+  const {
+    whatsNewOpen,
+    handleWhatsNewOpen,
+    handleWhatsNewClose,
+  } = useWhatsNew(isInitialized, isSettingsLoaded);
 
   // Simple handlers
   const handleContentChange = (content: string) => {
@@ -333,6 +349,14 @@ export const useAppState = () => {
     // New unified settings
     appSettings,
 
+    // Easter eggs
+    as400Unlocked,
+    showUnlockAnimation,
+    isLateNight,
+
+    // What's New state
+    whatsNewOpen,
+
     // Update state
     updateDialogOpen,
     updateDialogPhase,
@@ -374,6 +398,8 @@ export const useAppState = () => {
     handleDrop,
     handleCheckForUpdate,
     handleDismissUpdate,
+    handleWhatsNewOpen,
+    handleWhatsNewClose,
     handleKeyDown,
     handleFolderTreeFileClick,
     handleOpenFolder,

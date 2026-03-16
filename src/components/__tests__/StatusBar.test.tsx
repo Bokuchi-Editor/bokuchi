@@ -7,13 +7,18 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-vi.mock('../../themes', () => ({
-  themes: [
+vi.mock('../../themes', () => {
+  const mockThemes = [
     { name: 'default', displayName: 'Default' },
     { name: 'dark', displayName: 'Dark' },
     { name: 'darcula', displayName: 'Darcula' },
-  ],
-}));
+  ];
+  return {
+    themes: mockThemes,
+    getVisibleThemes: (unlockedSecretThemes: string[] = []) =>
+      mockThemes.filter((t: { name: string; hidden?: boolean }) => !t.hidden || unlockedSecretThemes.includes(t.name)),
+  };
+});
 
 import StatusBar from '../StatusBar';
 import { asMock } from '../../test-utils';

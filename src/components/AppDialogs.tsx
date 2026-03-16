@@ -5,6 +5,7 @@ import HelpDialog from './Help';
 import FileChangeDialog from './FileChangeDialog';
 import SaveBeforeCloseDialog from './SaveBeforeCloseDialog';
 import UpdateDialog, { UpdateDialogPhase } from './UpdateDialog';
+import WhatsNewDialog from './WhatsNewDialog';
 import { AppSettings } from '../types/settings';
 import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
 
@@ -44,6 +45,10 @@ export interface AppDialogsProps {
     tabId: string | null;
   };
 
+  // What's New dialog state
+  whatsNewOpen: boolean;
+  onWhatsNewClose: () => void;
+
   // Update dialog state
   updateDialogOpen: boolean;
   updateDialogPhase: UpdateDialogPhase;
@@ -61,6 +66,9 @@ export interface AppDialogsProps {
   onUpdate: () => void;
   onDismissUpdate: () => void;
 
+  // Easter eggs
+  as400Unlocked?: boolean;
+
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
 }
@@ -75,6 +83,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   helpOpen,
   fileChangeDialog,
   saveBeforeCloseDialog,
+  whatsNewOpen,
+  onWhatsNewClose,
   updateDialogOpen,
   updateDialogPhase,
   updateInfo,
@@ -88,6 +98,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   onCancelBeforeClose,
   onUpdate,
   onDismissUpdate,
+  as400Unlocked,
   t,
 }) => {
   return (
@@ -123,6 +134,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onClose={onSettingsClose}
         settings={settings}
         onSettingsChange={onSettingsChange}
+        as400Unlocked={as400Unlocked}
       />
 
       {/* Help dialog */}
@@ -146,6 +158,12 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onSave={onSaveBeforeClose}
         onDontSave={onDontSaveBeforeClose}
         onCancel={onCancelBeforeClose}
+      />
+
+      {/* What's New dialog */}
+      <WhatsNewDialog
+        open={whatsNewOpen}
+        onClose={onWhatsNewClose}
       />
 
       {/* Update dialog */}

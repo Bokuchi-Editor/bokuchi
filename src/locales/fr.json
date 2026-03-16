@@ -452,6 +452,9 @@
     "emptyFolder": "Ce dossier est vide",
     "toggleExplorer": "Basculer l'explorateur (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Convertir le tableau en Markdown",
     "dialogMessage": "Un tableau a été détecté dans le presse-papiers. Souhaitez-vous le convertir au format Markdown ?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Tableau converti en Markdown avec succès",
     "conversionFailed": "Échec de la conversion du tableau. Collé en texte brut.",
     "noTableDetected": "Aucun tableau détecté dans les données du presse-papiers"
+  },
+  "whatsNew": {
+    "title": "Nouveautés",
+    "gotIt": "Compris",
+    "type": {
+      "feature": "Fonctionnalité",
+      "fix": "Correction",
+      "improvement": "Amélioration"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Arborescence de dossiers",
+        "description": "Parcourez et ouvrez des fichiers depuis la structure de dossiers dans la barre latérale."
+      },
+      "outlinePanel": {
+        "title": "Panneau de plan",
+        "description": "Naviguez dans les titres du document avec la barre latérale de plan."
+      },
+      "editorFocus": {
+        "title": "Amélioration du focus de l'éditeur",
+        "description": "Focus de l'éditeur plus fiable après les dialogues et le changement d'onglets."
+      }
+    }
   }
 }

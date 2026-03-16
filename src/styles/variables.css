@@ -159,3 +159,34 @@
   --color-status-background: #3c3f41;
   --color-status-text: #808080;
 }
+
+/* AS/400 theme (IBM Green Screen) */
+[data-theme="as400"] {
+  --color-background: #000000;
+  --color-surface: #0a0a0a;
+  --color-text: #00ff00;
+  --color-text-secondary: #00cc00;
+  --color-border: #003300;
+  --color-border-light: #001a00;
+
+  --color-code-background: #001a00;
+  --color-code-text: #33ff33;
+  --color-pre-background: #001a00;
+  --color-pre-text: #00ff00;
+
+  --color-syntax-comment: #006600;
+  --color-syntax-keyword: #33ff33;
+  --color-syntax-string: #00cc00;
+  --color-syntax-number: #66ff66;
+  --color-syntax-function: #00ff00;
+  --color-syntax-variable: #33ff33;
+  --color-syntax-type: #66ff66;
+
+  --color-search-highlight: #004d00;
+  --color-search-highlight-text: #00ff00;
+  --color-search-current-highlight: #006600;
+  --color-search-current-highlight-text: #33ff33;
+
+  --color-status-background: #001a00;
+  --color-status-text: #00cc00;
+}

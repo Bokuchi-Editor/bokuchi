@@ -40,7 +40,7 @@ import {
   Tune,
   Refresh
 } from '@mui/icons-material';
-import { themes } from '../themes';
+import { getVisibleThemes } from '../themes';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +54,7 @@ interface SettingsProps {
   onClose: () => void;
   settings: AppSettings;
   onSettingsChange: (settings: AppSettings) => void;
+  as400Unlocked?: boolean;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -70,8 +71,10 @@ const Settings: React.FC<SettingsProps> = ({
   onClose,
   settings,
   onSettingsChange,
+  as400Unlocked,
 }) => {
   const { t } = useTranslation();
+  const visibleThemes = getVisibleThemes(as400Unlocked ? ['as400'] : []);
   const [activeTab, setActiveTab] = React.useState(0);
   const [newVariableKey, setNewVariableKey] = React.useState('');
   const [newVariableValue, setNewVariableValue] = React.useState('');
@@ -410,7 +413,7 @@ const Settings: React.FC<SettingsProps> = ({
                         label={t('settings.appearance.theme')}
                         onChange={(e) => handleSettingChange('appearance', 'theme', e.target.value)}
                       >
-                        {themes.map((themeOption) => (
+                        {visibleThemes.map((themeOption) => (
                           <MenuItem key={themeOption.name} value={themeOption.name}>
                             {themeOption.displayName}
                           </MenuItem>

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "npm run check && tauri dev",
+    "tauri:dev:clean": "rm -f \"$HOME/Library/Application Support/com.pemomomo.bokuchi/.app-state.dat\" && npm run tauri:dev",
     "tauri:dev:dynamic": "node scripts/tauri-dev.js",
     "tauri:build": "tauri build",
     "dev:standalone": "npm run build && npm run tauri:dev",
