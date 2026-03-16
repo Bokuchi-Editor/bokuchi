@@ -11,10 +11,10 @@
 
 ### 2. ビルドスクリプト
 
-- [ ] `build-macos-signed.sh` - DMG ファイル名のバージョン部分を更新
-  - 例: `Bokuchi_0.2_aarch64.dmg` → `Bokuchi_新バージョン_aarch64.dmg`
-- [ ] `build-windows.sh` - インストーラーファイル名のバージョン部分を更新
-  - 例: `Bokuchi_0.2_x64-setup.exe` → `Bokuchi_新バージョン_x64-setup.exe`
+- [ ] `build/build-macos-signed.sh` - DMG ファイル名のバージョン部分を更新
+- [ ] `build/build-macos-notarized.sh` - DMG ファイル名のバージョン部分を更新
+- [ ] `build/build-macos.sh` - DMG ファイル名のバージョン部分を更新
+- [ ] `build/build-windows.sh` - インストーラーファイル名のバージョン部分を更新
 
 ### 3. その他の可能性のあるファイル
 
@@ -38,6 +38,7 @@
 - `src-tauri/Cargo.lock`は自動生成されるため、手動更新は不要
 - ビルドスクリプトのファイル名は実際のビルド成果物のファイル名と一致させる必要がある
 
-## 現在のバージョン: 0.6.0
+---
 
-最終更新日: 2026年3月6日
+**最終更新日**: 2026年3月16日
+**バージョン**: 1.1

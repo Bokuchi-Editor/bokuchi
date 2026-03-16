@@ -10,10 +10,9 @@ This directory contains documentation for the Bokuchi project.
 ## Documentation Files
 
 - [Testing Guide](./TESTING.md)
-- [Test Strategy](./TEST_STRATEGY.md)
+- [Monkey Test Cases](./MONKEY_TEST_CASE.md)
 - [Cross Compile Troubleshooting](./CROSS_COMPILE_TROUBLESHOOTING.md)
 - [macOS Notarization Guide](./MACOS_NOTARIZATION_GUIDE.md)
-- [Updater Signing (Tauri v2)](./UPDATER_SIGNING.md)
 - [Menu System Guide](./MENU_SYSTEM_GUIDE.md)
 - [Security](./SECURITY.md)
 - [Version Update Checklist](./VERSION_UPDATE_CHECKLIST.md)

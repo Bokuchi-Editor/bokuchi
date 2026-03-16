@@ -44,12 +44,13 @@ npm run test:rust:verbose  # With verbose output
 | Category | Location | Approx. count |
 |----------|----------|---------------|
 | Rust unit tests | `src-tauri/src/tests.rs` | 59 |
-| TS utility tests | `src/utils/__tests__/*.test.ts` | 37 |
-| TS API tests | `src/api/__tests__/*.test.ts` | 94+ |
-| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 16 |
-| TS component tests | `src/components/__tests__/*.test.tsx` | 7 |
-| TS theme tests | `src/themes/__tests__/*.test.ts` | 10 |
-| TS integration tests | `src/__tests__/integration/*.test.tsx` | 30 |
+| TS utility tests | `src/utils/__tests__/*.test.ts` | 167 |
+| TS API tests | `src/api/__tests__/*.test.ts` | 173 |
+| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 20 |
+| TS component tests | `src/components/__tests__/*.test.tsx` | 173 |
+| TS hook tests | `src/hooks/__tests__/*.test.ts(x)` | 80 |
+| TS theme tests | `src/themes/__tests__/*.test.ts` | 14 |
+| TS integration tests | `src/__tests__/integration/*.test.tsx` | 37 |
 
 ## CI
 
@@ -68,6 +69,3 @@ E2E test code exists in `tests/e2e/` and `wdio.conf.ts` but is currently **not e
 
 Test coverage for UI logic and component interactions is handled by Tier 1 & 2 (Vitest + RTL) instead.
 
-## Test Strategy
-
-For the full list of planned test cases and implementation strategy, see [TEST_STRATEGY.md](./TEST_STRATEGY.md).

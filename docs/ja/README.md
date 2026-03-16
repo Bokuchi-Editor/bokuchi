@@ -9,6 +9,8 @@
 
 ## ドキュメントファイル
 
+- [テストガイド](./TESTING.md)
+- [モンキーテストケース](./MONKEY_TEST_CASE.md)
 - [クロスコンパイル トラブルシューティング](./CROSS_COMPILE_TROUBLESHOOTING.md)
 - [macOS 公証化ガイド](./MACOS_NOTARIZATION_GUIDE.md)
 - [メニューシステムガイド](./MENU_SYSTEM_GUIDE.md)

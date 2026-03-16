@@ -337,5 +337,4 @@ spctl --assess --verbose YourApp.app
 ---
 
 **最終更新**: 2025 年 9 月 10 日
-**作成者**: Bokuchi Development Team
 **バージョン**: 1.0
