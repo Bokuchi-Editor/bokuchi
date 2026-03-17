@@ -409,7 +409,8 @@
     "line": "Zeile",
     "column": "Spalte",
     "characters": "Zeichen",
-    "selected": "ausgewählt"
+    "selected": "ausgewählt",
+    "saved": "Gespeichert"
   },
   "zoom": {
     "maxLimitReached": "Maximale Zoom-Stufe ({{maxZoom}}%) erreicht",
@@ -476,17 +477,17 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "folderTree": {
-        "title": "Ordnerstruktur",
-        "description": "Durchsuchen und öffnen Sie Dateien aus der Ordnerstruktur in der Seitenleiste."
+      "saveStatus": {
+        "title": "Speicherstatus in der Statusleiste",
+        "description": "Die Speicherbestätigung wird jetzt in der Statusleiste anstatt als Pop-up-Benachrichtigung angezeigt."
       },
-      "outlinePanel": {
-        "title": "Gliederungsbereich",
-        "description": "Navigieren Sie durch die Dokumentüberschriften mit der Gliederungs-Seitenleiste."
+      "whatsNewDialog": {
+        "title": "Neuigkeiten-Dialog",
+        "description": "Neue Funktionen und Änderungen werden nach einem Update automatisch angezeigt. Genau dieser Bildschirm!"
       },
-      "editorFocus": {
-        "title": "Verbesserter Editor-Fokus",
-        "description": "Zuverlässigerer Editor-Fokus nach Dialogen und Tab-Wechsel."
+      "checkboxFix": {
+        "title": "Kontrollkästchen-Korrektur in der Vorschau",
+        "description": "Ein Problem wurde behoben, bei dem das Klicken auf Kontrollkästchen in der Vorschau keine Änderungen widerspiegelte."
       }
     }
   }

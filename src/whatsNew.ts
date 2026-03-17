@@ -25,22 +25,22 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.6.0',
+  version: '0.6.1',
   changes: [
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.folderTree.title',
-      descriptionKey: 'whatsNew.changes.folderTree.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.outlinePanel.title',
-      descriptionKey: 'whatsNew.changes.outlinePanel.description',
-    },
-    {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.editorFocus.title',
-      descriptionKey: 'whatsNew.changes.editorFocus.description',
+      titleKey: 'whatsNew.changes.saveStatus.title',
+      descriptionKey: 'whatsNew.changes.saveStatus.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.whatsNewDialog.title',
+      descriptionKey: 'whatsNew.changes.whatsNewDialog.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.checkboxFix.title',
+      descriptionKey: 'whatsNew.changes.checkboxFix.description',
     },
   ],
 };

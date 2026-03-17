@@ -8,7 +8,7 @@ interface UseAutoSaveParams {
   isSettingsLoaded: boolean;
   isInitialized: boolean;
   saveTab: (tabId: string) => Promise<boolean>;
-  setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void;
+  showSaveStatus: (message: string) => void;
   t: (key: string) => string;
 }
 
@@ -18,7 +18,7 @@ export const useAutoSave = ({
   isSettingsLoaded,
   isInitialized,
   saveTab,
-  setSnackbar,
+  showSaveStatus,
   t,
 }: UseAutoSaveParams) => {
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -37,7 +37,7 @@ export const useAutoSave = ({
       try {
         const success = await saveTab(activeTab.id);
         if (success) {
-          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+          showSaveStatus(t('statusBar.saved'));
         }
       } catch (error) {
         console.error('Auto-save failed:', error);
@@ -49,5 +49,5 @@ export const useAutoSave = ({
         clearTimeout(autoSaveTimerRef.current);
       }
     };
-  }, [activeTab?.content, activeTab?.id, activeTab?.isModified, activeTab?.isNew, activeTab?.filePath, appSettings.advanced.autoSave, isSettingsLoaded, isInitialized, saveTab, t, setSnackbar]);
+  }, [activeTab?.content, activeTab?.id, activeTab?.isModified, activeTab?.isNew, activeTab?.filePath, appSettings.advanced.autoSave, isSettingsLoaded, isInitialized, saveTab, t, showSaveStatus]);
 };

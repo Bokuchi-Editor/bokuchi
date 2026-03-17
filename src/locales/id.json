@@ -409,7 +409,8 @@
     "line": "Baris",
     "column": "Kolom",
     "characters": "karakter",
-    "selected": "dipilih"
+    "selected": "dipilih",
+    "saved": "Tersimpan"
   },
   "zoom": {
     "maxLimitReached": "Level zoom maksimum ({{maxZoom}}%) tercapai",
@@ -476,17 +477,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "folderTree": {
-        "title": "Pohon Folder",
-        "description": "Jelajahi dan buka file dari struktur folder di bilah samping."
+      "saveStatus": {
+        "title": "Status simpan di bilah status",
+        "description": "Konfirmasi penyimpanan sekarang ditampilkan di bilah status, bukan notifikasi pop-up."
       },
-      "outlinePanel": {
-        "title": "Panel Kerangka",
-        "description": "Navigasi judul dokumen Anda dengan bilah samping kerangka."
+      "whatsNewDialog": {
+        "title": "Dialog Yang Baru",
+        "description": "Fitur baru dan perubahan ditampilkan secara otomatis setelah pembaruan. Inilah layar yang sedang Anda lihat!"
       },
-      "editorFocus": {
-        "title": "Fokus Editor yang Ditingkatkan",
-        "description": "Fokus editor yang lebih andal setelah dialog dan pergantian tab."
+      "checkboxFix": {
+        "title": "Perbaikan kotak centang pratinjau",
+        "description": "Memperbaiki masalah di mana mengklik kotak centang di pratinjau tidak mencerminkan perubahan."
       }
     }
   }

@@ -409,7 +409,8 @@
     "line": "Ligne",
     "column": "Colonne",
     "characters": "caractères",
-    "selected": "sélectionné"
+    "selected": "sélectionné",
+    "saved": "Enregistré"
   },
   "zoom": {
     "maxLimitReached": "Niveau de zoom maximum ({{maxZoom}}%) atteint",
@@ -476,17 +477,17 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "folderTree": {
-        "title": "Arborescence de dossiers",
-        "description": "Parcourez et ouvrez des fichiers depuis la structure de dossiers dans la barre latérale."
+      "saveStatus": {
+        "title": "État de sauvegarde dans la barre d'état",
+        "description": "La confirmation de sauvegarde s'affiche désormais dans la barre d'état au lieu d'une notification contextuelle."
       },
-      "outlinePanel": {
-        "title": "Panneau de plan",
-        "description": "Naviguez dans les titres du document avec la barre latérale de plan."
+      "whatsNewDialog": {
+        "title": "Dialogue des nouveautés",
+        "description": "Les nouvelles fonctionnalités et modifications s'affichent automatiquement après une mise à jour. C'est exactement cet écran !"
       },
-      "editorFocus": {
-        "title": "Amélioration du focus de l'éditeur",
-        "description": "Focus de l'éditeur plus fiable après les dialogues et le changement d'onglets."
+      "checkboxFix": {
+        "title": "Correction des cases à cocher dans l'aperçu",
+        "description": "Correction d'un problème où cliquer sur les cases à cocher dans l'aperçu ne reflétait pas les modifications."
       }
     }
   }

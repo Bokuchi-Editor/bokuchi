@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTabsDesktop } from './useTabsDesktop';
 import { useZoom } from './useZoom';
@@ -31,6 +31,18 @@ export const useAppState = () => {
     message: '',
     severity: 'success'
   });
+  const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
+  const saveStatusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showSaveStatus = useCallback((message: string) => {
+    if (saveStatusTimerRef.current) {
+      clearTimeout(saveStatusTimerRef.current);
+    }
+    setSaveStatusMessage(message);
+    saveStatusTimerRef.current = setTimeout(() => {
+      setSaveStatusMessage(null);
+    }, 3000);
+  }, []);
   const [editorStatus, setEditorStatus] = useState({
     line: 1,
     column: 1,
@@ -158,6 +170,7 @@ export const useAppState = () => {
     updateTabContent,
     requestEditorFocus,
     setSnackbar,
+    showSaveStatus,
     t,
   });
 
@@ -168,7 +181,7 @@ export const useAppState = () => {
     isSettingsLoaded,
     isInitialized,
     saveTab,
-    setSnackbar,
+    showSaveStatus,
     t,
   });
 
@@ -335,6 +348,9 @@ export const useAppState = () => {
     isAtLimit,
     canZoomIn,
     canZoomOut,
+
+    // Save status (for status bar)
+    saveStatusMessage,
 
     // Outline panel
     outlinePanelOpen,

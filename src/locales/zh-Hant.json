@@ -409,7 +409,8 @@
     "line": "行",
     "column": "欄",
     "characters": "字元",
-    "selected": "已選擇"
+    "selected": "已選擇",
+    "saved": "已儲存"
   },
   "zoom": {
     "maxLimitReached": "已達到最大縮放層級（{{maxZoom}}%）",
@@ -476,17 +477,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "folderTree": {
-        "title": "資料夾樹",
-        "description": "在側邊欄中瀏覽資料夾結構並開啟檔案。"
+      "saveStatus": {
+        "title": "狀態列顯示儲存狀態",
+        "description": "儲存回饋現在顯示在狀態列中，而非彈出通知。"
       },
-      "outlinePanel": {
-        "title": "大綱面板",
-        "description": "透過大綱側邊欄導覽文件標題。"
+      "whatsNewDialog": {
+        "title": "新功能對話框",
+        "description": "更新後會自動顯示新功能和變更內容。正是您現在看到的這個畫面！"
       },
-      "editorFocus": {
-        "title": "改進編輯器焦點",
-        "description": "對話框和分頁切換後編輯器焦點更加可靠。"
+      "checkboxFix": {
+        "title": "預覽核取方塊修復",
+        "description": "修復了在預覽中點擊核取方塊後變更未反映的問題。"
       }
     }
   }

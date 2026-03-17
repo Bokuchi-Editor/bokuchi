@@ -20,6 +20,7 @@ interface StatusBarProps {
   canZoomOut: boolean;
   as400Unlocked?: boolean;
   isLateNight?: boolean;
+  saveStatusMessage?: string | null;
 }
 
 const StatusBar: React.FC<StatusBarProps> = ({
@@ -37,7 +38,8 @@ const StatusBar: React.FC<StatusBarProps> = ({
   canZoomIn,
   canZoomOut,
   as400Unlocked,
-  isLateNight
+  isLateNight,
+  saveStatusMessage
 }) => {
   const { t } = useTranslation();
   const [themeMenuAnchor, setThemeMenuAnchor] = useState<null | HTMLElement>(null);
@@ -160,8 +162,23 @@ const StatusBar: React.FC<StatusBarProps> = ({
         </Tooltip>
       </Box>
 
+      {/* Save status message */}
+      {saveStatusMessage && (
+        <Typography
+          variant="caption"
+          sx={{
+            ml: 'auto',
+            mr: 1,
+            fontFamily: 'monospace',
+            opacity: 0.8,
+          }}
+        >
+          {saveStatusMessage}
+        </Typography>
+      )}
+
       {/* Theme display and toggle - positioned at right end */}
-      <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ ml: saveStatusMessage ? 0 : 'auto', display: 'flex', alignItems: 'center' }}>
         <IconButton
           size="small"
           onClick={handleThemeMenuOpen}

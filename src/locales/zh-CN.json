@@ -409,7 +409,8 @@
     "line": "行",
     "column": "列",
     "characters": "字符",
-    "selected": "已选择"
+    "selected": "已选择",
+    "saved": "已保存"
   },
   "zoom": {
     "maxLimitReached": "已达到最大缩放级别（{{maxZoom}}%）",
@@ -476,17 +477,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "folderTree": {
-        "title": "文件夹树",
-        "description": "在侧边栏中浏览文件夹结构并打开文件。"
+      "saveStatus": {
+        "title": "状态栏显示保存状态",
+        "description": "保存反馈现在显示在状态栏中，而不是弹出通知。"
       },
-      "outlinePanel": {
-        "title": "大纲面板",
-        "description": "通过大纲侧边栏导航文档标题。"
+      "whatsNewDialog": {
+        "title": "新功能对话框",
+        "description": "更新后会自动显示新功能和变更内容。正是您现在看到的这个界面！"
       },
-      "editorFocus": {
-        "title": "改进编辑器聚焦",
-        "description": "对话框和标签切换后编辑器聚焦更加可靠。"
+      "checkboxFix": {
+        "title": "预览复选框修复",
+        "description": "修复了在预览中点击复选框后更改未反映的问题。"
       }
     }
   }

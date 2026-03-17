@@ -409,7 +409,8 @@
     "line": "行",
     "column": "列",
     "characters": "文字",
-    "selected": "選択中"
+    "selected": "選択中",
+    "saved": "保存完了"
   },
   "zoom": {
     "maxLimitReached": "最大ズームレベル ({{maxZoom}}%) に達しました",
@@ -476,17 +477,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "folderTree": {
-        "title": "フォルダツリー",
-        "description": "サイドバーからフォルダ構造を参照してファイルを開けるようになりました。"
+      "saveStatus": {
+        "title": "ステータスバーに保存状態を表示",
+        "description": "保存完了のフィードバックがポップアップ通知ではなくステータスバーに表示されるようになりました。"
       },
-      "outlinePanel": {
-        "title": "アウトラインパネル",
-        "description": "サイドバーで見出し構造をナビゲートできるようになりました。"
+      "whatsNewDialog": {
+        "title": "What's New ダイアログ",
+        "description": "アップデート後に新機能や変更点が自動で表示されます。まさにこの画面です！"
       },
-      "editorFocus": {
-        "title": "エディタフォーカスの改善",
-        "description": "ダイアログやタブ切り替え後のエディタフォーカスがより確実になりました。"
+      "checkboxFix": {
+        "title": "プレビューのチェックボックス修正",
+        "description": "プレビュー上でチェックボックスをクリックしても変更が反映されない問題を修正しました。"
       }
     }
   }

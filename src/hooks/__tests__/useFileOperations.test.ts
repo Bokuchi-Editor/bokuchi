@@ -28,6 +28,7 @@ describe('useFileOperations', () => {
   let updateTabContent: ReturnType<typeof vi.fn>;
   let requestEditorFocus: ReturnType<typeof vi.fn>;
   let setSnackbar: ReturnType<typeof vi.fn>;
+  let showSaveStatus: ReturnType<typeof vi.fn>;
   const t = (key: string) => key;
 
   const activeTab: Tab = {
@@ -53,6 +54,7 @@ describe('useFileOperations', () => {
     updateTabContent = vi.fn();
     requestEditorFocus = vi.fn();
     setSnackbar = vi.fn();
+    showSaveStatus = vi.fn();
   });
 
   const defaultParams = (): UseFileOperationsParams => ({
@@ -67,6 +69,7 @@ describe('useFileOperations', () => {
     updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
     requestEditorFocus: asMock<() => void>(requestEditorFocus),
     setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void>(setSnackbar),
+    showSaveStatus: asMock<(message: string) => void>(showSaveStatus),
     t,
   });
 
@@ -92,7 +95,7 @@ describe('useFileOperations', () => {
     });
 
     expect(saveTab).toHaveBeenCalledWith('tab1');
-    expect(setSnackbar).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }));
+    expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
   });
 
   // T-FO-03: handleSaveFileAs calls saveTabAs

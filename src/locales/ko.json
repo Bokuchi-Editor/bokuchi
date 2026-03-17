@@ -409,7 +409,8 @@
     "line": "줄",
     "column": "열",
     "characters": "문자",
-    "selected": "선택됨"
+    "selected": "선택됨",
+    "saved": "저장 완료"
   },
   "zoom": {
     "maxLimitReached": "최대 확대 수준 ({{maxZoom}}%)에 도달했습니다",
@@ -476,17 +477,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "folderTree": {
-        "title": "폴더 트리",
-        "description": "사이드바에서 폴더 구조를 탐색하고 파일을 열 수 있습니다."
+      "saveStatus": {
+        "title": "상태 표시줄에 저장 상태 표시",
+        "description": "저장 확인이 팝업 알림 대신 상태 표시줄에 표시됩니다."
       },
-      "outlinePanel": {
-        "title": "개요 패널",
-        "description": "개요 사이드바로 문서 제목을 탐색할 수 있습니다."
+      "whatsNewDialog": {
+        "title": "새로운 기능 대화상자",
+        "description": "업데이트 후 새로운 기능과 변경 사항이 자동으로 표시됩니다. 바로 지금 보고 계신 이 화면입니다!"
       },
-      "editorFocus": {
-        "title": "에디터 포커스 개선",
-        "description": "대화상자 및 탭 전환 후 더 안정적인 에디터 포커스."
+      "checkboxFix": {
+        "title": "미리보기 체크박스 수정",
+        "description": "미리보기에서 체크박스를 클릭해도 변경 사항이 반영되지 않는 문제를 수정했습니다."
       }
     }
   }
