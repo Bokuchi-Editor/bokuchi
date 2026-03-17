@@ -975,7 +975,7 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ p: 0, display: 'flex' }}>
-        <Box sx={{ width: 250, borderRight: 1, borderColor: 'divider' }}>
+        <Box sx={{ width: 280, borderRight: 1, borderColor: 'divider' }}>
           <List>
             {helpPages.map((page, index) => (
               <React.Fragment key={page.id}>

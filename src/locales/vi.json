@@ -409,7 +409,8 @@
     "line": "Dòng",
     "column": "Cột",
     "characters": "ký tự",
-    "selected": "đã chọn"
+    "selected": "đã chọn",
+    "saved": "Đã lưu"
   },
   "zoom": {
     "maxLimitReached": "Đã đạt mức zoom tối đa ({{maxZoom}}%)",
@@ -476,17 +477,17 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "folderTree": {
-        "title": "Cây thư mục",
-        "description": "Duyệt và mở tệp từ cấu trúc thư mục trong thanh bên."
+      "saveStatus": {
+        "title": "Trạng thái lưu trên thanh trạng thái",
+        "description": "Xác nhận lưu giờ đây hiển thị trên thanh trạng thái thay vì thông báo bật lên."
       },
-      "outlinePanel": {
-        "title": "Bảng phác thảo",
-        "description": "Điều hướng các tiêu đề tài liệu với thanh bên phác thảo."
+      "whatsNewDialog": {
+        "title": "Hộp thoại Có gì mới",
+        "description": "Các tính năng mới và thay đổi được hiển thị tự động sau khi cập nhật. Đây chính là màn hình bạn đang xem!"
       },
-      "editorFocus": {
-        "title": "Cải thiện focus trình soạn thảo",
-        "description": "Focus trình soạn thảo đáng tin cậy hơn sau hộp thoại và chuyển tab."
+      "checkboxFix": {
+        "title": "Sửa lỗi hộp kiểm xem trước",
+        "description": "Đã sửa lỗi nhấp vào hộp kiểm trong xem trước không phản ánh thay đổi."
       }
     }
   }

@@ -7,7 +7,7 @@ import { asMock } from '../../test-utils';
 
 describe('useAutoSave', () => {
   let saveTab: ReturnType<typeof vi.fn>;
-  let setSnackbar: ReturnType<typeof vi.fn>;
+  let showSaveStatus: ReturnType<typeof vi.fn>;
   const t = (key: string) => key;
 
   const activeTab: Tab = {
@@ -22,7 +22,7 @@ describe('useAutoSave', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     saveTab = vi.fn().mockResolvedValue(true);
-    setSnackbar = vi.fn();
+    showSaveStatus = vi.fn();
   });
 
   afterEach(() => {
@@ -35,7 +35,7 @@ describe('useAutoSave', () => {
     isSettingsLoaded: true,
     isInitialized: true,
     saveTab: asMock<(tabId: string) => Promise<boolean>>(saveTab),
-    setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void>(setSnackbar),
+    showSaveStatus: asMock<(message: string) => void>(showSaveStatus),
     t,
   });
 
@@ -92,15 +92,11 @@ describe('useAutoSave', () => {
     expect(saveTab).not.toHaveBeenCalled();
   });
 
-  // T-AS-06: shows snackbar on successful save
-  it('T-AS-06: shows snackbar on successful save', async () => {
+  // T-AS-06: shows save status on successful save
+  it('T-AS-06: shows save status on successful save', async () => {
     renderHook(() => useAutoSave(defaultParams()));
 
     await vi.advanceTimersByTimeAsync(3000);
-    expect(setSnackbar).toHaveBeenCalledWith({
-      open: true,
-      message: 'fileOperations.fileSaved',
-      severity: 'success',
-    });
+    expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
   });
 });

@@ -409,7 +409,8 @@
     "line": "Línea",
     "column": "Columna",
     "characters": "caracteres",
-    "selected": "seleccionado"
+    "selected": "seleccionado",
+    "saved": "Guardado"
   },
   "zoom": {
     "maxLimitReached": "Nivel máximo de zoom ({{maxZoom}}%) alcanzado",
@@ -476,17 +477,17 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "folderTree": {
-        "title": "Árbol de carpetas",
-        "description": "Navega y abre archivos desde la estructura de carpetas en la barra lateral."
+      "saveStatus": {
+        "title": "Estado de guardado en la barra de estado",
+        "description": "La confirmación de guardado ahora se muestra en la barra de estado en lugar de una notificación emergente."
       },
-      "outlinePanel": {
-        "title": "Panel de esquema",
-        "description": "Navega por los encabezados del documento con la barra lateral de esquema."
+      "whatsNewDialog": {
+        "title": "Diálogo de novedades",
+        "description": "Las nuevas funciones y cambios se muestran automáticamente después de una actualización. ¡Es exactamente esta pantalla!"
       },
-      "editorFocus": {
-        "title": "Enfoque del editor mejorado",
-        "description": "Enfoque del editor más confiable después de diálogos y cambio de pestañas."
+      "checkboxFix": {
+        "title": "Corrección de casillas en la vista previa",
+        "description": "Se corrigió un problema donde hacer clic en las casillas de la vista previa no reflejaba los cambios."
       }
     }
   }

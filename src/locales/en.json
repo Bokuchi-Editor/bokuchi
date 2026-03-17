@@ -409,7 +409,8 @@
     "line": "Line",
     "column": "Column",
     "characters": "characters",
-    "selected": "selected"
+    "selected": "selected",
+    "saved": "Saved"
   },
   "zoom": {
     "maxLimitReached": "Maximum zoom level ({{maxZoom}}%) reached",
@@ -476,17 +477,17 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "folderTree": {
-        "title": "Folder Tree",
-        "description": "Browse and open files from a folder structure in the sidebar."
+      "saveStatus": {
+        "title": "Save Status in Status Bar",
+        "description": "Save feedback is now shown in the status bar instead of a pop-up notification."
       },
-      "outlinePanel": {
-        "title": "Outline Panel",
-        "description": "Navigate your document headings with the outline sidebar."
+      "whatsNewDialog": {
+        "title": "What's New Dialog",
+        "description": "New features and changes are shown automatically after an update. This is the very screen you're looking at!"
       },
-      "editorFocus": {
-        "title": "Improved Editor Focus",
-        "description": "More reliable editor focus after dialogs and tab switching."
+      "checkboxFix": {
+        "title": "Preview Checkbox Fix",
+        "description": "Fixed an issue where clicking checkboxes in the preview did not reflect changes."
       }
     }
   }

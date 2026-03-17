@@ -16,6 +16,7 @@ export interface UseFileOperationsParams {
   updateTabContent: (tabId: string, content: string) => void;
   requestEditorFocus: () => void;
   setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void;
+  showSaveStatus: (message: string) => void;
   t: (key: string) => string;
 }
 
@@ -31,6 +32,7 @@ export const useFileOperations = ({
   updateTabContent,
   requestEditorFocus,
   setSnackbar,
+  showSaveStatus,
   t,
 }: UseFileOperationsParams) => {
   const [saveBeforeCloseDialog, setSaveBeforeCloseDialog] = useState<{
@@ -59,7 +61,7 @@ export const useFileOperations = ({
       try {
         const success = await saveTab(activeTab.id);
         if (success) {
-          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+          showSaveStatus(t('statusBar.saved'));
         } else {
           setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
@@ -74,7 +76,7 @@ export const useFileOperations = ({
       try {
         const success = await saveTabAs(activeTab.id);
         if (success) {
-          setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+          showSaveStatus(t('statusBar.saved'));
         } else {
           setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
@@ -89,7 +91,7 @@ export const useFileOperations = ({
         severity: 'error'
       });
     }
-  }, [activeTab, saveTabAs, setSnackbar, t]);
+  }, [activeTab, saveTabAs, setSnackbar, showSaveStatus, t]);
 
   const handleSaveWithVariables = useCallback(async () => {
     if (!activeTab) {
@@ -105,7 +107,7 @@ export const useFileOperations = ({
       const expandedContent = await variableApi.getExpandedMarkdown(activeTab.content, globalVariables);
       const result = await desktopApi.saveFileAs(expandedContent);
       if (result.success) {
-        setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+        showSaveStatus(t('statusBar.saved'));
       } else {
         setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
       }
@@ -113,7 +115,7 @@ export const useFileOperations = ({
       console.error('Failed to save file with variables:', error);
       setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
     }
-  }, [activeTab, globalVariables, setSnackbar, t]);
+  }, [activeTab, globalVariables, setSnackbar, showSaveStatus, t]);
 
   const handleTabClose = (tabId: string) => {
     const tab = tabs.find(t => t.id === tabId);
@@ -137,7 +139,7 @@ export const useFileOperations = ({
       const success = await saveTab(saveBeforeCloseDialog.tabId);
       if (success) {
         removeTab(saveBeforeCloseDialog.tabId);
-        setSnackbar({ open: true, message: t('fileOperations.fileSaved'), severity: 'success' });
+        showSaveStatus(t('statusBar.saved'));
       }
     } catch (error) {
       console.error('Failed to save file before closing:', error);

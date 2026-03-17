@@ -42,6 +42,7 @@ function AppDesktop() {
     canZoomIn,
     canZoomOut,
     appSettings,
+    saveStatusMessage,
 
     // What's New state
     whatsNewOpen,
@@ -490,6 +491,7 @@ function AppDesktop() {
         canZoomOut={canZoomOut}
         as400Unlocked={as400Unlocked}
         isLateNight={isLateNight}
+        saveStatusMessage={saveStatusMessage}
       />
       {/* Konami Code unlock animation */}
       {showUnlockAnimation && (
