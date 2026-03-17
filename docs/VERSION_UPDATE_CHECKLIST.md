@@ -16,7 +16,52 @@
 - [ ] `build/build-macos.sh` - Update version part in DMG filename
 - [ ] `build/build-windows.sh` - Update version part in installer filename
 
-### 3. Other Potential Files
+### 3. What's New Dialog
+
+The "What's New" modal is shown automatically on the first launch after a version update.
+
+- [ ] `src/whatsNew.ts` - Update `version` to match the new version, and replace the `changes` array with the new release's changes
+- [ ] Locale files (`src/locales/*.json`) - Update the `whatsNew.changes` section in all 14 locale files
+
+#### How to update `src/whatsNew.ts`
+
+Only two fields need to change: `version` and `changes`.
+
+```ts
+export const whatsNewContent: WhatsNewContent = {
+  version: '0.7.0', // ← Must match package.json version
+  changes: [
+    {
+      type: 'feature',           // 'feature' | 'fix' | 'improvement'
+      titleKey: 'whatsNew.changes.katex.title',
+      descriptionKey: 'whatsNew.changes.katex.description', // optional
+    },
+    // Add more entries as needed
+  ],
+};
+```
+
+#### How to update locale files
+
+In each locale file under `src/locales/`, only the `whatsNew.changes` object needs to be replaced. The `title`, `gotIt`, and `type` translations are fixed and should not be changed.
+
+```json
+"whatsNew": {
+  "title": "...",          // ← Do NOT change
+  "gotIt": "...",          // ← Do NOT change
+  "type": { ... },        // ← Do NOT change
+  "changes": {            // ← Replace this section each release
+    "katex": {
+      "title": "Math Rendering (KaTeX)",
+      "description": "Render math equations with $...$ and $$...$$ syntax."
+    }
+  }
+}
+```
+
+> **Note:** The keys inside `changes` (e.g., `katex`) must match the keys referenced in `src/whatsNew.ts` (`whatsNew.changes.katex.title`).
+
+### 4. Other Potential Files
 
 - [ ] `README.md` - Update if version information is documented
 - [ ] `CHANGELOG.md` - Update for the new release:
@@ -40,5 +85,5 @@
 
 ---
 
-**Last Updated**: March 16, 2026
-**Version**: 1.1
+**Last Updated**: March 17, 2026
+**Version**: 1.2
