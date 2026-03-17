@@ -137,6 +137,11 @@ vi.mock('../components/RecentFilesDialog', () => ({
 vi.mock('../i18n', () => ({}));
 
 // Mock Tauri API
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
+  transformCallback: vi.fn(),
+}));
+
 vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn().mockResolvedValue(() => {}),
 }));
