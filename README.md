@@ -188,9 +188,9 @@ Build output locations:
 Developer documentation is available in the [`docs/`](docs/) directory:
 
 - [Testing Guide](docs/TESTING.md) — Test architecture, running tests, CI
-- [Test Strategy](docs/TEST_STRATEGY.md) — Planned test cases and implementation approach
 - [Menu System Guide](docs/MENU_SYSTEM_GUIDE.md) — Menu architecture and customization
 - [Security](docs/SECURITY.md) — Security policy and reporting
 - [Cross Compile Troubleshooting](docs/CROSS_COMPILE_TROUBLESHOOTING.md)
 - [macOS Notarization Guide](docs/MACOS_NOTARIZATION_GUIDE.md)
 - [Version Update Checklist](docs/VERSION_UPDATE_CHECKLIST.md)
+- [Monkey Test Case](docs/MONKEY_TEST_CASE.md) — Manual UI integration test cases
