@@ -44,6 +44,11 @@ vi.mock('../SaveBeforeCloseDialog', () => ({
     ) : null,
 }));
 
+vi.mock('../WhatsNewDialog', () => ({
+  default: ({ open, onClose }: { open: boolean; onClose: () => void }) =>
+    open ? <div data-testid="whats-new-dialog"><button onClick={onClose}>close-whats-new</button></div> : null,
+}));
+
 vi.mock('../UpdateDialog', () => ({
   default: ({
     open,
@@ -86,6 +91,8 @@ describe('AppDialogs', () => {
       fileName: '',
       tabId: null,
     },
+    whatsNewOpen: false,
+    onWhatsNewClose: asMock<() => void>(vi.fn()),
     updateDialogOpen: false,
     updateDialogPhase: 'notify' as const,
     updateInfo: null,

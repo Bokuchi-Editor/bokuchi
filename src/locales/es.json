@@ -452,6 +452,9 @@
     "emptyFolder": "Esta carpeta está vacía",
     "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Convertir tabla a Markdown",
     "dialogMessage": "Se detectó una tabla en el portapapeles. ¿Desea convertirla al formato Markdown?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Tabla convertida a Markdown exitosamente",
     "conversionFailed": "Error al convertir la tabla. Pegado como texto plano.",
     "noTableDetected": "No se detectó ninguna tabla en los datos del portapapeles"
+  },
+  "whatsNew": {
+    "title": "Novedades",
+    "gotIt": "Entendido",
+    "type": {
+      "feature": "Función",
+      "fix": "Corrección",
+      "improvement": "Mejora"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Árbol de carpetas",
+        "description": "Navega y abre archivos desde la estructura de carpetas en la barra lateral."
+      },
+      "outlinePanel": {
+        "title": "Panel de esquema",
+        "description": "Navega por los encabezados del documento con la barra lateral de esquema."
+      },
+      "editorFocus": {
+        "title": "Enfoque del editor mejorado",
+        "description": "Enfoque del editor más confiable después de diálogos y cambio de pestañas."
+      }
+    }
   }
 }

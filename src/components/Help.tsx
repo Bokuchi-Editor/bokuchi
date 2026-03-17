@@ -16,16 +16,17 @@ import {
   CardContent,
   Chip,
 } from '@mui/material';
-import { Close, Help, Code, Book, Keyboard, School, Extension } from '@mui/icons-material';
+import { Close, Help, Code, Book, Keyboard, School, Extension, NewReleases, AutoAwesome, BugReport, TrendingUp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { formatKeyboardShortcut, getPlatform } from '../utils/platform';
+import { whatsNewContent, WhatsNewChange } from '../whatsNew';
 
 interface HelpProps {
   open: boolean;
   onClose: () => void;
 }
 
-type HelpPage = 'getting-started' | 'features' | 'variables' | 'keyboard-shortcuts' | 'tutorials';
+type HelpPage = 'whats-new' | 'getting-started' | 'features' | 'variables' | 'keyboard-shortcuts' | 'tutorials';
 
 const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
   const { t } = useTranslation();
@@ -50,6 +51,11 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
   }, [currentPage]);
 
   const helpPages = [
+    {
+      id: 'whats-new' as HelpPage,
+      title: t('whatsNew.title'),
+      icon: <NewReleases />,
+    },
     {
       id: 'getting-started' as HelpPage,
       title: t('help.gettingStarted.title'),
@@ -860,8 +866,73 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
     </Box>
   );
 
+  const changeTypeIcon = (type: WhatsNewChange['type']) => {
+    switch (type) {
+      case 'feature': return <AutoAwesome color="primary" />;
+      case 'fix': return <BugReport color="warning" />;
+      case 'improvement': return <TrendingUp color="success" />;
+    }
+  };
+
+  const changeTypeColor = (type: WhatsNewChange['type']): 'primary' | 'warning' | 'success' => {
+    switch (type) {
+      case 'feature': return 'primary';
+      case 'fix': return 'warning';
+      case 'improvement': return 'success';
+    }
+  };
+
+  const renderWhatsNew = () => (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        {t('whatsNew.title')}
+        <Chip
+          label={`v${whatsNewContent.version}`}
+          size="small"
+          color="primary"
+          variant="outlined"
+          sx={{ ml: 1, verticalAlign: 'middle' }}
+        />
+      </Typography>
+      <List>
+        {whatsNewContent.changes.map((change, index) => (
+          <ListItem key={index} alignItems="flex-start" sx={{ px: 0 }}>
+            <Box sx={{ mr: 2, mt: 0.5, display: 'flex', alignItems: 'center' }}>
+              {changeTypeIcon(change.type)}
+            </Box>
+            <ListItemText
+              primary={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                  <Chip
+                    label={t(`whatsNew.type.${change.type}`)}
+                    size="small"
+                    color={changeTypeColor(change.type)}
+                    variant="outlined"
+                    sx={{ height: 20, fontSize: '0.7rem' }}
+                  />
+                  <Typography variant="subtitle2">
+                    {t(change.titleKey)}
+                  </Typography>
+                </Box>
+              }
+              secondary={
+                change.descriptionKey ? (
+                  <Typography variant="body2" color="text.secondary">
+                    {t(change.descriptionKey)}
+                  </Typography>
+                ) : undefined
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   const renderContent = () => {
     switch (currentPage) {
+      case 'whats-new':
+        return renderWhatsNew();
       case 'getting-started':
         return renderGettingStarted();
       case 'features':

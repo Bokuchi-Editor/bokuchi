@@ -47,6 +47,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   const contentRef = useRef(content);
   const onContentChangeRef = useRef(onContentChange);
+  const lastProcessedInputRef = useRef<string>('');
   contentRef.current = content;
   onContentChangeRef.current = onContentChange;
 
@@ -69,11 +70,30 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
     // Add checkbox functionality (processed in postprocess)
 
+    // Process easter egg fence blocks (:::effect ... :::)
+    const processEasterEggBlocks = (markdown: string): string => {
+      const easterEggPattern = /^:::(shake|rainbow|glow|bounce|blink)\s*\n([\s\S]*?)^:::\s*$/gm;
+      return markdown.replace(easterEggPattern, (_match, effect: string, innerContent: string) => {
+        // Convert inner content to simple HTML (escape HTML entities, preserve line breaks)
+        const escapedContent = innerContent
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\n/g, '<br>');
+        return `<div class="ee-block ee-${effect}" data-effect="${effect}">${escapedContent}</div>`;
+      });
+    };
+
     // Expand variables and convert Markdown to HTML
     const processContent = async () => {
       if (content) {
+        // Skip re-processing if input hasn't changed (prevents animation interruption on auto-save)
+        const inputKey = content + JSON.stringify(globalVariables) + (filePath || '');
+        if (inputKey === lastProcessedInputRef.current) return;
+        lastProcessedInputRef.current = inputKey;
+
         const result = await variableApi.processMarkdown(content, globalVariables);
-        let processedMarkdown = result.processedContent;
+        let processedMarkdown = processEasterEggBlocks(result.processedContent);
 
         // Convert Markdown to HTML
         const markedResult = marked(processedMarkdown, {
@@ -470,8 +490,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           flex: 1,
           p: 2,
           overflow: 'auto',
-          backgroundColor: theme === 'darcula' ? '#2B2B2B' : (darkMode ? 'grey.900' : 'grey.50'),
-          color: theme === 'darcula' ? '#A9B7C6' : (darkMode ? 'grey.100' : 'text.primary'),
+          backgroundColor: theme === 'as400' ? '#000000' : theme === 'darcula' ? '#2B2B2B' : (darkMode ? 'grey.900' : 'grey.50'),
+          color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? 'grey.100' : 'text.primary'),
+          ...(theme === 'as400' ? {
+            background: 'repeating-linear-gradient(0deg, #000000 0px, #000000 4px, rgba(0,255,0,0.2) 4px, rgba(0,255,0,0.2) 5px)',
+          } : {}),
         }}
       >
         <div
@@ -481,12 +504,16 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           style={{
             fontSize: `${Math.round(16 * zoomLevel)}px`,
             lineHeight: `${Math.round(1.6 * zoomLevel)}`,
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontFamily: theme === 'as400'
+              ? '"IBM Plex Mono", "Courier New", Courier, monospace'
+              : '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             wordBreak: 'break-word',
             overflowWrap: 'break-word',
             hyphens: 'auto',
+            ...(theme === 'as400' ? { textShadow: '0 0 4px rgba(0,255,0,0.6)' } : {}),
           }}
         />
+        {/* CRT scanline + vignette overlay styles for AS/400 theme */}
         <style>
           {`
             .markdown-preview {
@@ -621,6 +648,94 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
             .markdown-preview a:hover {
               text-decoration: underline;
+            }
+
+            /* Easter egg blocks */
+            .ee-block {
+              padding: 1em;
+              margin: 1em 0;
+              border-radius: 4px;
+            }
+
+            /* :::shake */
+            .ee-shake {
+              animation: ee-shake 0.5s ease-in-out infinite;
+              display: inline-block;
+              border: 1px solid rgba(255,0,0,0.2);
+              border-radius: 4px;
+            }
+
+            @keyframes ee-shake {
+              0%, 100% { transform: translateX(0) }
+              10% { transform: translateX(-2px) rotate(-0.5deg) }
+              20% { transform: translateX(2px) rotate(0.5deg) }
+              30% { transform: translateX(-2px) rotate(-0.5deg) }
+              40% { transform: translateX(2px) rotate(0.5deg) }
+              50% { transform: translateX(-1px) rotate(-0.3deg) }
+              60% { transform: translateX(1px) rotate(0.3deg) }
+              70% { transform: translateX(-1px) }
+              80% { transform: translateX(1px) }
+              90% { transform: translateX(0) }
+            }
+
+            /* :::rainbow */
+            .ee-rainbow {
+              background: linear-gradient(
+                90deg,
+                #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff0088, #ff0000
+              );
+              background-size: 400% 100%;
+              -webkit-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: ee-rainbow 4s linear infinite;
+            }
+
+            @keyframes ee-rainbow {
+              0% { background-position: 0% 50% }
+              100% { background-position: 400% 50% }
+            }
+
+            /* :::glow */
+            .ee-glow {
+              animation: ee-glow 2s ease-in-out infinite;
+            }
+
+            @keyframes ee-glow {
+              0%, 100% {
+                text-shadow:
+                  0 0 4px currentColor,
+                  0 0 8px currentColor;
+              }
+              50% {
+                text-shadow:
+                  0 0 8px currentColor,
+                  0 0 20px currentColor,
+                  0 0 40px currentColor;
+              }
+            }
+
+            /* :::bounce */
+            .ee-bounce {
+              display: inline-block;
+              animation: ee-bounce 1.5s ease-in-out infinite;
+            }
+
+            @keyframes ee-bounce {
+              0%, 100% { transform: translateY(0) }
+              25% { transform: translateY(-6px) }
+              50% { transform: translateY(0) }
+              75% { transform: translateY(-3px) }
+            }
+
+            /* :::blink */
+            .ee-blink {
+              animation: ee-blink 1s step-end infinite;
+            }
+
+            @keyframes ee-blink {
+              0%, 100% { opacity: 1 }
+              50% { opacity: 0 }
             }
           `}
         </style>

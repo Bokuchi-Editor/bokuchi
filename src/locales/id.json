@@ -452,6 +452,9 @@
     "emptyFolder": "Folder ini kosong",
     "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Konversi Tabel ke Markdown",
     "dialogMessage": "Tabel terdeteksi di clipboard. Apakah Anda ingin mengonversinya ke format Markdown?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Tabel berhasil dikonversi ke Markdown",
     "conversionFailed": "Konversi tabel gagal. Ditempel sebagai teks biasa.",
     "noTableDetected": "Tidak ada tabel yang terdeteksi dalam data clipboard"
+  },
+  "whatsNew": {
+    "title": "Yang Baru",
+    "gotIt": "Mengerti",
+    "type": {
+      "feature": "Fitur",
+      "fix": "Perbaikan",
+      "improvement": "Peningkatan"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Pohon Folder",
+        "description": "Jelajahi dan buka file dari struktur folder di bilah samping."
+      },
+      "outlinePanel": {
+        "title": "Panel Kerangka",
+        "description": "Navigasi judul dokumen Anda dengan bilah samping kerangka."
+      },
+      "editorFocus": {
+        "title": "Fokus Editor yang Ditingkatkan",
+        "description": "Fokus editor yang lebih andal setelah dialog dan pergantian tab."
+      }
+    }
   }
 }

@@ -452,6 +452,9 @@
     "emptyFolder": "このフォルダは空です",
     "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "夜ふかしは禁物。適度に休憩を。"
+  },
   "tableConversion": {
     "dialogTitle": "テーブルをMarkdownに変換",
     "dialogMessage": "クリップボードにテーブルが検出されました。Markdown形式に変換しますか？",
@@ -463,5 +466,28 @@
     "conversionSuccess": "テーブルがMarkdownに正常に変換されました",
     "conversionFailed": "テーブルの変換に失敗しました。プレーンテキストとして貼り付けました。",
     "noTableDetected": "クリップボードデータにテーブルが検出されませんでした"
+  },
+  "whatsNew": {
+    "title": "新機能のご紹介",
+    "gotIt": "OK",
+    "type": {
+      "feature": "新機能",
+      "fix": "修正",
+      "improvement": "改善"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "フォルダツリー",
+        "description": "サイドバーからフォルダ構造を参照してファイルを開けるようになりました。"
+      },
+      "outlinePanel": {
+        "title": "アウトラインパネル",
+        "description": "サイドバーで見出し構造をナビゲートできるようになりました。"
+      },
+      "editorFocus": {
+        "title": "エディタフォーカスの改善",
+        "description": "ダイアログやタブ切り替え後のエディタフォーカスがより確実になりました。"
+      }
+    }
   }
 }

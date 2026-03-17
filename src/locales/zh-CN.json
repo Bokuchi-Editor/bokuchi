@@ -452,6 +452,9 @@
     "emptyFolder": "此文件夹为空",
     "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "将表格转换为 Markdown",
     "dialogMessage": "在剪贴板中检测到表格。是否要将其转换为 Markdown 格式？",
@@ -463,5 +466,28 @@
     "conversionSuccess": "表格已成功转换为 Markdown",
     "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
     "noTableDetected": "在剪贴板数据中未检测到表格"
+  },
+  "whatsNew": {
+    "title": "新功能",
+    "gotIt": "知道了",
+    "type": {
+      "feature": "新功能",
+      "fix": "修复",
+      "improvement": "改进"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "文件夹树",
+        "description": "在侧边栏中浏览文件夹结构并打开文件。"
+      },
+      "outlinePanel": {
+        "title": "大纲面板",
+        "description": "通过大纲侧边栏导航文档标题。"
+      },
+      "editorFocus": {
+        "title": "改进编辑器聚焦",
+        "description": "对话框和标签切换后编辑器聚焦更加可靠。"
+      }
+    }
   }
 }

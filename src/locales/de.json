@@ -452,6 +452,9 @@
     "emptyFolder": "Dieser Ordner ist leer",
     "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Tabelle in Markdown konvertieren",
     "dialogMessage": "Eine Tabelle wurde in der Zwischenablage erkannt. Möchten Sie sie in das Markdown-Format konvertieren?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Tabelle erfolgreich in Markdown konvertiert",
     "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
     "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
+  },
+  "whatsNew": {
+    "title": "Was ist neu",
+    "gotIt": "Verstanden",
+    "type": {
+      "feature": "Funktion",
+      "fix": "Fehlerbehebung",
+      "improvement": "Verbesserung"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Ordnerstruktur",
+        "description": "Durchsuchen und öffnen Sie Dateien aus der Ordnerstruktur in der Seitenleiste."
+      },
+      "outlinePanel": {
+        "title": "Gliederungsbereich",
+        "description": "Navigieren Sie durch die Dokumentüberschriften mit der Gliederungs-Seitenleiste."
+      },
+      "editorFocus": {
+        "title": "Verbesserter Editor-Fokus",
+        "description": "Zuverlässigerer Editor-Fokus nach Dialogen und Tab-Wechsel."
+      }
+    }
   }
 }

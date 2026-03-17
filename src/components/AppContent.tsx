@@ -343,7 +343,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     <Editor
                       content={activeTab.content}
                       onChange={onContentChange}
-                      darkMode={theme === 'dark'}
+                      darkMode={theme === 'dark' || theme === 'as400'}
                       theme={theme}
                       onStatusChange={onStatusChange}
                       zoomLevel={currentZoom}
@@ -372,7 +372,7 @@ const AppContent: React.FC<AppContentProps> = ({
                   <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden', borderLeft: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Preview
                       content={activeTab.content}
-                      darkMode={theme === 'dark'}
+                      darkMode={theme === 'dark' || theme === 'as400'}
                       theme={theme}
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
@@ -388,7 +388,7 @@ const AppContent: React.FC<AppContentProps> = ({
                   <Editor
                     content={activeTab.content}
                     onChange={onContentChange}
-                    darkMode={theme === 'dark'}
+                    darkMode={theme === 'dark' || theme === 'as400'}
                     theme={theme}
                     onStatusChange={onStatusChange}
                     zoomLevel={currentZoom}
@@ -418,7 +418,7 @@ const AppContent: React.FC<AppContentProps> = ({
                 <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                   <Preview
                     content={activeTab.content}
-                    darkMode={theme === 'dark'}
+                    darkMode={theme === 'dark' || theme === 'as400'}
                     theme={theme}
                     globalVariables={globalVariables}
                     zoomLevel={currentZoom}

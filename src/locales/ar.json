@@ -452,6 +452,9 @@
     "emptyFolder": "هذا المجلد فارغ",
     "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",
     "dialogMessage": "تم اكتشاف جدول في الحافظة. هل تريد تحويله إلى تنسيق Markdown؟",
@@ -463,5 +466,28 @@
     "conversionSuccess": "تم تحويل الجدول إلى Markdown بنجاح",
     "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
     "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
+  },
+  "whatsNew": {
+    "title": "ما الجديد",
+    "gotIt": "فهمت",
+    "type": {
+      "feature": "ميزة",
+      "fix": "إصلاح",
+      "improvement": "تحسين"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "شجرة المجلدات",
+        "description": "تصفح وفتح الملفات من بنية المجلدات في الشريط الجانبي."
+      },
+      "outlinePanel": {
+        "title": "لوحة المخطط",
+        "description": "تنقل بين عناوين المستند باستخدام الشريط الجانبي للمخطط."
+      },
+      "editorFocus": {
+        "title": "تحسين تركيز المحرر",
+        "description": "تركيز أكثر موثوقية للمحرر بعد مربعات الحوار وتبديل علامات التبويب."
+      }
+    }
   }
 }

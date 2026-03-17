@@ -452,6 +452,9 @@
     "emptyFolder": "Эта папка пуста",
     "toggleExplorer": "Переключить проводник (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",
     "dialogMessage": "В буфере обмена обнаружена таблица. Хотите ли вы конвертировать её в формат Markdown?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Таблица успешно конвертирована в Markdown",
     "conversionFailed": "Ошибка конвертации таблицы. Вставлено как обычный текст.",
     "noTableDetected": "В данных буфера обмена таблица не обнаружена"
+  },
+  "whatsNew": {
+    "title": "Что нового",
+    "gotIt": "Понятно",
+    "type": {
+      "feature": "Функция",
+      "fix": "Исправление",
+      "improvement": "Улучшение"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Дерево папок",
+        "description": "Просматривайте и открывайте файлы из структуры папок на боковой панели."
+      },
+      "outlinePanel": {
+        "title": "Панель структуры",
+        "description": "Навигация по заголовкам документа с помощью боковой панели структуры."
+      },
+      "editorFocus": {
+        "title": "Улучшенный фокус редактора",
+        "description": "Более надёжный фокус редактора после диалогов и переключения вкладок."
+      }
+    }
   }
 }

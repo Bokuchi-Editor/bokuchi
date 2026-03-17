@@ -452,6 +452,9 @@
     "emptyFolder": "This folder is empty",
     "toggleExplorer": "Toggle Explorer (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "Convert Table to Markdown",
     "dialogMessage": "A table was detected in the clipboard. Would you like to convert it to Markdown format?",
@@ -463,5 +466,28 @@
     "conversionSuccess": "Table converted to Markdown successfully",
     "conversionFailed": "Failed to convert table. Pasted as plain text.",
     "noTableDetected": "No table detected in clipboard data"
+  },
+  "whatsNew": {
+    "title": "What's New",
+    "gotIt": "Got It",
+    "type": {
+      "feature": "Feature",
+      "fix": "Fix",
+      "improvement": "Improvement"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "Folder Tree",
+        "description": "Browse and open files from a folder structure in the sidebar."
+      },
+      "outlinePanel": {
+        "title": "Outline Panel",
+        "description": "Navigate your document headings with the outline sidebar."
+      },
+      "editorFocus": {
+        "title": "Improved Editor Focus",
+        "description": "More reliable editor focus after dialogs and tab switching."
+      }
+    }
   }
 }

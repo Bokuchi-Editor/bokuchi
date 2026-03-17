@@ -452,6 +452,9 @@
     "emptyFolder": "此資料夾為空",
     "toggleExplorer": "切換檔案總管 (Ctrl+Shift+E)"
   },
+  "easterEgg": {
+    "lateNightMessage": "Late night? Take a break once in a while."
+  },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",
     "dialogMessage": "在剪貼簿中偵測到表格。是否要將其轉換為 Markdown 格式？",
@@ -463,5 +466,28 @@
     "conversionSuccess": "表格已成功轉換為 Markdown",
     "conversionFailed": "表格轉換失敗。已作為純文字貼上。",
     "noTableDetected": "在剪貼簿資料中未偵測到表格"
+  },
+  "whatsNew": {
+    "title": "新功能",
+    "gotIt": "了解",
+    "type": {
+      "feature": "新功能",
+      "fix": "修復",
+      "improvement": "改進"
+    },
+    "changes": {
+      "folderTree": {
+        "title": "資料夾樹",
+        "description": "在側邊欄中瀏覽資料夾結構並開啟檔案。"
+      },
+      "outlinePanel": {
+        "title": "大綱面板",
+        "description": "透過大綱側邊欄導覽文件標題。"
+      },
+      "editorFocus": {
+        "title": "改進編輯器焦點",
+        "description": "對話框和分頁切換後編輯器焦點更加可靠。"
+      }
+    }
   }
 }

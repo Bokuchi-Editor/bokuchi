@@ -43,6 +43,9 @@ function AppDesktop() {
     canZoomOut,
     appSettings,
 
+    // What's New state
+    whatsNewOpen,
+
     // Update state
     updateDialogOpen,
     updateDialogPhase,
@@ -79,8 +82,14 @@ function AppDesktop() {
     handleDrop,
     handleCheckForUpdate,
     handleDismissUpdate,
+    handleWhatsNewClose,
     openFile,
 
+
+    // Easter eggs
+    as400Unlocked,
+    showUnlockAnimation,
+    isLateNight,
 
     // Outline
     outlinePanelOpen,
@@ -438,6 +447,8 @@ function AppDesktop() {
           helpOpen={helpOpen}
           fileChangeDialog={fileChangeDialog}
           saveBeforeCloseDialog={saveBeforeCloseDialog}
+          whatsNewOpen={whatsNewOpen}
+          onWhatsNewClose={handleWhatsNewClose}
           updateDialogOpen={updateDialogOpen}
           updateDialogPhase={updateDialogPhase}
           updateInfo={updateInfo}
@@ -451,6 +462,7 @@ function AppDesktop() {
           onCancelBeforeClose={handleCancelBeforeClose}
           onUpdate={handleCheckForUpdate}
           onDismissUpdate={handleDismissUpdate}
+          as400Unlocked={as400Unlocked}
           t={t}
         />
 
@@ -467,7 +479,7 @@ function AppDesktop() {
         column={editorStatus.column}
         totalCharacters={editorStatus.totalCharacters}
         selectedCharacters={editorStatus.selectedCharacters}
-        darkMode={theme === 'dark'}
+        darkMode={theme === 'dark' || theme === 'as400'}
         theme={theme}
         onThemeChange={handleThemeChange}
         zoomPercentage={zoomPercentage}
@@ -476,7 +488,87 @@ function AppDesktop() {
         onResetZoom={resetZoom}
         canZoomIn={canZoomIn}
         canZoomOut={canZoomOut}
+        as400Unlocked={as400Unlocked}
+        isLateNight={isLateNight}
       />
+      {/* Konami Code unlock animation */}
+      {showUnlockAnimation && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: 'none',
+            zIndex: 9999,
+            animation: 'konamiUnlock 2.5s ease-out forwards',
+            '@keyframes konamiUnlock': {
+              '0%': {
+                backgroundColor: 'rgba(0, 255, 0, 0)',
+                boxShadow: 'inset 0 0 0px rgba(0, 255, 0, 0)',
+              },
+              '15%': {
+                backgroundColor: 'rgba(0, 255, 0, 0.15)',
+                boxShadow: 'inset 0 0 60px rgba(0, 255, 0, 0.4)',
+              },
+              '30%': {
+                backgroundColor: 'rgba(0, 255, 0, 0.05)',
+                boxShadow: 'inset 0 0 30px rgba(0, 255, 0, 0.2)',
+              },
+              '45%': {
+                backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                boxShadow: 'inset 0 0 40px rgba(0, 255, 0, 0.3)',
+              },
+              '100%': {
+                backgroundColor: 'rgba(0, 255, 0, 0)',
+                boxShadow: 'inset 0 0 0px rgba(0, 255, 0, 0)',
+              },
+            },
+          }}
+        >
+          {/* Scanline effect */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 1px, transparent 1px, transparent 3px)',
+              animation: 'scanlineScroll 0.1s linear infinite',
+              '@keyframes scanlineScroll': {
+                '0%': { backgroundPosition: '0 0' },
+                '100%': { backgroundPosition: '0 3px' },
+              },
+            }}
+          />
+          {/* Theme unlocked text */}
+          <Typography
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: '#00FF00',
+              fontFamily: '"IBM Plex Mono", "Courier New", Courier, monospace',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              textShadow: '0 0 10px rgba(0,255,0,0.8), 0 0 20px rgba(0,255,0,0.4)',
+              animation: 'unlockTextFade 2.5s ease-out forwards',
+              whiteSpace: 'nowrap',
+              '@keyframes unlockTextFade': {
+                '0%': { opacity: 0 },
+                '20%': { opacity: 1 },
+                '70%': { opacity: 1 },
+                '100%': { opacity: 0 },
+              },
+            }}
+          >
+            {'> AS/400 THEME UNLOCKED_'}
+          </Typography>
+        </Box>
+      )}
       </Box>
     </ThemeProvider>
   );

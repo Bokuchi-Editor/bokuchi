@@ -402,6 +402,54 @@ export const storeApi = {
     }
   },
 
+  // Save easter egg flags
+  async saveEasterEggFlags(flags: Record<string, boolean>): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('easterEggFlags', flags);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save easter egg flags:', error);
+      throw error;
+    }
+  },
+
+  // Load easter egg flags
+  async loadEasterEggFlags(): Promise<Record<string, boolean>> {
+    try {
+      const storeInstance = await getStore();
+      const flags = await storeInstance.get('easterEggFlags') as Record<string, boolean>;
+      return flags || {};
+    } catch (error) {
+      console.error('Failed to load easter egg flags:', error);
+      return {};
+    }
+  },
+
+  // Save last seen version for What's New dialog
+  async saveLastSeenVersion(version: string): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('lastSeenVersion', version);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save last seen version:', error);
+      throw error;
+    }
+  },
+
+  // Load last seen version for What's New dialog
+  async loadLastSeenVersion(): Promise<string | null> {
+    try {
+      const storeInstance = await getStore();
+      const version = await storeInstance.get('lastSeenVersion') as string | null;
+      return version || null;
+    } catch (error) {
+      console.error('Failed to load last seen version:', error);
+      return null;
+    }
+  },
+
   // Load folder tree root path
   async loadFolderTreeRoot(): Promise<string | null> {
     try {

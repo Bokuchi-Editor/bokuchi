@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Menu, MenuItem, IconButton, Tooltip } from '@mui/material';
 import { ZoomIn, ZoomOut, RestartAlt } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { ThemeName, themes } from '../themes';
+import { ThemeName, getVisibleThemes } from '../themes';
 
 interface StatusBarProps {
   line: number;
@@ -18,6 +18,8 @@ interface StatusBarProps {
   onResetZoom: () => void;
   canZoomIn: boolean;
   canZoomOut: boolean;
+  as400Unlocked?: boolean;
+  isLateNight?: boolean;
 }
 
 const StatusBar: React.FC<StatusBarProps> = ({
@@ -33,10 +35,13 @@ const StatusBar: React.FC<StatusBarProps> = ({
   onZoomOut,
   onResetZoom,
   canZoomIn,
-  canZoomOut
+  canZoomOut,
+  as400Unlocked,
+  isLateNight
 }) => {
   const { t } = useTranslation();
   const [themeMenuAnchor, setThemeMenuAnchor] = useState<null | HTMLElement>(null);
+  const visibleThemes = getVisibleThemes(as400Unlocked ? ['as400'] : []);
 
   const handleThemeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setThemeMenuAnchor(event.currentTarget);
@@ -57,14 +62,14 @@ const StatusBar: React.FC<StatusBarProps> = ({
       className="status-bar"
       sx={{
         height: '24px',
-        backgroundColor: theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#f3f3f3'),
+        backgroundColor: theme === 'as400' ? '#001a00' : theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#f3f3f3'),
         borderTop: 1,
-        borderColor: theme === 'darcula' ? '#323232' : 'divider',
+        borderColor: theme === 'as400' ? '#003300' : theme === 'darcula' ? '#323232' : 'divider',
         display: 'flex',
         alignItems: 'center',
         px: 2,
         fontSize: '12px',
-        color: theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#666666'),
+        color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#666666'),
         fontFamily: 'monospace'
       }}
     >
@@ -77,6 +82,13 @@ const StatusBar: React.FC<StatusBarProps> = ({
           : `${totalCharacters} ${t('statusBar.characters')}`
         }
       </Typography>
+
+      {/* Late night message */}
+      {isLateNight && (
+        <Typography variant="caption" sx={{ mr: 2, opacity: 0.7, fontStyle: 'italic' }}>
+          {t('easterEgg.lateNightMessage')}
+        </Typography>
+      )}
 
       {/* Zoom controls */}
       <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -164,7 +176,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
           }}
         >
           <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
-            {theme ? themes.find(t => t.name === theme)?.displayName || 'Default' : 'Default'}
+            {theme ? visibleThemes.find(t => t.name === theme)?.displayName || 'Default' : 'Default'}
           </Typography>
         </IconButton>
 
@@ -182,28 +194,28 @@ const StatusBar: React.FC<StatusBarProps> = ({
           }}
           PaperProps={{
             sx: {
-              backgroundColor: theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#ffffff'),
-              border: theme === 'darcula' ? '1px solid #323232' : (darkMode ? '1px solid #404040' : '1px solid #e0e0e0'),
+              backgroundColor: theme === 'as400' ? '#0a0a0a' : theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#ffffff'),
+              border: theme === 'as400' ? '1px solid #003300' : theme === 'darcula' ? '1px solid #323232' : (darkMode ? '1px solid #404040' : '1px solid #e0e0e0'),
               minWidth: '120px',
             }
           }}
         >
-          {themes.map((themeOption) => (
+          {visibleThemes.map((themeOption) => (
             <MenuItem
               key={themeOption.name}
               onClick={() => handleThemeSelect(themeOption.name)}
               sx={{
-                color: theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#333333'),
+                color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#333333'),
                 fontSize: '12px',
                 padding: '4px 12px',
                 '&:hover': {
-                  backgroundColor: theme === 'darcula' ? '#4C4F51' : (darkMode ? '#2d2d2d' : '#f5f5f5'),
+                  backgroundColor: theme === 'as400' ? '#003300' : theme === 'darcula' ? '#4C4F51' : (darkMode ? '#2d2d2d' : '#f5f5f5'),
                 },
                 '&.Mui-selected': {
-                  backgroundColor: theme === 'darcula' ? '#CC7832' : (darkMode ? '#007acc' : '#e3f2fd'),
-                  color: theme === 'darcula' ? '#2B2B2B' : (darkMode ? '#ffffff' : '#1976d2'),
+                  backgroundColor: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#CC7832' : (darkMode ? '#007acc' : '#e3f2fd'),
+                  color: theme === 'as400' ? '#000000' : theme === 'darcula' ? '#2B2B2B' : (darkMode ? '#ffffff' : '#1976d2'),
                   '&:hover': {
-                    backgroundColor: theme === 'darcula' ? '#D18F4A' : (darkMode ? '#005a9e' : '#bbdefb'),
+                    backgroundColor: theme === 'as400' ? '#33FF33' : theme === 'darcula' ? '#D18F4A' : (darkMode ? '#005a9e' : '#bbdefb'),
                   }
                 }
               }}

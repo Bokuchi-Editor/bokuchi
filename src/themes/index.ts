@@ -1,11 +1,12 @@
 import { createTheme, Theme } from '@mui/material/styles';
 
-export type ThemeName = 'default' | 'dark' | 'pastel' | 'vivid' | 'darcula';
+export type ThemeName = 'default' | 'dark' | 'pastel' | 'vivid' | 'darcula' | 'as400';
 
 export interface ThemeConfig {
   name: ThemeName;
   displayName: string;
   theme: Theme;
+  hidden?: boolean;
 }
 
 // Default Theme (Light)
@@ -258,6 +259,105 @@ const darculaTheme = createTheme({
   },
 });
 
+// AS/400 Theme (IBM Green Screen / 5250 Terminal)
+const as400Theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#00FF00',
+    },
+    secondary: {
+      main: '#33FF33',
+    },
+    background: {
+      default: '#000000',
+      paper: '#0a0a0a',
+    },
+    text: {
+      primary: '#00FF00',
+      secondary: '#00CC00',
+    },
+    divider: '#003300',
+  },
+  typography: {
+    fontFamily: '"IBM Plex Mono", "Courier New", Courier, monospace',
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#001a00',
+          color: '#00FF00',
+          borderBottom: '1px solid #003300',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 500,
+          fontFamily: '"IBM Plex Mono", "Courier New", Courier, monospace',
+        },
+        contained: {
+          backgroundColor: '#003300',
+          color: '#00FF00',
+          '&:hover': {
+            backgroundColor: '#004d00',
+          },
+        },
+        outlined: {
+          borderColor: '#00FF00',
+          color: '#00FF00',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 255, 0, 0.1)',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: '#0a0a0a',
+            fontFamily: '"IBM Plex Mono", "Courier New", Courier, monospace',
+            '& fieldset': {
+              borderColor: '#003300',
+            },
+            '&:hover fieldset': {
+              borderColor: '#00FF00',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#00FF00',
+            },
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#0a0a0a',
+          border: '1px solid #003300',
+        },
+      },
+    },
+  },
+  shape: {
+    borderRadius: 0,
+  },
+});
+
 export const themes: ThemeConfig[] = [
   {
     name: 'default',
@@ -284,7 +384,17 @@ export const themes: ThemeConfig[] = [
     displayName: 'Darcula',
     theme: darculaTheme,
   },
+  {
+    name: 'as400',
+    displayName: 'AS/400',
+    theme: as400Theme,
+    hidden: true,
+  },
 ];
+
+export const getVisibleThemes = (unlockedSecretThemes: ThemeName[] = []): ThemeConfig[] => {
+  return themes.filter(t => !t.hidden || unlockedSecretThemes.includes(t.name));
+};
 
 export const getThemeByName = (name: ThemeName): Theme => {
   const themeConfig = themes.find(t => t.name === name);

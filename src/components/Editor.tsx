@@ -467,7 +467,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
       <MarkdownToolbar editorRef={editorRef} />
 
-      <Box sx={{ flex: 1, position: 'relative' }}>
+      <Box sx={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <SearchReplacePanel
           editorRef={editorRef}
           open={searchOpen}
