@@ -451,7 +451,14 @@
     "refresh": "Обновить",
     "noFolderOpen": "Папка не открыта",
     "emptyFolder": "Эта папка пуста",
-    "toggleExplorer": "Переключить проводник (Ctrl+Shift+E)"
+    "toggleExplorer": "Переключить проводник (Ctrl+Shift+E)",
+    "rename": "Переименовать",
+    "renameTitle": "Переименовать файл",
+    "renameConfirm": "Переименовать",
+    "renameSuccess": "Файл успешно переименован",
+    "renameFailed": "Не удалось переименовать файл",
+    "renameErrorEmpty": "Имя файла не может быть пустым",
+    "renameErrorInvalidChar": "Имя файла не может содержать / или \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

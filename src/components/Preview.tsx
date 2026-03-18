@@ -5,6 +5,8 @@ import { Download } from '@mui/icons-material';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import { variableApi } from '../api/variableApi';
 import { desktopApi } from '../api/desktopApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
@@ -94,6 +96,37 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
         const result = await variableApi.processMarkdown(content, globalVariables);
         let processedMarkdown = processEasterEggBlocks(result.processedContent);
+
+        // Process KaTeX math expressions before marked parsing
+        // Protect code blocks from math processing
+        const codeBlocks: string[] = [];
+        processedMarkdown = processedMarkdown.replace(/```[\s\S]*?```|`[^`\n]+`/g, (match) => {
+          codeBlocks.push(match);
+          return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
+        });
+
+        // Process display math ($$...$$) first
+        processedMarkdown = processedMarkdown.replace(/\$\$([\s\S]*?)\$\$/g, (_match, tex: string) => {
+          try {
+            return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false });
+          } catch {
+            return `<span class="katex-error" style="color:red;">${tex}</span>`;
+          }
+        });
+
+        // Process inline math ($...$)
+        processedMarkdown = processedMarkdown.replace(/(?<!\$)\$(?!\$)((?:[^$\\]|\\.)+)\$(?!\$)/g, (_match, tex: string) => {
+          try {
+            return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false });
+          } catch {
+            return `<span class="katex-error" style="color:red;">${tex}</span>`;
+          }
+        });
+
+        // Restore code blocks
+        processedMarkdown = processedMarkdown.replace(/%%CODEBLOCK_(\d+)%%/g, (_match, index: string) => {
+          return codeBlocks[parseInt(index)];
+        });
 
         // Convert Markdown to HTML
         const markedResult = marked(processedMarkdown, {

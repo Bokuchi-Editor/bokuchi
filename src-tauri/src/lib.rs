@@ -78,7 +78,8 @@ pub fn run() {
             get_pending_file_paths_command,
             log_from_frontend,
             set_frontend_ready_command,
-            read_directory
+            read_directory,
+            rename_file
         ])
         .setup(|app| {
             // Get command line arguments

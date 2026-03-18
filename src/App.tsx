@@ -7,6 +7,7 @@ import AppContent from './components/AppContent';
 import AppDialogs from './components/AppDialogs';
 import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
+import RenameDialog from './components/RenameDialog';
 import { useAppState } from './hooks/useAppState';
 import './i18n';
 import './styles/variables.css';
@@ -120,6 +121,12 @@ function AppDesktop() {
     folderTreeCloseFolder,
     folderTreeToggleExpand,
     folderTreeRefreshTree,
+
+    // Rename
+    renameDialog,
+    handleRenameRequest,
+    handleRenameConfirm,
+    handleRenameCancel,
 
     // Translation
     t,
@@ -409,6 +416,7 @@ function AppDesktop() {
           onFolderTreeCloseFolder={folderTreeCloseFolder}
           onFolderTreeRefresh={folderTreeRefreshTree}
           onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
+          onRenameRequest={handleRenameRequest}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
@@ -472,6 +480,13 @@ function AppDesktop() {
           onClose={handleRecentFilesClose}
           onFileSelect={handleRecentFileSelect}
           t={t}
+        />
+
+        <RenameDialog
+          open={renameDialog.open}
+          currentName={renameDialog.currentName}
+          onConfirm={handleRenameConfirm}
+          onCancel={handleRenameCancel}
         />
 
       {/* Status bar */}

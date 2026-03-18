@@ -309,6 +309,33 @@ export const useTabsDesktop = () => {
     }
   }, [state.tabs, setTabFilePath, updateTabTitle, setTabModified]);
 
+  const renameFile = useCallback(async (oldPath: string, newName: string) => {
+    // Build new path from old path's directory + new name
+    const dir = oldPath.substring(0, oldPath.lastIndexOf('/'));
+    const newPath = `${dir}/${newName}`;
+
+    const result = await desktopApi.renameFile(oldPath, newPath);
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to rename file');
+    }
+
+    // Update any open tab that references this file
+    const tab = state.tabs.find(t => t.filePath === oldPath);
+    if (tab) {
+      setTabFilePath(tab.id, newPath);
+      updateTabTitle(tab.id, newName);
+      // Update file hash for the renamed file
+      try {
+        const newHashInfo = await desktopApi.getFileHash(newPath);
+        updateTabFileHash(tab.id, newHashInfo);
+      } catch (error) {
+        console.warn('Failed to update file hash after rename:', error);
+      }
+    }
+
+    return newPath;
+  }, [state.tabs, setTabFilePath, updateTabTitle, updateTabFileHash]);
+
   const reorderTabs = useCallback((reorderedTabs: Tab[]) => {
     dispatch({ type: 'REORDER_TABS', payload: { tabs: reorderedTabs } });
   }, []);
@@ -424,5 +451,6 @@ export const useTabsDesktop = () => {
     saveTab,
     saveTabAs,
     createNewTab,
+    renameFile,
   };
 };

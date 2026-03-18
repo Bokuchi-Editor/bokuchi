@@ -451,7 +451,14 @@
     "refresh": "Segarkan",
     "noFolderOpen": "Tidak ada folder yang dibuka",
     "emptyFolder": "Folder ini kosong",
-    "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)"
+    "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)",
+    "rename": "Ganti Nama",
+    "renameTitle": "Ganti Nama File",
+    "renameConfirm": "Ganti Nama",
+    "renameSuccess": "File berhasil diganti namanya",
+    "renameFailed": "Gagal mengganti nama file",
+    "renameErrorEmpty": "Nama file tidak boleh kosong",
+    "renameErrorInvalidChar": "Nama file tidak boleh mengandung / atau \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

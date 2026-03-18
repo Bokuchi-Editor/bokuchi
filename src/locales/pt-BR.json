@@ -451,7 +451,14 @@
     "refresh": "Atualizar",
     "noFolderOpen": "Nenhuma pasta aberta",
     "emptyFolder": "Esta pasta está vazia",
-    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)"
+    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)",
+    "rename": "Renomear",
+    "renameTitle": "Renomear Arquivo",
+    "renameConfirm": "Renomear",
+    "renameSuccess": "Arquivo renomeado com sucesso",
+    "renameFailed": "Falha ao renomear o arquivo",
+    "renameErrorEmpty": "O nome do arquivo não pode estar vazio",
+    "renameErrorInvalidChar": "O nome do arquivo não pode conter / ou \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

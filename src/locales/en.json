@@ -451,7 +451,14 @@
     "refresh": "Refresh",
     "noFolderOpen": "No folder opened",
     "emptyFolder": "This folder is empty",
-    "toggleExplorer": "Toggle Explorer (Ctrl+Shift+E)"
+    "toggleExplorer": "Toggle Explorer (Ctrl+Shift+E)",
+    "rename": "Rename",
+    "renameTitle": "Rename File",
+    "renameConfirm": "Rename",
+    "renameSuccess": "File renamed successfully",
+    "renameFailed": "Failed to rename file",
+    "renameErrorEmpty": "File name cannot be empty",
+    "renameErrorInvalidChar": "File name cannot contain / or \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."
