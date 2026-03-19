@@ -510,6 +510,23 @@ const Settings: React.FC<SettingsProps> = ({
                     </Typography>
                   </CardContent>
                 </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.editor.minimap}
+                          onChange={(e) => handleSettingChange('editor', 'minimap', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.editor.minimap')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.editor.minimapDescription')}
+                    </Typography>
+                  </CardContent>
+                </Card>
               </Box>
             )}
 

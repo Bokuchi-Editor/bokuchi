@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "エクスプローラーパネルを非表示にします。",
       "folderTreeFileFilter": "エクスプローラーファイルフィルター",
       "folderTreeFileFilterDescription": "エクスプローラーに表示するファイルの種類を選択してください。",
-      "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt)",
       "folderTreeFileFilterAll": "すべてのファイル"
     },
     "advanced": {

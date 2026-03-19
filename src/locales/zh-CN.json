@@ -321,7 +321,7 @@
       "wordWrap": "自动换行",
       "wordWrapDescription": "在编辑器中自动换行长行。",
       "minimap": "小地图",
-      "minimapDescription": "显示文档的小地图。"
+      "minimapDescription": "显示文档的缩略图。"
     },
     "interface": {
       "title": "界面",
@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
       "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
