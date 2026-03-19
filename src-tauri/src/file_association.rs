@@ -60,8 +60,7 @@ pub fn set_frontend_ready() {
     }
 }
 
-// macOS Apple Events handling
-#[cfg(target_os = "macos")]
+// Handle file open events (cross-platform)
 pub fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
     println!("Handling open file event for: {}", file_path);
 

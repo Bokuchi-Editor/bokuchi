@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Typography } from '@mui/material';
 
@@ -134,6 +134,9 @@ function AppDesktop() {
     // Constants
     ZOOM_CONFIG,
   } = useAppState();
+
+  // Track whether event listeners are fully registered
+  const [listenersReady, setListenersReady] = useState(false);
 
   // Ref to always hold the latest handlers, avoiding stale closures in event listeners
   const handlersRef = useRef({
@@ -276,7 +279,8 @@ function AppDesktop() {
         handlersRef.current.requestEditorFocus();
       });
 
-      // Note: setFrontendReady() is called separately after isInitialized becomes true
+      // Signal that all listeners are registered
+      setListenersReady(true);
     };
 
     setupMenuListeners();
@@ -292,11 +296,11 @@ function AppDesktop() {
     };
   }, []); // Empty dependency array to run only once
 
-  // Notify Rust that frontend is ready AFTER state restoration is complete.
-  // This prevents a race condition where file association tabs are added
-  // before LOAD_STATE overwrites the entire state.
+  // Notify Rust that frontend is ready AFTER both conditions are met:
+  // 1. State restoration is complete (isInitialized) — prevents LOAD_STATE from overwriting file association tabs
+  // 2. Event listeners are registered (listenersReady) — ensures open-file events can be received
   useEffect(() => {
-    if (!isInitialized) return;
+    if (!isInitialized || !listenersReady) return;
 
     const notifyAndOpenPending = async () => {
       try {
@@ -309,7 +313,7 @@ function AppDesktop() {
     };
 
     notifyAndOpenPending();
-  }, [isInitialized]);
+  }, [isInitialized, listenersReady]);
 
   return (
     <ThemeProvider theme={currentTheme}>
