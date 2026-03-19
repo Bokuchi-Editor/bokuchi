@@ -398,7 +398,7 @@ function AppDesktop() {
             showLineNumbers: appSettings.editor.showLineNumbers,
             tabSize: appSettings.editor.tabSize,
             wordWrap: appSettings.editor.wordWrap,
-            minimap: viewMode === 'editor' && appSettings.editor.minimap,
+            minimap: appSettings.editor.minimap,
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}

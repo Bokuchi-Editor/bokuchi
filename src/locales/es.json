@@ -321,7 +321,7 @@
       "wordWrap": "Ajuste de línea",
       "wordWrapDescription": "Ajustar líneas largas en el editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Muestra un minimapa del documento. Solo se muestra en el modo de solo editor para ahorrar espacio en la vista dividida."
+      "minimapDescription": "Muestra un minimapa del documento."
     },
     "interface": {
       "title": "Interfaz",

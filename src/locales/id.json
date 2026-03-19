@@ -321,7 +321,7 @@
       "wordWrap": "Bungkus Kata",
       "wordWrapDescription": "Bungkus baris panjang di editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Tampilkan minimap dokumen. Hanya ditampilkan dalam mode editor saja untuk menghemat ruang dalam tampilan terbagi."
+      "minimapDescription": "Tampilkan minimap dokumen."
     },
     "interface": {
       "title": "Antarmuka",

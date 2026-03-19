@@ -321,7 +321,7 @@
       "wordWrap": "ワードラップ",
       "wordWrapDescription": "エディターで長い行を折り返します。",
       "minimap": "ミニマップ",
-      "minimapDescription": "ドキュメントのミニマップを表示します。スプリットビューでは領域確保のため自動的に非表示になります。"
+      "minimapDescription": "ドキュメントのミニマップを表示します。"
     },
     "interface": {
       "title": "インターフェース",

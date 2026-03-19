@@ -321,7 +321,7 @@
       "wordWrap": "Zeilenumbruch",
       "wordWrapDescription": "Lange Zeilen im Editor umbrechen.",
       "minimap": "Minimap",
-      "minimapDescription": "Zeigt eine Minimap des Dokuments an. Wird nur im reinen Editor-Modus angezeigt, um Platz in der geteilten Ansicht zu sparen."
+      "minimapDescription": "Zeigt eine Minimap des Dokuments an."
     },
     "interface": {
       "title": "Oberfläche",

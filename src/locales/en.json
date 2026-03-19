@@ -321,7 +321,7 @@
       "wordWrap": "Word Wrap",
       "wordWrapDescription": "Wrap long lines in the editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Show a minimap of the document. Only displayed in editor-only view mode to save space in split view."
+      "minimapDescription": "Show a minimap of the document."
     },
     "interface": {
       "title": "Interface",

@@ -321,7 +321,7 @@
       "wordWrap": "自動換行",
       "wordWrapDescription": "在編輯器中自動換行長行。",
       "minimap": "小地圖",
-      "minimapDescription": "顯示文件的縮略圖。僅在純編輯器模式下顯示，以在分割視圖中節省空間。"
+      "minimapDescription": "顯示文件的縮略圖。"
     },
     "interface": {
       "title": "介面",

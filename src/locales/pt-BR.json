@@ -321,7 +321,7 @@
       "wordWrap": "Quebra de linha",
       "wordWrapDescription": "Quebre linhas longas no editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Exibir um minimapa do documento. Exibido apenas no modo somente editor para economizar espaço na visualização dividida."
+      "minimapDescription": "Exibir um minimapa do documento."
     },
     "interface": {
       "title": "Interface",

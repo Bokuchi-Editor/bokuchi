@@ -321,7 +321,7 @@
       "wordWrap": "Retour à la ligne",
       "wordWrapDescription": "Envelopper les lignes longues dans l'éditeur.",
       "minimap": "Minicarte",
-      "minimapDescription": "Affiche une minimap du document. Affichée uniquement en mode éditeur seul pour économiser de l'espace en vue partagée."
+      "minimapDescription": "Affiche une minimap du document."
     },
     "interface": {
       "title": "Interface",

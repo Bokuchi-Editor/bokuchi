@@ -321,7 +321,7 @@
       "wordWrap": "Xuống dòng tự động",
       "wordWrapDescription": "Xuống dòng tự động cho các dòng dài trong trình soạn thảo.",
       "minimap": "Bản đồ thu nhỏ",
-      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu. Chỉ hiển thị ở chế độ chỉ trình soạn thảo để tiết kiệm không gian trong chế độ chia đôi."
+      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu."
     },
     "interface": {
       "title": "Giao diện",
