@@ -451,7 +451,14 @@
     "refresh": "Aktualisieren",
     "noFolderOpen": "Kein Ordner geöffnet",
     "emptyFolder": "Dieser Ordner ist leer",
-    "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)"
+    "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)",
+    "rename": "Umbenennen",
+    "renameTitle": "Datei umbenennen",
+    "renameConfirm": "Umbenennen",
+    "renameSuccess": "Datei erfolgreich umbenannt",
+    "renameFailed": "Datei konnte nicht umbenannt werden",
+    "renameErrorEmpty": "Dateiname darf nicht leer sein",
+    "renameErrorInvalidChar": "Dateiname darf kein / oder \\ enthalten"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

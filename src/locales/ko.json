@@ -451,7 +451,14 @@
     "refresh": "새로고침",
     "noFolderOpen": "열린 폴더가 없습니다",
     "emptyFolder": "이 폴더는 비어 있습니다",
-    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)"
+    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)",
+    "rename": "이름 바꾸기",
+    "renameTitle": "파일 이름 바꾸기",
+    "renameConfirm": "이름 바꾸기",
+    "renameSuccess": "파일 이름이 변경되었습니다",
+    "renameFailed": "파일 이름 변경에 실패했습니다",
+    "renameErrorEmpty": "파일 이름을 입력해주세요",
+    "renameErrorInvalidChar": "파일 이름에 / 또는 \\를 사용할 수 없습니다"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

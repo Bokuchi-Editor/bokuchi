@@ -451,7 +451,14 @@
     "refresh": "تحديث",
     "noFolderOpen": "لم يتم فتح أي مجلد",
     "emptyFolder": "هذا المجلد فارغ",
-    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)"
+    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)",
+    "rename": "إعادة تسمية",
+    "renameTitle": "إعادة تسمية الملف",
+    "renameConfirm": "إعادة تسمية",
+    "renameSuccess": "تم إعادة تسمية الملف بنجاح",
+    "renameFailed": "فشل في إعادة تسمية الملف",
+    "renameErrorEmpty": "لا يمكن أن يكون اسم الملف فارغاً",
+    "renameErrorInvalidChar": "لا يمكن أن يحتوي اسم الملف على / أو \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

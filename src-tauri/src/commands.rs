@@ -240,6 +240,23 @@ pub async fn read_directory(path: String, show_all_files: bool) -> Result<Vec<cr
     Ok(dirs)
 }
 
+// Tauri command: Rename file
+#[tauri::command]
+pub async fn rename_file(old_path: String, new_path: String) -> Result<(), String> {
+    let old = Path::new(&old_path);
+    let new = Path::new(&new_path);
+
+    if !old.exists() {
+        return Err("Source file not found".to_string());
+    }
+
+    if new.exists() {
+        return Err("A file with that name already exists".to_string());
+    }
+
+    fs::rename(old, new).map_err(|e| format!("Failed to rename file: {}", e))
+}
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 pub fn greet(name: &str) -> String {

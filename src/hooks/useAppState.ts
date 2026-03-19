@@ -68,6 +68,7 @@ export const useAppState = () => {
     saveTab,
     saveTabAs,
     createNewTab,
+    renameFile,
   } = useTabsDesktop();
 
   // Zoom management
@@ -230,6 +231,33 @@ export const useAppState = () => {
       setSnackbar({ open: true, message: t('fileOperations.fileLoadFailed'), severity: 'error' });
     }
   };
+
+  // Rename dialog state
+  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string }>({
+    open: false, filePath: '', currentName: '',
+  });
+
+  const handleRenameRequest = useCallback((filePath: string) => {
+    const name = filePath.substring(filePath.lastIndexOf('/') + 1);
+    setRenameDialog({ open: true, filePath, currentName: name });
+  }, []);
+
+  const handleRenameConfirm = useCallback(async (newName: string) => {
+    try {
+      await renameFile(renameDialog.filePath, newName);
+      setRenameDialog({ open: false, filePath: '', currentName: '' });
+      folderTreeRefreshTree();
+      setSnackbar({ open: true, message: t('folderTree.renameSuccess'), severity: 'success' });
+    } catch (error) {
+      console.error('Failed to rename file:', error);
+      const msg = error instanceof Error ? error.message : t('folderTree.renameFailed');
+      setSnackbar({ open: true, message: msg, severity: 'error' });
+    }
+  }, [renameFile, renameDialog.filePath, folderTreeRefreshTree, t]);
+
+  const handleRenameCancel = useCallback(() => {
+    setRenameDialog({ open: false, filePath: '', currentName: '' });
+  }, []);
 
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
@@ -447,6 +475,10 @@ export const useAppState = () => {
     folderTreeCloseFolder,
     folderTreeToggleExpand,
     folderTreeRefreshTree,
+    renameDialog,
+    handleRenameRequest,
+    handleRenameConfirm,
+    handleRenameCancel,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

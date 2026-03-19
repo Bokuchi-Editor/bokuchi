@@ -51,6 +51,7 @@ interface AppContentProps {
   onFolderTreeCloseFolder: () => void;
   onFolderTreeRefresh: () => void;
   onFolderTreePanelClose: () => void;
+  onRenameRequest?: (filePath: string) => void;
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -93,6 +94,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onFolderTreeCloseFolder,
   onFolderTreeRefresh,
   onFolderTreePanelClose,
+  onRenameRequest,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -270,6 +272,7 @@ const AppContent: React.FC<AppContentProps> = ({
               onHeaderClick={handleExplorerHeaderClick}
               collapsed={explorerCollapsed}
               width={280}
+              onRenameRequest={onRenameRequest}
             />
           </Box>
         </Box>
@@ -301,6 +304,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onCloseFolder={onFolderTreeCloseFolder}
           onRefresh={onFolderTreeRefresh}
           onClose={onFolderTreePanelClose}
+          onRenameRequest={onRenameRequest}
         />
       )}
 
@@ -482,6 +486,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onRefresh={onFolderTreeRefresh}
             onClose={onFolderTreePanelClose}
             width={280}
+            onRenameRequest={onRenameRequest}
           />
         </Drawer>
       )}

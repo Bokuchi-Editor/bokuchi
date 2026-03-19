@@ -451,7 +451,14 @@
     "refresh": "刷新",
     "noFolderOpen": "未打开文件夹",
     "emptyFolder": "此文件夹为空",
-    "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)"
+    "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)",
+    "rename": "重命名",
+    "renameTitle": "重命名文件",
+    "renameConfirm": "重命名",
+    "renameSuccess": "文件重命名成功",
+    "renameFailed": "文件重命名失败",
+    "renameErrorEmpty": "文件名不能为空",
+    "renameErrorInvalidChar": "文件名不能包含 / 或 \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

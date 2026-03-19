@@ -451,7 +451,14 @@
     "refresh": "Làm mới",
     "noFolderOpen": "Chưa mở thư mục nào",
     "emptyFolder": "Thư mục này trống",
-    "toggleExplorer": "Bật/tắt trình khám phá (Ctrl+Shift+E)"
+    "toggleExplorer": "Bật/tắt trình khám phá (Ctrl+Shift+E)",
+    "rename": "Đổi tên",
+    "renameTitle": "Đổi tên tệp",
+    "renameConfirm": "Đổi tên",
+    "renameSuccess": "Đổi tên tệp thành công",
+    "renameFailed": "Đổi tên tệp thất bại",
+    "renameErrorEmpty": "Tên tệp không được để trống",
+    "renameErrorInvalidChar": "Tên tệp không được chứa / hoặc \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

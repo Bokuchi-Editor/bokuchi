@@ -451,7 +451,14 @@
     "refresh": "Actualiser",
     "noFolderOpen": "Aucun dossier ouvert",
     "emptyFolder": "Ce dossier est vide",
-    "toggleExplorer": "Basculer l'explorateur (Ctrl+Shift+E)"
+    "toggleExplorer": "Basculer l'explorateur (Ctrl+Shift+E)",
+    "rename": "Renommer",
+    "renameTitle": "Renommer le fichier",
+    "renameConfirm": "Renommer",
+    "renameSuccess": "Fichier renommé avec succès",
+    "renameFailed": "Échec du renommage du fichier",
+    "renameErrorEmpty": "Le nom du fichier ne peut pas être vide",
+    "renameErrorInvalidChar": "Le nom du fichier ne peut pas contenir / ou \\"
   },
   "easterEgg": {
     "lateNightMessage": "Late night? Take a break once in a while."

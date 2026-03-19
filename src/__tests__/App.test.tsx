@@ -108,6 +108,10 @@ vi.mock('../hooks/useAppState', () => ({
     folderTreeCloseFolder: vi.fn(),
     folderTreeToggleExpand: vi.fn(),
     folderTreeRefreshTree: vi.fn(),
+    renameDialog: { open: false, filePath: '', currentName: '' },
+    handleRenameRequest: vi.fn(),
+    handleRenameConfirm: vi.fn(),
+    handleRenameCancel: vi.fn(),
     t: (key: string) => key,
     ZOOM_CONFIG: { minZoom: 0.5, maxZoom: 2.0, zoomStep: 0.1 },
   }),
@@ -132,6 +136,10 @@ vi.mock('../components/StatusBar', () => ({
 
 vi.mock('../components/RecentFilesDialog', () => ({
   default: () => <div data-testid="recent-files">RecentFiles</div>,
+}));
+
+vi.mock('../components/RenameDialog', () => ({
+  default: () => <div data-testid="rename-dialog">RenameDialog</div>,
 }));
 
 vi.mock('../i18n', () => ({}));

@@ -451,7 +451,14 @@
     "refresh": "更新",
     "noFolderOpen": "フォルダが開かれていません",
     "emptyFolder": "このフォルダは空です",
-    "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)"
+    "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)",
+    "rename": "名前の変更",
+    "renameTitle": "ファイル名の変更",
+    "renameConfirm": "変更",
+    "renameSuccess": "ファイル名を変更しました",
+    "renameFailed": "ファイル名の変更に失敗しました",
+    "renameErrorEmpty": "ファイル名を入力してください",
+    "renameErrorInvalidChar": "ファイル名に / や \\ は使用できません"
   },
   "easterEgg": {
     "lateNightMessage": "夜ふかしは禁物。適度に休憩を。"
