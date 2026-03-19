@@ -321,7 +321,7 @@
       "wordWrap": "Zeilenumbruch",
       "wordWrapDescription": "Lange Zeilen im Editor umbrechen.",
       "minimap": "Minimap",
-      "minimapDescription": "Zeigen Sie eine Minimap des Dokuments."
+      "minimapDescription": "Zeigt eine Minimap des Dokuments an. Wird nur im reinen Editor-Modus angezeigt, um Platz in der geteilten Ansicht zu sparen."
     },
     "interface": {
       "title": "Oberfläche",
@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
       "folderTreeFileFilterAll": "All files"
     },
     "advanced": {

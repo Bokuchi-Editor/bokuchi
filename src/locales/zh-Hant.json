@@ -321,7 +321,7 @@
       "wordWrap": "自動換行",
       "wordWrapDescription": "在編輯器中自動換行長行。",
       "minimap": "小地圖",
-      "minimapDescription": "顯示文件的小地圖。"
+      "minimapDescription": "顯示文件的縮略圖。僅在純編輯器模式下顯示，以在分割視圖中節省空間。"
     },
     "interface": {
       "title": "介面",
@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
       "folderTreeFileFilterAll": "All files"
     },
     "advanced": {

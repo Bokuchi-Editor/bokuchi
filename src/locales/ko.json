@@ -321,7 +321,7 @@
       "wordWrap": "단어 줄바꿈",
       "wordWrapDescription": "편집기에서 긴 줄을 줄바꿈합니다.",
       "minimap": "미니맵",
-      "minimapDescription": "문서의 미니맵을 표시합니다."
+      "minimapDescription": "문서의 미니맵을 표시합니다. 분할 보기에서 공간을 절약하기 위해 에디터 전용 모드에서만 표시됩니다."
     },
     "interface": {
       "title": "인터페이스",
@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
       "folderTreeFileFilterAll": "All files"
     },
     "advanced": {

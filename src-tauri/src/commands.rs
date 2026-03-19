@@ -219,7 +219,7 @@ pub async fn read_directory(path: String, show_all_files: bool) -> Result<Vec<cr
                     .extension()
                     .map(|e| e.to_string_lossy().to_lowercase())
                     .unwrap_or_default();
-                if ext != "md" && ext != "txt" && ext != "markdown" {
+                if ext != "md" && ext != "txt" {
                     continue;
                 }
             }

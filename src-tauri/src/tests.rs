@@ -625,11 +625,11 @@ fn test_read_directory_filter_md_txt() {
     create_temp_file(&dir, "image.png", "");
     create_temp_file(&dir, "script.js", "");
     let entries = pollster::block_on(read_directory(dir.path().to_string_lossy().to_string(), false)).unwrap();
-    assert_eq!(entries.len(), 3); // .md, .txt, .markdown only
+    assert_eq!(entries.len(), 2); // .md, .txt only
     let names: Vec<&str> = entries.iter().map(|e| e.name.as_str()).collect();
     assert!(names.contains(&"doc.md"));
     assert!(names.contains(&"note.txt"));
-    assert!(names.contains(&"readme.markdown"));
+    assert!(!names.contains(&"readme.markdown"));
 }
 
 // R-CMD-18

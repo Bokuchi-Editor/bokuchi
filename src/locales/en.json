@@ -321,7 +321,7 @@
       "wordWrap": "Word Wrap",
       "wordWrapDescription": "Wrap long lines in the editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Show a minimap of the document."
+      "minimapDescription": "Show a minimap of the document. Only displayed in editor-only view mode to save space in split view."
     },
     "interface": {
       "title": "Interface",
@@ -343,7 +343,7 @@
       "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
       "folderTreeFileFilterAll": "All files"
     },
     "advanced": {
