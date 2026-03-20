@@ -49,12 +49,22 @@ pub use commands::*;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+        .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             // Focus existing window when new instance is launched
-            println!("New instance detected, attempting to focus existing window");
+            println!("Single instance: new instance detected with args: {:?}", args);
             if let Some(main_window) = app.get_webview_window("main") {
                 let _ = main_window.unminimize();
                 let _ = main_window.set_focus();
+            }
+
+            // Process file paths from args (args[0] is the executable, args[1..] may contain file paths)
+            for arg in args.iter().skip(1) {
+                // Skip flags/options
+                if arg.starts_with('-') {
+                    continue;
+                }
+                println!("Single instance: processing file arg: {}", arg);
+                handle_open_file_event(app, arg.to_string());
             }
         }))
         .plugin(tauri_plugin_fs::init())
@@ -103,19 +113,14 @@ pub fn run() {
                 println!("Current directory: {:?}", std::env::current_dir());
             }
 
-            // If file path is passed as argument (macOS only)
-            #[cfg(target_os = "macos")]
-            if args.len() > 1 {
-                let file_path = &args[1];
-                println!("File path from args: {}", file_path);
-                handle_open_file_event(app.handle(), file_path.to_string());
-            } else {
-                println!("No command line arguments provided");
-            }
-
-            #[cfg(not(target_os = "macos"))]
-            {
-                println!("Command line argument handling is only available on macOS");
+            // Process file paths from command line arguments (cross-platform)
+            for arg in args.iter().skip(1) {
+                // Skip flags/options
+                if arg.starts_with('-') {
+                    continue;
+                }
+                println!("Setup: processing file arg: {}", arg);
+                handle_open_file_event(app.handle(), arg.to_string());
             }
 
             // Custom menu setup (macOS only)
