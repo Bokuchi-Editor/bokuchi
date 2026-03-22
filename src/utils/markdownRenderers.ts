@@ -1,4 +1,31 @@
+import hljs from 'highlight.js';
 import type { RenderingSettings } from '../types/settings';
+
+/** Languages handled by post-processors — skip syntax highlighting */
+const POST_PROCESSED_LANGS = new Set(['mermaid']);
+
+/**
+ * Custom code renderer for marked that applies syntax highlighting
+ * and preserves post-processed language blocks (e.g. mermaid).
+ */
+export function renderCode({ text, lang }: { text: string; lang?: string; escaped?: boolean }): string {
+  // Post-processed languages: output raw text with language class preserved
+  if (lang && POST_PROCESSED_LANGS.has(lang)) {
+    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
+  }
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      const highlighted = hljs.highlight(text, { language: lang }).value;
+      return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+    } catch (err) {
+      console.warn('Highlight.js error:', err);
+    }
+  }
+  const langClass = lang ? ` language-${lang}` : '';
+  const highlighted = hljs.highlightAuto(text).value;
+  return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`;
+}
 
 // Lazy-loaded module caches
 let katexModule: typeof import('katex') | null = null;
