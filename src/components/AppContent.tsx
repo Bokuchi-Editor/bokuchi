@@ -8,6 +8,7 @@ import FolderTreePanel from './FolderTreePanel';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
+import { RenderingSettings } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 
 interface AppContentProps {
@@ -22,6 +23,9 @@ interface AppContentProps {
   currentZoom: number;
   isInitialized: boolean;
   isSettingsLoaded: boolean;
+
+  // Rendering settings
+  renderingSettings?: RenderingSettings;
 
   // Editor settings
   editorSettings?: {
@@ -79,6 +83,7 @@ const AppContent: React.FC<AppContentProps> = ({
   currentZoom,
   isInitialized,
   isSettingsLoaded,
+  renderingSettings,
   editorSettings,
   outlineDisplayMode,
   outlinePanelOpen,
@@ -383,6 +388,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       onContentChange={onContentChange}
                       scrollFraction={scrollFraction}
                       filePath={activeTab.filePath}
+                      renderingSettings={renderingSettings}
                     />
                   </Box>
                 </>
@@ -428,6 +434,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     zoomLevel={currentZoom}
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
+                    renderingSettings={renderingSettings}
                   />
                 </Box>
               )}

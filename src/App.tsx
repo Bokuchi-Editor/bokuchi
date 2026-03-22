@@ -397,6 +397,7 @@ function AppDesktop() {
           currentZoom={currentZoom}
           isInitialized={isInitialized}
           isSettingsLoaded={isSettingsLoaded}
+          renderingSettings={appSettings.rendering}
           editorSettings={{
             fontSize: appSettings.editor.fontSize,
             showLineNumbers: appSettings.editor.showLineNumbers,

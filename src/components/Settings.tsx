@@ -958,6 +958,41 @@ const Settings: React.FC<SettingsProps> = ({
                   </CardContent>
                 </Card>
 
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                      {t('settings.advanced.rendering')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.renderingDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableKatex ?? true}
+                          onChange={(e) => handleSettingChange('rendering', 'enableKatex', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableKatex')}
+                    />
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.enableKatexDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableMermaid ?? false}
+                          onChange={(e) => handleSettingChange('rendering', 'enableMermaid', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableMermaid')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.advanced.enableMermaidDescription')}
+                    </Typography>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardContent>
                     <Typography variant="h6" sx={{ mb: 2 }}>

@@ -5,12 +5,12 @@ import { Download } from '@mui/icons-material';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
 import { variableApi } from '../api/variableApi';
 import { desktopApi } from '../api/desktopApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { readFile } from '@tauri-apps/plugin-fs';
+import { RenderingSettings, DEFAULT_RENDERING_SETTINGS } from '../types/settings';
+import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
 
 interface PreviewProps {
   content: string;
@@ -21,6 +21,7 @@ interface PreviewProps {
   onContentChange?: (newContent: string) => void;
   scrollFraction?: number;
   filePath?: string;
+  renderingSettings?: RenderingSettings;
 }
 
 /** Resolve a relative path against a base directory path */
@@ -39,7 +40,7 @@ function resolveRelativePath(baseDirPath: string, relativePath: string): string 
   return '/' + resolved.join('/');
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
@@ -54,10 +55,20 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   onContentChangeRef.current = onContentChange;
 
   useEffect(() => {
+    let stale = false;
+
     // Set up custom renderer for syntax highlighting
     const renderer = new marked.Renderer();
 
+    // Languages handled by post-processors — skip syntax highlighting
+    const postProcessedLangs = new Set(['mermaid']);
+
     renderer.code = function({ text, lang }: { text: string; lang?: string; escaped?: boolean }) {
+      // Post-processed languages: output raw text with language class preserved
+      if (lang && postProcessedLangs.has(lang)) {
+        const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
+      }
       if (lang && hljs.getLanguage(lang)) {
         try {
           const highlighted = hljs.highlight(text, { language: lang }).value;
@@ -66,8 +77,9 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           console.warn('Highlight.js error:', err);
         }
       }
+      const langClass = lang ? ` language-${lang}` : '';
       const highlighted = hljs.highlightAuto(text).value;
-      return `<pre><code class="hljs">${highlighted}</code></pre>`;
+      return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`;
     };
 
     // Add checkbox functionality (processed in postprocess)
@@ -90,43 +102,22 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     const processContent = async () => {
       if (content) {
         // Skip re-processing if input hasn't changed (prevents animation interruption on auto-save)
-        const inputKey = content + JSON.stringify(globalVariables) + (filePath || '');
+        const inputKey = content + JSON.stringify(globalVariables) + (filePath || '') + JSON.stringify(renderingSettings) + darkMode + (theme || '');
         if (inputKey === lastProcessedInputRef.current) return;
-        lastProcessedInputRef.current = inputKey;
 
         const result = await variableApi.processMarkdown(content, globalVariables);
+        if (stale) return;
         let processedMarkdown = processEasterEggBlocks(result.processedContent);
 
-        // Process KaTeX math expressions before marked parsing
-        // Protect code blocks from math processing
-        const codeBlocks: string[] = [];
-        processedMarkdown = processedMarkdown.replace(/```[\s\S]*?```|`[^`\n]+`/g, (match) => {
-          codeBlocks.push(match);
-          return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
-        });
-
-        // Process display math ($$...$$) first
-        processedMarkdown = processedMarkdown.replace(/\$\$([\s\S]*?)\$\$/g, (_match, tex: string) => {
+        // Process KaTeX math expressions before marked parsing (lazy-loaded)
+        if (renderingSettings.enableKatex && contentHasKatex(processedMarkdown)) {
           try {
-            return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false });
-          } catch {
-            return `<span class="katex-error" style="color:red;">${tex}</span>`;
+            processedMarkdown = await processKatex(processedMarkdown);
+          } catch (err) {
+            console.warn('KaTeX processing failed, showing raw math syntax:', err);
           }
-        });
-
-        // Process inline math ($...$)
-        processedMarkdown = processedMarkdown.replace(/(?<!\$)\$(?!\$)((?:[^$\\]|\\.)+)\$(?!\$)/g, (_match, tex: string) => {
-          try {
-            return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false });
-          } catch {
-            return `<span class="katex-error" style="color:red;">${tex}</span>`;
-          }
-        });
-
-        // Restore code blocks
-        processedMarkdown = processedMarkdown.replace(/%%CODEBLOCK_(\d+)%%/g, (_match, index: string) => {
-          return codeBlocks[parseInt(index)];
-        });
+          if (stale) return;
+        }
 
         // Convert Markdown to HTML
         const markedResult = marked(processedMarkdown, {
@@ -141,6 +132,17 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           processedHtml = markedResult;
         } else {
           processedHtml = await markedResult;
+        }
+
+        // Process Mermaid diagrams (lazy-loaded, after marked parsing)
+        if (renderingSettings.enableMermaid && contentHasMermaid(processedMarkdown)) {
+          try {
+            reinitializeMermaid(darkMode || theme === 'darcula');
+            processedHtml = await processMermaidBlocks(processedHtml);
+          } catch (err) {
+            console.warn('Mermaid processing failed, showing raw code blocks:', err);
+          }
+          if (stale) return;
         }
 
         // Process checkboxes generated by the marked library
@@ -198,6 +200,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           }
 
           await Promise.all(imgPromises);
+          if (stale) return;
 
           // Revoke previous blob URLs
           for (const url of blobUrlsRef.current) {
@@ -210,6 +213,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           }
         }
 
+        lastProcessedInputRef.current = inputKey;
         setProcessedContent(processedMarkdown);
         setHtmlContent(processedHtml);
       } else {
@@ -219,7 +223,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     };
 
     processContent();
-  }, [content, globalVariables, filePath]);
+    return () => { stale = true; };
+  }, [content, globalVariables, filePath, renderingSettings, darkMode, theme]);
 
   // Handle link clicks: re-attach when DOM changes
   useEffect(() => {
@@ -316,7 +321,13 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       // Set up custom renderer for syntax highlighting
       const renderer = new marked.Renderer();
 
+      const postProcessedLangs = new Set(['mermaid']);
+
       renderer.code = function({ text, lang }: { text: string; lang?: string; escaped?: boolean }) {
+        if (lang && postProcessedLangs.has(lang)) {
+          const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
+        }
         if (lang && hljs.getLanguage(lang)) {
           try {
             const highlighted = hljs.highlight(text, { language: lang }).value;
@@ -325,15 +336,27 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             console.warn('Highlight.js error:', err);
           }
         }
+        const langClass = lang ? ` language-${lang}` : '';
         const highlighted = hljs.highlightAuto(text).value;
-        return `<pre><code class="hljs">${highlighted}</code></pre>`;
+        return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`;
       };
 
-      const htmlContent = marked(processedContent, {
+      let exportHtml: string;
+      const markedExportResult = marked(processedContent, {
         breaks: true,
         gfm: true,
         renderer: renderer,
       });
+      if (typeof markedExportResult === 'string') {
+        exportHtml = markedExportResult;
+      } else {
+        exportHtml = await markedExportResult;
+      }
+
+      // Process Mermaid diagrams for export (renders as inline SVG)
+      if (renderingSettings.enableMermaid && contentHasMermaid(processedContent)) {
+        exportHtml = await processMermaidBlocks(exportHtml);
+      }
 
       // Determine colors based on theme
       const isDarkTheme = darkMode || theme === 'darcula';
@@ -471,7 +494,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     <link rel="stylesheet" href="${highlightStyle}">
 </head>
 <body>
-    ${htmlContent}
+    ${exportHtml}
     <script>
       // Embed highlight.js core functionality (no CDN)
       (function(){
@@ -681,6 +704,23 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
             .markdown-preview a:hover {
               text-decoration: underline;
+            }
+
+            /* Mermaid diagrams */
+            .mermaid-diagram {
+              display: flex;
+              justify-content: center;
+              margin: 1em 0;
+              overflow-x: auto;
+            }
+
+            .mermaid-diagram svg {
+              max-width: 100%;
+              height: auto;
+            }
+
+            .mermaid-error {
+              margin: 1em 0;
             }
 
             /* Easter egg blocks */
