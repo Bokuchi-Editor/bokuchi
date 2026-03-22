@@ -26,6 +26,12 @@ export interface InterfaceSettings {
   folderTreeFileFilter: 'markdown' | 'all';
 }
 
+// Rendering settings type definition
+export interface RenderingSettings {
+  enableKatex: boolean;
+  enableMermaid: boolean;
+}
+
 // Advanced settings type definition
 export interface AdvancedSettings {
   autoSave: boolean;
@@ -46,6 +52,7 @@ export interface AppSettings {
   appearance: AppearanceSettings;
   interface: InterfaceSettings;
   advanced: AdvancedSettings;
+  rendering: RenderingSettings;
   recentFiles: RecentFilesSettings;
   globalVariables: Record<string, string>;
 }
@@ -79,6 +86,11 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
   tableConversion: 'confirm',
 };
 
+export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
+  enableKatex: true,
+  enableMermaid: false,
+};
+
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {
   maxRecentFiles: 20,
   showPreview: true,
@@ -90,6 +102,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   appearance: DEFAULT_APPEARANCE_SETTINGS,
   interface: DEFAULT_INTERFACE_SETTINGS,
   advanced: DEFAULT_ADVANCED_SETTINGS,
+  rendering: DEFAULT_RENDERING_SETTINGS,
   recentFiles: DEFAULT_RECENT_FILES_SETTINGS,
   globalVariables: {},
 };
