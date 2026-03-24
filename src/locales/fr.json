@@ -475,6 +475,9 @@
     "conversionFailed": "Échec de la conversion du tableau. Collé en texte brut.",
     "noTableDetected": "Aucun tableau détecté dans les données du presse-papiers"
   },
+  "search": {
+    "searchAllTabs": "Rechercher dans tous les onglets"
+  },
   "whatsNew": {
     "title": "Nouveautés",
     "gotIt": "Compris",

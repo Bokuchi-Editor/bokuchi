@@ -475,6 +475,9 @@
     "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
     "noTableDetected": "在剪贴板数据中未检测到表格"
   },
+  "search": {
+    "searchAllTabs": "搜索所有标签页"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "知道了",

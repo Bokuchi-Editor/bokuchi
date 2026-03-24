@@ -368,6 +368,9 @@ const AppContent: React.FC<AppContentProps> = ({
                       onSnackbar={onSnackbar}
                       onTableConversionSettingChange={onTableConversionSettingChange}
                       onScrollChange={handleEditorScrollChange}
+                      tabs={tabs}
+                      activeTabId={activeTabId}
+                      onTabSwitch={onTabChange}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -413,6 +416,9 @@ const AppContent: React.FC<AppContentProps> = ({
                     tableConversion={editorSettings?.tableConversion}
                     onSnackbar={onSnackbar}
                     onTableConversionSettingChange={onTableConversionSettingChange}
+                    tabs={tabs}
+                    activeTabId={activeTabId}
+                    onTabSwitch={onTabChange}
                     fileNotFound={
                       activeTab.isNew && activeTab.filePath
                         ? {

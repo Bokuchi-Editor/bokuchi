@@ -481,6 +481,9 @@
     "conversionFailed": "Failed to convert table. Pasted as plain text.",
     "noTableDetected": "No table detected in clipboard data"
   },
+  "search": {
+    "searchAllTabs": "Search all tabs"
+  },
   "whatsNew": {
     "title": "What's New",
     "gotIt": "Got It",

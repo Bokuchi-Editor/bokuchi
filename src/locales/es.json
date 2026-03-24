@@ -475,6 +475,9 @@
     "conversionFailed": "Error al convertir la tabla. Pegado como texto plano.",
     "noTableDetected": "No se detectó ninguna tabla en los datos del portapapeles"
   },
+  "search": {
+    "searchAllTabs": "Buscar en todas las pestañas"
+  },
   "whatsNew": {
     "title": "Novedades",
     "gotIt": "Entendido",

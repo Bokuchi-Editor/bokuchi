@@ -475,6 +475,9 @@
     "conversionFailed": "Chuyển đổi bảng thất bại. Đã dán dưới dạng văn bản thuần túy.",
     "noTableDetected": "Không phát hiện bảng nào trong dữ liệu clipboard"
   },
+  "search": {
+    "searchAllTabs": "Tìm kiếm tất cả các tab"
+  },
   "whatsNew": {
     "title": "Có gì mới",
     "gotIt": "Đã hiểu",

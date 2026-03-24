@@ -475,6 +475,9 @@
     "conversionFailed": "Falha na conversão da tabela. Colado como texto simples.",
     "noTableDetected": "Nenhuma tabela detectada nos dados da área de transferência"
   },
+  "search": {
+    "searchAllTabs": "Pesquisar em todas as abas"
+  },
   "whatsNew": {
     "title": "Novidades",
     "gotIt": "Entendi",
