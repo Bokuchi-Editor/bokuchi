@@ -481,6 +481,9 @@
     "conversionFailed": "テーブルの変換に失敗しました。プレーンテキストとして貼り付けました。",
     "noTableDetected": "クリップボードデータにテーブルが検出されませんでした"
   },
+  "search": {
+    "searchAllTabs": "すべてのタブを検索"
+  },
   "whatsNew": {
     "title": "新機能のご紹介",
     "gotIt": "OK",

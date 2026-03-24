@@ -475,6 +475,9 @@
     "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
     "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
   },
+  "search": {
+    "searchAllTabs": "Alle Tabs durchsuchen"
+  },
   "whatsNew": {
     "title": "Was ist neu",
     "gotIt": "Verstanden",

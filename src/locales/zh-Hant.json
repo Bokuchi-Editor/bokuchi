@@ -475,6 +475,9 @@
     "conversionFailed": "表格轉換失敗。已作為純文字貼上。",
     "noTableDetected": "在剪貼簿資料中未偵測到表格"
   },
+  "search": {
+    "searchAllTabs": "搜尋所有分頁"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "了解",

@@ -475,6 +475,9 @@
     "conversionFailed": "표 변환에 실패했습니다. 일반 텍스트로 붙여넣었습니다.",
     "noTableDetected": "클립보드 데이터에서 표가 감지되지 않았습니다"
   },
+  "search": {
+    "searchAllTabs": "모든 탭에서 검색"
+  },
   "whatsNew": {
     "title": "새로운 기능",
     "gotIt": "확인",

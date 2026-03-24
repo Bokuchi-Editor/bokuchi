@@ -123,4 +123,104 @@ describe('TabBar', () => {
       }
     }
   });
+
+  // T-TB-07: close passes correct tab ID
+  it('T-TB-07: close button passes the correct tab ID', () => {
+    render(<TabBar {...defaultProps()} layout="vertical" />);
+    const closeIcons = screen.getAllByTestId('CloseIcon');
+    // Click close on the second tab (File2.md)
+    if (closeIcons.length >= 2) {
+      const closeButton = closeIcons[1].closest('button');
+      if (closeButton) {
+        fireEvent.click(closeButton);
+        expect(onTabClose).toHaveBeenCalledWith('tab2');
+      }
+    }
+  });
+
+  // T-TB-08: horizontal close button passes correct tab ID
+  it('T-TB-08: horizontal close button calls onTabClose with correct ID', () => {
+    render(<TabBar {...defaultProps()} />);
+    const closeIcons = screen.getAllByTestId('CloseIcon');
+    // Click close on the first tab (tab1)
+    if (closeIcons.length >= 1) {
+      const closeBtn = closeIcons[0].closest('[role="tab"]')
+        ? closeIcons[0]
+        : closeIcons[0].parentElement;
+      if (closeBtn) {
+        fireEvent.click(closeBtn);
+        expect(onTabClose).toHaveBeenCalledWith('tab1');
+      }
+    }
+  });
+
+  // T-TB-09: modified badge visible for modified tab
+  it('T-TB-09: shows modification badge for modified tab', () => {
+    const { container } = render(<TabBar {...defaultProps()} />);
+    // MUI Badge with variant="dot" renders a <span> with class MuiBadge-dot
+    const badges = container.querySelectorAll('.MuiBadge-dot');
+    // tab1 is not modified (invisible=true → dot hidden), tab2 is modified (invisible=false → dot visible)
+    // Count visible badges
+    const visibleBadges = Array.from(badges).filter(
+      (b) => !b.classList.contains('MuiBadge-invisible'),
+    );
+    expect(visibleBadges.length).toBe(1); // only tab2
+  });
+
+  // T-TB-10: unmodified tab hides badge
+  it('T-TB-10: hides modification badge for unmodified tab', () => {
+    const unmodifiedTabs: TabType[] = [
+      { id: 'tab1', title: 'Clean.md', content: '', isModified: false, isNew: false },
+    ];
+    const { container } = render(
+      <TabBar {...defaultProps()} tabs={unmodifiedTabs} />,
+    );
+    const visibleBadges = Array.from(
+      container.querySelectorAll('.MuiBadge-dot'),
+    ).filter((b) => !b.classList.contains('MuiBadge-invisible'));
+    expect(visibleBadges.length).toBe(0);
+  });
+
+  // T-TB-11: vertical new tab button works
+  it('T-TB-11: vertical layout new tab button calls onNewTab', () => {
+    render(<TabBar {...defaultProps()} layout="vertical" />);
+    const addIcons = screen.getAllByTestId('AddIcon');
+    const addBtn = addIcons[0]?.closest('button');
+    if (addBtn) {
+      fireEvent.click(addBtn);
+      expect(onNewTab).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  // T-TB-12: clicking tab in vertical layout calls onTabChange with correct ID
+  it('T-TB-12: vertical tab click calls onTabChange with tab ID', () => {
+    render(<TabBar {...defaultProps()} layout="vertical" />);
+    fireEvent.click(screen.getByText('File2.md'));
+    expect(onTabChange).toHaveBeenCalledWith('tab2');
+  });
+
+  // T-TB-13: many tabs render all titles
+  it('T-TB-13: renders all tabs when many are provided', () => {
+    const manyTabs: TabType[] = Array.from({ length: 10 }, (_, i) => ({
+      id: `tab${i}`,
+      title: `Doc${i}.md`,
+      content: '',
+      isModified: i % 2 === 0,
+      isNew: false,
+    }));
+    render(<TabBar {...defaultProps()} tabs={manyTabs} activeTabId="tab0" />);
+    for (let i = 0; i < 10; i++) {
+      expect(screen.getByText(`Doc${i}.md`)).toBeInTheDocument();
+    }
+  });
+
+  // T-TB-14: embedded vertical layout does not set fixed width
+  it('T-TB-14: embedded mode does not apply fixed width', () => {
+    const { container } = render(
+      <TabBar {...defaultProps()} layout="vertical" embedded={true} />,
+    );
+    // The root Box should not have width: 280 when embedded
+    const rootBox = container.firstElementChild as HTMLElement;
+    expect(rootBox.style.width).not.toBe('280px');
+  });
 });

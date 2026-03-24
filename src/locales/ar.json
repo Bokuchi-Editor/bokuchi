@@ -475,6 +475,9 @@
     "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
     "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
   },
+  "search": {
+    "searchAllTabs": "البحث في جميع علامات التبويب"
+  },
   "whatsNew": {
     "title": "ما الجديد",
     "gotIt": "فهمت",

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { TableConversionDialog } from './TableConversionDialog';
 import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
 import MarkdownToolbar from './MarkdownToolbar';
+import { Tab } from '../types/tab';
 
 interface EditorProps {
   content: string;
@@ -38,6 +39,10 @@ interface EditorProps {
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
   onScrollChange?: (scrollFraction: number) => void;
+  // Cross-tab search
+  tabs?: Tab[];
+  activeTabId?: string | null;
+  onTabSwitch?: (tabId: string) => void;
 }
 
 const MarkdownEditor: React.FC<EditorProps> = ({
@@ -60,9 +65,13 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   onSnackbar,
   onTableConversionSettingChange,
   onScrollChange,
+  tabs,
+  activeTabId,
+  onTabSwitch,
 }) => {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -217,10 +226,17 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
+          setSearchAllTabsDefault(false);
           setSearchOpen(true);
         });
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
+          setSearchAllTabsDefault(false);
+          setSearchOpen(true);
+        });
+
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
+          setSearchAllTabsDefault(true);
           setSearchOpen(true);
         });
 
@@ -457,8 +473,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           Editor
         </Typography>
         <Box>
-          <Tooltip title="Search (Ctrl+F)">
-            <IconButton size="small" onClick={() => setSearchOpen(true)}>
+          <Tooltip title="Search (Ctrl+F / Ctrl+Shift+F)">
+            <IconButton size="small" onClick={() => { setSearchAllTabsDefault(false); setSearchOpen(true); }}>
               <Search />
             </IconButton>
           </Tooltip>
@@ -473,6 +489,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           open={searchOpen}
           onClose={() => { setSearchOpen(false); focusEditor(); }}
           onChange={onChange}
+          tabs={tabs}
+          activeTabId={activeTabId}
+          onTabSwitch={onTabSwitch}
+          searchAllTabsDefault={searchAllTabsDefault}
         />
         {fileNotFound ? (
           <Box
