@@ -106,8 +106,6 @@ export const useAppState = () => {
     zoomIn,
     zoomOut,
     viewMode,
-    setOutlinePanelOpen,
-    setFolderTreePanelOpen,
   });
 
   // Easter eggs

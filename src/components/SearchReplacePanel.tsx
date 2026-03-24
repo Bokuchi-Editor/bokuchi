@@ -203,7 +203,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
     const allMatches: CrossTabMatchInfo[] = [];
 
     for (const tab of tabs) {
-      const lines = tab.content.split('\n');
+      const lines = tab.content.split(/\r?\n/);
       // Reset regex for each tab
       searchRegex.lastIndex = 0;
 
@@ -218,7 +218,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
         }
         // Calculate line number and column
         const beforeMatch = tabContent.substring(0, match.index);
-        const lineNumber = beforeMatch.split('\n').length;
+        const lineNumber = beforeMatch.split(/\r?\n/).length;
         const lastNewline = beforeMatch.lastIndexOf('\n');
         const column = match.index - lastNewline;
 

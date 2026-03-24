@@ -110,7 +110,7 @@ export function detectHtmlTable(clipboardData: DataTransfer): string | null {
  */
 export function validateMarkdownTable(markdown: string): boolean {
   try {
-    const lines = markdown.split('\n');
+    const lines = markdown.split(/\r?\n/);
     if (lines.length < 2) {
       return false;
     }
@@ -142,7 +142,7 @@ export function validateMarkdownTable(markdown: string): boolean {
 export function convertTsvCsvToMarkdown(text: string): string {
 
   try {
-    const lines = text.trim().split('\n');
+    const lines = text.trim().split(/\r?\n/);
 
     if (lines.length === 0) {
       throw new Error('No lines found');

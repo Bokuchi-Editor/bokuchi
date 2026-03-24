@@ -4,7 +4,7 @@ import { HeadingItem } from '../types/outline';
  * Extract ATX headings from Markdown content, ignoring code blocks.
  */
 export function extractHeadings(content: string): HeadingItem[] {
-  const lines = content.split('\n');
+  const lines = content.split(/\r?\n/);
   const headings: HeadingItem[] = [];
   let inCodeBlock = false;
 
