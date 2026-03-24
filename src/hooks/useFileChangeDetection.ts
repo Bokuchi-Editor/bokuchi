@@ -84,7 +84,7 @@ export const useFileChangeDetection = ({
     return () => {
       window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
     };
-  }, [updateTabContent, updateTabFileHash, setActiveTab, isInitialized]);
+  }, [tabs, updateTabContent, updateTabFileHash, setActiveTab, isInitialized]);
 
   // Common file change detection handler
   const checkFileChange = useCallback(async (tab: Tab, source: string) => {

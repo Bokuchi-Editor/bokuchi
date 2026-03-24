@@ -92,6 +92,33 @@ describe('extractHeadings', () => {
     expect(result.map(h => h.level)).toEqual([1, 3, 2]);
   });
 
+  // T-HE-08a: Regression test for Windows CRLF line endings (Issue #225)
+  it('extracts headings from content with CRLF line endings', () => {
+    const content = '# H1\r\n## H2\r\n### H3';
+    const result = extractHeadings(content);
+    expect(result).toHaveLength(3);
+    expect(result.map(h => h.level)).toEqual([1, 2, 3]);
+    expect(result.map(h => h.text)).toEqual(['H1', 'H2', 'H3']);
+  });
+
+  // T-HE-08b: Regression test for CRLF line numbers (Issue #225)
+  it('returns correct line numbers with CRLF line endings', () => {
+    const content = 'Some text\r\n# First Heading\r\n\r\n## Second Heading';
+    const result = extractHeadings(content);
+    expect(result).toHaveLength(2);
+    expect(result[0].lineNumber).toBe(2);
+    expect(result[1].lineNumber).toBe(4);
+  });
+
+  // T-HE-08c: Regression test for CRLF with code blocks (Issue #225)
+  it('skips headings inside code blocks with CRLF line endings', () => {
+    const content = '# Real\r\n```\r\n# Fake\r\n```\r\n## Also Real';
+    const result = extractHeadings(content);
+    expect(result).toHaveLength(2);
+    expect(result[0].text).toBe('Real');
+    expect(result[1].text).toBe('Also Real');
+  });
+
   // T-HE-08
   it('ignores lines that are not headings', () => {
     const content = [

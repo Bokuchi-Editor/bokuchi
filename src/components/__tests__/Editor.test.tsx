@@ -103,7 +103,7 @@ vi.mock('@monaco-editor/react', () => ({
 }));
 
 import MarkdownEditor from '../Editor';
-import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../../utils/tableConverter';
+import { validateMarkdownTable, convertTsvCsvToMarkdown } from '../../utils/tableConverter';
 
 // Helper: create a mock Monaco editor instance
 function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor> = {}) {
@@ -886,6 +886,58 @@ describe('MarkdownEditor', () => {
       await waitFor(() => {
         expect(convertTsvCsvToMarkdown).toHaveBeenCalledWith("A\tB\n1\t2");
         expect(screen.getByTestId('table-dialog')).toBeInTheDocument();
+      });
+
+      document.body.removeChild(domNode);
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-24: Regression test - paste handler updates when tableConversion prop changes (Issue #225)
+    it('T-ED-24: paste handler reflects updated tableConversion setting', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38 },
+      };
+
+      const mockEditor = createMockMonacoEditor();
+      const domNode = document.createElement('div');
+      const textarea = document.createElement('textarea');
+      domNode.appendChild(textarea);
+      document.body.appendChild(domNode);
+      textarea.focus();
+      (mockEditor.getDomNode as ReturnType<typeof vi.fn>).mockReturnValue(domNode);
+
+      const onSnackbar = vi.fn();
+
+      // Start with 'confirm' mode
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps()} tableConversion="confirm" onSnackbar={onSnackbar} />,
+      );
+      capturedOnMount!(mockEditor);
+
+      // Switch to 'auto' mode (simulating settings load completing)
+      rerender(
+        <MarkdownEditor {...defaultProps()} tableConversion="auto" onSnackbar={onSnackbar} />,
+      );
+
+      // Paste HTML table data
+      const pasteEvent = new Event('paste', { bubbles: true, cancelable: true }) as unknown as ClipboardEvent;
+      Object.defineProperty(pasteEvent, 'clipboardData', {
+        value: {
+          getData: (type: string) => {
+            if (type === 'text/html') return '<table><tr><td>A</td></tr></table>';
+            if (type === 'text/plain') return 'A';
+            return '';
+          },
+        },
+      });
+      document.dispatchEvent(pasteEvent);
+
+      // In 'auto' mode, table should be inserted directly (no dialog)
+      await waitFor(() => {
+        expect(mockEditor.executeEdits).toHaveBeenCalled();
+        // Dialog should NOT appear in auto mode
+        expect(screen.queryByTestId('table-dialog')).not.toBeInTheDocument();
       });
 
       document.body.removeChild(domNode);

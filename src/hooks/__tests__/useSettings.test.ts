@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { ThemeName } from '../../themes';
@@ -40,12 +39,7 @@ import { applyThemeToDocument } from '../../themes';
 import { asMock } from '../../test-utils';
 
 describe('useSettings', () => {
-  let setOutlinePanelOpen: ReturnType<typeof vi.fn>;
-  let setFolderTreePanelOpen: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
-    setOutlinePanelOpen = vi.fn();
-    setFolderTreePanelOpen = vi.fn();
     vi.clearAllMocks();
   });
 
@@ -55,8 +49,6 @@ describe('useSettings', () => {
     zoomIn: asMock<() => void>(vi.fn()),
     zoomOut: asMock<() => void>(vi.fn()),
     viewMode: 'split' as const,
-    setOutlinePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setOutlinePanelOpen),
-    setFolderTreePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setFolderTreePanelOpen),
   });
 
   // T-SETT-01: initial default state
@@ -138,23 +130,35 @@ describe('useSettings', () => {
     expect(storeApi.saveAppSettings).toHaveBeenCalledWith(newSettings);
   });
 
-  // T-SETT-07: auto-opens outline panel when mode is persistent
-  it('T-SETT-07: auto-opens outline panel for persistent mode', async () => {
+  // T-SETT-07: Regression test - handleAppSettingsChange never touches panel open state (Issue #225)
+  // Settings changes must not affect panel visibility. Panels are controlled only by user actions
+  // (icon clicks, keyboard shortcuts), not by settings changes.
+  it('T-SETT-07: handleAppSettingsChange does not control panel open state', async () => {
     const { result } = renderHook(() => useSettings(defaultParams()));
 
     await waitFor(() => {
       expect(result.current.isSettingsLoaded).toBe(true);
     });
 
+    // Verify handleAppSettingsChange does not expose or call setOutlinePanelOpen/setFolderTreePanelOpen
+    // by checking that settings change only persists to store and updates local state
     const newSettings = {
       ...result.current.appSettings,
-      interface: { ...result.current.appSettings.interface, outlineDisplayMode: 'persistent' as const },
+      interface: {
+        ...result.current.appSettings.interface,
+        tabLayout: 'vertical' as const,
+        outlineDisplayMode: 'persistent' as const,
+        folderTreeDisplayMode: 'persistent' as const,
+      },
     };
 
     await act(async () => {
       await result.current.handleAppSettingsChange(newSettings);
     });
 
-    expect(setOutlinePanelOpen).toHaveBeenCalledWith(true);
+    // Only saveAppSettings should be called, no panel state side effects
+    expect(storeApi.saveAppSettings).toHaveBeenCalledWith(newSettings);
+    expect(result.current.appSettings.interface.outlineDisplayMode).toBe('persistent');
+    expect(result.current.appSettings.interface.folderTreeDisplayMode).toBe('persistent');
   });
 });

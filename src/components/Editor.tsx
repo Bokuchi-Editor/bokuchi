@@ -82,6 +82,126 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     clipboardData: null,
   });
 
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+
+  const insertPlainText = useCallback((text: string) => {
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const selection = editor.getSelection();
+
+    if (selection) {
+      editor.executeEdits('paste', [{
+        range: selection,
+        text: text,
+        forceMoveMarkers: true
+      }]);
+    } else {
+      // If no selection, insert at current cursor position
+      const position = editor.getPosition();
+      if (position) {
+        editor.executeEdits('paste', [{
+          range: {
+            startLineNumber: position.lineNumber,
+            startColumn: position.column,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column
+          },
+          text: text,
+          forceMoveMarkers: true
+        }]);
+      }
+    }
+  }, []);
+
+  const insertMarkdownTable = useCallback((markdownTable: string) => {
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const selection = editor.getSelection();
+
+    if (selection) {
+      // If selection exists, replace
+      editor.executeEdits('table-conversion', [{
+        range: selection,
+        text: markdownTable,
+        forceMoveMarkers: true
+      }]);
+    } else {
+      // If no selection, insert at current position
+      const position = editor.getPosition();
+      if (position) {
+        editor.executeEdits('table-conversion', [{
+          range: {
+            startLineNumber: position.lineNumber,
+            startColumn: position.column,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column
+          },
+          text: markdownTable,
+          forceMoveMarkers: true
+        }]);
+      }
+    }
+  }, []);
+
+  const handlePasteWithData = useCallback(async (htmlData: string, plainText: string) => {
+
+    try {
+      // If table conversion is disabled, perform normal paste
+      if (tableConversion === 'off') {
+        insertPlainText(plainText);
+        return;
+      }
+
+      let markdownTable = '';
+
+      // Step 1: Search and convert HTML tables
+      if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
+        markdownTable = htmlTableToMarkdown(htmlData);
+      }
+      // Step 2: Search and convert TSV/CSV in plain text
+      else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
+        markdownTable = convertTsvCsvToMarkdown(plainText);
+      }
+      else {
+        insertPlainText(plainText);
+        return;
+      }
+
+      // Validate conversion result
+      if (!validateMarkdownTable(markdownTable)) {
+        insertPlainText(plainText);
+        return;
+      }
+
+
+      // Process according to settings
+      if (tableConversion === 'auto') {
+        // Auto conversion
+        insertMarkdownTable(markdownTable);
+        onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
+      } else if (tableConversion === 'confirm') {
+        // Show confirmation dialog
+        // Save clipboard data immediately (save data, not object)
+        const savedData = {
+          plainText: plainText,
+          htmlData: htmlData
+        };
+        setTableConversionDialog({
+          open: true,
+          markdownTable,
+          clipboardData: savedData,
+        });
+      }
+    } catch (error) {
+      console.error('Table conversion failed:', error);
+      // Fallback: paste as plain text
+      insertPlainText(plainText);
+      onSnackbar?.(t('tableConversion.conversionFailed'), 'warning');
+    }
+  }, [tableConversion, insertPlainText, insertMarkdownTable, onSnackbar, t]);
+
   // Set up global paste event listener
   useEffect(() => {
     let isShiftPressed = false;
@@ -165,9 +285,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       document.removeEventListener('keydown', handleKeyDown, true);
       document.removeEventListener('keyup', handleKeyUp, true);
     };
-  }, [tableConversion]);
-
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  }, [tableConversion, handlePasteWithData, insertPlainText, onSnackbar]);
 
   // Robust focus function with Tauri window focus + retry
   const focusEditor = useCallback(async (editorInstance?: editor.IStandaloneCodeEditor) => {
@@ -321,125 +439,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
       onChange(value);
-    }
-  };
-
-  const handlePasteWithData = async (htmlData: string, plainText: string) => {
-
-    try {
-      // If table conversion is disabled, perform normal paste
-      if (tableConversion === 'off') {
-        insertPlainText(plainText);
-        return;
-      }
-
-      let markdownTable = '';
-
-      // Step 1: Search and convert HTML tables
-      if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
-        markdownTable = htmlTableToMarkdown(htmlData);
-      }
-      // Step 2: Search and convert TSV/CSV in plain text
-      else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-        markdownTable = convertTsvCsvToMarkdown(plainText);
-      }
-      else {
-        insertPlainText(plainText);
-        return;
-      }
-
-      // Validate conversion result
-      if (!validateMarkdownTable(markdownTable)) {
-        insertPlainText(plainText);
-        return;
-      }
-
-
-      // Process according to settings
-      if (tableConversion === 'auto') {
-        // Auto conversion
-        insertMarkdownTable(markdownTable);
-        onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
-      } else if (tableConversion === 'confirm') {
-        // Show confirmation dialog
-        // Save clipboard data immediately (save data, not object)
-        const savedData = {
-          plainText: plainText,
-          htmlData: htmlData
-        };
-        setTableConversionDialog({
-          open: true,
-          markdownTable,
-          clipboardData: savedData,
-        });
-      }
-    } catch (error) {
-      console.error('Table conversion failed:', error);
-      // Fallback: paste as plain text
-      insertPlainText(plainText);
-      onSnackbar?.(t('tableConversion.conversionFailed'), 'warning');
-    }
-  };
-
-
-  const insertPlainText = (text: string) => {
-    if (!editorRef.current) return;
-
-    const editor = editorRef.current;
-    const selection = editor.getSelection();
-
-    if (selection) {
-      editor.executeEdits('paste', [{
-        range: selection,
-        text: text,
-        forceMoveMarkers: true
-      }]);
-    } else {
-      // If no selection, insert at current cursor position
-      const position = editor.getPosition();
-      if (position) {
-        editor.executeEdits('paste', [{
-          range: {
-            startLineNumber: position.lineNumber,
-            startColumn: position.column,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column
-          },
-          text: text,
-          forceMoveMarkers: true
-        }]);
-      }
-    }
-  };
-
-  const insertMarkdownTable = (markdownTable: string) => {
-    if (!editorRef.current) return;
-
-    const editor = editorRef.current;
-    const selection = editor.getSelection();
-
-    if (selection) {
-      // If selection exists, replace
-      editor.executeEdits('table-conversion', [{
-        range: selection,
-        text: markdownTable,
-        forceMoveMarkers: true
-      }]);
-    } else {
-      // If no selection, insert at current position
-      const position = editor.getPosition();
-      if (position) {
-        editor.executeEdits('table-conversion', [{
-          range: {
-            startLineNumber: position.lineNumber,
-            startColumn: position.column,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column
-          },
-          text: markdownTable,
-          forceMoveMarkers: true
-        }]);
-      }
     }
   };
 

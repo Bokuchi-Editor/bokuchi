@@ -261,7 +261,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       if (!currentOnContentChange) return;
 
       const checkboxIndex = parseInt(target.getAttribute('data-checkbox-index') || '0');
-      const lines = contentRef.current.split('\n');
+      const lines = contentRef.current.split(/\r?\n/);
       let currentIndex = 0;
 
       for (let i = 0; i < lines.length; i++) {
