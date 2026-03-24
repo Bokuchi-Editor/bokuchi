@@ -147,6 +147,11 @@ export function generateExportCSS(colors: ExportThemeColors): string {
             text-decoration: underline;
         }
 
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         .hljs {
             background: ${colors.codeBackground} !important;
         }`;
