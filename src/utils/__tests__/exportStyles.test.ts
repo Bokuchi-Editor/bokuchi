@@ -53,6 +53,14 @@ describe('generateExportCSS', () => {
     expect(css).toContain(colors.linkColor);
     expect(css).toContain('font-family');
   });
+
+  it('constrains images to fit within parent element', () => {
+    const colors = getExportThemeColors(false);
+    const css = generateExportCSS(colors);
+    expect(css).toContain('img');
+    expect(css).toContain('max-width: 100%');
+    expect(css).toContain('height: auto');
+  });
 });
 
 describe('buildExportHTML', () => {
