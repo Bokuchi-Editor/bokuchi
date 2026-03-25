@@ -4,6 +4,11 @@
     "loading": "로딩 중...",
     "noTabsOpen": "열린 탭이 없습니다. 시작하려면 새 탭을 만드세요."
   },
+  "emptyState": {
+    "recentFiles": "최근 파일",
+    "newFile": "새 파일",
+    "openFile": "파일 열기"
+  },
   "buttons": {
     "open": "열기",
     "save": "저장",

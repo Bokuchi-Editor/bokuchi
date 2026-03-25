@@ -4,6 +4,11 @@
     "loading": "Laden...",
     "noTabsOpen": "Keine Tabs geöffnet. Erstellen Sie einen neuen Tab, um zu beginnen."
   },
+  "emptyState": {
+    "recentFiles": "Zuletzt geöffnet",
+    "newFile": "Neue Datei",
+    "openFile": "Datei öffnen"
+  },
   "buttons": {
     "open": "Öffnen",
     "save": "Speichern",

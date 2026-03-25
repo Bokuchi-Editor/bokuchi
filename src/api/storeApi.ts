@@ -213,14 +213,8 @@ export const storeApi = {
   // Create initial state
   createInitialState(): AppState {
     return {
-      tabs: [{
-        id: '1',
-        title: 'Untitled',
-        content: '',
-        isNew: true,
-        isModified: false,
-      }],
-      activeTabId: '1',
+      tabs: [],
+      activeTabId: null,
       lastOpenedAt: Date.now(),
     };
   },

@@ -90,7 +90,7 @@ export const useTabs = () => {
   const createNewTab = useCallback(() => {
     return addTab({
       title: 'Untitled',
-      content: '# New Document\n\nStart typing here...',
+      content: '',
       isModified: false,
       isNew: true,
     });

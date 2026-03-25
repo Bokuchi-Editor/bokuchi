@@ -4,6 +4,11 @@
     "loading": "Cargando...",
     "noTabsOpen": "No hay pestañas abiertas. Crea una nueva pestaña para comenzar."
   },
+  "emptyState": {
+    "recentFiles": "Archivos recientes",
+    "newFile": "Nuevo archivo",
+    "openFile": "Abrir archivo"
+  },
   "buttons": {
     "open": "Abrir",
     "save": "Guardar",

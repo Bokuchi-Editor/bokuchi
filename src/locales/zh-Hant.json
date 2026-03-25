@@ -4,6 +4,11 @@
     "loading": "載入中...",
     "noTabsOpen": "沒有開啟的標籤頁。建立新標籤頁開始使用。"
   },
+  "emptyState": {
+    "recentFiles": "最近的檔案",
+    "newFile": "新建檔案",
+    "openFile": "開啟檔案"
+  },
   "buttons": {
     "open": "開啟",
     "save": "儲存",

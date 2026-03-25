@@ -5,6 +5,7 @@ import Preview from './Preview';
 import TabBar from './TabBar';
 import OutlinePanel from './OutlinePanel';
 import FolderTreePanel from './FolderTreePanel';
+import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
@@ -61,6 +62,8 @@ interface AppContentProps {
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
+  onOpenFile: () => void;
+  onRecentFileSelect: (filePath: string) => void;
   onTabReorder: (tabs: Tab[]) => void;
   onContentChange: (content: string) => void;
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
@@ -103,6 +106,8 @@ const AppContent: React.FC<AppContentProps> = ({
   onTabChange,
   onTabClose,
   onNewTab,
+  onOpenFile,
+  onRecentFileSelect,
   onTabReorder,
   onContentChange,
   onStatusChange,
@@ -333,11 +338,12 @@ const AppContent: React.FC<AppContentProps> = ({
               </Typography>
             </Box>
           ) : tabs.length === 0 ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-              <Typography variant="h6" color="text.secondary">
-                {t('app.noTabsOpen')}
-              </Typography>
-            </Box>
+            <EmptyState
+              onNewTab={onNewTab}
+              onOpenFile={onOpenFile}
+              onRecentFileSelect={onRecentFileSelect}
+              t={t}
+            />
           ) : !activeTab ? (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
               <Typography variant="h6" color="text.secondary">

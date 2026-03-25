@@ -4,6 +4,11 @@
     "loading": "加载中...",
     "noTabsOpen": "没有打开的标签页。创建新标签页开始使用。"
   },
+  "emptyState": {
+    "recentFiles": "最近的文件",
+    "newFile": "新建文件",
+    "openFile": "打开文件"
+  },
   "buttons": {
     "open": "打开",
     "save": "保存",

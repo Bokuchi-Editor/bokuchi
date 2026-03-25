@@ -4,6 +4,11 @@
     "loading": "Carregando...",
     "noTabsOpen": "Nenhuma aba aberta. Crie uma nova aba para começar."
   },
+  "emptyState": {
+    "recentFiles": "Arquivos recentes",
+    "newFile": "Novo arquivo",
+    "openFile": "Abrir arquivo"
+  },
   "buttons": {
     "open": "Abrir",
     "save": "Salvar",

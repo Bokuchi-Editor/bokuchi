@@ -321,12 +321,8 @@ export const useAppState = () => {
     }
   }, [viewMode, isSettingsLoaded, requestEditorFocus]);
 
-  // Create initial tab
-  useEffect(() => {
-    if (tabs.length === 0) {
-      createNewTab();
-    }
-  }, [tabs.length, createNewTab]);
+  // Note: No auto-creation of tabs when empty.
+  // The EmptyState component is shown instead (see AppContent).
 
   // Keyboard shortcuts
   const { handleKeyDown } = useKeyboardShortcuts({
