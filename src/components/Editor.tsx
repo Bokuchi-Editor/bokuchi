@@ -83,6 +83,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   });
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const disposablesRef = useRef<import('monaco-editor').IDisposable[]>([]);
+
+  // Dispose Monaco listeners on unmount
+  useEffect(() => {
+    return () => {
+      disposablesRef.current.forEach(d => d.dispose());
+      disposablesRef.current = [];
+    };
+  }, []);
 
   const insertPlainText = useCallback((text: string) => {
     if (!editorRef.current) return;
@@ -377,6 +386,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       console.warn('Failed to set keyboard shortcuts:', error);
     }
 
+    // Dispose previous listeners before registering new ones
+    disposablesRef.current.forEach(d => d.dispose());
+    disposablesRef.current = [];
+
     // Monitor cursor position and selection information changes
     if (onStatusChange) {
       const updateStatus = () => {
@@ -406,32 +419,40 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       updateStatus();
 
       // Monitor cursor position changes
-      editor.onDidChangeCursorPosition(() => {
-        updateStatus();
-      });
+      disposablesRef.current.push(
+        editor.onDidChangeCursorPosition(() => {
+          updateStatus();
+        })
+      );
 
       // Monitor selection range changes
-      editor.onDidChangeCursorSelection(() => {
-        updateStatus();
-      });
+      disposablesRef.current.push(
+        editor.onDidChangeCursorSelection(() => {
+          updateStatus();
+        })
+      );
 
       // Monitor content changes
-      editor.onDidChangeModelContent(() => {
-        updateStatus();
-      });
+      disposablesRef.current.push(
+        editor.onDidChangeModelContent(() => {
+          updateStatus();
+        })
+      );
     }
 
     // Sync scroll: notify parent of scroll position
     if (onScrollChange) {
-      editor.onDidScrollChange(() => {
-        const scrollTop = editor.getScrollTop();
-        const scrollHeight = editor.getScrollHeight();
-        const clientHeight = editor.getLayoutInfo().height;
-        const maxScroll = scrollHeight - clientHeight;
-        if (maxScroll > 0) {
-          onScrollChange(scrollTop / maxScroll);
-        }
-      });
+      disposablesRef.current.push(
+        editor.onDidScrollChange(() => {
+          const scrollTop = editor.getScrollTop();
+          const scrollHeight = editor.getScrollHeight();
+          const clientHeight = editor.getLayoutInfo().height;
+          const maxScroll = scrollHeight - clientHeight;
+          if (maxScroll > 0) {
+            onScrollChange(scrollTop / maxScroll);
+          }
+        })
+      );
     }
 
   };

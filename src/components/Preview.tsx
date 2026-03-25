@@ -48,6 +48,16 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const [exportError, setExportError] = useState<string | null>(null);
   const blobUrlsRef = useRef<string[]>([]);
 
+  // Revoke all blob URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      for (const url of blobUrlsRef.current) {
+        URL.revokeObjectURL(url);
+      }
+      blobUrlsRef.current = [];
+    };
+  }, []);
+
   const contentRef = useRef(content);
   const onContentChangeRef = useRef(onContentChange);
   const lastProcessedInputRef = useRef<string>('');
