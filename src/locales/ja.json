@@ -4,6 +4,11 @@
     "loading": "読み込み中...",
     "noTabsOpen": "タブが開かれていません。新しいタブを作成して開始してください。"
   },
+  "emptyState": {
+    "recentFiles": "最近のファイル",
+    "newFile": "新規ファイル",
+    "openFile": "ファイルを開く"
+  },
   "buttons": {
     "open": "開く",
     "save": "保存",

@@ -4,6 +4,11 @@
     "loading": "Chargement...",
     "noTabsOpen": "Aucun onglet ouvert. Créez un nouvel onglet pour commencer."
   },
+  "emptyState": {
+    "recentFiles": "Fichiers récents",
+    "newFile": "Nouveau fichier",
+    "openFile": "Ouvrir un fichier"
+  },
   "buttons": {
     "open": "Ouvrir",
     "save": "Enregistrer",

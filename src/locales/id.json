@@ -4,6 +4,11 @@
     "loading": "Memuat...",
     "noTabsOpen": "Tidak ada tab yang terbuka. Buat tab baru untuk memulai."
   },
+  "emptyState": {
+    "recentFiles": "File Terbaru",
+    "newFile": "File Baru",
+    "openFile": "Buka File"
+  },
   "buttons": {
     "open": "Buka",
     "save": "Simpan",

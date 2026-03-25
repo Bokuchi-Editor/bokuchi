@@ -210,12 +210,10 @@ describe('storeApi.loadViewMode', () => {
 // createInitialState
 // ---------------------------------------------------------------------------
 describe('storeApi.createInitialState', () => {
-  it('returns state with one default tab', () => {
+  it('returns state with no tabs (empty state)', () => {
     const state = storeApi.createInitialState();
-    expect(state.tabs).toHaveLength(1);
-    expect(state.activeTabId).toBe('1');
-    expect(state.tabs[0].isNew).toBe(true);
-    expect(state.tabs[0].content).toBe('');
+    expect(state.tabs).toHaveLength(0);
+    expect(state.activeTabId).toBeNull();
     expect(state.lastOpenedAt).toBeGreaterThan(0);
   });
 });

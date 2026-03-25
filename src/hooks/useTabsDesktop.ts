@@ -343,7 +343,7 @@ export const useTabsDesktop = () => {
   const createNewTab = useCallback(() => {
     const tabId = addTab({
       title: 'Untitled',
-      content: '# New Document\n\nStart typing here...',
+      content: '',
       isModified: false,
       isNew: true,
     });

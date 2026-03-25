@@ -4,6 +4,11 @@
     "loading": "Đang tải...",
     "noTabsOpen": "Không có tab nào mở. Tạo tab mới để bắt đầu."
   },
+  "emptyState": {
+    "recentFiles": "Tệp gần đây",
+    "newFile": "Tệp mới",
+    "openFile": "Mở tệp"
+  },
   "buttons": {
     "open": "Mở",
     "save": "Lưu",

@@ -425,6 +425,8 @@ function AppDesktop() {
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
+          onOpenFile={handleOpenFile}
+          onRecentFileSelect={handleRecentFileSelect}
           onTabReorder={handleTabReorder}
           onContentChange={handleContentChange}
           onStatusChange={setEditorStatus}
