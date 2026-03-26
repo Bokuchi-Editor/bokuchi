@@ -372,7 +372,9 @@
       "importSuccess": "설정이 성공적으로 가져와졌습니다",
       "importError": "설정 가져오기에 실패했습니다",
       "resetSuccess": "설정이 성공적으로 재설정되었습니다",
-      "resetError": "설정 재설정에 실패했습니다"
+      "resetError": "설정 재설정에 실패했습니다",
+      "enableMarp": "Marp (프레젠테이션)",
+      "enableMarpDescription": "marp: true 프론트매터가 있는 Markdown 슬라이드를 프레젠테이션으로 미리 봅니다."
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "미리보기에서 체크박스를 클릭해도 변경 사항이 반영되지 않는 문제를 수정했습니다."
       }
     }
+  },
+  "preview": {
+    "presentation": "프레젠테이션",
+    "previousSlide": "이전 슬라이드",
+    "nextSlide": "다음 슬라이드",
+    "slideCounter": "슬라이드 {{current}} / {{total}}"
   }
 }

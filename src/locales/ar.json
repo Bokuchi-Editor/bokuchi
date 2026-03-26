@@ -372,7 +372,9 @@
       "importSuccess": "تم استيراد الإعدادات بنجاح",
       "importError": "فشل في استيراد الإعدادات",
       "resetSuccess": "تم إعادة تعيين الإعدادات بنجاح",
-      "resetError": "فشل في إعادة تعيين الإعدادات"
+      "resetError": "فشل في إعادة تعيين الإعدادات",
+      "enableMarp": "Marp (عروض تقديمية)",
+      "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي."
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "تم إصلاح مشكلة عدم انعكاس التغييرات عند النقر على مربعات الاختيار في المعاينة."
       }
     }
+  },
+  "preview": {
+    "presentation": "عرض تقديمي",
+    "previousSlide": "الشريحة السابقة",
+    "nextSlide": "الشريحة التالية",
+    "slideCounter": "شريحة {{current}} من {{total}}"
   }
 }

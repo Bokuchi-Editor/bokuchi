@@ -372,7 +372,9 @@
       "importSuccess": "Pengaturan berhasil diimpor",
       "importError": "Gagal mengimpor pengaturan",
       "resetSuccess": "Pengaturan berhasil direset",
-      "resetError": "Gagal mereset pengaturan"
+      "resetError": "Gagal mereset pengaturan",
+      "enableMarp": "Marp (Presentasi)",
+      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi."
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "Memperbaiki masalah di mana mengklik kotak centang di pratinjau tidak mencerminkan perubahan."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentasi",
+    "previousSlide": "Slide sebelumnya",
+    "nextSlide": "Slide berikutnya",
+    "slideCounter": "Slide {{current}} dari {{total}}"
   }
 }

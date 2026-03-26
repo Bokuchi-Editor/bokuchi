@@ -378,7 +378,9 @@
       "importSuccess": "設定が正常にインポートされました",
       "importError": "設定のインポートに失敗しました",
       "resetSuccess": "設定が正常にリセットされました",
-      "resetError": "設定のリセットに失敗しました"
+      "resetError": "設定のリセットに失敗しました",
+      "enableMarp": "Marp（プレゼンテーション）",
+      "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。"
     }
   },
   "fileOperations": {
@@ -511,5 +513,11 @@
         "description": "プレビュー上でチェックボックスをクリックしても変更が反映されない問題を修正しました。"
       }
     }
+  },
+  "preview": {
+    "presentation": "プレゼンテーション",
+    "previousSlide": "前のスライド",
+    "nextSlide": "次のスライド",
+    "slideCounter": "スライド {{current}} / {{total}}"
   }
 }

@@ -372,7 +372,9 @@
       "importSuccess": "Настройки успешно импортированы",
       "importError": "Не удалось импортировать настройки",
       "resetSuccess": "Настройки успешно сброшены",
-      "resetError": "Не удалось сбросить настройки"
+      "resetError": "Не удалось сбросить настройки",
+      "enableMarp": "Marp (Презентации)",
+      "enableMarpDescription": "Предпросмотр слайдов Markdown с marp: true в виде презентации."
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "Исправлена проблема, при которой нажатие на флажки в предпросмотре не отражало изменения."
       }
     }
+  },
+  "preview": {
+    "presentation": "Презентация",
+    "previousSlide": "Предыдущий слайд",
+    "nextSlide": "Следующий слайд",
+    "slideCounter": "Слайд {{current}} из {{total}}"
   }
 }

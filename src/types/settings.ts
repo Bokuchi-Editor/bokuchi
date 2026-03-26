@@ -30,6 +30,7 @@ export interface InterfaceSettings {
 export interface RenderingSettings {
   enableKatex: boolean;
   enableMermaid: boolean;
+  enableMarp: boolean;
 }
 
 // Advanced settings type definition
@@ -89,6 +90,7 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
 export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
   enableKatex: true,
   enableMermaid: false,
+  enableMarp: false,
 };
 
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {

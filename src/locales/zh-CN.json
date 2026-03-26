@@ -372,7 +372,9 @@
       "importSuccess": "设置导入成功",
       "importError": "设置导入失败",
       "resetSuccess": "设置重置成功",
-      "resetError": "设置重置失败"
+      "resetError": "设置重置失败",
+      "enableMarp": "Marp（演示文稿）",
+      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。"
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "修复了在预览中点击复选框后更改未反映的问题。"
       }
     }
+  },
+  "preview": {
+    "presentation": "演示文稿",
+    "previousSlide": "上一张幻灯片",
+    "nextSlide": "下一张幻灯片",
+    "slideCounter": "幻灯片 {{current}} / {{total}}"
   }
 }

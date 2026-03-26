@@ -372,7 +372,9 @@
       "importSuccess": "設定匯入成功",
       "importError": "設定匯入失敗",
       "resetSuccess": "設定重設成功",
-      "resetError": "設定重設失敗"
+      "resetError": "設定重設失敗",
+      "enableMarp": "Marp（簡報）",
+      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。"
     }
   },
   "fileOperations": {
@@ -505,5 +507,11 @@
         "description": "修復了在預覽中點擊核取方塊後變更未反映的問題。"
       }
     }
+  },
+  "preview": {
+    "presentation": "簡報",
+    "previousSlide": "上一張投影片",
+    "nextSlide": "下一張投影片",
+    "slideCounter": "投影片 {{current}} / {{total}}"
   }
 }

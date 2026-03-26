@@ -246,7 +246,7 @@ describe('processRenderingExtensions', () => {
     const result = await processRenderingExtensions(
       markdown,
       html,
-      { enableKatex: true, enableMermaid: true },
+      { enableKatex: true, enableMermaid: true, enableMarp: false },
       false,
     );
 
@@ -261,7 +261,7 @@ describe('processRenderingExtensions', () => {
     const result = await processRenderingExtensions(
       markdown,
       html,
-      { enableKatex: false, enableMermaid: false },
+      { enableKatex: false, enableMermaid: false, enableMarp: false },
       false,
     );
 
@@ -276,7 +276,7 @@ describe('processRenderingExtensions', () => {
     const result = await processRenderingExtensions(
       markdown,
       html,
-      { enableKatex: true, enableMermaid: false },
+      { enableKatex: true, enableMermaid: false, enableMarp: false },
       false,
     );
 
@@ -291,7 +291,7 @@ describe('processRenderingExtensions', () => {
     const result = await processRenderingExtensions(
       markdown,
       html,
-      { enableKatex: true, enableMermaid: true },
+      { enableKatex: true, enableMermaid: true, enableMarp: false },
       false,
     );
 

@@ -11,6 +11,8 @@ import { readFile } from '@tauri-apps/plugin-fs';
 import { RenderingSettings, DEFAULT_RENDERING_SETTINGS } from '../types/settings';
 import { renderCode, processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
 import { buildExportHTML } from '../utils/exportStyles';
+import { contentIsMarp } from '../utils/marpRenderer';
+import MarpPreview from './MarpPreview';
 
 interface PreviewProps {
   content: string;
@@ -41,6 +43,7 @@ function resolveRelativePath(baseDirPath: string, relativePath: string): string 
 }
 
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS }) => {
+  const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [processedContent, setProcessedContent] = useState(content || '');
@@ -343,6 +346,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   };
 
   // htmlContent is managed by useState, so removed here
+
+  // Delegate to MarpPreview for Marp presentations
+  if (isMarp) {
+    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} />;
+  }
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

@@ -987,8 +987,20 @@ const Settings: React.FC<SettingsProps> = ({
                       }
                       label={t('settings.advanced.enableMermaid')}
                     />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.advanced.enableMermaidDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableMarp ?? false}
+                          onChange={(e) => handleSettingChange('rendering', 'enableMarp', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableMarp')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.advanced.enableMarpDescription')}
                     </Typography>
                   </CardContent>
                 </Card>
