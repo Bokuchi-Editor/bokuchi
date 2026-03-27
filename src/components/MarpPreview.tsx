@@ -75,7 +75,7 @@ async function inlineRelativeImages(html: string, filePath: string): Promise<str
     promises.push(
       readAsDataUrl(absolutePath, src)
         .then(dataUrl => { replacements.set(src, dataUrl); })
-        .catch(err => { console.warn('Failed to load image:', absolutePath, err); })
+        .catch(err => { console.error('[MarpPreview] Failed to inline image:', absolutePath, err); })
     );
   }
 
@@ -86,13 +86,19 @@ async function inlineRelativeImages(html: string, filePath: string): Promise<str
     collectSrc(match[1]);
   }
 
-  // 2. CSS url("...") — Marp uses this for background images
+  // 2. CSS url(&quot;...&quot;) — Marp encodes quotes as HTML entities in inline styles
+  const urlEntityRegex = /url\(&quot;([^&]+)&quot;\)/g;
+  while ((match = urlEntityRegex.exec(html)) !== null) {
+    collectSrc(match[1]);
+  }
+
+  // 3. CSS url("...") — fallback for unencoded quotes
   const urlRegex = /url\("([^"]+)"\)/g;
   while ((match = urlRegex.exec(html)) !== null) {
     collectSrc(match[1]);
   }
 
-  // 3. SVG <image href="..."> or <image xlink:href="...">
+  // 4. SVG <image href="..."> or <image xlink:href="...">
   const imageHrefRegex = /<image\s+[^>]*?(?:xlink:)?href="([^"]+)"[^>]*?>/g;
   while ((match = imageHrefRegex.exec(html)) !== null) {
     collectSrc(match[1]);
@@ -103,8 +109,8 @@ async function inlineRelativeImages(html: string, filePath: string): Promise<str
   let result = html;
   for (const [original, dataUrl] of replacements) {
     if (dataUrl !== original) {
-      // Replace in all attribute contexts
       result = result.split(`src="${original}"`).join(`src="${dataUrl}"`);
+      result = result.split(`url(&quot;${original}&quot;)`).join(`url(&quot;${dataUrl}&quot;)`);
       result = result.split(`url("${original}")`).join(`url("${dataUrl}")`);
       result = result.split(`href="${original}"`).join(`href="${dataUrl}"`);
     }
@@ -156,7 +162,11 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
 
       // Inline relative images as data URLs so the iframe can display them
       if (filePath) {
-        html = await inlineRelativeImages(html, filePath);
+        try {
+          html = await inlineRelativeImages(html, filePath);
+        } catch (err) {
+          console.error('[MarpPreview] inlineRelativeImages failed:', err);
+        }
         if (stale) return;
       }
 
