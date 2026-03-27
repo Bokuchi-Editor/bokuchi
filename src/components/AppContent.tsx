@@ -398,6 +398,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       scrollFraction={scrollFraction}
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
+                      viewMode="split"
                     />
                   </Box>
                 </>
@@ -447,6 +448,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
+                    viewMode="preview"
                   />
                 </Box>
               )}

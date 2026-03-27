@@ -81,3 +81,54 @@ html, body {
 <body>${html}</body>
 </html>`;
 }
+
+/**
+ * Build a self-contained HTML document showing all slides stacked vertically.
+ * Used in split/separate mode for overview while editing.
+ */
+export function buildAllSlidesDocument(html: string, css: string): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+${css}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #1a1a1a;
+}
+
+div.marpit > svg[data-marpit-svg] {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 16px auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border-radius: 4px;
+}
+
+div.marpit {
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+</style>
+</head>
+<body>${html}
+<script>
+window.addEventListener('message', function(e) {
+  if (e.data && typeof e.data.scrollFraction === 'number') {
+    var maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if (maxScroll > 0) {
+      document.documentElement.scrollTop = e.data.scrollFraction * maxScroll;
+    }
+  }
+});
+</script>
+</body>
+</html>`;
+}

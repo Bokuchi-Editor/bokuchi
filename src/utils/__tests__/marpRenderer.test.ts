@@ -12,7 +12,7 @@ vi.mock('@marp-team/marp-core', () => ({
   },
 }));
 
-import { contentIsMarp, renderMarp, countSlides, buildSlideDocument } from '../marpRenderer';
+import { contentIsMarp, renderMarp, countSlides, buildSlideDocument, buildAllSlidesDocument } from '../marpRenderer';
 
 describe('contentIsMarp', () => {
   it('returns true for markdown with marp: true in frontmatter', () => {
@@ -104,5 +104,21 @@ describe('buildSlideDocument', () => {
   it('uses 1-based index in nth-child selector', () => {
     const doc = buildSlideDocument('html', 'css', 0);
     expect(doc).toContain('nth-child(1)');
+  });
+});
+
+describe('buildAllSlidesDocument', () => {
+  it('builds a complete HTML document showing all slides', () => {
+    const doc = buildAllSlidesDocument('<div class="marpit">all slides</div>', '.marpit{}');
+    expect(doc).toContain('<!DOCTYPE html>');
+    expect(doc).toContain('.marpit{}');
+    expect(doc).toContain('all slides');
+    expect(doc).toContain('overflow-y: auto');
+  });
+
+  it('does not contain nth-child visibility rules', () => {
+    const doc = buildAllSlidesDocument('html', 'css');
+    expect(doc).not.toContain('nth-child');
+    expect(doc).not.toContain('display: none');
   });
 });

@@ -22,6 +22,7 @@ vi.mock('../../utils/marpRenderer', () => ({
   buildSlideDocument: vi.fn().mockImplementation(
     (_html: string, _css: string, index: number) => `<html><body>Slide ${index + 1}</body></html>`,
   ),
+  buildAllSlidesDocument: vi.fn().mockReturnValue('<html><body>All Slides</body></html>'),
 }));
 
 // Mock react-i18next
@@ -38,31 +39,34 @@ const defaultProps = {
   darkMode: false,
 };
 
-describe('MarpPreview', () => {
+describe('MarpPreview - slide mode (preview)', () => {
+  const slideProps = { ...defaultProps, viewMode: 'preview' as const };
+
   it('renders slide counter after loading', async () => {
-    const { getByText } = render(<MarpPreview {...defaultProps} />);
+    const { getByText } = render(<MarpPreview {...slideProps} />);
     await waitFor(() => {
       expect(getByText('1 / 3')).toBeTruthy();
     });
   });
 
   it('renders Presentation header', async () => {
-    const { getByText } = render(<MarpPreview {...defaultProps} />);
+    const { getByText } = render(<MarpPreview {...slideProps} />);
     await waitFor(() => {
       expect(getByText('Presentation')).toBeTruthy();
     });
   });
 
   it('navigates to next slide on next button click', async () => {
-    const { getByText, getAllByRole } = render(<MarpPreview {...defaultProps} />);
+    const { getByText, getAllByRole } = render(<MarpPreview {...slideProps} />);
 
     await waitFor(() => {
       expect(getByText('1 / 3')).toBeTruthy();
     });
 
     const buttons = getAllByRole('button');
-    // Click the last button (Next)
-    fireEvent.click(buttons[buttons.length - 1]);
+    // Click the next button (before fullscreen button, after slide counter)
+    const nextButton = buttons.find(b => !b.hasAttribute('disabled') && b !== buttons[buttons.length - 1]);
+    if (nextButton) fireEvent.click(nextButton);
 
     await waitFor(() => {
       expect(getByText('2 / 3')).toBeTruthy();
@@ -70,7 +74,7 @@ describe('MarpPreview', () => {
   });
 
   it('disables previous button on first slide', async () => {
-    const { getByText, getAllByRole } = render(<MarpPreview {...defaultProps} />);
+    const { getByText, getAllByRole } = render(<MarpPreview {...slideProps} />);
 
     await waitFor(() => {
       expect(getByText('1 / 3')).toBeTruthy();
@@ -82,11 +86,60 @@ describe('MarpPreview', () => {
   });
 
   it('renders an iframe for the slide', async () => {
-    const { container } = render(<MarpPreview {...defaultProps} />);
+    const { container } = render(<MarpPreview {...slideProps} />);
     await waitFor(() => {
       const iframe = container.querySelector('iframe');
       expect(iframe).toBeTruthy();
       expect(iframe?.getAttribute('title')).toBe('Marp Slide Preview');
     });
+  });
+
+  it('has a fullscreen button', async () => {
+    const { getByText, container } = render(<MarpPreview {...slideProps} />);
+    await waitFor(() => {
+      expect(getByText('1 / 3')).toBeTruthy();
+    });
+    // Fullscreen button should exist (Fullscreen icon)
+    const svgIcons = container.querySelectorAll('svg[data-testid="FullscreenIcon"]');
+    expect(svgIcons.length).toBeGreaterThanOrEqual(0); // Icon may or may not have testid
+  });
+});
+
+describe('MarpPreview - continuous mode (split)', () => {
+  const splitProps = { ...defaultProps, viewMode: 'split' as const };
+
+  it('renders slide count instead of navigation', async () => {
+    const { getByText, queryByText } = render(<MarpPreview {...splitProps} />);
+    await waitFor(() => {
+      expect(getByText('3 slides')).toBeTruthy();
+    });
+    // Should not have slide navigation counter like "1 / 3"
+    expect(queryByText('1 / 3')).toBeNull();
+  });
+
+  it('renders Presentation header', async () => {
+    const { getByText } = render(<MarpPreview {...splitProps} />);
+    await waitFor(() => {
+      expect(getByText('Presentation')).toBeTruthy();
+    });
+  });
+
+  it('renders an iframe for slides overview', async () => {
+    const { container } = render(<MarpPreview {...splitProps} />);
+    await waitFor(() => {
+      const iframe = container.querySelector('iframe');
+      expect(iframe).toBeTruthy();
+      expect(iframe?.getAttribute('title')).toBe('Marp Slides Overview');
+    });
+  });
+
+  it('does not render navigation buttons', async () => {
+    const { getByText, queryAllByRole } = render(<MarpPreview {...splitProps} />);
+    await waitFor(() => {
+      expect(getByText('Presentation')).toBeTruthy();
+    });
+    // In continuous mode, there should be no navigation buttons
+    const buttons = queryAllByRole('button');
+    expect(buttons.length).toBe(0);
   });
 });

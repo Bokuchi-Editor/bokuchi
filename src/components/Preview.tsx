@@ -24,6 +24,7 @@ interface PreviewProps {
   scrollFraction?: number;
   filePath?: string;
   renderingSettings?: RenderingSettings;
+  viewMode?: 'split' | 'editor' | 'preview';
 }
 
 /** Resolve a relative path against a base directory path */
@@ -42,7 +43,7 @@ function resolveRelativePath(baseDirPath: string, relativePath: string): string 
   return '/' + resolved.join('/');
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -349,7 +350,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // Delegate to MarpPreview for Marp presentations
   if (isMarp) {
-    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} />;
+    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} viewMode={viewMode} />;
   }
 
   return (

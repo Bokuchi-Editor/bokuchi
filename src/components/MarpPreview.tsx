@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
-import { NavigateBefore, NavigateNext } from '@mui/icons-material';
+import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { readFile } from '@tauri-apps/plugin-fs';
 import { variableApi } from '../api/variableApi';
-import { renderMarp, buildSlideDocument } from '../utils/marpRenderer';
+import { renderMarp, buildSlideDocument, buildAllSlidesDocument } from '../utils/marpRenderer';
 
 interface MarpPreviewProps {
   content: string;
@@ -14,6 +14,7 @@ interface MarpPreviewProps {
   zoomLevel?: number;
   scrollFraction?: number;
   filePath?: string;
+  viewMode?: 'split' | 'editor' | 'preview';
 }
 
 /** Resolve a relative path against a base directory path */
@@ -37,42 +38,64 @@ const MIME_MAP: Record<string, string> = {
   bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
 };
 
+/** Check if a URL is absolute (http, https, data, blob) */
+function isAbsoluteUrl(src: string): boolean {
+  return src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:') || src.startsWith('blob:');
+}
+
+/** Read a local file and return its data URL */
+async function readAsDataUrl(absolutePath: string, src: string): Promise<string> {
+  const data = await readFile(absolutePath);
+  const ext = src.split('.').pop()?.toLowerCase() || '';
+  const mime = MIME_MAP[ext] || 'application/octet-stream';
+  let binary = '';
+  for (let i = 0; i < data.length; i++) {
+    binary += String.fromCharCode(data[i]);
+  }
+  return `data:${mime};base64,${btoa(binary)}`;
+}
+
 /**
- * Replace relative image src attributes in HTML with inline data URLs.
- * Needed because the iframe srcdoc cannot access local file paths or blob URLs.
+ * Replace relative image references in HTML with inline data URLs.
+ * Handles:
+ * - <img src="..."> tags (regular images)
+ * - CSS url("...") patterns (Marp background images)
+ * - <image href="..."> / <image xlink:href="..."> SVG elements
  */
 async function inlineRelativeImages(html: string, filePath: string): Promise<string> {
   const baseDir = filePath.substring(0, filePath.lastIndexOf('/'));
-  const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
   const replacements = new Map<string, string>();
-
   const promises: Promise<void>[] = [];
-  let match;
-  while ((match = imgRegex.exec(html)) !== null) {
-    const src = match[1];
-    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:') || src.startsWith('blob:')) {
-      continue;
-    }
-    if (replacements.has(src)) continue;
-    // Reserve key to avoid duplicate reads
-    replacements.set(src, src);
 
+  /** Collect a src for replacement if it's a relative path */
+  function collectSrc(src: string) {
+    if (isAbsoluteUrl(src) || replacements.has(src)) return;
+    replacements.set(src, src); // reserve
     const absolutePath = resolveRelativePath(baseDir, src);
     promises.push(
-      readFile(absolutePath).then(data => {
-        const ext = src.split('.').pop()?.toLowerCase() || '';
-        const mime = MIME_MAP[ext] || 'application/octet-stream';
-        // Convert Uint8Array to base64 data URL
-        let binary = '';
-        for (let i = 0; i < data.length; i++) {
-          binary += String.fromCharCode(data[i]);
-        }
-        const base64 = btoa(binary);
-        replacements.set(src, `data:${mime};base64,${base64}`);
-      }).catch(err => {
-        console.warn('Failed to load image:', absolutePath, err);
-      })
+      readAsDataUrl(absolutePath, src)
+        .then(dataUrl => { replacements.set(src, dataUrl); })
+        .catch(err => { console.warn('Failed to load image:', absolutePath, err); })
     );
+  }
+
+  // 1. <img src="...">
+  const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
+  let match;
+  while ((match = imgRegex.exec(html)) !== null) {
+    collectSrc(match[1]);
+  }
+
+  // 2. CSS url("...") — Marp uses this for background images
+  const urlRegex = /url\("([^"]+)"\)/g;
+  while ((match = urlRegex.exec(html)) !== null) {
+    collectSrc(match[1]);
+  }
+
+  // 3. SVG <image href="..."> or <image xlink:href="...">
+  const imageHrefRegex = /<image\s+[^>]*?(?:xlink:)?href="([^"]+)"[^>]*?>/g;
+  while ((match = imageHrefRegex.exec(html)) !== null) {
+    collectSrc(match[1]);
   }
 
   await Promise.all(promises);
@@ -80,7 +103,10 @@ async function inlineRelativeImages(html: string, filePath: string): Promise<str
   let result = html;
   for (const [original, dataUrl] of replacements) {
     if (dataUrl !== original) {
+      // Replace in all attribute contexts
       result = result.split(`src="${original}"`).join(`src="${dataUrl}"`);
+      result = result.split(`url("${original}")`).join(`url("${dataUrl}")`);
+      result = result.split(`href="${original}"`).join(`href="${dataUrl}"`);
     }
   }
   return result;
@@ -92,14 +118,20 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
   zoomLevel = 1.0,
   scrollFraction,
   filePath,
+  viewMode = 'split',
 }) => {
   const { t } = useTranslation();
   const [marpHtml, setMarpHtml] = useState('');
   const [marpCss, setMarpCss] = useState('');
   const [slideCount, setSlideCount] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const lastInputRef = useRef<string>('');
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const isSlideMode = viewMode === 'preview';
+  const isContinuousMode = viewMode === 'split';
 
   // Render Marp slides
   useEffect(() => {
@@ -139,8 +171,17 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     return () => { stale = true; };
   }, [content, globalVariables, filePath]);
 
-  // Map scrollFraction to slide index
+  // Scroll sync for continuous mode — send scrollFraction to iframe via postMessage
   useEffect(() => {
+    if (!isContinuousMode || scrollFraction === undefined) return;
+    const iframe = iframeRef.current;
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage({ scrollFraction }, '*');
+  }, [scrollFraction, isContinuousMode, marpHtml]);
+
+  // Map scrollFraction to slide index for slide mode
+  useEffect(() => {
+    if (!isSlideMode) return;
     if (scrollFraction !== undefined && slideCount > 0) {
       const index = Math.min(
         Math.floor(scrollFraction * slideCount),
@@ -148,7 +189,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
       );
       setCurrentSlide(index);
     }
-  }, [scrollFraction, slideCount]);
+  }, [scrollFraction, slideCount, isSlideMode]);
 
   const goToPrev = useCallback(() => {
     setCurrentSlide((prev) => Math.max(0, prev - 1));
@@ -158,28 +199,159 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
   }, [slideCount]);
 
-  // Keyboard navigation
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  // Keyboard navigation (slide mode)
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    if (!isSlideMode && !isFullscreen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        e.preventDefault();
+        setIsFullscreen(false);
+        return;
+      }
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
         goToPrev();
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
         e.preventDefault();
         goToNext();
       }
     };
 
+    // Use window-level listener in fullscreen for reliable key capture
+    if (isFullscreen) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+
+    const container = containerRef.current;
+    if (!container) return;
     container.addEventListener('keydown', handleKeyDown);
     return () => container.removeEventListener('keydown', handleKeyDown);
-  }, [goToPrev, goToNext]);
+  }, [goToPrev, goToNext, isSlideMode, isFullscreen]);
 
-  // Build the iframe srcdoc for the current slide
-  const srcdoc = marpHtml ? buildSlideDocument(marpHtml, marpCss, currentSlide) : '';
+  // Exit fullscreen when switching away from preview mode
+  useEffect(() => {
+    if (!isSlideMode) setIsFullscreen(false);
+  }, [isSlideMode]);
 
+  // Build iframe srcdoc
+  const srcdoc = marpHtml
+    ? (isContinuousMode
+        ? buildAllSlidesDocument(marpHtml, marpCss)
+        : buildSlideDocument(marpHtml, marpCss, currentSlide))
+    : '';
+
+  // Fullscreen overlay
+  if (isFullscreen && srcdoc) {
+    return (
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          backgroundColor: '#000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {/* Slide area */}
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              maxHeight: '100%',
+              aspectRatio: '16 / 9',
+              maxWidth: 'calc(100vh * 16 / 9)',
+            }}
+          >
+            <iframe
+              srcDoc={srcdoc}
+              sandbox="allow-scripts"
+              title="Marp Slide Fullscreen"
+              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+            />
+          </Box>
+        </Box>
+
+        {/* Exit fullscreen button — top right, semi-transparent */}
+        <Tooltip title={t('preview.exitFullscreen', 'Exit Fullscreen (Esc)')}>
+          <IconButton
+            onClick={toggleFullscreen}
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              color: 'rgba(255,255,255,0.5)',
+              '&:hover': { color: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(255,255,255,0.1)' },
+            }}
+          >
+            <FullscreenExit />
+          </IconButton>
+        </Tooltip>
+
+        {/* Slide counter — bottom center */}
+        <Typography
+          variant="body2"
+          sx={{
+            position: 'absolute',
+            bottom: 16,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            color: 'rgba(255,255,255,0.5)',
+            userSelect: 'none',
+          }}
+        >
+          {slideCount > 0 ? `${currentSlide + 1} / ${slideCount}` : ''}
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Continuous mode (split view) — all slides stacked vertically
+  if (isContinuousMode) {
+    return (
+      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+        <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="subtitle2" color="text.secondary">
+            {t('preview.presentation', 'Presentation')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {slideCount > 0 ? `${slideCount} ${t('preview.slides', 'slides')}` : ''}
+          </Typography>
+        </Box>
+        <Box sx={{ flex: 1, overflow: 'hidden' }}>
+          {srcdoc && (
+            <iframe
+              ref={iframeRef}
+              srcDoc={srcdoc}
+              sandbox="allow-scripts"
+              title="Marp Slides Overview"
+              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+            />
+          )}
+        </Box>
+      </Box>
+    );
+  }
+
+  // Slide mode (preview view) — single slide with navigation
   return (
     <Box
       ref={containerRef}
@@ -209,10 +381,15 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               </IconButton>
             </span>
           </Tooltip>
+          <Tooltip title={t('preview.fullscreen', 'Fullscreen')}>
+            <IconButton size="small" onClick={toggleFullscreen}>
+              <Fullscreen />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
 
-      {/* Slide area — iframe renders Marp HTML/CSS in full isolation */}
+      {/* Slide area */}
       <Box
         sx={{
           flex: 1,
@@ -242,12 +419,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               srcDoc={srcdoc}
               sandbox="allow-scripts"
               title="Marp Slide Preview"
-              style={{
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                display: 'block',
-              }}
+              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
           </Box>
         )}
