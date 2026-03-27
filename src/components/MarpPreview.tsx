@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
-import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit } from '@mui/icons-material';
+import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit, GridView } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { readFile } from '@tauri-apps/plugin-fs';
 import { variableApi } from '../api/variableApi';
-import { renderMarp, buildSlideDocument, buildAllSlidesDocument } from '../utils/marpRenderer';
+import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument } from '../utils/marpRenderer';
 
 interface MarpPreviewProps {
   content: string;
@@ -118,10 +118,46 @@ async function inlineRelativeImages(html: string, filePath: string): Promise<str
   return result;
 }
 
+/**
+ * Compute the line ranges for each Marp slide from the source content.
+ * Returns an array of { startLine, endLine } (0-based, inclusive).
+ * The frontmatter block (first --- ... ---) is treated as part of slide 0.
+ */
+function computeSlideLineRanges(content: string): { startLine: number; endLine: number }[] {
+  const lines = content.split('\n');
+  const totalLines = lines.length;
+
+  // Find frontmatter end (second ---)
+  let contentStart = 0;
+  if (lines[0]?.trim() === '---') {
+    for (let i = 1; i < totalLines; i++) {
+      if (lines[i]?.trim() === '---') {
+        contentStart = i + 1; // line after closing ---
+        break;
+      }
+    }
+  }
+
+  // Find slide break positions (--- on its own line, after frontmatter)
+  const slideStarts: number[] = [contentStart];
+  for (let i = contentStart; i < totalLines; i++) {
+    if (lines[i]?.trim() === '---') {
+      slideStarts.push(i + 1);
+    }
+  }
+
+  const ranges: { startLine: number; endLine: number }[] = [];
+  for (let i = 0; i < slideStarts.length; i++) {
+    const start = slideStarts[i];
+    const end = (i + 1 < slideStarts.length) ? slideStarts[i + 1] - 2 : totalLines - 1;
+    ranges.push({ startLine: start, endLine: Math.max(start, end) });
+  }
+  return ranges;
+}
+
 const MarpPreview: React.FC<MarpPreviewProps> = ({
   content,
   globalVariables = {},
-  zoomLevel = 1.0,
   scrollFraction,
   filePath,
   viewMode = 'split',
@@ -132,6 +168,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
   const [slideCount, setSlideCount] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isThumbnailMode, setIsThumbnailMode] = useState(false);
   const lastInputRef = useRef<string>('');
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -181,25 +218,64 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     return () => { stale = true; };
   }, [content, globalVariables, filePath]);
 
-  // Scroll sync for continuous mode — send scrollFraction to iframe via postMessage
+  // Compute slide line ranges from source content (memoized)
+  const slideRanges = React.useMemo(() => computeSlideLineRanges(content), [content]);
+
+  /**
+   * Convert editor scrollFraction to { slideIndex, subFraction }.
+   * scrollFraction maps linearly to source lines; we find which slide
+   * that line falls in and how far through that slide we are.
+   */
+  const fractionToSlide = useCallback((fraction: number) => {
+    const totalLines = content.split('\n').length;
+    const currentLine = fraction * (totalLines - 1);
+
+    // Find which slide contains this line
+    for (let i = slideRanges.length - 1; i >= 0; i--) {
+      if (currentLine >= slideRanges[i].startLine) {
+        const range = slideRanges[i];
+        const rangeSize = range.endLine - range.startLine;
+        const sub = rangeSize > 0 ? (currentLine - range.startLine) / rangeSize : 0;
+        return { slideIndex: i, subFraction: Math.min(1, Math.max(0, sub)) };
+      }
+    }
+    return { slideIndex: 0, subFraction: 0 };
+  }, [content, slideRanges]);
+
+  // Scroll sync for continuous mode — directly manipulate iframe DOM
   useEffect(() => {
     if (!isContinuousMode || scrollFraction === undefined) return;
     const iframe = iframeRef.current;
-    if (!iframe?.contentWindow) return;
-    iframe.contentWindow.postMessage({ scrollFraction }, '*');
-  }, [scrollFraction, isContinuousMode, marpHtml]);
+    if (!iframe?.contentDocument) return;
 
-  // Map scrollFraction to slide index for slide mode
+    const doc = iframe.contentDocument;
+    const slides = doc.querySelectorAll('div.marpit > svg[data-marpit-svg]');
+    if (slides.length === 0) return;
+
+    const { slideIndex, subFraction } = fractionToSlide(scrollFraction);
+    const idx = Math.min(slideIndex, slides.length - 1);
+    const slideElement = slides[idx];
+
+    // SVG elements don't have offsetTop/offsetHeight — use getBoundingClientRect
+    // relative to the document's current scroll position
+    const docScrollTop = doc.documentElement.scrollTop;
+    const rect = slideElement.getBoundingClientRect();
+    const slideTop = rect.top + docScrollTop;
+    const slideHeight = rect.height;
+
+    // Center the current position in the preview viewport
+    const viewportHeight = doc.documentElement.clientHeight;
+    const targetPos = slideTop + (subFraction * slideHeight);
+    const scrollTarget = targetPos - (viewportHeight / 2);
+    doc.documentElement.scrollTop = Math.max(0, scrollTarget);
+  }, [scrollFraction, isContinuousMode, marpHtml, fractionToSlide]);
+
+  // Map scrollFraction to slide index for slide mode (preview)
   useEffect(() => {
-    if (!isSlideMode) return;
-    if (scrollFraction !== undefined && slideCount > 0) {
-      const index = Math.min(
-        Math.floor(scrollFraction * slideCount),
-        slideCount - 1,
-      );
-      setCurrentSlide(index);
-    }
-  }, [scrollFraction, slideCount, isSlideMode]);
+    if (!isSlideMode || scrollFraction === undefined || slideCount === 0) return;
+    const { slideIndex } = fractionToSlide(scrollFraction);
+    setCurrentSlide(Math.min(slideIndex, slideCount - 1));
+  }, [scrollFraction, slideCount, isSlideMode, fractionToSlide]);
 
   const goToPrev = useCallback(() => {
     setCurrentSlide((prev) => Math.max(0, prev - 1));
@@ -211,13 +287,23 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen(prev => !prev);
+    setIsThumbnailMode(false);
   }, []);
 
-  // Keyboard navigation (slide mode)
+  const toggleThumbnailMode = useCallback(() => {
+    setIsThumbnailMode(prev => !prev);
+  }, []);
+
+  // Keyboard navigation (slide mode / fullscreen)
+  // Uses window-level listener so arrow keys work regardless of focus target
   useEffect(() => {
     if (!isSlideMode && !isFullscreen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture when user is typing in an input/textarea
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
       if (e.key === 'Escape' && isFullscreen) {
         e.preventDefault();
         setIsFullscreen(false);
@@ -232,29 +318,68 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
       }
     };
 
-    // Use window-level listener in fullscreen for reliable key capture
-    if (isFullscreen) {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-
-    const container = containerRef.current;
-    if (!container) return;
-    container.addEventListener('keydown', handleKeyDown);
-    return () => container.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToPrev, goToNext, isSlideMode, isFullscreen]);
 
-  // Exit fullscreen when switching away from preview mode
+  // Exit fullscreen/thumbnail when switching away from preview mode
   useEffect(() => {
-    if (!isSlideMode) setIsFullscreen(false);
+    if (!isSlideMode) {
+      setIsFullscreen(false);
+      setIsThumbnailMode(false);
+    }
   }, [isSlideMode]);
 
-  // Build iframe srcdoc
-  const srcdoc = marpHtml
-    ? (isContinuousMode
-        ? buildAllSlidesDocument(marpHtml, marpCss)
-        : buildSlideDocument(marpHtml, marpCss, currentSlide))
-    : '';
+  // Listen for postMessage from thumbnail iframe (slide selection)
+  const thumbnailIframeRef = useRef<HTMLIFrameElement>(null);
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'slideSelect' && typeof e.data.slideIndex === 'number') {
+        setCurrentSlide(e.data.slideIndex);
+        setIsThumbnailMode(false);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Build iframe srcdoc — for slide mode, build once with initial slide index.
+  // Subsequent slide changes are handled via postMessage (no full reload).
+  const slideDocRef = useRef<string>('');
+  const slideIframeRef = useRef<HTMLIFrameElement>(null);
+  const fullscreenIframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Rebuild slide document only when html/css content changes, not on slide navigation
+  const srcdoc = React.useMemo(() => {
+    if (!marpHtml) {
+      slideDocRef.current = '';
+      return '';
+    }
+    if (isContinuousMode) {
+      return buildAllSlidesDocument(marpHtml, marpCss);
+    }
+    const doc = buildSlideDocument(marpHtml, marpCss, currentSlide);
+    slideDocRef.current = doc;
+    return doc;
+  }, [marpHtml, marpCss, isContinuousMode]);
+
+  // Build thumbnail document
+  const thumbnailSrcdoc = React.useMemo(() => {
+    if (!marpHtml || !isThumbnailMode) return '';
+    return buildThumbnailDocument(marpHtml, marpCss, currentSlide);
+  }, [marpHtml, marpCss, isThumbnailMode]);
+
+  // Send postMessage to iframe(s) when slide changes (slide mode only)
+  useEffect(() => {
+    if (isContinuousMode || !marpHtml) return;
+    const msg = { slideIndex: currentSlide };
+    slideIframeRef.current?.contentWindow?.postMessage(msg, '*');
+    fullscreenIframeRef.current?.contentWindow?.postMessage(msg, '*');
+    // Update active highlight in thumbnail iframe
+    thumbnailIframeRef.current?.contentWindow?.postMessage(
+      { type: 'thumbActive', slideIndex: currentSlide }, '*'
+    );
+  }, [currentSlide, isContinuousMode, marpHtml]);
 
   // Fullscreen overlay
   if (isFullscreen && srcdoc) {
@@ -292,6 +417,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
             }}
           >
             <iframe
+              ref={fullscreenIframeRef}
               srcDoc={srcdoc}
               sandbox="allow-scripts"
               title="Marp Slide Fullscreen"
@@ -351,7 +477,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
             <iframe
               ref={iframeRef}
               srcDoc={srcdoc}
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-same-origin"
               title="Marp Slides Overview"
               style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
@@ -391,6 +517,15 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               </IconButton>
             </span>
           </Tooltip>
+          <Tooltip title={t('preview.thumbnails', 'Slide Overview')}>
+            <IconButton
+              size="small"
+              onClick={toggleThumbnailMode}
+              color={isThumbnailMode ? 'primary' : 'default'}
+            >
+              <GridView />
+            </IconButton>
+          </Tooltip>
           <Tooltip title={t('preview.fullscreen', 'Fullscreen')}>
             <IconButton size="small" onClick={toggleFullscreen}>
               <Fullscreen />
@@ -399,39 +534,44 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
         </Box>
       </Box>
 
-      {/* Slide area */}
+      {/* Thumbnail grid overlay */}
+      {isThumbnailMode && thumbnailSrcdoc && (
+        <Box
+          sx={{
+            flex: 1,
+            overflow: 'hidden',
+            backgroundColor: '#1a1a1a',
+          }}
+        >
+          <iframe
+            ref={thumbnailIframeRef}
+            srcDoc={thumbnailSrcdoc}
+            sandbox="allow-scripts"
+            title="Marp Slide Thumbnails"
+            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+          />
+        </Box>
+      )}
+
+      {/* Slide area — always mounted, hidden when thumbnail mode is active */}
       <Box
         sx={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          flex: isThumbnailMode ? 0 : 1,
           overflow: 'hidden',
           backgroundColor: '#000',
-          p: 2,
+          display: isThumbnailMode ? 'none' : 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         {srcdoc && (
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: 960,
-              aspectRatio: '16 / 9',
-              position: 'relative',
-              overflow: 'hidden',
-              boxShadow: 3,
-              borderRadius: 1,
-              transform: zoomLevel !== 1.0 ? `scale(${zoomLevel})` : undefined,
-              transformOrigin: 'center center',
-            }}
-          >
-            <iframe
-              srcDoc={srcdoc}
-              sandbox="allow-scripts"
-              title="Marp Slide Preview"
-              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-            />
-          </Box>
+          <iframe
+            ref={slideIframeRef}
+            srcDoc={srcdoc}
+            sandbox="allow-scripts"
+            title="Marp Slide Preview"
+            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+          />
         )}
       </Box>
     </Box>
