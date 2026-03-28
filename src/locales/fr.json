@@ -492,17 +492,21 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "saveStatus": {
-        "title": "État de sauvegarde dans la barre d'état",
-        "description": "La confirmation de sauvegarde s'affiche désormais dans la barre d'état au lieu d'une notification contextuelle."
+      "katexMermaid": {
+        "title": "Prise en charge de KaTeX et Mermaid",
+        "description": "L'aperçu affiche désormais les formules mathématiques LaTeX et les diagrammes Mermaid, activable dans les Paramètres."
       },
-      "whatsNewDialog": {
-        "title": "Dialogue des nouveautés",
-        "description": "Les nouvelles fonctionnalités et modifications s'affichent automatiquement après une mise à jour. C'est exactement cet écran !"
+      "emptyState": {
+        "title": "Nouvel écran d'accueil",
+        "description": "Nouvel écran d'accueil lorsqu'aucun fichier n'est ouvert, avec un accès rapide pour créer, ouvrir et consulter les fichiers récents."
       },
-      "checkboxFix": {
-        "title": "Correction des cases à cocher dans l'aperçu",
-        "description": "Correction d'un problème où cliquer sur les cases à cocher dans l'aperçu ne reflétait pas les modifications."
+      "memoryOptimization": {
+        "title": "Optimisation de la mémoire",
+        "description": "Le cache des onglets fermés est libéré immédiatement, réduisant l'utilisation de la mémoire."
+      },
+      "bugFixes": {
+        "title": "Corrections de bogues",
+        "description": "Correction de problèmes d'association de fichiers et de plusieurs autres bogues mineurs."
       }
     }
   }

@@ -492,17 +492,21 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Speicherstatus in der Statusleiste",
-        "description": "Die Speicherbestätigung wird jetzt in der Statusleiste anstatt als Pop-up-Benachrichtigung angezeigt."
+      "katexMermaid": {
+        "title": "KaTeX- & Mermaid-Unterstützung",
+        "description": "Die Vorschau rendert jetzt LaTeX-Mathematik und Mermaid-Diagramme, aktivierbar in den Einstellungen."
       },
-      "whatsNewDialog": {
-        "title": "Neuigkeiten-Dialog",
-        "description": "Neue Funktionen und Änderungen werden nach einem Update automatisch angezeigt. Genau dieser Bildschirm!"
+      "emptyState": {
+        "title": "Neuer Willkommensbildschirm",
+        "description": "Neuer Willkommensbildschirm wenn keine Dateien geöffnet sind, mit Schnellzugriff zum Erstellen, Öffnen und auf kürzliche Dateien."
       },
-      "checkboxFix": {
-        "title": "Kontrollkästchen-Korrektur in der Vorschau",
-        "description": "Ein Problem wurde behoben, bei dem das Klicken auf Kontrollkästchen in der Vorschau keine Änderungen widerspiegelte."
+      "memoryOptimization": {
+        "title": "Speicheroptimierung",
+        "description": "Der Cache geschlossener Tabs wird sofort freigegeben, wodurch der Speicherverbrauch reduziert wird."
+      },
+      "bugFixes": {
+        "title": "Fehlerbehebungen",
+        "description": "Probleme mit der Dateizuordnung und diverse andere kleinere Fehler wurden behoben."
       }
     }
   }

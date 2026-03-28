@@ -5,7 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.6.1...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.0...HEAD)
+
+## [0.7.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.6.1...v0.7.0) - 2026-03-29
+
+### Added
+
+- KaTeX math rendering support (`$...$` and `$$...$$` syntax) with toggle in Settings
+- Mermaid diagram rendering support (```mermaid blocks) with dark-mode aware theming
+- Editor minimap, togglable in Settings
+- Cross-tab search in Search & Replace panel
+- Welcome screen (empty state) when no files are open
+- File rename from folder tree context menu
+- HTML export style improvements with theme-aware colors
+
+### Changed
+
+- Drag & drop migrated from HTML5 to Tauri native API for reliable file-path detection
+- Cross-platform file association handling (was macOS-only)
+- New tabs start with empty content instead of placeholder text
+- Menu event debounce logic refactored and consolidated
+- Search & Replace panel layout made responsive
+
+### Fixed
+
+- Closed tab caches not released immediately (memory leak)
+- File association bug on Windows
+- Several minor bugs discovered during integration testing
 
 ## [0.6.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.6.0...v0.6.1) - 2026-03-17
 

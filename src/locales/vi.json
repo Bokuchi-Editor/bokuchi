@@ -492,17 +492,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Trạng thái lưu trên thanh trạng thái",
-        "description": "Xác nhận lưu giờ đây hiển thị trên thanh trạng thái thay vì thông báo bật lên."
+      "katexMermaid": {
+        "title": "Hỗ trợ KaTeX và Mermaid",
+        "description": "Xem trước giờ đây hiển thị công thức LaTeX và sơ đồ Mermaid, có thể bật/tắt trong Cài đặt."
       },
-      "whatsNewDialog": {
-        "title": "Hộp thoại Có gì mới",
-        "description": "Các tính năng mới và thay đổi được hiển thị tự động sau khi cập nhật. Đây chính là màn hình bạn đang xem!"
+      "emptyState": {
+        "title": "Màn hình chào mừng mới",
+        "description": "Màn hình chào mừng hiển thị khi không có tệp nào đang mở, cho phép truy cập nhanh để tạo, mở hoặc xem tệp gần đây."
       },
-      "checkboxFix": {
-        "title": "Sửa lỗi hộp kiểm xem trước",
-        "description": "Đã sửa lỗi nhấp vào hộp kiểm trong xem trước không phản ánh thay đổi."
+      "memoryOptimization": {
+        "title": "Tối ưu hóa bộ nhớ",
+        "description": "Bộ nhớ đệm của tab đã đóng được giải phóng ngay lập tức, giảm mức sử dụng bộ nhớ."
+      },
+      "bugFixes": {
+        "title": "Sửa lỗi",
+        "description": "Đã sửa các lỗi liên kết tệp và một số lỗi nhỏ khác."
       }
     }
   }

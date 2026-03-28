@@ -492,17 +492,21 @@
       "improvement": "개선"
     },
     "changes": {
-      "saveStatus": {
-        "title": "상태 표시줄에 저장 상태 표시",
-        "description": "저장 확인이 팝업 알림 대신 상태 표시줄에 표시됩니다."
+      "katexMermaid": {
+        "title": "KaTeX 및 Mermaid 지원",
+        "description": "미리보기에서 LaTeX 수식과 Mermaid 다이어그램을 렌더링할 수 있으며, 설정에서 전환할 수 있습니다."
       },
-      "whatsNewDialog": {
-        "title": "새로운 기능 대화상자",
-        "description": "업데이트 후 새로운 기능과 변경 사항이 자동으로 표시됩니다. 바로 지금 보고 계신 이 화면입니다!"
+      "emptyState": {
+        "title": "새 환영 화면",
+        "description": "파일이 열려 있지 않을 때 새 환영 화면이 표시되며, 파일 생성/열기/최근 파일에 빠르게 접근할 수 있습니다."
       },
-      "checkboxFix": {
-        "title": "미리보기 체크박스 수정",
-        "description": "미리보기에서 체크박스를 클릭해도 변경 사항이 반영되지 않는 문제를 수정했습니다."
+      "memoryOptimization": {
+        "title": "메모리 최적화",
+        "description": "닫은 탭의 캐시가 즉시 해제되어 메모리 사용량이 줄어듭니다."
+      },
+      "bugFixes": {
+        "title": "버그 수정",
+        "description": "파일 연결 문제 및 기타 여러 사소한 버그를 수정했습니다."
       }
     }
   }

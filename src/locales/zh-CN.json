@@ -492,17 +492,21 @@
       "improvement": "改进"
     },
     "changes": {
-      "saveStatus": {
-        "title": "状态栏显示保存状态",
-        "description": "保存反馈现在显示在状态栏中，而不是弹出通知。"
+      "katexMermaid": {
+        "title": "KaTeX 和 Mermaid 支持",
+        "description": "预览现在可以渲染 LaTeX 数学公式和 Mermaid 图表，可在设置中开启或关闭。"
       },
-      "whatsNewDialog": {
-        "title": "新功能对话框",
-        "description": "更新后会自动显示新功能和变更内容。正是您现在看到的这个界面！"
+      "emptyState": {
+        "title": "全新欢迎界面",
+        "description": "没有打开文件时会显示欢迎界面，可快速创建、打开文件或访问最近的文件。"
       },
-      "checkboxFix": {
-        "title": "预览复选框修复",
-        "description": "修复了在预览中点击复选框后更改未反映的问题。"
+      "memoryOptimization": {
+        "title": "内存优化",
+        "description": "关闭标签页的缓存会立即释放，降低内存占用。"
+      },
+      "bugFixes": {
+        "title": "错误修复",
+        "description": "修复了文件关联问题及其他多个小错误。"
       }
     }
   }

@@ -492,17 +492,21 @@
       "improvement": "改進"
     },
     "changes": {
-      "saveStatus": {
-        "title": "狀態列顯示儲存狀態",
-        "description": "儲存回饋現在顯示在狀態列中，而非彈出通知。"
+      "katexMermaid": {
+        "title": "KaTeX 與 Mermaid 支援",
+        "description": "預覽現在可以渲染 LaTeX 數學公式和 Mermaid 圖表，可在設定中開啟或關閉。"
       },
-      "whatsNewDialog": {
-        "title": "新功能對話框",
-        "description": "更新後會自動顯示新功能和變更內容。正是您現在看到的這個畫面！"
+      "emptyState": {
+        "title": "全新歡迎畫面",
+        "description": "沒有開啟檔案時會顯示歡迎畫面，可快速建立、開啟檔案或存取最近的檔案。"
       },
-      "checkboxFix": {
-        "title": "預覽核取方塊修復",
-        "description": "修復了在預覽中點擊核取方塊後變更未反映的問題。"
+      "memoryOptimization": {
+        "title": "記憶體最佳化",
+        "description": "關閉分頁的快取會立即釋放，降低記憶體使用量。"
+      },
+      "bugFixes": {
+        "title": "錯誤修復",
+        "description": "修復了檔案關聯問題及其他多個小錯誤。"
       }
     }
   }
