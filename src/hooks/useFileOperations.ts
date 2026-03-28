@@ -1,8 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Tab } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { variableApi } from '../api/variableApi';
-import { isMarkdownFile } from '../utils/pathUtils';
 
 export interface UseFileOperationsParams {
   activeTab: Tab | null;
@@ -12,8 +11,6 @@ export interface UseFileOperationsParams {
   saveTab: (tabId: string) => Promise<boolean>;
   saveTabAs: (tabId: string) => Promise<boolean>;
   removeTab: (tabId: string) => void;
-  createNewTab: () => string;
-  updateTabContent: (tabId: string, content: string) => void;
   requestEditorFocus: () => void;
   setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void;
   showSaveStatus: (message: string) => void;
@@ -28,8 +25,6 @@ export const useFileOperations = ({
   saveTab,
   saveTabAs,
   removeTab,
-  createNewTab,
-  updateTabContent,
   requestEditorFocus,
   setSnackbar,
   showSaveStatus,
@@ -118,7 +113,7 @@ export const useFileOperations = ({
   }, [activeTab, globalVariables, setSnackbar, showSaveStatus, t]);
 
   const handleTabClose = (tabId: string) => {
-    const tab = tabs.find(t => t.id === tabId);
+    const tab = tabs.find(entry => entry.id === tabId);
     if (!tab) return;
 
     if (tab.isModified) {
@@ -160,67 +155,6 @@ export const useFileOperations = ({
     setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
   };
 
-  // Drag and drop handlers
-  const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (event: React.DragEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = async (event: React.DragEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDragOver(false);
-
-    const files = Array.from(event.dataTransfer.files);
-    const markdownFiles = files.filter(file => isMarkdownFile(file.name));
-
-    if (markdownFiles.length === 0) {
-      setSnackbar({
-        open: true,
-        message: t('fileOperations.noMarkdownFiles'),
-        severity: 'error'
-      });
-      return;
-    }
-
-    const fileToOpen = markdownFiles[0];
-
-    try {
-      const content = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          resolve(e.target?.result as string || '');
-        };
-        reader.onerror = reject;
-        reader.readAsText(fileToOpen);
-      });
-
-      const newTabId = createNewTab();
-      updateTabContent(newTabId, content);
-      requestEditorFocus();
-
-      setSnackbar({
-        open: true,
-        message: t('fileOperations.fileLoaded'),
-        severity: 'success'
-      });
-    } catch (error) {
-      console.error('Failed to open dropped file:', error);
-      setSnackbar({
-        open: true,
-        message: t('fileOperations.fileLoadFailed'),
-        severity: 'error'
-      });
-    }
-  };
-
   return {
     saveBeforeCloseDialog,
     setSaveBeforeCloseDialog,
@@ -234,8 +168,5 @@ export const useFileOperations = ({
     handleSaveBeforeClose,
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
   };
 };

@@ -34,6 +34,7 @@ export const useAppState = () => {
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
   const saveStatusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const SAVE_STATUS_DISPLAY_MS = 3000;
   const showSaveStatus = useCallback((message: string) => {
     if (saveStatusTimerRef.current) {
       clearTimeout(saveStatusTimerRef.current);
@@ -41,7 +42,7 @@ export const useAppState = () => {
     setSaveStatusMessage(message);
     saveStatusTimerRef.current = setTimeout(() => {
       setSaveStatusMessage(null);
-    }, 3000);
+    }, SAVE_STATUS_DISPLAY_MS);
   }, []);
   const [editorStatus, setEditorStatus] = useState({
     line: 1,
@@ -154,9 +155,6 @@ export const useAppState = () => {
     handleSaveBeforeClose,
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
   } = useFileOperations({
     activeTab,
     tabs,
@@ -165,8 +163,6 @@ export const useAppState = () => {
     saveTab,
     saveTabAs,
     removeTab,
-    createNewTab,
-    updateTabContent,
     requestEditorFocus,
     setSnackbar,
     showSaveStatus,
@@ -312,11 +308,12 @@ export const useAppState = () => {
   }, []);
 
   // Focus editor when switching to a mode that shows the editor
+  const EDITOR_FOCUS_DELAY_MS = 100;
   useEffect(() => {
     if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
       const timer = setTimeout(() => {
         requestEditorFocus();
-      }, 100);
+      }, EDITOR_FOCUS_DELAY_MS);
       return () => clearTimeout(timer);
     }
   }, [viewMode, isSettingsLoaded, requestEditorFocus]);
@@ -431,9 +428,6 @@ export const useAppState = () => {
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
     handleTabReorder,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
     handleCheckForUpdate,
     handleDismissUpdate,
     handleWhatsNewOpen,

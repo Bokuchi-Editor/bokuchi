@@ -40,13 +40,13 @@ async function getKatex() {
   return katexModule.default;
 }
 
-async function getMermaid() {
+async function getMermaid(dark?: boolean) {
   if (!mermaidModule) {
     mermaidModule = await import('mermaid');
     if (!mermaidInitialized) {
       mermaidModule.default.initialize({
         startOnLoad: false,
-        theme: 'default',
+        theme: dark ? 'dark' : 'default',
         securityLevel: 'strict',
       });
       mermaidInitialized = true;
@@ -140,7 +140,7 @@ let mermaidLock: Promise<void> = Promise.resolve();
  * Replaces ```mermaid blocks with rendered SVG.
  * Serialized to prevent concurrent mermaid.render() calls which conflict.
  */
-export async function processMermaidBlocks(html: string): Promise<string> {
+export async function processMermaidBlocks(html: string, dark?: boolean): Promise<string> {
   // Wait for any in-flight mermaid render to complete
   const previousLock = mermaidLock;
   let releaseLock: () => void;
@@ -148,14 +148,14 @@ export async function processMermaidBlocks(html: string): Promise<string> {
   await previousLock;
 
   try {
-    return await processMermaidBlocksInternal(html);
+    return await processMermaidBlocksInternal(html, dark);
   } finally {
     releaseLock!();
   }
 }
 
-async function processMermaidBlocksInternal(html: string): Promise<string> {
-  const mermaid = await getMermaid();
+async function processMermaidBlocksInternal(html: string, dark?: boolean): Promise<string> {
+  const mermaid = await getMermaid(dark);
 
   // Find mermaid diagram placeholders in the HTML
   // After marked processes ```mermaid blocks, they become <pre><code class="...mermaid...">
@@ -216,7 +216,7 @@ export async function processRenderingExtensions(
   // Mermaid: process HTML after marked (will be called separately)
   if (settings.enableMermaid && contentHasMermaid(markdown)) {
     reinitializeMermaid(darkMode);
-    processedHtml = await processMermaidBlocks(html);
+    processedHtml = await processMermaidBlocks(html, darkMode);
   }
 
   return { processedMarkdown, processedHtml };
