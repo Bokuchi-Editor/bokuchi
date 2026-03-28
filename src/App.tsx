@@ -31,6 +31,7 @@ function AppDesktop() {
     fileChangeDialog,
     saveBeforeCloseDialog,
     isDragOver,
+    setIsDragOver,
     tabs,
     activeTabId,
     activeTab,
@@ -79,9 +80,6 @@ function AppDesktop() {
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
     handleTabReorder,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
     handleCheckForUpdate,
     handleDismissUpdate,
     handleWhatsNewClose,
@@ -141,17 +139,18 @@ function AppDesktop() {
   // Ref to always hold the latest handlers, avoiding stale closures in event listeners
   const handlersRef = useRef({
     handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
-    handleHelpOpen, openFile, requestEditorFocus,
+    handleHelpOpen, openFile, requestEditorFocus, setIsDragOver, setSnackbar, t,
   });
   useEffect(() => {
     handlersRef.current = {
       handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
-      handleHelpOpen, openFile, requestEditorFocus,
+      handleHelpOpen, openFile, requestEditorFocus, setIsDragOver, setSnackbar, t,
     };
   });
 
   // Set up menu event listeners
   useEffect(() => {
+    let cancelled = false;
 
     let unlistenMenu: (() => void) | undefined;
     let unlistenNewFile: (() => void) | undefined;
@@ -160,51 +159,46 @@ function AppDesktop() {
     let unlistenSaveWithVariables: (() => void) | undefined;
     let unlistenHelp: (() => void) | undefined;
     let unlistenFileOpen: (() => void) | undefined;
+    let unlistenDragDrop: (() => void) | undefined;
 
     const setupMenuListeners = async () => {
       const { listen } = await import('@tauri-apps/api/event');
 
-      // Debounce variables (moved to global scope)
+      // If effect was cleaned up during the async import, don't register listeners
+      if (cancelled) return;
+
+      const MENU_DEBOUNCE_MS = 100;
+      const FILE_OPEN_DEBOUNCE_MS = 2000;
+
+      // Shared debounce state for menu events (attached to window to survive re-renders)
       const globalDebounce = (window as unknown as {
         lastMenuEventTime?: number;
-        DEBOUNCE_DELAY: number;
       });
 
       if (!globalDebounce.lastMenuEventTime) {
         globalDebounce.lastMenuEventTime = 0;
       }
-      globalDebounce.DEBOUNCE_DELAY = 100;
 
-      unlistenMenu = await listen('menu-save', () => {
+      // Returns true if the event should be suppressed (within debounce window)
+      const isMenuDebounced = (): boolean => {
         const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
+        if (now - globalDebounce.lastMenuEventTime! < MENU_DEBOUNCE_MS) {
+          return true;
         }
         globalDebounce.lastMenuEventTime = now;
-        handlersRef.current.handleSaveFile();
+        return false;
+      };
+
+      unlistenMenu = await listen('menu-save', () => {
+        if (!isMenuDebounced()) handlersRef.current.handleSaveFile();
       });
 
       unlistenNewFile = await listen('menu-new-file', () => {
-        const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-        globalDebounce.lastMenuEventTime = now;
-        handlersRef.current.handleNewTab();
+        if (!isMenuDebounced()) handlersRef.current.handleNewTab();
       });
 
       unlistenOpenFile = await listen('menu-open-file', async () => {
-        const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-        globalDebounce.lastMenuEventTime = now;
+        if (isMenuDebounced()) return;
         try {
           await handlersRef.current.openFile();
         } catch (error) {
@@ -213,45 +207,21 @@ function AppDesktop() {
       });
 
       unlistenSaveAs = await listen('menu-save-as', () => {
-        const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-        globalDebounce.lastMenuEventTime = now;
-        handlersRef.current.handleSaveFileAs();
+        if (!isMenuDebounced()) handlersRef.current.handleSaveFileAs();
       });
 
       unlistenSaveWithVariables = await listen('menu-save-with-variables', () => {
-        const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-        globalDebounce.lastMenuEventTime = now;
-        handlersRef.current.handleSaveWithVariables();
+        if (!isMenuDebounced()) handlersRef.current.handleSaveWithVariables();
       });
 
       unlistenHelp = await listen('menu-help', () => {
-        const now = Date.now();
-        const timeDiff = now - globalDebounce.lastMenuEventTime!;
-
-        if (timeDiff < globalDebounce.DEBOUNCE_DELAY) {
-          return;
-        }
-        globalDebounce.lastMenuEventTime = now;
-        handlersRef.current.handleHelpOpen();
+        if (!isMenuDebounced()) handlersRef.current.handleHelpOpen();
       });
 
       // File association event listener with debounce
-
-      // Debounce for file open events
       const fileOpenDebounce = (window as unknown as {
         lastFileOpenTime?: number;
         lastFilePath?: string;
-        DEBOUNCE_DELAY: number;
       });
 
       if (!fileOpenDebounce.lastFileOpenTime) {
@@ -260,7 +230,6 @@ function AppDesktop() {
       if (!fileOpenDebounce.lastFilePath) {
         fileOpenDebounce.lastFilePath = '';
       }
-      fileOpenDebounce.DEBOUNCE_DELAY = 2000; // 2000ms debounce for file open
 
       unlistenFileOpen = await listen('open-file', async (event: { payload: { file_path: string } }) => {
         const now = Date.now();
@@ -269,14 +238,60 @@ function AppDesktop() {
         const isSameFile = currentFilePath === fileOpenDebounce.lastFilePath;
 
         // Debounce: same file within time limit
-        if (isSameFile && timeDiff < fileOpenDebounce.DEBOUNCE_DELAY) {
+        if (isSameFile && timeDiff < FILE_OPEN_DEBOUNCE_MS) {
           return;
         }
-
         fileOpenDebounce.lastFileOpenTime = now;
         fileOpenDebounce.lastFilePath = currentFilePath;
         await handlersRef.current.openFile(currentFilePath);
         handlersRef.current.requestEditorFocus();
+      });
+
+      // Drag and drop event listener (uses Tauri API to get file paths)
+      const { getCurrentWebview } = await import('@tauri-apps/api/webview');
+      if (cancelled) return;
+
+      const isSupportedFile = (path: string) => {
+        const lower = path.toLowerCase();
+        return lower.endsWith('.md') || lower.endsWith('.markdown') || lower.endsWith('.txt');
+      };
+
+      unlistenDragDrop = await getCurrentWebview().onDragDropEvent(async (event) => {
+        if (event.payload.type === 'enter') {
+          const hasSupported = event.payload.paths.some(isSupportedFile);
+          if (hasSupported) {
+            handlersRef.current.setIsDragOver(true);
+          }
+        } else if (event.payload.type === 'leave') {
+          handlersRef.current.setIsDragOver(false);
+        } else if (event.payload.type === 'drop') {
+          handlersRef.current.setIsDragOver(false);
+          const supportedPaths = event.payload.paths.filter(isSupportedFile);
+          if (supportedPaths.length === 0) {
+            handlersRef.current.setSnackbar({
+              open: true,
+              message: handlersRef.current.t('fileOperations.noMarkdownFiles'),
+              severity: 'error',
+            });
+            return;
+          }
+
+          // Mark in fileOpenDebounce so the subsequent RunEvent::Opened
+          // (which macOS also fires for dropped files) is suppressed
+          fileOpenDebounce.lastFileOpenTime = Date.now();
+          fileOpenDebounce.lastFilePath = supportedPaths[0];
+
+          try {
+            await handlersRef.current.openFile(supportedPaths[0]);
+            handlersRef.current.requestEditorFocus();
+          } catch {
+            handlersRef.current.setSnackbar({
+              open: true,
+              message: handlersRef.current.t('fileOperations.fileLoadFailed'),
+              severity: 'error',
+            });
+          }
+        }
       });
 
       // Signal that all listeners are registered
@@ -286,6 +301,7 @@ function AppDesktop() {
     setupMenuListeners();
 
     return () => {
+      cancelled = true;
       if (unlistenMenu) unlistenMenu();
       if (unlistenNewFile) unlistenNewFile();
       if (unlistenOpenFile) unlistenOpenFile();
@@ -293,6 +309,7 @@ function AppDesktop() {
       if (unlistenSaveWithVariables) unlistenSaveWithVariables();
       if (unlistenHelp) unlistenHelp();
       if (unlistenFileOpen) unlistenFileOpen();
+      if (unlistenDragDrop) unlistenDragDrop();
     };
   }, []); // Empty dependency array to run only once
 
@@ -358,9 +375,6 @@ function AppDesktop() {
             }
           })
         }}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
       >
         <AppHeader
           viewMode={viewMode}

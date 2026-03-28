@@ -104,6 +104,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           sx={{
             color: 'text.primary',
             bgcolor: 'action.hover',
+            textTransform: 'none',
             '&:hover': { bgcolor: 'action.selected' },
           }}
         >
@@ -125,6 +126,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           sx={{
             color: 'text.primary',
             bgcolor: 'action.hover',
+            textTransform: 'none',
             '&:hover': { bgcolor: 'action.selected' },
           }}
         >

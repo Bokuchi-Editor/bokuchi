@@ -480,14 +480,13 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
       sx={{
         position: 'absolute',
         top: 8,
-        right: 20,
+        right: 8,
         zIndex: 100,
         backgroundColor: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
         borderRadius: '6px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        minWidth: 420,
-        maxWidth: 520,
+        width: 'min(520px, calc(100% - 16px))',
         overflow: 'hidden',
       }}
     >
