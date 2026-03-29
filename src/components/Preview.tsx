@@ -130,8 +130,9 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         // Process Mermaid diagrams (lazy-loaded, after marked parsing)
         if (renderingSettings.enableMermaid && contentHasMermaid(processedMarkdown)) {
           try {
-            reinitializeMermaid(darkMode || theme === 'darcula');
-            processedHtml = await processMermaidBlocks(processedHtml);
+            const isDark = darkMode || theme === 'darcula';
+            reinitializeMermaid(isDark);
+            processedHtml = await processMermaidBlocks(processedHtml, isDark);
           } catch (err) {
             console.warn('Mermaid processing failed, showing raw code blocks:', err);
           }
@@ -329,7 +330,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
       // Process Mermaid diagrams for export (renders as inline SVG)
       if (renderingSettings.enableMermaid && contentHasMermaid(processedContent)) {
-        exportHtml = await processMermaidBlocks(exportHtml);
+        exportHtml = await processMermaidBlocks(exportHtml, darkMode || theme === 'darcula');
       }
 
       const fullHTML = buildExportHTML(exportHtml, darkMode, theme);

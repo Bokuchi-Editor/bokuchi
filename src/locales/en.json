@@ -500,17 +500,21 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Save Status in Status Bar",
-        "description": "Save feedback is now shown in the status bar instead of a pop-up notification."
+      "katexMermaid": {
+        "title": "KaTeX & Mermaid Support",
+        "description": "The preview now renders LaTeX math expressions and Mermaid diagrams. Both can be toggled in Settings."
       },
-      "whatsNewDialog": {
-        "title": "What's New Dialog",
-        "description": "New features and changes are shown automatically after an update. This is the very screen you're looking at!"
+      "emptyState": {
+        "title": "New Welcome Screen",
+        "description": "A new welcome screen is displayed when no files are open, with quick access to create, open, or pick a recent file."
       },
-      "checkboxFix": {
-        "title": "Preview Checkbox Fix",
-        "description": "Fixed an issue where clicking checkboxes in the preview did not reflect changes."
+      "memoryOptimization": {
+        "title": "Memory Management Optimization",
+        "description": "Closed tab caches are now released immediately, reducing memory usage."
+      },
+      "bugFixes": {
+        "title": "Bug Fixes",
+        "description": "Fixed file association issues and several other minor bugs."
       }
     }
   },

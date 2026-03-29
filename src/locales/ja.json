@@ -500,17 +500,21 @@
       "improvement": "改善"
     },
     "changes": {
-      "saveStatus": {
-        "title": "ステータスバーに保存状態を表示",
-        "description": "保存完了のフィードバックがポップアップ通知ではなくステータスバーに表示されるようになりました。"
+      "katexMermaid": {
+        "title": "KaTeX・Mermaid 対応",
+        "description": "プレビューで LaTeX 数式と Mermaid ダイアグラムを表示できるようになりました。設定画面でそれぞれ切り替えできます。"
       },
-      "whatsNewDialog": {
-        "title": "What's New ダイアログ",
-        "description": "アップデート後に新機能や変更点が自動で表示されます。まさにこの画面です！"
+      "emptyState": {
+        "title": "ウェルカム画面の追加",
+        "description": "ファイルが開かれていないときに、新規作成・ファイルを開く・最近使ったファイルにすばやくアクセスできるウェルカム画面が表示されます。"
       },
-      "checkboxFix": {
-        "title": "プレビューのチェックボックス修正",
-        "description": "プレビュー上でチェックボックスをクリックしても変更が反映されない問題を修正しました。"
+      "memoryOptimization": {
+        "title": "メモリ管理の最適化",
+        "description": "閉じたタブのキャッシュが即座に解放されるようになり、メモリ使用量が改善しました。"
+      },
+      "bugFixes": {
+        "title": "不具合の修正",
+        "description": "ファイルの関連付けに関する問題をはじめ、いくつかの不具合を修正しました。"
       }
     }
   },

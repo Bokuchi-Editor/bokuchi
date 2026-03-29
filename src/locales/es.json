@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "El panel de esquema siempre se muestra como parte del diseño.",
       "outlineDisplayModeOverlay": "Superposición",
       "outlineDisplayModeOverlayDescription": "El panel de esquema se desliza desde la derecha como una superposición.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Panel del explorador",
+      "folderTreeDisplayModeDescription": "Elija cómo se muestra el panel del explorador (árbol de carpetas).",
+      "folderTreeDisplayModePersistent": "Siempre visible",
+      "folderTreeDisplayModePersistentDescription": "El panel del explorador siempre se muestra como parte del diseño.",
+      "folderTreeDisplayModeOverlay": "Superposición",
+      "folderTreeDisplayModeOverlayDescription": "El panel del explorador se desliza desde la izquierda como una superposición.",
+      "folderTreeDisplayModeOff": "Desactivado",
+      "folderTreeDisplayModeOffDescription": "El panel del explorador está oculto.",
+      "folderTreeFileFilter": "Filtro de archivos del explorador",
+      "folderTreeFileFilterDescription": "Elija qué archivos mostrar en el explorador.",
+      "folderTreeFileFilterMarkdown": "Solo archivos Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Todos los archivos"
     },
     "advanced": {
       "title": "Avanzado",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "Convertir automáticamente",
       "tableConversionConfirm": "Preguntar antes de convertir",
       "tableConversionOff": "No convertir",
+      "rendering": "Extensiones de renderizado",
+      "renderingDescription": "Habilitar o deshabilitar funciones de renderizado opcionales. Las funciones deshabilitadas no cargan sus bibliotecas, manteniendo el editor ligero.",
+      "enableKatex": "KaTeX (Expresiones matemáticas)",
+      "enableKatexDescription": "Renderizar expresiones matemáticas usando la sintaxis $...$ (en línea) y $$...$$ (bloque).",
+      "enableMermaid": "Mermaid (Diagramas)",
+      "enableMermaidDescription": "Renderizar diagramas desde bloques de código ```mermaid (diagramas de flujo, diagramas de secuencia, etc.).",
       "importExport": "Importar/Exportar configuración",
       "exportSettings": "Exportar configuración",
       "importSettings": "Importar configuración",
@@ -468,7 +474,7 @@
     "renameErrorInvalidChar": "El nombre del archivo no puede contener / o \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "¿Trasnochar? Tómate un descanso de vez en cuando."
   },
   "tableConversion": {
     "dialogTitle": "Convertir tabla a Markdown",
@@ -494,17 +500,21 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Estado de guardado en la barra de estado",
-        "description": "La confirmación de guardado ahora se muestra en la barra de estado en lugar de una notificación emergente."
+      "katexMermaid": {
+        "title": "Soporte para KaTeX y Mermaid",
+        "description": "La vista previa ahora renderiza fórmulas matemáticas LaTeX y diagramas Mermaid, activable desde Configuración."
       },
-      "whatsNewDialog": {
-        "title": "Diálogo de novedades",
-        "description": "Las nuevas funciones y cambios se muestran automáticamente después de una actualización. ¡Es exactamente esta pantalla!"
+      "emptyState": {
+        "title": "Nueva pantalla de bienvenida",
+        "description": "Nueva pantalla de bienvenida cuando no hay archivos abiertos, con acceso rápido para crear, abrir y ver archivos recientes."
       },
-      "checkboxFix": {
-        "title": "Corrección de casillas en la vista previa",
-        "description": "Se corrigió un problema donde hacer clic en las casillas de la vista previa no reflejaba los cambios."
+      "memoryOptimization": {
+        "title": "Optimización de memoria",
+        "description": "La caché de las pestañas cerradas se libera de inmediato, reduciendo el uso de memoria."
+      },
+      "bugFixes": {
+        "title": "Correcciones de errores",
+        "description": "Se corrigieron problemas de asociación de archivos y varios otros errores menores."
       }
     }
   },

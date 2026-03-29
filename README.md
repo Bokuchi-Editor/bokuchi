@@ -2,6 +2,11 @@
 
 Built with Tauri, React, and Rust.
 
+- Official Site
+  - https://bokuchi.com
+- User Guide:
+  - https://doc.bokuchi.com/
+
 ## Screen Shot
 
 ![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss2.png)
@@ -93,18 +98,19 @@ Set global variables through the Variables settings panel. These are available a
 
 ## Roadmap
 
-- [ ] KaTeX math rendering
+- [x] Frontend tests (Vitest + Testing Library)
+- [x] KaTeX math rendering
+- [x] Mermaid diagrams
+- [x] Cross-tab search
+- [x] Standalone HTML export (inline CSS)
 - [ ] PDF export
 - [ ] Command palette
-- [ ] Mermaid / PlantUML diagrams
+- [ ] PlantUML diagrams
 - [ ] Split editor (two files side by side)
 - [ ] Tab pinning
 - [ ] Image paste / drop management
-- [x] Frontend tests (Vitest + Testing Library)
-- [ ] Cross-tab search
 - [ ] File rename from tab
-- [ ] Standalone HTML export (inline CSS)
-- [ ] Word / character count with reading time
+- [ ] Word count with reading time
 - [ ] Undo / redo history persistence
 - [ ] Markdown snippets / templates
 
