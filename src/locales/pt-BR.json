@@ -4,6 +4,11 @@
     "loading": "Carregando...",
     "noTabsOpen": "Nenhuma aba aberta. Crie uma nova aba para começar."
   },
+  "emptyState": {
+    "recentFiles": "Arquivos recentes",
+    "newFile": "Novo arquivo",
+    "openFile": "Abrir arquivo"
+  },
   "buttons": {
     "open": "Abrir",
     "save": "Salvar",
@@ -321,7 +326,7 @@
       "wordWrap": "Quebra de linha",
       "wordWrapDescription": "Quebre linhas longas no editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Mostre um minimapa do documento."
+      "minimapDescription": "Exibir um minimapa do documento."
     },
     "interface": {
       "title": "Interface",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
       "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Painel do explorador",
+      "folderTreeDisplayModeDescription": "Escolha como o painel do explorador (árvore de pastas) é exibido.",
+      "folderTreeDisplayModePersistent": "Sempre visível",
+      "folderTreeDisplayModePersistentDescription": "O painel do explorador é sempre exibido como parte do layout.",
+      "folderTreeDisplayModeOverlay": "Sobreposição",
+      "folderTreeDisplayModeOverlayDescription": "O painel do explorador desliza pela esquerda como uma sobreposição.",
+      "folderTreeDisplayModeOff": "Desativado",
+      "folderTreeDisplayModeOffDescription": "O painel do explorador está oculto.",
+      "folderTreeFileFilter": "Filtro de arquivos do explorador",
+      "folderTreeFileFilterDescription": "Escolha quais arquivos exibir no explorador.",
+      "folderTreeFileFilterMarkdown": "Somente arquivos Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Todos os arquivos"
     },
     "advanced": {
       "title": "Avançado",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "Converter automaticamente",
       "tableConversionConfirm": "Perguntar antes de converter",
       "tableConversionOff": "Não converter",
+      "rendering": "Extensões de renderização",
+      "renderingDescription": "Ativar ou desativar recursos opcionais de renderização. Recursos desativados não carregam suas bibliotecas, mantendo o editor leve.",
+      "enableKatex": "KaTeX (Expressões matemáticas)",
+      "enableKatexDescription": "Renderizar expressões matemáticas usando a sintaxe $...$ (inline) e $$...$$ (bloco).",
+      "enableMermaid": "Mermaid (Diagramas)",
+      "enableMermaidDescription": "Renderizar diagramas a partir de blocos de código ```mermaid (fluxogramas, diagramas de sequência, etc.).",
       "importExport": "Importar/Exportar configurações",
       "exportSettings": "Exportar configurações",
       "importSettings": "Importar configurações",
@@ -451,10 +462,17 @@
     "refresh": "Atualizar",
     "noFolderOpen": "Nenhuma pasta aberta",
     "emptyFolder": "Esta pasta está vazia",
-    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)"
+    "toggleExplorer": "Alternar explorador (Ctrl+Shift+E)",
+    "rename": "Renomear",
+    "renameTitle": "Renomear Arquivo",
+    "renameConfirm": "Renomear",
+    "renameSuccess": "Arquivo renomeado com sucesso",
+    "renameFailed": "Falha ao renomear o arquivo",
+    "renameErrorEmpty": "O nome do arquivo não pode estar vazio",
+    "renameErrorInvalidChar": "O nome do arquivo não pode conter / ou \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Noite longa? Faça uma pausa de vez em quando."
   },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "Falha na conversão da tabela. Colado como texto simples.",
     "noTableDetected": "Nenhuma tabela detectada nos dados da área de transferência"
   },
+  "search": {
+    "searchAllTabs": "Pesquisar em todas as abas"
+  },
   "whatsNew": {
     "title": "Novidades",
     "gotIt": "Entendi",
@@ -477,17 +498,21 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Status de salvamento na barra de status",
-        "description": "A confirmação de salvamento agora é exibida na barra de status em vez de uma notificação pop-up."
+      "katexMermaid": {
+        "title": "Suporte a KaTeX e Mermaid",
+        "description": "A visualização agora renderiza fórmulas LaTeX e diagramas Mermaid, com opção de ativar/desativar nas Configurações."
       },
-      "whatsNewDialog": {
-        "title": "Diálogo de novidades",
-        "description": "Novos recursos e alterações são exibidos automaticamente após uma atualização. É exatamente esta tela!"
+      "emptyState": {
+        "title": "Nova tela de boas-vindas",
+        "description": "Uma nova tela de boas-vindas é exibida quando nenhum arquivo está aberto, com acesso rápido para criar, abrir ou acessar arquivos recentes."
       },
-      "checkboxFix": {
-        "title": "Correção de caixas de seleção na visualização",
-        "description": "Corrigido um problema em que clicar nas caixas de seleção na visualização não refletia as alterações."
+      "memoryOptimization": {
+        "title": "Otimização de memória",
+        "description": "Os caches de abas fechadas são liberados imediatamente, reduzindo o uso de memória."
+      },
+      "bugFixes": {
+        "title": "Correções de bugs",
+        "description": "Corrigidos problemas de associação de arquivos e vários outros bugs menores."
       }
     }
   }

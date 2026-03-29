@@ -4,6 +4,11 @@
     "loading": "جاري التحميل...",
     "noTabsOpen": "لا توجد علامات تبويب مفتوحة. أنشئ علامة تبويب جديدة للبدء."
   },
+  "emptyState": {
+    "recentFiles": "الملفات الأخيرة",
+    "newFile": "ملف جديد",
+    "openFile": "فتح ملف"
+  },
   "buttons": {
     "open": "فتح",
     "save": "حفظ",
@@ -321,7 +326,7 @@
       "wordWrap": "التفاف النص",
       "wordWrapDescription": "التفاف الأسطر الطويلة في المحرر.",
       "minimap": "الخريطة المصغرة",
-      "minimapDescription": "إظهار خريطة مصغرة للمستند."
+      "minimapDescription": "عرض خريطة مصغرة للمستند."
     },
     "interface": {
       "title": "الواجهة",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
       "outlineDisplayModeOverlay": "تراكب",
       "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "لوحة المستكشف",
+      "folderTreeDisplayModeDescription": "اختر كيفية عرض لوحة المستكشف (شجرة المجلدات).",
+      "folderTreeDisplayModePersistent": "مرئي دائمًا",
+      "folderTreeDisplayModePersistentDescription": "تُعرض لوحة المستكشف دائمًا كجزء من التخطيط.",
+      "folderTreeDisplayModeOverlay": "تراكب",
+      "folderTreeDisplayModeOverlayDescription": "تنزلق لوحة المستكشف من اليسار كتراكب.",
+      "folderTreeDisplayModeOff": "إيقاف",
+      "folderTreeDisplayModeOffDescription": "لوحة المستكشف مخفية.",
+      "folderTreeFileFilter": "فلتر ملفات المستكشف",
+      "folderTreeFileFilterDescription": "اختر الملفات المراد عرضها في المستكشف.",
+      "folderTreeFileFilterMarkdown": "ملفات Markdown فقط (.md, .txt)",
+      "folderTreeFileFilterAll": "جميع الملفات"
     },
     "advanced": {
       "title": "متقدم",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "تحويل تلقائي",
       "tableConversionConfirm": "السؤال قبل التحويل",
       "tableConversionOff": "عدم التحويل",
+      "rendering": "إضافات العرض",
+      "renderingDescription": "تمكين أو تعطيل ميزات العرض الاختيارية. الميزات المعطلة لا تحمّل مكتباتها، مما يحافظ على خفة المحرر.",
+      "enableKatex": "KaTeX (التعبيرات الرياضية)",
+      "enableKatexDescription": "عرض التعبيرات الرياضية باستخدام صيغة $...$ (سطري) و $$...$$ (كتلة).",
+      "enableMermaid": "Mermaid (المخططات)",
+      "enableMermaidDescription": "عرض المخططات من كتل التعليمات البرمجية ```mermaid (مخططات انسيابية، مخططات تسلسلية، إلخ).",
       "importExport": "استيراد/تصدير الإعدادات",
       "exportSettings": "تصدير الإعدادات",
       "importSettings": "استيراد الإعدادات",
@@ -451,10 +462,17 @@
     "refresh": "تحديث",
     "noFolderOpen": "لم يتم فتح أي مجلد",
     "emptyFolder": "هذا المجلد فارغ",
-    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)"
+    "toggleExplorer": "تبديل المستكشف (Ctrl+Shift+E)",
+    "rename": "إعادة تسمية",
+    "renameTitle": "إعادة تسمية الملف",
+    "renameConfirm": "إعادة تسمية",
+    "renameSuccess": "تم إعادة تسمية الملف بنجاح",
+    "renameFailed": "فشل في إعادة تسمية الملف",
+    "renameErrorEmpty": "لا يمكن أن يكون اسم الملف فارغاً",
+    "renameErrorInvalidChar": "لا يمكن أن يحتوي اسم الملف على / أو \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "سهرة متأخرة؟ خذ استراحة بين الحين والآخر."
   },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
     "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
   },
+  "search": {
+    "searchAllTabs": "البحث في جميع علامات التبويب"
+  },
   "whatsNew": {
     "title": "ما الجديد",
     "gotIt": "فهمت",
@@ -477,17 +498,21 @@
       "improvement": "تحسين"
     },
     "changes": {
-      "saveStatus": {
-        "title": "حالة الحفظ في شريط الحالة",
-        "description": "يتم الآن عرض تأكيد الحفظ في شريط الحالة بدلاً من إشعار منبثق."
+      "katexMermaid": {
+        "title": "دعم KaTeX و Mermaid",
+        "description": "تعرض المعاينة الآن معادلات LaTeX الرياضية ومخططات Mermaid، مع إمكانية التفعيل والتعطيل من الإعدادات."
       },
-      "whatsNewDialog": {
-        "title": "حوار الجديد",
-        "description": "يتم عرض الميزات الجديدة والتغييرات تلقائياً بعد التحديث. هذه هي الشاشة التي تراها الآن!"
+      "emptyState": {
+        "title": "شاشة ترحيب جديدة",
+        "description": "شاشة ترحيب جديدة عند عدم فتح أي ملفات، مع وصول سريع لإنشاء وفتح الملفات والملفات الأخيرة."
       },
-      "checkboxFix": {
-        "title": "إصلاح مربعات الاختيار في المعاينة",
-        "description": "تم إصلاح مشكلة عدم انعكاس التغييرات عند النقر على مربعات الاختيار في المعاينة."
+      "memoryOptimization": {
+        "title": "تحسين استخدام الذاكرة",
+        "description": "يتم الآن تحرير ذاكرة التخزين المؤقت للتبويبات المغلقة فوراً، مما يقلل من استخدام الذاكرة."
+      },
+      "bugFixes": {
+        "title": "إصلاح الأخطاء",
+        "description": "تم إصلاح مشاكل ارتباط الملفات والعديد من الأخطاء الثانوية الأخرى."
       }
     }
   }

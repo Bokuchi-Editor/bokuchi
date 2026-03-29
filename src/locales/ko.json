@@ -4,6 +4,11 @@
     "loading": "로딩 중...",
     "noTabsOpen": "열린 탭이 없습니다. 시작하려면 새 탭을 만드세요."
   },
+  "emptyState": {
+    "recentFiles": "최근 파일",
+    "newFile": "새 파일",
+    "openFile": "파일 열기"
+  },
   "buttons": {
     "open": "열기",
     "save": "저장",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "개요 패널이 레이아웃의 일부로 항상 표시됩니다.",
       "outlineDisplayModeOverlay": "오버레이",
       "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "탐색기 패널",
+      "folderTreeDisplayModeDescription": "탐색기(폴더 트리) 패널의 표시 방법을 선택합니다.",
+      "folderTreeDisplayModePersistent": "항상 표시",
+      "folderTreeDisplayModePersistentDescription": "탐색기 패널이 레이아웃의 일부로 항상 표시됩니다.",
+      "folderTreeDisplayModeOverlay": "오버레이",
+      "folderTreeDisplayModeOverlayDescription": "탐색기 패널이 왼쪽에서 오버레이로 슬라이드됩니다.",
+      "folderTreeDisplayModeOff": "끄기",
+      "folderTreeDisplayModeOffDescription": "탐색기 패널이 숨겨집니다.",
+      "folderTreeFileFilter": "탐색기 파일 필터",
+      "folderTreeFileFilterDescription": "탐색기에 표시할 파일을 선택합니다.",
+      "folderTreeFileFilterMarkdown": "Markdown 파일만 (.md, .txt)",
+      "folderTreeFileFilterAll": "모든 파일"
     },
     "advanced": {
       "title": "고급",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "자동 변환",
       "tableConversionConfirm": "변환 전에 묻기",
       "tableConversionOff": "변환하지 않음",
+      "rendering": "렌더링 확장",
+      "renderingDescription": "선택적 렌더링 기능을 활성화하거나 비활성화합니다. 비활성화된 기능은 라이브러리를 로드하지 않아 에디터를 가볍게 유지합니다.",
+      "enableKatex": "KaTeX (수학 표현식)",
+      "enableKatexDescription": "$...$ (인라인) 및 $$...$$ (블록) 구문을 사용하여 수학 표현식을 렌더링합니다.",
+      "enableMermaid": "Mermaid (다이어그램)",
+      "enableMermaidDescription": "```mermaid 코드 블록에서 다이어그램을 렌더링합니다 (플로차트, 시퀀스 다이어그램 등).",
       "importExport": "설정 가져오기/내보내기",
       "exportSettings": "설정 내보내기",
       "importSettings": "설정 가져오기",
@@ -451,10 +462,17 @@
     "refresh": "새로고침",
     "noFolderOpen": "열린 폴더가 없습니다",
     "emptyFolder": "이 폴더는 비어 있습니다",
-    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)"
+    "toggleExplorer": "탐색기 토글 (Ctrl+Shift+E)",
+    "rename": "이름 바꾸기",
+    "renameTitle": "파일 이름 바꾸기",
+    "renameConfirm": "이름 바꾸기",
+    "renameSuccess": "파일 이름이 변경되었습니다",
+    "renameFailed": "파일 이름 변경에 실패했습니다",
+    "renameErrorEmpty": "파일 이름을 입력해주세요",
+    "renameErrorInvalidChar": "파일 이름에 / 또는 \\를 사용할 수 없습니다"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "밤이 깊었네요? 가끔은 쉬어가세요."
   },
   "tableConversion": {
     "dialogTitle": "표를 Markdown으로 변환",
@@ -468,6 +486,9 @@
     "conversionFailed": "표 변환에 실패했습니다. 일반 텍스트로 붙여넣었습니다.",
     "noTableDetected": "클립보드 데이터에서 표가 감지되지 않았습니다"
   },
+  "search": {
+    "searchAllTabs": "모든 탭에서 검색"
+  },
   "whatsNew": {
     "title": "새로운 기능",
     "gotIt": "확인",
@@ -477,17 +498,21 @@
       "improvement": "개선"
     },
     "changes": {
-      "saveStatus": {
-        "title": "상태 표시줄에 저장 상태 표시",
-        "description": "저장 확인이 팝업 알림 대신 상태 표시줄에 표시됩니다."
+      "katexMermaid": {
+        "title": "KaTeX 및 Mermaid 지원",
+        "description": "미리보기에서 LaTeX 수식과 Mermaid 다이어그램을 렌더링할 수 있으며, 설정에서 전환할 수 있습니다."
       },
-      "whatsNewDialog": {
-        "title": "새로운 기능 대화상자",
-        "description": "업데이트 후 새로운 기능과 변경 사항이 자동으로 표시됩니다. 바로 지금 보고 계신 이 화면입니다!"
+      "emptyState": {
+        "title": "새 환영 화면",
+        "description": "파일이 열려 있지 않을 때 새 환영 화면이 표시되며, 파일 생성/열기/최근 파일에 빠르게 접근할 수 있습니다."
       },
-      "checkboxFix": {
-        "title": "미리보기 체크박스 수정",
-        "description": "미리보기에서 체크박스를 클릭해도 변경 사항이 반영되지 않는 문제를 수정했습니다."
+      "memoryOptimization": {
+        "title": "메모리 최적화",
+        "description": "닫은 탭의 캐시가 즉시 해제되어 메모리 사용량이 줄어듭니다."
+      },
+      "bugFixes": {
+        "title": "버그 수정",
+        "description": "파일 연결 문제 및 기타 여러 사소한 버그를 수정했습니다."
       }
     }
   }

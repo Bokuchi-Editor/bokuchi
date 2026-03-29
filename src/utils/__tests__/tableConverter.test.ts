@@ -199,4 +199,22 @@ describe('convertTsvCsvToMarkdown', () => {
   it('throws when no delimiter found', () => {
     expect(() => convertTsvCsvToMarkdown('single column')).toThrow('No delimiter found');
   });
+
+  // T-TC-16: Regression test for CRLF line endings (Issue #225)
+  it('converts TSV with CRLF line endings', () => {
+    const tsv = 'Name\tAge\r\nAlice\t30\r\nBob\t25';
+    const result = convertTsvCsvToMarkdown(tsv);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(4);
+    expect(lines[0]).toBe('| Name | Age |');
+    expect(lines[2]).toBe('| Alice | 30 |');
+  });
+});
+
+describe('validateMarkdownTable (CRLF)', () => {
+  // T-TC-17: Regression test for CRLF in validation (Issue #225)
+  it('validates table with CRLF line endings', () => {
+    const table = '| A | B |\r\n| --- | --- |\r\n| 1 | 2 |';
+    expect(validateMarkdownTable(table)).toBe(true);
+  });
 });

@@ -25,22 +25,27 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.6.1',
+  version: '0.7.0',
   changes: [
     {
-      type: 'improvement',
-      titleKey: 'whatsNew.changes.saveStatus.title',
-      descriptionKey: 'whatsNew.changes.saveStatus.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.katexMermaid.title',
+      descriptionKey: 'whatsNew.changes.katexMermaid.description',
     },
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.whatsNewDialog.title',
-      descriptionKey: 'whatsNew.changes.whatsNewDialog.description',
+      titleKey: 'whatsNew.changes.emptyState.title',
+      descriptionKey: 'whatsNew.changes.emptyState.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.memoryOptimization.title',
+      descriptionKey: 'whatsNew.changes.memoryOptimization.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.checkboxFix.title',
-      descriptionKey: 'whatsNew.changes.checkboxFix.description',
+      titleKey: 'whatsNew.changes.bugFixes.title',
+      descriptionKey: 'whatsNew.changes.bugFixes.description',
     },
   ],
 };

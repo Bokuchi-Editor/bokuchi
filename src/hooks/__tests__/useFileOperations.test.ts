@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
@@ -24,8 +23,6 @@ describe('useFileOperations', () => {
   let saveTab: ReturnType<typeof vi.fn>;
   let saveTabAs: ReturnType<typeof vi.fn>;
   let removeTab: ReturnType<typeof vi.fn>;
-  let createNewTab: ReturnType<typeof vi.fn>;
-  let updateTabContent: ReturnType<typeof vi.fn>;
   let requestEditorFocus: ReturnType<typeof vi.fn>;
   let setSnackbar: ReturnType<typeof vi.fn>;
   let showSaveStatus: ReturnType<typeof vi.fn>;
@@ -50,8 +47,6 @@ describe('useFileOperations', () => {
     saveTab = vi.fn().mockResolvedValue(true);
     saveTabAs = vi.fn().mockResolvedValue(true);
     removeTab = vi.fn();
-    createNewTab = vi.fn().mockReturnValue('new-tab-id');
-    updateTabContent = vi.fn();
     requestEditorFocus = vi.fn();
     setSnackbar = vi.fn();
     showSaveStatus = vi.fn();
@@ -65,8 +60,6 @@ describe('useFileOperations', () => {
     saveTab: asMock<(tabId: string) => Promise<boolean>>(saveTab),
     saveTabAs: asMock<(tabId: string) => Promise<boolean>>(saveTabAs),
     removeTab: asMock<(tabId: string) => void>(removeTab),
-    createNewTab: asMock<() => string>(createNewTab),
-    updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
     requestEditorFocus: asMock<() => void>(requestEditorFocus),
     setSnackbar: asMock<(snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void>(setSnackbar),
     showSaveStatus: asMock<(message: string) => void>(showSaveStatus),
@@ -179,32 +172,4 @@ describe('useFileOperations', () => {
     expect(result.current.saveBeforeCloseDialog.open).toBe(false);
   });
 
-  // T-FO-09: drag over sets isDragOver
-  it('T-FO-09: handleDragOver sets isDragOver to true', () => {
-    const { result } = renderHook(() => useFileOperations(defaultParams()));
-
-    act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
-      result.current.handleDragOver(event);
-    });
-
-    expect(result.current.isDragOver).toBe(true);
-  });
-
-  // T-FO-10: drag leave clears isDragOver
-  it('T-FO-10: handleDragLeave sets isDragOver to false', () => {
-    const { result } = renderHook(() => useFileOperations(defaultParams()));
-
-    act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
-      result.current.handleDragOver(event);
-    });
-
-    act(() => {
-      const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() } as unknown as React.DragEvent;
-      result.current.handleDragLeave(event);
-    });
-
-    expect(result.current.isDragOver).toBe(false);
-  });
 });

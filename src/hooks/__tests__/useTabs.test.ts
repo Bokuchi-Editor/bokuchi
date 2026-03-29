@@ -112,7 +112,7 @@ describe('useTabs', () => {
 
     expect(result.current.tabs).toHaveLength(1);
     expect(result.current.tabs[0].title).toBe('Untitled');
-    expect(result.current.tabs[0].content).toContain('# New Document');
+    expect(result.current.tabs[0].content).toBe('');
   });
 
   // T-UT-08: openFile reads file content and creates tab

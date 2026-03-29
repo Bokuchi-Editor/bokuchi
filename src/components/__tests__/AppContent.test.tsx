@@ -26,6 +26,10 @@ vi.mock('../FolderTreePanel', () => ({
   default: () => <div data-testid="folder-tree-panel">FolderTree</div>,
 }));
 
+vi.mock('../EmptyState', () => ({
+  default: () => <div data-testid="empty-state">EmptyState</div>,
+}));
+
 vi.mock('../../hooks/useOutlineHeadings', () => ({
   useOutlineHeadings: () => [],
 }));
@@ -62,6 +66,8 @@ const createDefaultProps = () => ({
   onTabChange: vi.fn(),
   onTabClose: vi.fn(),
   onNewTab: vi.fn(),
+  onOpenFile: vi.fn(),
+  onRecentFileSelect: vi.fn(),
   onTabReorder: vi.fn(),
   onContentChange: vi.fn(),
   onStatusChange: vi.fn(),
@@ -97,10 +103,10 @@ describe('AppContent', () => {
     expect(screen.getByText('app.loading')).toBeInTheDocument();
   });
 
-  // T-AC-05: no tabs open state
-  it('T-AC-05: shows no tabs message when tabs is empty', () => {
+  // T-AC-05: empty state shown when tabs is empty
+  it('T-AC-05: shows empty state when tabs is empty', () => {
     render(<AppContent {...createDefaultProps()} tabs={[]} activeTab={null} activeTabId={null} />);
-    expect(screen.getByText('app.noTabsOpen')).toBeInTheDocument();
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument();
   });
 
   // T-AC-06: horizontal tab bar rendered

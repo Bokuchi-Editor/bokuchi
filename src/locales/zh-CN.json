@@ -4,6 +4,11 @@
     "loading": "加载中...",
     "noTabsOpen": "没有打开的标签页。创建新标签页开始使用。"
   },
+  "emptyState": {
+    "recentFiles": "最近的文件",
+    "newFile": "新建文件",
+    "openFile": "打开文件"
+  },
   "buttons": {
     "open": "打开",
     "save": "保存",
@@ -321,7 +326,7 @@
       "wordWrap": "自动换行",
       "wordWrapDescription": "在编辑器中自动换行长行。",
       "minimap": "小地图",
-      "minimapDescription": "显示文档的小地图。"
+      "minimapDescription": "显示文档的缩略图。"
     },
     "interface": {
       "title": "界面",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
       "outlineDisplayModeOverlay": "覆盖层",
       "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "资源管理器面板",
+      "folderTreeDisplayModeDescription": "选择资源管理器（文件夹树）面板的显示方式。",
+      "folderTreeDisplayModePersistent": "始终显示",
+      "folderTreeDisplayModePersistentDescription": "资源管理器面板作为布局的一部分始终显示。",
+      "folderTreeDisplayModeOverlay": "覆盖层",
+      "folderTreeDisplayModeOverlayDescription": "资源管理器面板从左侧滑入作为覆盖层显示。",
+      "folderTreeDisplayModeOff": "关闭",
+      "folderTreeDisplayModeOffDescription": "资源管理器面板被隐藏。",
+      "folderTreeFileFilter": "资源管理器文件过滤器",
+      "folderTreeFileFilterDescription": "选择在资源管理器中显示哪些文件。",
+      "folderTreeFileFilterMarkdown": "仅 Markdown 文件 (.md, .txt)",
+      "folderTreeFileFilterAll": "所有文件"
     },
     "advanced": {
       "title": "高级",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "自动转换",
       "tableConversionConfirm": "转换前询问",
       "tableConversionOff": "不转换",
+      "rendering": "渲染扩展",
+      "renderingDescription": "启用或禁用可选渲染功能。禁用的功能不会加载其库，保持编辑器轻量。",
+      "enableKatex": "KaTeX（数学表达式）",
+      "enableKatexDescription": "使用 $...$（行内）和 $$...$$（块级）语法渲染数学表达式。",
+      "enableMermaid": "Mermaid（图表）",
+      "enableMermaidDescription": "从 ```mermaid 代码块渲染图表（流程图、时序图等）。",
       "importExport": "导入/导出设置",
       "exportSettings": "导出设置",
       "importSettings": "导入设置",
@@ -451,10 +462,17 @@
     "refresh": "刷新",
     "noFolderOpen": "未打开文件夹",
     "emptyFolder": "此文件夹为空",
-    "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)"
+    "toggleExplorer": "切换资源管理器 (Ctrl+Shift+E)",
+    "rename": "重命名",
+    "renameTitle": "重命名文件",
+    "renameConfirm": "重命名",
+    "renameSuccess": "文件重命名成功",
+    "renameFailed": "文件重命名失败",
+    "renameErrorEmpty": "文件名不能为空",
+    "renameErrorInvalidChar": "文件名不能包含 / 或 \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "夜深了？偶尔也要休息一下哦。"
   },
   "tableConversion": {
     "dialogTitle": "将表格转换为 Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
     "noTableDetected": "在剪贴板数据中未检测到表格"
   },
+  "search": {
+    "searchAllTabs": "搜索所有标签页"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "知道了",
@@ -477,17 +498,21 @@
       "improvement": "改进"
     },
     "changes": {
-      "saveStatus": {
-        "title": "状态栏显示保存状态",
-        "description": "保存反馈现在显示在状态栏中，而不是弹出通知。"
+      "katexMermaid": {
+        "title": "KaTeX 和 Mermaid 支持",
+        "description": "预览现在可以渲染 LaTeX 数学公式和 Mermaid 图表，可在设置中开启或关闭。"
       },
-      "whatsNewDialog": {
-        "title": "新功能对话框",
-        "description": "更新后会自动显示新功能和变更内容。正是您现在看到的这个界面！"
+      "emptyState": {
+        "title": "全新欢迎界面",
+        "description": "没有打开文件时会显示欢迎界面，可快速创建、打开文件或访问最近的文件。"
       },
-      "checkboxFix": {
-        "title": "预览复选框修复",
-        "description": "修复了在预览中点击复选框后更改未反映的问题。"
+      "memoryOptimization": {
+        "title": "内存优化",
+        "description": "关闭标签页的缓存会立即释放，降低内存占用。"
+      },
+      "bugFixes": {
+        "title": "错误修复",
+        "description": "修复了文件关联问题及其他多个小错误。"
       }
     }
   }

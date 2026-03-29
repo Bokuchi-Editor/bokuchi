@@ -4,6 +4,11 @@
     "loading": "Đang tải...",
     "noTabsOpen": "Không có tab nào mở. Tạo tab mới để bắt đầu."
   },
+  "emptyState": {
+    "recentFiles": "Tệp gần đây",
+    "newFile": "Tệp mới",
+    "openFile": "Mở tệp"
+  },
   "buttons": {
     "open": "Mở",
     "save": "Lưu",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
       "outlineDisplayModeOverlay": "Lớp phủ",
       "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Bảng điều khiển Explorer",
+      "folderTreeDisplayModeDescription": "Chọn cách hiển thị bảng điều khiển explorer (cây thư mục).",
+      "folderTreeDisplayModePersistent": "Luôn hiển thị",
+      "folderTreeDisplayModePersistentDescription": "Bảng điều khiển explorer luôn được hiển thị như một phần của bố cục.",
+      "folderTreeDisplayModeOverlay": "Lớp phủ",
+      "folderTreeDisplayModeOverlayDescription": "Bảng điều khiển explorer trượt vào từ bên trái dưới dạng lớp phủ.",
+      "folderTreeDisplayModeOff": "Tắt",
+      "folderTreeDisplayModeOffDescription": "Bảng điều khiển explorer bị ẩn.",
+      "folderTreeFileFilter": "Bộ lọc tệp Explorer",
+      "folderTreeFileFilterDescription": "Chọn tệp nào để hiển thị trong explorer.",
+      "folderTreeFileFilterMarkdown": "Chỉ tệp Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Tất cả tệp"
     },
     "advanced": {
       "title": "Nâng cao",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "Tự động chuyển đổi",
       "tableConversionConfirm": "Hỏi trước khi chuyển đổi",
       "tableConversionOff": "Không chuyển đổi",
+      "rendering": "Tiện ích mở rộng kết xuất",
+      "renderingDescription": "Bật hoặc tắt các tính năng kết xuất tùy chọn. Các tính năng bị tắt không tải thư viện, giữ cho trình soạn thảo nhẹ nhàng.",
+      "enableKatex": "KaTeX (Biểu thức toán học)",
+      "enableKatexDescription": "Kết xuất biểu thức toán học sử dụng cú pháp $...$ (nội tuyến) và $$...$$ (khối).",
+      "enableMermaid": "Mermaid (Sơ đồ)",
+      "enableMermaidDescription": "Kết xuất sơ đồ từ các khối mã ```mermaid (lưu đồ, sơ đồ tuần tự, v.v.).",
       "importExport": "Nhập/Xuất cài đặt",
       "exportSettings": "Xuất cài đặt",
       "importSettings": "Nhập cài đặt",
@@ -451,10 +462,17 @@
     "refresh": "Làm mới",
     "noFolderOpen": "Chưa mở thư mục nào",
     "emptyFolder": "Thư mục này trống",
-    "toggleExplorer": "Bật/tắt trình khám phá (Ctrl+Shift+E)"
+    "toggleExplorer": "Bật/tắt trình khám phá (Ctrl+Shift+E)",
+    "rename": "Đổi tên",
+    "renameTitle": "Đổi tên tệp",
+    "renameConfirm": "Đổi tên",
+    "renameSuccess": "Đổi tên tệp thành công",
+    "renameFailed": "Đổi tên tệp thất bại",
+    "renameErrorEmpty": "Tên tệp không được để trống",
+    "renameErrorInvalidChar": "Tên tệp không được chứa / hoặc \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Khuya rồi? Hãy nghỉ ngơi một chút nhé."
   },
   "tableConversion": {
     "dialogTitle": "Chuyển đổi bảng sang Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "Chuyển đổi bảng thất bại. Đã dán dưới dạng văn bản thuần túy.",
     "noTableDetected": "Không phát hiện bảng nào trong dữ liệu clipboard"
   },
+  "search": {
+    "searchAllTabs": "Tìm kiếm tất cả các tab"
+  },
   "whatsNew": {
     "title": "Có gì mới",
     "gotIt": "Đã hiểu",
@@ -477,17 +498,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Trạng thái lưu trên thanh trạng thái",
-        "description": "Xác nhận lưu giờ đây hiển thị trên thanh trạng thái thay vì thông báo bật lên."
+      "katexMermaid": {
+        "title": "Hỗ trợ KaTeX và Mermaid",
+        "description": "Xem trước giờ đây hiển thị công thức LaTeX và sơ đồ Mermaid, có thể bật/tắt trong Cài đặt."
       },
-      "whatsNewDialog": {
-        "title": "Hộp thoại Có gì mới",
-        "description": "Các tính năng mới và thay đổi được hiển thị tự động sau khi cập nhật. Đây chính là màn hình bạn đang xem!"
+      "emptyState": {
+        "title": "Màn hình chào mừng mới",
+        "description": "Màn hình chào mừng hiển thị khi không có tệp nào đang mở, cho phép truy cập nhanh để tạo, mở hoặc xem tệp gần đây."
       },
-      "checkboxFix": {
-        "title": "Sửa lỗi hộp kiểm xem trước",
-        "description": "Đã sửa lỗi nhấp vào hộp kiểm trong xem trước không phản ánh thay đổi."
+      "memoryOptimization": {
+        "title": "Tối ưu hóa bộ nhớ",
+        "description": "Bộ nhớ đệm của tab đã đóng được giải phóng ngay lập tức, giảm mức sử dụng bộ nhớ."
+      },
+      "bugFixes": {
+        "title": "Sửa lỗi",
+        "description": "Đã sửa các lỗi liên kết tệp và một số lỗi nhỏ khác."
       }
     }
   }

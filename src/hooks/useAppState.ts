@@ -34,6 +34,7 @@ export const useAppState = () => {
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
   const saveStatusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const SAVE_STATUS_DISPLAY_MS = 3000;
   const showSaveStatus = useCallback((message: string) => {
     if (saveStatusTimerRef.current) {
       clearTimeout(saveStatusTimerRef.current);
@@ -41,7 +42,7 @@ export const useAppState = () => {
     setSaveStatusMessage(message);
     saveStatusTimerRef.current = setTimeout(() => {
       setSaveStatusMessage(null);
-    }, 3000);
+    }, SAVE_STATUS_DISPLAY_MS);
   }, []);
   const [editorStatus, setEditorStatus] = useState({
     line: 1,
@@ -68,6 +69,7 @@ export const useAppState = () => {
     saveTab,
     saveTabAs,
     createNewTab,
+    renameFile,
   } = useTabsDesktop();
 
   // Zoom management
@@ -105,8 +107,6 @@ export const useAppState = () => {
     zoomIn,
     zoomOut,
     viewMode,
-    setOutlinePanelOpen,
-    setFolderTreePanelOpen,
   });
 
   // Easter eggs
@@ -155,9 +155,6 @@ export const useAppState = () => {
     handleSaveBeforeClose,
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
   } = useFileOperations({
     activeTab,
     tabs,
@@ -166,8 +163,6 @@ export const useAppState = () => {
     saveTab,
     saveTabAs,
     removeTab,
-    createNewTab,
-    updateTabContent,
     requestEditorFocus,
     setSnackbar,
     showSaveStatus,
@@ -231,6 +226,33 @@ export const useAppState = () => {
     }
   };
 
+  // Rename dialog state
+  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string }>({
+    open: false, filePath: '', currentName: '',
+  });
+
+  const handleRenameRequest = useCallback((filePath: string) => {
+    const name = filePath.substring(filePath.lastIndexOf('/') + 1);
+    setRenameDialog({ open: true, filePath, currentName: name });
+  }, []);
+
+  const handleRenameConfirm = useCallback(async (newName: string) => {
+    try {
+      await renameFile(renameDialog.filePath, newName);
+      setRenameDialog({ open: false, filePath: '', currentName: '' });
+      folderTreeRefreshTree();
+      setSnackbar({ open: true, message: t('folderTree.renameSuccess'), severity: 'success' });
+    } catch (error) {
+      console.error('Failed to rename file:', error);
+      const msg = error instanceof Error ? error.message : t('folderTree.renameFailed');
+      setSnackbar({ open: true, message: msg, severity: 'error' });
+    }
+  }, [renameFile, renameDialog.filePath, folderTreeRefreshTree, t]);
+
+  const handleRenameCancel = useCallback(() => {
+    setRenameDialog({ open: false, filePath: '', currentName: '' });
+  }, []);
+
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
       await openFile(filePath);
@@ -286,21 +308,18 @@ export const useAppState = () => {
   }, []);
 
   // Focus editor when switching to a mode that shows the editor
+  const EDITOR_FOCUS_DELAY_MS = 100;
   useEffect(() => {
     if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
       const timer = setTimeout(() => {
         requestEditorFocus();
-      }, 100);
+      }, EDITOR_FOCUS_DELAY_MS);
       return () => clearTimeout(timer);
     }
   }, [viewMode, isSettingsLoaded, requestEditorFocus]);
 
-  // Create initial tab
-  useEffect(() => {
-    if (tabs.length === 0) {
-      createNewTab();
-    }
-  }, [tabs.length, createNewTab]);
+  // Note: No auto-creation of tabs when empty.
+  // The EmptyState component is shown instead (see AppContent).
 
   // Keyboard shortcuts
   const { handleKeyDown } = useKeyboardShortcuts({
@@ -409,9 +428,6 @@ export const useAppState = () => {
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
     handleTabReorder,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
     handleCheckForUpdate,
     handleDismissUpdate,
     handleWhatsNewOpen,
@@ -447,6 +463,10 @@ export const useAppState = () => {
     folderTreeCloseFolder,
     folderTreeToggleExpand,
     folderTreeRefreshTree,
+    renameDialog,
+    handleRenameRequest,
+    handleRenameConfirm,
+    handleRenameCancel,
     setGlobalVariables,
     setTabLayout,
     setViewMode,
