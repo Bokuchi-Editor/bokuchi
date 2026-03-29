@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
       "outlineDisplayModeOverlay": "ओवरले",
       "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "एक्सप्लोरर पैनल",
+      "folderTreeDisplayModeDescription": "एक्सप्लोरर (फ़ोल्डर ट्री) पैनल कैसे प्रदर्शित हो, चुनें।",
+      "folderTreeDisplayModePersistent": "हमेशा दिखाएं",
+      "folderTreeDisplayModePersistentDescription": "एक्सप्लोरर पैनल लेआउट के हिस्से के रूप में हमेशा दिखाया जाता है।",
+      "folderTreeDisplayModeOverlay": "ओवरले",
+      "folderTreeDisplayModeOverlayDescription": "एक्सप्लोरर पैनल बाईं ओर से ओवरले के रूप में स्लाइड करता है।",
+      "folderTreeDisplayModeOff": "बंद",
+      "folderTreeDisplayModeOffDescription": "एक्सप्लोरर पैनल छिपा हुआ है।",
+      "folderTreeFileFilter": "एक्सप्लोरर फ़ाइल फ़िल्टर",
+      "folderTreeFileFilterDescription": "एक्सप्लोरर में कौन सी फ़ाइलें प्रदर्शित करनी हैं, चुनें।",
+      "folderTreeFileFilterMarkdown": "केवल Markdown फ़ाइलें (.md, .txt)",
+      "folderTreeFileFilterAll": "सभी फ़ाइलें"
     },
     "advanced": {
       "title": "उन्नत",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "ऑटो कन्वर्ट",
       "tableConversionConfirm": "कन्वर्ट करने से पहले पूछें",
       "tableConversionOff": "कन्वर्ट न करें",
+      "rendering": "रेंडरिंग एक्सटेंशन",
+      "renderingDescription": "वैकल्पिक रेंडरिंग सुविधाओं को सक्षम या अक्षम करें। अक्षम सुविधाएँ अपनी लाइब्रेरी लोड नहीं करतीं, जिससे एडिटर हल्का रहता है।",
+      "enableKatex": "KaTeX (गणितीय अभिव्यक्तियाँ)",
+      "enableKatexDescription": "$...$ (इनलाइन) और $$...$$ (ब्लॉक) सिंटैक्स का उपयोग करके गणितीय अभिव्यक्तियाँ रेंडर करें।",
+      "enableMermaid": "Mermaid (आरेख)",
+      "enableMermaidDescription": "```mermaid कोड ब्लॉक से आरेख रेंडर करें (फ्लोचार्ट, अनुक्रम आरेख, आदि)।",
       "importExport": "आयात/निर्यात सेटिंग्स",
       "exportSettings": "सेटिंग्स निर्यात करें",
       "importSettings": "सेटिंग्स आयात करें",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "फ़ाइल नाम में / या \\ नहीं हो सकता"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "देर रात? बीच-बीच में थोड़ा आराम कर लें।"
   },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",

@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Панель структуры всегда отображается как часть макета.",
       "outlineDisplayModeOverlay": "Наложение",
       "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Панель проводника",
+      "folderTreeDisplayModeDescription": "Выберите способ отображения панели проводника (дерева папок).",
+      "folderTreeDisplayModePersistent": "Всегда видимая",
+      "folderTreeDisplayModePersistentDescription": "Панель проводника всегда отображается как часть макета.",
+      "folderTreeDisplayModeOverlay": "Наложение",
+      "folderTreeDisplayModeOverlayDescription": "Панель проводника выдвигается слева как наложение.",
+      "folderTreeDisplayModeOff": "Выключено",
+      "folderTreeDisplayModeOffDescription": "Панель проводника скрыта.",
+      "folderTreeFileFilter": "Фильтр файлов проводника",
+      "folderTreeFileFilterDescription": "Выберите, какие файлы отображать в проводнике.",
+      "folderTreeFileFilterMarkdown": "Только файлы Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Все файлы"
     },
     "advanced": {
       "title": "Дополнительно",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "Автоматическая конвертация",
       "tableConversionConfirm": "Спрашивать перед конвертацией",
       "tableConversionOff": "Не конвертировать",
+      "rendering": "Расширения рендеринга",
+      "renderingDescription": "Включить или отключить дополнительные функции рендеринга. Отключённые функции не загружают свои библиотеки, сохраняя лёгкость редактора.",
+      "enableKatex": "KaTeX (Математические выражения)",
+      "enableKatexDescription": "Отображать математические выражения с использованием синтаксиса $...$ (встроенный) и $$...$$ (блочный).",
+      "enableMermaid": "Mermaid (Диаграммы)",
+      "enableMermaidDescription": "Отображать диаграммы из блоков кода ```mermaid (блок-схемы, диаграммы последовательностей и т.д.).",
       "importExport": "Импорт/Экспорт настроек",
       "exportSettings": "Экспорт настроек",
       "importSettings": "Импорт настроек",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "Имя файла не может содержать / или \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Поздняя ночь? Иногда стоит сделать перерыв."
   },
   "tableConversion": {
     "dialogTitle": "Конвертировать таблицу в Markdown",

@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
       "outlineDisplayModeOverlay": "تراكب",
       "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "لوحة المستكشف",
+      "folderTreeDisplayModeDescription": "اختر كيفية عرض لوحة المستكشف (شجرة المجلدات).",
+      "folderTreeDisplayModePersistent": "مرئي دائمًا",
+      "folderTreeDisplayModePersistentDescription": "تُعرض لوحة المستكشف دائمًا كجزء من التخطيط.",
+      "folderTreeDisplayModeOverlay": "تراكب",
+      "folderTreeDisplayModeOverlayDescription": "تنزلق لوحة المستكشف من اليسار كتراكب.",
+      "folderTreeDisplayModeOff": "إيقاف",
+      "folderTreeDisplayModeOffDescription": "لوحة المستكشف مخفية.",
+      "folderTreeFileFilter": "فلتر ملفات المستكشف",
+      "folderTreeFileFilterDescription": "اختر الملفات المراد عرضها في المستكشف.",
+      "folderTreeFileFilterMarkdown": "ملفات Markdown فقط (.md, .txt)",
+      "folderTreeFileFilterAll": "جميع الملفات"
     },
     "advanced": {
       "title": "متقدم",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "تحويل تلقائي",
       "tableConversionConfirm": "السؤال قبل التحويل",
       "tableConversionOff": "عدم التحويل",
+      "rendering": "إضافات العرض",
+      "renderingDescription": "تمكين أو تعطيل ميزات العرض الاختيارية. الميزات المعطلة لا تحمّل مكتباتها، مما يحافظ على خفة المحرر.",
+      "enableKatex": "KaTeX (التعبيرات الرياضية)",
+      "enableKatexDescription": "عرض التعبيرات الرياضية باستخدام صيغة $...$ (سطري) و $$...$$ (كتلة).",
+      "enableMermaid": "Mermaid (المخططات)",
+      "enableMermaidDescription": "عرض المخططات من كتل التعليمات البرمجية ```mermaid (مخططات انسيابية، مخططات تسلسلية، إلخ).",
       "importExport": "استيراد/تصدير الإعدادات",
       "exportSettings": "تصدير الإعدادات",
       "importSettings": "استيراد الإعدادات",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "لا يمكن أن يحتوي اسم الملف على / أو \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "سهرة متأخرة؟ خذ استراحة بين الحين والآخر."
   },
   "tableConversion": {
     "dialogTitle": "تحويل الجدول إلى Markdown",

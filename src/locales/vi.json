@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
       "outlineDisplayModeOverlay": "Lớp phủ",
       "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Bảng điều khiển Explorer",
+      "folderTreeDisplayModeDescription": "Chọn cách hiển thị bảng điều khiển explorer (cây thư mục).",
+      "folderTreeDisplayModePersistent": "Luôn hiển thị",
+      "folderTreeDisplayModePersistentDescription": "Bảng điều khiển explorer luôn được hiển thị như một phần của bố cục.",
+      "folderTreeDisplayModeOverlay": "Lớp phủ",
+      "folderTreeDisplayModeOverlayDescription": "Bảng điều khiển explorer trượt vào từ bên trái dưới dạng lớp phủ.",
+      "folderTreeDisplayModeOff": "Tắt",
+      "folderTreeDisplayModeOffDescription": "Bảng điều khiển explorer bị ẩn.",
+      "folderTreeFileFilter": "Bộ lọc tệp Explorer",
+      "folderTreeFileFilterDescription": "Chọn tệp nào để hiển thị trong explorer.",
+      "folderTreeFileFilterMarkdown": "Chỉ tệp Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Tất cả tệp"
     },
     "advanced": {
       "title": "Nâng cao",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "Tự động chuyển đổi",
       "tableConversionConfirm": "Hỏi trước khi chuyển đổi",
       "tableConversionOff": "Không chuyển đổi",
+      "rendering": "Tiện ích mở rộng kết xuất",
+      "renderingDescription": "Bật hoặc tắt các tính năng kết xuất tùy chọn. Các tính năng bị tắt không tải thư viện, giữ cho trình soạn thảo nhẹ nhàng.",
+      "enableKatex": "KaTeX (Biểu thức toán học)",
+      "enableKatexDescription": "Kết xuất biểu thức toán học sử dụng cú pháp $...$ (nội tuyến) và $$...$$ (khối).",
+      "enableMermaid": "Mermaid (Sơ đồ)",
+      "enableMermaidDescription": "Kết xuất sơ đồ từ các khối mã ```mermaid (lưu đồ, sơ đồ tuần tự, v.v.).",
       "importExport": "Nhập/Xuất cài đặt",
       "exportSettings": "Xuất cài đặt",
       "importSettings": "Nhập cài đặt",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "Tên tệp không được chứa / hoặc \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Khuya rồi? Hãy nghỉ ngơi một chút nhé."
   },
   "tableConversion": {
     "dialogTitle": "Chuyển đổi bảng sang Markdown",

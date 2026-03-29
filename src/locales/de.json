@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Das Gliederungspanel wird immer als Teil des Layouts angezeigt.",
       "outlineDisplayModeOverlay": "Überlagerung",
       "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayMode": "Explorer-Panel",
+      "folderTreeDisplayModeDescription": "Wählen Sie, wie das Explorer-Panel (Ordnerbaum) angezeigt wird.",
+      "folderTreeDisplayModePersistent": "Immer sichtbar",
+      "folderTreeDisplayModePersistentDescription": "Das Explorer-Panel wird immer als Teil des Layouts angezeigt.",
       "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayModeOverlayDescription": "Das Explorer-Panel gleitet von links als Overlay herein.",
+      "folderTreeDisplayModeOff": "Aus",
+      "folderTreeDisplayModeOffDescription": "Das Explorer-Panel ist ausgeblendet.",
+      "folderTreeFileFilter": "Explorer-Dateifilter",
+      "folderTreeFileFilterDescription": "Wählen Sie, welche Dateien im Explorer angezeigt werden.",
+      "folderTreeFileFilterMarkdown": "Nur Markdown-Dateien (.md, .txt)",
+      "folderTreeFileFilterAll": "Alle Dateien"
     },
     "advanced": {
       "title": "Erweitert",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "Automatisch konvertieren",
       "tableConversionConfirm": "Vor Konvertierung fragen",
       "tableConversionOff": "Nicht konvertieren",
+      "rendering": "Rendering-Erweiterungen",
+      "renderingDescription": "Optionale Rendering-Funktionen aktivieren oder deaktivieren. Deaktivierte Funktionen laden ihre Bibliotheken nicht, wodurch der Editor leichtgewichtig bleibt.",
+      "enableKatex": "KaTeX (Mathematische Ausdrücke)",
+      "enableKatexDescription": "Mathematische Ausdrücke mit $...$ (Inline) und $$...$$ (Block) Syntax rendern.",
+      "enableMermaid": "Mermaid (Diagramme)",
+      "enableMermaidDescription": "Diagramme aus ```mermaid Codeblöcken rendern (Flussdiagramme, Sequenzdiagramme usw.).",
       "importExport": "Einstellungen importieren/exportieren",
       "exportSettings": "Einstellungen exportieren",
       "importSettings": "Einstellungen importieren",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "Dateiname darf kein / oder \\ enthalten"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Spät dran? Mach ruhig mal eine Pause."
   },
   "tableConversion": {
     "dialogTitle": "Tabelle in Markdown konvertieren",

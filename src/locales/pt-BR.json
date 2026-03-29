@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
       "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "Painel do explorador",
+      "folderTreeDisplayModeDescription": "Escolha como o painel do explorador (árvore de pastas) é exibido.",
+      "folderTreeDisplayModePersistent": "Sempre visível",
+      "folderTreeDisplayModePersistentDescription": "O painel do explorador é sempre exibido como parte do layout.",
+      "folderTreeDisplayModeOverlay": "Sobreposição",
+      "folderTreeDisplayModeOverlayDescription": "O painel do explorador desliza pela esquerda como uma sobreposição.",
+      "folderTreeDisplayModeOff": "Desativado",
+      "folderTreeDisplayModeOffDescription": "O painel do explorador está oculto.",
+      "folderTreeFileFilter": "Filtro de arquivos do explorador",
+      "folderTreeFileFilterDescription": "Escolha quais arquivos exibir no explorador.",
+      "folderTreeFileFilterMarkdown": "Somente arquivos Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Todos os arquivos"
     },
     "advanced": {
       "title": "Avançado",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "Converter automaticamente",
       "tableConversionConfirm": "Perguntar antes de converter",
       "tableConversionOff": "Não converter",
+      "rendering": "Extensões de renderização",
+      "renderingDescription": "Ativar ou desativar recursos opcionais de renderização. Recursos desativados não carregam suas bibliotecas, mantendo o editor leve.",
+      "enableKatex": "KaTeX (Expressões matemáticas)",
+      "enableKatexDescription": "Renderizar expressões matemáticas usando a sintaxe $...$ (inline) e $$...$$ (bloco).",
+      "enableMermaid": "Mermaid (Diagramas)",
+      "enableMermaidDescription": "Renderizar diagramas a partir de blocos de código ```mermaid (fluxogramas, diagramas de sequência, etc.).",
       "importExport": "Importar/Exportar configurações",
       "exportSettings": "Exportar configurações",
       "importSettings": "Importar configurações",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "O nome do arquivo não pode conter / ou \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Noite longa? Faça uma pausa de vez em quando."
   },
   "tableConversion": {
     "dialogTitle": "Converter tabela para Markdown",

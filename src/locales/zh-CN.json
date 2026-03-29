@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
       "outlineDisplayModeOverlay": "覆盖层",
       "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "资源管理器面板",
+      "folderTreeDisplayModeDescription": "选择资源管理器（文件夹树）面板的显示方式。",
+      "folderTreeDisplayModePersistent": "始终显示",
+      "folderTreeDisplayModePersistentDescription": "资源管理器面板作为布局的一部分始终显示。",
+      "folderTreeDisplayModeOverlay": "覆盖层",
+      "folderTreeDisplayModeOverlayDescription": "资源管理器面板从左侧滑入作为覆盖层显示。",
+      "folderTreeDisplayModeOff": "关闭",
+      "folderTreeDisplayModeOffDescription": "资源管理器面板被隐藏。",
+      "folderTreeFileFilter": "资源管理器文件过滤器",
+      "folderTreeFileFilterDescription": "选择在资源管理器中显示哪些文件。",
+      "folderTreeFileFilterMarkdown": "仅 Markdown 文件 (.md, .txt)",
+      "folderTreeFileFilterAll": "所有文件"
     },
     "advanced": {
       "title": "高级",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "自动转换",
       "tableConversionConfirm": "转换前询问",
       "tableConversionOff": "不转换",
+      "rendering": "渲染扩展",
+      "renderingDescription": "启用或禁用可选渲染功能。禁用的功能不会加载其库，保持编辑器轻量。",
+      "enableKatex": "KaTeX（数学表达式）",
+      "enableKatexDescription": "使用 $...$（行内）和 $$...$$（块级）语法渲染数学表达式。",
+      "enableMermaid": "Mermaid（图表）",
+      "enableMermaidDescription": "从 ```mermaid 代码块渲染图表（流程图、时序图等）。",
       "importExport": "导入/导出设置",
       "exportSettings": "导出设置",
       "importSettings": "导入设置",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "文件名不能包含 / 或 \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "夜深了？偶尔也要休息一下哦。"
   },
   "tableConversion": {
     "dialogTitle": "将表格转换为 Markdown",

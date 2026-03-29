@@ -338,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
       "outlineDisplayModeOverlay": "覆蓋層",
       "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "檔案總管面板",
+      "folderTreeDisplayModeDescription": "選擇檔案總管（資料夾樹）面板的顯示方式。",
+      "folderTreeDisplayModePersistent": "始終顯示",
+      "folderTreeDisplayModePersistentDescription": "檔案總管面板作為佈局的一部分始終顯示。",
+      "folderTreeDisplayModeOverlay": "覆蓋層",
+      "folderTreeDisplayModeOverlayDescription": "檔案總管面板從左側滑入作為覆蓋層顯示。",
+      "folderTreeDisplayModeOff": "關閉",
+      "folderTreeDisplayModeOffDescription": "檔案總管面板被隱藏。",
+      "folderTreeFileFilter": "檔案總管檔案篩選器",
+      "folderTreeFileFilterDescription": "選擇在檔案總管中顯示哪些檔案。",
+      "folderTreeFileFilterMarkdown": "僅 Markdown 檔案 (.md, .txt)",
+      "folderTreeFileFilterAll": "所有檔案"
     },
     "advanced": {
       "title": "進階",
@@ -362,6 +362,12 @@
       "tableConversionAuto": "自動轉換",
       "tableConversionConfirm": "轉換前詢問",
       "tableConversionOff": "不轉換",
+      "rendering": "渲染擴充",
+      "renderingDescription": "啟用或停用可選的渲染功能。停用的功能不會載入其程式庫，保持編輯器輕量。",
+      "enableKatex": "KaTeX（數學表達式）",
+      "enableKatexDescription": "使用 $...$（行內）和 $$...$$（區塊）語法渲染數學表達式。",
+      "enableMermaid": "Mermaid（圖表）",
+      "enableMermaidDescription": "從 ```mermaid 程式碼區塊渲染圖表（流程圖、時序圖等）。",
       "importExport": "匯入/匯出設定",
       "exportSettings": "匯出設定",
       "importSettings": "匯入設定",
@@ -466,7 +472,7 @@
     "renameErrorInvalidChar": "檔案名稱不能包含 / 或 \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "夜深了？偶爾也要休息一下喔。"
   },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",
