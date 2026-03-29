@@ -129,7 +129,7 @@ const WhatsNewDialog: React.FC<WhatsNewDialogProps> = ({ open, onClose }) => {
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={onClose} variant="contained" autoFocus>
+        <Button onClick={onClose} variant="contained">
           {t('whatsNew.gotIt')}
         </Button>
       </DialogActions>

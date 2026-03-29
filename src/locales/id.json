@@ -4,6 +4,11 @@
     "loading": "Memuat...",
     "noTabsOpen": "Tidak ada tab yang terbuka. Buat tab baru untuk memulai."
   },
+  "emptyState": {
+    "recentFiles": "File Terbaru",
+    "newFile": "File Baru",
+    "openFile": "Buka File"
+  },
   "buttons": {
     "open": "Buka",
     "save": "Simpan",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Panel kerangka selalu ditampilkan sebagai bagian dari tata letak.",
       "outlineDisplayModeOverlay": "Overlay",
       "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayMode": "Panel Explorer",
+      "folderTreeDisplayModeDescription": "Pilih bagaimana panel explorer (pohon folder) ditampilkan.",
+      "folderTreeDisplayModePersistent": "Selalu terlihat",
+      "folderTreeDisplayModePersistentDescription": "Panel explorer selalu ditampilkan sebagai bagian dari tata letak.",
       "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayModeOverlayDescription": "Panel explorer masuk dari kiri sebagai overlay.",
+      "folderTreeDisplayModeOff": "Nonaktif",
+      "folderTreeDisplayModeOffDescription": "Panel explorer disembunyikan.",
+      "folderTreeFileFilter": "Filter File Explorer",
+      "folderTreeFileFilterDescription": "Pilih file mana yang ditampilkan di explorer.",
+      "folderTreeFileFilterMarkdown": "Hanya file Markdown (.md, .txt)",
+      "folderTreeFileFilterAll": "Semua file"
     },
     "advanced": {
       "title": "Lanjutan",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "Konversi Otomatis",
       "tableConversionConfirm": "Tanya Sebelum Mengonversi",
       "tableConversionOff": "Jangan Konversi",
+      "rendering": "Ekstensi Rendering",
+      "renderingDescription": "Aktifkan atau nonaktifkan fitur rendering opsional. Fitur yang dinonaktifkan tidak memuat pustakanya, menjaga editor tetap ringan.",
+      "enableKatex": "KaTeX (Ekspresi Matematika)",
+      "enableKatexDescription": "Render ekspresi matematika menggunakan sintaks $...$ (sebaris) dan $$...$$ (blok).",
+      "enableMermaid": "Mermaid (Diagram)",
+      "enableMermaidDescription": "Render diagram dari blok kode ```mermaid (diagram alur, diagram urutan, dll.).",
       "importExport": "Impor/Ekspor Pengaturan",
       "exportSettings": "Ekspor Pengaturan",
       "importSettings": "Impor Pengaturan",
@@ -451,10 +462,17 @@
     "refresh": "Segarkan",
     "noFolderOpen": "Tidak ada folder yang dibuka",
     "emptyFolder": "Folder ini kosong",
-    "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)"
+    "toggleExplorer": "Beralih Penjelajah (Ctrl+Shift+E)",
+    "rename": "Ganti Nama",
+    "renameTitle": "Ganti Nama File",
+    "renameConfirm": "Ganti Nama",
+    "renameSuccess": "File berhasil diganti namanya",
+    "renameFailed": "Gagal mengganti nama file",
+    "renameErrorEmpty": "Nama file tidak boleh kosong",
+    "renameErrorInvalidChar": "Nama file tidak boleh mengandung / atau \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Begadang? Istirahat sebentar sesekali."
   },
   "tableConversion": {
     "dialogTitle": "Konversi Tabel ke Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "Konversi tabel gagal. Ditempel sebagai teks biasa.",
     "noTableDetected": "Tidak ada tabel yang terdeteksi dalam data clipboard"
   },
+  "search": {
+    "searchAllTabs": "Cari di semua tab"
+  },
   "whatsNew": {
     "title": "Yang Baru",
     "gotIt": "Mengerti",
@@ -477,17 +498,21 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Status simpan di bilah status",
-        "description": "Konfirmasi penyimpanan sekarang ditampilkan di bilah status, bukan notifikasi pop-up."
+      "katexMermaid": {
+        "title": "Dukungan KaTeX & Mermaid",
+        "description": "Pratinjau sekarang merender rumus matematika LaTeX dan diagram Mermaid, dapat diaktifkan di Pengaturan."
       },
-      "whatsNewDialog": {
-        "title": "Dialog Yang Baru",
-        "description": "Fitur baru dan perubahan ditampilkan secara otomatis setelah pembaruan. Inilah layar yang sedang Anda lihat!"
+      "emptyState": {
+        "title": "Layar sambutan baru",
+        "description": "Layar sambutan baru saat tidak ada file yang terbuka, dengan akses cepat untuk membuat, membuka, dan melihat file terbaru."
       },
-      "checkboxFix": {
-        "title": "Perbaikan kotak centang pratinjau",
-        "description": "Memperbaiki masalah di mana mengklik kotak centang di pratinjau tidak mencerminkan perubahan."
+      "memoryOptimization": {
+        "title": "Optimisasi memori",
+        "description": "Cache tab yang ditutup langsung dilepaskan, mengurangi penggunaan memori."
+      },
+      "bugFixes": {
+        "title": "Perbaikan bug",
+        "description": "Memperbaiki masalah asosiasi file dan beberapa bug kecil lainnya."
       }
     }
   }

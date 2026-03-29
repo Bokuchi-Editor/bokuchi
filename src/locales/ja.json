@@ -4,6 +4,11 @@
     "loading": "読み込み中...",
     "noTabsOpen": "タブが開かれていません。新しいタブを作成して開始してください。"
   },
+  "emptyState": {
+    "recentFiles": "最近のファイル",
+    "newFile": "新規ファイル",
+    "openFile": "ファイルを開く"
+  },
   "buttons": {
     "open": "開く",
     "save": "保存",
@@ -343,7 +348,7 @@
       "folderTreeDisplayModeOffDescription": "エクスプローラーパネルを非表示にします。",
       "folderTreeFileFilter": "エクスプローラーファイルフィルター",
       "folderTreeFileFilterDescription": "エクスプローラーに表示するファイルの種類を選択してください。",
-      "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt, .markdown)",
+      "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt)",
       "folderTreeFileFilterAll": "すべてのファイル"
     },
     "advanced": {
@@ -357,6 +362,12 @@
       "tableConversionAuto": "自動変換",
       "tableConversionConfirm": "変換前に確認",
       "tableConversionOff": "変換しない",
+      "rendering": "レンダリング拡張",
+      "renderingDescription": "オプションのレンダリング機能を有効/無効にします。無効にした機能はライブラリを読み込まないため、エディターの軽量性を維持できます。",
+      "enableKatex": "KaTeX（数式）",
+      "enableKatexDescription": "$...$（インライン）および $$...$$（ディスプレイ）構文で数式をレンダリングします。",
+      "enableMermaid": "Mermaid（図表）",
+      "enableMermaidDescription": "```mermaid フェンスドコードブロックから図表（フローチャート、シーケンス図など）をレンダリングします。",
       "importExport": "設定のインポート/エクスポート",
       "exportSettings": "設定をエクスポート",
       "importSettings": "設定をインポート",
@@ -451,7 +462,14 @@
     "refresh": "更新",
     "noFolderOpen": "フォルダが開かれていません",
     "emptyFolder": "このフォルダは空です",
-    "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)"
+    "toggleExplorer": "エクスプローラーの切り替え (Ctrl+Shift+E)",
+    "rename": "名前の変更",
+    "renameTitle": "ファイル名の変更",
+    "renameConfirm": "変更",
+    "renameSuccess": "ファイル名を変更しました",
+    "renameFailed": "ファイル名の変更に失敗しました",
+    "renameErrorEmpty": "ファイル名を入力してください",
+    "renameErrorInvalidChar": "ファイル名に / や \\ は使用できません"
   },
   "easterEgg": {
     "lateNightMessage": "夜ふかしは禁物。適度に休憩を。"
@@ -468,6 +486,9 @@
     "conversionFailed": "テーブルの変換に失敗しました。プレーンテキストとして貼り付けました。",
     "noTableDetected": "クリップボードデータにテーブルが検出されませんでした"
   },
+  "search": {
+    "searchAllTabs": "すべてのタブを検索"
+  },
   "whatsNew": {
     "title": "新機能のご紹介",
     "gotIt": "OK",
@@ -477,17 +498,21 @@
       "improvement": "改善"
     },
     "changes": {
-      "saveStatus": {
-        "title": "ステータスバーに保存状態を表示",
-        "description": "保存完了のフィードバックがポップアップ通知ではなくステータスバーに表示されるようになりました。"
+      "katexMermaid": {
+        "title": "KaTeX・Mermaid 対応",
+        "description": "プレビューで LaTeX 数式と Mermaid ダイアグラムを表示できるようになりました。設定画面でそれぞれ切り替えできます。"
       },
-      "whatsNewDialog": {
-        "title": "What's New ダイアログ",
-        "description": "アップデート後に新機能や変更点が自動で表示されます。まさにこの画面です！"
+      "emptyState": {
+        "title": "ウェルカム画面の追加",
+        "description": "ファイルが開かれていないときに、新規作成・ファイルを開く・最近使ったファイルにすばやくアクセスできるウェルカム画面が表示されます。"
       },
-      "checkboxFix": {
-        "title": "プレビューのチェックボックス修正",
-        "description": "プレビュー上でチェックボックスをクリックしても変更が反映されない問題を修正しました。"
+      "memoryOptimization": {
+        "title": "メモリ管理の最適化",
+        "description": "閉じたタブのキャッシュが即座に解放されるようになり、メモリ使用量が改善しました。"
+      },
+      "bugFixes": {
+        "title": "不具合の修正",
+        "description": "ファイルの関連付けに関する問題をはじめ、いくつかの不具合を修正しました。"
       }
     }
   }

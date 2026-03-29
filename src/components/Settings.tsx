@@ -510,6 +510,23 @@ const Settings: React.FC<SettingsProps> = ({
                     </Typography>
                   </CardContent>
                 </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.editor.minimap}
+                          onChange={(e) => handleSettingChange('editor', 'minimap', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.editor.minimap')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.editor.minimapDescription')}
+                    </Typography>
+                  </CardContent>
+                </Card>
               </Box>
             )}
 
@@ -938,6 +955,41 @@ const Settings: React.FC<SettingsProps> = ({
                         />
                       </RadioGroup>
                     </FormControl>
+                  </CardContent>
+                </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                      {t('settings.advanced.rendering')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.renderingDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableKatex ?? true}
+                          onChange={(e) => handleSettingChange('rendering', 'enableKatex', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableKatex')}
+                    />
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.enableKatexDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableMermaid ?? false}
+                          onChange={(e) => handleSettingChange('rendering', 'enableMermaid', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableMermaid')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.advanced.enableMermaidDescription')}
+                    </Typography>
                   </CardContent>
                 </Card>
 

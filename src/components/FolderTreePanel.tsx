@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,6 +10,8 @@ import {
   Collapse,
   Button,
   CircularProgress,
+  Menu,
+  MenuItem as MuiMenuItem,
 } from '@mui/material';
 import {
   Close,
@@ -21,6 +23,7 @@ import {
   ExpandMore,
   ChevronRight,
   CreateNewFolder,
+  DriveFileRenameOutline,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { FolderTreeNode } from '../types/folderTree';
@@ -39,6 +42,7 @@ interface FolderTreePanelProps {
   onHeaderClick?: () => void;
   collapsed?: boolean;
   width?: number;
+  onRenameRequest?: (filePath: string) => void;
 }
 
 interface TreeNodeProps {
@@ -47,6 +51,7 @@ interface TreeNodeProps {
   activeFilePath?: string;
   onFileClick: (filePath: string) => void;
   onToggleExpand: (nodePath: string) => void;
+  onRenameRequest?: (filePath: string) => void;
 }
 
 const TreeNode: React.FC<TreeNodeProps> = ({
@@ -55,8 +60,11 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   activeFilePath,
   onFileClick,
   onToggleExpand,
+  onRenameRequest,
 }) => {
+  const { t } = useTranslation();
   const isActive = !node.isDirectory && activeFilePath && node.path === activeFilePath;
+  const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number } | null>(null);
 
   const handleClick = () => {
     if (node.isDirectory) {
@@ -66,10 +74,27 @@ const TreeNode: React.FC<TreeNodeProps> = ({
     }
   };
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (node.isDirectory) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu({ mouseX: e.clientX, mouseY: e.clientY });
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenu(null);
+  };
+
+  const handleRename = () => {
+    setContextMenu(null);
+    onRenameRequest?.(node.path);
+  };
+
   return (
     <>
       <ListItemButton
         onClick={handleClick}
+        onContextMenu={handleContextMenu}
         selected={!!isActive}
         sx={{
           pl: 1 + depth * 2,
@@ -124,10 +149,30 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 activeFilePath={activeFilePath}
                 onFileClick={onFileClick}
                 onToggleExpand={onToggleExpand}
+                onRenameRequest={onRenameRequest}
               />
             ))}
           </List>
         </Collapse>
+      )}
+      {!node.isDirectory && (
+        <Menu
+          open={contextMenu !== null}
+          onClose={handleCloseContextMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            contextMenu !== null
+              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+              : undefined
+          }
+        >
+          <MuiMenuItem onClick={handleRename}>
+            <ListItemIcon>
+              <DriveFileRenameOutline fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t('folderTree.rename')}</ListItemText>
+          </MuiMenuItem>
+        </Menu>
       )}
     </>
   );
@@ -147,6 +192,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
   onHeaderClick,
   collapsed = false,
   width = 280,
+  onRenameRequest,
 }) => {
   const { t } = useTranslation();
 
@@ -249,6 +295,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
                 activeFilePath={activeFilePath}
                 onFileClick={onFileClick}
                 onToggleExpand={onToggleExpand}
+                onRenameRequest={onRenameRequest}
               />
             ))}
           </List>

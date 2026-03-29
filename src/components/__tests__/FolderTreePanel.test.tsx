@@ -165,4 +165,32 @@ describe('FolderTreePanel', () => {
     const readmeItem = screen.getByText('README.md').closest('[role="button"]');
     expect(readmeItem).toHaveClass('Mui-selected');
   });
+
+  // T-FTP-14: right-click on file shows context menu with rename
+  it('T-FTP-14: right-click on file shows rename context menu', () => {
+    const onRenameRequest = vi.fn();
+    renderPanel({ onRenameRequest: asMock<(path: string) => void>(onRenameRequest) });
+    const readmeItem = screen.getByText('README.md').closest('[role="button"]') as HTMLElement;
+    fireEvent.contextMenu(readmeItem);
+    expect(screen.getByText('folderTree.rename')).toBeInTheDocument();
+  });
+
+  // T-FTP-15: clicking rename menu item calls onRenameRequest
+  it('T-FTP-15: rename menu item calls onRenameRequest with file path', () => {
+    const onRenameRequest = vi.fn();
+    renderPanel({ onRenameRequest: asMock<(path: string) => void>(onRenameRequest) });
+    const readmeItem = screen.getByText('README.md').closest('[role="button"]') as HTMLElement;
+    fireEvent.contextMenu(readmeItem);
+    fireEvent.click(screen.getByText('folderTree.rename'));
+    expect(onRenameRequest).toHaveBeenCalledWith('/project/README.md');
+  });
+
+  // T-FTP-16: right-click on directory does NOT show context menu
+  it('T-FTP-16: right-click on directory does not show context menu', () => {
+    const onRenameRequest = vi.fn();
+    renderPanel({ onRenameRequest: asMock<(path: string) => void>(onRenameRequest) });
+    const srcItem = screen.getByText('src').closest('[role="button"]') as HTMLElement;
+    fireEvent.contextMenu(srcItem);
+    expect(screen.queryByText('folderTree.rename')).not.toBeInTheDocument();
+  });
 });

@@ -92,4 +92,51 @@ describe('useFileChangeDetection', () => {
     expect(removeSpy).toHaveBeenCalledWith('fileChangeDetected', expect.any(Function));
     removeSpy.mockRestore();
   });
+
+  // T-FCD-05: Regression test - event listener sees updated tabs (Issue #225)
+  it('T-FCD-05: reload finds tab after tabs are updated', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+
+    const initialTabs: Tab[] = [
+      { id: 'tab1', title: 'test.md', content: '# Old', filePath: '/path/test.md', isModified: false, isNew: false },
+    ];
+
+    const newTab: Tab = {
+      id: 'tab2', title: 'new.md', content: '# New', filePath: '/path/new.md', isModified: false, isNew: false,
+    };
+
+    let currentTabs = initialTabs;
+
+    const { rerender } = renderHook(
+      () => useFileChangeDetection({
+        tabs: currentTabs,
+        activeTab: currentTabs[0],
+        isInitialized: true,
+        updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
+        updateTabFileHash: asMock<(tabId: string) => void>(updateTabFileHash),
+        setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
+      }),
+    );
+
+    // Add a new tab and rerender
+    currentTabs = [...initialTabs, newTab];
+    rerender();
+
+    // Dispatch event for the new tab
+    await act(async () => {
+      const event = new CustomEvent('fileChangeDetected', {
+        detail: {
+          fileName: 'new.md',
+          tabId: 'tab2',
+          onCancel: vi.fn(),
+        },
+      });
+      window.dispatchEvent(event);
+    });
+
+    // The dialog should open and the reload handler should find tab2
+    // If tabs dependency was missing, the listener would have stale tabs and not find tab2
+    asMock<typeof desktopApi.readFileFromPath>(desktopApi.readFileFromPath as ReturnType<typeof vi.fn>);
+    (desktopApi.readFileFromPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce('updated content');
+  });
 });

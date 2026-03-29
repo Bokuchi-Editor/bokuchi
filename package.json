@@ -1,7 +1,7 @@
 {
   "name": "bokuchi",
   "private": true,
-  "version": "0.6.1",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -56,7 +56,9 @@
     "@tauri-apps/plugin-window-state": "^2.4.0",
     "highlight.js": "^11.11.1",
     "i18next": "^25.10.4",
+    "katex": "^0.16.38",
     "marked": "^16.4.2",
+    "mermaid": "^11.13.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-i18next": "^15.7.4"
@@ -67,6 +69,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/katex": "^0.16.8",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.57.1",

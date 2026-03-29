@@ -397,6 +397,32 @@ describe('desktopApi.openFolder', () => {
 });
 
 // ---------------------------------------------------------------------------
+// renameFile
+// ---------------------------------------------------------------------------
+describe('desktopApi.renameFile', () => {
+  it('calls invoke with correct params and returns success', async () => {
+    vi.mocked(invoke).mockResolvedValue(undefined);
+    const result = await desktopApi.renameFile('/old.md', '/new.md');
+    expect(result).toEqual({ success: true, filePath: '/new.md' });
+    expect(invoke).toHaveBeenCalledWith('rename_file', { oldPath: '/old.md', newPath: '/new.md' });
+  });
+
+  it('returns error on failure', async () => {
+    vi.mocked(invoke).mockRejectedValue(new Error('permission denied'));
+    const result = await desktopApi.renameFile('/old.md', '/new.md');
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('permission denied');
+  });
+
+  it('stringifies non-Error rejection', async () => {
+    vi.mocked(invoke).mockRejectedValue('raw error');
+    const result = await desktopApi.renameFile('/old.md', '/new.md');
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('raw error');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // readDirectory
 // ---------------------------------------------------------------------------
 describe('desktopApi.readDirectory', () => {

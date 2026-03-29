@@ -5,9 +5,11 @@ import Preview from './Preview';
 import TabBar from './TabBar';
 import OutlinePanel from './OutlinePanel';
 import FolderTreePanel from './FolderTreePanel';
+import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
+import { RenderingSettings } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 
 interface AppContentProps {
@@ -22,6 +24,9 @@ interface AppContentProps {
   currentZoom: number;
   isInitialized: boolean;
   isSettingsLoaded: boolean;
+
+  // Rendering settings
+  renderingSettings?: RenderingSettings;
 
   // Editor settings
   editorSettings?: {
@@ -51,11 +56,14 @@ interface AppContentProps {
   onFolderTreeCloseFolder: () => void;
   onFolderTreeRefresh: () => void;
   onFolderTreePanelClose: () => void;
+  onRenameRequest?: (filePath: string) => void;
 
   // Handlers
   onTabChange: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
+  onOpenFile: () => void;
+  onRecentFileSelect: (filePath: string) => void;
   onTabReorder: (tabs: Tab[]) => void;
   onContentChange: (content: string) => void;
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
@@ -78,6 +86,7 @@ const AppContent: React.FC<AppContentProps> = ({
   currentZoom,
   isInitialized,
   isSettingsLoaded,
+  renderingSettings,
   editorSettings,
   outlineDisplayMode,
   outlinePanelOpen,
@@ -93,9 +102,12 @@ const AppContent: React.FC<AppContentProps> = ({
   onFolderTreeCloseFolder,
   onFolderTreeRefresh,
   onFolderTreePanelClose,
+  onRenameRequest,
   onTabChange,
   onTabClose,
   onNewTab,
+  onOpenFile,
+  onRecentFileSelect,
   onTabReorder,
   onContentChange,
   onStatusChange,
@@ -270,6 +282,7 @@ const AppContent: React.FC<AppContentProps> = ({
               onHeaderClick={handleExplorerHeaderClick}
               collapsed={explorerCollapsed}
               width={280}
+              onRenameRequest={onRenameRequest}
             />
           </Box>
         </Box>
@@ -301,6 +314,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onCloseFolder={onFolderTreeCloseFolder}
           onRefresh={onFolderTreeRefresh}
           onClose={onFolderTreePanelClose}
+          onRenameRequest={onRenameRequest}
         />
       )}
 
@@ -324,11 +338,12 @@ const AppContent: React.FC<AppContentProps> = ({
               </Typography>
             </Box>
           ) : tabs.length === 0 ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-              <Typography variant="h6" color="text.secondary">
-                {t('app.noTabsOpen')}
-              </Typography>
-            </Box>
+            <EmptyState
+              onNewTab={onNewTab}
+              onOpenFile={onOpenFile}
+              onRecentFileSelect={onRecentFileSelect}
+              t={t}
+            />
           ) : !activeTab ? (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
               <Typography variant="h6" color="text.secondary">
@@ -359,6 +374,9 @@ const AppContent: React.FC<AppContentProps> = ({
                       onSnackbar={onSnackbar}
                       onTableConversionSettingChange={onTableConversionSettingChange}
                       onScrollChange={handleEditorScrollChange}
+                      tabs={tabs}
+                      activeTabId={activeTabId}
+                      onTabSwitch={onTabChange}
                       fileNotFound={
                         activeTab.isNew && activeTab.filePath
                           ? {
@@ -379,6 +397,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       onContentChange={onContentChange}
                       scrollFraction={scrollFraction}
                       filePath={activeTab.filePath}
+                      renderingSettings={renderingSettings}
                     />
                   </Box>
                 </>
@@ -403,6 +422,9 @@ const AppContent: React.FC<AppContentProps> = ({
                     tableConversion={editorSettings?.tableConversion}
                     onSnackbar={onSnackbar}
                     onTableConversionSettingChange={onTableConversionSettingChange}
+                    tabs={tabs}
+                    activeTabId={activeTabId}
+                    onTabSwitch={onTabChange}
                     fileNotFound={
                       activeTab.isNew && activeTab.filePath
                         ? {
@@ -424,6 +446,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     zoomLevel={currentZoom}
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
+                    renderingSettings={renderingSettings}
                   />
                 </Box>
               )}
@@ -482,6 +505,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onRefresh={onFolderTreeRefresh}
             onClose={onFolderTreePanelClose}
             width={280}
+            onRenameRequest={onRenameRequest}
           />
         </Drawer>
       )}

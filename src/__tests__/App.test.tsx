@@ -18,6 +18,7 @@ vi.mock('../hooks/useAppState', () => ({
     fileChangeDialog: { open: false, fileName: '', onReload: vi.fn(), onCancel: vi.fn() },
     saveBeforeCloseDialog: { open: false, fileName: '', tabId: null },
     isDragOver: false,
+    setIsDragOver: vi.fn(),
     tabs: [{ id: 'tab1', title: 'test.md', content: '# Hello', isModified: false, isNew: false }],
     activeTabId: 'tab1',
     activeTab: { id: 'tab1', title: 'test.md', content: '# Hello', isModified: false, isNew: false },
@@ -81,9 +82,6 @@ vi.mock('../hooks/useAppState', () => ({
     handleDontSaveBeforeClose: vi.fn(),
     handleCancelBeforeClose: vi.fn(),
     handleTabReorder: vi.fn(),
-    handleDragOver: vi.fn(),
-    handleDragLeave: vi.fn(),
-    handleDrop: vi.fn(),
     handleCheckForUpdate: vi.fn(),
     handleDismissUpdate: vi.fn(),
     handleKeyDown: vi.fn(),
@@ -108,6 +106,10 @@ vi.mock('../hooks/useAppState', () => ({
     folderTreeCloseFolder: vi.fn(),
     folderTreeToggleExpand: vi.fn(),
     folderTreeRefreshTree: vi.fn(),
+    renameDialog: { open: false, filePath: '', currentName: '' },
+    handleRenameRequest: vi.fn(),
+    handleRenameConfirm: vi.fn(),
+    handleRenameCancel: vi.fn(),
     t: (key: string) => key,
     ZOOM_CONFIG: { minZoom: 0.5, maxZoom: 2.0, zoomStep: 0.1 },
   }),
@@ -134,6 +136,10 @@ vi.mock('../components/RecentFilesDialog', () => ({
   default: () => <div data-testid="recent-files">RecentFiles</div>,
 }));
 
+vi.mock('../components/RenameDialog', () => ({
+  default: () => <div data-testid="rename-dialog">RenameDialog</div>,
+}));
+
 vi.mock('../i18n', () => ({}));
 
 // Mock Tauri API
@@ -144,6 +150,12 @@ vi.mock('@tauri-apps/api/core', () => ({
 
 vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn().mockResolvedValue(() => {}),
+}));
+
+vi.mock('@tauri-apps/api/webview', () => ({
+  getCurrentWebview: () => ({
+    onDragDropEvent: vi.fn().mockResolvedValue(() => {}),
+  }),
 }));
 
 vi.mock('../api/desktopApi', () => ({

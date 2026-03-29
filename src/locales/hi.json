@@ -4,6 +4,11 @@
     "loading": "लोड हो रहा है...",
     "noTabsOpen": "कोई टैब खुला नहीं है। शुरू करने के लिए एक नया टैब बनाएं।"
   },
+  "emptyState": {
+    "recentFiles": "हाल की फ़ाइलें",
+    "newFile": "नई फ़ाइल",
+    "openFile": "फ़ाइल खोलें"
+  },
   "buttons": {
     "open": "खोलें",
     "save": "सहेजें",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
       "outlineDisplayModeOverlay": "ओवरले",
       "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "एक्सप्लोरर पैनल",
+      "folderTreeDisplayModeDescription": "एक्सप्लोरर (फ़ोल्डर ट्री) पैनल कैसे प्रदर्शित हो, चुनें।",
+      "folderTreeDisplayModePersistent": "हमेशा दिखाएं",
+      "folderTreeDisplayModePersistentDescription": "एक्सप्लोरर पैनल लेआउट के हिस्से के रूप में हमेशा दिखाया जाता है।",
+      "folderTreeDisplayModeOverlay": "ओवरले",
+      "folderTreeDisplayModeOverlayDescription": "एक्सप्लोरर पैनल बाईं ओर से ओवरले के रूप में स्लाइड करता है।",
+      "folderTreeDisplayModeOff": "बंद",
+      "folderTreeDisplayModeOffDescription": "एक्सप्लोरर पैनल छिपा हुआ है।",
+      "folderTreeFileFilter": "एक्सप्लोरर फ़ाइल फ़िल्टर",
+      "folderTreeFileFilterDescription": "एक्सप्लोरर में कौन सी फ़ाइलें प्रदर्शित करनी हैं, चुनें।",
+      "folderTreeFileFilterMarkdown": "केवल Markdown फ़ाइलें (.md, .txt)",
+      "folderTreeFileFilterAll": "सभी फ़ाइलें"
     },
     "advanced": {
       "title": "उन्नत",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "ऑटो कन्वर्ट",
       "tableConversionConfirm": "कन्वर्ट करने से पहले पूछें",
       "tableConversionOff": "कन्वर्ट न करें",
+      "rendering": "रेंडरिंग एक्सटेंशन",
+      "renderingDescription": "वैकल्पिक रेंडरिंग सुविधाओं को सक्षम या अक्षम करें। अक्षम सुविधाएँ अपनी लाइब्रेरी लोड नहीं करतीं, जिससे एडिटर हल्का रहता है।",
+      "enableKatex": "KaTeX (गणितीय अभिव्यक्तियाँ)",
+      "enableKatexDescription": "$...$ (इनलाइन) और $$...$$ (ब्लॉक) सिंटैक्स का उपयोग करके गणितीय अभिव्यक्तियाँ रेंडर करें।",
+      "enableMermaid": "Mermaid (आरेख)",
+      "enableMermaidDescription": "```mermaid कोड ब्लॉक से आरेख रेंडर करें (फ्लोचार्ट, अनुक्रम आरेख, आदि)।",
       "importExport": "आयात/निर्यात सेटिंग्स",
       "exportSettings": "सेटिंग्स निर्यात करें",
       "importSettings": "सेटिंग्स आयात करें",
@@ -451,10 +462,17 @@
     "refresh": "रीफ़्रेश",
     "noFolderOpen": "कोई फ़ोल्डर नहीं खोला गया",
     "emptyFolder": "यह फ़ोल्डर खाली है",
-    "toggleExplorer": "एक्सप्लोरर टॉगल करें (Ctrl+Shift+E)"
+    "toggleExplorer": "एक्सप्लोरर टॉगल करें (Ctrl+Shift+E)",
+    "rename": "नाम बदलें",
+    "renameTitle": "फ़ाइल का नाम बदलें",
+    "renameConfirm": "नाम बदलें",
+    "renameSuccess": "फ़ाइल का नाम सफलतापूर्वक बदला गया",
+    "renameFailed": "फ़ाइल का नाम बदलने में विफल",
+    "renameErrorEmpty": "फ़ाइल नाम खाली नहीं हो सकता",
+    "renameErrorInvalidChar": "फ़ाइल नाम में / या \\ नहीं हो सकता"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "देर रात? बीच-बीच में थोड़ा आराम कर लें।"
   },
   "tableConversion": {
     "dialogTitle": "टेबल को Markdown में कन्वर्ट करें",
@@ -468,6 +486,9 @@
     "conversionFailed": "टेबल कन्वर्ज़न असफल। प्लेन टेक्स्ट के रूप में पेस्ट किया गया।",
     "noTableDetected": "क्लिपबोर्ड डेटा में कोई टेबल नहीं मिली"
   },
+  "search": {
+    "searchAllTabs": "सभी टैब में खोजें"
+  },
   "whatsNew": {
     "title": "नया क्या है",
     "gotIt": "समझ गया",
@@ -477,17 +498,21 @@
       "improvement": "सुधार"
     },
     "changes": {
-      "saveStatus": {
-        "title": "स्टेटस बार में सेव स्थिति",
-        "description": "सेव की पुष्टि अब पॉप-अप सूचना के बजाय स्टेटस बार में दिखाई जाती है।"
+      "katexMermaid": {
+        "title": "KaTeX और Mermaid सपोर्ट",
+        "description": "प्रीव्यू अब LaTeX गणितीय सूत्र और Mermaid डायग्राम रेंडर करता है, सेटिंग्स में चालू/बंद किया जा सकता है।"
       },
-      "whatsNewDialog": {
-        "title": "नया क्या है डायलॉग",
-        "description": "अपडेट के बाद नई सुविधाएं और परिवर्तन स्वचालित रूप से दिखाए जाते हैं। यही वह स्क्रीन है जो आप अभी देख रहे हैं!"
+      "emptyState": {
+        "title": "नई स्वागत स्क्रीन",
+        "description": "जब कोई फाइल नहीं खुली हो तो नई स्वागत स्क्रीन, फाइल बनाने, खोलने और हाल की फाइलों तक त्वरित पहुंच के साथ।"
       },
-      "checkboxFix": {
-        "title": "प्रीव्यू चेकबॉक्स सुधार",
-        "description": "प्रीव्यू में चेकबॉक्स पर क्लिक करने पर परिवर्तन प्रतिबिंबित न होने की समस्या ठीक की गई।"
+      "memoryOptimization": {
+        "title": "मेमोरी ऑप्टिमाइजेशन",
+        "description": "बंद किए गए टैब का कैश तुरंत रिलीज किया जाता है, जिससे मेमोरी उपयोग कम होता है।"
+      },
+      "bugFixes": {
+        "title": "बग फिक्स",
+        "description": "फाइल एसोसिएशन की समस्याएं और कई अन्य छोटे बग ठीक किए गए।"
       }
     }
   }

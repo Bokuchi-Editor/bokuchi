@@ -4,6 +4,11 @@
     "loading": "載入中...",
     "noTabsOpen": "沒有開啟的標籤頁。建立新標籤頁開始使用。"
   },
+  "emptyState": {
+    "recentFiles": "最近的檔案",
+    "newFile": "新建檔案",
+    "openFile": "開啟檔案"
+  },
   "buttons": {
     "open": "開啟",
     "save": "儲存",
@@ -321,7 +326,7 @@
       "wordWrap": "自動換行",
       "wordWrapDescription": "在編輯器中自動換行長行。",
       "minimap": "小地圖",
-      "minimapDescription": "顯示文件的小地圖。"
+      "minimapDescription": "顯示文件的縮略圖。"
     },
     "interface": {
       "title": "介面",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
       "outlineDisplayModeOverlay": "覆蓋層",
       "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
-      "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayMode": "檔案總管面板",
+      "folderTreeDisplayModeDescription": "選擇檔案總管（資料夾樹）面板的顯示方式。",
+      "folderTreeDisplayModePersistent": "始終顯示",
+      "folderTreeDisplayModePersistentDescription": "檔案總管面板作為佈局的一部分始終顯示。",
+      "folderTreeDisplayModeOverlay": "覆蓋層",
+      "folderTreeDisplayModeOverlayDescription": "檔案總管面板從左側滑入作為覆蓋層顯示。",
+      "folderTreeDisplayModeOff": "關閉",
+      "folderTreeDisplayModeOffDescription": "檔案總管面板被隱藏。",
+      "folderTreeFileFilter": "檔案總管檔案篩選器",
+      "folderTreeFileFilterDescription": "選擇在檔案總管中顯示哪些檔案。",
+      "folderTreeFileFilterMarkdown": "僅 Markdown 檔案 (.md, .txt)",
+      "folderTreeFileFilterAll": "所有檔案"
     },
     "advanced": {
       "title": "進階",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "自動轉換",
       "tableConversionConfirm": "轉換前詢問",
       "tableConversionOff": "不轉換",
+      "rendering": "渲染擴充",
+      "renderingDescription": "啟用或停用可選的渲染功能。停用的功能不會載入其程式庫，保持編輯器輕量。",
+      "enableKatex": "KaTeX（數學表達式）",
+      "enableKatexDescription": "使用 $...$（行內）和 $$...$$（區塊）語法渲染數學表達式。",
+      "enableMermaid": "Mermaid（圖表）",
+      "enableMermaidDescription": "從 ```mermaid 程式碼區塊渲染圖表（流程圖、時序圖等）。",
       "importExport": "匯入/匯出設定",
       "exportSettings": "匯出設定",
       "importSettings": "匯入設定",
@@ -451,10 +462,17 @@
     "refresh": "重新整理",
     "noFolderOpen": "未開啟資料夾",
     "emptyFolder": "此資料夾為空",
-    "toggleExplorer": "切換檔案總管 (Ctrl+Shift+E)"
+    "toggleExplorer": "切換檔案總管 (Ctrl+Shift+E)",
+    "rename": "重新命名",
+    "renameTitle": "重新命名檔案",
+    "renameConfirm": "重新命名",
+    "renameSuccess": "檔案重新命名成功",
+    "renameFailed": "檔案重新命名失敗",
+    "renameErrorEmpty": "檔案名稱不能為空",
+    "renameErrorInvalidChar": "檔案名稱不能包含 / 或 \\"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "夜深了？偶爾也要休息一下喔。"
   },
   "tableConversion": {
     "dialogTitle": "將表格轉換為 Markdown",
@@ -468,6 +486,9 @@
     "conversionFailed": "表格轉換失敗。已作為純文字貼上。",
     "noTableDetected": "在剪貼簿資料中未偵測到表格"
   },
+  "search": {
+    "searchAllTabs": "搜尋所有分頁"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "了解",
@@ -477,17 +498,21 @@
       "improvement": "改進"
     },
     "changes": {
-      "saveStatus": {
-        "title": "狀態列顯示儲存狀態",
-        "description": "儲存回饋現在顯示在狀態列中，而非彈出通知。"
+      "katexMermaid": {
+        "title": "KaTeX 與 Mermaid 支援",
+        "description": "預覽現在可以渲染 LaTeX 數學公式和 Mermaid 圖表，可在設定中開啟或關閉。"
       },
-      "whatsNewDialog": {
-        "title": "新功能對話框",
-        "description": "更新後會自動顯示新功能和變更內容。正是您現在看到的這個畫面！"
+      "emptyState": {
+        "title": "全新歡迎畫面",
+        "description": "沒有開啟檔案時會顯示歡迎畫面，可快速建立、開啟檔案或存取最近的檔案。"
       },
-      "checkboxFix": {
-        "title": "預覽核取方塊修復",
-        "description": "修復了在預覽中點擊核取方塊後變更未反映的問題。"
+      "memoryOptimization": {
+        "title": "記憶體最佳化",
+        "description": "關閉分頁的快取會立即釋放，降低記憶體使用量。"
+      },
+      "bugFixes": {
+        "title": "錯誤修復",
+        "description": "修復了檔案關聯問題及其他多個小錯誤。"
       }
     }
   }

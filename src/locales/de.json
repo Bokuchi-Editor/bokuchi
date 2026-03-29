@@ -4,6 +4,11 @@
     "loading": "Laden...",
     "noTabsOpen": "Keine Tabs geöffnet. Erstellen Sie einen neuen Tab, um zu beginnen."
   },
+  "emptyState": {
+    "recentFiles": "Zuletzt geöffnet",
+    "newFile": "Neue Datei",
+    "openFile": "Datei öffnen"
+  },
   "buttons": {
     "open": "Öffnen",
     "save": "Speichern",
@@ -321,7 +326,7 @@
       "wordWrap": "Zeilenumbruch",
       "wordWrapDescription": "Lange Zeilen im Editor umbrechen.",
       "minimap": "Minimap",
-      "minimapDescription": "Zeigen Sie eine Minimap des Dokuments."
+      "minimapDescription": "Zeigt eine Minimap des Dokuments an."
     },
     "interface": {
       "title": "Oberfläche",
@@ -333,18 +338,18 @@
       "outlineDisplayModePersistentDescription": "Das Gliederungspanel wird immer als Teil des Layouts angezeigt.",
       "outlineDisplayModeOverlay": "Überlagerung",
       "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein.",
-      "folderTreeDisplayMode": "Explorer Panel",
-      "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
-      "folderTreeDisplayModePersistent": "Always visible",
-      "folderTreeDisplayModePersistentDescription": "The explorer panel is always shown as part of the layout.",
+      "folderTreeDisplayMode": "Explorer-Panel",
+      "folderTreeDisplayModeDescription": "Wählen Sie, wie das Explorer-Panel (Ordnerbaum) angezeigt wird.",
+      "folderTreeDisplayModePersistent": "Immer sichtbar",
+      "folderTreeDisplayModePersistentDescription": "Das Explorer-Panel wird immer als Teil des Layouts angezeigt.",
       "folderTreeDisplayModeOverlay": "Overlay",
-      "folderTreeDisplayModeOverlayDescription": "The explorer panel slides in from the left as an overlay.",
-      "folderTreeDisplayModeOff": "Off",
-      "folderTreeDisplayModeOffDescription": "The explorer panel is hidden.",
-      "folderTreeFileFilter": "Explorer File Filter",
-      "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
-      "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt, .markdown)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeDisplayModeOverlayDescription": "Das Explorer-Panel gleitet von links als Overlay herein.",
+      "folderTreeDisplayModeOff": "Aus",
+      "folderTreeDisplayModeOffDescription": "Das Explorer-Panel ist ausgeblendet.",
+      "folderTreeFileFilter": "Explorer-Dateifilter",
+      "folderTreeFileFilterDescription": "Wählen Sie, welche Dateien im Explorer angezeigt werden.",
+      "folderTreeFileFilterMarkdown": "Nur Markdown-Dateien (.md, .txt)",
+      "folderTreeFileFilterAll": "Alle Dateien"
     },
     "advanced": {
       "title": "Erweitert",
@@ -357,6 +362,12 @@
       "tableConversionAuto": "Automatisch konvertieren",
       "tableConversionConfirm": "Vor Konvertierung fragen",
       "tableConversionOff": "Nicht konvertieren",
+      "rendering": "Rendering-Erweiterungen",
+      "renderingDescription": "Optionale Rendering-Funktionen aktivieren oder deaktivieren. Deaktivierte Funktionen laden ihre Bibliotheken nicht, wodurch der Editor leichtgewichtig bleibt.",
+      "enableKatex": "KaTeX (Mathematische Ausdrücke)",
+      "enableKatexDescription": "Mathematische Ausdrücke mit $...$ (Inline) und $$...$$ (Block) Syntax rendern.",
+      "enableMermaid": "Mermaid (Diagramme)",
+      "enableMermaidDescription": "Diagramme aus ```mermaid Codeblöcken rendern (Flussdiagramme, Sequenzdiagramme usw.).",
       "importExport": "Einstellungen importieren/exportieren",
       "exportSettings": "Einstellungen exportieren",
       "importSettings": "Einstellungen importieren",
@@ -451,10 +462,17 @@
     "refresh": "Aktualisieren",
     "noFolderOpen": "Kein Ordner geöffnet",
     "emptyFolder": "Dieser Ordner ist leer",
-    "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)"
+    "toggleExplorer": "Explorer umschalten (Ctrl+Shift+E)",
+    "rename": "Umbenennen",
+    "renameTitle": "Datei umbenennen",
+    "renameConfirm": "Umbenennen",
+    "renameSuccess": "Datei erfolgreich umbenannt",
+    "renameFailed": "Datei konnte nicht umbenannt werden",
+    "renameErrorEmpty": "Dateiname darf nicht leer sein",
+    "renameErrorInvalidChar": "Dateiname darf kein / oder \\ enthalten"
   },
   "easterEgg": {
-    "lateNightMessage": "Late night? Take a break once in a while."
+    "lateNightMessage": "Spät dran? Mach ruhig mal eine Pause."
   },
   "tableConversion": {
     "dialogTitle": "Tabelle in Markdown konvertieren",
@@ -468,6 +486,9 @@
     "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
     "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
   },
+  "search": {
+    "searchAllTabs": "Alle Tabs durchsuchen"
+  },
   "whatsNew": {
     "title": "Was ist neu",
     "gotIt": "Verstanden",
@@ -477,17 +498,21 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "saveStatus": {
-        "title": "Speicherstatus in der Statusleiste",
-        "description": "Die Speicherbestätigung wird jetzt in der Statusleiste anstatt als Pop-up-Benachrichtigung angezeigt."
+      "katexMermaid": {
+        "title": "KaTeX- & Mermaid-Unterstützung",
+        "description": "Die Vorschau rendert jetzt LaTeX-Mathematik und Mermaid-Diagramme, aktivierbar in den Einstellungen."
       },
-      "whatsNewDialog": {
-        "title": "Neuigkeiten-Dialog",
-        "description": "Neue Funktionen und Änderungen werden nach einem Update automatisch angezeigt. Genau dieser Bildschirm!"
+      "emptyState": {
+        "title": "Neuer Willkommensbildschirm",
+        "description": "Neuer Willkommensbildschirm wenn keine Dateien geöffnet sind, mit Schnellzugriff zum Erstellen, Öffnen und auf kürzliche Dateien."
       },
-      "checkboxFix": {
-        "title": "Kontrollkästchen-Korrektur in der Vorschau",
-        "description": "Ein Problem wurde behoben, bei dem das Klicken auf Kontrollkästchen in der Vorschau keine Änderungen widerspiegelte."
+      "memoryOptimization": {
+        "title": "Speicheroptimierung",
+        "description": "Der Cache geschlossener Tabs wird sofort freigegeben, wodurch der Speicherverbrauch reduziert wird."
+      },
+      "bugFixes": {
+        "title": "Fehlerbehebungen",
+        "description": "Probleme mit der Dateizuordnung und diverse andere kleinere Fehler wurden behoben."
       }
     }
   }

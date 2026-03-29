@@ -158,4 +158,59 @@ describe('Settings', () => {
     fireEvent.click(screen.getByText('settings.globalVariables.title'));
     expect(screen.getByText('author')).toBeInTheDocument();
   });
+
+  // T-SET-14: rendering extensions section is visible in advanced tab
+  it('T-SET-14: shows rendering extensions in advanced tab', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    expect(screen.getByText('settings.advanced.rendering')).toBeInTheDocument();
+    expect(screen.getByText('settings.advanced.enableKatex')).toBeInTheDocument();
+    expect(screen.getByText('settings.advanced.enableMermaid')).toBeInTheDocument();
+  });
+
+  // T-SET-15: KaTeX toggle defaults to enabled
+  it('T-SET-15: KaTeX toggle is checked by default', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    const katexLabel = screen.getByText('settings.advanced.enableKatex');
+    const katexSwitch = katexLabel.closest('label')?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(katexSwitch.checked).toBe(true);
+  });
+
+  // T-SET-16: Mermaid toggle defaults to disabled
+  it('T-SET-16: Mermaid toggle is unchecked by default', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    const mermaidLabel = screen.getByText('settings.advanced.enableMermaid');
+    const mermaidSwitch = mermaidLabel.closest('label')?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(mermaidSwitch.checked).toBe(false);
+  });
+
+  // T-SET-17: toggling Mermaid calls onSettingsChange
+  it('T-SET-17: toggling Mermaid on calls onSettingsChange', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    const mermaidLabel = screen.getByText('settings.advanced.enableMermaid');
+    const mermaidSwitch = mermaidLabel.closest('label')?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    fireEvent.click(mermaidSwitch);
+    expect(onSettingsChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rendering: expect.objectContaining({ enableMermaid: true }),
+      })
+    );
+  });
+
+  // T-SET-18: toggling KaTeX off calls onSettingsChange
+  it('T-SET-18: toggling KaTeX off calls onSettingsChange', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    const katexLabel = screen.getByText('settings.advanced.enableKatex');
+    const katexSwitch = katexLabel.closest('label')?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    fireEvent.click(katexSwitch);
+    expect(onSettingsChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rendering: expect.objectContaining({ enableKatex: false }),
+      })
+    );
+  });
 });

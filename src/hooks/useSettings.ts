@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type Dispatch, type SetStateAction } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getThemeByName, applyThemeToDocument } from '../themes';
 import { storeApi } from '../api/storeApi';
@@ -11,8 +11,6 @@ interface UseSettingsParams {
   zoomIn: () => void;
   zoomOut: () => void;
   viewMode: 'split' | 'editor' | 'preview';
-  setOutlinePanelOpen: Dispatch<SetStateAction<boolean>>;
-  setFolderTreePanelOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const useSettings = ({
@@ -21,8 +19,6 @@ export const useSettings = ({
   zoomIn,
   zoomOut,
   viewMode,
-  setOutlinePanelOpen,
-  setFolderTreePanelOpen,
 }: UseSettingsParams) => {
   const { i18n } = useTranslation();
 
@@ -190,16 +186,8 @@ export const useSettings = ({
       }
     }
 
-    // Auto-open panels when switching to persistent mode
-    if (newSettings.interface.outlineDisplayMode === 'persistent') {
-      setOutlinePanelOpen(true);
-    }
-    if (newSettings.interface.folderTreeDisplayMode === 'persistent') {
-      setFolderTreePanelOpen(true);
-    }
-
     await storeApi.saveAppSettings(newSettings);
-  }, [i18n, currentZoom, zoomIn, zoomOut, setOutlinePanelOpen, setFolderTreePanelOpen]);
+  }, [i18n, currentZoom, zoomIn, zoomOut]);
 
   return {
     theme,

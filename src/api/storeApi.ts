@@ -213,14 +213,8 @@ export const storeApi = {
   // Create initial state
   createInitialState(): AppState {
     return {
-      tabs: [{
-        id: '1',
-        title: 'Untitled',
-        content: '',
-        isNew: true,
-        isModified: false,
-      }],
-      activeTabId: '1',
+      tabs: [],
+      activeTabId: null,
       lastOpenedAt: Date.now(),
     };
   },
@@ -251,6 +245,7 @@ export const storeApi = {
         appearance: { ...DEFAULT_APP_SETTINGS.appearance, ...settings?.appearance },
         interface: { ...DEFAULT_APP_SETTINGS.interface, ...settings?.interface },
         advanced: { ...DEFAULT_APP_SETTINGS.advanced, ...settings?.advanced },
+        rendering: { ...DEFAULT_APP_SETTINGS.rendering, ...settings?.rendering },
         globalVariables: { ...DEFAULT_APP_SETTINGS.globalVariables, ...settings?.globalVariables },
       };
 

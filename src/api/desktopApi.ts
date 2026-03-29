@@ -424,6 +424,18 @@ export const desktopApi = {
     }
   },
 
+  // Rename file
+  async renameFile(oldPath: string, newPath: string): Promise<SaveResponse> {
+    try {
+      await invoke('rename_file', { oldPath, newPath });
+      return { success: true, filePath: newPath };
+    } catch (error: unknown) {
+      console.error('Error renaming file:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return { success: false, error: errorMessage };
+    }
+  },
+
   // Read directory entries (via Rust command)
   async readDirectory(path: string, showAllFiles: boolean): Promise<DirEntry[]> {
     try {
