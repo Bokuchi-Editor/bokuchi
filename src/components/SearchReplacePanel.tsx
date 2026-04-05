@@ -40,6 +40,7 @@ interface SearchReplacePanelProps {
   activeTabId?: string | null;
   onTabSwitch?: (tabId: string) => void;
   searchAllTabsDefault?: boolean;
+  showReplaceDefault?: boolean;
 }
 
 const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
@@ -51,6 +52,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   activeTabId,
   onTabSwitch,
   searchAllTabsDefault = false,
+  showReplaceDefault = false,
 }) => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
@@ -69,12 +71,13 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   const decorationIdsRef = useRef<string[]>([]);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // Sync searchAllTabs with searchAllTabsDefault when panel opens
+  // Sync searchAllTabs and showReplace with defaults when panel opens
   useEffect(() => {
     if (open) {
       setSearchAllTabs(searchAllTabsDefault);
+      setShowReplace(showReplaceDefault);
     }
-  }, [open, searchAllTabsDefault]);
+  }, [open, searchAllTabsDefault, showReplaceDefault]);
 
   // Focus search input when panel opens
   useEffect(() => {

@@ -191,7 +191,10 @@
         "zoomOut": "Perkecil",
         "resetZoom": "Reset Zoom",
         "toggleExplorer": "Beralih Penjelajah",
-        "toggleOutline": "Beralih Kerangka"
+        "toggleOutline": "Beralih Kerangka",
+        "search": "Cari",
+        "searchAllTabs": "Cari di semua tab",
+        "replace": "Cari dan ganti"
       }
     },
     "tutorials": {

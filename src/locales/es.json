@@ -191,7 +191,10 @@
         "zoomOut": "Alejar",
         "resetZoom": "Restablecer zoom",
         "toggleExplorer": "Alternar explorador",
-        "toggleOutline": "Alternar esquema"
+        "toggleOutline": "Alternar esquema",
+        "search": "Buscar",
+        "searchAllTabs": "Buscar en todas las pestañas",
+        "replace": "Buscar y reemplazar"
       }
     },
     "tutorials": {

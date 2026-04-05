@@ -191,7 +191,10 @@
         "zoomOut": "缩小",
         "resetZoom": "重置缩放",
         "toggleExplorer": "切换资源管理器",
-        "toggleOutline": "切换大纲"
+        "toggleOutline": "切换大纲",
+        "search": "搜索",
+        "searchAllTabs": "搜索所有标签页",
+        "replace": "搜索和替换"
       }
     },
     "tutorials": {

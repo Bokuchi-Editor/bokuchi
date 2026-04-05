@@ -191,7 +191,10 @@
         "zoomOut": "Zoom arrière",
         "resetZoom": "Réinitialiser le zoom",
         "toggleExplorer": "Basculer l'explorateur",
-        "toggleOutline": "Basculer le plan"
+        "toggleOutline": "Basculer le plan",
+        "search": "Rechercher",
+        "searchAllTabs": "Rechercher dans tous les onglets",
+        "replace": "Rechercher et remplacer"
       }
     },
     "tutorials": {

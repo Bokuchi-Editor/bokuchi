@@ -191,7 +191,10 @@
         "zoomOut": "Zoom Out",
         "resetZoom": "Reset Zoom",
         "toggleExplorer": "Toggle Explorer",
-        "toggleOutline": "Toggle Outline"
+        "toggleOutline": "Toggle Outline",
+        "search": "Search",
+        "searchAllTabs": "Search All Tabs",
+        "replace": "Search and Replace"
       }
     },
     "tutorials": {

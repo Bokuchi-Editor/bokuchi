@@ -398,6 +398,42 @@ describe('SearchReplacePanel', () => {
     expect(editor.setSelection).toHaveBeenCalled();
   });
 
+  // T-SR-12b: showReplaceDefault=true opens panel with replace row visible
+  it('T-SR-12b: showReplaceDefault=true opens panel with replace row visible', () => {
+    const editor = createMockEditor('hello world');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel
+        editorRef={editorRef}
+        open={true}
+        onClose={vi.fn()}
+        onChange={vi.fn()}
+        showReplaceDefault={true}
+      />,
+    );
+
+    expect(screen.getByPlaceholderText('Replace')).toBeInTheDocument();
+  });
+
+  // T-SR-12c: showReplaceDefault=false (default) opens panel without replace row
+  it('T-SR-12c: showReplaceDefault=false opens panel without replace row', () => {
+    const editor = createMockEditor('hello world');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel
+        editorRef={editorRef}
+        open={true}
+        onClose={vi.fn()}
+        onChange={vi.fn()}
+        showReplaceDefault={false}
+      />,
+    );
+
+    expect(screen.queryByPlaceholderText('Replace')).not.toBeInTheDocument();
+  });
+
   // T-SR-12: toggling checkbox switches between single and cross-tab mode
   it('T-SR-12: toggling checkbox switches between single and cross-tab search', () => {
     const editor = createMockEditor('hello world\ngoodbye world');
