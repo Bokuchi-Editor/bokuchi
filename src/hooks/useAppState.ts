@@ -213,6 +213,7 @@ export const useAppState = () => {
   const handleSettingsClose = () => setSettingsOpen(false);
   const handleHelpOpen = () => setHelpOpen(true);
   const handleHelpClose = () => setHelpOpen(false);
+
   const handleRecentFilesOpen = () => setRecentFilesOpen(true);
   const handleRecentFilesClose = () => setRecentFilesOpen(false);
 

@@ -94,25 +94,59 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     };
   }, []);
 
-  // Dispose Monaco models for closed tabs to prevent memory leaks
+  // Dispose Monaco models for closed tabs to prevent memory leaks.
+  // We use getModels() iteration instead of getModel(Uri.parse(...)) because
+  // URI matching via Uri.parse may fail depending on the runtime environment.
+  // keepCurrentModel={true} is set on the Editor component so that model
+  // lifecycle is entirely managed here (the library won't dispose on unmount).
   const prevTabIdsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
     if (!tabs) return;
     const currentIds = new Set(tabs.map(tab => tab.id));
     const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-    if (monaco) {
+    if (monaco?.editor?.getModels) {
+      const removedIds = new Set<string>();
       for (const prevId of prevTabIdsRef.current) {
         if (!currentIds.has(prevId)) {
-          const uri = monaco.Uri.parse(prevId);
-          const model = monaco.editor.getModel(uri);
-          if (model) {
-            model.dispose();
+          removedIds.add(prevId);
+        }
+      }
+      if (removedIds.size > 0) {
+        for (const model of monaco.editor.getModels()) {
+          const uriStr = model.uri.toString();
+          for (const id of removedIds) {
+            if (uriStr === id || uriStr.endsWith('/' + id)) {
+              model.dispose();
+              break;
+            }
           }
         }
       }
     }
     prevTabIdsRef.current = currentIds;
   }, [tabs]);
+
+  // On unmount, dispose models for tabs that no longer exist.
+  // Models for still-open tabs are kept alive so that undo history
+  // survives view-mode switches (editor → preview → editor).
+  const tabsRef = useRef(tabs);
+  tabsRef.current = tabs;
+  useEffect(() => {
+    return () => {
+      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+      if (!monaco?.editor?.getModels) return;
+      const liveIds = new Set((tabsRef.current ?? []).map(tab => tab.id));
+      for (const model of monaco.editor.getModels()) {
+        const uriStr = model.uri.toString();
+        for (const trackedId of prevTabIdsRef.current) {
+          if ((uriStr === trackedId || uriStr.endsWith('/' + trackedId)) && !liveIds.has(trackedId)) {
+            model.dispose();
+            break;
+          }
+        }
+      }
+    };
+  }, []);
 
   const insertPlainText = useCallback((text: string) => {
     if (!editorRef.current) return;
@@ -576,6 +610,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             height="100%"
             defaultLanguage="markdown"
             path={activeTabId || 'default'}
+            keepCurrentModel
             value={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
