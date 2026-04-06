@@ -93,6 +93,26 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     };
   }, []);
 
+  // Dispose Monaco models for closed tabs to prevent memory leaks
+  const prevTabIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!tabs) return;
+    const currentIds = new Set(tabs.map(tab => tab.id));
+    const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+    if (monaco) {
+      for (const prevId of prevTabIdsRef.current) {
+        if (!currentIds.has(prevId)) {
+          const uri = monaco.Uri.parse(prevId);
+          const model = monaco.editor.getModel(uri);
+          if (model) {
+            model.dispose();
+          }
+        }
+      }
+    }
+    prevTabIdsRef.current = currentIds;
+  }, [tabs]);
+
   const insertPlainText = useCallback((text: string) => {
     if (!editorRef.current) return;
 
@@ -550,6 +570,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           <Editor
             height="100%"
             defaultLanguage="markdown"
+            path={activeTabId || 'default'}
             value={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
