@@ -665,6 +665,30 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       </List>
 
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {t('help.keyboardShortcuts.categories.editing')}
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary={getShortcutDisplay('F')}
+            secondary={t('help.keyboardShortcuts.shortcuts.search')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary={getShortcutDisplay('F', true)}
+            secondary={t('help.keyboardShortcuts.shortcuts.searchAllTabs')}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary={getShortcutDisplay('H')}
+            secondary={t('help.keyboardShortcuts.shortcuts.replace')}
+          />
+        </ListItem>
+      </List>
+
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         {t('help.keyboardShortcuts.categories.view')}
       </Typography>
       <List>

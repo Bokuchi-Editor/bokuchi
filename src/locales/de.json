@@ -191,7 +191,10 @@
         "zoomOut": "Verkleinern",
         "resetZoom": "Zoom zurücksetzen",
         "toggleExplorer": "Explorer umschalten",
-        "toggleOutline": "Gliederung umschalten"
+        "toggleOutline": "Gliederung umschalten",
+        "search": "Suchen",
+        "searchAllTabs": "Alle Tabs durchsuchen",
+        "replace": "Suchen und Ersetzen"
       }
     },
     "tutorials": {

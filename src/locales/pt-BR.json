@@ -191,7 +191,10 @@
         "zoomOut": "Diminuir zoom",
         "resetZoom": "Redefinir zoom",
         "toggleExplorer": "Alternar explorador",
-        "toggleOutline": "Alternar esboço"
+        "toggleOutline": "Alternar esboço",
+        "search": "Pesquisar",
+        "searchAllTabs": "Pesquisar em todas as abas",
+        "replace": "Pesquisar e substituir"
       }
     },
     "tutorials": {
