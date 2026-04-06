@@ -107,7 +107,7 @@ export async function processKatex(markdown: string): Promise<string> {
   // Process display math ($$...$$) first
   result = result.replace(DISPLAY_MATH_RE, (_match, tex: string) => {
     try {
-      return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false });
+      return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false }).replace(/\n/g, '');
     } catch {
       return `<span class="katex-error" style="color:red;">${tex}</span>`;
     }
@@ -116,7 +116,7 @@ export async function processKatex(markdown: string): Promise<string> {
   // Process inline math ($...$)
   result = result.replace(INLINE_MATH_RE, (_match, tex: string) => {
     try {
-      return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false });
+      return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false }).replace(/\n/g, '');
     } catch {
       return `<span class="katex-error" style="color:red;">${tex}</span>`;
     }
