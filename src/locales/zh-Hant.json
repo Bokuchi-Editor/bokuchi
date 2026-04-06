@@ -191,7 +191,10 @@
         "zoomOut": "縮小",
         "resetZoom": "重設縮放",
         "toggleExplorer": "切換檔案總管",
-        "toggleOutline": "切換大綱"
+        "toggleOutline": "切換大綱",
+        "search": "搜尋",
+        "searchAllTabs": "搜尋所有分頁",
+        "replace": "搜尋與取代"
       }
     },
     "tutorials": {

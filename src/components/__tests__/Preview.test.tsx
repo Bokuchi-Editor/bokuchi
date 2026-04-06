@@ -50,6 +50,16 @@ vi.mock('marked', () => {
       if (checked) {
         return `<li><input checked="" disabled="" type="checkbox"> ${checked[1]}</li>`;
       }
+      // Image link: [![alt](img-src)](href)
+      const imageLink = line.match(/^\[!\[([^\]]*)\]\(([^)]+)\)\]\(([^)]+)\)$/);
+      if (imageLink) {
+        return `<p><a href="${imageLink[3]}"><img src="${imageLink[2]}" alt="${imageLink[1]}"></a></p>`;
+      }
+      // Plain link: [text](href)
+      const plainLink = line.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (plainLink) {
+        return `<p><a href="${plainLink[2]}">${plainLink[1]}</a></p>`;
+      }
       return `<p>${line}</p>`;
     });
     const hasListItems = items.some((i) => i.startsWith('<li>'));
@@ -67,6 +77,7 @@ vi.mock('marked', () => {
 
 import MarkdownPreview from '../Preview';
 import { variableApi } from '../../api/variableApi';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 /**
  * Helper: render the Preview component and wait until the async markdown
@@ -360,5 +371,62 @@ describe('MarkdownPreview – themes', () => {
 
     const preview = container.querySelector('.markdown-preview') as HTMLElement;
     expect(preview.style.fontFamily).toContain('IBM Plex Mono');
+  });
+});
+
+// =========================================================================
+// Link click handling
+// =========================================================================
+
+describe('MarkdownPreview – link clicks', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (openUrl as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+  });
+
+  // T-PV-14: clicking a plain text link opens URL externally
+  it('T-PV-14: plain text link opens URL via openUrl', async () => {
+    const { container } = await renderPreviewContent({
+      content: '[Google](https://google.com)',
+    });
+
+    const link = container.querySelector('a[href="https://google.com"]') as HTMLAnchorElement;
+    expect(link).not.toBeNull();
+
+    fireEvent.click(link);
+
+    expect(openUrl).toHaveBeenCalledWith('https://google.com');
+  });
+
+  // T-PV-15: clicking an image inside a link opens URL externally (regression)
+  it('T-PV-15: image link opens URL via openUrl when clicking the image', async () => {
+    const { container } = await renderPreviewContent({
+      content: '[![Google](https://img.sample.com/google.png)](https://google.com)',
+    });
+
+    const img = container.querySelector('a[href="https://google.com"] img') as HTMLImageElement;
+    expect(img).not.toBeNull();
+
+    fireEvent.click(img);
+
+    expect(openUrl).toHaveBeenCalledWith('https://google.com');
+  });
+
+  // T-PV-16: clicking an image link does not trigger default navigation
+  it('T-PV-16: image link click prevents default navigation', async () => {
+    const { container } = await renderPreviewContent({
+      content: '[![Google](https://img.sample.com/google.png)](https://google.com)',
+    });
+
+    const img = container.querySelector('a[href="https://google.com"] img') as HTMLImageElement;
+    expect(img).not.toBeNull();
+
+    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+    const preventDefaultSpy = vi.spyOn(clickEvent, 'preventDefault');
+
+    img.dispatchEvent(clickEvent);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(openUrl).toHaveBeenCalledWith('https://google.com');
   });
 });

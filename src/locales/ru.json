@@ -191,7 +191,10 @@
         "zoomOut": "Уменьшить",
         "resetZoom": "Сбросить масштаб",
         "toggleExplorer": "Переключить проводник",
-        "toggleOutline": "Переключить структуру"
+        "toggleOutline": "Переключить структуру",
+        "search": "Поиск",
+        "searchAllTabs": "Поиск по всем вкладкам",
+        "replace": "Поиск и замена"
       }
     },
     "tutorials": {

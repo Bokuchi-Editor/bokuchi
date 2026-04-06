@@ -72,6 +72,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
+  const [showReplaceDefault, setShowReplaceDefault] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -374,16 +375,19 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(false);
+          setShowReplaceDefault(false);
           setSearchOpen(true);
         });
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
           setSearchAllTabsDefault(false);
+          setShowReplaceDefault(true);
           setSearchOpen(true);
         });
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(true);
+          setShowReplaceDefault(false);
           setSearchOpen(true);
         });
 
@@ -533,6 +537,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           activeTabId={activeTabId}
           onTabSwitch={onTabSwitch}
           searchAllTabsDefault={searchAllTabsDefault}
+          showReplaceDefault={showReplaceDefault}
         />
         {fileNotFound ? (
           <Box

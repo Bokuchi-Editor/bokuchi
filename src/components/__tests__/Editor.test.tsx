@@ -20,12 +20,14 @@ vi.mock('../SearchReplacePanel', () => ({
   default: (props: {
     open: boolean;
     searchAllTabsDefault?: boolean;
+    showReplaceDefault?: boolean;
     onClose: () => void;
   }) =>
     props.open ? (
       <div
         data-testid="search-panel"
         data-all-tabs={String(!!props.searchAllTabsDefault)}
+        data-show-replace={String(!!props.showReplaceDefault)}
       >
         <button data-testid="close-search" onClick={props.onClose}>
           Close
@@ -338,6 +340,47 @@ describe('MarkdownEditor', () => {
 
       expect(screen.getByTestId('search-panel')).toBeInTheDocument();
       expect(screen.getByTestId('search-panel').dataset.allTabs).toBe('true');
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-13b: Ctrl+H opens search in replace mode
+    it('T-ED-13b: Ctrl+H opens search in replace mode', () => {
+      const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
+      const KeyCode = { KeyF: 36, KeyH: 38, KeyV: 52 };
+      (window as unknown as Record<string, unknown>).monaco = { KeyMod, KeyCode };
+
+      render(<MarkdownEditor {...defaultProps()} />);
+      const mockEditor = createMockMonacoEditor();
+      capturedOnMount!(mockEditor);
+
+      // Execute Ctrl+H handler (second addCommand call)
+      const ctrlHHandler = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls[1][1];
+      act(() => { ctrlHHandler(); });
+
+      expect(screen.getByTestId('search-panel')).toBeInTheDocument();
+      expect(screen.getByTestId('search-panel').dataset.showReplace).toBe('true');
+      expect(screen.getByTestId('search-panel').dataset.allTabs).toBe('false');
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-13c: Ctrl+F opens search without replace mode
+    it('T-ED-13c: Ctrl+F opens search without replace mode', () => {
+      const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
+      const KeyCode = { KeyF: 36, KeyH: 38, KeyV: 52 };
+      (window as unknown as Record<string, unknown>).monaco = { KeyMod, KeyCode };
+
+      render(<MarkdownEditor {...defaultProps()} />);
+      const mockEditor = createMockMonacoEditor();
+      capturedOnMount!(mockEditor);
+
+      // Execute Ctrl+F handler (first addCommand call)
+      const ctrlFHandler = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls[0][1];
+      act(() => { ctrlFHandler(); });
+
+      expect(screen.getByTestId('search-panel')).toBeInTheDocument();
+      expect(screen.getByTestId('search-panel').dataset.showReplace).toBe('false');
 
       delete (window as unknown as Record<string, unknown>).monaco;
     });
