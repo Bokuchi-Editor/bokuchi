@@ -38,7 +38,7 @@ import {
   Edit,
   Computer,
   Tune,
-  Refresh
+  Refresh,
 } from '@mui/icons-material';
 import { getVisibleThemes } from '../themes';
 import { TransitionProps } from '@mui/material/transitions';
@@ -1024,6 +1024,7 @@ const Settings: React.FC<SettingsProps> = ({
                     </Box>
                   </CardContent>
                 </Card>
+
               </Box>
             )}
           </Box>
