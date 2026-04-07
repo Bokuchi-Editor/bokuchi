@@ -85,7 +85,6 @@ function AppDesktop() {
     handleWhatsNewClose,
     openFile,
 
-
     // Easter eggs
     as400Unlocked,
     showUnlockAnimation,
