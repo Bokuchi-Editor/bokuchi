@@ -191,7 +191,10 @@
         "zoomOut": "축소",
         "resetZoom": "확대/축소 재설정",
         "toggleExplorer": "탐색기 전환",
-        "toggleOutline": "개요 전환"
+        "toggleOutline": "개요 전환",
+        "search": "검색",
+        "searchAllTabs": "모든 탭 검색",
+        "replace": "검색 및 바꾸기"
       }
     },
     "tutorials": {

@@ -191,7 +191,10 @@
         "zoomOut": "ズームアウト",
         "resetZoom": "ズームリセット",
         "toggleExplorer": "エクスプローラーの切り替え",
-        "toggleOutline": "アウトラインの切り替え"
+        "toggleOutline": "アウトラインの切り替え",
+        "search": "検索",
+        "searchAllTabs": "全タブを検索",
+        "replace": "検索と置換"
       }
     },
     "tutorials": {

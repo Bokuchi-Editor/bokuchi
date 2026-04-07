@@ -191,7 +191,10 @@
         "zoomOut": "Thu nhỏ",
         "resetZoom": "Đặt lại zoom",
         "toggleExplorer": "Bật/tắt trình khám phá",
-        "toggleOutline": "Bật/tắt dàn ý"
+        "toggleOutline": "Bật/tắt dàn ý",
+        "search": "Tìm kiếm",
+        "searchAllTabs": "Tìm kiếm tất cả tab",
+        "replace": "Tìm kiếm và thay thế"
       }
     },
     "tutorials": {

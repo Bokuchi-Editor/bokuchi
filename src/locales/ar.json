@@ -191,7 +191,10 @@
         "zoomOut": "تصغير",
         "resetZoom": "إعادة تعيين التكبير",
         "toggleExplorer": "تبديل المستكشف",
-        "toggleOutline": "تبديل المخطط"
+        "toggleOutline": "تبديل المخطط",
+        "search": "بحث",
+        "searchAllTabs": "البحث في جميع علامات التبويب",
+        "replace": "بحث واستبدال"
       }
     },
     "tutorials": {

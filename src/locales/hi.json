@@ -191,7 +191,10 @@
         "zoomOut": "ज़ूम आउट",
         "resetZoom": "ज़ूम रीसेट करें",
         "toggleExplorer": "एक्सप्लोरर टॉगल करें",
-        "toggleOutline": "रूपरेखा टॉगल करें"
+        "toggleOutline": "रूपरेखा टॉगल करें",
+        "search": "खोजें",
+        "searchAllTabs": "सभी टैब में खोजें",
+        "replace": "खोजें और बदलें"
       }
     },
     "tutorials": {
