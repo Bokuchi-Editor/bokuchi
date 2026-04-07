@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.1...HEAD)
+
+## [0.7.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.0...v0.7.1) - 2026-04-07
+
+### Fixed
+
+- Undo/redo affecting all tabs instead of only the focused tab
+- KaTeX math expressions inside Markdown table cells rendering as raw SVG path strings
+- Search & Replace shortcut (Cmd+H / Ctrl+H) not showing the replace input field
+- Image links in preview navigating within the app instead of opening in an external browser
 
 ## [0.7.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.6.1...v0.7.0) - 2026-03-29
 

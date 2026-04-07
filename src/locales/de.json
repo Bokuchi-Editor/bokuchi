@@ -501,21 +501,17 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX- & Mermaid-Unterstützung",
-        "description": "Die Vorschau rendert jetzt LaTeX-Mathematik und Mermaid-Diagramme, aktivierbar in den Einstellungen."
+      "undoRedoIsolation": {
+        "title": "Rückgängig/Wiederholen-Tab-Isolierung",
+        "description": "Rückgängig und Wiederholen wirken jetzt nur auf den aktuellen Tab statt auf alle geöffneten Tabs."
       },
-      "emptyState": {
-        "title": "Neuer Willkommensbildschirm",
-        "description": "Neuer Willkommensbildschirm wenn keine Dateien geöffnet sind, mit Schnellzugriff zum Erstellen, Öffnen und auf kürzliche Dateien."
+      "katexTableCell": {
+        "title": "KaTeX in Tabellenzellen",
+        "description": "Mathematische Ausdrücke in Markdown-Tabellenzellen werden jetzt korrekt dargestellt."
       },
-      "memoryOptimization": {
-        "title": "Speicheroptimierung",
-        "description": "Der Cache geschlossener Tabs wird sofort freigegeben, wodurch der Speicherverbrauch reduziert wird."
-      },
-      "bugFixes": {
-        "title": "Fehlerbehebungen",
-        "description": "Probleme mit der Dateizuordnung und diverse andere kleinere Fehler wurden behoben."
+      "imageLinkHandling": {
+        "title": "Verbesserung der Bild-Link-Behandlung",
+        "description": "Bild-Links in der Vorschau werden jetzt im externen Browser geöffnet."
       }
     }
   }

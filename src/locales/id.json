@@ -501,21 +501,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Dukungan KaTeX & Mermaid",
-        "description": "Pratinjau sekarang merender rumus matematika LaTeX dan diagram Mermaid, dapat diaktifkan di Pengaturan."
+      "undoRedoIsolation": {
+        "title": "Isolasi undo/redo per tab",
+        "description": "Undo dan redo sekarang bekerja secara independen per tab, tidak lagi memengaruhi semua tab yang terbuka."
       },
-      "emptyState": {
-        "title": "Layar sambutan baru",
-        "description": "Layar sambutan baru saat tidak ada file yang terbuka, dengan akses cepat untuk membuat, membuka, dan melihat file terbaru."
+      "katexTableCell": {
+        "title": "Perbaikan KaTeX di sel tabel",
+        "description": "Ekspresi matematika dalam sel tabel Markdown sekarang ditampilkan dengan benar."
       },
-      "memoryOptimization": {
-        "title": "Optimisasi memori",
-        "description": "Cache tab yang ditutup langsung dilepaskan, mengurangi penggunaan memori."
-      },
-      "bugFixes": {
-        "title": "Perbaikan bug",
-        "description": "Memperbaiki masalah asosiasi file dan beberapa bug kecil lainnya."
+      "imageLinkHandling": {
+        "title": "Perbaikan penanganan tautan gambar",
+        "description": "Mengklik tautan gambar di pratinjau sekarang membukanya di browser eksternal."
       }
     }
   }

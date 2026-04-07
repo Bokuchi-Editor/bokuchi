@@ -501,21 +501,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX 與 Mermaid 支援",
-        "description": "預覽現在可以渲染 LaTeX 數學公式和 Mermaid 圖表，可在設定中開啟或關閉。"
+      "undoRedoIsolation": {
+        "title": "復原/重做分頁隔離",
+        "description": "復原和重做操作現在僅作用於當前分頁，不再影響所有開啟的分頁。"
       },
-      "emptyState": {
-        "title": "全新歡迎畫面",
-        "description": "沒有開啟檔案時會顯示歡迎畫面，可快速建立、開啟檔案或存取最近的檔案。"
+      "katexTableCell": {
+        "title": "表格儲存格內 KaTeX 修正",
+        "description": "Markdown 表格儲存格中的數學公式現在可以正確呈現。"
       },
-      "memoryOptimization": {
-        "title": "記憶體最佳化",
-        "description": "關閉分頁的快取會立即釋放，降低記憶體使用量。"
-      },
-      "bugFixes": {
-        "title": "錯誤修復",
-        "description": "修復了檔案關聯問題及其他多個小錯誤。"
+      "imageLinkHandling": {
+        "title": "圖片連結處理改進",
+        "description": "點擊預覽中的圖片連結現在會在外部瀏覽器中開啟。"
       }
     }
   }

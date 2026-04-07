@@ -501,21 +501,17 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX & Mermaid Support",
-        "description": "The preview now renders LaTeX math expressions and Mermaid diagrams. Both can be toggled in Settings."
+      "undoRedoIsolation": {
+        "title": "Undo/Redo Tab Isolation",
+        "description": "Undo and redo now work independently per tab instead of affecting all open tabs."
       },
-      "emptyState": {
-        "title": "New Welcome Screen",
-        "description": "A new welcome screen is displayed when no files are open, with quick access to create, open, or pick a recent file."
+      "katexTableCell": {
+        "title": "KaTeX in Table Cells",
+        "description": "Math expressions inside Markdown table cells now render correctly."
       },
-      "memoryOptimization": {
-        "title": "Memory Management Optimization",
-        "description": "Closed tab caches are now released immediately, reducing memory usage."
-      },
-      "bugFixes": {
-        "title": "Bug Fixes",
-        "description": "Fixed file association issues and several other minor bugs."
+      "imageLinkHandling": {
+        "title": "Image Link Handling",
+        "description": "Clicking image links in preview now opens them in an external browser."
       }
     }
   }

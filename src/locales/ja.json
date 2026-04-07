@@ -501,21 +501,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX・Mermaid 対応",
-        "description": "プレビューで LaTeX 数式と Mermaid ダイアグラムを表示できるようになりました。設定画面でそれぞれ切り替えできます。"
+      "undoRedoIsolation": {
+        "title": "元に戻す・やり直しのタブ分離",
+        "description": "元に戻す・やり直し操作が、すべてのタブではなくフォーカス中のタブのみに適用されるようになりました。"
       },
-      "emptyState": {
-        "title": "ウェルカム画面の追加",
-        "description": "ファイルが開かれていないときに、新規作成・ファイルを開く・最近使ったファイルにすばやくアクセスできるウェルカム画面が表示されます。"
+      "katexTableCell": {
+        "title": "テーブルセル内のKaTeX表示修正",
+        "description": "Markdownテーブルセル内の数式が正しくレンダリングされるようになりました。"
       },
-      "memoryOptimization": {
-        "title": "メモリ管理の最適化",
-        "description": "閉じたタブのキャッシュが即座に解放されるようになり、メモリ使用量が改善しました。"
-      },
-      "bugFixes": {
-        "title": "不具合の修正",
-        "description": "ファイルの関連付けに関する問題をはじめ、いくつかの不具合を修正しました。"
+      "imageLinkHandling": {
+        "title": "画像リンクの処理改善",
+        "description": "プレビュー内の画像リンクをクリックすると外部ブラウザで開くようになりました。"
       }
     }
   }

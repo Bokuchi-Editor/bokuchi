@@ -501,21 +501,17 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Prise en charge de KaTeX et Mermaid",
-        "description": "L'aperçu affiche désormais les formules mathématiques LaTeX et les diagrammes Mermaid, activable dans les Paramètres."
+      "undoRedoIsolation": {
+        "title": "Isolation annuler/rétablir par onglet",
+        "description": "Les actions annuler et rétablir fonctionnent désormais indépendamment pour chaque onglet."
       },
-      "emptyState": {
-        "title": "Nouvel écran d'accueil",
-        "description": "Nouvel écran d'accueil lorsqu'aucun fichier n'est ouvert, avec un accès rapide pour créer, ouvrir et consulter les fichiers récents."
+      "katexTableCell": {
+        "title": "KaTeX dans les cellules de tableau",
+        "description": "Les expressions mathématiques dans les cellules de tableau Markdown s'affichent désormais correctement."
       },
-      "memoryOptimization": {
-        "title": "Optimisation de la mémoire",
-        "description": "Le cache des onglets fermés est libéré immédiatement, réduisant l'utilisation de la mémoire."
-      },
-      "bugFixes": {
-        "title": "Corrections de bogues",
-        "description": "Correction de problèmes d'association de fichiers et de plusieurs autres bogues mineurs."
+      "imageLinkHandling": {
+        "title": "Amélioration des liens d'images",
+        "description": "Les liens d'images dans l'aperçu s'ouvrent désormais dans un navigateur externe."
       }
     }
   }

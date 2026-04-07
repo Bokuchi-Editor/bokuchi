@@ -501,21 +501,17 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Hỗ trợ KaTeX và Mermaid",
-        "description": "Xem trước giờ đây hiển thị công thức LaTeX và sơ đồ Mermaid, có thể bật/tắt trong Cài đặt."
+      "undoRedoIsolation": {
+        "title": "Cô lập hoàn tác/làm lại theo tab",
+        "description": "Hoàn tác và làm lại giờ hoạt động độc lập cho từng tab thay vì ảnh hưởng đến tất cả các tab đang mở."
       },
-      "emptyState": {
-        "title": "Màn hình chào mừng mới",
-        "description": "Màn hình chào mừng hiển thị khi không có tệp nào đang mở, cho phép truy cập nhanh để tạo, mở hoặc xem tệp gần đây."
+      "katexTableCell": {
+        "title": "Sửa lỗi KaTeX trong ô bảng",
+        "description": "Biểu thức toán trong ô bảng Markdown giờ hiển thị chính xác."
       },
-      "memoryOptimization": {
-        "title": "Tối ưu hóa bộ nhớ",
-        "description": "Bộ nhớ đệm của tab đã đóng được giải phóng ngay lập tức, giảm mức sử dụng bộ nhớ."
-      },
-      "bugFixes": {
-        "title": "Sửa lỗi",
-        "description": "Đã sửa các lỗi liên kết tệp và một số lỗi nhỏ khác."
+      "imageLinkHandling": {
+        "title": "Cải thiện xử lý liên kết hình ảnh",
+        "description": "Nhấp vào liên kết hình ảnh trong bản xem trước giờ sẽ mở trong trình duyệt ngoài."
       }
     }
   }

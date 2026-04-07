@@ -501,21 +501,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX 및 Mermaid 지원",
-        "description": "미리보기에서 LaTeX 수식과 Mermaid 다이어그램을 렌더링할 수 있으며, 설정에서 전환할 수 있습니다."
+      "undoRedoIsolation": {
+        "title": "실행 취소/다시 실행 탭 분리",
+        "description": "실행 취소 및 다시 실행이 모든 탭이 아닌 현재 탭에서만 독립적으로 작동합니다."
       },
-      "emptyState": {
-        "title": "새 환영 화면",
-        "description": "파일이 열려 있지 않을 때 새 환영 화면이 표시되며, 파일 생성/열기/최근 파일에 빠르게 접근할 수 있습니다."
+      "katexTableCell": {
+        "title": "테이블 셀 내 KaTeX 수정",
+        "description": "Markdown 테이블 셀 내의 수식이 올바르게 렌더링됩니다."
       },
-      "memoryOptimization": {
-        "title": "메모리 최적화",
-        "description": "닫은 탭의 캐시가 즉시 해제되어 메모리 사용량이 줄어듭니다."
-      },
-      "bugFixes": {
-        "title": "버그 수정",
-        "description": "파일 연결 문제 및 기타 여러 사소한 버그를 수정했습니다."
+      "imageLinkHandling": {
+        "title": "이미지 링크 처리 개선",
+        "description": "미리보기에서 이미지 링크를 클릭하면 외부 브라우저에서 열립니다."
       }
     }
   }

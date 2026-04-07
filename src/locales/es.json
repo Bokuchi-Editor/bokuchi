@@ -501,21 +501,17 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Soporte para KaTeX y Mermaid",
-        "description": "La vista previa ahora renderiza fórmulas matemáticas LaTeX y diagramas Mermaid, activable desde Configuración."
+      "undoRedoIsolation": {
+        "title": "Aislamiento de deshacer/rehacer por pestaña",
+        "description": "Deshacer y rehacer ahora funcionan de forma independiente en cada pestaña."
       },
-      "emptyState": {
-        "title": "Nueva pantalla de bienvenida",
-        "description": "Nueva pantalla de bienvenida cuando no hay archivos abiertos, con acceso rápido para crear, abrir y ver archivos recientes."
+      "katexTableCell": {
+        "title": "KaTeX en celdas de tabla",
+        "description": "Las expresiones matemáticas en celdas de tabla Markdown ahora se muestran correctamente."
       },
-      "memoryOptimization": {
-        "title": "Optimización de memoria",
-        "description": "La caché de las pestañas cerradas se libera de inmediato, reduciendo el uso de memoria."
-      },
-      "bugFixes": {
-        "title": "Correcciones de errores",
-        "description": "Se corrigieron problemas de asociación de archivos y varios otros errores menores."
+      "imageLinkHandling": {
+        "title": "Mejora en enlaces de imágenes",
+        "description": "Los enlaces de imágenes en la vista previa ahora se abren en un navegador externo."
       }
     }
   }

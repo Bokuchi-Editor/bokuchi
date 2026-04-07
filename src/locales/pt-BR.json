@@ -501,21 +501,17 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Suporte a KaTeX e Mermaid",
-        "description": "A visualização agora renderiza fórmulas LaTeX e diagramas Mermaid, com opção de ativar/desativar nas Configurações."
+      "undoRedoIsolation": {
+        "title": "Isolamento de desfazer/refazer por aba",
+        "description": "Desfazer e refazer agora funcionam independentemente em cada aba."
       },
-      "emptyState": {
-        "title": "Nova tela de boas-vindas",
-        "description": "Uma nova tela de boas-vindas é exibida quando nenhum arquivo está aberto, com acesso rápido para criar, abrir ou acessar arquivos recentes."
+      "katexTableCell": {
+        "title": "KaTeX em células de tabela",
+        "description": "Expressões matemáticas em células de tabela Markdown agora são renderizadas corretamente."
       },
-      "memoryOptimization": {
-        "title": "Otimização de memória",
-        "description": "Os caches de abas fechadas são liberados imediatamente, reduzindo o uso de memória."
-      },
-      "bugFixes": {
-        "title": "Correções de bugs",
-        "description": "Corrigidos problemas de associação de arquivos e vários outros bugs menores."
+      "imageLinkHandling": {
+        "title": "Melhoria nos links de imagens",
+        "description": "Links de imagens na visualização agora abrem em um navegador externo."
       }
     }
   }

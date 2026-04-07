@@ -501,21 +501,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX 和 Mermaid 支持",
-        "description": "预览现在可以渲染 LaTeX 数学公式和 Mermaid 图表，可在设置中开启或关闭。"
+      "undoRedoIsolation": {
+        "title": "撤销/重做标签页隔离",
+        "description": "撤销和重做操作现在仅作用于当前标签页，不再影响所有打开的标签页。"
       },
-      "emptyState": {
-        "title": "全新欢迎界面",
-        "description": "没有打开文件时会显示欢迎界面，可快速创建、打开文件或访问最近的文件。"
+      "katexTableCell": {
+        "title": "表格单元格内 KaTeX 修复",
+        "description": "Markdown 表格单元格中的数学公式现在可以正确渲染。"
       },
-      "memoryOptimization": {
-        "title": "内存优化",
-        "description": "关闭标签页的缓存会立即释放，降低内存占用。"
-      },
-      "bugFixes": {
-        "title": "错误修复",
-        "description": "修复了文件关联问题及其他多个小错误。"
+      "imageLinkHandling": {
+        "title": "图片链接处理改进",
+        "description": "点击预览中的图片链接现在会在外部浏览器中打开。"
       }
     }
   }
