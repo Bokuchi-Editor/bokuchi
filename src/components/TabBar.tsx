@@ -10,8 +10,11 @@ import {
   ListItem,
   ListItemButton,
   Divider,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import { Close, Add } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
 import {
   DndContext,
@@ -42,6 +45,7 @@ interface TabBarProps {
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
   onTabReorder: (tabs: TabType[]) => void;
+  onTabRename?: (tabId: string) => void;
   layout?: 'horizontal' | 'vertical';
   embedded?: boolean;
 }
@@ -63,8 +67,9 @@ const SortableTab: React.FC<{
   isActive: boolean;
   onClose: (event: React.MouseEvent, tabId: string) => void;
   onClick: (tabId: string) => void;
+  onContextMenu?: (event: React.MouseEvent, tabId: string) => void;
   layout: 'horizontal' | 'vertical';
-}> = ({ tab, isActive, onClose, onClick, layout }) => {
+}> = ({ tab, isActive, onClose, onClick, onContextMenu, layout }) => {
   const {
     attributes,
     listeners,
@@ -105,6 +110,7 @@ const SortableTab: React.FC<{
         <ListItemButton
           selected={isActive}
           onClick={() => onClick(tab.id)}
+          onContextMenu={(e) => onContextMenu?.(e, tab.id)}
           sx={{
             py: 1,
             px: 2,
@@ -175,6 +181,7 @@ const SortableTab: React.FC<{
       style={style}
       value={tab.id}
       onClick={() => onClick(tab.id)}
+      onContextMenu={(e) => onContextMenu?.(e, tab.id)}
       label={
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 0 }}>
           <Box
@@ -258,15 +265,36 @@ const TabBar: React.FC<TabBarProps> = ({
   onTabClose,
   onNewTab,
   onTabReorder,
+  onTabRename,
   layout = 'horizontal',
   embedded = false,
 }) => {
+  const { t } = useTranslation();
   const sensors = useSensors(
     createThresholdPointerSensor(),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Context menu state
+  const [contextMenu, setContextMenu] = React.useState<{ mouseX: number; mouseY: number; tabId: string } | null>(null);
+
+  const handleContextMenu = useCallback((event: React.MouseEvent, tabId: string) => {
+    event.preventDefault();
+    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, tabId });
+  }, []);
+
+  const handleContextMenuClose = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  const handleRenameClick = useCallback(() => {
+    if (contextMenu && onTabRename) {
+      onTabRename(contextMenu.tabId);
+    }
+    setContextMenu(null);
+  }, [contextMenu, onTabRename]);
 
   const handleTabClick = (_event: React.SyntheticEvent, tabIndex: number) => {
     const tab = tabs[tabIndex];
@@ -339,6 +367,7 @@ const TabBar: React.FC<TabBarProps> = ({
                     isActive={tab.id === activeTabId}
                     onClose={handleTabClose}
                     onClick={onTabChange}
+                    onContextMenu={handleContextMenu}
                     layout="vertical"
                   />
                   {index < tabs.length - 1 && <Divider />}
@@ -347,6 +376,20 @@ const TabBar: React.FC<TabBarProps> = ({
             </List>
           </SortableContext>
         </DndContext>
+        {onTabRename && (
+          <Menu
+            open={contextMenu !== null}
+            onClose={handleContextMenuClose}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
+            }
+          >
+            <MenuItem onClick={handleRenameClick}>{t('folderTree.rename')}</MenuItem>
+          </Menu>
+        )}
       </Box>
     );
   }
@@ -402,6 +445,7 @@ const TabBar: React.FC<TabBarProps> = ({
                   isActive={tab.id === activeTabId}
                   onClose={handleTabClose}
                   onClick={onTabChange}
+                  onContextMenu={handleContextMenu}
                   layout="horizontal"
                 />
               ))}
@@ -422,6 +466,20 @@ const TabBar: React.FC<TabBarProps> = ({
           </IconButton>
         </Tooltip>
       </Box>
+      {onTabRename && (
+        <Menu
+          open={contextMenu !== null}
+          onClose={handleContextMenuClose}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            contextMenu !== null
+              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+              : undefined
+          }
+        >
+          <MenuItem onClick={handleRenameClick}>{t('folderTree.rename')}</MenuItem>
+        </Menu>
+      )}
     </Box>
   );
 };

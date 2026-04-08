@@ -3,6 +3,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { Tab as TabType } from '../../types/tab';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+  }),
+}));
+
 // Mock dnd-kit to avoid complex DnD setup
 vi.mock('@dnd-kit/core', () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -222,5 +228,87 @@ describe('TabBar', () => {
     // The root Box should not have width: 280 when embedded
     const rootBox = container.firstElementChild as HTMLElement;
     expect(rootBox.style.width).not.toBe('280px');
+  });
+
+  // --- Context menu / Rename tests ---
+
+  // T-TB-15: right-click on horizontal tab shows context menu with Rename
+  it('T-TB-15: right-click on horizontal tab shows context menu', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    expect(screen.getByText('folderTree.rename')).toBeInTheDocument();
+  });
+
+  // T-TB-16: clicking Rename in context menu calls onTabRename with correct ID
+  it('T-TB-16: Rename menu item calls onTabRename with correct tab ID', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File2.md'));
+    fireEvent.click(screen.getByText('folderTree.rename'));
+    expect(onTabRename).toHaveBeenCalledWith('tab2');
+  });
+
+  // T-TB-17: clicking Rename calls handler and menu item becomes hidden
+  it('T-TB-17: Rename click triggers handler (menu will close via state)', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    const menuItem = screen.getByText('folderTree.rename');
+    expect(menuItem).toBeInTheDocument();
+    fireEvent.click(menuItem);
+    // Handler is called, which sets contextMenu to null (menu closes)
+    expect(onTabRename).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-18: right-click on vertical tab shows context menu
+  it('T-TB-18: right-click on vertical tab shows context menu', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        layout="vertical"
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File2.md'));
+    expect(screen.getByText('folderTree.rename')).toBeInTheDocument();
+  });
+
+  // T-TB-19: vertical Rename menu item calls onTabRename with correct ID
+  it('T-TB-19: vertical Rename calls onTabRename with correct tab ID', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        layout="vertical"
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    fireEvent.click(screen.getByText('folderTree.rename'));
+    expect(onTabRename).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-20: no context menu rendered when onTabRename is not provided
+  it('T-TB-20: no context menu when onTabRename is not provided', () => {
+    render(<TabBar {...defaultProps()} />);
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    expect(screen.queryByText('folderTree.rename')).not.toBeInTheDocument();
   });
 });

@@ -70,6 +70,7 @@ export const useAppState = () => {
     saveTabAs,
     createNewTab,
     renameFile,
+    updateTabTitle,
   } = useTabsDesktop();
 
   // Zoom management
@@ -228,7 +229,7 @@ export const useAppState = () => {
   };
 
   // Rename dialog state
-  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string }>({
+  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string; tabId?: string }>({
     open: false, filePath: '', currentName: '',
   });
 
@@ -239,20 +240,35 @@ export const useAppState = () => {
 
   const handleRenameConfirm = useCallback(async (newName: string) => {
     try {
-      await renameFile(renameDialog.filePath, newName);
+      if (renameDialog.tabId && !renameDialog.filePath) {
+        // Unsaved tab: only update title
+        updateTabTitle(renameDialog.tabId, newName);
+      } else {
+        // Saved file (from tab or folder tree): rename on filesystem
+        await renameFile(renameDialog.filePath, newName);
+        folderTreeRefreshTree();
+      }
       setRenameDialog({ open: false, filePath: '', currentName: '' });
-      folderTreeRefreshTree();
       setSnackbar({ open: true, message: t('folderTree.renameSuccess'), severity: 'success' });
     } catch (error) {
       console.error('Failed to rename file:', error);
       const msg = error instanceof Error ? error.message : t('folderTree.renameFailed');
       setSnackbar({ open: true, message: msg, severity: 'error' });
     }
-  }, [renameFile, renameDialog.filePath, folderTreeRefreshTree, t]);
+  }, [renameFile, renameDialog.filePath, renameDialog.tabId, updateTabTitle, folderTreeRefreshTree, t]);
 
   const handleRenameCancel = useCallback(() => {
     setRenameDialog({ open: false, filePath: '', currentName: '' });
   }, []);
+
+  const handleTabRenameRequest = useCallback((tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab) return;
+    const currentName = tab.filePath
+      ? tab.filePath.substring(tab.filePath.lastIndexOf('/') + 1)
+      : tab.title;
+    setRenameDialog({ open: true, filePath: tab.filePath || '', currentName, tabId });
+  }, [tabs]);
 
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
@@ -468,6 +484,7 @@ export const useAppState = () => {
     handleRenameRequest,
     handleRenameConfirm,
     handleRenameCancel,
+    handleTabRenameRequest,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

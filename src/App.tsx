@@ -124,6 +124,7 @@ function AppDesktop() {
     handleRenameRequest,
     handleRenameConfirm,
     handleRenameCancel,
+    handleTabRenameRequest,
 
     // Translation
     t,
@@ -435,6 +436,7 @@ function AppDesktop() {
           onFolderTreeRefresh={folderTreeRefreshTree}
           onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
           onRenameRequest={handleRenameRequest}
+          onTabRename={handleTabRenameRequest}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
