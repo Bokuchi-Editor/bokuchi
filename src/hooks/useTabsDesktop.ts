@@ -41,6 +41,14 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'REMOVE_TAB', payload: { id } });
   }, []);
 
+  const toggleTabPinned = useCallback((id: string) => {
+    dispatch({ type: 'TOGGLE_TAB_PINNED', payload: { id } });
+  }, []);
+
+  const removeTabs = useCallback((ids: string[]) => {
+    dispatch({ type: 'REMOVE_TABS', payload: { ids } });
+  }, []);
+
 
 
   const updateTabContent = useCallback((id: string, content: string) => {
@@ -439,6 +447,8 @@ export const useTabsDesktop = () => {
     isInitialized,
     addTab,
     removeTab,
+    toggleTabPinned,
+    removeTabs,
     setActiveTab,
     updateTabContent,
     updateTabTitle,

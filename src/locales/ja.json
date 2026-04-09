@@ -306,7 +306,13 @@
       "horizontal": "水平タブ",
       "vertical": "垂直タブ",
       "horizontalDescription": "タブはエディターの上に水平に表示されます。",
-      "verticalDescription": "タブはエディターの左側に垂直に表示されます。"
+      "verticalDescription": "タブはエディターの左側に垂直に表示されます。",
+      "closeButtonPosition": "閉じるボタンの位置",
+      "closeButtonPositionDescription": "タブの閉じるボタンとピンアイコンの表示位置を選択します。",
+      "closeButtonLeft": "左",
+      "closeButtonRight": "右",
+      "closeButtonLeftDescription": "タブの左側に閉じるボタンとピンアイコンを表示します。",
+      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。"
     },
     "viewMode": {
       "title": "ビューモード",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "すべてのタブを検索"
+  },
+  "tabs": {
+    "copyFilePath": "ファイルパスをコピー",
+    "copyFileName": "ファイル名をコピー",
+    "pinTab": "タブをピン留め",
+    "unpinTab": "タブのピン留めを解除",
+    "closeTab": "タブを閉じる",
+    "closeOtherTabs": "他のタブを閉じる",
+    "closeTabsToRight": "右側のタブをすべて閉じる",
+    "closeTabsBelow": "下側のタブをすべて閉じる",
+    "closeAllTabs": "すべてのタブを閉じる",
+    "pathCopied": "パスをクリップボードにコピーしました",
+    "fileNameCopied": "ファイル名をクリップボードにコピーしました",
+    "copyFailed": "クリップボードへのコピーに失敗しました"
   },
   "whatsNew": {
     "title": "新機能のご紹介",

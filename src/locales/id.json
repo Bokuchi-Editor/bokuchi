@@ -306,7 +306,13 @@
       "horizontal": "Tab Horizontal",
       "vertical": "Tab Vertikal",
       "horizontalDescription": "Tab ditampilkan secara horizontal di atas editor.",
-      "verticalDescription": "Tab ditampilkan secara vertikal di sisi kiri editor."
+      "verticalDescription": "Tab ditampilkan secara vertikal di sisi kiri editor.",
+      "closeButtonPosition": "Posisi Tombol Tutup",
+      "closeButtonPositionDescription": "Pilih tempat menampilkan tombol tutup dan ikon pin pada tab.",
+      "closeButtonLeft": "Kiri",
+      "closeButtonRight": "Kanan",
+      "closeButtonLeftDescription": "Tampilkan tombol tutup dan ikon pin di sisi kiri tab.",
+      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab."
     },
     "viewMode": {
       "title": "Mode Tampilan",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Cari di semua tab"
+  },
+  "tabs": {
+    "copyFilePath": "Salin path file",
+    "copyFileName": "Salin nama file",
+    "pinTab": "Sematkan tab",
+    "unpinTab": "Lepas sematan tab",
+    "closeTab": "Tutup tab",
+    "closeOtherTabs": "Tutup tab lainnya",
+    "closeTabsToRight": "Tutup tab di sebelah kanan",
+    "closeTabsBelow": "Tutup tab di bawah",
+    "closeAllTabs": "Tutup semua tab",
+    "pathCopied": "Path disalin ke clipboard",
+    "fileNameCopied": "Nama file disalin ke clipboard",
+    "copyFailed": "Gagal menyalin ke clipboard"
   },
   "whatsNew": {
     "title": "Yang Baru",

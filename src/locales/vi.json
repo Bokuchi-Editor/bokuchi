@@ -306,7 +306,13 @@
       "horizontal": "Tab ngang",
       "vertical": "Tab dọc",
       "horizontalDescription": "Tab được hiển thị ngang phía trên trình soạn thảo.",
-      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo."
+      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo.",
+      "closeButtonPosition": "Vị trí nút đóng",
+      "closeButtonPositionDescription": "Chọn vị trí hiển thị nút đóng và biểu tượng ghim trên tab.",
+      "closeButtonLeft": "Trái",
+      "closeButtonRight": "Phải",
+      "closeButtonLeftDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên trái tab.",
+      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab."
     },
     "viewMode": {
       "title": "Chế độ xem",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Tìm kiếm tất cả các tab"
+  },
+  "tabs": {
+    "copyFilePath": "Sao chép đường dẫn tệp",
+    "copyFileName": "Sao chép tên tệp",
+    "pinTab": "Ghim tab",
+    "unpinTab": "Bỏ ghim tab",
+    "closeTab": "Đóng tab",
+    "closeOtherTabs": "Đóng các tab khác",
+    "closeTabsToRight": "Đóng các tab bên phải",
+    "closeTabsBelow": "Đóng các tab bên dưới",
+    "closeAllTabs": "Đóng tất cả tab",
+    "pathCopied": "Đã sao chép đường dẫn vào clipboard",
+    "fileNameCopied": "Đã sao chép tên tệp vào clipboard",
+    "copyFailed": "Không thể sao chép vào clipboard"
   },
   "whatsNew": {
     "title": "Có gì mới",

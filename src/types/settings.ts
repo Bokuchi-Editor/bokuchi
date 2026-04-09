@@ -20,6 +20,7 @@ export interface AppearanceSettings {
 export interface InterfaceSettings {
   language: string;
   tabLayout: 'horizontal' | 'vertical';
+  tabCloseButtonPosition: 'left' | 'right';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
   folderTreeDisplayMode: FolderTreeDisplayMode;
@@ -74,6 +75,7 @@ export const DEFAULT_APPEARANCE_SETTINGS: AppearanceSettings = {
 export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   language: 'en',
   tabLayout: 'horizontal',
+  tabCloseButtonPosition: 'right',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
   folderTreeDisplayMode: 'off',

@@ -613,6 +613,52 @@ const Settings: React.FC<SettingsProps> = ({
 
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                      {t('settings.tabLayout.closeButtonPosition')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.tabLayout.closeButtonPositionDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.tabCloseButtonPosition}
+                        onChange={(e) => handleSettingChange('interface', 'tabCloseButtonPosition', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="left"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.tabLayout.closeButtonLeft')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.tabLayout.closeButtonLeftDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="right"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.tabLayout.closeButtonRight')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.tabLayout.closeButtonRightDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.interface.zoomLevelDescription')}
                     </Typography>

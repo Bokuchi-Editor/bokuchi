@@ -306,7 +306,13 @@
       "horizontal": "क्षैतिज टैब",
       "vertical": "ऊर्ध्वाधर टैब",
       "horizontalDescription": "टैब संपादक के ऊपर क्षैतिज रूप से प्रदर्शित होते हैं।",
-      "verticalDescription": "टैब संपादक के बाईं ओर ऊर्ध्वाधर रूप से प्रदर्शित होते हैं।"
+      "verticalDescription": "टैब संपादक के बाईं ओर ऊर्ध्वाधर रूप से प्रदर्शित होते हैं।",
+      "closeButtonPosition": "बंद करें बटन की स्थिति",
+      "closeButtonPositionDescription": "टैब पर बंद करें बटन और पिन आइकन की प्रदर्शन स्थिति चुनें।",
+      "closeButtonLeft": "बाएं",
+      "closeButtonRight": "दाएं",
+      "closeButtonLeftDescription": "टैब के बाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
+      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।"
     },
     "viewMode": {
       "title": "दृश्य मोड",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "सभी टैब में खोजें"
+  },
+  "tabs": {
+    "copyFilePath": "फ़ाइल पथ कॉपी करें",
+    "copyFileName": "फ़ाइल नाम कॉपी करें",
+    "pinTab": "टैब पिन करें",
+    "unpinTab": "टैब अनपिन करें",
+    "closeTab": "टैब बंद करें",
+    "closeOtherTabs": "अन्य टैब बंद करें",
+    "closeTabsToRight": "दाईं ओर के टैब बंद करें",
+    "closeTabsBelow": "नीचे के टैब बंद करें",
+    "closeAllTabs": "सभी टैब बंद करें",
+    "pathCopied": "पथ क्लिपबोर्ड पर कॉपी किया गया",
+    "fileNameCopied": "फ़ाइल नाम क्लिपबोर्ड पर कॉपी किया गया",
+    "copyFailed": "क्लिपबोर्ड पर कॉपी करने में विफल"
   },
   "whatsNew": {
     "title": "नया क्या है",
