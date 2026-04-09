@@ -7,7 +7,7 @@ interface UseFileChangeDetectionParams {
   tabs: Tab[];
   activeTab: Tab | null;
   isInitialized: boolean;
-  updateTabContent: (tabId: string, content: string) => void;
+  reloadTabContent: (tabId: string, content: string) => void;
   updateTabFileHash: (tabId: string, hashInfo: { hash: string; modified_time: number; file_size: number }) => void;
   setActiveTab: (tabId: string) => void;
 }
@@ -16,7 +16,7 @@ export const useFileChangeDetection = ({
   tabs,
   activeTab,
   isInitialized,
-  updateTabContent,
+  reloadTabContent,
   updateTabFileHash,
   setActiveTab,
 }: UseFileChangeDetectionParams) => {
@@ -46,14 +46,20 @@ export const useFileChangeDetection = ({
             const tab = currentTabs.find(t => t.id === tabId);
 
             if (tab && tab.filePath && !tab.isNew) {
-              const fileContent = await desktopApi.readFileFromPath(tab.filePath);
-              updateTabContent(tabId, fileContent);
+              // Use readFileByPath (custom Tauri command) instead of readFileFromPath
+              // (FS plugin) to avoid scope/path issues on Windows
+              const fileResult = await desktopApi.readFileByPath(tab.filePath);
+              if (fileResult.error) {
+                console.error('Failed to read file for reload:', fileResult.error);
+              } else {
+                reloadTabContent(tabId, fileResult.content);
 
-              try {
-                const newHashInfo = await desktopApi.getFileHash(tab.filePath);
-                updateTabFileHash(tabId, newHashInfo);
-              } catch (error) {
-                console.warn('Failed to update file hash after reload:', error);
+                try {
+                  const newHashInfo = await desktopApi.getFileHash(tab.filePath);
+                  updateTabFileHash(tabId, newHashInfo);
+                } catch (error) {
+                  console.warn('Failed to update file hash after reload:', error);
+                }
               }
             }
             setActiveTab(tabId);
@@ -84,7 +90,7 @@ export const useFileChangeDetection = ({
     return () => {
       window.removeEventListener('fileChangeDetected', handleFileChangeDetected);
     };
-  }, [tabs, updateTabContent, updateTabFileHash, setActiveTab, isInitialized]);
+  }, [tabs, reloadTabContent, updateTabFileHash, setActiveTab, isInitialized]);
 
   // Common file change detection handler
   const checkFileChange = useCallback(async (tab: Tab, source: string) => {
@@ -99,10 +105,12 @@ export const useFileChangeDetection = ({
             tabId: tab.id,
             onReload: async () => {
               try {
-                const fileContent = await desktopApi.readFileFromPath(tab.filePath!);
-                updateTabContent(tab.id, fileContent);
-                const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
-                updateTabFileHash(tab.id, newHashInfo);
+                const fileResult = await desktopApi.readFileByPath(tab.filePath!);
+                if (!fileResult.error) {
+                  reloadTabContent(tab.id, fileResult.content);
+                  const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
+                  updateTabFileHash(tab.id, newHashInfo);
+                }
                 setActiveTab(tab.id);
               } catch (error) {
                 console.error('Failed to reload file:', error);
@@ -124,11 +132,12 @@ export const useFileChangeDetection = ({
     } catch (error) {
       console.warn(`Failed to check file change during ${source}:`, error);
     }
-  }, [updateTabContent, updateTabFileHash, setActiveTab]);
+  }, [reloadTabContent, updateTabFileHash, setActiveTab]);
 
   // Periodic file change check (every 5 seconds)
+  // Stop polling while the file change dialog is open to prevent re-triggering
   useEffect(() => {
-    if (!isInitialized) return;
+    if (!isInitialized || fileChangeDialog.open) return;
 
     const interval = setInterval(async () => {
       if (activeTab && !activeTab.isNew && activeTab.filePath) {
@@ -137,7 +146,7 @@ export const useFileChangeDetection = ({
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isInitialized, activeTab, checkFileChange]);
+  }, [isInitialized, activeTab, checkFileChange, fileChangeDialog.open]);
 
   return {
     fileChangeDialog,

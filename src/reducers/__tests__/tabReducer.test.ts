@@ -99,6 +99,22 @@ describe('tabReducer', () => {
     expect(result.tabs[1].isModified).toBe(false);
   });
 
+  // T-TR-07b
+  it('RELOAD_TAB_CONTENT sets content but keeps isModified false', () => {
+    const tab1 = createTab({ id: 't1', content: 'old', isModified: true });
+    const tab2 = createTab({ id: 't2', content: 'keep', isModified: true });
+    const state = stateWith(tab1, tab2);
+
+    const result = tabReducer(state, {
+      type: 'RELOAD_TAB_CONTENT',
+      payload: { id: 't1', content: 'reloaded from disk' },
+    });
+    expect(result.tabs[0].content).toBe('reloaded from disk');
+    expect(result.tabs[0].isModified).toBe(false);
+    expect(result.tabs[1].content).toBe('keep');
+    expect(result.tabs[1].isModified).toBe(true);
+  });
+
   // T-TR-08
   it('UPDATE_TAB_TITLE updates title and leaves other tabs unchanged', () => {
     const tab1 = createTab({ id: 't1', title: 'Old Title' });
