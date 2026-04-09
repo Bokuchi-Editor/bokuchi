@@ -13,7 +13,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { Close, Add } from '@mui/icons-material';
+import { Close, Add, PushPin } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
 import {
@@ -46,6 +46,13 @@ interface TabBarProps {
   onNewTab: () => void;
   onTabReorder: (tabs: TabType[]) => void;
   onTabRename?: (tabId: string) => void;
+  onToggleTabPinned?: (tabId: string) => void;
+  onCopyFilePath?: (tabId: string) => void;
+  onCopyFileName?: (tabId: string) => void;
+  onCloseOtherTabs?: (tabId: string) => void;
+  onCloseTabsToRight?: (tabId: string) => void;
+  onCloseAllTabs?: () => void;
+  closeButtonPosition?: 'left' | 'right';
   layout?: 'horizontal' | 'vertical';
   embedded?: boolean;
 }
@@ -68,8 +75,10 @@ const SortableTab: React.FC<{
   onClose: (event: React.MouseEvent, tabId: string) => void;
   onClick: (tabId: string) => void;
   onContextMenu?: (event: React.MouseEvent, tabId: string) => void;
+  onDoubleClick?: (tabId: string) => void;
+  closeButtonPosition?: 'left' | 'right';
   layout: 'horizontal' | 'vertical';
-}> = ({ tab, isActive, onClose, onClick, onContextMenu, layout }) => {
+}> = ({ tab, isActive, onClose, onClick, onContextMenu, onDoubleClick, closeButtonPosition = 'right', layout }) => {
   const {
     attributes,
     listeners,
@@ -97,6 +106,29 @@ const SortableTab: React.FC<{
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const isLeft = closeButtonPosition === 'left';
+
+  // Close/Pin button element for vertical layout
+  const verticalActionButton = tab.isPinned ? (
+    <PushPin fontSize="small" sx={{ [isLeft ? 'mr' : 'ml']: 1, flexShrink: 0, opacity: 0.7, color: isActive ? 'inherit' : 'primary.main' }} />
+  ) : (
+    <IconButton
+      size="small"
+      onClick={(e) => onClose(e, tab.id)}
+      sx={{
+        [isLeft ? 'mr' : 'ml']: 1,
+        opacity: 0.7,
+        flexShrink: 0,
+        '&:hover': {
+          opacity: 1,
+          bgcolor: 'action.hover',
+        },
+      }}
+    >
+      <Close fontSize="small" />
+    </IconButton>
+  );
+
   if (layout === 'vertical') {
     return (
       <ListItem
@@ -110,6 +142,7 @@ const SortableTab: React.FC<{
         <ListItemButton
           selected={isActive}
           onClick={() => onClick(tab.id)}
+          onDoubleClick={() => onDoubleClick?.(tab.id)}
           onContextMenu={(e) => onContextMenu?.(e, tab.id)}
           sx={{
             py: 1,
@@ -123,6 +156,7 @@ const SortableTab: React.FC<{
             },
           }}
         >
+          {isLeft && verticalActionButton}
           <Box
             {...attributes}
             {...listeners}
@@ -131,7 +165,7 @@ const SortableTab: React.FC<{
               display: 'flex',
               alignItems: 'center',
               cursor: 'grab',
-              minWidth: 0, // Set minimum width of flex item to 0
+              minWidth: 0,
               '&:active': {
                 cursor: 'grabbing',
               },
@@ -143,7 +177,7 @@ const SortableTab: React.FC<{
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
                 fontSize: '0.875rem',
-                minWidth: 0, // Set minimum width of flex item to 0
+                minWidth: 0,
               }}
             >
               {tab.title}
@@ -152,28 +186,49 @@ const SortableTab: React.FC<{
               color="error"
               variant="dot"
               invisible={!tab.isModified}
-              sx={{ ml: 1, flexShrink: 0 }} // Badge should not shrink
+              sx={{ ml: 1, flexShrink: 0 }}
             />
           </Box>
-          <IconButton
-            size="small"
-            onClick={(e) => onClose(e, tab.id)}
-            sx={{
-              ml: 1,
-              opacity: 0.7,
-              flexShrink: 0, // Close button should not shrink
-              '&:hover': {
-                opacity: 1,
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <Close fontSize="small" />
-          </IconButton>
+          {!isLeft && verticalActionButton}
         </ListItemButton>
       </ListItem>
     );
   }
+
+  // Close/Pin button element for horizontal layout
+  const horizontalActionButton = tab.isPinned ? (
+    <Box
+      component="span"
+      sx={{
+        [isLeft ? 'mr' : 'ml']: 0.5,
+        p: 0.5,
+        display: 'flex',
+        alignItems: 'center',
+        flexShrink: 0,
+      }}
+    >
+      <PushPin fontSize="small" sx={{ color: isActive ? 'inherit' : 'primary.main' }} />
+    </Box>
+  ) : (
+    <Box
+      component="span"
+      onClick={(e) => onClose(e, tab.id)}
+      sx={{
+        [isLeft ? 'mr' : 'ml']: 0.5,
+        p: 0.5,
+        cursor: 'pointer',
+        borderRadius: 1,
+        display: 'flex',
+        alignItems: 'center',
+        flexShrink: 0,
+        '&:hover': {
+          bgcolor: 'action.hover',
+        },
+      }}
+    >
+      <Close fontSize="small" />
+    </Box>
+  );
 
   return (
     <Tab
@@ -181,9 +236,11 @@ const SortableTab: React.FC<{
       style={style}
       value={tab.id}
       onClick={() => onClick(tab.id)}
+      onDoubleClick={() => onDoubleClick?.(tab.id)}
       onContextMenu={(e) => onContextMenu?.(e, tab.id)}
       label={
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 0 }}>
+          {isLeft && horizontalActionButton}
           <Box
             {...attributes}
             {...listeners}
@@ -192,7 +249,7 @@ const SortableTab: React.FC<{
               display: 'flex',
               alignItems: 'center',
               cursor: 'grab',
-              minWidth: 0, // Set minimum width of flex item to 0
+              minWidth: 0,
               '&:active': {
                 cursor: 'grabbing',
               },
@@ -203,7 +260,7 @@ const SortableTab: React.FC<{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                minWidth: 0, // Set minimum width of flex item to 0
+                minWidth: 0,
               }}
             >
               {tab.title}
@@ -212,33 +269,18 @@ const SortableTab: React.FC<{
               color="error"
               variant="dot"
               invisible={!tab.isModified}
-              sx={{ ml: 1, flexShrink: 0 }} // Badge should not shrink
+              sx={{ ml: 1, flexShrink: 0 }}
             />
           </Box>
-          <Box
-            component="span"
-            onClick={(e) => onClose(e, tab.id)}
-            sx={{
-              ml: 0.5,
-              p: 0.5,
-              cursor: 'pointer',
-              borderRadius: 1,
-              display: 'flex',
-              alignItems: 'center',
-              flexShrink: 0, // Close button should not shrink
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <Close fontSize="small" />
-          </Box>
+          {!isLeft && horizontalActionButton}
         </Box>
       }
       sx={{
         '& .MuiTab-iconWrapper': {
           display: 'none',
         },
+        borderTop: '3px solid',
+        borderTopColor: tab.isPinned && !isActive ? 'primary.main' : 'transparent',
         ...(isActive && {
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
@@ -266,6 +308,13 @@ const TabBar: React.FC<TabBarProps> = ({
   onNewTab,
   onTabReorder,
   onTabRename,
+  onToggleTabPinned,
+  onCopyFilePath,
+  onCopyFileName,
+  onCloseOtherTabs,
+  onCloseTabsToRight,
+  onCloseAllTabs,
+  closeButtonPosition = 'right',
   layout = 'horizontal',
   embedded = false,
 }) => {
@@ -296,6 +345,47 @@ const TabBar: React.FC<TabBarProps> = ({
     setContextMenu(null);
   }, [contextMenu, onTabRename]);
 
+  const handleCopyFilePathClick = useCallback(() => {
+    if (contextMenu) onCopyFilePath?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onCopyFilePath]);
+
+  const handleCopyFileNameClick = useCallback(() => {
+    if (contextMenu) onCopyFileName?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onCopyFileName]);
+
+  const handleTogglePinClick = useCallback(() => {
+    if (contextMenu) onToggleTabPinned?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onToggleTabPinned]);
+
+  const handleCloseTabClick = useCallback(() => {
+    if (contextMenu) onTabClose(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onTabClose]);
+
+  const handleCloseOtherTabsClick = useCallback(() => {
+    if (contextMenu) onCloseOtherTabs?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onCloseOtherTabs]);
+
+  const handleCloseTabsToRightClick = useCallback(() => {
+    if (contextMenu) onCloseTabsToRight?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onCloseTabsToRight]);
+
+  const handleCloseAllTabsClick = useCallback(() => {
+    onCloseAllTabs?.();
+    setContextMenu(null);
+  }, [onCloseAllTabs]);
+
+  const handleDoubleClick = useCallback((tabId: string) => {
+    onToggleTabPinned?.(tabId);
+  }, [onToggleTabPinned]);
+
+  const contextTab = contextMenu ? tabs.find(t => t.id === contextMenu.tabId) : null;
+
   const handleTabClick = (_event: React.SyntheticEvent, tabIndex: number) => {
     const tab = tabs[tabIndex];
     if (tab) {
@@ -320,8 +410,10 @@ const TabBar: React.FC<TabBarProps> = ({
     }
   };
 
+  let content: React.ReactNode;
+
   if (layout === 'vertical') {
-    return (
+    content = (
       <Box
         sx={{
           ...(!embedded && {
@@ -368,6 +460,8 @@ const TabBar: React.FC<TabBarProps> = ({
                     onClose={handleTabClose}
                     onClick={onTabChange}
                     onContextMenu={handleContextMenu}
+                    onDoubleClick={handleDoubleClick}
+                    closeButtonPosition={closeButtonPosition}
                     layout="vertical"
                   />
                   {index < tabs.length - 1 && <Divider />}
@@ -376,26 +470,11 @@ const TabBar: React.FC<TabBarProps> = ({
             </List>
           </SortableContext>
         </DndContext>
-        {onTabRename && (
-          <Menu
-            open={contextMenu !== null}
-            onClose={handleContextMenuClose}
-            anchorReference="anchorPosition"
-            anchorPosition={
-              contextMenu !== null
-                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                : undefined
-            }
-          >
-            <MenuItem onClick={handleRenameClick}>{t('folderTree.rename')}</MenuItem>
-          </Menu>
-        )}
       </Box>
     );
-  }
-
-  return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
+  } else {
+    content = (
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <DndContext
           sensors={sensors}
@@ -429,9 +508,9 @@ const TabBar: React.FC<TabBarProps> = ({
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   minWidth: 120,
-                  maxWidth: 250, // Slightly increased to accommodate close button space
-                  borderRight: 1,
-                  borderColor: 'divider',
+                  maxWidth: 250,
+                  borderRight: '1px solid',
+                  borderRightColor: 'divider',
                   '&:last-child': {
                     borderRight: 'none',
                   },
@@ -446,6 +525,8 @@ const TabBar: React.FC<TabBarProps> = ({
                   onClose={handleTabClose}
                   onClick={onTabChange}
                   onContextMenu={handleContextMenu}
+                  onDoubleClick={handleDoubleClick}
+                  closeButtonPosition={closeButtonPosition}
                   layout="horizontal"
                 />
               ))}
@@ -466,21 +547,54 @@ const TabBar: React.FC<TabBarProps> = ({
           </IconButton>
         </Tooltip>
       </Box>
-      {onTabRename && (
-        <Menu
-          open={contextMenu !== null}
-          onClose={handleContextMenuClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenu !== null
-              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-              : undefined
-          }
-        >
-          <MenuItem onClick={handleRenameClick}>{t('folderTree.rename')}</MenuItem>
-        </Menu>
-      )}
     </Box>
+    );
+  }
+
+  return (
+    <>
+      {content}
+      <Menu
+        open={contextMenu !== null}
+        onClose={handleContextMenuClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+      >
+        {onTabRename && (
+          <MenuItem onClick={handleRenameClick}>{t('folderTree.rename')}</MenuItem>
+        )}
+        <MenuItem
+          onClick={handleCopyFilePathClick}
+          disabled={!contextTab?.filePath || contextTab?.isNew}
+        >
+          {t('tabs.copyFilePath')}
+        </MenuItem>
+        <MenuItem onClick={handleCopyFileNameClick}>
+          {t('tabs.copyFileName')}
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleTogglePinClick}>
+          {contextTab?.isPinned ? t('tabs.unpinTab') : t('tabs.pinTab')}
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleCloseTabClick}>
+          {t('tabs.closeTab')}
+        </MenuItem>
+        <MenuItem onClick={handleCloseOtherTabsClick}>
+          {t('tabs.closeOtherTabs')}
+        </MenuItem>
+        <MenuItem onClick={handleCloseTabsToRightClick}>
+          {layout === 'horizontal' ? t('tabs.closeTabsToRight') : t('tabs.closeTabsBelow')}
+        </MenuItem>
+        <MenuItem onClick={handleCloseAllTabsClick}>
+          {t('tabs.closeAllTabs')}
+        </MenuItem>
+      </Menu>
+    </>
   );
 };
 

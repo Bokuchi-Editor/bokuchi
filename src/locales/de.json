@@ -306,7 +306,13 @@
       "horizontal": "Horizontale Tabs",
       "vertical": "Vertikale Tabs",
       "horizontalDescription": "Tabs werden horizontal über dem Editor angezeigt.",
-      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt."
+      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt.",
+      "closeButtonPosition": "Position der Schließen-Schaltfläche",
+      "closeButtonPositionDescription": "Wählen Sie, wo die Schließen-Schaltfläche und das Anheften-Symbol auf den Tabs angezeigt werden.",
+      "closeButtonLeft": "Links",
+      "closeButtonRight": "Rechts",
+      "closeButtonLeftDescription": "Schließen-Schaltfläche und Anheften-Symbol links auf dem Tab anzeigen.",
+      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen."
     },
     "viewMode": {
       "title": "Ansichtsmodus",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Alle Tabs durchsuchen"
+  },
+  "tabs": {
+    "copyFilePath": "Dateipfad kopieren",
+    "copyFileName": "Dateiname kopieren",
+    "pinTab": "Tab anheften",
+    "unpinTab": "Tab lösen",
+    "closeTab": "Tab schließen",
+    "closeOtherTabs": "Andere Tabs schließen",
+    "closeTabsToRight": "Tabs rechts schließen",
+    "closeTabsBelow": "Tabs darunter schließen",
+    "closeAllTabs": "Alle Tabs schließen",
+    "pathCopied": "Pfad in die Zwischenablage kopiert",
+    "fileNameCopied": "Dateiname in die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
   },
   "whatsNew": {
     "title": "Was ist neu",

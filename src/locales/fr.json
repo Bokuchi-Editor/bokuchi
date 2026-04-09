@@ -306,7 +306,13 @@
       "horizontal": "Onglets horizontaux",
       "vertical": "Onglets verticaux",
       "horizontalDescription": "Les onglets sont affichés horizontalement au-dessus de l'éditeur.",
-      "verticalDescription": "Les onglets sont affichés verticalement sur le côté gauche de l'éditeur."
+      "verticalDescription": "Les onglets sont affichés verticalement sur le côté gauche de l'éditeur.",
+      "closeButtonPosition": "Position du bouton de fermeture",
+      "closeButtonPositionDescription": "Choisissez où afficher le bouton de fermeture et l'icône d'épingle sur les onglets.",
+      "closeButtonLeft": "Gauche",
+      "closeButtonRight": "Droite",
+      "closeButtonLeftDescription": "Afficher le bouton de fermeture et l'icône d'épingle à gauche de l'onglet.",
+      "closeButtonRightDescription": "Afficher le bouton de fermeture et l'icône d'épingle à droite de l'onglet."
     },
     "viewMode": {
       "title": "Mode d'affichage",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Rechercher dans tous les onglets"
+  },
+  "tabs": {
+    "copyFilePath": "Copier le chemin du fichier",
+    "copyFileName": "Copier le nom du fichier",
+    "pinTab": "Épingler l'onglet",
+    "unpinTab": "Désépingler l'onglet",
+    "closeTab": "Fermer l'onglet",
+    "closeOtherTabs": "Fermer les autres onglets",
+    "closeTabsToRight": "Fermer les onglets à droite",
+    "closeTabsBelow": "Fermer les onglets en dessous",
+    "closeAllTabs": "Fermer tous les onglets",
+    "pathCopied": "Chemin copié dans le presse-papiers",
+    "fileNameCopied": "Nom du fichier copié dans le presse-papiers",
+    "copyFailed": "Échec de la copie dans le presse-papiers"
   },
   "whatsNew": {
     "title": "Nouveautés",

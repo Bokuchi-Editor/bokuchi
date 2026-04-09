@@ -306,7 +306,13 @@
       "horizontal": "수평 탭",
       "vertical": "수직 탭",
       "horizontalDescription": "탭이 편집기 위에 수평으로 표시됩니다.",
-      "verticalDescription": "탭이 편집기 왼쪽에 수직으로 표시됩니다."
+      "verticalDescription": "탭이 편집기 왼쪽에 수직으로 표시됩니다.",
+      "closeButtonPosition": "닫기 버튼 위치",
+      "closeButtonPositionDescription": "탭에서 닫기 버튼과 고정 아이콘의 표시 위치를 선택합니다.",
+      "closeButtonLeft": "왼쪽",
+      "closeButtonRight": "오른쪽",
+      "closeButtonLeftDescription": "탭 왼쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
+      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다."
     },
     "viewMode": {
       "title": "보기 모드",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "모든 탭에서 검색"
+  },
+  "tabs": {
+    "copyFilePath": "파일 경로 복사",
+    "copyFileName": "파일 이름 복사",
+    "pinTab": "탭 고정",
+    "unpinTab": "탭 고정 해제",
+    "closeTab": "탭 닫기",
+    "closeOtherTabs": "다른 탭 닫기",
+    "closeTabsToRight": "오른쪽 탭 닫기",
+    "closeTabsBelow": "아래 탭 닫기",
+    "closeAllTabs": "모든 탭 닫기",
+    "pathCopied": "경로가 클립보드에 복사되었습니다",
+    "fileNameCopied": "파일 이름이 클립보드에 복사되었습니다",
+    "copyFailed": "클립보드에 복사하지 못했습니다"
   },
   "whatsNew": {
     "title": "새로운 기능",

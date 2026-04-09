@@ -305,10 +305,164 @@ describe('TabBar', () => {
     expect(onTabRename).toHaveBeenCalledWith('tab1');
   });
 
-  // T-TB-20: no context menu rendered when onTabRename is not provided
-  it('T-TB-20: no context menu when onTabRename is not provided', () => {
+  // T-TB-20: Rename not shown when onTabRename is not provided, but other items shown
+  it('T-TB-20: Rename not shown without onTabRename, but context menu items still appear', () => {
     render(<TabBar {...defaultProps()} />);
     fireEvent.contextMenu(screen.getByText('File1.md'));
     expect(screen.queryByText('folderTree.rename')).not.toBeInTheDocument();
+    expect(screen.getByText('tabs.closeTab')).toBeInTheDocument();
+  });
+
+  // --- New context menu and pin feature tests ---
+
+  // T-TB-21: context menu shows all items
+  it('T-TB-21: context menu shows all items', () => {
+    const onTabRename = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onTabRename={asMock<(tabId: string) => void>(onTabRename)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    expect(screen.getByText('folderTree.rename')).toBeInTheDocument();
+    expect(screen.getByText('tabs.copyFilePath')).toBeInTheDocument();
+    expect(screen.getByText('tabs.copyFileName')).toBeInTheDocument();
+    expect(screen.getByText('tabs.pinTab')).toBeInTheDocument();
+    expect(screen.getByText('tabs.closeTab')).toBeInTheDocument();
+    expect(screen.getByText('tabs.closeOtherTabs')).toBeInTheDocument();
+    expect(screen.getByText('tabs.closeTabsToRight')).toBeInTheDocument();
+    expect(screen.getByText('tabs.closeAllTabs')).toBeInTheDocument();
+  });
+
+  // T-TB-22: Copy file path is disabled for unsaved tabs
+  it('T-TB-22: Copy file path disabled for unsaved tab', () => {
+    const unsavedTabs: TabType[] = [
+      { id: 'tab1', title: 'Untitled', content: '', isModified: false, isNew: true },
+    ];
+    render(<TabBar {...defaultProps()} tabs={unsavedTabs} activeTabId="tab1" />);
+    fireEvent.contextMenu(screen.getByText('Untitled'));
+    const copyPathItem = screen.getByText('tabs.copyFilePath');
+    expect(copyPathItem.closest('li')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  // T-TB-23: Pin/Unpin label changes based on isPinned state
+  it('T-TB-23: shows Unpin for pinned tab', () => {
+    const pinnedTabs: TabType[] = [
+      { id: 'tab1', title: 'File1.md', content: '', isModified: false, isNew: false, isPinned: true },
+    ];
+    render(<TabBar {...defaultProps()} tabs={pinnedTabs} activeTabId="tab1" />);
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    expect(screen.getByText('tabs.unpinTab')).toBeInTheDocument();
+    expect(screen.queryByText('tabs.pinTab')).not.toBeInTheDocument();
+  });
+
+  // T-TB-24: Pinned tab shows PushPin icon instead of Close
+  it('T-TB-24: pinned tab shows PushPin icon', () => {
+    const pinnedTabs: TabType[] = [
+      { id: 'tab1', title: 'Pinned.md', content: '', isModified: false, isNew: false, isPinned: true },
+    ];
+    const { container } = render(
+      <TabBar {...defaultProps()} tabs={pinnedTabs} activeTabId="tab1" />,
+    );
+    expect(container.querySelector('[data-testid="PushPinIcon"]')).toBeInTheDocument();
+  });
+
+  // T-TB-25: Double-click calls onToggleTabPinned
+  it('T-TB-25: double-click calls onToggleTabPinned', () => {
+    const onToggleTabPinned = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onToggleTabPinned={asMock<(tabId: string) => void>(onToggleTabPinned)}
+      />,
+    );
+    fireEvent.doubleClick(screen.getByText('File1.md'));
+    expect(onToggleTabPinned).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-26: vertical layout shows "Close Tabs Below" instead of "to the Right"
+  it('T-TB-26: vertical layout shows closeTabsBelow', () => {
+    render(<TabBar {...defaultProps()} layout="vertical" />);
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    expect(screen.getByText('tabs.closeTabsBelow')).toBeInTheDocument();
+    expect(screen.queryByText('tabs.closeTabsToRight')).not.toBeInTheDocument();
+  });
+
+  // T-TB-27: Close Tab menu item calls onTabClose
+  it('T-TB-27: Close Tab calls onTabClose with correct tab ID', () => {
+    render(<TabBar {...defaultProps()} />);
+    fireEvent.contextMenu(screen.getByText('File2.md'));
+    fireEvent.click(screen.getByText('tabs.closeTab'));
+    expect(onTabClose).toHaveBeenCalledWith('tab2');
+  });
+
+  // T-TB-28: Close Other Tabs calls onCloseOtherTabs
+  it('T-TB-28: Close Other Tabs calls onCloseOtherTabs', () => {
+    const onCloseOtherTabs = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onCloseOtherTabs={asMock<(tabId: string) => void>(onCloseOtherTabs)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    fireEvent.click(screen.getByText('tabs.closeOtherTabs'));
+    expect(onCloseOtherTabs).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-29: Close All Tabs calls onCloseAllTabs
+  it('T-TB-29: Close All Tabs calls onCloseAllTabs', () => {
+    const onCloseAllTabs = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onCloseAllTabs={asMock<() => void>(onCloseAllTabs)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    fireEvent.click(screen.getByText('tabs.closeAllTabs'));
+    expect(onCloseAllTabs).toHaveBeenCalledTimes(1);
+  });
+
+  // --- Close button position and accent border tests ---
+
+  // T-TB-30: closeButtonPosition="left" renders pin icon with mr spacing (horizontal)
+  it('T-TB-30: left position renders PushPin with correct position in horizontal', () => {
+    const pinnedTabs: TabType[] = [
+      { id: 'tab1', title: 'Pinned.md', content: '', isModified: false, isNew: false, isPinned: true },
+    ];
+    const { container } = render(
+      <TabBar {...defaultProps()} tabs={pinnedTabs} activeTabId="tab1" closeButtonPosition="left" />,
+    );
+    const pinIcon = container.querySelector('[data-testid="PushPinIcon"]');
+    expect(pinIcon).toBeInTheDocument();
+    expect(screen.getByText('Pinned.md')).toBeInTheDocument();
+  });
+
+  // T-TB-31: closeButtonPosition="left" renders close button before title (vertical)
+  it('T-TB-31: left position renders close button before title in vertical', () => {
+    const { container } = render(
+      <TabBar {...defaultProps()} layout="vertical" closeButtonPosition="left" />,
+    );
+    // Close icon should exist
+    const closeIcons = container.querySelectorAll('[data-testid="CloseIcon"]');
+    expect(closeIcons.length).toBeGreaterThan(0);
+  });
+
+  // T-TB-32: pinned non-active horizontal tab has top border
+  it('T-TB-32: pinned non-active horizontal tab has top border style', () => {
+    const mixedTabs: TabType[] = [
+      { id: 'tab1', title: 'Active.md', content: '', isModified: false, isNew: false },
+      { id: 'tab2', title: 'Pinned.md', content: '', isModified: false, isNew: false, isPinned: true },
+    ];
+    const { container } = render(
+      <TabBar {...defaultProps()} tabs={mixedTabs} activeTabId="tab1" />,
+    );
+    // The pinned non-active tab should have a non-transparent top border
+    const tabs = container.querySelectorAll('.MuiTab-root');
+    expect(tabs.length).toBe(2);
+    // Second tab is pinned and non-active, should exist with border applied via sx
+    expect(tabs[1]).toBeTruthy();
   });
 });

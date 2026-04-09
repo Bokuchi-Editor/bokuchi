@@ -306,7 +306,13 @@
       "horizontal": "تبويبات أفقية",
       "vertical": "تبويبات عمودية",
       "horizontalDescription": "تظهر التبويبات أفقياً فوق المحرر.",
-      "verticalDescription": "تظهر التبويبات عمودياً على الجانب الأيسر من المحرر."
+      "verticalDescription": "تظهر التبويبات عمودياً على الجانب الأيسر من المحرر.",
+      "closeButtonPosition": "موضع زر الإغلاق",
+      "closeButtonPositionDescription": "اختر مكان عرض زر الإغلاق وأيقونة التثبيت في علامات التبويب.",
+      "closeButtonLeft": "يسار",
+      "closeButtonRight": "يمين",
+      "closeButtonLeftDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيسر من علامة التبويب.",
+      "closeButtonRightDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيمن من علامة التبويب."
     },
     "viewMode": {
       "title": "وضع العرض",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "البحث في جميع علامات التبويب"
+  },
+  "tabs": {
+    "copyFilePath": "نسخ مسار الملف",
+    "copyFileName": "نسخ اسم الملف",
+    "pinTab": "تثبيت علامة التبويب",
+    "unpinTab": "إلغاء تثبيت علامة التبويب",
+    "closeTab": "إغلاق علامة التبويب",
+    "closeOtherTabs": "إغلاق علامات التبويب الأخرى",
+    "closeTabsToRight": "إغلاق علامات التبويب على اليمين",
+    "closeTabsBelow": "إغلاق علامات التبويب أدناه",
+    "closeAllTabs": "إغلاق جميع علامات التبويب",
+    "pathCopied": "تم نسخ المسار إلى الحافظة",
+    "fileNameCopied": "تم نسخ اسم الملف إلى الحافظة",
+    "copyFailed": "فشل النسخ إلى الحافظة"
   },
   "whatsNew": {
     "title": "ما الجديد",

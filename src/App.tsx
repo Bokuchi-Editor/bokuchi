@@ -80,6 +80,12 @@ function AppDesktop() {
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
     handleTabReorder,
+    handleToggleTabPinned,
+    handleCopyFilePath,
+    handleCopyFileName,
+    handleCloseOtherTabs,
+    handleCloseTabsToRight,
+    handleCloseAllTabs,
     handleCheckForUpdate,
     handleDismissUpdate,
     handleWhatsNewClose,
@@ -437,6 +443,13 @@ function AppDesktop() {
           onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
           onRenameRequest={handleRenameRequest}
           onTabRename={handleTabRenameRequest}
+          onToggleTabPinned={handleToggleTabPinned}
+          onCopyFilePath={handleCopyFilePath}
+          onCopyFileName={handleCopyFileName}
+          onCloseOtherTabs={handleCloseOtherTabs}
+          onCloseTabsToRight={handleCloseTabsToRight}
+          onCloseAllTabs={handleCloseAllTabs}
+          tabCloseButtonPosition={appSettings.interface.tabCloseButtonPosition}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}

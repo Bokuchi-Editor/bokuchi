@@ -306,7 +306,13 @@
       "horizontal": "Horizontal Tabs",
       "vertical": "Vertical Tabs",
       "horizontalDescription": "Tabs are displayed horizontally above the editor.",
-      "verticalDescription": "Tabs are displayed vertically on the left side of the editor."
+      "verticalDescription": "Tabs are displayed vertically on the left side of the editor.",
+      "closeButtonPosition": "Close Button Position",
+      "closeButtonPositionDescription": "Choose where to display the close button and pin icon on tabs.",
+      "closeButtonLeft": "Left",
+      "closeButtonRight": "Right",
+      "closeButtonLeftDescription": "Display close button and pin icon on the left side of the tab.",
+      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab."
     },
     "viewMode": {
       "title": "View Mode",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Search all tabs"
+  },
+  "tabs": {
+    "copyFilePath": "Copy File Path",
+    "copyFileName": "Copy File Name",
+    "pinTab": "Pin Tab",
+    "unpinTab": "Unpin Tab",
+    "closeTab": "Close Tab",
+    "closeOtherTabs": "Close Other Tabs",
+    "closeTabsToRight": "Close Tabs to the Right",
+    "closeTabsBelow": "Close Tabs Below",
+    "closeAllTabs": "Close All Tabs",
+    "pathCopied": "Path copied to clipboard",
+    "fileNameCopied": "File name copied to clipboard",
+    "copyFailed": "Failed to copy to clipboard"
   },
   "whatsNew": {
     "title": "What's New",

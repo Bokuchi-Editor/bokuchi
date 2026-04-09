@@ -306,7 +306,13 @@
       "horizontal": "Abas horizontais",
       "vertical": "Abas verticais",
       "horizontalDescription": "As abas são exibidas horizontalmente acima do editor.",
-      "verticalDescription": "As abas são exibidas verticalmente no lado esquerdo do editor."
+      "verticalDescription": "As abas são exibidas verticalmente no lado esquerdo do editor.",
+      "closeButtonPosition": "Posição do botão de fechar",
+      "closeButtonPositionDescription": "Escolha onde exibir o botão de fechar e o ícone de fixar nas abas.",
+      "closeButtonLeft": "Esquerda",
+      "closeButtonRight": "Direita",
+      "closeButtonLeftDescription": "Exibir o botão de fechar e o ícone de fixar no lado esquerdo da aba.",
+      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba."
     },
     "viewMode": {
       "title": "Modo de visualização",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Pesquisar em todas as abas"
+  },
+  "tabs": {
+    "copyFilePath": "Copiar caminho do arquivo",
+    "copyFileName": "Copiar nome do arquivo",
+    "pinTab": "Fixar aba",
+    "unpinTab": "Desafixar aba",
+    "closeTab": "Fechar aba",
+    "closeOtherTabs": "Fechar outras abas",
+    "closeTabsToRight": "Fechar abas à direita",
+    "closeTabsBelow": "Fechar abas abaixo",
+    "closeAllTabs": "Fechar todas as abas",
+    "pathCopied": "Caminho copiado para a área de transferência",
+    "fileNameCopied": "Nome do arquivo copiado para a área de transferência",
+    "copyFailed": "Falha ao copiar para a área de transferência"
   },
   "whatsNew": {
     "title": "Novidades",

@@ -306,7 +306,13 @@
       "horizontal": "Pestañas horizontales",
       "vertical": "Pestañas verticales",
       "horizontalDescription": "Las pestañas se muestran horizontalmente encima del editor.",
-      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor."
+      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor.",
+      "closeButtonPosition": "Posición del botón de cerrar",
+      "closeButtonPositionDescription": "Elige dónde mostrar el botón de cerrar y el icono de fijar en las pestañas.",
+      "closeButtonLeft": "Izquierda",
+      "closeButtonRight": "Derecha",
+      "closeButtonLeftDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado izquierdo de la pestaña.",
+      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña."
     },
     "viewMode": {
       "title": "Modo de vista",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "Buscar en todas las pestañas"
+  },
+  "tabs": {
+    "copyFilePath": "Copiar ruta del archivo",
+    "copyFileName": "Copiar nombre del archivo",
+    "pinTab": "Fijar pestaña",
+    "unpinTab": "Desfijar pestaña",
+    "closeTab": "Cerrar pestaña",
+    "closeOtherTabs": "Cerrar otras pestañas",
+    "closeTabsToRight": "Cerrar pestañas a la derecha",
+    "closeTabsBelow": "Cerrar pestañas de abajo",
+    "closeAllTabs": "Cerrar todas las pestañas",
+    "pathCopied": "Ruta copiada al portapapeles",
+    "fileNameCopied": "Nombre de archivo copiado al portapapeles",
+    "copyFailed": "Error al copiar al portapapeles"
   },
   "whatsNew": {
     "title": "Novedades",

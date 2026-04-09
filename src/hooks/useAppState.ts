@@ -61,6 +61,8 @@ export const useAppState = () => {
     activeTab,
     isInitialized,
     removeTab,
+    toggleTabPinned,
+    removeTabs,
     setActiveTab,
     updateTabContent,
     updateTabFileHash,
@@ -269,6 +271,66 @@ export const useAppState = () => {
       : tab.title;
     setRenameDialog({ open: true, filePath: tab.filePath || '', currentName, tabId });
   }, [tabs]);
+
+  // Tab context menu handlers
+  const handleToggleTabPinned = useCallback((tabId: string) => {
+    toggleTabPinned(tabId);
+  }, [toggleTabPinned]);
+
+  const handleCopyFilePath = useCallback(async (tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab?.filePath) return;
+    try {
+      await navigator.clipboard.writeText(tab.filePath);
+      setSnackbar({ open: true, message: t('tabs.pathCopied'), severity: 'success' });
+    } catch {
+      setSnackbar({ open: true, message: t('tabs.copyFailed'), severity: 'error' });
+    }
+  }, [tabs, t]);
+
+  const handleCopyFileName = useCallback(async (tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab) return;
+    const fileName = tab.filePath
+      ? tab.filePath.substring(tab.filePath.lastIndexOf('/') + 1)
+      : tab.title;
+    try {
+      await navigator.clipboard.writeText(fileName);
+      setSnackbar({ open: true, message: t('tabs.fileNameCopied'), severity: 'success' });
+    } catch {
+      setSnackbar({ open: true, message: t('tabs.copyFailed'), severity: 'error' });
+    }
+  }, [tabs, t]);
+
+  const handleCloseOtherTabs = useCallback((tabId: string) => {
+    const idsToClose = tabs
+      .filter(tab => tab.id !== tabId && !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
+
+  const handleCloseTabsToRight = useCallback((tabId: string) => {
+    const tabIndex = tabs.findIndex(t => t.id === tabId);
+    if (tabIndex === -1) return;
+    const idsToClose = tabs
+      .slice(tabIndex + 1)
+      .filter(tab => !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
+
+  const handleCloseAllTabs = useCallback(() => {
+    const idsToClose = tabs
+      .filter(tab => !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
 
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
@@ -485,6 +547,12 @@ export const useAppState = () => {
     handleRenameConfirm,
     handleRenameCancel,
     handleTabRenameRequest,
+    handleToggleTabPinned,
+    handleCopyFilePath,
+    handleCopyFileName,
+    handleCloseOtherTabs,
+    handleCloseTabsToRight,
+    handleCloseAllTabs,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

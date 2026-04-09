@@ -306,7 +306,13 @@
       "horizontal": "水平标签页",
       "vertical": "垂直标签页",
       "horizontalDescription": "标签页在编辑器上方水平显示。",
-      "verticalDescription": "标签页在编辑器左侧垂直显示。"
+      "verticalDescription": "标签页在编辑器左侧垂直显示。",
+      "closeButtonPosition": "关闭按钮位置",
+      "closeButtonPositionDescription": "选择标签页上关闭按钮和固定图标的显示位置。",
+      "closeButtonLeft": "左侧",
+      "closeButtonRight": "右侧",
+      "closeButtonLeftDescription": "在标签页左侧显示关闭按钮和固定图标。",
+      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。"
     },
     "viewMode": {
       "title": "视图模式",
@@ -491,6 +497,20 @@
   },
   "search": {
     "searchAllTabs": "搜索所有标签页"
+  },
+  "tabs": {
+    "copyFilePath": "复制文件路径",
+    "copyFileName": "复制文件名",
+    "pinTab": "固定标签页",
+    "unpinTab": "取消固定标签页",
+    "closeTab": "关闭标签页",
+    "closeOtherTabs": "关闭其他标签页",
+    "closeTabsToRight": "关闭右侧标签页",
+    "closeTabsBelow": "关闭下方标签页",
+    "closeAllTabs": "关闭所有标签页",
+    "pathCopied": "路径已复制到剪贴板",
+    "fileNameCopied": "文件名已复制到剪贴板",
+    "copyFailed": "复制到剪贴板失败"
   },
   "whatsNew": {
     "title": "新功能",
