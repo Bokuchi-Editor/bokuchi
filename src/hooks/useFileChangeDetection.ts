@@ -9,6 +9,7 @@ interface UseFileChangeDetectionParams {
   isInitialized: boolean;
   reloadTabContent: (tabId: string, content: string) => void;
   updateTabFileHash: (tabId: string, hashInfo: { hash: string; modified_time: number; file_size: number }) => void;
+  setTabModified: (tabId: string, isModified: boolean) => void;
   setActiveTab: (tabId: string) => void;
 }
 
@@ -18,6 +19,7 @@ export const useFileChangeDetection = ({
   isInitialized,
   reloadTabContent,
   updateTabFileHash,
+  setTabModified,
   setActiveTab,
 }: UseFileChangeDetectionParams) => {
   const [fileChangeDialog, setFileChangeDialog] = useState<{
@@ -69,18 +71,11 @@ export const useFileChangeDetection = ({
           setFileChangeDialog(prev => ({ ...prev, open: false }));
         },
         onCancel: async () => {
-          onCancel();
           try {
-            const currentTabs = tabs;
-            const tab = currentTabs.find(t => t.id === tabId);
-            if (tab && tab.filePath && !tab.isNew) {
-              const newHashInfo = await desktopApi.getFileHash(tab.filePath);
-              updateTabFileHash(tabId, newHashInfo);
-            }
+            await onCancel();
           } catch (error) {
-            console.warn('Failed to update file hash after cancel:', error);
+            console.error('Failed to execute cancel handler:', error);
           }
-          setActiveTab(tabId);
           setFileChangeDialog(prev => ({ ...prev, open: false }));
         },
       });
@@ -117,6 +112,7 @@ export const useFileChangeDetection = ({
               }
             },
             onCancel: async () => {
+              setTabModified(tab.id, true);
               try {
                 const newHashInfo = await desktopApi.getFileHash(tab.filePath!);
                 updateTabFileHash(tab.id, newHashInfo);
@@ -132,7 +128,7 @@ export const useFileChangeDetection = ({
     } catch (error) {
       console.warn(`Failed to check file change during ${source}:`, error);
     }
-  }, [reloadTabContent, updateTabFileHash, setActiveTab]);
+  }, [reloadTabContent, updateTabFileHash, setTabModified, setActiveTab]);
 
   // Periodic file change check (every 5 seconds)
   // Stop polling while the file change dialog is open to prevent re-triggering
