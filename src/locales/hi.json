@@ -191,7 +191,10 @@
         "zoomOut": "ज़ूम आउट",
         "resetZoom": "ज़ूम रीसेट करें",
         "toggleExplorer": "एक्सप्लोरर टॉगल करें",
-        "toggleOutline": "रूपरेखा टॉगल करें"
+        "toggleOutline": "रूपरेखा टॉगल करें",
+        "search": "खोजें",
+        "searchAllTabs": "सभी टैब में खोजें",
+        "replace": "खोजें और बदलें"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "क्षैतिज टैब",
       "vertical": "ऊर्ध्वाधर टैब",
       "horizontalDescription": "टैब संपादक के ऊपर क्षैतिज रूप से प्रदर्शित होते हैं।",
-      "verticalDescription": "टैब संपादक के बाईं ओर ऊर्ध्वाधर रूप से प्रदर्शित होते हैं।"
+      "verticalDescription": "टैब संपादक के बाईं ओर ऊर्ध्वाधर रूप से प्रदर्शित होते हैं।",
+      "closeButtonPosition": "बंद करें बटन की स्थिति",
+      "closeButtonPositionDescription": "टैब पर बंद करें बटन और पिन आइकन की प्रदर्शन स्थिति चुनें।",
+      "closeButtonLeft": "बाएं",
+      "closeButtonRight": "दाएं",
+      "closeButtonLeftDescription": "टैब के बाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
+      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।"
     },
     "viewMode": {
       "title": "दृश्य मोड",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "सभी टैब में खोजें"
   },
+  "tabs": {
+    "copyFilePath": "फ़ाइल पथ कॉपी करें",
+    "copyFileName": "फ़ाइल नाम कॉपी करें",
+    "pinTab": "टैब पिन करें",
+    "unpinTab": "टैब अनपिन करें",
+    "closeTab": "टैब बंद करें",
+    "closeOtherTabs": "अन्य टैब बंद करें",
+    "closeTabsToRight": "दाईं ओर के टैब बंद करें",
+    "closeTabsBelow": "नीचे के टैब बंद करें",
+    "closeAllTabs": "सभी टैब बंद करें",
+    "pathCopied": "पथ क्लिपबोर्ड पर कॉपी किया गया",
+    "fileNameCopied": "फ़ाइल नाम क्लिपबोर्ड पर कॉपी किया गया",
+    "copyFailed": "क्लिपबोर्ड पर कॉपी करने में विफल"
+  },
   "whatsNew": {
     "title": "नया क्या है",
     "gotIt": "समझ गया",
@@ -500,21 +523,9 @@
       "improvement": "सुधार"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX और Mermaid सपोर्ट",
-        "description": "प्रीव्यू अब LaTeX गणितीय सूत्र और Mermaid डायग्राम रेंडर करता है, सेटिंग्स में चालू/बंद किया जा सकता है।"
-      },
-      "emptyState": {
-        "title": "नई स्वागत स्क्रीन",
-        "description": "जब कोई फाइल नहीं खुली हो तो नई स्वागत स्क्रीन, फाइल बनाने, खोलने और हाल की फाइलों तक त्वरित पहुंच के साथ।"
-      },
-      "memoryOptimization": {
-        "title": "मेमोरी ऑप्टिमाइजेशन",
-        "description": "बंद किए गए टैब का कैश तुरंत रिलीज किया जाता है, जिससे मेमोरी उपयोग कम होता है।"
-      },
-      "bugFixes": {
-        "title": "बग फिक्स",
-        "description": "फाइल एसोसिएशन की समस्याएं और कई अन्य छोटे बग ठीक किए गए।"
+      "fileChangeDetectionWindows": {
+        "title": "Windows पर फ़ाइल परिवर्तन पहचान सुधार",
+        "description": "Windows पर फ़ाइल परिवर्तन पहचान ठीक से काम न करने की समस्या को ठीक किया गया।"
       }
     }
   },

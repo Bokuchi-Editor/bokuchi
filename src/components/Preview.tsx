@@ -220,38 +220,40 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     return () => { stale = true; };
   }, [content, globalVariables, filePath, renderingSettings, darkMode, theme]);
 
-  // Handle link clicks: re-attach when DOM changes
+  // Handle link clicks via event delegation on the container (capture phase).
+  // Using delegation avoids the gap between DOM replacement and listener attachment,
+  // and capturing ensures we intercept clicks on child elements (e.g. <img> inside <a>)
+  // before the default navigation can occur.
   useEffect(() => {
-    if (!previewRef.current) return;
+    const container = previewRef.current;
+    if (!container) return;
 
-    const cleanupFns: (() => void)[] = [];
+    const handler = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+      if (!link || !container.contains(link)) return;
 
-    const links = previewRef.current.querySelectorAll('a');
-    links.forEach(link => {
-      const handler = (e: Event) => {
-        e.preventDefault();
-        const href = link.getAttribute('href');
-        if (href) {
-          if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
-            openUrl(href).catch(err => {
-              console.error('Failed to open URL:', href, err);
-            });
-          } else if (href.startsWith('#')) {
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth' });
-            }
+      e.preventDefault();
+      e.stopPropagation();
+
+      const href = link.getAttribute('href');
+      if (href) {
+        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
+          openUrl(href).catch(err => {
+            console.error('Failed to open URL:', href, err);
+          });
+        } else if (href.startsWith('#')) {
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
           }
         }
-      };
-      link.addEventListener('click', handler);
-      cleanupFns.push(() => link.removeEventListener('click', handler));
-    });
-
-    return () => {
-      cleanupFns.forEach(fn => fn());
+      }
     };
-  }, [htmlContent]);
+
+    container.addEventListener('click', handler, true);
+    return () => container.removeEventListener('click', handler, true);
+  }, []);
 
   // Handle checkbox toggle via event delegation on the container.
   // The container element itself persists across dangerouslySetInnerHTML updates,
@@ -415,6 +417,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             .markdown-preview img {
               max-width: 100%;
               height: auto;
+              -webkit-user-drag: none;
+              user-drag: none;
             }
 
             .markdown-preview h1:first-child,

@@ -20,12 +20,14 @@ vi.mock('../SearchReplacePanel', () => ({
   default: (props: {
     open: boolean;
     searchAllTabsDefault?: boolean;
+    showReplaceDefault?: boolean;
     onClose: () => void;
   }) =>
     props.open ? (
       <div
         data-testid="search-panel"
         data-all-tabs={String(!!props.searchAllTabsDefault)}
+        data-show-replace={String(!!props.showReplaceDefault)}
       >
         <button data-testid="close-search" onClick={props.onClose}>
           Close
@@ -80,18 +82,22 @@ vi.mock('../../utils/tableConverter', () => ({
 let capturedOnMount: ((editor: editor.IStandaloneCodeEditor) => void) | null =
   null;
 
+let capturedPath: string | undefined = undefined;
+
 vi.mock('@monaco-editor/react', () => ({
   default: (props: {
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
     onChange?: (value: string | undefined) => void;
     value?: string;
+    path?: string;
     options?: Record<string, unknown>;
     theme?: string;
   }) => {
     // Store onMount so tests can invoke it
     capturedOnMount = props.onMount ?? null;
+    capturedPath = props.path;
     return (
-      <div data-testid="monaco-editor" data-theme={props.theme}>
+      <div data-testid="monaco-editor" data-theme={props.theme} data-path={props.path}>
         <textarea
           data-testid="monaco-textarea"
           value={props.value}
@@ -334,6 +340,47 @@ describe('MarkdownEditor', () => {
 
       expect(screen.getByTestId('search-panel')).toBeInTheDocument();
       expect(screen.getByTestId('search-panel').dataset.allTabs).toBe('true');
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-13b: Ctrl+H opens search in replace mode
+    it('T-ED-13b: Ctrl+H opens search in replace mode', () => {
+      const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
+      const KeyCode = { KeyF: 36, KeyH: 38, KeyV: 52 };
+      (window as unknown as Record<string, unknown>).monaco = { KeyMod, KeyCode };
+
+      render(<MarkdownEditor {...defaultProps()} />);
+      const mockEditor = createMockMonacoEditor();
+      capturedOnMount!(mockEditor);
+
+      // Execute Ctrl+H handler (second addCommand call)
+      const ctrlHHandler = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls[1][1];
+      act(() => { ctrlHHandler(); });
+
+      expect(screen.getByTestId('search-panel')).toBeInTheDocument();
+      expect(screen.getByTestId('search-panel').dataset.showReplace).toBe('true');
+      expect(screen.getByTestId('search-panel').dataset.allTabs).toBe('false');
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-13c: Ctrl+F opens search without replace mode
+    it('T-ED-13c: Ctrl+F opens search without replace mode', () => {
+      const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
+      const KeyCode = { KeyF: 36, KeyH: 38, KeyV: 52 };
+      (window as unknown as Record<string, unknown>).monaco = { KeyMod, KeyCode };
+
+      render(<MarkdownEditor {...defaultProps()} />);
+      const mockEditor = createMockMonacoEditor();
+      capturedOnMount!(mockEditor);
+
+      // Execute Ctrl+F handler (first addCommand call)
+      const ctrlFHandler = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls[0][1];
+      act(() => { ctrlFHandler(); });
+
+      expect(screen.getByTestId('search-panel')).toBeInTheDocument();
+      expect(screen.getByTestId('search-panel').dataset.showReplace).toBe('false');
 
       delete (window as unknown as Record<string, unknown>).monaco;
     });
@@ -892,8 +939,8 @@ describe('MarkdownEditor', () => {
       delete (window as unknown as Record<string, unknown>).monaco;
     });
 
-    // T-ED-24: Regression test - paste handler updates when tableConversion prop changes (Issue #225)
-    it('T-ED-24: paste handler reflects updated tableConversion setting', async () => {
+    // T-ED-29: Regression test - paste handler updates when tableConversion prop changes (Issue #225)
+    it('T-ED-29: paste handler reflects updated tableConversion setting', async () => {
       (window as unknown as Record<string, unknown>).monaco = {
         KeyMod: { CtrlCmd: 2048, Shift: 1024 },
         KeyCode: { KeyF: 36, KeyH: 38 },
@@ -941,6 +988,168 @@ describe('MarkdownEditor', () => {
       });
 
       document.body.removeChild(domNode);
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+  });
+
+  // =========================================================================
+  // Undo/redo isolation per tab (regression for undo-across-tabs bug)
+  // =========================================================================
+
+  describe('undo/redo isolation per tab', () => {
+    // T-ED-30: path prop is set to activeTabId for per-tab undo history
+    it('T-ED-30: passes activeTabId as path prop to Monaco Editor', () => {
+      render(
+        <MarkdownEditor {...defaultProps()} activeTabId="tab-123" />,
+      );
+      const editorEl = screen.getByTestId('monaco-editor');
+      expect(editorEl.dataset.path).toBe('tab-123');
+      expect(capturedPath).toBe('tab-123');
+    });
+
+    // T-ED-31: path defaults to 'default' when activeTabId is null
+    it('T-ED-31: uses "default" as path when activeTabId is null', () => {
+      render(
+        <MarkdownEditor {...defaultProps()} activeTabId={null} />,
+      );
+      const editorEl = screen.getByTestId('monaco-editor');
+      expect(editorEl.dataset.path).toBe('default');
+    });
+
+    // T-ED-32: path changes when switching tabs
+    it('T-ED-32: path prop updates when activeTabId changes', () => {
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps()} activeTabId="tab-A" />,
+      );
+      expect(capturedPath).toBe('tab-A');
+
+      rerender(
+        <MarkdownEditor {...defaultProps()} activeTabId="tab-B" />,
+      );
+      expect(capturedPath).toBe('tab-B');
+    });
+
+    // T-ED-33: closed tab model is disposed via getModels() iteration
+    it('T-ED-33: disposes Monaco model when a tab is removed from tabs list', () => {
+      const mockDispose = vi.fn();
+      const mockModels = [
+        { uri: { toString: () => 'tab-1' }, dispose: vi.fn() },
+        { uri: { toString: () => 'tab-2' }, dispose: mockDispose },
+      ];
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+        editor: { getModels: () => mockModels },
+      };
+
+      const tab1 = { id: 'tab-1', title: 'File 1', content: 'a', isModified: false, isNew: false };
+      const tab2 = { id: 'tab-2', title: 'File 2', content: 'b', isModified: false, isNew: false };
+
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1, tab2]} activeTabId="tab-1" />,
+      );
+
+      // Remove tab-2
+      rerender(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1]} activeTabId="tab-1" />,
+      );
+
+      expect(mockDispose).toHaveBeenCalledTimes(1);
+      // tab-1 model should NOT be disposed
+      expect(mockModels[0].dispose).not.toHaveBeenCalled();
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-34: no model disposed when no tabs are removed
+    it('T-ED-34: does not dispose any model when tabs remain unchanged', () => {
+      const mockModel = { uri: { toString: () => 'tab-1' }, dispose: vi.fn() };
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+        editor: { getModels: () => [mockModel] },
+      };
+
+      const tab1 = { id: 'tab-1', title: 'File 1', content: 'a', isModified: false, isNew: false };
+
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1]} activeTabId="tab-1" />,
+      );
+
+      // Rerender with same tabs
+      rerender(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1]} activeTabId="tab-1" />,
+      );
+
+      expect(mockModel.dispose).not.toHaveBeenCalled();
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-35: URI with path prefix (e.g. "file:///tab-1") also matches
+    it('T-ED-35: disposes model whose URI ends with /tabId', () => {
+      const mockDispose = vi.fn();
+      const mockModels = [
+        { uri: { toString: () => 'file:///tab-2' }, dispose: mockDispose },
+      ];
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+        editor: { getModels: () => mockModels },
+      };
+
+      const tab1 = { id: 'tab-1', title: 'File 1', content: 'a', isModified: false, isNew: false };
+      const tab2 = { id: 'tab-2', title: 'File 2', content: 'b', isModified: false, isNew: false };
+
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1, tab2]} activeTabId="tab-1" />,
+      );
+
+      rerender(
+        <MarkdownEditor {...defaultProps()} tabs={[tab1]} activeTabId="tab-1" />,
+      );
+
+      expect(mockDispose).toHaveBeenCalledTimes(1);
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-36: on unmount, only orphaned models are disposed (live tabs survive)
+    it('T-ED-36: unmount disposes orphaned models but keeps live tab models', () => {
+      const disposedTab = vi.fn();
+      const liveTab = vi.fn();
+      const mockModels = [
+        { uri: { toString: () => 'tab-alive' }, dispose: liveTab },
+        { uri: { toString: () => 'tab-dead' }, dispose: disposedTab },
+      ];
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+        editor: { getModels: () => mockModels },
+      };
+
+      const tabAlive = { id: 'tab-alive', title: 'Alive', content: 'a', isModified: false, isNew: false };
+      const tabDead = { id: 'tab-dead', title: 'Dead', content: 'b', isModified: false, isNew: false };
+
+      // Mount with both tabs to populate prevTabIdsRef
+      const { rerender, unmount } = render(
+        <MarkdownEditor {...defaultProps()} tabs={[tabAlive, tabDead]} activeTabId="tab-alive" />,
+      );
+
+      // Remove tab-dead, then unmount (simulates view-mode switch after closing a tab)
+      rerender(
+        <MarkdownEditor {...defaultProps()} tabs={[tabAlive]} activeTabId="tab-alive" />,
+      );
+      // tab-dead disposed by the tabs-change effect
+      disposedTab.mockClear();
+
+      unmount();
+
+      // tab-alive model should survive (live tab)
+      expect(liveTab).not.toHaveBeenCalled();
+      // tab-dead is no longer tracked after previous cleanup, so no double-dispose
+      expect(disposedTab).not.toHaveBeenCalled();
+
       delete (window as unknown as Record<string, unknown>).monaco;
     });
   });

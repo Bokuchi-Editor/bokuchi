@@ -191,7 +191,10 @@
         "zoomOut": "Zoom Out",
         "resetZoom": "Reset Zoom",
         "toggleExplorer": "Toggle Explorer",
-        "toggleOutline": "Toggle Outline"
+        "toggleOutline": "Toggle Outline",
+        "search": "Search",
+        "searchAllTabs": "Search All Tabs",
+        "replace": "Search and Replace"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Horizontal Tabs",
       "vertical": "Vertical Tabs",
       "horizontalDescription": "Tabs are displayed horizontally above the editor.",
-      "verticalDescription": "Tabs are displayed vertically on the left side of the editor."
+      "verticalDescription": "Tabs are displayed vertically on the left side of the editor.",
+      "closeButtonPosition": "Close Button Position",
+      "closeButtonPositionDescription": "Choose where to display the close button and pin icon on tabs.",
+      "closeButtonLeft": "Left",
+      "closeButtonRight": "Right",
+      "closeButtonLeftDescription": "Display close button and pin icon on the left side of the tab.",
+      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab."
     },
     "viewMode": {
       "title": "View Mode",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Search all tabs"
   },
+  "tabs": {
+    "copyFilePath": "Copy File Path",
+    "copyFileName": "Copy File Name",
+    "pinTab": "Pin Tab",
+    "unpinTab": "Unpin Tab",
+    "closeTab": "Close Tab",
+    "closeOtherTabs": "Close Other Tabs",
+    "closeTabsToRight": "Close Tabs to the Right",
+    "closeTabsBelow": "Close Tabs Below",
+    "closeAllTabs": "Close All Tabs",
+    "pathCopied": "Path copied to clipboard",
+    "fileNameCopied": "File name copied to clipboard",
+    "copyFailed": "Failed to copy to clipboard"
+  },
   "whatsNew": {
     "title": "What's New",
     "gotIt": "Got It",
@@ -500,21 +523,9 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX & Mermaid Support",
-        "description": "The preview now renders LaTeX math expressions and Mermaid diagrams. Both can be toggled in Settings."
-      },
-      "emptyState": {
-        "title": "New Welcome Screen",
-        "description": "A new welcome screen is displayed when no files are open, with quick access to create, open, or pick a recent file."
-      },
-      "memoryOptimization": {
-        "title": "Memory Management Optimization",
-        "description": "Closed tab caches are now released immediately, reducing memory usage."
-      },
-      "bugFixes": {
-        "title": "Bug Fixes",
-        "description": "Fixed file association issues and several other minor bugs."
+      "fileChangeDetectionWindows": {
+        "title": "File Change Detection on Windows",
+        "description": "Fixed an issue where file change detection was not working properly on Windows."
       }
     }
   },

@@ -18,6 +18,14 @@ export const useTabs = () => {
     dispatch({ type: 'REMOVE_TAB', payload: { id } });
   }, []);
 
+  const toggleTabPinned = useCallback((id: string) => {
+    dispatch({ type: 'TOGGLE_TAB_PINNED', payload: { id } });
+  }, []);
+
+  const removeTabs = useCallback((ids: string[]) => {
+    dispatch({ type: 'REMOVE_TABS', payload: { ids } });
+  }, []);
+
   const setActiveTab = useCallback((id: string) => {
     dispatch({ type: 'SET_ACTIVE_TAB', payload: { id } });
   }, []);
@@ -106,6 +114,8 @@ export const useTabs = () => {
     activeTab: getActiveTab(),
     addTab,
     removeTab,
+    toggleTabPinned,
+    removeTabs,
     setActiveTab,
     updateTabContent,
     updateTabTitle,

@@ -55,6 +55,16 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'RELOAD_TAB_CONTENT':
+      return {
+        ...state,
+        tabs: state.tabs.map(tab =>
+          tab.id === action.payload.id
+            ? { ...tab, content: action.payload.content, isModified: false }
+            : tab
+        ),
+      };
+
     case 'UPDATE_TAB_TITLE':
       return {
         ...state,
@@ -130,6 +140,37 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ...state,
         tabs: action.payload.tabs,
         activeTabId: validActiveTabId,
+      };
+    }
+
+    case 'TOGGLE_TAB_PINNED':
+      return {
+        ...state,
+        tabs: state.tabs.map(tab =>
+          tab.id === action.payload.id
+            ? { ...tab, isPinned: !tab.isPinned }
+            : tab
+        ),
+      };
+
+    case 'REMOVE_TABS': {
+      const idsToRemove = new Set(action.payload.ids);
+      const remainingTabs = state.tabs.filter(tab => !idsToRemove.has(tab.id));
+      let newActiveTabId = state.activeTabId;
+
+      if (state.activeTabId && idsToRemove.has(state.activeTabId)) {
+        const oldIndex = state.tabs.findIndex(tab => tab.id === state.activeTabId);
+        if (remainingTabs.length > 0) {
+          newActiveTabId = remainingTabs[Math.min(oldIndex, remainingTabs.length - 1)]?.id || null;
+        } else {
+          newActiveTabId = null;
+        }
+      }
+
+      return {
+        ...state,
+        tabs: remainingTabs,
+        activeTabId: newActiveTabId,
       };
     }
 

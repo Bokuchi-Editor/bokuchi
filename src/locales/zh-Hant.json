@@ -191,7 +191,10 @@
         "zoomOut": "縮小",
         "resetZoom": "重設縮放",
         "toggleExplorer": "切換檔案總管",
-        "toggleOutline": "切換大綱"
+        "toggleOutline": "切換大綱",
+        "search": "搜尋",
+        "searchAllTabs": "搜尋所有分頁",
+        "replace": "搜尋與取代"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "水平標籤頁",
       "vertical": "垂直標籤頁",
       "horizontalDescription": "標籤頁在編輯器上方水平顯示。",
-      "verticalDescription": "標籤頁在編輯器左側垂直顯示。"
+      "verticalDescription": "標籤頁在編輯器左側垂直顯示。",
+      "closeButtonPosition": "關閉按鈕位置",
+      "closeButtonPositionDescription": "選擇分頁上關閉按鈕和釘選圖示的顯示位置。",
+      "closeButtonLeft": "左側",
+      "closeButtonRight": "右側",
+      "closeButtonLeftDescription": "在分頁左側顯示關閉按鈕和釘選圖示。",
+      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。"
     },
     "viewMode": {
       "title": "檢視模式",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "搜尋所有分頁"
   },
+  "tabs": {
+    "copyFilePath": "複製檔案路徑",
+    "copyFileName": "複製檔案名稱",
+    "pinTab": "釘選分頁",
+    "unpinTab": "取消釘選分頁",
+    "closeTab": "關閉分頁",
+    "closeOtherTabs": "關閉其他分頁",
+    "closeTabsToRight": "關閉右側分頁",
+    "closeTabsBelow": "關閉下方分頁",
+    "closeAllTabs": "關閉所有分頁",
+    "pathCopied": "路徑已複製到剪貼簿",
+    "fileNameCopied": "檔案名稱已複製到剪貼簿",
+    "copyFailed": "複製到剪貼簿失敗"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "了解",
@@ -500,21 +523,9 @@
       "improvement": "改進"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX 與 Mermaid 支援",
-        "description": "預覽現在可以渲染 LaTeX 數學公式和 Mermaid 圖表，可在設定中開啟或關閉。"
-      },
-      "emptyState": {
-        "title": "全新歡迎畫面",
-        "description": "沒有開啟檔案時會顯示歡迎畫面，可快速建立、開啟檔案或存取最近的檔案。"
-      },
-      "memoryOptimization": {
-        "title": "記憶體最佳化",
-        "description": "關閉分頁的快取會立即釋放，降低記憶體使用量。"
-      },
-      "bugFixes": {
-        "title": "錯誤修復",
-        "description": "修復了檔案關聯問題及其他多個小錯誤。"
+      "fileChangeDetectionWindows": {
+        "title": "Windows 檔案變更偵測修正",
+        "description": "修正了 Windows 環境下檔案變更偵測無法正常運作的問題。"
       }
     }
   },

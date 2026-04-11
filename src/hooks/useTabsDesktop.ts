@@ -41,10 +41,22 @@ export const useTabsDesktop = () => {
     dispatch({ type: 'REMOVE_TAB', payload: { id } });
   }, []);
 
+  const toggleTabPinned = useCallback((id: string) => {
+    dispatch({ type: 'TOGGLE_TAB_PINNED', payload: { id } });
+  }, []);
+
+  const removeTabs = useCallback((ids: string[]) => {
+    dispatch({ type: 'REMOVE_TABS', payload: { ids } });
+  }, []);
+
 
 
   const updateTabContent = useCallback((id: string, content: string) => {
     dispatch({ type: 'UPDATE_TAB_CONTENT', payload: { id, content } });
+  }, []);
+
+  const reloadTabContent = useCallback((id: string, content: string) => {
+    dispatch({ type: 'RELOAD_TAB_CONTENT', payload: { id, content } });
   }, []);
 
   const updateTabTitle = useCallback((id: string, title: string) => {
@@ -168,9 +180,8 @@ export const useTabsDesktop = () => {
               fileName: tab.title,
               tabId: id,
               onReload: async (newContent: string) => {
-                // Update content
-                updateTabContent(id, newContent);
-                setTabModified(id, false);
+                // Update content (reload sets isModified: false)
+                reloadTabContent(id, newContent);
 
                 // Update file hash info
                 try {
@@ -278,7 +289,7 @@ export const useTabsDesktop = () => {
       console.error('Error details:', error);
       return false;
     }
-  }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent]);
+  }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent, reloadTabContent]);
 
   const saveTabAs = useCallback(async (id: string) => {
     const tab = state.tabs.find(t => t.id === id);
@@ -439,8 +450,11 @@ export const useTabsDesktop = () => {
     isInitialized,
     addTab,
     removeTab,
+    toggleTabPinned,
+    removeTabs,
     setActiveTab,
     updateTabContent,
+    reloadTabContent,
     updateTabTitle,
     setTabModified,
     setTabFilePath,

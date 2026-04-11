@@ -191,7 +191,10 @@
         "zoomOut": "Verkleinern",
         "resetZoom": "Zoom zurücksetzen",
         "toggleExplorer": "Explorer umschalten",
-        "toggleOutline": "Gliederung umschalten"
+        "toggleOutline": "Gliederung umschalten",
+        "search": "Suchen",
+        "searchAllTabs": "Alle Tabs durchsuchen",
+        "replace": "Suchen und Ersetzen"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Horizontale Tabs",
       "vertical": "Vertikale Tabs",
       "horizontalDescription": "Tabs werden horizontal über dem Editor angezeigt.",
-      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt."
+      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt.",
+      "closeButtonPosition": "Position der Schließen-Schaltfläche",
+      "closeButtonPositionDescription": "Wählen Sie, wo die Schließen-Schaltfläche und das Anheften-Symbol auf den Tabs angezeigt werden.",
+      "closeButtonLeft": "Links",
+      "closeButtonRight": "Rechts",
+      "closeButtonLeftDescription": "Schließen-Schaltfläche und Anheften-Symbol links auf dem Tab anzeigen.",
+      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen."
     },
     "viewMode": {
       "title": "Ansichtsmodus",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Alle Tabs durchsuchen"
   },
+  "tabs": {
+    "copyFilePath": "Dateipfad kopieren",
+    "copyFileName": "Dateiname kopieren",
+    "pinTab": "Tab anheften",
+    "unpinTab": "Tab lösen",
+    "closeTab": "Tab schließen",
+    "closeOtherTabs": "Andere Tabs schließen",
+    "closeTabsToRight": "Tabs rechts schließen",
+    "closeTabsBelow": "Tabs darunter schließen",
+    "closeAllTabs": "Alle Tabs schließen",
+    "pathCopied": "Pfad in die Zwischenablage kopiert",
+    "fileNameCopied": "Dateiname in die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
+  },
   "whatsNew": {
     "title": "Was ist neu",
     "gotIt": "Verstanden",
@@ -500,21 +523,9 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX- & Mermaid-Unterstützung",
-        "description": "Die Vorschau rendert jetzt LaTeX-Mathematik und Mermaid-Diagramme, aktivierbar in den Einstellungen."
-      },
-      "emptyState": {
-        "title": "Neuer Willkommensbildschirm",
-        "description": "Neuer Willkommensbildschirm wenn keine Dateien geöffnet sind, mit Schnellzugriff zum Erstellen, Öffnen und auf kürzliche Dateien."
-      },
-      "memoryOptimization": {
-        "title": "Speicheroptimierung",
-        "description": "Der Cache geschlossener Tabs wird sofort freigegeben, wodurch der Speicherverbrauch reduziert wird."
-      },
-      "bugFixes": {
-        "title": "Fehlerbehebungen",
-        "description": "Probleme mit der Dateizuordnung und diverse andere kleinere Fehler wurden behoben."
+      "fileChangeDetectionWindows": {
+        "title": "Dateiänderungserkennung unter Windows",
+        "description": "Ein Problem wurde behoben, bei dem die Dateiänderungserkennung unter Windows nicht richtig funktionierte."
       }
     }
   },

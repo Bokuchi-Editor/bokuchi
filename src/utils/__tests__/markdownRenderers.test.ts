@@ -161,6 +161,25 @@ describe('processKatex', () => {
     expect(result).toContain('<span class="katex">a</span>');
     expect(result).toContain('<span class="katex katex-display">b</span>');
   });
+
+  it('strips newlines from KaTeX output to prevent table parsing issues', async () => {
+    const katexMod = await import('katex');
+    const mockRenderToString = vi.mocked(katexMod.default.renderToString);
+
+    // Simulate KaTeX output with newlines (as real KaTeX SVG path data contains)
+    mockRenderToString.mockReturnValueOnce(
+      '<span class="katex"><svg>\n<path d="c-2.7,0,-7.17,-2.7\n-13.5,-8"/>\n</svg></span>'
+    );
+
+    const result = await processKatex('$\\sqrt{1}$');
+    expect(result).not.toContain('\n');
+    expect(result).toContain('<svg><path d="c-2.7,0,-7.17,-2.7-13.5,-8"/></svg>');
+
+    // Restore default mock behavior
+    mockRenderToString.mockImplementation((tex: string, opts?: { displayMode?: boolean }) => {
+      return `<span class="katex${opts?.displayMode ? ' katex-display' : ''}">${tex}</span>`;
+    });
+  });
 });
 
 describe('processMermaidBlocks', () => {

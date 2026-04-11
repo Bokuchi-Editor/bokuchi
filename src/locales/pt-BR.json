@@ -191,7 +191,10 @@
         "zoomOut": "Diminuir zoom",
         "resetZoom": "Redefinir zoom",
         "toggleExplorer": "Alternar explorador",
-        "toggleOutline": "Alternar esboço"
+        "toggleOutline": "Alternar esboço",
+        "search": "Pesquisar",
+        "searchAllTabs": "Pesquisar em todas as abas",
+        "replace": "Pesquisar e substituir"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Abas horizontais",
       "vertical": "Abas verticais",
       "horizontalDescription": "As abas são exibidas horizontalmente acima do editor.",
-      "verticalDescription": "As abas são exibidas verticalmente no lado esquerdo do editor."
+      "verticalDescription": "As abas são exibidas verticalmente no lado esquerdo do editor.",
+      "closeButtonPosition": "Posição do botão de fechar",
+      "closeButtonPositionDescription": "Escolha onde exibir o botão de fechar e o ícone de fixar nas abas.",
+      "closeButtonLeft": "Esquerda",
+      "closeButtonRight": "Direita",
+      "closeButtonLeftDescription": "Exibir o botão de fechar e o ícone de fixar no lado esquerdo da aba.",
+      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba."
     },
     "viewMode": {
       "title": "Modo de visualização",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Pesquisar em todas as abas"
   },
+  "tabs": {
+    "copyFilePath": "Copiar caminho do arquivo",
+    "copyFileName": "Copiar nome do arquivo",
+    "pinTab": "Fixar aba",
+    "unpinTab": "Desafixar aba",
+    "closeTab": "Fechar aba",
+    "closeOtherTabs": "Fechar outras abas",
+    "closeTabsToRight": "Fechar abas à direita",
+    "closeTabsBelow": "Fechar abas abaixo",
+    "closeAllTabs": "Fechar todas as abas",
+    "pathCopied": "Caminho copiado para a área de transferência",
+    "fileNameCopied": "Nome do arquivo copiado para a área de transferência",
+    "copyFailed": "Falha ao copiar para a área de transferência"
+  },
   "whatsNew": {
     "title": "Novidades",
     "gotIt": "Entendi",
@@ -500,21 +523,9 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Suporte a KaTeX e Mermaid",
-        "description": "A visualização agora renderiza fórmulas LaTeX e diagramas Mermaid, com opção de ativar/desativar nas Configurações."
-      },
-      "emptyState": {
-        "title": "Nova tela de boas-vindas",
-        "description": "Uma nova tela de boas-vindas é exibida quando nenhum arquivo está aberto, com acesso rápido para criar, abrir ou acessar arquivos recentes."
-      },
-      "memoryOptimization": {
-        "title": "Otimização de memória",
-        "description": "Os caches de abas fechadas são liberados imediatamente, reduzindo o uso de memória."
-      },
-      "bugFixes": {
-        "title": "Correções de bugs",
-        "description": "Corrigidos problemas de associação de arquivos e vários outros bugs menores."
+      "fileChangeDetectionWindows": {
+        "title": "Detecção de alterações de arquivos no Windows",
+        "description": "Corrigido um problema em que a detecção de alterações de arquivos não funcionava corretamente no Windows."
       }
     }
   },

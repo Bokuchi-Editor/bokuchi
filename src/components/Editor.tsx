@@ -72,6 +72,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
+  const [showReplaceDefault, setShowReplaceDefault] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -90,6 +91,60 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     return () => {
       disposablesRef.current.forEach(d => d.dispose());
       disposablesRef.current = [];
+    };
+  }, []);
+
+  // Dispose Monaco models for closed tabs to prevent memory leaks.
+  // We use getModels() iteration instead of getModel(Uri.parse(...)) because
+  // URI matching via Uri.parse may fail depending on the runtime environment.
+  // keepCurrentModel={true} is set on the Editor component so that model
+  // lifecycle is entirely managed here (the library won't dispose on unmount).
+  const prevTabIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!tabs) return;
+    const currentIds = new Set(tabs.map(tab => tab.id));
+    const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+    if (monaco?.editor?.getModels) {
+      const removedIds = new Set<string>();
+      for (const prevId of prevTabIdsRef.current) {
+        if (!currentIds.has(prevId)) {
+          removedIds.add(prevId);
+        }
+      }
+      if (removedIds.size > 0) {
+        for (const model of monaco.editor.getModels()) {
+          const uriStr = model.uri.toString();
+          for (const id of removedIds) {
+            if (uriStr === id || uriStr.endsWith('/' + id)) {
+              model.dispose();
+              break;
+            }
+          }
+        }
+      }
+    }
+    prevTabIdsRef.current = currentIds;
+  }, [tabs]);
+
+  // On unmount, dispose models for tabs that no longer exist.
+  // Models for still-open tabs are kept alive so that undo history
+  // survives view-mode switches (editor → preview → editor).
+  const tabsRef = useRef(tabs);
+  tabsRef.current = tabs;
+  useEffect(() => {
+    return () => {
+      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+      if (!monaco?.editor?.getModels) return;
+      const liveIds = new Set((tabsRef.current ?? []).map(tab => tab.id));
+      for (const model of monaco.editor.getModels()) {
+        const uriStr = model.uri.toString();
+        for (const trackedId of prevTabIdsRef.current) {
+          if ((uriStr === trackedId || uriStr.endsWith('/' + trackedId)) && !liveIds.has(trackedId)) {
+            model.dispose();
+            break;
+          }
+        }
+      }
     };
   }, []);
 
@@ -354,16 +409,19 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(false);
+          setShowReplaceDefault(false);
           setSearchOpen(true);
         });
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
           setSearchAllTabsDefault(false);
+          setShowReplaceDefault(true);
           setSearchOpen(true);
         });
 
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(true);
+          setShowReplaceDefault(false);
           setSearchOpen(true);
         });
 
@@ -458,7 +516,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    if (value !== undefined) {
+    if (value !== undefined && value !== content) {
       onChange(value);
     }
   };
@@ -513,6 +571,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           activeTabId={activeTabId}
           onTabSwitch={onTabSwitch}
           searchAllTabsDefault={searchAllTabsDefault}
+          showReplaceDefault={showReplaceDefault}
         />
         {fileNotFound ? (
           <Box
@@ -550,6 +609,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           <Editor
             height="100%"
             defaultLanguage="markdown"
+            path={activeTabId || 'default'}
+            keepCurrentModel
             value={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}

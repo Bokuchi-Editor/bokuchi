@@ -191,7 +191,10 @@
         "zoomOut": "Perkecil",
         "resetZoom": "Reset Zoom",
         "toggleExplorer": "Beralih Penjelajah",
-        "toggleOutline": "Beralih Kerangka"
+        "toggleOutline": "Beralih Kerangka",
+        "search": "Cari",
+        "searchAllTabs": "Cari di semua tab",
+        "replace": "Cari dan ganti"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Tab Horizontal",
       "vertical": "Tab Vertikal",
       "horizontalDescription": "Tab ditampilkan secara horizontal di atas editor.",
-      "verticalDescription": "Tab ditampilkan secara vertikal di sisi kiri editor."
+      "verticalDescription": "Tab ditampilkan secara vertikal di sisi kiri editor.",
+      "closeButtonPosition": "Posisi Tombol Tutup",
+      "closeButtonPositionDescription": "Pilih tempat menampilkan tombol tutup dan ikon pin pada tab.",
+      "closeButtonLeft": "Kiri",
+      "closeButtonRight": "Kanan",
+      "closeButtonLeftDescription": "Tampilkan tombol tutup dan ikon pin di sisi kiri tab.",
+      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab."
     },
     "viewMode": {
       "title": "Mode Tampilan",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Cari di semua tab"
   },
+  "tabs": {
+    "copyFilePath": "Salin path file",
+    "copyFileName": "Salin nama file",
+    "pinTab": "Sematkan tab",
+    "unpinTab": "Lepas sematan tab",
+    "closeTab": "Tutup tab",
+    "closeOtherTabs": "Tutup tab lainnya",
+    "closeTabsToRight": "Tutup tab di sebelah kanan",
+    "closeTabsBelow": "Tutup tab di bawah",
+    "closeAllTabs": "Tutup semua tab",
+    "pathCopied": "Path disalin ke clipboard",
+    "fileNameCopied": "Nama file disalin ke clipboard",
+    "copyFailed": "Gagal menyalin ke clipboard"
+  },
   "whatsNew": {
     "title": "Yang Baru",
     "gotIt": "Mengerti",
@@ -500,21 +523,9 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Dukungan KaTeX & Mermaid",
-        "description": "Pratinjau sekarang merender rumus matematika LaTeX dan diagram Mermaid, dapat diaktifkan di Pengaturan."
-      },
-      "emptyState": {
-        "title": "Layar sambutan baru",
-        "description": "Layar sambutan baru saat tidak ada file yang terbuka, dengan akses cepat untuk membuat, membuka, dan melihat file terbaru."
-      },
-      "memoryOptimization": {
-        "title": "Optimisasi memori",
-        "description": "Cache tab yang ditutup langsung dilepaskan, mengurangi penggunaan memori."
-      },
-      "bugFixes": {
-        "title": "Perbaikan bug",
-        "description": "Memperbaiki masalah asosiasi file dan beberapa bug kecil lainnya."
+      "fileChangeDetectionWindows": {
+        "title": "Deteksi perubahan file di Windows",
+        "description": "Memperbaiki masalah di mana deteksi perubahan file tidak berfungsi dengan baik di Windows."
       }
     }
   },

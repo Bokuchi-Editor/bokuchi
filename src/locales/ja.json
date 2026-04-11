@@ -191,7 +191,10 @@
         "zoomOut": "ズームアウト",
         "resetZoom": "ズームリセット",
         "toggleExplorer": "エクスプローラーの切り替え",
-        "toggleOutline": "アウトラインの切り替え"
+        "toggleOutline": "アウトラインの切り替え",
+        "search": "検索",
+        "searchAllTabs": "全タブを検索",
+        "replace": "検索と置換"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "水平タブ",
       "vertical": "垂直タブ",
       "horizontalDescription": "タブはエディターの上に水平に表示されます。",
-      "verticalDescription": "タブはエディターの左側に垂直に表示されます。"
+      "verticalDescription": "タブはエディターの左側に垂直に表示されます。",
+      "closeButtonPosition": "閉じるボタンの位置",
+      "closeButtonPositionDescription": "タブの閉じるボタンとピンアイコンの表示位置を選択します。",
+      "closeButtonLeft": "左",
+      "closeButtonRight": "右",
+      "closeButtonLeftDescription": "タブの左側に閉じるボタンとピンアイコンを表示します。",
+      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。"
     },
     "viewMode": {
       "title": "ビューモード",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "すべてのタブを検索"
   },
+  "tabs": {
+    "copyFilePath": "ファイルパスをコピー",
+    "copyFileName": "ファイル名をコピー",
+    "pinTab": "タブをピン留め",
+    "unpinTab": "タブのピン留めを解除",
+    "closeTab": "タブを閉じる",
+    "closeOtherTabs": "他のタブを閉じる",
+    "closeTabsToRight": "右側のタブをすべて閉じる",
+    "closeTabsBelow": "下側のタブをすべて閉じる",
+    "closeAllTabs": "すべてのタブを閉じる",
+    "pathCopied": "パスをクリップボードにコピーしました",
+    "fileNameCopied": "ファイル名をクリップボードにコピーしました",
+    "copyFailed": "クリップボードへのコピーに失敗しました"
+  },
   "whatsNew": {
     "title": "新機能のご紹介",
     "gotIt": "OK",
@@ -500,21 +523,9 @@
       "improvement": "改善"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX・Mermaid 対応",
-        "description": "プレビューで LaTeX 数式と Mermaid ダイアグラムを表示できるようになりました。設定画面でそれぞれ切り替えできます。"
-      },
-      "emptyState": {
-        "title": "ウェルカム画面の追加",
-        "description": "ファイルが開かれていないときに、新規作成・ファイルを開く・最近使ったファイルにすばやくアクセスできるウェルカム画面が表示されます。"
-      },
-      "memoryOptimization": {
-        "title": "メモリ管理の最適化",
-        "description": "閉じたタブのキャッシュが即座に解放されるようになり、メモリ使用量が改善しました。"
-      },
-      "bugFixes": {
-        "title": "不具合の修正",
-        "description": "ファイルの関連付けに関する問題をはじめ、いくつかの不具合を修正しました。"
+      "fileChangeDetectionWindows": {
+        "title": "Windowsでのファイル変更検知の修正",
+        "description": "Windows環境でファイルの変更検知が正しく動作しない問題を修正しました。"
       }
     }
   },

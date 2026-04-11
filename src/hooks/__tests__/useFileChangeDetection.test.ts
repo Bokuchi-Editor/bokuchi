@@ -17,8 +17,9 @@ import type { Tab } from '../../types/tab';
 import { asMock } from '../../test-utils';
 
 describe('useFileChangeDetection', () => {
-  let updateTabContent: ReturnType<typeof vi.fn>;
+  let reloadTabContent: ReturnType<typeof vi.fn>;
   let updateTabFileHash: ReturnType<typeof vi.fn>;
+  let setTabModified: ReturnType<typeof vi.fn>;
   let setActiveTab: ReturnType<typeof vi.fn>;
 
   const tabs: Tab[] = [
@@ -26,8 +27,9 @@ describe('useFileChangeDetection', () => {
   ];
 
   beforeEach(() => {
-    updateTabContent = vi.fn();
+    reloadTabContent = vi.fn();
     updateTabFileHash = vi.fn();
+    setTabModified = vi.fn();
     setActiveTab = vi.fn();
   });
 
@@ -35,8 +37,9 @@ describe('useFileChangeDetection', () => {
     tabs,
     activeTab: tabs[0],
     isInitialized: true,
-    updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
+    reloadTabContent: asMock<(tabId: string, content: string) => void>(reloadTabContent),
     updateTabFileHash: asMock<(tabId: string) => void>(updateTabFileHash),
+    setTabModified: asMock<(tabId: string, isModified: boolean) => void>(setTabModified),
     setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
   });
 
@@ -112,8 +115,9 @@ describe('useFileChangeDetection', () => {
         tabs: currentTabs,
         activeTab: currentTabs[0],
         isInitialized: true,
-        updateTabContent: asMock<(tabId: string, content: string) => void>(updateTabContent),
+        reloadTabContent: asMock<(tabId: string, content: string) => void>(reloadTabContent),
         updateTabFileHash: asMock<(tabId: string) => void>(updateTabFileHash),
+        setTabModified: asMock<(tabId: string, isModified: boolean) => void>(setTabModified),
         setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
       }),
     );
@@ -138,5 +142,96 @@ describe('useFileChangeDetection', () => {
     // If tabs dependency was missing, the listener would have stale tabs and not find tab2
     asMock<typeof desktopApi.readFileFromPath>(desktopApi.readFileFromPath as ReturnType<typeof vi.fn>);
     (desktopApi.readFileFromPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce('updated content');
+  });
+
+  // T-FCD-07: Regression test - cancel marks tab as modified
+  it('T-FCD-07: onCancel calls detail onCancel and closes dialog', async () => {
+    const detailOnCancel = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+    // Open dialog via event
+    act(() => {
+      const event = new CustomEvent('fileChangeDetected', {
+        detail: {
+          fileName: 'test.md',
+          tabId: 'tab1',
+          onCancel: detailOnCancel,
+        },
+      });
+      window.dispatchEvent(event);
+    });
+
+    expect(result.current.fileChangeDialog.open).toBe(true);
+
+    // Click cancel
+    await act(async () => {
+      await result.current.fileChangeDialog.onCancel();
+    });
+
+    // Detail's onCancel should have been called
+    expect(detailOnCancel).toHaveBeenCalledTimes(1);
+    // Dialog should be closed
+    expect(result.current.fileChangeDialog.open).toBe(false);
+  });
+
+  // T-FCD-08: Regression test - dialog closes even if onCancel throws
+  it('T-FCD-08: dialog closes even when detail onCancel throws', async () => {
+    const detailOnCancel = vi.fn().mockRejectedValue(new Error('save failed'));
+    const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+    // Open dialog via event
+    act(() => {
+      const event = new CustomEvent('fileChangeDetected', {
+        detail: {
+          fileName: 'test.md',
+          tabId: 'tab1',
+          onCancel: detailOnCancel,
+        },
+      });
+      window.dispatchEvent(event);
+    });
+
+    expect(result.current.fileChangeDialog.open).toBe(true);
+
+    // Click cancel (onCancel throws internally)
+    await act(async () => {
+      await result.current.fileChangeDialog.onCancel();
+    });
+
+    // Dialog must still close despite the error
+    expect(result.current.fileChangeDialog.open).toBe(false);
+  });
+
+  // T-FCD-06: Regression test - polling stops while dialog is open
+  it('T-FCD-06: does not poll while file change dialog is open', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // Open the dialog
+      act(() => {
+        result.current.setFileChangeDialog({
+          open: true,
+          fileName: 'test.md',
+          onReload: vi.fn(),
+          onCancel: vi.fn(),
+        });
+      });
+
+      // Advance timers past the 5-second polling interval
+      await act(async () => {
+        vi.advanceTimersByTime(10000);
+      });
+
+      // detectFileChange should NOT have been called while dialog is open
+      expect(mockDetect).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

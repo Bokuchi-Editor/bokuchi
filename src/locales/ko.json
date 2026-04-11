@@ -191,7 +191,10 @@
         "zoomOut": "축소",
         "resetZoom": "확대/축소 재설정",
         "toggleExplorer": "탐색기 전환",
-        "toggleOutline": "개요 전환"
+        "toggleOutline": "개요 전환",
+        "search": "검색",
+        "searchAllTabs": "모든 탭 검색",
+        "replace": "검색 및 바꾸기"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "수평 탭",
       "vertical": "수직 탭",
       "horizontalDescription": "탭이 편집기 위에 수평으로 표시됩니다.",
-      "verticalDescription": "탭이 편집기 왼쪽에 수직으로 표시됩니다."
+      "verticalDescription": "탭이 편집기 왼쪽에 수직으로 표시됩니다.",
+      "closeButtonPosition": "닫기 버튼 위치",
+      "closeButtonPositionDescription": "탭에서 닫기 버튼과 고정 아이콘의 표시 위치를 선택합니다.",
+      "closeButtonLeft": "왼쪽",
+      "closeButtonRight": "오른쪽",
+      "closeButtonLeftDescription": "탭 왼쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
+      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다."
     },
     "viewMode": {
       "title": "보기 모드",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "모든 탭에서 검색"
   },
+  "tabs": {
+    "copyFilePath": "파일 경로 복사",
+    "copyFileName": "파일 이름 복사",
+    "pinTab": "탭 고정",
+    "unpinTab": "탭 고정 해제",
+    "closeTab": "탭 닫기",
+    "closeOtherTabs": "다른 탭 닫기",
+    "closeTabsToRight": "오른쪽 탭 닫기",
+    "closeTabsBelow": "아래 탭 닫기",
+    "closeAllTabs": "모든 탭 닫기",
+    "pathCopied": "경로가 클립보드에 복사되었습니다",
+    "fileNameCopied": "파일 이름이 클립보드에 복사되었습니다",
+    "copyFailed": "클립보드에 복사하지 못했습니다"
+  },
   "whatsNew": {
     "title": "새로운 기능",
     "gotIt": "확인",
@@ -500,21 +523,9 @@
       "improvement": "개선"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "KaTeX 및 Mermaid 지원",
-        "description": "미리보기에서 LaTeX 수식과 Mermaid 다이어그램을 렌더링할 수 있으며, 설정에서 전환할 수 있습니다."
-      },
-      "emptyState": {
-        "title": "새 환영 화면",
-        "description": "파일이 열려 있지 않을 때 새 환영 화면이 표시되며, 파일 생성/열기/최근 파일에 빠르게 접근할 수 있습니다."
-      },
-      "memoryOptimization": {
-        "title": "메모리 최적화",
-        "description": "닫은 탭의 캐시가 즉시 해제되어 메모리 사용량이 줄어듭니다."
-      },
-      "bugFixes": {
-        "title": "버그 수정",
-        "description": "파일 연결 문제 및 기타 여러 사소한 버그를 수정했습니다."
+      "fileChangeDetectionWindows": {
+        "title": "Windows 파일 변경 감지 수정",
+        "description": "Windows에서 파일 변경 감지가 제대로 작동하지 않던 문제를 수정했습니다."
       }
     }
   },

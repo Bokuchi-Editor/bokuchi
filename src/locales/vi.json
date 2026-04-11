@@ -191,7 +191,10 @@
         "zoomOut": "Thu nhỏ",
         "resetZoom": "Đặt lại zoom",
         "toggleExplorer": "Bật/tắt trình khám phá",
-        "toggleOutline": "Bật/tắt dàn ý"
+        "toggleOutline": "Bật/tắt dàn ý",
+        "search": "Tìm kiếm",
+        "searchAllTabs": "Tìm kiếm tất cả tab",
+        "replace": "Tìm kiếm và thay thế"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Tab ngang",
       "vertical": "Tab dọc",
       "horizontalDescription": "Tab được hiển thị ngang phía trên trình soạn thảo.",
-      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo."
+      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo.",
+      "closeButtonPosition": "Vị trí nút đóng",
+      "closeButtonPositionDescription": "Chọn vị trí hiển thị nút đóng và biểu tượng ghim trên tab.",
+      "closeButtonLeft": "Trái",
+      "closeButtonRight": "Phải",
+      "closeButtonLeftDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên trái tab.",
+      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab."
     },
     "viewMode": {
       "title": "Chế độ xem",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Tìm kiếm tất cả các tab"
   },
+  "tabs": {
+    "copyFilePath": "Sao chép đường dẫn tệp",
+    "copyFileName": "Sao chép tên tệp",
+    "pinTab": "Ghim tab",
+    "unpinTab": "Bỏ ghim tab",
+    "closeTab": "Đóng tab",
+    "closeOtherTabs": "Đóng các tab khác",
+    "closeTabsToRight": "Đóng các tab bên phải",
+    "closeTabsBelow": "Đóng các tab bên dưới",
+    "closeAllTabs": "Đóng tất cả tab",
+    "pathCopied": "Đã sao chép đường dẫn vào clipboard",
+    "fileNameCopied": "Đã sao chép tên tệp vào clipboard",
+    "copyFailed": "Không thể sao chép vào clipboard"
+  },
   "whatsNew": {
     "title": "Có gì mới",
     "gotIt": "Đã hiểu",
@@ -500,21 +523,9 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Hỗ trợ KaTeX và Mermaid",
-        "description": "Xem trước giờ đây hiển thị công thức LaTeX và sơ đồ Mermaid, có thể bật/tắt trong Cài đặt."
-      },
-      "emptyState": {
-        "title": "Màn hình chào mừng mới",
-        "description": "Màn hình chào mừng hiển thị khi không có tệp nào đang mở, cho phép truy cập nhanh để tạo, mở hoặc xem tệp gần đây."
-      },
-      "memoryOptimization": {
-        "title": "Tối ưu hóa bộ nhớ",
-        "description": "Bộ nhớ đệm của tab đã đóng được giải phóng ngay lập tức, giảm mức sử dụng bộ nhớ."
-      },
-      "bugFixes": {
-        "title": "Sửa lỗi",
-        "description": "Đã sửa các lỗi liên kết tệp và một số lỗi nhỏ khác."
+      "fileChangeDetectionWindows": {
+        "title": "Phát hiện thay đổi tệp trên Windows",
+        "description": "Đã sửa lỗi phát hiện thay đổi tệp không hoạt động đúng trên Windows."
       }
     }
   },

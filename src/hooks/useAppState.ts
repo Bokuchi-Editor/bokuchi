@@ -61,15 +61,20 @@ export const useAppState = () => {
     activeTab,
     isInitialized,
     removeTab,
+    toggleTabPinned,
+    removeTabs,
     setActiveTab,
     updateTabContent,
+    reloadTabContent,
     updateTabFileHash,
+    setTabModified,
     reorderTabs,
     openFile,
     saveTab,
     saveTabAs,
     createNewTab,
     renameFile,
+    updateTabTitle,
   } = useTabsDesktop();
 
   // Zoom management
@@ -136,8 +141,9 @@ export const useAppState = () => {
     tabs,
     activeTab,
     isInitialized,
-    updateTabContent,
+    reloadTabContent,
     updateTabFileHash,
+    setTabModified,
     setActiveTab,
   });
 
@@ -213,6 +219,7 @@ export const useAppState = () => {
   const handleSettingsClose = () => setSettingsOpen(false);
   const handleHelpOpen = () => setHelpOpen(true);
   const handleHelpClose = () => setHelpOpen(false);
+
   const handleRecentFilesOpen = () => setRecentFilesOpen(true);
   const handleRecentFilesClose = () => setRecentFilesOpen(false);
 
@@ -227,7 +234,7 @@ export const useAppState = () => {
   };
 
   // Rename dialog state
-  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string }>({
+  const [renameDialog, setRenameDialog] = useState<{ open: boolean; filePath: string; currentName: string; tabId?: string }>({
     open: false, filePath: '', currentName: '',
   });
 
@@ -238,20 +245,95 @@ export const useAppState = () => {
 
   const handleRenameConfirm = useCallback(async (newName: string) => {
     try {
-      await renameFile(renameDialog.filePath, newName);
+      if (renameDialog.tabId && !renameDialog.filePath) {
+        // Unsaved tab: only update title
+        updateTabTitle(renameDialog.tabId, newName);
+      } else {
+        // Saved file (from tab or folder tree): rename on filesystem
+        await renameFile(renameDialog.filePath, newName);
+        folderTreeRefreshTree();
+      }
       setRenameDialog({ open: false, filePath: '', currentName: '' });
-      folderTreeRefreshTree();
       setSnackbar({ open: true, message: t('folderTree.renameSuccess'), severity: 'success' });
     } catch (error) {
       console.error('Failed to rename file:', error);
       const msg = error instanceof Error ? error.message : t('folderTree.renameFailed');
       setSnackbar({ open: true, message: msg, severity: 'error' });
     }
-  }, [renameFile, renameDialog.filePath, folderTreeRefreshTree, t]);
+  }, [renameFile, renameDialog.filePath, renameDialog.tabId, updateTabTitle, folderTreeRefreshTree, t]);
 
   const handleRenameCancel = useCallback(() => {
     setRenameDialog({ open: false, filePath: '', currentName: '' });
   }, []);
+
+  const handleTabRenameRequest = useCallback((tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab) return;
+    const currentName = tab.filePath
+      ? tab.filePath.substring(tab.filePath.lastIndexOf('/') + 1)
+      : tab.title;
+    setRenameDialog({ open: true, filePath: tab.filePath || '', currentName, tabId });
+  }, [tabs]);
+
+  // Tab context menu handlers
+  const handleToggleTabPinned = useCallback((tabId: string) => {
+    toggleTabPinned(tabId);
+  }, [toggleTabPinned]);
+
+  const handleCopyFilePath = useCallback(async (tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab?.filePath) return;
+    try {
+      await navigator.clipboard.writeText(tab.filePath);
+      setSnackbar({ open: true, message: t('tabs.pathCopied'), severity: 'success' });
+    } catch {
+      setSnackbar({ open: true, message: t('tabs.copyFailed'), severity: 'error' });
+    }
+  }, [tabs, t]);
+
+  const handleCopyFileName = useCallback(async (tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab) return;
+    const fileName = tab.filePath
+      ? tab.filePath.substring(tab.filePath.lastIndexOf('/') + 1)
+      : tab.title;
+    try {
+      await navigator.clipboard.writeText(fileName);
+      setSnackbar({ open: true, message: t('tabs.fileNameCopied'), severity: 'success' });
+    } catch {
+      setSnackbar({ open: true, message: t('tabs.copyFailed'), severity: 'error' });
+    }
+  }, [tabs, t]);
+
+  const handleCloseOtherTabs = useCallback((tabId: string) => {
+    const idsToClose = tabs
+      .filter(tab => tab.id !== tabId && !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
+
+  const handleCloseTabsToRight = useCallback((tabId: string) => {
+    const tabIndex = tabs.findIndex(t => t.id === tabId);
+    if (tabIndex === -1) return;
+    const idsToClose = tabs
+      .slice(tabIndex + 1)
+      .filter(tab => !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
+
+  const handleCloseAllTabs = useCallback(() => {
+    const idsToClose = tabs
+      .filter(tab => !tab.isPinned && !tab.isModified)
+      .map(tab => tab.id);
+    if (idsToClose.length > 0) {
+      removeTabs(idsToClose);
+    }
+  }, [tabs, removeTabs]);
 
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
@@ -467,6 +549,13 @@ export const useAppState = () => {
     handleRenameRequest,
     handleRenameConfirm,
     handleRenameCancel,
+    handleTabRenameRequest,
+    handleToggleTabPinned,
+    handleCopyFilePath,
+    handleCopyFileName,
+    handleCloseOtherTabs,
+    handleCloseTabsToRight,
+    handleCloseAllTabs,
     setGlobalVariables,
     setTabLayout,
     setViewMode,

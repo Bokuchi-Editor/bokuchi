@@ -57,6 +57,14 @@ interface AppContentProps {
   onFolderTreeRefresh: () => void;
   onFolderTreePanelClose: () => void;
   onRenameRequest?: (filePath: string) => void;
+  onTabRename?: (tabId: string) => void;
+  onToggleTabPinned?: (tabId: string) => void;
+  onCopyFilePath?: (tabId: string) => void;
+  onCopyFileName?: (tabId: string) => void;
+  onCloseOtherTabs?: (tabId: string) => void;
+  onCloseTabsToRight?: (tabId: string) => void;
+  onCloseAllTabs?: () => void;
+  tabCloseButtonPosition?: 'left' | 'right';
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -103,6 +111,14 @@ const AppContent: React.FC<AppContentProps> = ({
   onFolderTreeRefresh,
   onFolderTreePanelClose,
   onRenameRequest,
+  onTabRename,
+  onToggleTabPinned,
+  onCopyFilePath,
+  onCopyFileName,
+  onCloseOtherTabs,
+  onCloseTabsToRight,
+  onCloseAllTabs,
+  tabCloseButtonPosition,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -246,6 +262,14 @@ const AppContent: React.FC<AppContentProps> = ({
               onTabClose={onTabClose}
               onNewTab={onNewTab}
               onTabReorder={onTabReorder}
+              onTabRename={onTabRename}
+              onToggleTabPinned={onToggleTabPinned}
+              onCopyFilePath={onCopyFilePath}
+              onCopyFileName={onCopyFileName}
+              onCloseOtherTabs={onCloseOtherTabs}
+              onCloseTabsToRight={onCloseTabsToRight}
+              onCloseAllTabs={onCloseAllTabs}
+              closeButtonPosition={tabCloseButtonPosition}
               layout="vertical"
               embedded
             />
@@ -297,6 +321,14 @@ const AppContent: React.FC<AppContentProps> = ({
           onTabClose={onTabClose}
           onNewTab={onNewTab}
           onTabReorder={onTabReorder}
+          onTabRename={onTabRename}
+          onToggleTabPinned={onToggleTabPinned}
+          onCopyFilePath={onCopyFilePath}
+          onCopyFileName={onCopyFileName}
+          onCloseOtherTabs={onCloseOtherTabs}
+          onCloseTabsToRight={onCloseTabsToRight}
+          onCloseAllTabs={onCloseAllTabs}
+          closeButtonPosition={tabCloseButtonPosition}
           layout={tabLayout}
         />
       )}
@@ -327,6 +359,14 @@ const AppContent: React.FC<AppContentProps> = ({
             onTabClose={onTabClose}
             onNewTab={onNewTab}
             onTabReorder={onTabReorder}
+            onTabRename={onTabRename}
+            onToggleTabPinned={onToggleTabPinned}
+            onCopyFilePath={onCopyFilePath}
+            onCopyFileName={onCopyFileName}
+            onCloseOtherTabs={onCloseOtherTabs}
+            onCloseTabsToRight={onCloseTabsToRight}
+            onCloseAllTabs={onCloseAllTabs}
+            closeButtonPosition={tabCloseButtonPosition}
             layout={tabLayout}
           />
         )}

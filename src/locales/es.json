@@ -191,7 +191,10 @@
         "zoomOut": "Alejar",
         "resetZoom": "Restablecer zoom",
         "toggleExplorer": "Alternar explorador",
-        "toggleOutline": "Alternar esquema"
+        "toggleOutline": "Alternar esquema",
+        "search": "Buscar",
+        "searchAllTabs": "Buscar en todas las pestañas",
+        "replace": "Buscar y reemplazar"
       }
     },
     "tutorials": {
@@ -303,7 +306,13 @@
       "horizontal": "Pestañas horizontales",
       "vertical": "Pestañas verticales",
       "horizontalDescription": "Las pestañas se muestran horizontalmente encima del editor.",
-      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor."
+      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor.",
+      "closeButtonPosition": "Posición del botón de cerrar",
+      "closeButtonPositionDescription": "Elige dónde mostrar el botón de cerrar y el icono de fijar en las pestañas.",
+      "closeButtonLeft": "Izquierda",
+      "closeButtonRight": "Derecha",
+      "closeButtonLeftDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado izquierdo de la pestaña.",
+      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña."
     },
     "viewMode": {
       "title": "Modo de vista",
@@ -491,6 +500,20 @@
   "search": {
     "searchAllTabs": "Buscar en todas las pestañas"
   },
+  "tabs": {
+    "copyFilePath": "Copiar ruta del archivo",
+    "copyFileName": "Copiar nombre del archivo",
+    "pinTab": "Fijar pestaña",
+    "unpinTab": "Desfijar pestaña",
+    "closeTab": "Cerrar pestaña",
+    "closeOtherTabs": "Cerrar otras pestañas",
+    "closeTabsToRight": "Cerrar pestañas a la derecha",
+    "closeTabsBelow": "Cerrar pestañas de abajo",
+    "closeAllTabs": "Cerrar todas las pestañas",
+    "pathCopied": "Ruta copiada al portapapeles",
+    "fileNameCopied": "Nombre de archivo copiado al portapapeles",
+    "copyFailed": "Error al copiar al portapapeles"
+  },
   "whatsNew": {
     "title": "Novedades",
     "gotIt": "Entendido",
@@ -500,21 +523,9 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "katexMermaid": {
-        "title": "Soporte para KaTeX y Mermaid",
-        "description": "La vista previa ahora renderiza fórmulas matemáticas LaTeX y diagramas Mermaid, activable desde Configuración."
-      },
-      "emptyState": {
-        "title": "Nueva pantalla de bienvenida",
-        "description": "Nueva pantalla de bienvenida cuando no hay archivos abiertos, con acceso rápido para crear, abrir y ver archivos recientes."
-      },
-      "memoryOptimization": {
-        "title": "Optimización de memoria",
-        "description": "La caché de las pestañas cerradas se libera de inmediato, reduciendo el uso de memoria."
-      },
-      "bugFixes": {
-        "title": "Correcciones de errores",
-        "description": "Se corrigieron problemas de asociación de archivos y varios otros errores menores."
+      "fileChangeDetectionWindows": {
+        "title": "Detección de cambios de archivos en Windows",
+        "description": "Se corrigió un problema en el que la detección de cambios de archivos no funcionaba correctamente en Windows."
       }
     }
   },
