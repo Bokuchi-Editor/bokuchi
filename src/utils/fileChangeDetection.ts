@@ -22,23 +22,23 @@ export async function detectFileChange(tab: Tab): Promise<boolean> {
     // Get current file hash
     const currentHashInfo = await desktopApi.getFileHash(tab.filePath);
 
-    // Incremental checks
-    // 1. File size check (fast)
+    // Content-based change detection
+    // NOTE: modified_time is intentionally NOT used for change detection.
+    // Windows/NTFS can update timestamps without content changes
+    // (delayed metadata flush, AV scanning, etc.), causing false positives
+    // that lead to infinite dialog loops.
+
+    // 1. File size check (fast) — size change always means content change
     if (currentHashInfo.file_size !== tab.fileHashInfo.file_size) {
       return true;
     }
 
-    // 2. Last modified time check (fast)
-    if (currentHashInfo.modified_time !== tab.fileHashInfo.modified_time) {
-      return true;
-    }
-
-    // 3. Hash value check (only when needed)
+    // 2. Hash value check — definitive content comparison
     if (currentHashInfo.hash !== tab.fileHashInfo.hash) {
       return true;
     }
 
-    // No changes
+    // No content changes
     return false;
   } catch (error) {
     console.error('Failed to detect file change:', error);

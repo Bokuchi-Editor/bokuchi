@@ -63,7 +63,9 @@ export const useAppState = () => {
     removeTab,
     setActiveTab,
     updateTabContent,
+    reloadTabContent,
     updateTabFileHash,
+    setTabModified,
     reorderTabs,
     openFile,
     saveTab,
@@ -136,8 +138,9 @@ export const useAppState = () => {
     tabs,
     activeTab,
     isInitialized,
-    updateTabContent,
+    reloadTabContent,
     updateTabFileHash,
+    setTabModified,
     setActiveTab,
   });
 
