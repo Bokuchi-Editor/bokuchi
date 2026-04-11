@@ -59,15 +59,16 @@ describe('detectFileChange', () => {
     expect(await detectFileChange(tab)).toBe(true);
   });
 
-  // T-FC-03
-  it('returns true when modified time differs', async () => {
+  // T-FC-03: modified_time differs but hash is the same → not changed
+  // (Windows/NTFS can update modified_time without content changes)
+  it('returns false when only modified time differs but hash matches', async () => {
     vi.mocked(desktopApi.getFileHash).mockResolvedValue({
       hash: 'abc123',
       modified_time: 2000,
       file_size: 512,
     });
     const tab = createTab();
-    expect(await detectFileChange(tab)).toBe(true);
+    expect(await detectFileChange(tab)).toBe(false);
   });
 
   // T-FC-04

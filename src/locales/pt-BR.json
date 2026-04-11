@@ -501,17 +501,9 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Isolamento de desfazer/refazer por aba",
-        "description": "Desfazer e refazer agora funcionam independentemente em cada aba."
-      },
-      "katexTableCell": {
-        "title": "KaTeX em células de tabela",
-        "description": "Expressões matemáticas em células de tabela Markdown agora são renderizadas corretamente."
-      },
-      "imageLinkHandling": {
-        "title": "Melhoria nos links de imagens",
-        "description": "Links de imagens na visualização agora abrem em um navegador externo."
+      "fileChangeDetectionWindows": {
+        "title": "Detecção de alterações de arquivos no Windows",
+        "description": "Corrigido um problema em que a detecção de alterações de arquivos não funcionava corretamente no Windows."
       }
     }
   }

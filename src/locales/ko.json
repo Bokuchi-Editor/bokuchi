@@ -501,17 +501,9 @@
       "improvement": "개선"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "실행 취소/다시 실행 탭 분리",
-        "description": "실행 취소 및 다시 실행이 모든 탭이 아닌 현재 탭에서만 독립적으로 작동합니다."
-      },
-      "katexTableCell": {
-        "title": "테이블 셀 내 KaTeX 수정",
-        "description": "Markdown 테이블 셀 내의 수식이 올바르게 렌더링됩니다."
-      },
-      "imageLinkHandling": {
-        "title": "이미지 링크 처리 개선",
-        "description": "미리보기에서 이미지 링크를 클릭하면 외부 브라우저에서 열립니다."
+      "fileChangeDetectionWindows": {
+        "title": "Windows 파일 변경 감지 수정",
+        "description": "Windows에서 파일 변경 감지가 제대로 작동하지 않던 문제를 수정했습니다."
       }
     }
   }

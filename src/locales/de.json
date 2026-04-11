@@ -501,17 +501,9 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Rückgängig/Wiederholen-Tab-Isolierung",
-        "description": "Rückgängig und Wiederholen wirken jetzt nur auf den aktuellen Tab statt auf alle geöffneten Tabs."
-      },
-      "katexTableCell": {
-        "title": "KaTeX in Tabellenzellen",
-        "description": "Mathematische Ausdrücke in Markdown-Tabellenzellen werden jetzt korrekt dargestellt."
-      },
-      "imageLinkHandling": {
-        "title": "Verbesserung der Bild-Link-Behandlung",
-        "description": "Bild-Links in der Vorschau werden jetzt im externen Browser geöffnet."
+      "fileChangeDetectionWindows": {
+        "title": "Dateiänderungserkennung unter Windows",
+        "description": "Ein Problem wurde behoben, bei dem die Dateiänderungserkennung unter Windows nicht richtig funktionierte."
       }
     }
   }

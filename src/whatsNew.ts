@@ -25,22 +25,12 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.7.1',
+  version: '0.7.2',
   changes: [
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.undoRedoIsolation.title',
-      descriptionKey: 'whatsNew.changes.undoRedoIsolation.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.katexTableCell.title',
-      descriptionKey: 'whatsNew.changes.katexTableCell.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.imageLinkHandling.title',
-      descriptionKey: 'whatsNew.changes.imageLinkHandling.description',
+      titleKey: 'whatsNew.changes.fileChangeDetectionWindows.title',
+      descriptionKey: 'whatsNew.changes.fileChangeDetectionWindows.description',
     },
   ],
 };

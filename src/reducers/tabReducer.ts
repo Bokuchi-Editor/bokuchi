@@ -55,6 +55,16 @@ export const tabReducer = (state: TabState, action: TabAction): TabState => {
         ),
       };
 
+    case 'RELOAD_TAB_CONTENT':
+      return {
+        ...state,
+        tabs: state.tabs.map(tab =>
+          tab.id === action.payload.id
+            ? { ...tab, content: action.payload.content, isModified: false }
+            : tab
+        ),
+      };
+
     case 'UPDATE_TAB_TITLE':
       return {
         ...state,
