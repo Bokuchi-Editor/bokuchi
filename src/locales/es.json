@@ -521,17 +521,9 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Aislamiento de deshacer/rehacer por pestaña",
-        "description": "Deshacer y rehacer ahora funcionan de forma independiente en cada pestaña."
-      },
-      "katexTableCell": {
-        "title": "KaTeX en celdas de tabla",
-        "description": "Las expresiones matemáticas en celdas de tabla Markdown ahora se muestran correctamente."
-      },
-      "imageLinkHandling": {
-        "title": "Mejora en enlaces de imágenes",
-        "description": "Los enlaces de imágenes en la vista previa ahora se abren en un navegador externo."
+      "fileChangeDetectionWindows": {
+        "title": "Detección de cambios de archivos en Windows",
+        "description": "Se corrigió un problema en el que la detección de cambios de archivos no funcionaba correctamente en Windows."
       }
     }
   }

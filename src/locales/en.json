@@ -521,17 +521,9 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Undo/Redo Tab Isolation",
-        "description": "Undo and redo now work independently per tab instead of affecting all open tabs."
-      },
-      "katexTableCell": {
-        "title": "KaTeX in Table Cells",
-        "description": "Math expressions inside Markdown table cells now render correctly."
-      },
-      "imageLinkHandling": {
-        "title": "Image Link Handling",
-        "description": "Clicking image links in preview now opens them in an external browser."
+      "fileChangeDetectionWindows": {
+        "title": "File Change Detection on Windows",
+        "description": "Fixed an issue where file change detection was not working properly on Windows."
       }
     }
   }

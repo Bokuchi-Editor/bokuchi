@@ -521,17 +521,9 @@
       "improvement": "改進"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "復原/重做分頁隔離",
-        "description": "復原和重做操作現在僅作用於當前分頁，不再影響所有開啟的分頁。"
-      },
-      "katexTableCell": {
-        "title": "表格儲存格內 KaTeX 修正",
-        "description": "Markdown 表格儲存格中的數學公式現在可以正確呈現。"
-      },
-      "imageLinkHandling": {
-        "title": "圖片連結處理改進",
-        "description": "點擊預覽中的圖片連結現在會在外部瀏覽器中開啟。"
+      "fileChangeDetectionWindows": {
+        "title": "Windows 檔案變更偵測修正",
+        "description": "修正了 Windows 環境下檔案變更偵測無法正常運作的問題。"
       }
     }
   }

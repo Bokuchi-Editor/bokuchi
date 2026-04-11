@@ -521,17 +521,9 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Cô lập hoàn tác/làm lại theo tab",
-        "description": "Hoàn tác và làm lại giờ hoạt động độc lập cho từng tab thay vì ảnh hưởng đến tất cả các tab đang mở."
-      },
-      "katexTableCell": {
-        "title": "Sửa lỗi KaTeX trong ô bảng",
-        "description": "Biểu thức toán trong ô bảng Markdown giờ hiển thị chính xác."
-      },
-      "imageLinkHandling": {
-        "title": "Cải thiện xử lý liên kết hình ảnh",
-        "description": "Nhấp vào liên kết hình ảnh trong bản xem trước giờ sẽ mở trong trình duyệt ngoài."
+      "fileChangeDetectionWindows": {
+        "title": "Phát hiện thay đổi tệp trên Windows",
+        "description": "Đã sửa lỗi phát hiện thay đổi tệp không hoạt động đúng trên Windows."
       }
     }
   }

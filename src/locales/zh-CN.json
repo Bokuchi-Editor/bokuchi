@@ -521,17 +521,9 @@
       "improvement": "改进"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "撤销/重做标签页隔离",
-        "description": "撤销和重做操作现在仅作用于当前标签页，不再影响所有打开的标签页。"
-      },
-      "katexTableCell": {
-        "title": "表格单元格内 KaTeX 修复",
-        "description": "Markdown 表格单元格中的数学公式现在可以正确渲染。"
-      },
-      "imageLinkHandling": {
-        "title": "图片链接处理改进",
-        "description": "点击预览中的图片链接现在会在外部浏览器中打开。"
+      "fileChangeDetectionWindows": {
+        "title": "Windows 文件变更检测修复",
+        "description": "修复了 Windows 环境下文件变更检测无法正常工作的问题。"
       }
     }
   }

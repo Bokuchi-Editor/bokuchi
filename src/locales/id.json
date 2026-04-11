@@ -521,17 +521,9 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Isolasi undo/redo per tab",
-        "description": "Undo dan redo sekarang bekerja secara independen per tab, tidak lagi memengaruhi semua tab yang terbuka."
-      },
-      "katexTableCell": {
-        "title": "Perbaikan KaTeX di sel tabel",
-        "description": "Ekspresi matematika dalam sel tabel Markdown sekarang ditampilkan dengan benar."
-      },
-      "imageLinkHandling": {
-        "title": "Perbaikan penanganan tautan gambar",
-        "description": "Mengklik tautan gambar di pratinjau sekarang membukanya di browser eksternal."
+      "fileChangeDetectionWindows": {
+        "title": "Deteksi perubahan file di Windows",
+        "description": "Memperbaiki masalah di mana deteksi perubahan file tidak berfungsi dengan baik di Windows."
       }
     }
   }

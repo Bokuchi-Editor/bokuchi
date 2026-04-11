@@ -521,17 +521,9 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "Isolation annuler/rétablir par onglet",
-        "description": "Les actions annuler et rétablir fonctionnent désormais indépendamment pour chaque onglet."
-      },
-      "katexTableCell": {
-        "title": "KaTeX dans les cellules de tableau",
-        "description": "Les expressions mathématiques dans les cellules de tableau Markdown s'affichent désormais correctement."
-      },
-      "imageLinkHandling": {
-        "title": "Amélioration des liens d'images",
-        "description": "Les liens d'images dans l'aperçu s'ouvrent désormais dans un navigateur externe."
+      "fileChangeDetectionWindows": {
+        "title": "Détection des modifications de fichiers sous Windows",
+        "description": "Correction d'un problème où la détection des modifications de fichiers ne fonctionnait pas correctement sous Windows."
       }
     }
   }

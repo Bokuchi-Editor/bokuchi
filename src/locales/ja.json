@@ -521,17 +521,9 @@
       "improvement": "改善"
     },
     "changes": {
-      "undoRedoIsolation": {
-        "title": "元に戻す・やり直しのタブ分離",
-        "description": "元に戻す・やり直し操作が、すべてのタブではなくフォーカス中のタブのみに適用されるようになりました。"
-      },
-      "katexTableCell": {
-        "title": "テーブルセル内のKaTeX表示修正",
-        "description": "Markdownテーブルセル内の数式が正しくレンダリングされるようになりました。"
-      },
-      "imageLinkHandling": {
-        "title": "画像リンクの処理改善",
-        "description": "プレビュー内の画像リンクをクリックすると外部ブラウザで開くようになりました。"
+      "fileChangeDetectionWindows": {
+        "title": "Windowsでのファイル変更検知の修正",
+        "description": "Windows環境でファイルの変更検知が正しく動作しない問題を修正しました。"
       }
     }
   }

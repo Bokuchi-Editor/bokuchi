@@ -516,7 +516,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    if (value !== undefined) {
+    if (value !== undefined && value !== content) {
       onChange(value);
     }
   };

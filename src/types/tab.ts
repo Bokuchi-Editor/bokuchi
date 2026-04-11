@@ -29,6 +29,7 @@ export type TabAction =
   | { type: 'REMOVE_TAB'; payload: { id: string } }
   | { type: 'SET_ACTIVE_TAB'; payload: { id: string | null } }
   | { type: 'UPDATE_TAB_CONTENT'; payload: { id: string; content: string } }
+  | { type: 'RELOAD_TAB_CONTENT'; payload: { id: string; content: string } }
   | { type: 'UPDATE_TAB_TITLE'; payload: { id: string; title: string } }
   | { type: 'SET_TAB_MODIFIED'; payload: { id: string; isModified: boolean } }
   | { type: 'SET_TAB_FILE_PATH'; payload: { id: string; filePath: string } }
