@@ -387,7 +387,9 @@
       "importSuccess": "Configuración importada exitosamente",
       "importError": "Error al importar configuración",
       "resetSuccess": "Configuración restablecida exitosamente",
-      "resetError": "Error al restablecer configuración"
+      "resetError": "Error al restablecer configuración",
+      "enableMarp": "Marp (Presentaciones)",
+      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Se corrigió un problema en el que la detección de cambios de archivos no funcionaba correctamente en Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentación",
+    "previousSlide": "Diapositiva anterior",
+    "nextSlide": "Diapositiva siguiente",
+    "slideCounter": "Diapositiva {{current}} de {{total}}"
   }
 }

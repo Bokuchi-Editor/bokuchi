@@ -387,7 +387,9 @@
       "importSuccess": "Settings imported successfully",
       "importError": "Failed to import settings",
       "resetSuccess": "Settings reset successfully",
-      "resetError": "Failed to reset settings"
+      "resetError": "Failed to reset settings",
+      "enableMarp": "Marp (Presentations)",
+      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Fixed an issue where file change detection was not working properly on Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentation",
+    "previousSlide": "Previous Slide",
+    "nextSlide": "Next Slide",
+    "slideCounter": "Slide {{current}} of {{total}}"
   }
 }

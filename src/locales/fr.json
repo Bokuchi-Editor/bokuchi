@@ -387,7 +387,9 @@
       "importSuccess": "Paramètres importés avec succès",
       "importError": "Échec de l'importation des paramètres",
       "resetSuccess": "Paramètres réinitialisés avec succès",
-      "resetError": "Échec de la réinitialisation des paramètres"
+      "resetError": "Échec de la réinitialisation des paramètres",
+      "enableMarp": "Marp (Présentations)",
+      "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Correction d'un problème où la détection des modifications de fichiers ne fonctionnait pas correctement sous Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Présentation",
+    "previousSlide": "Diapositive précédente",
+    "nextSlide": "Diapositive suivante",
+    "slideCounter": "Diapositive {{current}} sur {{total}}"
   }
 }

@@ -387,7 +387,9 @@
       "importSuccess": "Pengaturan berhasil diimpor",
       "importError": "Gagal mengimpor pengaturan",
       "resetSuccess": "Pengaturan berhasil direset",
-      "resetError": "Gagal mereset pengaturan"
+      "resetError": "Gagal mereset pengaturan",
+      "enableMarp": "Marp (Presentasi)",
+      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Memperbaiki masalah di mana deteksi perubahan file tidak berfungsi dengan baik di Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentasi",
+    "previousSlide": "Slide sebelumnya",
+    "nextSlide": "Slide berikutnya",
+    "slideCounter": "Slide {{current}} dari {{total}}"
   }
 }

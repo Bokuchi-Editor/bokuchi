@@ -387,7 +387,9 @@
       "importSuccess": "सेटिंग्स सफलतापूर्वक आयात की गईं",
       "importError": "सेटिंग्स आयात करने में विफल",
       "resetSuccess": "सेटिंग्स सफलतापूर्वक रीसेट की गईं",
-      "resetError": "सेटिंग्स रीसेट करने में विफल"
+      "resetError": "सेटिंग्स रीसेट करने में विफल",
+      "enableMarp": "Marp (प्रस्तुतियाँ)",
+      "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।"
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Windows पर फ़ाइल परिवर्तन पहचान ठीक से काम न करने की समस्या को ठीक किया गया।"
       }
     }
+  },
+  "preview": {
+    "presentation": "प्रस्तुति",
+    "previousSlide": "पिछली स्लाइड",
+    "nextSlide": "अगली स्लाइड",
+    "slideCounter": "स्लाइड {{current}} / {{total}}"
   }
 }

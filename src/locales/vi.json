@@ -387,7 +387,9 @@
       "importSuccess": "Nhập cài đặt thành công",
       "importError": "Không thể nhập cài đặt",
       "resetSuccess": "Đặt lại cài đặt thành công",
-      "resetError": "Không thể đặt lại cài đặt"
+      "resetError": "Không thể đặt lại cài đặt",
+      "enableMarp": "Marp (Trình chiếu)",
+      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Đã sửa lỗi phát hiện thay đổi tệp không hoạt động đúng trên Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Trình chiếu",
+    "previousSlide": "Slide trước",
+    "nextSlide": "Slide tiếp theo",
+    "slideCounter": "Slide {{current}} / {{total}}"
   }
 }

@@ -387,7 +387,9 @@
       "importSuccess": "Einstellungen erfolgreich importiert",
       "importError": "Import der Einstellungen fehlgeschlagen",
       "resetSuccess": "Einstellungen erfolgreich zurückgesetzt",
-      "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen"
+      "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
+      "enableMarp": "Marp (Präsentationen)",
+      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Ein Problem wurde behoben, bei dem die Dateiänderungserkennung unter Windows nicht richtig funktionierte."
       }
     }
+  },
+  "preview": {
+    "presentation": "Präsentation",
+    "previousSlide": "Vorherige Folie",
+    "nextSlide": "Nächste Folie",
+    "slideCounter": "Folie {{current}} von {{total}}"
   }
 }

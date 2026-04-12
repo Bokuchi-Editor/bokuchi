@@ -387,7 +387,9 @@
       "importSuccess": "Configurações importadas com sucesso",
       "importError": "Falha ao importar configurações",
       "resetSuccess": "Configurações redefinidas com sucesso",
-      "resetError": "Falha ao redefinir configurações"
+      "resetError": "Falha ao redefinir configurações",
+      "enableMarp": "Marp (Apresentações)",
+      "enableMarpDescription": "Visualizar slides Markdown com marp: true como apresentação."
     }
   },
   "fileOperations": {
@@ -526,5 +528,11 @@
         "description": "Corrigido um problema em que a detecção de alterações de arquivos não funcionava corretamente no Windows."
       }
     }
+  },
+  "preview": {
+    "presentation": "Apresentação",
+    "previousSlide": "Slide anterior",
+    "nextSlide": "Próximo slide",
+    "slideCounter": "Slide {{current}} de {{total}}"
   }
 }
