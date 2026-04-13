@@ -119,6 +119,38 @@ describe('extractHeadings', () => {
     expect(result[1].text).toBe('Also Real');
   });
 
+  // T-HE-09: mixed code block markers (backtick open, tilde close)
+  it('T-HE-09: treats backtick and tilde as independent toggles', () => {
+    const content = [
+      '# Before',
+      '```',
+      '# Inside backtick block',
+      '~~~',        // This toggles code block off (independent marker)
+      '# After tilde close',
+    ].join('\n');
+
+    const result = extractHeadings(content);
+    // The implementation toggles on ``` (line 2), then toggles on ~~~ (line 4)
+    // So line 5 is outside code block
+    expect(result).toHaveLength(2);
+    expect(result[0].text).toBe('Before');
+    expect(result[1].text).toBe('After tilde close');
+  });
+
+  // T-HE-10: headings with leading whitespace (indented headings)
+  it('T-HE-10: extracts headings with leading whitespace', () => {
+    const content = [
+      '  # Indented heading',
+      '# Normal heading',
+    ].join('\n');
+
+    const result = extractHeadings(content);
+    // trimStart() is called before matching, so indented headings are extracted
+    expect(result).toHaveLength(2);
+    expect(result[0].text).toBe('Indented heading');
+    expect(result[1].text).toBe('Normal heading');
+  });
+
   // T-HE-08
   it('ignores lines that are not headings', () => {
     const content = [

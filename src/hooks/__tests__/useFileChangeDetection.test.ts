@@ -202,6 +202,109 @@ describe('useFileChangeDetection', () => {
     expect(result.current.fileChangeDialog.open).toBe(false);
   });
 
+  // T-FCD-09: polling fires at exactly 5-second intervals
+  it('T-FCD-09: polls for file changes every 5 seconds', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockResolvedValue(false);
+
+      renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // At 4999ms - should NOT have polled yet
+      await act(async () => {
+        vi.advanceTimersByTime(4999);
+      });
+      expect(mockDetect).not.toHaveBeenCalled();
+
+      // At 5000ms - should poll
+      await act(async () => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(1);
+
+      // At 10000ms - should poll again
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-10: polling resumes after dialog is closed
+  it('T-FCD-10: resumes polling after dialog is closed', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockResolvedValue(false);
+
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // Open dialog - stops polling
+      act(() => {
+        result.current.setFileChangeDialog({
+          open: true,
+          fileName: 'test.md',
+          onReload: vi.fn(),
+          onCancel: vi.fn(),
+        });
+      });
+
+      await act(async () => {
+        vi.advanceTimersByTime(10000);
+      });
+      expect(mockDetect).not.toHaveBeenCalled();
+
+      // Close dialog - polling should resume
+      act(() => {
+        result.current.setFileChangeDialog({
+          open: false,
+          fileName: '',
+          onReload: vi.fn(),
+          onCancel: vi.fn(),
+        });
+      });
+
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-11: detectFileChange error does not open dialog
+  it('T-FCD-11: error in detectFileChange does not open dialog', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockRejectedValue(new Error('permission denied'));
+
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+
+      // Dialog should remain closed despite the error
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   // T-FCD-06: Regression test - polling stops while dialog is open
   it('T-FCD-06: does not poll while file change dialog is open', async () => {
     vi.useFakeTimers();

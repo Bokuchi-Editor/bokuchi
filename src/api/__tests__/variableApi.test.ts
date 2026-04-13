@@ -124,6 +124,24 @@ describe('variableApi.processMarkdown', () => {
   });
 });
 
+// T-VA-01: YAML round-trip: export then load preserves variables
+describe('variableApi YAML round-trip', () => {
+  it('T-VA-01: exported YAML can be loaded back', async () => {
+    const yamlContent = 'name: Alice\ngreeting: Hello World\n';
+
+    // export returns YAML string
+    vi.mocked(invoke).mockResolvedValueOnce(yamlContent);
+    const exported = await variableApi.exportVariablesToYAML();
+    expect(exported).toBe(yamlContent);
+
+    // load accepts the same YAML string
+    vi.mocked(invoke).mockResolvedValueOnce(undefined);
+    const loadResult = await variableApi.loadVariablesFromYAML(exported);
+    expect(loadResult.success).toBe(true);
+    expect(invoke).toHaveBeenCalledWith('load_variables_from_yaml', { yamlContent: exported });
+  });
+});
+
 describe('variableApi.getExpandedMarkdown', () => {
   it('returns expanded content on success', async () => {
     vi.mocked(invoke).mockResolvedValue('fully expanded');

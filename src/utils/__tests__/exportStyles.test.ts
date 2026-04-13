@@ -64,11 +64,27 @@ describe('generateExportCSS', () => {
 });
 
 describe('buildExportHTML', () => {
-  it('returns a full HTML document with body content', () => {
+  it('returns a full HTML document with correct structure', () => {
     const html = buildExportHTML('<p>Hello</p>', false);
+    // Document structure
     expect(html).toContain('<!DOCTYPE html>');
+    expect(html).toContain('<html lang="en">');
+    expect(html).toContain('<head>');
+    expect(html).toContain('</head>');
+    expect(html).toContain('<body>');
+    expect(html).toContain('</body>');
+    // Meta tags
+    expect(html).toContain('<meta charset="UTF-8">');
+    expect(html).toContain('<meta name="viewport"');
+    expect(html).toContain('<title>Markdown Export</title>');
+    // Body content embedded
     expect(html).toContain('<p>Hello</p>');
-    expect(html).toContain('Markdown Export');
+    // Embedded CSS (not CDN)
+    expect(html).toContain('<style>');
+    // Highlight.js CSS as data URI in link tag
+    expect(html).toContain('<link rel="stylesheet" href="data:text/css;base64,');
+    // Embedded highlight.js script (self-contained, no CDN)
+    expect(html).toContain('<script>');
     expect(html).toContain('highlightAll');
   });
 

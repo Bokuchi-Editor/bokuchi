@@ -70,6 +70,27 @@ Some content`;
   it('returns false for empty content', () => {
     expect(contentIsMarp('')).toBe(false);
   });
+
+  // T-MR-02: frontmatter whitespace variations
+  it('T-MR-02: detects marp: true with extra spaces', () => {
+    const content = `---
+marp:  true
+---
+
+# Slide`;
+    expect(contentIsMarp(content)).toBe(true);
+  });
+
+  // T-MR-03: marp:true without space is still accepted (regex uses \s*)
+  it('T-MR-03: accepts marp:true without space after colon', () => {
+    const content = `---
+marp:true
+---
+
+# Slide`;
+    // The regex MARP_FRONTMATTER_RE uses \s* so space is optional
+    expect(contentIsMarp(content)).toBe(true);
+  });
 });
 
 describe('renderMarp', () => {
@@ -93,17 +114,24 @@ describe('countSlides', () => {
 });
 
 describe('buildSlideDocument', () => {
-  it('builds a complete HTML document with nth-child CSS for the given slide index', () => {
+  it('builds a complete HTML document with showSlide for the given index', () => {
     const doc = buildSlideDocument('<div class="marpit">slides</div>', '.marpit{}', 2);
     expect(doc).toContain('<!DOCTYPE html>');
     expect(doc).toContain('.marpit{}');
-    expect(doc).toContain('nth-child(3)');
+    expect(doc).toContain('showSlide(2)');
     expect(doc).toContain('slides');
   });
 
-  it('uses 1-based index in nth-child selector', () => {
+  it('uses 0-based slide index in showSlide call', () => {
     const doc = buildSlideDocument('html', 'css', 0);
-    expect(doc).toContain('nth-child(1)');
+    expect(doc).toContain('showSlide(0)');
+  });
+
+  // T-MR-01: large index still generates valid document
+  it('T-MR-01: generates valid HTML even when index exceeds slide count', () => {
+    const doc = buildSlideDocument('<div class="marpit">slides</div>', '.marpit{}', 999);
+    expect(doc).toContain('<!DOCTYPE html>');
+    expect(doc).toContain('showSlide(999)');
   });
 });
 

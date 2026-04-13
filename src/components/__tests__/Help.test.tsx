@@ -38,14 +38,16 @@ describe('HelpDialog', () => {
     expect(screen.queryByText('help.title')).not.toBeInTheDocument();
   });
 
-  // T-HD-03: shows getting started by default
-  it('T-HD-03: shows getting started page by default', () => {
+  // T-HD-03: shows getting started by default with content sections
+  it('T-HD-03: shows getting started page with content by default', () => {
     render(<HelpDialog open={true} onClose={asMock<() => void>(onClose)} />);
     // Title appears both in sidebar and content area
     const elements = screen.getAllByText('help.gettingStarted.title');
     expect(elements.length).toBeGreaterThanOrEqual(2);
-    // Content area shows basic usage section
+    // Content area shows multiple sections
     expect(screen.getByText('help.gettingStarted.basicUsage')).toBeInTheDocument();
+    expect(screen.getByText('help.gettingStarted.fileOperations')).toBeInTheDocument();
+    expect(screen.getByText('help.gettingStarted.viewModes')).toBeInTheDocument();
   });
 
   // T-HD-04: navigating to features tab
@@ -55,18 +57,32 @@ describe('HelpDialog', () => {
     expect(screen.getByText('help.features.description')).toBeInTheDocument();
   });
 
-  // T-HD-05: navigating to keyboard shortcuts tab
-  it('T-HD-05: switches to keyboard shortcuts page', () => {
+  // T-HD-05: keyboard shortcuts page shows shortcut keys and descriptions
+  it('T-HD-05: keyboard shortcuts page renders actual shortcut entries', () => {
     render(<HelpDialog open={true} onClose={asMock<() => void>(onClose)} />);
     fireEvent.click(screen.getByText('help.keyboardShortcuts.title'));
     expect(screen.getByText('help.keyboardShortcuts.description')).toBeInTheDocument();
+    // Verify actual shortcut keys are rendered (from formatKeyboardShortcut mock)
+    expect(screen.getByText('Ctrl+N')).toBeInTheDocument();
+    expect(screen.getByText('Ctrl+S')).toBeInTheDocument();
+    expect(screen.getByText('Ctrl+Shift+S')).toBeInTheDocument();
+    // Verify shortcut descriptions (i18n keys as text since t() returns key)
+    expect(screen.getByText('help.keyboardShortcuts.shortcuts.newFile')).toBeInTheDocument();
+    expect(screen.getByText('help.keyboardShortcuts.shortcuts.saveFile')).toBeInTheDocument();
+    // Verify category headings are present
+    expect(screen.getByText('help.keyboardShortcuts.categories.fileOperations')).toBeInTheDocument();
   });
 
-  // T-HD-06: navigating to variables tab
-  it('T-HD-06: switches to variables page', () => {
+  // T-HD-06: variables page shows usage instructions and code examples
+  it('T-HD-06: variables page renders usage instructions', () => {
     render(<HelpDialog open={true} onClose={asMock<() => void>(onClose)} />);
     fireEvent.click(screen.getByText('help.variables.title'));
     expect(screen.getByText('help.variables.description')).toBeInTheDocument();
+    // Verify sub-sections are rendered
+    expect(screen.getByText('help.variables.howToUse')).toBeInTheDocument();
+    expect(screen.getByText('help.variables.settingUp')).toBeInTheDocument();
+    // Verify code example block is present
+    expect(screen.getByText('help.variables.codeExample')).toBeInTheDocument();
   });
 
   // T-HD-07: navigating to tutorials tab

@@ -99,4 +99,61 @@ describe('useAutoSave', () => {
     await vi.advanceTimersByTimeAsync(3000);
     expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
   });
+
+  // T-AS-07: does not trigger when tab has no filePath
+  it('T-AS-07: does not trigger for tab without filePath', async () => {
+    const params = defaultParams();
+    params.activeTab = { ...activeTab, filePath: undefined, isNew: false };
+    renderHook(() => useAutoSave(params));
+
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(saveTab).not.toHaveBeenCalled();
+  });
+
+  // T-AS-08: does not trigger when isSettingsLoaded is false
+  it('T-AS-08: does not trigger when settings not loaded', async () => {
+    const params = defaultParams();
+    params.isSettingsLoaded = false;
+    renderHook(() => useAutoSave(params));
+
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(saveTab).not.toHaveBeenCalled();
+  });
+
+  // T-AS-09: content change resets the 3-second timer
+  it('T-AS-09: resets timer on content change, only saves once', async () => {
+    const params = defaultParams();
+    const { rerender } = renderHook(
+      (props) => useAutoSave(props),
+      { initialProps: params },
+    );
+
+    // Wait 2 seconds (timer running)
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(saveTab).not.toHaveBeenCalled();
+
+    // Content changes -> timer should reset
+    rerender({
+      ...params,
+      activeTab: { ...activeTab, content: '# Updated' },
+    });
+
+    // Wait another 2 seconds (only 2s since reset, should not save yet)
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(saveTab).not.toHaveBeenCalled();
+
+    // Wait 1 more second (3s since reset, should save now)
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(saveTab).toHaveBeenCalledTimes(1);
+  });
+
+  // T-AS-10: does not show status when save fails
+  it('T-AS-10: does not show save status when save fails', async () => {
+    const params = defaultParams();
+    saveTab.mockRejectedValue(new Error('save error'));
+    renderHook(() => useAutoSave(params));
+
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(showSaveStatus).not.toHaveBeenCalled();
+  });
 });

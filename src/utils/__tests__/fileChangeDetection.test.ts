@@ -252,4 +252,33 @@ describe('detectMultipleFileChanges', () => {
     const changed = await detectMultipleFileChanges([]);
     expect(changed).toEqual([]);
   });
+
+  // T-FC-MFC-01: treats permission errors as unchanged (safe side)
+  it('T-FC-MFC-01: permission error on one tab does not affect others', async () => {
+    vi.mocked(desktopApi.getFileHash)
+      .mockRejectedValueOnce(new Error('EPERM: operation not permitted'))
+      .mockResolvedValueOnce({ hash: 'changed', modified_time: 2000, file_size: 1024 });
+
+    const tabs = [
+      createTab({ id: 'tab-perm' }),
+      createTab({ id: 'tab-changed' }),
+    ];
+
+    const changed = await detectMultipleFileChanges(tabs);
+    // tab-perm should be treated as unchanged (error → false)
+    expect(changed).not.toContain('tab-perm');
+    // tab-changed should still be detected
+    expect(changed).toContain('tab-changed');
+  });
+});
+
+describe('detectFileChange – permission error', () => {
+  // T-FC-08: specific permission error returns false (safe side)
+  it('T-FC-08: returns false on permission denied error', async () => {
+    vi.mocked(desktopApi.getFileHash).mockRejectedValue(
+      new Error('EPERM: operation not permitted, open \'/protected/file.md\''),
+    );
+    const tab = createTab();
+    expect(await detectFileChange(tab)).toBe(false);
+  });
 });

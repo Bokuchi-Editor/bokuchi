@@ -465,4 +465,32 @@ describe('TabBar', () => {
     // Second tab is pinned and non-active, should exist with border applied via sx
     expect(tabs[1]).toBeTruthy();
   });
+
+  // T-TB-33: vertical mode auto-scrolls active tab into view
+  it('T-TB-33: scrollIntoView is called for active tab in vertical mode', () => {
+    const scrollSpy = vi.spyOn(Element.prototype, 'scrollIntoView');
+    scrollSpy.mockClear();
+
+    render(
+      <TabBar {...defaultProps()} layout="vertical" />,
+    );
+
+    // scrollIntoView should have been called for the active tab
+    expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest' });
+    scrollSpy.mockRestore();
+  });
+
+  // T-TB-34: horizontal mode does not auto-scroll
+  it('T-TB-34: scrollIntoView is not called in horizontal mode', () => {
+    const scrollSpy = vi.spyOn(Element.prototype, 'scrollIntoView');
+    scrollSpy.mockClear();
+
+    render(
+      <TabBar {...defaultProps()} layout="horizontal" />,
+    );
+
+    // scrollIntoView should NOT be called in horizontal layout
+    expect(scrollSpy).not.toHaveBeenCalled();
+    scrollSpy.mockRestore();
+  });
 });

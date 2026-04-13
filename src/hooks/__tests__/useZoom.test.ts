@@ -120,4 +120,74 @@ describe('useZoom', () => {
     const { result } = renderHook(() => useZoom(config));
     expect(result.current.zoomPercentage).toBe(75);
   });
+
+  // T-UZ-11: JIS keyboard - Shift+Semicolon triggers zoom in
+  it('T-UZ-11: JIS keyboard Shift+Semicolon triggers zoom in', () => {
+    const { result } = renderHook(() => useZoom(defaultConfig));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', {
+        key: '+',
+        code: 'Semicolon',
+        ctrlKey: true,
+        shiftKey: true,
+        bubbles: true,
+      }));
+    });
+
+    expect(result.current.currentZoom).toBeCloseTo(1.1);
+  });
+
+  // T-UZ-12: Ctrl+0 resets zoom
+  it('T-UZ-12: Ctrl+0 keyboard shortcut resets zoom', () => {
+    const { result } = renderHook(() => useZoom(defaultConfig));
+
+    // Zoom in first
+    act(() => result.current.zoomIn());
+    expect(result.current.currentZoom).toBeCloseTo(1.1);
+
+    // Ctrl+0 to reset
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', {
+        key: '0',
+        code: 'Digit0',
+        ctrlKey: true,
+        bubbles: true,
+      }));
+    });
+
+    expect(result.current.currentZoom).toBe(1.0);
+  });
+
+  // T-UZ-13: Ctrl+- keyboard shortcut zooms out
+  it('T-UZ-13: Ctrl+- keyboard shortcut zooms out', () => {
+    const { result } = renderHook(() => useZoom(defaultConfig));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', {
+        key: '-',
+        code: 'Minus',
+        ctrlKey: true,
+        bubbles: true,
+      }));
+    });
+
+    expect(result.current.currentZoom).toBeCloseTo(0.9);
+  });
+
+  // T-UZ-14: Ctrl+= keyboard shortcut zooms in
+  it('T-UZ-14: Ctrl+= keyboard shortcut zooms in', () => {
+    const { result } = renderHook(() => useZoom(defaultConfig));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', {
+        key: '=',
+        code: 'Equal',
+        ctrlKey: true,
+        bubbles: true,
+      }));
+    });
+
+    expect(result.current.currentZoom).toBeCloseTo(1.1);
+  });
 });

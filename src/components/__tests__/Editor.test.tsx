@@ -83,6 +83,7 @@ let capturedOnMount: ((editor: editor.IStandaloneCodeEditor) => void) | null =
   null;
 
 let capturedPath: string | undefined = undefined;
+let capturedKeepCurrentModel: boolean | undefined = undefined;
 
 vi.mock('@monaco-editor/react', () => ({
   default: (props: {
@@ -92,10 +93,12 @@ vi.mock('@monaco-editor/react', () => ({
     path?: string;
     options?: Record<string, unknown>;
     theme?: string;
+    keepCurrentModel?: boolean;
   }) => {
     // Store onMount so tests can invoke it
     capturedOnMount = props.onMount ?? null;
     capturedPath = props.path;
+    capturedKeepCurrentModel = props.keepCurrentModel;
     return (
       <div data-testid="monaco-editor" data-theme={props.theme} data-path={props.path}>
         <textarea
@@ -1151,6 +1154,46 @@ describe('MarkdownEditor', () => {
       expect(disposedTab).not.toHaveBeenCalled();
 
       delete (window as unknown as Record<string, unknown>).monaco;
+    });
+  });
+
+  // =========================================================================
+  // keepCurrentModel prop
+  // =========================================================================
+
+  describe('keepCurrentModel prop (CLAUDE.md critical rule)', () => {
+    beforeEach(() => {
+      capturedKeepCurrentModel = undefined;
+    });
+
+    // T-ED-KCM-01: Monaco Editor receives keepCurrentModel={true}
+    it('T-ED-KCM-01: passes keepCurrentModel={true} to Monaco Editor', () => {
+      render(<MarkdownEditor {...defaultProps()} />);
+      expect(capturedKeepCurrentModel).toBe(true);
+    });
+  });
+
+  // =========================================================================
+  // Table conversion modes
+  // =========================================================================
+
+  describe('table paste conversion – mode differences', () => {
+    // T-ED-TC-01: off mode does not trigger table conversion
+    it('T-ED-TC-01: tableConversion=off does not convert pasted tables', async () => {
+      render(
+        <MarkdownEditor
+          {...defaultProps()}
+          tableConversion="off"
+        />,
+      );
+
+      const mockEditor = createMockMonacoEditor();
+      act(() => {
+        capturedOnMount?.(mockEditor);
+      });
+
+      // If tableConversion is 'off', no table dialog should appear
+      expect(screen.queryByTestId('table-dialog')).toBeNull();
     });
   });
 });
