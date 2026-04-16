@@ -132,13 +132,39 @@ const AppContent: React.FC<AppContentProps> = ({
   focusRequestId,
   t,
 }) => {
+  const scrollFractionMap = useRef<Map<string, number>>(new Map());
+  const activeTabIdRef = useRef(activeTabId);
+  activeTabIdRef.current = activeTabId;
   const [scrollFraction, setScrollFraction] = useState(0);
   const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
 
   const headings = useOutlineHeadings(activeTab?.content);
 
+  // Restore scroll position when switching tabs
+  useEffect(() => {
+    if (activeTabId) {
+      setScrollFraction(scrollFractionMap.current.get(activeTabId) ?? 0);
+    }
+  }, [activeTabId]);
+
+  // Clean up scroll entries for closed tabs
+  useEffect(() => {
+    const currentTabIds = new Set(tabs.map(t => t.id));
+    for (const key of scrollFractionMap.current.keys()) {
+      if (!currentTabIds.has(key)) {
+        scrollFractionMap.current.delete(key);
+      }
+    }
+  }, [tabs]);
+
+  // Use ref for activeTabId to avoid stale closure in Editor's scroll listener.
+  // Editor.tsx registers onScrollChange once at mount, so the callback reference must be stable.
   const handleEditorScrollChange = useCallback((fraction: number) => {
     setScrollFraction(fraction);
+    const tabId = activeTabIdRef.current;
+    if (tabId) {
+      scrollFractionMap.current.set(tabId, fraction);
+    }
   }, []);
 
   const handleHeadingClick = useCallback((lineNumber: number) => {
@@ -488,6 +514,8 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
+                    scrollFraction={scrollFraction}
+                    onScrollChange={handleEditorScrollChange}
                     viewMode="preview"
                   />
                 </Box>
