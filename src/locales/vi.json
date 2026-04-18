@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Bộ lọc tệp Explorer",
       "folderTreeFileFilterDescription": "Chọn tệp nào để hiển thị trong explorer.",
       "folderTreeFileFilterMarkdown": "Chỉ tệp Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Tất cả tệp"
+      "folderTreeFileFilterAll": "Tất cả tệp",
+      "scrollSyncMode": "Đồng bộ cuộn (Chế độ chia đôi)",
+      "scrollSyncModeDescription": "Chọn cách trình soạn thảo và bảng xem trước cuộn cùng nhau trong chế độ chia đôi.",
+      "scrollSyncModeEditorToPreview": "Trình soạn thảo → Xem trước",
+      "scrollSyncModeEditorToPreviewDescription": "Cuộn trình soạn thảo sẽ cuộn xem trước. Cuộn xem trước không di chuyển trình soạn thảo.",
+      "scrollSyncModeBidirectional": "Hai chiều",
+      "scrollSyncModeBidirectionalDescription": "Cuộn ở một bảng sẽ đồng bộ cuộn bảng còn lại.",
+      "scrollSyncModeOff": "Tắt",
+      "scrollSyncModeOffDescription": "Mỗi bảng cuộn độc lập."
     },
     "advanced": {
       "title": "Nâng cao",

@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Filter File Explorer",
       "folderTreeFileFilterDescription": "Pilih file mana yang ditampilkan di explorer.",
       "folderTreeFileFilterMarkdown": "Hanya file Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Semua file"
+      "folderTreeFileFilterAll": "Semua file",
+      "scrollSyncMode": "Sinkronisasi Gulir (Tampilan terbagi)",
+      "scrollSyncModeDescription": "Pilih cara panel editor dan pratinjau bergulir bersama dalam tampilan terbagi.",
+      "scrollSyncModeEditorToPreview": "Editor → Pratinjau",
+      "scrollSyncModeEditorToPreviewDescription": "Menggulir editor akan menggulir pratinjau. Menggulir pratinjau tidak menggerakkan editor.",
+      "scrollSyncModeBidirectional": "Dua arah",
+      "scrollSyncModeBidirectionalDescription": "Menggulir salah satu panel akan menggulir panel lainnya secara sinkron.",
+      "scrollSyncModeOff": "Mati",
+      "scrollSyncModeOffDescription": "Setiap panel bergulir secara independen."
     },
     "advanced": {
       "title": "Lanjutan",

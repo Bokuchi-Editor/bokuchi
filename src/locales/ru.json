@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Фильтр файлов проводника",
       "folderTreeFileFilterDescription": "Выберите, какие файлы отображать в проводнике.",
       "folderTreeFileFilterMarkdown": "Только файлы Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Все файлы"
+      "folderTreeFileFilterAll": "Все файлы",
+      "scrollSyncMode": "Синхронизация прокрутки (разделённый вид)",
+      "scrollSyncModeDescription": "Выберите, как панели редактора и предпросмотра прокручиваются вместе в разделённом виде.",
+      "scrollSyncModeEditorToPreview": "Редактор → Предпросмотр",
+      "scrollSyncModeEditorToPreviewDescription": "Прокрутка редактора прокручивает предпросмотр. Прокрутка предпросмотра не двигает редактор.",
+      "scrollSyncModeBidirectional": "Двунаправленная",
+      "scrollSyncModeBidirectionalDescription": "Прокрутка любой панели синхронно прокручивает другую.",
+      "scrollSyncModeOff": "Отключено",
+      "scrollSyncModeOffDescription": "Каждая панель прокручивается независимо."
     },
     "advanced": {
       "title": "Дополнительно",

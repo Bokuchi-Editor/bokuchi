@@ -1,6 +1,8 @@
 import { OutlineDisplayMode } from './outline';
 import { FolderTreeDisplayMode } from './folderTree';
 
+export type ScrollSyncMode = 'editor-to-preview' | 'bidirectional' | 'off';
+
 // Editor settings type definition
 export interface EditorSettings {
   fontSize: number;
@@ -25,6 +27,7 @@ export interface InterfaceSettings {
   outlineDisplayMode: OutlineDisplayMode;
   folderTreeDisplayMode: FolderTreeDisplayMode;
   folderTreeFileFilter: 'markdown' | 'all';
+  scrollSyncMode: ScrollSyncMode;
 }
 
 // Rendering settings type definition
@@ -81,6 +84,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   outlineDisplayMode: 'persistent',
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',
+  scrollSyncMode: 'editor-to-preview',
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {

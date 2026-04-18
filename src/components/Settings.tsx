@@ -815,6 +815,67 @@ const Settings: React.FC<SettingsProps> = ({
                     </FormControl>
                   </CardContent>
                 </Card>
+
+                {/* Scroll Sync Mode */}
+                <Card sx={{ mt: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {t('settings.interface.scrollSyncMode')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.interface.scrollSyncModeDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.scrollSyncMode}
+                        onChange={(e) => handleSettingChange('interface', 'scrollSyncMode', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="editor-to-preview"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeEditorToPreview')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeEditorToPreviewDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="bidirectional"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeBidirectional')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeBidirectionalDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="off"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeOff')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeOffDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
               </Box>
             )}
 

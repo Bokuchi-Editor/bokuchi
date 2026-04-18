@@ -9,7 +9,7 @@ import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
-import { RenderingSettings } from '../types/settings';
+import { RenderingSettings, ScrollSyncMode } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 
 interface AppContentProps {
@@ -38,6 +38,9 @@ interface AppContentProps {
     showWhitespace: boolean;
     tableConversion: 'auto' | 'confirm' | 'off';
   };
+
+  // Scroll sync between editor and preview in split view
+  scrollSyncMode: ScrollSyncMode;
 
   // Outline
   outlineDisplayMode: OutlineDisplayMode;
@@ -96,6 +99,7 @@ const AppContent: React.FC<AppContentProps> = ({
   isSettingsLoaded,
   renderingSettings,
   editorSettings,
+  scrollSyncMode,
   outlineDisplayMode,
   outlinePanelOpen,
   onOutlinePanelClose,
@@ -135,7 +139,9 @@ const AppContent: React.FC<AppContentProps> = ({
   const scrollFractionMap = useRef<Map<string, number>>(new Map());
   const activeTabIdRef = useRef(activeTabId);
   activeTabIdRef.current = activeTabId;
-  const [scrollFraction, setScrollFraction] = useState(0);
+  // Track which side initiated the scroll so the originating side ignores its own update
+  // (prevents bidirectional sync from feedback-looping).
+  const [scrollState, setScrollState] = useState<{ fraction: number; source: 'editor' | 'preview' | 'restore' }>({ fraction: 0, source: 'restore' });
   const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
 
   const headings = useOutlineHeadings(activeTab?.content);
@@ -143,7 +149,7 @@ const AppContent: React.FC<AppContentProps> = ({
   // Restore scroll position when switching tabs
   useEffect(() => {
     if (activeTabId) {
-      setScrollFraction(scrollFractionMap.current.get(activeTabId) ?? 0);
+      setScrollState({ fraction: scrollFractionMap.current.get(activeTabId) ?? 0, source: 'restore' });
     }
   }, [activeTabId]);
 
@@ -160,12 +166,28 @@ const AppContent: React.FC<AppContentProps> = ({
   // Use ref for activeTabId to avoid stale closure in Editor's scroll listener.
   // Editor.tsx registers onScrollChange once at mount, so the callback reference must be stable.
   const handleEditorScrollChange = useCallback((fraction: number) => {
-    setScrollFraction(fraction);
+    setScrollState({ fraction, source: 'editor' });
     const tabId = activeTabIdRef.current;
     if (tabId) {
       scrollFractionMap.current.set(tabId, fraction);
     }
   }, []);
+
+  const handlePreviewScrollChange = useCallback((fraction: number) => {
+    setScrollState({ fraction, source: 'preview' });
+    const tabId = activeTabIdRef.current;
+    if (tabId) {
+      scrollFractionMap.current.set(tabId, fraction);
+    }
+  }, []);
+
+  // Per-side scroll value for split view: undefined means "do not push update to this side".
+  const editorScrollFraction = scrollSyncMode === 'bidirectional' && scrollState.source === 'preview'
+    ? scrollState.fraction
+    : undefined;
+  const previewSplitScrollFraction = scrollSyncMode !== 'off' && scrollState.source !== 'preview'
+    ? scrollState.fraction
+    : undefined;
 
   const handleHeadingClick = useCallback((lineNumber: number) => {
     setRevealLineRequest(prev => ({ lineNumber, requestId: prev.requestId + 1 }));
@@ -439,7 +461,8 @@ const AppContent: React.FC<AppContentProps> = ({
                       tableConversion={editorSettings?.tableConversion}
                       onSnackbar={onSnackbar}
                       onTableConversionSettingChange={onTableConversionSettingChange}
-                      onScrollChange={handleEditorScrollChange}
+                      onScrollChange={scrollSyncMode !== 'off' ? handleEditorScrollChange : undefined}
+                      scrollFraction={editorScrollFraction}
                       tabs={tabs}
                       activeTabId={activeTabId}
                       onTabSwitch={onTabChange}
@@ -461,7 +484,8 @@ const AppContent: React.FC<AppContentProps> = ({
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
                       onContentChange={onContentChange}
-                      scrollFraction={scrollFraction}
+                      scrollFraction={previewSplitScrollFraction}
+                      onScrollChange={scrollSyncMode === 'bidirectional' ? handlePreviewScrollChange : undefined}
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
                       viewMode="split"
@@ -514,8 +538,8 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
-                    scrollFraction={scrollFraction}
-                    onScrollChange={handleEditorScrollChange}
+                    scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
+                    onScrollChange={handlePreviewScrollChange}
                     viewMode="preview"
                   />
                 </Box>

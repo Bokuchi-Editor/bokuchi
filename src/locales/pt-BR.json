@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Filtro de arquivos do explorador",
       "folderTreeFileFilterDescription": "Escolha quais arquivos exibir no explorador.",
       "folderTreeFileFilterMarkdown": "Somente arquivos Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Todos os arquivos"
+      "folderTreeFileFilterAll": "Todos os arquivos",
+      "scrollSyncMode": "Sincronização de rolagem (Visão dividida)",
+      "scrollSyncModeDescription": "Escolha como os painéis do editor e da pré-visualização rolam juntos na visão dividida.",
+      "scrollSyncModeEditorToPreview": "Editor → Pré-visualização",
+      "scrollSyncModeEditorToPreviewDescription": "Rolar o editor rola a pré-visualização. Rolar a pré-visualização não move o editor.",
+      "scrollSyncModeBidirectional": "Bidirecional",
+      "scrollSyncModeBidirectionalDescription": "Rolar qualquer painel rola o outro em sincronia.",
+      "scrollSyncModeOff": "Desativado",
+      "scrollSyncModeOffDescription": "Cada painel rola de forma independente."
     },
     "advanced": {
       "title": "Avançado",

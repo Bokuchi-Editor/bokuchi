@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "檔案總管檔案篩選器",
       "folderTreeFileFilterDescription": "選擇在檔案總管中顯示哪些檔案。",
       "folderTreeFileFilterMarkdown": "僅 Markdown 檔案 (.md, .txt)",
-      "folderTreeFileFilterAll": "所有檔案"
+      "folderTreeFileFilterAll": "所有檔案",
+      "scrollSyncMode": "捲動同步（分割檢視）",
+      "scrollSyncModeDescription": "選擇在分割檢視中編輯器與預覽面板如何同步捲動。",
+      "scrollSyncModeEditorToPreview": "編輯器 → 預覽",
+      "scrollSyncModeEditorToPreviewDescription": "捲動編輯器時預覽也會捲動。捲動預覽不會移動編輯器。",
+      "scrollSyncModeBidirectional": "雙向",
+      "scrollSyncModeBidirectionalDescription": "捲動任一面板，另一面板都會同步捲動。",
+      "scrollSyncModeOff": "關閉",
+      "scrollSyncModeOffDescription": "兩個面板各自獨立捲動。"
     },
     "advanced": {
       "title": "進階",

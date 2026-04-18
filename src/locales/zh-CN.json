@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "资源管理器文件过滤器",
       "folderTreeFileFilterDescription": "选择在资源管理器中显示哪些文件。",
       "folderTreeFileFilterMarkdown": "仅 Markdown 文件 (.md, .txt)",
-      "folderTreeFileFilterAll": "所有文件"
+      "folderTreeFileFilterAll": "所有文件",
+      "scrollSyncMode": "滚动同步（分屏视图）",
+      "scrollSyncModeDescription": "选择分屏视图中编辑器与预览面板的滚动同步方式。",
+      "scrollSyncModeEditorToPreview": "编辑器 → 预览",
+      "scrollSyncModeEditorToPreviewDescription": "滚动编辑器时预览也会滚动。滚动预览不会移动编辑器。",
+      "scrollSyncModeBidirectional": "双向",
+      "scrollSyncModeBidirectionalDescription": "滚动任一面板，另一面板都会同步滚动。",
+      "scrollSyncModeOff": "关闭",
+      "scrollSyncModeOffDescription": "两个面板各自独立滚动。"
     },
     "advanced": {
       "title": "高级",

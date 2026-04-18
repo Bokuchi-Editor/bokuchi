@@ -39,6 +39,7 @@ interface EditorProps {
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
   onScrollChange?: (scrollFraction: number) => void;
+  scrollFraction?: number;
   // Cross-tab search
   tabs?: Tab[];
   activeTabId?: string | null;
@@ -65,6 +66,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   onSnackbar,
   onTableConversionSettingChange,
   onScrollChange,
+  scrollFraction,
   tabs,
   activeTabId,
   onTabSwitch,
@@ -85,6 +87,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const disposablesRef = useRef<import('monaco-editor').IDisposable[]>([]);
+  const isProgrammaticScrollRef = useRef(false);
 
   // Dispose Monaco listeners on unmount
   useEffect(() => {
@@ -385,6 +388,21 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     }
   }, [focusRequestId, focusEditor]);
 
+  // Apply scroll position from parent (used in bidirectional sync mode)
+  useEffect(() => {
+    if (scrollFraction === undefined || !editorRef.current) return;
+    const editor = editorRef.current;
+    const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
+    if (maxScroll <= 0) return;
+    const targetScroll = scrollFraction * maxScroll;
+    if (Math.abs(editor.getScrollTop() - targetScroll) < 1) return;
+    isProgrammaticScrollRef.current = true;
+    editor.setScrollTop(targetScroll);
+    requestAnimationFrame(() => {
+      isProgrammaticScrollRef.current = false;
+    });
+  }, [scrollFraction]);
+
   // Reveal line when revealLineRequest changes (outline panel heading click)
   useEffect(() => {
     if (!revealLineRequest || revealLineRequest.requestId === 0) return;
@@ -502,6 +520,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     if (onScrollChange) {
       disposablesRef.current.push(
         editor.onDidScrollChange(() => {
+          // Skip events triggered by our own programmatic scroll to avoid feedback loops
+          if (isProgrammaticScrollRef.current) return;
           const scrollTop = editor.getScrollTop();
           const scrollHeight = editor.getScrollHeight();
           const clientHeight = editor.getLayoutInfo().height;

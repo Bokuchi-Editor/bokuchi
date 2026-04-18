@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "एक्सप्लोरर फ़ाइल फ़िल्टर",
       "folderTreeFileFilterDescription": "एक्सप्लोरर में कौन सी फ़ाइलें प्रदर्शित करनी हैं, चुनें।",
       "folderTreeFileFilterMarkdown": "केवल Markdown फ़ाइलें (.md, .txt)",
-      "folderTreeFileFilterAll": "सभी फ़ाइलें"
+      "folderTreeFileFilterAll": "सभी फ़ाइलें",
+      "scrollSyncMode": "स्क्रॉल सिंक (विभाजित दृश्य)",
+      "scrollSyncModeDescription": "विभाजित दृश्य में एडिटर और प्रीव्यू पैनल कैसे एक साथ स्क्रॉल करें यह चुनें।",
+      "scrollSyncModeEditorToPreview": "एडिटर → प्रीव्यू",
+      "scrollSyncModeEditorToPreviewDescription": "एडिटर को स्क्रॉल करने पर प्रीव्यू भी स्क्रॉल होती है। प्रीव्यू को स्क्रॉल करने से एडिटर नहीं हिलता।",
+      "scrollSyncModeBidirectional": "द्विदिशीय",
+      "scrollSyncModeBidirectionalDescription": "किसी भी पैनल को स्क्रॉल करने पर दूसरा पैनल भी सिंक में स्क्रॉल होता है।",
+      "scrollSyncModeOff": "बंद",
+      "scrollSyncModeOffDescription": "प्रत्येक पैनल स्वतंत्र रूप से स्क्रॉल होता है।"
     },
     "advanced": {
       "title": "उन्नत",

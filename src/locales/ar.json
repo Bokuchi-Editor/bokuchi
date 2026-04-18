@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "فلتر ملفات المستكشف",
       "folderTreeFileFilterDescription": "اختر الملفات المراد عرضها في المستكشف.",
       "folderTreeFileFilterMarkdown": "ملفات Markdown فقط (.md, .txt)",
-      "folderTreeFileFilterAll": "جميع الملفات"
+      "folderTreeFileFilterAll": "جميع الملفات",
+      "scrollSyncMode": "مزامنة التمرير (العرض المنقسم)",
+      "scrollSyncModeDescription": "اختر كيفية تمرير لوحتي المحرر والمعاينة معًا في العرض المنقسم.",
+      "scrollSyncModeEditorToPreview": "المحرر ← المعاينة",
+      "scrollSyncModeEditorToPreviewDescription": "تمرير المحرر يمرر المعاينة. تمرير المعاينة لا يحرك المحرر.",
+      "scrollSyncModeBidirectional": "ثنائي الاتجاه",
+      "scrollSyncModeBidirectionalDescription": "تمرير أي من اللوحتين يمرر الأخرى بشكل متزامن.",
+      "scrollSyncModeOff": "معطل",
+      "scrollSyncModeOffDescription": "كل لوحة تتمرر بشكل مستقل."
     },
     "advanced": {
       "title": "متقدم",

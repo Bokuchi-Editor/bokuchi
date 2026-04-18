@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Filtre de fichiers de l'explorateur",
       "folderTreeFileFilterDescription": "Choisissez quels fichiers afficher dans l'explorateur.",
       "folderTreeFileFilterMarkdown": "Fichiers Markdown uniquement (.md, .txt)",
-      "folderTreeFileFilterAll": "Tous les fichiers"
+      "folderTreeFileFilterAll": "Tous les fichiers",
+      "scrollSyncMode": "Synchronisation du défilement (Vue divisée)",
+      "scrollSyncModeDescription": "Choisissez comment les volets éditeur et aperçu défilent ensemble en vue divisée.",
+      "scrollSyncModeEditorToPreview": "Éditeur → Aperçu",
+      "scrollSyncModeEditorToPreviewDescription": "Faire défiler l'éditeur fait défiler l'aperçu. Faire défiler l'aperçu ne déplace pas l'éditeur.",
+      "scrollSyncModeBidirectional": "Bidirectionnel",
+      "scrollSyncModeBidirectionalDescription": "Faire défiler un volet fait défiler l'autre en synchronisation.",
+      "scrollSyncModeOff": "Désactivé",
+      "scrollSyncModeOffDescription": "Chaque volet défile indépendamment."
     },
     "advanced": {
       "title": "Avancé",
