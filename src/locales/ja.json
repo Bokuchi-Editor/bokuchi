@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "エクスプローラーファイルフィルター",
       "folderTreeFileFilterDescription": "エクスプローラーに表示するファイルの種類を選択してください。",
       "folderTreeFileFilterMarkdown": "Markdownファイルのみ (.md, .txt)",
-      "folderTreeFileFilterAll": "すべてのファイル"
+      "folderTreeFileFilterAll": "すべてのファイル",
+      "scrollSyncMode": "スクロール同期 (分割モード)",
+      "scrollSyncModeDescription": "分割モードでエディターとプレビューのスクロールを同期する方法を選択します。",
+      "scrollSyncModeEditorToPreview": "エディター → プレビュー",
+      "scrollSyncModeEditorToPreviewDescription": "エディターをスクロールするとプレビューも同期します。プレビューをスクロールしてもエディターは動きません。",
+      "scrollSyncModeBidirectional": "双方向",
+      "scrollSyncModeBidirectionalDescription": "どちらをスクロールしても、もう片方も同期してスクロールします。",
+      "scrollSyncModeOff": "オフ",
+      "scrollSyncModeOffDescription": "エディターとプレビューはそれぞれ独立してスクロールします。"
     },
     "advanced": {
       "title": "高度な設定",

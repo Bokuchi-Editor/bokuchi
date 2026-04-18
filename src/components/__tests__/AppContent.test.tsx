@@ -57,6 +57,7 @@ const createDefaultProps = () => ({
   currentZoom: 1.0,
   isInitialized: true,
   isSettingsLoaded: true,
+  scrollSyncMode: 'editor-to-preview' as const,
   outlineDisplayMode: 'persistent' as const,
   outlinePanelOpen: false,
   onOutlinePanelClose: vi.fn(),

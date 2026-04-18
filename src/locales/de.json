@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Explorer-Dateifilter",
       "folderTreeFileFilterDescription": "Wählen Sie, welche Dateien im Explorer angezeigt werden.",
       "folderTreeFileFilterMarkdown": "Nur Markdown-Dateien (.md, .txt)",
-      "folderTreeFileFilterAll": "Alle Dateien"
+      "folderTreeFileFilterAll": "Alle Dateien",
+      "scrollSyncMode": "Scroll-Synchronisierung (Geteilte Ansicht)",
+      "scrollSyncModeDescription": "Wählen Sie, wie Editor- und Vorschaubereich in der geteilten Ansicht gemeinsam scrollen.",
+      "scrollSyncModeEditorToPreview": "Editor → Vorschau",
+      "scrollSyncModeEditorToPreviewDescription": "Beim Scrollen des Editors wird die Vorschau mitgescrollt. Das Scrollen der Vorschau bewegt den Editor nicht.",
+      "scrollSyncModeBidirectional": "Bidirektional",
+      "scrollSyncModeBidirectionalDescription": "Das Scrollen eines Bereichs scrollt den anderen synchron mit.",
+      "scrollSyncModeOff": "Aus",
+      "scrollSyncModeOffDescription": "Jeder Bereich scrollt unabhängig."
     },
     "advanced": {
       "title": "Erweitert",

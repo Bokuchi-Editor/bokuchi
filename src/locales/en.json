@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
       "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeFileFilterAll": "All files",
+      "scrollSyncMode": "Scroll Sync (Split view)",
+      "scrollSyncModeDescription": "Choose how the editor and preview panes scroll together in split view.",
+      "scrollSyncModeEditorToPreview": "Editor → Preview",
+      "scrollSyncModeEditorToPreviewDescription": "Scrolling the editor scrolls the preview. Scrolling the preview does not move the editor.",
+      "scrollSyncModeBidirectional": "Bidirectional",
+      "scrollSyncModeBidirectionalDescription": "Scrolling either pane scrolls the other in sync.",
+      "scrollSyncModeOff": "Off",
+      "scrollSyncModeOffDescription": "Each pane scrolls independently."
     },
     "advanced": {
       "title": "Advanced",

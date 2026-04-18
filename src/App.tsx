@@ -427,6 +427,7 @@ function AppDesktop() {
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}
+          scrollSyncMode={appSettings.interface.scrollSyncMode}
           outlineDisplayMode={appSettings.interface.outlineDisplayMode}
           outlinePanelOpen={outlinePanelOpen}
           onOutlinePanelClose={() => setOutlinePanelOpen(false)}

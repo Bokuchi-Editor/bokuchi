@@ -40,6 +40,7 @@ vi.mock('../hooks/useAppState', () => ({
         outlineDisplayMode: 'persistent',
         folderTreeDisplayMode: 'off',
         folderTreeFileFilter: 'markdown',
+        scrollSyncMode: 'editor-to-preview',
       },
       advanced: { autoSave: true, showWhitespace: false, tableConversion: 'confirm' },
       recentFiles: { maxRecentFiles: 20, showPreview: true, previewLength: 100 },

@@ -358,7 +358,15 @@
       "folderTreeFileFilter": "탐색기 파일 필터",
       "folderTreeFileFilterDescription": "탐색기에 표시할 파일을 선택합니다.",
       "folderTreeFileFilterMarkdown": "Markdown 파일만 (.md, .txt)",
-      "folderTreeFileFilterAll": "모든 파일"
+      "folderTreeFileFilterAll": "모든 파일",
+      "scrollSyncMode": "스크롤 동기화 (분할 보기)",
+      "scrollSyncModeDescription": "분할 보기에서 에디터와 미리보기 창이 함께 스크롤되는 방식을 선택하세요.",
+      "scrollSyncModeEditorToPreview": "에디터 → 미리보기",
+      "scrollSyncModeEditorToPreviewDescription": "에디터를 스크롤하면 미리보기도 스크롤됩니다. 미리보기를 스크롤해도 에디터는 움직이지 않습니다.",
+      "scrollSyncModeBidirectional": "양방향",
+      "scrollSyncModeBidirectionalDescription": "어느 쪽을 스크롤해도 다른 쪽이 동기화되어 스크롤됩니다.",
+      "scrollSyncModeOff": "끄기",
+      "scrollSyncModeOffDescription": "각 창이 독립적으로 스크롤됩니다."
     },
     "advanced": {
       "title": "고급",

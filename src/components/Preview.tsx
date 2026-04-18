@@ -48,6 +48,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScrollRef = useRef(false);
   const [processedContent, setProcessedContent] = useState(content || '');
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
@@ -304,20 +305,26 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // Sync scroll from editor
   useEffect(() => {
-    if (scrollFraction !== undefined && scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const maxScroll = container.scrollHeight - container.clientHeight;
-      if (maxScroll > 0) {
-        container.scrollTop = scrollFraction * maxScroll;
-      }
-    }
+    if (scrollFraction === undefined || !scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const maxScroll = container.scrollHeight - container.clientHeight;
+    if (maxScroll <= 0) return;
+    const targetScroll = scrollFraction * maxScroll;
+    if (Math.abs(container.scrollTop - targetScroll) < 1) return;
+    isProgrammaticScrollRef.current = true;
+    container.scrollTop = targetScroll;
+    requestAnimationFrame(() => {
+      isProgrammaticScrollRef.current = false;
+    });
   }, [scrollFraction]);
 
-  // Report scroll position back to parent (used in preview-only mode)
+  // Report scroll position back to parent
   useEffect(() => {
     if (!onScrollChange || !scrollContainerRef.current) return;
     const container = scrollContainerRef.current;
     const handleScroll = () => {
+      // Skip events triggered by our own programmatic scroll to avoid feedback loops
+      if (isProgrammaticScrollRef.current) return;
       const maxScroll = container.scrollHeight - container.clientHeight;
       if (maxScroll > 0) {
         onScrollChange(container.scrollTop / maxScroll);
