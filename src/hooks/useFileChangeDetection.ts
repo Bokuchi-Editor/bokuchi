@@ -56,6 +56,21 @@ export const useFileChangeDetection = ({
               } else {
                 reloadTabContent(tabId, fileResult.content);
 
+                // Sync Monaco model directly (it may be out of sync if Editor is
+                // unmounted, e.g. in preview mode with keepCurrentModel)
+                const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+                if (monaco?.editor?.getModels) {
+                  for (const model of monaco.editor.getModels()) {
+                    const uriStr = model.uri.toString();
+                    if (uriStr === tabId || uriStr.endsWith('/' + tabId)) {
+                      if (model.getValue() !== fileResult.content) {
+                        model.setValue(fileResult.content);
+                      }
+                      break;
+                    }
+                  }
+                }
+
                 try {
                   const newHashInfo = await desktopApi.getFileHash(tab.filePath);
                   updateTabFileHash(tabId, newHashInfo);
