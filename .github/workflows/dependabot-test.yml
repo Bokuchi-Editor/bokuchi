@@ -82,7 +82,7 @@ jobs:
 
       - name: Comment on PR
         if: failure()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             github.rest.issues.createComment({
@@ -94,7 +94,7 @@ jobs:
 
       - name: Comment on PR (Success)
         if: success()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             github.rest.issues.createComment({
