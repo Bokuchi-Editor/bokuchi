@@ -90,6 +90,27 @@ describe('checkDuplicateFileInTabs', () => {
   });
 });
 
+describe('normalizeFilePath - edge cases', () => {
+  // T-PU-18: UNC paths
+  it('T-PU-18: normalizes UNC paths', () => {
+    expect(normalizeFilePath('\\\\server\\share\\file.md')).toBe('//server/share/file.md');
+  });
+
+  // T-PU-19: relative paths pass through with normalization
+  it('T-PU-19: normalizes relative paths with backslashes', () => {
+    expect(normalizeFilePath('.\\docs\\file.md')).toBe('./docs/file.md');
+    expect(normalizeFilePath('..\\file.md')).toBe('../file.md');
+  });
+});
+
+describe('extractFolderNameFromPath - edge cases', () => {
+  // T-PU-20: trailing slash falls back to full path (pop() returns '' which is falsy)
+  it('T-PU-20: returns full path for path with trailing slash', () => {
+    const result = extractFolderNameFromPath('/home/user/');
+    expect(result).toBe('/home/user/');
+  });
+});
+
 describe('isMarkdownFile', () => {
   // T-PU-14
   it('T-PU-14: returns true for .md files', () => {
@@ -110,5 +131,17 @@ describe('isMarkdownFile', () => {
   it('T-PU-17: returns false for non-markdown files', () => {
     expect(isMarkdownFile('script.js')).toBe(false);
     expect(isMarkdownFile('style.css')).toBe(false);
+  });
+
+  // T-PU-21: multiple extensions ending in .md
+  it('T-PU-21: returns true for files with multiple extensions ending in .md', () => {
+    expect(isMarkdownFile('file.test.md')).toBe(true);
+    expect(isMarkdownFile('docs.backup.markdown')).toBe(true);
+  });
+
+  // T-PU-22: .md-like but not .md
+  it('T-PU-22: returns false for similar but non-markdown extensions', () => {
+    expect(isMarkdownFile('file.mdx')).toBe(false);
+    expect(isMarkdownFile('file.mdown')).toBe(false);
   });
 });

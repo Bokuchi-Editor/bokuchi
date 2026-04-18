@@ -44,13 +44,13 @@ npm run test:rust:verbose  # 詳細出力付き
 | カテゴリ | パス | テスト数 (概算) |
 |----------|------|----------------|
 | Rust ユニットテスト | `src-tauri/src/tests.rs` | 59 |
-| TS ユーティリティテスト | `src/utils/__tests__/*.test.ts` | 167 |
-| TS API テスト | `src/api/__tests__/*.test.ts` | 173 |
-| TS リデューサーテスト | `src/reducers/__tests__/*.test.ts` | 20 |
-| TS コンポーネントテスト | `src/components/__tests__/*.test.tsx` | 173 |
-| TS フックテスト | `src/hooks/__tests__/*.test.ts(x)` | 80 |
-| TS テーマテスト | `src/themes/__tests__/*.test.ts` | 14 |
-| TS 結合テスト | `src/__tests__/integration/*.test.tsx` | 37 |
+| TS ユーティリティテスト | `src/utils/__tests__/*.test.ts` | 222 |
+| TS API テスト | `src/api/__tests__/*.test.ts` | 132 |
+| TS リデューサーテスト | `src/reducers/__tests__/*.test.ts` | 26 |
+| TS コンポーネントテスト | `src/components/__tests__/*.test.tsx` | 298 |
+| TS フックテスト | `src/hooks/__tests__/*.test.ts(x)` | 92 |
+| TS テーマテスト | `src/themes/__tests__/*.test.ts` | 16 |
+| TS 結合テスト | `src/__tests__/*.test.tsx` | 35 |
 
 ## CI
 

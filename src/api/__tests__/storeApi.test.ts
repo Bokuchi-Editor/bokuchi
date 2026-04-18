@@ -89,9 +89,10 @@ describe('storeApi.loadGlobalVariables', () => {
 // saveLanguage / loadLanguage
 // ---------------------------------------------------------------------------
 describe('storeApi.saveLanguage', () => {
-  it('stores language', async () => {
+  it('stores language and persists to disk', async () => {
     await storeApi.saveLanguage('ja');
     expect(mockStore.set).toHaveBeenCalledWith('language', 'ja');
+    expect(mockStore.save).toHaveBeenCalled();
   });
 });
 
@@ -116,9 +117,10 @@ describe('storeApi.loadLanguage', () => {
 // saveZoomLevel / loadZoomLevel
 // ---------------------------------------------------------------------------
 describe('storeApi.saveZoomLevel', () => {
-  it('stores zoom level', async () => {
+  it('stores zoom level and persists to disk', async () => {
     await storeApi.saveZoomLevel(1.5);
     expect(mockStore.set).toHaveBeenCalledWith('zoomLevel', 1.5);
+    expect(mockStore.save).toHaveBeenCalled();
   });
 });
 
@@ -143,9 +145,10 @@ describe('storeApi.loadZoomLevel', () => {
 // saveTheme / loadTheme
 // ---------------------------------------------------------------------------
 describe('storeApi.saveTheme', () => {
-  it('stores theme', async () => {
+  it('stores theme and persists to disk', async () => {
     await storeApi.saveTheme('dark');
     expect(mockStore.set).toHaveBeenCalledWith('theme', 'dark');
+    expect(mockStore.save).toHaveBeenCalled();
   });
 });
 
@@ -164,6 +167,14 @@ describe('storeApi.loadTheme', () => {
 // ---------------------------------------------------------------------------
 // saveDarkMode / loadDarkMode
 // ---------------------------------------------------------------------------
+describe('storeApi.saveDarkMode', () => {
+  it('stores dark mode and persists to disk', async () => {
+    await storeApi.saveDarkMode(true);
+    expect(mockStore.set).toHaveBeenCalledWith('darkMode', true);
+    expect(mockStore.save).toHaveBeenCalled();
+  });
+});
+
 describe('storeApi.loadDarkMode', () => {
   it('returns stored value', async () => {
     mockStore.get.mockResolvedValue(true);
@@ -179,6 +190,14 @@ describe('storeApi.loadDarkMode', () => {
 // ---------------------------------------------------------------------------
 // saveTabLayout / loadTabLayout
 // ---------------------------------------------------------------------------
+describe('storeApi.saveTabLayout', () => {
+  it('stores tab layout and persists to disk', async () => {
+    await storeApi.saveTabLayout('vertical');
+    expect(mockStore.set).toHaveBeenCalledWith('tabLayout', 'vertical');
+    expect(mockStore.save).toHaveBeenCalled();
+  });
+});
+
 describe('storeApi.loadTabLayout', () => {
   it('returns stored layout', async () => {
     mockStore.get.mockResolvedValue('vertical');
@@ -194,6 +213,14 @@ describe('storeApi.loadTabLayout', () => {
 // ---------------------------------------------------------------------------
 // saveViewMode / loadViewMode
 // ---------------------------------------------------------------------------
+describe('storeApi.saveViewMode', () => {
+  it('stores view mode and persists to disk', async () => {
+    await storeApi.saveViewMode('preview');
+    expect(mockStore.set).toHaveBeenCalledWith('viewMode', 'preview');
+    expect(mockStore.save).toHaveBeenCalled();
+  });
+});
+
 describe('storeApi.loadViewMode', () => {
   it('returns stored mode', async () => {
     mockStore.get.mockResolvedValue('preview');
@@ -350,6 +377,18 @@ describe('storeApi.addRecentFile', () => {
     expect(savedFiles[0].openCount).toBe(2);
   });
 
+  it('truncates preview to previewLength setting', async () => {
+    const longContent = 'A'.repeat(200);
+    mockStore.get
+      .mockResolvedValueOnce([]) // recentFiles
+      .mockResolvedValueOnce(DEFAULT_APP_SETTINGS); // appSettings (previewLength: 100)
+
+    await storeApi.addRecentFile('/long.md', 'long.md', longContent);
+
+    const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ preview: string }>;
+    expect(savedFiles[0].preview).toHaveLength(DEFAULT_APP_SETTINGS.recentFiles.previewLength);
+  });
+
   it('enforces max recent files limit', async () => {
     const maxFiles = DEFAULT_APP_SETTINGS.recentFiles.maxRecentFiles;
     const existing = Array.from({ length: maxFiles }, (_, i) => ({
@@ -395,9 +434,10 @@ describe('storeApi.removeRecentFile', () => {
 // Folder tree root
 // ---------------------------------------------------------------------------
 describe('storeApi.saveFolderTreeRoot', () => {
-  it('stores root path', async () => {
+  it('stores root path and persists to disk', async () => {
     await storeApi.saveFolderTreeRoot('/home/user/docs');
     expect(mockStore.set).toHaveBeenCalledWith('folderTreeRoot', '/home/user/docs');
+    expect(mockStore.save).toHaveBeenCalled();
   });
 
   it('stores null to clear', async () => {

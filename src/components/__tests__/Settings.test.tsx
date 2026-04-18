@@ -37,6 +37,8 @@ import Settings from '../Settings';
 import { DEFAULT_APP_SETTINGS } from '../../types/settings';
 import type { AppSettings } from '../../types/settings';
 import { asMock } from '../../test-utils';
+import { storeApi } from '../../api/storeApi';
+import { desktopApi } from '../../api/desktopApi';
 
 describe('Settings', () => {
   let onClose: ReturnType<typeof vi.fn>;
@@ -212,5 +214,61 @@ describe('Settings', () => {
         rendering: expect.objectContaining({ enableKatex: false }),
       })
     );
+  });
+
+  // T-SET-19: reset button opens confirmation dialog
+  it('T-SET-19: reset button shows confirmation dialog', () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    fireEvent.click(screen.getByText('settings.advanced.resetSettings'));
+    // Confirmation dialog appears
+    expect(screen.getByText('settings.advanced.resetConfirm')).toBeInTheDocument();
+  });
+
+  // T-SET-20: confirming reset calls storeApi.resetAppSettings and onSettingsChange
+  it('T-SET-20: confirming reset calls resetAppSettings', async () => {
+    // loadAppSettings is called after reset to get fresh defaults
+    vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce(DEFAULT_APP_SETTINGS);
+
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    // Click reset button to open confirmation
+    fireEvent.click(screen.getByText('settings.advanced.resetSettings'));
+    // Confirm dialog has two buttons with same text; the confirm one is the contained variant
+    const confirmButtons = screen.getAllByText('settings.advanced.resetSettings');
+    const confirmButton = confirmButtons.find(btn =>
+      btn.closest('button')?.classList.contains('MuiButton-containedError')
+    );
+    expect(confirmButton).toBeDefined();
+    fireEvent.click(confirmButton!);
+
+    // Wait for async handler
+    await vi.waitFor(() => {
+      expect(storeApi.resetAppSettings).toHaveBeenCalled();
+      expect(onSettingsChange).toHaveBeenCalled();
+    });
+  });
+
+  // T-SET-21: export button calls desktopApi.exportSettingsFile
+  it('T-SET-21: export settings calls exportSettingsFile', async () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    fireEvent.click(screen.getByText('settings.advanced.exportSettings'));
+
+    await vi.waitFor(() => {
+      expect(storeApi.exportAppSettings).toHaveBeenCalled();
+      expect(desktopApi.exportSettingsFile).toHaveBeenCalled();
+    });
+  });
+
+  // T-SET-22: import button calls desktopApi.importSettingsFile
+  it('T-SET-22: import settings calls importSettingsFile', async () => {
+    render(<Settings {...defaultProps()} />);
+    fireEvent.click(screen.getByText('settings.advanced.title'));
+    fireEvent.click(screen.getByText('settings.advanced.importSettings'));
+
+    await vi.waitFor(() => {
+      expect(desktopApi.importSettingsFile).toHaveBeenCalled();
+    });
   });
 });

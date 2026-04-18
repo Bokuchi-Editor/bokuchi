@@ -75,9 +75,31 @@ vi.mock('marked', () => {
   return { marked: simpleMarked };
 });
 
+// Mock markdownRenderers for verifying render pipeline calls
+vi.mock('../../utils/markdownRenderers', () => ({
+  renderCode: vi.fn(),
+  processKatex: vi.fn().mockImplementation(async (md: string) => md.replace(/\$([^$]+)\$/g, '<span class="katex">$1</span>')),
+  contentHasKatex: vi.fn().mockImplementation((content: string) => /\$/.test(content)),
+  processMermaidBlocks: vi.fn().mockImplementation(async (html: string) => html.replace(/mermaid-placeholder/g, '<div class="mermaid-rendered">diagram</div>')),
+  contentHasMermaid: vi.fn().mockImplementation((content: string) => /mermaid/.test(content)),
+  reinitializeMermaid: vi.fn(),
+}));
+
+// Mock MarpPreview component
+vi.mock('../MarpPreview', () => ({
+  default: (props: Record<string, unknown>) => <div data-testid="marp-preview" data-content={props.content}>MarpPreview</div>,
+}));
+
+// Mock marpRenderer
+vi.mock('../../utils/marpRenderer', () => ({
+  contentIsMarp: vi.fn().mockReturnValue(false),
+}));
+
 import MarkdownPreview from '../Preview';
 import { variableApi } from '../../api/variableApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid } from '../../utils/markdownRenderers';
+import { contentIsMarp } from '../../utils/marpRenderer';
 
 /**
  * Helper: render the Preview component and wait until the async markdown
@@ -371,6 +393,134 @@ describe('MarkdownPreview – themes', () => {
 
     const preview = container.querySelector('.markdown-preview') as HTMLElement;
     expect(preview.style.fontFamily).toContain('IBM Plex Mono');
+  });
+});
+
+// =========================================================================
+// Link click handling
+// =========================================================================
+
+// =========================================================================
+// KaTeX rendering
+// =========================================================================
+
+describe('MarkdownPreview – KaTeX', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+  });
+
+  // T-PV-17: KaTeX enabled triggers processKatex
+  it('T-PV-17: calls processKatex when enableKatex is true and content has math', async () => {
+    await renderPreviewContent({
+      content: 'Math: $E=mc^2$',
+      renderingSettings: { enableKatex: true, enableMermaid: false, enableMarp: false },
+    });
+
+    expect(contentHasKatex).toHaveBeenCalled();
+    expect(processKatex).toHaveBeenCalled();
+  });
+
+  // T-PV-18: KaTeX disabled does not call processKatex
+  it('T-PV-18: does not call processKatex when enableKatex is false', async () => {
+    await renderPreviewContent({
+      content: 'Math: $E=mc^2$',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false },
+    });
+
+    expect(processKatex).not.toHaveBeenCalled();
+  });
+});
+
+// =========================================================================
+// Mermaid rendering
+// =========================================================================
+
+describe('MarkdownPreview – Mermaid', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+  });
+
+  // T-PV-19: Mermaid enabled triggers processMermaidBlocks
+  it('T-PV-19: calls processMermaidBlocks when enableMermaid is true and content has mermaid', async () => {
+    await renderPreviewContent({
+      content: '```mermaid\ngraph TD\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: true, enableMarp: false },
+    });
+
+    expect(contentHasMermaid).toHaveBeenCalled();
+    expect(processMermaidBlocks).toHaveBeenCalled();
+  });
+
+  // T-PV-20: Mermaid disabled does not call processMermaidBlocks
+  it('T-PV-20: does not call processMermaidBlocks when enableMermaid is false', async () => {
+    await renderPreviewContent({
+      content: '```mermaid\ngraph TD\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false },
+    });
+
+    expect(processMermaidBlocks).not.toHaveBeenCalled();
+  });
+});
+
+// =========================================================================
+// Easter egg blocks
+// =========================================================================
+
+describe('MarkdownPreview – Easter egg blocks', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+  });
+
+  // T-PV-21: :::rainbow block renders with ee-rainbow class
+  it('T-PV-21: easter egg block renders with effect class', async () => {
+    const { container } = await renderPreviewContent({
+      content: ':::rainbow\nHello\n:::\n',
+    });
+
+    const eeBlock = container.querySelector('.ee-block.ee-rainbow');
+    expect(eeBlock).not.toBeNull();
+    expect(eeBlock?.getAttribute('data-effect')).toBe('rainbow');
+  });
+});
+
+// =========================================================================
+// Marp detection
+// =========================================================================
+
+describe('MarkdownPreview – Marp detection', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // T-PV-22: Marp content renders MarpPreview instead of normal preview
+  it('T-PV-22: renders MarpPreview when content is marp and enableMarp is true', async () => {
+    vi.mocked(contentIsMarp).mockReturnValue(true);
+
+    const { getByTestId } = render(
+      <MarkdownPreview
+        content="---\nmarp: true\n---\n# Slide"
+        darkMode={false}
+        renderingSettings={{ enableKatex: false, enableMermaid: false, enableMarp: true }}
+      />,
+    );
+
+    expect(getByTestId('marp-preview')).toBeInTheDocument();
+  });
+
+  // T-PV-23: Marp disabled renders normal preview even for marp content
+  it('T-PV-23: renders normal preview when enableMarp is false', async () => {
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+
+    const { container, queryByTestId } = await renderPreviewContent({
+      content: '---\nmarp: true\n---\n# Slide',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false },
+    });
+
+    expect(queryByTestId('marp-preview')).toBeNull();
+    expect(container.querySelector('.markdown-preview')).not.toBeNull();
   });
 });
 

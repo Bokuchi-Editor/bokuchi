@@ -177,4 +177,114 @@ describe('useKeyboardShortcuts', () => {
 
     expect(setOutlinePanelOpen).toHaveBeenCalled();
   });
+
+  // T-KS-11: Cmd+Shift+S triggers save as
+  it('T-KS-11: Ctrl+Shift+S triggers save as', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('S', { ctrlKey: true, shiftKey: true });
+    });
+
+    expect(onSaveFileAs).toHaveBeenCalledTimes(1);
+    expect(onSaveFile).not.toHaveBeenCalled();
+  });
+
+  // T-KS-12: Ctrl+Shift+V rotates view mode
+  it('T-KS-12: Ctrl+Shift+V rotates view mode', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('V', { ctrlKey: true, shiftKey: true });
+    });
+
+    expect(onRotateViewMode).toHaveBeenCalledTimes(1);
+  });
+
+  // T-KS-13: Ctrl+Shift+1 switches to split view
+  it('T-KS-13: Ctrl+Shift+1 switches to split view', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('!', { ctrlKey: true, shiftKey: true, code: 'Digit1' });
+    });
+
+    expect(onChangeViewMode).toHaveBeenCalledWith('split');
+  });
+
+  // T-KS-14: Ctrl+Shift+2 switches to editor view
+  it('T-KS-14: Ctrl+Shift+2 switches to editor view', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('@', { ctrlKey: true, shiftKey: true, code: 'Digit2' });
+    });
+
+    expect(onChangeViewMode).toHaveBeenCalledWith('editor');
+  });
+
+  // T-KS-15: Ctrl+Shift+3 switches to preview view
+  it('T-KS-15: Ctrl+Shift+3 switches to preview view', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('#', { ctrlKey: true, shiftKey: true, code: 'Digit3' });
+    });
+
+    expect(onChangeViewMode).toHaveBeenCalledWith('preview');
+  });
+
+  // T-KS-16: Ctrl+Shift+E toggles folder tree panel
+  it('T-KS-16: Ctrl+Shift+E toggles folder tree panel', () => {
+    const params = defaultParams();
+    params.appSettings = {
+      ...DEFAULT_APP_SETTINGS,
+      interface: { ...DEFAULT_APP_SETTINGS.interface, folderTreeDisplayMode: 'persistent' },
+    };
+    renderHook(() => useKeyboardShortcuts(params));
+
+    act(() => {
+      fireKeydown('E', { ctrlKey: true, shiftKey: true });
+    });
+
+    expect(setFolderTreePanelOpen).toHaveBeenCalled();
+  });
+
+  // T-KS-17: Ctrl+Shift+E does NOT toggle when folderTreeDisplayMode is 'off'
+  it('T-KS-17: Ctrl+Shift+E is disabled when folderTreeDisplayMode is off', () => {
+    const params = defaultParams();
+    params.appSettings = {
+      ...DEFAULT_APP_SETTINGS,
+      interface: { ...DEFAULT_APP_SETTINGS.interface, folderTreeDisplayMode: 'off' },
+    };
+    renderHook(() => useKeyboardShortcuts(params));
+
+    act(() => {
+      fireKeydown('E', { ctrlKey: true, shiftKey: true });
+    });
+
+    expect(setFolderTreePanelOpen).not.toHaveBeenCalled();
+  });
+
+  // T-KS-18: metaKey works as alternative to ctrlKey (macOS support)
+  it('T-KS-18: metaKey triggers shortcuts (macOS Cmd key)', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('n', { metaKey: true });
+    });
+
+    expect(onNewTab).toHaveBeenCalledTimes(1);
+  });
+
+  // T-KS-19: metaKey + S triggers save
+  it('T-KS-19: metaKey+S triggers save (macOS)', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('s', { metaKey: true });
+    });
+
+    expect(onSaveFile).toHaveBeenCalledTimes(1);
+  });
 });

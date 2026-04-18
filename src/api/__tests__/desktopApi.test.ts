@@ -78,6 +78,18 @@ describe('desktopApi.openFile', () => {
     expect(result).toEqual({ content: '# Hello', filePath: '/test.md' });
   });
 
+  // T-DA-01: open dialog uses correct file type filters (.md/.txt + all)
+  it('T-DA-01: opens dialog with Markdown/txt and All Files filters', async () => {
+    vi.mocked(open).mockResolvedValue(null);
+    await desktopApi.openFile();
+    expect(open).toHaveBeenCalledWith(expect.objectContaining({
+      filters: [
+        { name: 'Markdown Files', extensions: ['md', 'txt'] },
+        { name: 'All Files', extensions: ['*'] },
+      ],
+    }));
+  });
+
   it('returns error when no file selected', async () => {
     vi.mocked(open).mockResolvedValue(null);
     const result = await desktopApi.openFile();
@@ -435,6 +447,13 @@ describe('desktopApi.readDirectory', () => {
     const result = await desktopApi.readDirectory('/dir', false);
     expect(result).toEqual(entries);
     expect(invoke).toHaveBeenCalledWith('read_directory', { path: '/dir', showAllFiles: false });
+  });
+
+  // T-DA-02: showAllFiles parameter is passed correctly
+  it('T-DA-02: passes showAllFiles=true to invoke', async () => {
+    vi.mocked(invoke).mockResolvedValue([]);
+    await desktopApi.readDirectory('/dir', true);
+    expect(invoke).toHaveBeenCalledWith('read_directory', { path: '/dir', showAllFiles: true });
   });
 
   it('returns empty array on error', async () => {

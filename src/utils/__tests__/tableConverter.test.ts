@@ -86,6 +86,31 @@ describe('htmlTableToMarkdown', () => {
     expect(lines).toHaveLength(3);
   });
 
+  // T-TC-18: HTML entities are decoded by DOMParser
+  it('T-TC-18: decodes HTML entities in cells', () => {
+    const html = `
+      <table>
+        <tr><th>Symbol</th></tr>
+        <tr><td>&amp; &lt;tag&gt; &quot;quoted&quot;</td></tr>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    expect(result).toContain('& <tag> "quoted"');
+  });
+
+  // T-TC-19: colspan cells are treated as single cells (documents current behavior)
+  it('T-TC-19: colspan cells are read as single text content', () => {
+    const html = `
+      <table>
+        <tr><th>A</th><th>B</th></tr>
+        <tr><td colspan="2">Spanning</td></tr>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    // DOMParser reads each <td> as one cell regardless of colspan
+    expect(result).toContain('Spanning');
+  });
+
   // T-TC-06
   it('handles cells with whitespace and newlines', () => {
     const html = `

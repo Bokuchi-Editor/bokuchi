@@ -100,5 +100,51 @@ describe('markdownToolbarActions', () => {
       const edit = buildHeadingEdit(1, '### Title with # inside', 2);
       expect(edit.text).toBe('## Title with # inside');
     });
+
+    // T-MTA-12: heading level 7 produces 7 hashes (beyond H6 spec but documents behavior)
+    it('T-MTA-12: level 7 produces 7 hashes (documents current behavior)', () => {
+      const edit = buildHeadingEdit(1, 'Text', 7);
+      expect(edit.text).toBe('####### Text');
+    });
+
+    // T-MTA-13: heading level 0 produces no hashes, just a space prefix
+    it('T-MTA-13: level 0 produces empty prefix with space', () => {
+      const edit = buildHeadingEdit(1, 'Text', 0);
+      expect(edit.text).toBe(' Text');
+    });
+  });
+
+  describe('buildWrapEdit – multi-line selection', () => {
+    // T-MTA-14: wrap with multi-line selection
+    it('T-MTA-14: wraps multi-line selected text', () => {
+      const multiLineSelection = {
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 3,
+        endColumn: 10,
+      };
+      const { edit, newSelection } = buildWrapEdit(
+        multiLineSelection,
+        'line1\nline2\nline3',
+        '**',
+        '**',
+        'bold',
+      );
+      expect(edit.text).toBe('**line1\nline2\nline3**');
+      // With text selected, newSelection should be null
+      expect(newSelection).toBeNull();
+    });
+
+    // T-MTA-15: wrap link with selected text
+    it('T-MTA-15: wraps selected text as link', () => {
+      const selection = {
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 4,
+      };
+      const { edit } = buildWrapEdit(selection, 'url', '[', '](url)', 'link text');
+      expect(edit.text).toBe('[url](url)');
+    });
   });
 });

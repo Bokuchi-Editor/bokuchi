@@ -44,13 +44,13 @@ npm run test:rust:verbose  # With verbose output
 | Category | Location | Approx. count |
 |----------|----------|---------------|
 | Rust unit tests | `src-tauri/src/tests.rs` | 59 |
-| TS utility tests | `src/utils/__tests__/*.test.ts` | 167 |
-| TS API tests | `src/api/__tests__/*.test.ts` | 173 |
-| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 20 |
-| TS component tests | `src/components/__tests__/*.test.tsx` | 173 |
-| TS hook tests | `src/hooks/__tests__/*.test.ts(x)` | 80 |
-| TS theme tests | `src/themes/__tests__/*.test.ts` | 14 |
-| TS integration tests | `src/__tests__/integration/*.test.tsx` | 37 |
+| TS utility tests | `src/utils/__tests__/*.test.ts` | 222 |
+| TS API tests | `src/api/__tests__/*.test.ts` | 132 |
+| TS reducer tests | `src/reducers/__tests__/*.test.ts` | 26 |
+| TS component tests | `src/components/__tests__/*.test.tsx` | 298 |
+| TS hook tests | `src/hooks/__tests__/*.test.ts(x)` | 92 |
+| TS theme tests | `src/themes/__tests__/*.test.ts` | 16 |
+| TS integration tests | `src/__tests__/*.test.tsx` | 35 |
 
 ## CI
 
