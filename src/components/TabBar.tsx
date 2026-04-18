@@ -16,6 +16,7 @@ import {
 import { Close, Add, PushPin } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
+import { getTabDisplayTitle } from '../utils/pathUtils';
 import {
   DndContext,
   closestCenter,
@@ -180,7 +181,7 @@ const SortableTab: React.FC<{
                 minWidth: 0,
               }}
             >
-              {tab.title}
+              {getTabDisplayTitle(tab)}
             </Box>
             <Badge
               color="error"
@@ -263,7 +264,7 @@ const SortableTab: React.FC<{
                 minWidth: 0,
               }}
             >
-              {tab.title}
+              {getTabDisplayTitle(tab)}
             </Box>
             <Badge
               color="error"
