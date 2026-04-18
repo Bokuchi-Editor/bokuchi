@@ -4,6 +4,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('../../api/desktopApi', () => ({
   desktopApi: {
     readFileFromPath: vi.fn().mockResolvedValue('new content'),
+    readFileByPath: vi.fn().mockResolvedValue({ content: 'new content', error: null }),
     getFileHash: vi.fn().mockResolvedValue({ hash: 'abc', modified_time: 1000, file_size: 100 }),
   },
 }));
@@ -302,6 +303,144 @@ describe('useFileChangeDetection', () => {
       expect(result.current.fileChangeDialog.open).toBe(false);
     } finally {
       vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-12: Regression test - reload syncs Monaco model (preview mode fix)
+  it('T-FCD-12: onReload syncs Monaco model when it exists', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'externally updated content',
+      error: null,
+    });
+
+    const mockSetValue = vi.fn();
+    const mockModel = {
+      uri: { toString: () => 'tab1' },
+      getValue: () => 'old content',
+      setValue: mockSetValue,
+    };
+
+    // Set up mock Monaco global with a model for tab1
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = {
+      editor: {
+        getModels: () => [mockModel],
+      },
+    };
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // Dispatch fileChangeDetected event
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      expect(result.current.fileChangeDialog.open).toBe(true);
+
+      // Click reload
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      // Monaco model should have been synced with the new content
+      expect(mockSetValue).toHaveBeenCalledWith('externally updated content');
+      expect(reloadTabContent).toHaveBeenCalledWith('tab1', 'externally updated content');
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
+    }
+  });
+
+  // T-FCD-13: Regression test - reload skips Monaco sync when model content matches
+  it('T-FCD-13: onReload skips Monaco setValue when model already has correct content', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'same content',
+      error: null,
+    });
+
+    const mockSetValue = vi.fn();
+    const mockModel = {
+      uri: { toString: () => 'tab1' },
+      getValue: () => 'same content',
+      setValue: mockSetValue,
+    };
+
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = {
+      editor: {
+        getModels: () => [mockModel],
+      },
+    };
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      // setValue should NOT be called since content already matches
+      expect(mockSetValue).not.toHaveBeenCalled();
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
+    }
+  });
+
+  // T-FCD-14: Regression test - reload works when Monaco is not available
+  it('T-FCD-14: onReload works gracefully when Monaco global is not available', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'new content',
+      error: null,
+    });
+
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = undefined;
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      // Should not throw even without Monaco
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      expect(reloadTabContent).toHaveBeenCalledWith('tab1', 'new content');
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
     }
   });
 
