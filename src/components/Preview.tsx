@@ -22,6 +22,7 @@ interface PreviewProps {
   zoomLevel?: number;
   onContentChange?: (newContent: string) => void;
   scrollFraction?: number;
+  onScrollChange?: (fraction: number) => void;
   filePath?: string;
   renderingSettings?: RenderingSettings;
   viewMode?: 'split' | 'editor' | 'preview';
@@ -43,7 +44,7 @@ function resolveRelativePath(baseDirPath: string, relativePath: string): string 
   return '/' + resolved.join('/');
 }
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -311,6 +312,20 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       }
     }
   }, [scrollFraction]);
+
+  // Report scroll position back to parent (used in preview-only mode)
+  useEffect(() => {
+    if (!onScrollChange || !scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const handleScroll = () => {
+      const maxScroll = container.scrollHeight - container.clientHeight;
+      if (maxScroll > 0) {
+        onScrollChange(container.scrollTop / maxScroll);
+      }
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [onScrollChange]);
 
   const handleExportHTML = async () => {
     try {
