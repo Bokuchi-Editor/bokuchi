@@ -11,6 +11,8 @@ import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
 import { RenderingSettings, ScrollSyncMode } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
+import { useResizableSidebar } from '../hooks/useResizableSidebar';
+import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
 
 interface AppContentProps {
   // State
@@ -207,74 +209,20 @@ const AppContent: React.FC<AppContentProps> = ({
   const showStandaloneVerticalTabs = tabLayout === 'vertical' && !showMergedLeftSidebar;
 
   // Resizable divider state for merged sidebar
-  const [tabSectionHeight, setTabSectionHeight] = useState(200);
-  const [explorerCollapsed, setExplorerCollapsed] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const explorerHeightBeforeCollapse = useRef(0);
-  const isDraggingRef = useRef(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const handleExplorerHeaderClick = useCallback(() => {
-    if (explorerCollapsed) {
-      // Restore previous height (or default)
-      const restoreH = explorerHeightBeforeCollapse.current || 200;
-      if (sidebarRef.current) {
-        const maxH = sidebarRef.current.getBoundingClientRect().height - 120;
-        setTabSectionHeight(Math.min(restoreH, maxH));
-      } else {
-        setTabSectionHeight(restoreH);
-      }
-      setExplorerCollapsed(false);
-    } else {
-      // Save current height then collapse explorer (body hidden, header stays)
-      explorerHeightBeforeCollapse.current = tabSectionHeight;
-      // Set tab section to fill, leaving room for explorer header + divider
-      if (sidebarRef.current) {
-        const totalH = sidebarRef.current.getBoundingClientRect().height;
-        setTabSectionHeight(totalH - 48);
-      }
-      setExplorerCollapsed(true);
-    }
-  }, [explorerCollapsed, tabSectionHeight]);
-
-  const handleDividerMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    isDraggingRef.current = true;
-    setIsDragging(true);
-
-    const onMouseMove = (ev: MouseEvent) => {
-      if (!isDraggingRef.current || !sidebarRef.current) return;
-      const sidebarRect = sidebarRef.current.getBoundingClientRect();
-      const newHeight = ev.clientY - sidebarRect.top;
-      const minH = 80;
-      // Explorer header (~40px) + divider (4px) = 44px must always remain
-      const maxH = sidebarRect.height - 48;
-      const clamped = Math.max(minH, Math.min(maxH, newHeight));
-      setTabSectionHeight(clamped);
-      // Un-collapse when user drags to give explorer more space
-      setExplorerCollapsed(false);
-    };
-
-    const onMouseUp = () => {
-      isDraggingRef.current = false;
-      setIsDragging(false);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    };
-
-    document.body.style.cursor = 'row-resize';
-    document.body.style.userSelect = 'none';
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  }, []);
+  const {
+    sidebarRef,
+    topSectionHeight: tabSectionHeight,
+    bottomCollapsed: explorerCollapsed,
+    isDragging,
+    toggleBottomCollapsed: handleExplorerHeaderClick,
+    handleDividerMouseDown,
+  } = useResizableSidebar();
 
   // Force Monaco Editor to recalculate layout when persistent panels toggle
   useEffect(() => {
     const timer = setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
-    }, 50);
+    }, LAYOUT_SETTLE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
 
@@ -285,8 +233,8 @@ const AppContent: React.FC<AppContentProps> = ({
         <Box
           ref={sidebarRef}
           sx={{
-            width: 280,
-            minWidth: 280,
+            width: SIDEBAR_WIDTH_PX,
+            minWidth: SIDEBAR_WIDTH_PX,
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
@@ -326,7 +274,7 @@ const AppContent: React.FC<AppContentProps> = ({
           <Box
             onMouseDown={handleDividerMouseDown}
             sx={{
-              height: 4,
+              height: SIDEBAR_DIVIDER_HEIGHT_PX,
               cursor: 'row-resize',
               flexShrink: 0,
               bgcolor: 'divider',
@@ -353,7 +301,7 @@ const AppContent: React.FC<AppContentProps> = ({
               onClose={onFolderTreePanelClose}
               onHeaderClick={handleExplorerHeaderClick}
               collapsed={explorerCollapsed}
-              width={280}
+              width={SIDEBAR_WIDTH_PX}
               onRenameRequest={onRenameRequest}
             />
           </Box>
@@ -560,13 +508,13 @@ const AppContent: React.FC<AppContentProps> = ({
                   variant="temporary"
                   open={outlinePanelOpen}
                   onClose={onOutlinePanelClose}
-                  PaperProps={{ sx: { width: 280 } }}
+                  PaperProps={{ sx: { width: DRAWER_WIDTH_PX } }}
                 >
                   <OutlinePanel
                     headings={headings}
                     onHeadingClick={handleHeadingClick}
                     onClose={onOutlinePanelClose}
-                    width={280}
+                    width={DRAWER_WIDTH_PX}
                   />
                 </Drawer>
               )}
@@ -582,7 +530,7 @@ const AppContent: React.FC<AppContentProps> = ({
           variant="temporary"
           open={folderTreePanelOpen}
           onClose={onFolderTreePanelClose}
-          PaperProps={{ sx: { width: 280 } }}
+          PaperProps={{ sx: { width: DRAWER_WIDTH_PX } }}
         >
           <FolderTreePanel
             rootFolderName={folderTreeRootFolderName}
@@ -598,7 +546,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onCloseFolder={onFolderTreeCloseFolder}
             onRefresh={onFolderTreeRefresh}
             onClose={onFolderTreePanelClose}
-            width={280}
+            width={DRAWER_WIDTH_PX}
             onRenameRequest={onRenameRequest}
           />
         </Drawer>

@@ -38,6 +38,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { dragConfig } from '../config/dragConfig';
+import { SIDEBAR_WIDTH_PX } from '../constants/layout';
 
 interface TabBarProps {
   tabs: TabType[];
@@ -418,7 +419,7 @@ const TabBar: React.FC<TabBarProps> = ({
       <Box
         sx={{
           ...(!embedded && {
-            width: 280,
+            width: SIDEBAR_WIDTH_PX,
             borderRight: 1,
             borderColor: 'divider',
           }),

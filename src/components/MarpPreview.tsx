@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit, GridView } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { readFile } from '@tauri-apps/plugin-fs';
 import { variableApi } from '../api/variableApi';
 import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument } from '../utils/marpRenderer';
+import { inlineMarpRelativeImages } from '../utils/marpImageInliner';
+import { computeSlideLineRanges, scrollFractionToSlidePosition } from '../utils/marpSlideRanges';
 
 interface MarpPreviewProps {
   content: string;
@@ -17,143 +18,9 @@ interface MarpPreviewProps {
   viewMode?: 'split' | 'editor' | 'preview';
 }
 
-/** Resolve a relative path against a base directory path */
-function resolveRelativePath(baseDirPath: string, relativePath: string): string {
-  const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);
-  const resolved: string[] = [];
-  for (const part of parts) {
-    if (part === '.') continue;
-    if (part === '..') {
-      resolved.pop();
-    } else {
-      resolved.push(part);
-    }
-  }
-  return '/' + resolved.join('/');
-}
-
-const MIME_MAP: Record<string, string> = {
-  png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
-  gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
-  bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
-};
-
-/** Check if a URL is absolute (http, https, data, blob) */
-function isAbsoluteUrl(src: string): boolean {
-  return src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:') || src.startsWith('blob:');
-}
-
-/** Read a local file and return its data URL */
-async function readAsDataUrl(absolutePath: string, src: string): Promise<string> {
-  const data = await readFile(absolutePath);
-  const ext = src.split('.').pop()?.toLowerCase() || '';
-  const mime = MIME_MAP[ext] || 'application/octet-stream';
-  let binary = '';
-  for (let i = 0; i < data.length; i++) {
-    binary += String.fromCharCode(data[i]);
-  }
-  return `data:${mime};base64,${btoa(binary)}`;
-}
-
-/**
- * Replace relative image references in HTML with inline data URLs.
- * Handles:
- * - <img src="..."> tags (regular images)
- * - CSS url("...") patterns (Marp background images)
- * - <image href="..."> / <image xlink:href="..."> SVG elements
- */
-async function inlineRelativeImages(html: string, filePath: string): Promise<string> {
-  const baseDir = filePath.substring(0, filePath.lastIndexOf('/'));
-  const replacements = new Map<string, string>();
-  const promises: Promise<void>[] = [];
-
-  /** Collect a src for replacement if it's a relative path */
-  function collectSrc(src: string) {
-    if (isAbsoluteUrl(src) || replacements.has(src)) return;
-    replacements.set(src, src); // reserve
-    const absolutePath = resolveRelativePath(baseDir, src);
-    promises.push(
-      readAsDataUrl(absolutePath, src)
-        .then(dataUrl => { replacements.set(src, dataUrl); })
-        .catch(err => { console.error('[MarpPreview] Failed to inline image:', absolutePath, err); })
-    );
-  }
-
-  // 1. <img src="...">
-  const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
-  let match;
-  while ((match = imgRegex.exec(html)) !== null) {
-    collectSrc(match[1]);
-  }
-
-  // 2. CSS url(&quot;...&quot;) — Marp encodes quotes as HTML entities in inline styles
-  const urlEntityRegex = /url\(&quot;([^&]+)&quot;\)/g;
-  while ((match = urlEntityRegex.exec(html)) !== null) {
-    collectSrc(match[1]);
-  }
-
-  // 3. CSS url("...") — fallback for unencoded quotes
-  const urlRegex = /url\("([^"]+)"\)/g;
-  while ((match = urlRegex.exec(html)) !== null) {
-    collectSrc(match[1]);
-  }
-
-  // 4. SVG <image href="..."> or <image xlink:href="...">
-  const imageHrefRegex = /<image\s+[^>]*?(?:xlink:)?href="([^"]+)"[^>]*?>/g;
-  while ((match = imageHrefRegex.exec(html)) !== null) {
-    collectSrc(match[1]);
-  }
-
-  await Promise.all(promises);
-
-  let result = html;
-  for (const [original, dataUrl] of replacements) {
-    if (dataUrl !== original) {
-      result = result.split(`src="${original}"`).join(`src="${dataUrl}"`);
-      result = result.split(`url(&quot;${original}&quot;)`).join(`url(&quot;${dataUrl}&quot;)`);
-      result = result.split(`url("${original}")`).join(`url("${dataUrl}")`);
-      result = result.split(`href="${original}"`).join(`href="${dataUrl}"`);
-    }
-  }
-  return result;
-}
-
-/**
- * Compute the line ranges for each Marp slide from the source content.
- * Returns an array of { startLine, endLine } (0-based, inclusive).
- * The frontmatter block (first --- ... ---) is treated as part of slide 0.
- */
-function computeSlideLineRanges(content: string): { startLine: number; endLine: number }[] {
-  const lines = content.split('\n');
-  const totalLines = lines.length;
-
-  // Find frontmatter end (second ---)
-  let contentStart = 0;
-  if (lines[0]?.trim() === '---') {
-    for (let i = 1; i < totalLines; i++) {
-      if (lines[i]?.trim() === '---') {
-        contentStart = i + 1; // line after closing ---
-        break;
-      }
-    }
-  }
-
-  // Find slide break positions (--- on its own line, after frontmatter)
-  const slideStarts: number[] = [contentStart];
-  for (let i = contentStart; i < totalLines; i++) {
-    if (lines[i]?.trim() === '---') {
-      slideStarts.push(i + 1);
-    }
-  }
-
-  const ranges: { startLine: number; endLine: number }[] = [];
-  for (let i = 0; i < slideStarts.length; i++) {
-    const start = slideStarts[i];
-    const end = (i + 1 < slideStarts.length) ? slideStarts[i + 1] - 2 : totalLines - 1;
-    ranges.push({ startLine: start, endLine: Math.max(start, end) });
-  }
-  return ranges;
-}
+const FULLSCREEN_Z_INDEX = 9999;
+const FULLSCREEN_BUTTON_OFFSET_PX = 16;
+const SLIDE_COUNTER_MIN_WIDTH_PX = 60;
 
 const MarpPreview: React.FC<MarpPreviewProps> = ({
   content,
@@ -200,9 +67,9 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
       // Inline relative images as data URLs so the iframe can display them
       if (filePath) {
         try {
-          html = await inlineRelativeImages(html, filePath);
+          html = await inlineMarpRelativeImages(html, filePath);
         } catch (err) {
-          console.error('[MarpPreview] inlineRelativeImages failed:', err);
+          console.error('[MarpPreview] inlineMarpRelativeImages failed:', err);
         }
         if (stale) return;
       }
@@ -221,25 +88,9 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
   // Compute slide line ranges from source content (memoized)
   const slideRanges = React.useMemo(() => computeSlideLineRanges(content), [content]);
 
-  /**
-   * Convert editor scrollFraction to { slideIndex, subFraction }.
-   * scrollFraction maps linearly to source lines; we find which slide
-   * that line falls in and how far through that slide we are.
-   */
   const fractionToSlide = useCallback((fraction: number) => {
     const totalLines = content.split('\n').length;
-    const currentLine = fraction * (totalLines - 1);
-
-    // Find which slide contains this line
-    for (let i = slideRanges.length - 1; i >= 0; i--) {
-      if (currentLine >= slideRanges[i].startLine) {
-        const range = slideRanges[i];
-        const rangeSize = range.endLine - range.startLine;
-        const sub = rangeSize > 0 ? (currentLine - range.startLine) / rangeSize : 0;
-        return { slideIndex: i, subFraction: Math.min(1, Math.max(0, sub)) };
-      }
-    }
-    return { slideIndex: 0, subFraction: 0 };
+    return scrollFractionToSlidePosition(fraction, totalLines, slideRanges);
   }, [content, slideRanges]);
 
   // Scroll sync for continuous mode — directly manipulate iframe DOM
@@ -391,7 +242,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
           left: 0,
           width: '100vw',
           height: '100vh',
-          zIndex: 9999,
+          zIndex: FULLSCREEN_Z_INDEX,
           backgroundColor: '#000',
           display: 'flex',
           alignItems: 'center',
@@ -432,8 +283,8 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
             onClick={toggleFullscreen}
             sx={{
               position: 'absolute',
-              top: 16,
-              right: 16,
+              top: FULLSCREEN_BUTTON_OFFSET_PX,
+              right: FULLSCREEN_BUTTON_OFFSET_PX,
               color: 'rgba(255,255,255,0.5)',
               '&:hover': { color: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(255,255,255,0.1)' },
             }}
@@ -447,7 +298,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
           variant="body2"
           sx={{
             position: 'absolute',
-            bottom: 16,
+            bottom: FULLSCREEN_BUTTON_OFFSET_PX,
             left: '50%',
             transform: 'translateX(-50%)',
             color: 'rgba(255,255,255,0.5)',
@@ -507,7 +358,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               </IconButton>
             </span>
           </Tooltip>
-          <Typography variant="body2" color="text.secondary" sx={{ minWidth: 60, textAlign: 'center' }}>
+          <Typography variant="body2" color="text.secondary" sx={{ minWidth: SLIDE_COUNTER_MIN_WIDTH_PX, textAlign: 'center' }}>
             {slideCount > 0 ? `${currentSlide + 1} / ${slideCount}` : '—'}
           </Typography>
           <Tooltip title={t('preview.nextSlide', 'Next Slide')}>

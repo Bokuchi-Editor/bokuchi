@@ -18,6 +18,13 @@ import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 import { useEasterEggs } from './useEasterEggs';
 import { useWhatsNew } from './useWhatsNew';
 
+/** How long the transient "Saved" status message stays visible in the status bar. */
+const SAVE_STATUS_DISPLAY_MS = 3000;
+
+/** Delay before requesting editor focus after switching into a mode that shows the editor.
+ * Gives Monaco time to finish mounting/layout before receiving focus. */
+const EDITOR_FOCUS_DELAY_MS = 100;
+
 export const useAppState = () => {
   const { t } = useTranslation();
 
@@ -34,7 +41,6 @@ export const useAppState = () => {
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
   const saveStatusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const SAVE_STATUS_DISPLAY_MS = 3000;
   const showSaveStatus = useCallback((message: string) => {
     if (saveStatusTimerRef.current) {
       clearTimeout(saveStatusTimerRef.current);
@@ -390,7 +396,6 @@ export const useAppState = () => {
   }, []);
 
   // Focus editor when switching to a mode that shows the editor
-  const EDITOR_FOCUS_DELAY_MS = 100;
   useEffect(() => {
     if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
       const timer = setTimeout(() => {
