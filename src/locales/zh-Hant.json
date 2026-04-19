@@ -531,9 +531,37 @@
       "improvement": "改進"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Windows 檔案變更偵測修正",
-        "description": "修正了 Windows 環境下檔案變更偵測無法正常運作的問題。"
+      "marpPreview": {
+        "title": "Marp 簡報預覽",
+        "description": "可將含有 `marp: true` front-matter 的 Markdown 檔案以投影片簡報形式預覽。"
+      },
+      "tabContextMenu": {
+        "title": "分頁右鍵選單",
+        "description": "在分頁上按右鍵可進行釘選、重新命名、複製路徑或檔名，以及關閉其他/右側/全部分頁等操作。"
+      },
+      "tabPinning": {
+        "title": "分頁釘選",
+        "description": "釘選重要分頁，使其不會被批次關閉動作關閉。"
+      },
+      "tabRename": {
+        "title": "分頁重新命名",
+        "description": "直接從分頁重新命名磁碟上已儲存的檔案，或變更未儲存分頁的標題。"
+      },
+      "tabUnsavedTitle": {
+        "title": "依第一行自動設定標題",
+        "description": "未儲存的分頁現在會將內容的第一行顯示為分頁標題。"
+      },
+      "tabCloseButtonPosition": {
+        "title": "關閉按鈕位置",
+        "description": "可選擇關閉/釘選圖示顯示在每個分頁的左側或右側。"
+      },
+      "scrollSyncMode": {
+        "title": "捲動同步選項",
+        "description": "可選擇編輯器與預覽的捲動位置同步方式：單向（預設）、雙向或關閉。"
+      },
+      "previewExternalChange": {
+        "title": "預覽模式下的外部檔案變更",
+        "description": "修正了預覽模式下外部檔案變更無法正確載入的問題。"
       }
     }
   },

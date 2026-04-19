@@ -531,9 +531,37 @@
       "improvement": "개선"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Windows 파일 변경 감지 수정",
-        "description": "Windows에서 파일 변경 감지가 제대로 작동하지 않던 문제를 수정했습니다."
+      "marpPreview": {
+        "title": "Marp 프레젠테이션 미리보기",
+        "description": "`marp: true` 프런트매터가 있는 Markdown 파일을 슬라이드 프레젠테이션으로 미리볼 수 있습니다."
+      },
+      "tabContextMenu": {
+        "title": "탭 컨텍스트 메뉴",
+        "description": "탭을 마우스 오른쪽 버튼으로 클릭하여 고정, 이름 변경, 경로/파일 이름 복사, 다른 탭/오른쪽 탭/모든 탭 닫기를 할 수 있습니다."
+      },
+      "tabPinning": {
+        "title": "탭 고정",
+        "description": "중요한 탭을 고정하여 일괄 닫기 동작에서 제외할 수 있습니다."
+      },
+      "tabRename": {
+        "title": "탭 이름 변경",
+        "description": "디스크에 저장된 파일의 이름을 바꾸거나 저장되지 않은 탭의 제목을 탭에서 직접 변경할 수 있습니다."
+      },
+      "tabUnsavedTitle": {
+        "title": "첫 줄에서 자동 제목",
+        "description": "저장되지 않은 탭이 이제 내용의 첫 줄을 탭 제목으로 표시합니다."
+      },
+      "tabCloseButtonPosition": {
+        "title": "닫기 버튼 위치",
+        "description": "닫기/고정 아이콘을 각 탭의 왼쪽 또는 오른쪽에 표시할지 선택할 수 있습니다."
+      },
+      "scrollSyncMode": {
+        "title": "스크롤 동기화 옵션",
+        "description": "에디터와 미리보기의 스크롤 위치 동기화 방식을 단방향(기본값), 양방향, 끄기 중에서 선택할 수 있습니다."
+      },
+      "previewExternalChange": {
+        "title": "미리보기 모드에서 외부 파일 변경",
+        "description": "미리보기 모드에서 외부 파일 변경 사항이 올바르게 로드되지 않던 문제를 수정했습니다."
       }
     }
   },

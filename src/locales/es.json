@@ -531,9 +531,37 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Detección de cambios de archivos en Windows",
-        "description": "Se corrigió un problema en el que la detección de cambios de archivos no funcionaba correctamente en Windows."
+      "marpPreview": {
+        "title": "Vista previa de presentaciones Marp",
+        "description": "Los archivos Markdown con `marp: true` en el front-matter ahora se pueden previsualizar como diapositivas."
+      },
+      "tabContextMenu": {
+        "title": "Menú contextual de pestañas",
+        "description": "Haga clic derecho en una pestaña para fijarla, renombrarla, copiar su ruta o nombre de archivo, o cerrar otras/a la derecha/todas las pestañas."
+      },
+      "tabPinning": {
+        "title": "Fijar pestañas",
+        "description": "Fije las pestañas importantes para excluirlas de las acciones de cierre masivo."
+      },
+      "tabRename": {
+        "title": "Renombrar pestaña",
+        "description": "Renombre archivos guardados en el disco o cambie el título de pestañas sin guardar directamente desde la pestaña."
+      },
+      "tabUnsavedTitle": {
+        "title": "Título automático desde la primera línea",
+        "description": "Las pestañas sin guardar ahora muestran la primera línea de su contenido como título."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Posición del botón de cierre",
+        "description": "Elija si el icono de cierre/fijar aparece a la izquierda o a la derecha de cada pestaña."
+      },
+      "scrollSyncMode": {
+        "title": "Opciones de sincronización de desplazamiento",
+        "description": "Elija cómo se sincroniza el desplazamiento entre editor y vista previa: unidireccional (predeterminado), bidireccional o desactivado."
+      },
+      "previewExternalChange": {
+        "title": "Cambio externo de archivo en modo vista previa",
+        "description": "Se corrigió un problema por el que los cambios externos de archivos no se cargaban correctamente en modo vista previa."
       }
     }
   },

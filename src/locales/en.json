@@ -531,9 +531,37 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "File Change Detection on Windows",
-        "description": "Fixed an issue where file change detection was not working properly on Windows."
+      "marpPreview": {
+        "title": "Marp Presentation Preview",
+        "description": "Preview Markdown files with a `marp: true` front-matter as slide presentations."
+      },
+      "tabContextMenu": {
+        "title": "Tab Context Menu",
+        "description": "Right-click a tab to pin, rename, copy its path or filename, or close other/right/all tabs."
+      },
+      "tabPinning": {
+        "title": "Tab Pinning",
+        "description": "Pin important tabs to keep them from being closed by bulk close actions."
+      },
+      "tabRename": {
+        "title": "Tab Rename",
+        "description": "Rename saved files on disk or change the title of unsaved tabs directly from the tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Auto Title from First Line",
+        "description": "Unsaved tabs now display the first line of their content as the tab title."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Close Button Position",
+        "description": "Choose whether the close/pin icon appears on the left or right side of each tab."
+      },
+      "scrollSyncMode": {
+        "title": "Scroll Sync Options",
+        "description": "Choose how editor and preview scroll positions sync: one-way (default), bidirectional, or off."
+      },
+      "previewExternalChange": {
+        "title": "External File Change in Preview Mode",
+        "description": "Fixed an issue where external file changes were not loaded correctly while in preview mode."
       }
     }
   },

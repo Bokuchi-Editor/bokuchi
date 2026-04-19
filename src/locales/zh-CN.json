@@ -531,9 +531,37 @@
       "improvement": "改进"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Windows 文件变更检测修复",
-        "description": "修复了 Windows 环境下文件变更检测无法正常工作的问题。"
+      "marpPreview": {
+        "title": "Marp 演示文稿预览",
+        "description": "可以将带有 `marp: true` front-matter 的 Markdown 文件以幻灯片演示文稿的形式预览。"
+      },
+      "tabContextMenu": {
+        "title": "标签页上下文菜单",
+        "description": "右键单击标签页可进行固定、重命名、复制路径或文件名，以及关闭其他/右侧/所有标签页等操作。"
+      },
+      "tabPinning": {
+        "title": "标签页固定",
+        "description": "固定重要的标签页，使其不会被批量关闭操作影响。"
+      },
+      "tabRename": {
+        "title": "标签页重命名",
+        "description": "直接从标签页重命名磁盘上已保存的文件，或更改未保存标签页的标题。"
+      },
+      "tabUnsavedTitle": {
+        "title": "根据首行自动设置标题",
+        "description": "未保存的标签页现在会将内容的第一行显示为标签页标题。"
+      },
+      "tabCloseButtonPosition": {
+        "title": "关闭按钮位置",
+        "description": "可选择关闭/固定图标显示在每个标签页的左侧或右侧。"
+      },
+      "scrollSyncMode": {
+        "title": "滚动同步选项",
+        "description": "可选择编辑器和预览之间滚动位置的同步方式：单向（默认）、双向或关闭。"
+      },
+      "previewExternalChange": {
+        "title": "预览模式下的外部文件变更",
+        "description": "修复了在预览模式下外部文件变更无法正确加载的问题。"
       }
     }
   },

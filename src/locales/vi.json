@@ -531,9 +531,37 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Phát hiện thay đổi tệp trên Windows",
-        "description": "Đã sửa lỗi phát hiện thay đổi tệp không hoạt động đúng trên Windows."
+      "marpPreview": {
+        "title": "Xem trước bản trình bày Marp",
+        "description": "Xem trước tệp Markdown có front-matter `marp: true` dưới dạng bản trình bày slide."
+      },
+      "tabContextMenu": {
+        "title": "Menu ngữ cảnh của tab",
+        "description": "Nhấp chuột phải vào tab để ghim, đổi tên, sao chép đường dẫn hoặc tên tệp, hoặc đóng các tab khác/bên phải/tất cả."
+      },
+      "tabPinning": {
+        "title": "Ghim tab",
+        "description": "Ghim các tab quan trọng để chúng không bị đóng bởi các thao tác đóng hàng loạt."
+      },
+      "tabRename": {
+        "title": "Đổi tên tab",
+        "description": "Đổi tên tệp đã lưu trên đĩa hoặc thay đổi tiêu đề của tab chưa lưu trực tiếp từ tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Tự động đặt tiêu đề từ dòng đầu tiên",
+        "description": "Các tab chưa lưu giờ đây hiển thị dòng đầu tiên của nội dung làm tiêu đề tab."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Vị trí nút đóng",
+        "description": "Chọn biểu tượng đóng/ghim xuất hiện ở bên trái hoặc bên phải của mỗi tab."
+      },
+      "scrollSyncMode": {
+        "title": "Tùy chọn đồng bộ cuộn",
+        "description": "Chọn cách đồng bộ vị trí cuộn giữa trình soạn thảo và xem trước: một chiều (mặc định), hai chiều, hoặc tắt."
+      },
+      "previewExternalChange": {
+        "title": "Thay đổi tệp bên ngoài trong chế độ xem trước",
+        "description": "Đã sửa lỗi khi các thay đổi tệp bên ngoài không được tải chính xác trong chế độ xem trước."
       }
     }
   },

@@ -531,9 +531,37 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Dateiänderungserkennung unter Windows",
-        "description": "Ein Problem wurde behoben, bei dem die Dateiänderungserkennung unter Windows nicht richtig funktionierte."
+      "marpPreview": {
+        "title": "Marp-Präsentationsvorschau",
+        "description": "Markdown-Dateien mit `marp: true` im Front-Matter können nun als Folienpräsentation angezeigt werden."
+      },
+      "tabContextMenu": {
+        "title": "Tab-Kontextmenü",
+        "description": "Klicken Sie mit der rechten Maustaste auf einen Tab, um ihn anzuheften, umzubenennen, Pfad/Dateiname zu kopieren oder andere/rechte/alle Tabs zu schließen."
+      },
+      "tabPinning": {
+        "title": "Tabs anheften",
+        "description": "Heften Sie wichtige Tabs an, damit sie von Sammel-Schließaktionen ausgenommen werden."
+      },
+      "tabRename": {
+        "title": "Tab umbenennen",
+        "description": "Benennen Sie gespeicherte Dateien auf der Festplatte um oder ändern Sie den Titel ungespeicherter Tabs direkt im Tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Automatischer Titel aus der ersten Zeile",
+        "description": "Ungespeicherte Tabs zeigen nun die erste Zeile des Inhalts als Tab-Titel an."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Position der Schließen-Schaltfläche",
+        "description": "Wählen Sie, ob das Schließen-/Anheften-Symbol links oder rechts an jedem Tab erscheint."
+      },
+      "scrollSyncMode": {
+        "title": "Optionen für Scroll-Synchronisierung",
+        "description": "Wählen Sie, wie Editor- und Vorschau-Scrollpositionen synchronisiert werden: einseitig (Standard), bidirektional oder aus."
+      },
+      "previewExternalChange": {
+        "title": "Externe Dateiänderung im Vorschaumodus",
+        "description": "Ein Problem wurde behoben, bei dem externe Dateiänderungen im Vorschaumodus nicht korrekt geladen wurden."
       }
     }
   },

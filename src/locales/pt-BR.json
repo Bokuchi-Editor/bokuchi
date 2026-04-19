@@ -531,9 +531,37 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Detecção de alterações de arquivos no Windows",
-        "description": "Corrigido um problema em que a detecção de alterações de arquivos não funcionava corretamente no Windows."
+      "marpPreview": {
+        "title": "Pré-visualização de apresentação Marp",
+        "description": "Pré-visualize arquivos Markdown com front-matter `marp: true` como apresentações de slides."
+      },
+      "tabContextMenu": {
+        "title": "Menu de contexto da aba",
+        "description": "Clique com o botão direito em uma aba para fixar, renomear, copiar caminho ou nome do arquivo, ou fechar outras/à direita/todas as abas."
+      },
+      "tabPinning": {
+        "title": "Fixar abas",
+        "description": "Fixe abas importantes para que não sejam fechadas por ações de fechamento em massa."
+      },
+      "tabRename": {
+        "title": "Renomear aba",
+        "description": "Renomeie arquivos salvos no disco ou altere o título de abas não salvas diretamente a partir da aba."
+      },
+      "tabUnsavedTitle": {
+        "title": "Título automático a partir da primeira linha",
+        "description": "Abas não salvas agora exibem a primeira linha do conteúdo como título da aba."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Posição do botão de fechar",
+        "description": "Escolha se o ícone de fechar/fixar aparece à esquerda ou à direita de cada aba."
+      },
+      "scrollSyncMode": {
+        "title": "Opções de sincronização de rolagem",
+        "description": "Escolha como a rolagem entre editor e pré-visualização é sincronizada: unidirecional (padrão), bidirecional ou desligada."
+      },
+      "previewExternalChange": {
+        "title": "Alteração externa de arquivo no modo pré-visualização",
+        "description": "Corrigido um problema em que alterações externas de arquivos não eram carregadas corretamente no modo pré-visualização."
       }
     }
   },

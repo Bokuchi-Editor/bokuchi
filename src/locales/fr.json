@@ -531,9 +531,37 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Détection des modifications de fichiers sous Windows",
-        "description": "Correction d'un problème où la détection des modifications de fichiers ne fonctionnait pas correctement sous Windows."
+      "marpPreview": {
+        "title": "Aperçu de présentation Marp",
+        "description": "Les fichiers Markdown avec `marp: true` en front-matter peuvent désormais être prévisualisés sous forme de diaporama."
+      },
+      "tabContextMenu": {
+        "title": "Menu contextuel d'onglet",
+        "description": "Cliquez avec le bouton droit sur un onglet pour l'épingler, le renommer, copier son chemin ou nom de fichier, ou fermer les autres onglets/à droite/tous."
+      },
+      "tabPinning": {
+        "title": "Épingler les onglets",
+        "description": "Épinglez les onglets importants pour les exclure des actions de fermeture groupée."
+      },
+      "tabRename": {
+        "title": "Renommer un onglet",
+        "description": "Renommez les fichiers enregistrés sur disque ou modifiez le titre des onglets non enregistrés directement depuis l'onglet."
+      },
+      "tabUnsavedTitle": {
+        "title": "Titre automatique à partir de la première ligne",
+        "description": "Les onglets non enregistrés affichent désormais la première ligne de leur contenu comme titre."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Position du bouton de fermeture",
+        "description": "Choisissez si l'icône de fermeture/épinglage apparaît à gauche ou à droite de chaque onglet."
+      },
+      "scrollSyncMode": {
+        "title": "Options de synchronisation du défilement",
+        "description": "Choisissez comment synchroniser les positions de défilement de l'éditeur et de l'aperçu : unidirectionnel (défaut), bidirectionnel ou désactivé."
+      },
+      "previewExternalChange": {
+        "title": "Modification externe de fichier en mode aperçu",
+        "description": "Correction d'un problème où les modifications externes de fichiers n'étaient pas correctement chargées en mode aperçu."
       }
     }
   },

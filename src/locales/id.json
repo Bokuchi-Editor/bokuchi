@@ -531,9 +531,37 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Deteksi perubahan file di Windows",
-        "description": "Memperbaiki masalah di mana deteksi perubahan file tidak berfungsi dengan baik di Windows."
+      "marpPreview": {
+        "title": "Pratinjau Presentasi Marp",
+        "description": "Pratinjau file Markdown dengan front-matter `marp: true` sebagai presentasi slide."
+      },
+      "tabContextMenu": {
+        "title": "Menu Konteks Tab",
+        "description": "Klik kanan pada tab untuk menyematkan, mengganti nama, menyalin path atau nama file, atau menutup tab lain/kanan/semua."
+      },
+      "tabPinning": {
+        "title": "Menyematkan Tab",
+        "description": "Sematkan tab penting agar tidak tertutup oleh aksi penutupan massal."
+      },
+      "tabRename": {
+        "title": "Ganti Nama Tab",
+        "description": "Ganti nama file yang tersimpan di disk atau ubah judul tab yang belum disimpan langsung dari tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Judul Otomatis dari Baris Pertama",
+        "description": "Tab yang belum disimpan sekarang menampilkan baris pertama kontennya sebagai judul tab."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Posisi Tombol Tutup",
+        "description": "Pilih apakah ikon tutup/sematkan muncul di sisi kiri atau kanan setiap tab."
+      },
+      "scrollSyncMode": {
+        "title": "Opsi Sinkronisasi Gulir",
+        "description": "Pilih cara posisi gulir editor dan pratinjau disinkronkan: satu arah (default), dua arah, atau mati."
+      },
+      "previewExternalChange": {
+        "title": "Perubahan File Eksternal di Mode Pratinjau",
+        "description": "Memperbaiki masalah di mana perubahan file eksternal tidak dimuat dengan benar saat dalam mode pratinjau."
       }
     }
   },
