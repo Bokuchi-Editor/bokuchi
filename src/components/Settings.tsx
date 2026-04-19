@@ -48,6 +48,7 @@ import { AppSettings } from '../types/settings';
 import { storeApi } from '../api/storeApi';
 import { desktopApi } from '../api/desktopApi';
 import { variableApi } from '../api/variableApi';
+import { LANGUAGE_OPTIONS } from '../constants/languages';
 
 interface SettingsProps {
   open: boolean;
@@ -549,20 +550,11 @@ const Settings: React.FC<SettingsProps> = ({
                         onChange={(e) => handleSettingChange('interface', 'language', e.target.value)}
                         label={t('settings.language.selectLanguage')}
                       >
-                        <MenuItem value="en">{t('settings.language.english')}</MenuItem>
-                        <MenuItem value="ja">{t('settings.language.japanese')}</MenuItem>
-                        <MenuItem value="zh-CN">{t('settings.language.chinese')}</MenuItem>
-                        <MenuItem value="zh-Hant">{t('settings.language.chineseTraditional')}</MenuItem>
-                        <MenuItem value="es">{t('settings.language.spanish')}</MenuItem>
-                        <MenuItem value="hi">{t('settings.language.hindi')}</MenuItem>
-                        <MenuItem value="ru">{t('settings.language.russian')}</MenuItem>
-                        <MenuItem value="ko">{t('settings.language.korean')}</MenuItem>
-                        <MenuItem value="pt-BR">{t('settings.language.portuguese')}</MenuItem>
-                        <MenuItem value="ar">{t('settings.language.arabic')}</MenuItem>
-                        <MenuItem value="fr">{t('settings.language.french')}</MenuItem>
-                        <MenuItem value="de">{t('settings.language.german')}</MenuItem>
-                        <MenuItem value="id">{t('settings.language.indonesian')}</MenuItem>
-                        <MenuItem value="vi">{t('settings.language.vietnamese')}</MenuItem>
+                        {LANGUAGE_OPTIONS.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {t(option.translationKey)}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </CardContent>

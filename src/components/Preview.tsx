@@ -12,6 +12,7 @@ import { RenderingSettings, DEFAULT_RENDERING_SETTINGS } from '../types/settings
 import { renderCode, processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
 import { buildExportHTML } from '../utils/exportStyles';
 import { contentIsMarp } from '../utils/marpRenderer';
+import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../utils/imagePathResolver';
 import MarpPreview from './MarpPreview';
 
 interface PreviewProps {
@@ -28,21 +29,8 @@ interface PreviewProps {
   viewMode?: 'split' | 'editor' | 'preview';
 }
 
-/** Resolve a relative path against a base directory path */
-function resolveRelativePath(baseDirPath: string, relativePath: string): string {
-  // Normalize separators to /
-  const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);
-  const resolved: string[] = [];
-  for (const part of parts) {
-    if (part === '.') continue;
-    if (part === '..') {
-      resolved.pop();
-    } else {
-      resolved.push(part);
-    }
-  }
-  return '/' + resolved.join('/');
-}
+const BASE_PREVIEW_FONT_SIZE_PX = 16;
+const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
@@ -166,7 +154,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
         // Resolve relative image paths to blob URLs
         if (filePath) {
-          const baseDir = filePath.substring(0, filePath.lastIndexOf('/'));
+          const baseDir = dirnameOf(filePath);
           const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
           let imgMatch;
           const replacements = new Map<string, string>();
@@ -174,18 +162,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           const imgPromises: Promise<void>[] = [];
           while ((imgMatch = imgRegex.exec(processedHtml)) !== null) {
             const src = imgMatch[1];
-            if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:') && !src.startsWith('blob:')) {
+            if (!isAbsoluteUrl(src)) {
               const absolutePath = resolveRelativePath(baseDir, src);
               imgPromises.push(
                 readFile(absolutePath).then(data => {
-                  const ext = src.split('.').pop()?.toLowerCase() || '';
-                  const mimeMap: Record<string, string> = {
-                    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
-                    gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
-                    bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
-                  };
-                  const mime = mimeMap[ext] || 'application/octet-stream';
-                  const blob = new Blob([data], { type: mime });
+                  const blob = new Blob([data], { type: mimeTypeFromPath(src) });
                   const blobUrl = URL.createObjectURL(blob);
                   replacements.set(src, blobUrl);
                 }).catch(err => {
@@ -408,8 +389,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           className={`markdown-preview ${theme === 'darcula' ? 'hljs-dark' : (darkMode ? 'hljs-dark' : 'hljs-light')}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
-            fontSize: `${Math.round(16 * zoomLevel)}px`,
-            lineHeight: `${Math.round(1.6 * zoomLevel)}`,
+            fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
+            lineHeight: `${Math.round(BASE_PREVIEW_LINE_HEIGHT * zoomLevel)}`,
             fontFamily: theme === 'as400'
               ? '"IBM Plex Mono", "Courier New", Courier, monospace'
               : '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
