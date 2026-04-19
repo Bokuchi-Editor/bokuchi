@@ -40,6 +40,7 @@ vi.mock('../hooks/useAppState', () => ({
         outlineDisplayMode: 'persistent',
         folderTreeDisplayMode: 'off',
         folderTreeFileFilter: 'markdown',
+        scrollSyncMode: 'editor-to-preview',
       },
       advanced: { autoSave: true, showWhitespace: false, tableConversion: 'confirm' },
       recentFiles: { maxRecentFiles: 20, showPreview: true, previewLength: 100 },
@@ -180,5 +181,21 @@ describe('App', () => {
   it('T-APP-02: renders recent files dialog', () => {
     render(<AppDesktop />);
     expect(screen.getByTestId('recent-files')).toBeInTheDocument();
+  });
+
+  // T-APP-03: renders rename dialog
+  it('T-APP-03: renders rename dialog', () => {
+    render(<AppDesktop />);
+    expect(screen.getByTestId('rename-dialog')).toBeInTheDocument();
+  });
+
+  // T-APP-04: ThemeProvider wraps entire app tree
+  it('T-APP-04: all child components render within a styled container', () => {
+    const { container } = render(<AppDesktop />);
+    // The outermost MUI Box should contain all child testids
+    const box = container.firstChild;
+    expect(box).not.toBeNull();
+    expect(screen.getByTestId('app-header')).toBeInTheDocument();
+    expect(screen.getByTestId('status-bar')).toBeInTheDocument();
   });
 });

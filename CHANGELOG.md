@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.2...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.0...HEAD)
+
+## [0.8.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.2...v0.8.0) - 2026-04-19
+
+### Added
+
+- Marp presentation preview — render Markdown with `marp: true` front-matter as slide presentations (gated by a new `enableMarp` setting)
+- Tab context menu (right-click) — pin/unpin, rename, copy path/filename, close other/right/all tabs
+- Tab pinning — pinned tabs are excluded from bulk close
+- Tab rename — rename saved files on disk or change the title of unsaved tabs
+- Auto tab title from the first line for unsaved buffers
+- Tab close-button position setting (left/right)
+- Scroll sync mode option (one-way (default) / bidirectional / off) for split view
+- Redesigned Split/Editor/Preview view-mode toggle icons and refreshed app editor icon
+
+### Changed
+
+- Refactoring: extracted shared utilities (`imagePathResolver`, `marpImageInliner`, `marpSlideRanges`, `useResizableSidebar`, layout/language constants) and hoisted magic numbers
+- i18n: all 14 locales updated for the new features and settings
+- Dependency updates (React, MUI icons, TypeScript-ESLint, Vitest, DOMPurify, @marp-team/marp-core, and others)
+
+### Fixed
+
+- External file changes not loaded correctly in preview mode (when the editor was unmounted)
+- Image loading edge cases in Marp mode
+- Preview scroll position not preserved across tab switches
 
 ## [0.7.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.1...v0.7.2) - 2026-04-11
 

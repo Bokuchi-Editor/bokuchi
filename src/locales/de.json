@@ -306,7 +306,13 @@
       "horizontal": "Horizontale Tabs",
       "vertical": "Vertikale Tabs",
       "horizontalDescription": "Tabs werden horizontal über dem Editor angezeigt.",
-      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt."
+      "verticalDescription": "Tabs werden vertikal auf der linken Seite des Editors angezeigt.",
+      "closeButtonPosition": "Position der Schließen-Schaltfläche",
+      "closeButtonPositionDescription": "Wählen Sie, wo die Schließen-Schaltfläche und das Anheften-Symbol auf den Tabs angezeigt werden.",
+      "closeButtonLeft": "Links",
+      "closeButtonRight": "Rechts",
+      "closeButtonLeftDescription": "Schließen-Schaltfläche und Anheften-Symbol links auf dem Tab anzeigen.",
+      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen."
     },
     "viewMode": {
       "title": "Ansichtsmodus",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "Explorer-Dateifilter",
       "folderTreeFileFilterDescription": "Wählen Sie, welche Dateien im Explorer angezeigt werden.",
       "folderTreeFileFilterMarkdown": "Nur Markdown-Dateien (.md, .txt)",
-      "folderTreeFileFilterAll": "Alle Dateien"
+      "folderTreeFileFilterAll": "Alle Dateien",
+      "scrollSyncMode": "Scroll-Synchronisierung (Geteilte Ansicht)",
+      "scrollSyncModeDescription": "Wählen Sie, wie Editor- und Vorschaubereich in der geteilten Ansicht gemeinsam scrollen.",
+      "scrollSyncModeEditorToPreview": "Editor → Vorschau",
+      "scrollSyncModeEditorToPreviewDescription": "Beim Scrollen des Editors wird die Vorschau mitgescrollt. Das Scrollen der Vorschau bewegt den Editor nicht.",
+      "scrollSyncModeBidirectional": "Bidirektional",
+      "scrollSyncModeBidirectionalDescription": "Das Scrollen eines Bereichs scrollt den anderen synchron mit.",
+      "scrollSyncModeOff": "Aus",
+      "scrollSyncModeOffDescription": "Jeder Bereich scrollt unabhängig."
     },
     "advanced": {
       "title": "Erweitert",
@@ -381,7 +395,9 @@
       "importSuccess": "Einstellungen erfolgreich importiert",
       "importError": "Import der Einstellungen fehlgeschlagen",
       "resetSuccess": "Einstellungen erfolgreich zurückgesetzt",
-      "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen"
+      "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
+      "enableMarp": "Marp (Präsentationen)",
+      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen."
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "Alle Tabs durchsuchen"
   },
+  "tabs": {
+    "copyFilePath": "Dateipfad kopieren",
+    "copyFileName": "Dateiname kopieren",
+    "pinTab": "Tab anheften",
+    "unpinTab": "Tab lösen",
+    "closeTab": "Tab schließen",
+    "closeOtherTabs": "Andere Tabs schließen",
+    "closeTabsToRight": "Tabs rechts schließen",
+    "closeTabsBelow": "Tabs darunter schließen",
+    "closeAllTabs": "Alle Tabs schließen",
+    "pathCopied": "Pfad in die Zwischenablage kopiert",
+    "fileNameCopied": "Dateiname in die Zwischenablage kopiert",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
+  },
   "whatsNew": {
     "title": "Was ist neu",
     "gotIt": "Verstanden",
@@ -501,10 +531,44 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Dateiänderungserkennung unter Windows",
-        "description": "Ein Problem wurde behoben, bei dem die Dateiänderungserkennung unter Windows nicht richtig funktionierte."
+      "marpPreview": {
+        "title": "Marp-Präsentationsvorschau",
+        "description": "Markdown-Dateien mit `marp: true` im Front-Matter können nun als Folienpräsentation angezeigt werden."
+      },
+      "tabContextMenu": {
+        "title": "Tab-Kontextmenü",
+        "description": "Klicken Sie mit der rechten Maustaste auf einen Tab, um ihn anzuheften, umzubenennen, Pfad/Dateiname zu kopieren oder andere/rechte/alle Tabs zu schließen."
+      },
+      "tabPinning": {
+        "title": "Tabs anheften",
+        "description": "Heften Sie wichtige Tabs an, damit sie von Sammel-Schließaktionen ausgenommen werden."
+      },
+      "tabRename": {
+        "title": "Tab umbenennen",
+        "description": "Benennen Sie gespeicherte Dateien auf der Festplatte um oder ändern Sie den Titel ungespeicherter Tabs direkt im Tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Automatischer Titel aus der ersten Zeile",
+        "description": "Ungespeicherte Tabs zeigen nun die erste Zeile des Inhalts als Tab-Titel an."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Position der Schließen-Schaltfläche",
+        "description": "Wählen Sie, ob das Schließen-/Anheften-Symbol links oder rechts an jedem Tab erscheint."
+      },
+      "scrollSyncMode": {
+        "title": "Optionen für Scroll-Synchronisierung",
+        "description": "Wählen Sie, wie Editor- und Vorschau-Scrollpositionen synchronisiert werden: einseitig (Standard), bidirektional oder aus."
+      },
+      "previewExternalChange": {
+        "title": "Externe Dateiänderung im Vorschaumodus",
+        "description": "Ein Problem wurde behoben, bei dem externe Dateiänderungen im Vorschaumodus nicht korrekt geladen wurden."
       }
     }
+  },
+  "preview": {
+    "presentation": "Präsentation",
+    "previousSlide": "Vorherige Folie",
+    "nextSlide": "Nächste Folie",
+    "slideCounter": "Folie {{current}} von {{total}}"
   }
 }

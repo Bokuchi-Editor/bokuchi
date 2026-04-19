@@ -1,6 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { FolderOpen, Save, SaveAlt, MoreVert, ViewColumn, Edit, Visibility, Add, Settings as SettingsIcon2, HelpOutline, Schedule, FormatListBulleted, AccountTree } from '@mui/icons-material';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ToggleButton, ToggleButtonGroup, SvgIcon } from '@mui/material';
+import { FolderOpen, Save, SaveAlt, MoreVert, Add, Settings as SettingsIcon2, HelpOutline, Schedule, FormatListBulleted, AccountTree } from '@mui/icons-material';
+
+const SplitViewIcon = () => (
+  <SvgIcon viewBox="0 0 512 512">
+    <path fill="currentColor" d="M415.19,18.64H96.81c-43.17,0-78.18,35-78.18,78.18v318.38c0,43.17,35,78.18,78.18,78.18h318.38c43.17,0,78.18-35,78.18-78.18V96.81c0-43.17-35-78.18-78.18-78.18ZM58.64,415.19V96.81c0-21.05,17.13-38.18,38.18-38.18h139.19v394.73H96.81c-21.05,0-38.18-17.13-38.18-38.18ZM453.36,415.19c0,21.05-17.13,38.18-38.18,38.18h-139.19V58.64h139.19c21.05,0,38.18,17.13,38.18,38.18v318.38Z" />
+  </SvgIcon>
+);
+
+const EditViewIcon = () => (
+  <SvgIcon viewBox="0 0 512 512">
+    <rect fill="currentColor" x="135.25" y="167.42" width="268.72" height="156.26" transform="translate(-94.66 262.56) rotate(-45)" />
+    <path fill="currentColor" d="M447.72,177.93l-110.49-110.49,44.13-44.13c10.34-10.34,27.12-10.34,37.46,0l73.03,73.03c10.34,10.34,10.34,27.12,0,37.46l-44.13,44.13Z" />
+    <polygon fill="currentColor" points="36.56 478.6 90.95 313.72 201.44 424.21 36.56 478.6" />
+  </SvgIcon>
+);
+
+const PreviewIcon = () => (
+  <SvgIcon viewBox="0 0 512 512">
+    <path fill="currentColor" d="M256,157.68c-26.26,0-50.95,10.23-69.52,28.8-18.57,18.57-28.8,43.26-28.8,69.52s10.23,50.95,28.8,69.52c18.57,18.57,43.26,28.8,69.52,28.8s50.95-10.23,69.52-28.8c18.57-18.57,28.8-43.26,28.8-69.52s-10.23-50.95-28.8-69.52c-18.57-18.57-43.26-28.8-69.52-28.8ZM240.03,204.14c-18.82,5.91-32.35,24.79-34.1,38.89-.68,5.48-5.35,9.5-10.74,9.5-.45,0-.9-.03-1.35-.08-5.94-.74-10.15-6.15-9.42-12.09,3.05-24.6,24.17-49.05,49.11-56.89,5.71-1.79,11.79,1.38,13.58,7.09,1.79,5.71-1.38,11.79-7.09,13.58Z" />
+    <path fill="currentColor" d="M256,109.72C116.93,109.72,4.19,256,4.19,256c0,0,112.74,146.28,251.81,146.28s251.81-146.28,251.81-146.28c0,0-112.74-146.28-251.81-146.28ZM256,388.91c-73.4,0-132.91-59.51-132.91-132.91s59.51-132.91,132.91-132.91,132.91,59.51,132.91,132.91-59.51,132.91-132.91,132.91Z" />
+  </SvgIcon>
+);
+
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { Tab } from '../types/tab';
@@ -98,16 +120,26 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             }
           }}
           size="small"
-          sx={{ mr: 1 }}
+          sx={{
+            mr: 1,
+            '& .MuiToggleButton-root': {
+              color: 'inherit',
+              opacity: 0.5,
+              '&.Mui-selected': {
+                opacity: 1,
+                color: 'inherit',
+              },
+            },
+          }}
         >
           <ToggleButton value="split" aria-label={t('buttons.splitView')}>
-            <ViewColumn />
+            <SplitViewIcon />
           </ToggleButton>
           <ToggleButton value="editor" aria-label={t('buttons.editorOnly')}>
-            <Edit />
+            <EditViewIcon />
           </ToggleButton>
           <ToggleButton value="preview" aria-label={t('buttons.previewOnly')}>
-            <Visibility />
+            <PreviewIcon />
           </ToggleButton>
         </ToggleButtonGroup>
 

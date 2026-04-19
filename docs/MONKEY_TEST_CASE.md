@@ -104,44 +104,46 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | M-55 | Detect external changes            | Modify an open file in another editor        | A change detection dialog is displayed         |
 | M-56 | External change - Reload           | Select "Reload" in the M-55 dialog           | The content is updated to the latest version   |
 | M-57 | External change - Cancel           | Select "Cancel" in the M-55 dialog           | The current edited content is retained         |
+| M-58 | External change in preview mode    | Switch to preview mode, modify the file externally, select "Reload", then switch to editor or split mode | The editor displays the externally changed content (not the old content) |
+| M-59 | No data loss after preview reload  | After M-58, wait for auto-save to trigger    | Auto-save writes the externally changed content, not the old content     |
 
 ## 10. Zoom
 
 | #    | Test Case    | Steps            | Expected Result              |
 | ---- | ------------ | ---------------- | ---------------------------- |
-| M-58 | Zoom in      | Press `Ctrl+=`   | The entire UI is enlarged    |
-| M-59 | Zoom out     | Press `Ctrl+-`   | The entire UI is reduced     |
-| M-60 | Reset zoom   | Press `Ctrl+0`   | Returns to 100%              |
+| M-60 | Zoom in      | Press `Ctrl+=`   | The entire UI is enlarged    |
+| M-61 | Zoom out     | Press `Ctrl+-`   | The entire UI is reduced     |
+| M-62 | Reset zoom   | Press `Ctrl+0`   | Returns to 100%              |
 
 ## 11. Preview Rendering
 
 | #    | Test Case                          | Steps                                                                   | Expected Result                                                        |
 | ---- | ---------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| M-61 | Mermaid diagram rendering          | Enable Mermaid, write a ` ```mermaid ` fenced block (e.g. `graph TD; A-->B`) | The diagram renders as an SVG in the preview                           |
-| M-62 | Mermaid error handling             | Write an invalid mermaid block (e.g. `invalid!!!`)                      | A red error message is shown instead of a diagram                      |
-| M-63 | Mermaid dark mode theme            | Toggle dark mode while a Mermaid diagram is displayed                   | The diagram re-renders with the dark theme                             |
-| M-64 | KaTeX math rendering               | With KaTeX enabled, write `$E=mc^2$` and `$$\sum_{i=1}^{n} i$$`        | Inline and display math are rendered correctly                         |
-| M-65 | Disabled renderers show raw syntax | Disable both KaTeX and Mermaid, write math and mermaid blocks           | Raw `$...$` text and ` ```mermaid ` code blocks are shown as-is       |
-| M-66 | HTML export with Mermaid           | Enable Mermaid, write a diagram, export as HTML                         | The exported HTML contains the Mermaid diagram as inline SVG           |
-| M-67 | HTML export image sizing           | Write markdown with a large image, export as HTML, open in browser      | Images are constrained to the container width and maintain aspect ratio |
+| M-63 | Mermaid diagram rendering          | Enable Mermaid, write a ` ```mermaid ` fenced block (e.g. `graph TD; A-->B`) | The diagram renders as an SVG in the preview                           |
+| M-64 | Mermaid error handling             | Write an invalid mermaid block (e.g. `invalid!!!`)                      | A red error message is shown instead of a diagram                      |
+| M-65 | Mermaid dark mode theme            | Toggle dark mode while a Mermaid diagram is displayed                   | The diagram re-renders with the dark theme                             |
+| M-66 | KaTeX math rendering               | With KaTeX enabled, write `$E=mc^2$` and `$$\sum_{i=1}^{n} i$$`        | Inline and display math are rendered correctly                         |
+| M-67 | Disabled renderers show raw syntax | Disable both KaTeX and Mermaid, write math and mermaid blocks           | Raw `$...$` text and ` ```mermaid ` code blocks are shown as-is       |
+| M-68 | HTML export with Mermaid           | Enable Mermaid, write a diagram, export as HTML                         | The exported HTML contains the Mermaid diagram as inline SVG           |
+| M-69 | HTML export image sizing           | Write markdown with a large image, export as HTML, open in browser      | Images are constrained to the container width and maintain aspect ratio |
 
 ## 12. Clipboard & Paste
 
 | #    | Test Case                          | Steps                                                                     | Expected Result                                                      |
 | ---- | ---------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| M-68 | Paste HTML table (auto mode)       | Set table conversion to "auto", copy a table from a spreadsheet, paste    | The table is automatically converted to Markdown table syntax        |
-| M-69 | Paste HTML table (confirm mode)    | Set table conversion to "confirm", copy a table from a spreadsheet, paste | A confirmation dialog appears before converting                      |
-| M-70 | Paste HTML table (off mode)        | Set table conversion to "off", copy a table from a spreadsheet, paste     | The table is pasted as plain text without conversion                 |
-| M-71 | Paste as plain text                | Copy formatted text, paste with `Ctrl+Shift+V`                           | Content is pasted as plain text regardless of table conversion setting |
-| M-72 | Paste TSV/CSV data                 | Copy tab-separated or comma-separated data, paste into editor             | The data is detected and converted to a Markdown table               |
+| M-70 | Paste HTML table (auto mode)       | Set table conversion to "auto", copy a table from a spreadsheet, paste    | The table is automatically converted to Markdown table syntax        |
+| M-71 | Paste HTML table (confirm mode)    | Set table conversion to "confirm", copy a table from a spreadsheet, paste | A confirmation dialog appears before converting                      |
+| M-72 | Paste HTML table (off mode)        | Set table conversion to "off", copy a table from a spreadsheet, paste     | The table is pasted as plain text without conversion                 |
+| M-73 | Paste as plain text                | Copy formatted text, paste with `Ctrl+Shift+V`                           | Content is pasted as plain text regardless of table conversion setting |
+| M-74 | Paste TSV/CSV data                 | Copy tab-separated or comma-separated data, paste into editor             | The data is detected and converted to a Markdown table               |
 
 ## 13. Edge Cases & Stability
 
 | #    | Test Case              | Steps                                           | Expected Result                                       |
 | ---- | ---------------------- | ----------------------------------------------- | ----------------------------------------------------- |
-| M-73 | Rapid tab switching    | Rapidly switch tabs in quick succession         | Switches correctly without crashing                   |
-| M-74 | Many tabs              | Open 20 or more tabs                            | Scrolling/overflow handling works correctly            |
-| M-75 | Large file             | Open a Markdown file larger than 1 MB           | The editor functions normally                         |
-| M-76 | Empty file             | Open a 0-byte file                              | An empty editor is displayed without errors           |
-| M-77 | Long lines             | Open a Markdown file with lines of thousands of characters | Word wrap functions correctly              |
-| M-78 | Prolonged tab switching | Switch between tabs with images 50+ times       | No memory leak; editor remains responsive             |
+| M-75 | Rapid tab switching    | Rapidly switch tabs in quick succession         | Switches correctly without crashing                   |
+| M-76 | Many tabs              | Open 20 or more tabs                            | Scrolling/overflow handling works correctly            |
+| M-77 | Large file             | Open a Markdown file larger than 1 MB           | The editor functions normally                         |
+| M-78 | Empty file             | Open a 0-byte file                              | An empty editor is displayed without errors           |
+| M-79 | Long lines             | Open a Markdown file with lines of thousands of characters | Word wrap functions correctly              |
+| M-80 | Prolonged tab switching | Switch between tabs with images 50+ times       | No memory leak; editor remains responsive             |

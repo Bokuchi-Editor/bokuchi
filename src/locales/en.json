@@ -306,7 +306,13 @@
       "horizontal": "Horizontal Tabs",
       "vertical": "Vertical Tabs",
       "horizontalDescription": "Tabs are displayed horizontally above the editor.",
-      "verticalDescription": "Tabs are displayed vertically on the left side of the editor."
+      "verticalDescription": "Tabs are displayed vertically on the left side of the editor.",
+      "closeButtonPosition": "Close Button Position",
+      "closeButtonPositionDescription": "Choose where to display the close button and pin icon on tabs.",
+      "closeButtonLeft": "Left",
+      "closeButtonRight": "Right",
+      "closeButtonLeftDescription": "Display close button and pin icon on the left side of the tab.",
+      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab."
     },
     "viewMode": {
       "title": "View Mode",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "Explorer File Filter",
       "folderTreeFileFilterDescription": "Choose which files to display in the explorer.",
       "folderTreeFileFilterMarkdown": "Markdown files only (.md, .txt)",
-      "folderTreeFileFilterAll": "All files"
+      "folderTreeFileFilterAll": "All files",
+      "scrollSyncMode": "Scroll Sync (Split view)",
+      "scrollSyncModeDescription": "Choose how the editor and preview panes scroll together in split view.",
+      "scrollSyncModeEditorToPreview": "Editor → Preview",
+      "scrollSyncModeEditorToPreviewDescription": "Scrolling the editor scrolls the preview. Scrolling the preview does not move the editor.",
+      "scrollSyncModeBidirectional": "Bidirectional",
+      "scrollSyncModeBidirectionalDescription": "Scrolling either pane scrolls the other in sync.",
+      "scrollSyncModeOff": "Off",
+      "scrollSyncModeOffDescription": "Each pane scrolls independently."
     },
     "advanced": {
       "title": "Advanced",
@@ -381,7 +395,9 @@
       "importSuccess": "Settings imported successfully",
       "importError": "Failed to import settings",
       "resetSuccess": "Settings reset successfully",
-      "resetError": "Failed to reset settings"
+      "resetError": "Failed to reset settings",
+      "enableMarp": "Marp (Presentations)",
+      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation."
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "Search all tabs"
   },
+  "tabs": {
+    "copyFilePath": "Copy File Path",
+    "copyFileName": "Copy File Name",
+    "pinTab": "Pin Tab",
+    "unpinTab": "Unpin Tab",
+    "closeTab": "Close Tab",
+    "closeOtherTabs": "Close Other Tabs",
+    "closeTabsToRight": "Close Tabs to the Right",
+    "closeTabsBelow": "Close Tabs Below",
+    "closeAllTabs": "Close All Tabs",
+    "pathCopied": "Path copied to clipboard",
+    "fileNameCopied": "File name copied to clipboard",
+    "copyFailed": "Failed to copy to clipboard"
+  },
   "whatsNew": {
     "title": "What's New",
     "gotIt": "Got It",
@@ -501,10 +531,44 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "File Change Detection on Windows",
-        "description": "Fixed an issue where file change detection was not working properly on Windows."
+      "marpPreview": {
+        "title": "Marp Presentation Preview",
+        "description": "Preview Markdown files with a `marp: true` front-matter as slide presentations."
+      },
+      "tabContextMenu": {
+        "title": "Tab Context Menu",
+        "description": "Right-click a tab to pin, rename, copy its path or filename, or close other/right/all tabs."
+      },
+      "tabPinning": {
+        "title": "Tab Pinning",
+        "description": "Pin important tabs to keep them from being closed by bulk close actions."
+      },
+      "tabRename": {
+        "title": "Tab Rename",
+        "description": "Rename saved files on disk or change the title of unsaved tabs directly from the tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Auto Title from First Line",
+        "description": "Unsaved tabs now display the first line of their content as the tab title."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Close Button Position",
+        "description": "Choose whether the close/pin icon appears on the left or right side of each tab."
+      },
+      "scrollSyncMode": {
+        "title": "Scroll Sync Options",
+        "description": "Choose how editor and preview scroll positions sync: one-way (default), bidirectional, or off."
+      },
+      "previewExternalChange": {
+        "title": "External File Change in Preview Mode",
+        "description": "Fixed an issue where external file changes were not loaded correctly while in preview mode."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentation",
+    "previousSlide": "Previous Slide",
+    "nextSlide": "Next Slide",
+    "slideCounter": "Slide {{current}} of {{total}}"
   }
 }

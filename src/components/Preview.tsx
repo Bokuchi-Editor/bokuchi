@@ -11,6 +11,9 @@ import { readFile } from '@tauri-apps/plugin-fs';
 import { RenderingSettings, DEFAULT_RENDERING_SETTINGS } from '../types/settings';
 import { renderCode, processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
 import { buildExportHTML } from '../utils/exportStyles';
+import { contentIsMarp } from '../utils/marpRenderer';
+import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../utils/imagePathResolver';
+import MarpPreview from './MarpPreview';
 
 interface PreviewProps {
   content: string;
@@ -20,29 +23,20 @@ interface PreviewProps {
   zoomLevel?: number;
   onContentChange?: (newContent: string) => void;
   scrollFraction?: number;
+  onScrollChange?: (fraction: number) => void;
   filePath?: string;
   renderingSettings?: RenderingSettings;
+  viewMode?: 'split' | 'editor' | 'preview';
 }
 
-/** Resolve a relative path against a base directory path */
-function resolveRelativePath(baseDirPath: string, relativePath: string): string {
-  // Normalize separators to /
-  const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);
-  const resolved: string[] = [];
-  for (const part of parts) {
-    if (part === '.') continue;
-    if (part === '..') {
-      resolved.pop();
-    } else {
-      resolved.push(part);
-    }
-  }
-  return '/' + resolved.join('/');
-}
+const BASE_PREVIEW_FONT_SIZE_PX = 16;
+const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
+  const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScrollRef = useRef(false);
   const [processedContent, setProcessedContent] = useState(content || '');
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
@@ -160,7 +154,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
         // Resolve relative image paths to blob URLs
         if (filePath) {
-          const baseDir = filePath.substring(0, filePath.lastIndexOf('/'));
+          const baseDir = dirnameOf(filePath);
           const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
           let imgMatch;
           const replacements = new Map<string, string>();
@@ -168,18 +162,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           const imgPromises: Promise<void>[] = [];
           while ((imgMatch = imgRegex.exec(processedHtml)) !== null) {
             const src = imgMatch[1];
-            if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:') && !src.startsWith('blob:')) {
+            if (!isAbsoluteUrl(src)) {
               const absolutePath = resolveRelativePath(baseDir, src);
               imgPromises.push(
                 readFile(absolutePath).then(data => {
-                  const ext = src.split('.').pop()?.toLowerCase() || '';
-                  const mimeMap: Record<string, string> = {
-                    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
-                    gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
-                    bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
-                  };
-                  const mime = mimeMap[ext] || 'application/octet-stream';
-                  const blob = new Blob([data], { type: mime });
+                  const blob = new Blob([data], { type: mimeTypeFromPath(src) });
                   const blobUrl = URL.createObjectURL(blob);
                   replacements.set(src, blobUrl);
                 }).catch(err => {
@@ -299,14 +286,34 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // Sync scroll from editor
   useEffect(() => {
-    if (scrollFraction !== undefined && scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
+    if (scrollFraction === undefined || !scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const maxScroll = container.scrollHeight - container.clientHeight;
+    if (maxScroll <= 0) return;
+    const targetScroll = scrollFraction * maxScroll;
+    if (Math.abs(container.scrollTop - targetScroll) < 1) return;
+    isProgrammaticScrollRef.current = true;
+    container.scrollTop = targetScroll;
+    requestAnimationFrame(() => {
+      isProgrammaticScrollRef.current = false;
+    });
+  }, [scrollFraction]);
+
+  // Report scroll position back to parent
+  useEffect(() => {
+    if (!onScrollChange || !scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const handleScroll = () => {
+      // Skip events triggered by our own programmatic scroll to avoid feedback loops
+      if (isProgrammaticScrollRef.current) return;
       const maxScroll = container.scrollHeight - container.clientHeight;
       if (maxScroll > 0) {
-        container.scrollTop = scrollFraction * maxScroll;
+        onScrollChange(container.scrollTop / maxScroll);
       }
-    }
-  }, [scrollFraction]);
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [onScrollChange]);
 
   const handleExportHTML = async () => {
     try {
@@ -347,6 +354,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // htmlContent is managed by useState, so removed here
 
+  // Delegate to MarpPreview for Marp presentations
+  if (isMarp) {
+    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} viewMode={viewMode} />;
+  }
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -377,8 +389,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           className={`markdown-preview ${theme === 'darcula' ? 'hljs-dark' : (darkMode ? 'hljs-dark' : 'hljs-light')}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
-            fontSize: `${Math.round(16 * zoomLevel)}px`,
-            lineHeight: `${Math.round(1.6 * zoomLevel)}`,
+            fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
+            lineHeight: `${Math.round(BASE_PREVIEW_LINE_HEIGHT * zoomLevel)}`,
             fontFamily: theme === 'as400'
               ? '"IBM Plex Mono", "Courier New", Courier, monospace'
               : '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

@@ -41,3 +41,27 @@ export const isMarkdownFile = (fileName: string): boolean => {
   const lowerName = fileName.toLowerCase();
   return lowerName.endsWith('.md') || lowerName.endsWith('.markdown');
 };
+
+const UNTITLED_TAB_TITLE_MAX_LENGTH = 20;
+
+/**
+ * Get the display title for a tab.
+ * For unsaved (new) tabs, derives the title from the first line of content.
+ * Falls back to 'Untitled' if content is empty.
+ */
+export const getTabDisplayTitle = (tab: Tab): string => {
+  if (!tab.isNew) {
+    return tab.title;
+  }
+
+  const firstLine = tab.content.split('\n')[0]?.trim();
+  if (!firstLine) {
+    return 'Untitled';
+  }
+
+  if (firstLine.length > UNTITLED_TAB_TITLE_MAX_LENGTH) {
+    return firstLine.slice(0, UNTITLED_TAB_TITLE_MAX_LENGTH) + '…';
+  }
+
+  return firstLine;
+};

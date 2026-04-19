@@ -41,12 +41,32 @@ describe('formatDate', () => {
     expect(formatDate(oneDayAgo)).toBe('1 day ago');
   });
 
-  // T-FMT-06: older than a week
+  // T-FMT-06: older than a week returns locale date string
   it('T-FMT-06: returns formatted date for timestamps older than a week', () => {
     const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
     const result = formatDate(twoWeeksAgo);
-    // Should be a locale date string
-    expect(result).toMatch(/\d/);
+    // System time is 2026-03-12, two weeks ago is 2026-02-26
+    const expected = new Date(twoWeeksAgo).toLocaleDateString('en-US');
+    expect(result).toBe(expected);
+  });
+
+  // T-FMT-13: boundary - exactly 1 hour
+  it('T-FMT-13: returns "1 hour ago" at exactly 1 hour boundary', () => {
+    const exactlyOneHour = Date.now() - 60 * 60 * 1000;
+    expect(formatDate(exactlyOneHour)).toBe('1 hour ago');
+  });
+
+  // T-FMT-14: boundary - exactly 24 hours
+  it('T-FMT-14: returns "1 day ago" at exactly 24 hours boundary', () => {
+    const exactly24Hours = Date.now() - 24 * 60 * 60 * 1000;
+    expect(formatDate(exactly24Hours)).toBe('1 day ago');
+  });
+
+  // T-FMT-15: boundary - exactly 7 days returns locale date
+  it('T-FMT-15: returns locale date at exactly 7 days boundary', () => {
+    const exactly7Days = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const expected = new Date(exactly7Days).toLocaleDateString('en-US');
+    expect(formatDate(exactly7Days)).toBe(expected);
   });
 });
 
@@ -79,5 +99,20 @@ describe('formatFileSize', () => {
   // T-FMT-12: large megabytes
   it('T-FMT-12: formats large files', () => {
     expect(formatFileSize(5 * 1024 * 1024)).toBe('5.0 MB');
+  });
+
+  // T-FMT-16: GB-scale falls through to MB display
+  it('T-FMT-16: formats GB-scale files as MB', () => {
+    expect(formatFileSize(2 * 1024 * 1024 * 1024)).toBe('2048.0 MB');
+  });
+
+  // T-FMT-17: boundary - exactly 1024 bytes becomes KB
+  it('T-FMT-17: formats exactly 1024 bytes as KB', () => {
+    expect(formatFileSize(1024)).toBe('1.0 KB');
+  });
+
+  // T-FMT-18: boundary - exactly 1 MB
+  it('T-FMT-18: formats exactly 1 MB', () => {
+    expect(formatFileSize(1024 * 1024)).toBe('1.0 MB');
   });
 });

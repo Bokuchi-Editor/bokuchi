@@ -306,7 +306,13 @@
       "horizontal": "Tab ngang",
       "vertical": "Tab dọc",
       "horizontalDescription": "Tab được hiển thị ngang phía trên trình soạn thảo.",
-      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo."
+      "verticalDescription": "Tab được hiển thị dọc ở phía bên trái của trình soạn thảo.",
+      "closeButtonPosition": "Vị trí nút đóng",
+      "closeButtonPositionDescription": "Chọn vị trí hiển thị nút đóng và biểu tượng ghim trên tab.",
+      "closeButtonLeft": "Trái",
+      "closeButtonRight": "Phải",
+      "closeButtonLeftDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên trái tab.",
+      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab."
     },
     "viewMode": {
       "title": "Chế độ xem",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "Bộ lọc tệp Explorer",
       "folderTreeFileFilterDescription": "Chọn tệp nào để hiển thị trong explorer.",
       "folderTreeFileFilterMarkdown": "Chỉ tệp Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Tất cả tệp"
+      "folderTreeFileFilterAll": "Tất cả tệp",
+      "scrollSyncMode": "Đồng bộ cuộn (Chế độ chia đôi)",
+      "scrollSyncModeDescription": "Chọn cách trình soạn thảo và bảng xem trước cuộn cùng nhau trong chế độ chia đôi.",
+      "scrollSyncModeEditorToPreview": "Trình soạn thảo → Xem trước",
+      "scrollSyncModeEditorToPreviewDescription": "Cuộn trình soạn thảo sẽ cuộn xem trước. Cuộn xem trước không di chuyển trình soạn thảo.",
+      "scrollSyncModeBidirectional": "Hai chiều",
+      "scrollSyncModeBidirectionalDescription": "Cuộn ở một bảng sẽ đồng bộ cuộn bảng còn lại.",
+      "scrollSyncModeOff": "Tắt",
+      "scrollSyncModeOffDescription": "Mỗi bảng cuộn độc lập."
     },
     "advanced": {
       "title": "Nâng cao",
@@ -381,7 +395,9 @@
       "importSuccess": "Nhập cài đặt thành công",
       "importError": "Không thể nhập cài đặt",
       "resetSuccess": "Đặt lại cài đặt thành công",
-      "resetError": "Không thể đặt lại cài đặt"
+      "resetError": "Không thể đặt lại cài đặt",
+      "enableMarp": "Marp (Trình chiếu)",
+      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu."
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "Tìm kiếm tất cả các tab"
   },
+  "tabs": {
+    "copyFilePath": "Sao chép đường dẫn tệp",
+    "copyFileName": "Sao chép tên tệp",
+    "pinTab": "Ghim tab",
+    "unpinTab": "Bỏ ghim tab",
+    "closeTab": "Đóng tab",
+    "closeOtherTabs": "Đóng các tab khác",
+    "closeTabsToRight": "Đóng các tab bên phải",
+    "closeTabsBelow": "Đóng các tab bên dưới",
+    "closeAllTabs": "Đóng tất cả tab",
+    "pathCopied": "Đã sao chép đường dẫn vào clipboard",
+    "fileNameCopied": "Đã sao chép tên tệp vào clipboard",
+    "copyFailed": "Không thể sao chép vào clipboard"
+  },
   "whatsNew": {
     "title": "Có gì mới",
     "gotIt": "Đã hiểu",
@@ -501,10 +531,44 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Phát hiện thay đổi tệp trên Windows",
-        "description": "Đã sửa lỗi phát hiện thay đổi tệp không hoạt động đúng trên Windows."
+      "marpPreview": {
+        "title": "Xem trước bản trình bày Marp",
+        "description": "Xem trước tệp Markdown có front-matter `marp: true` dưới dạng bản trình bày slide."
+      },
+      "tabContextMenu": {
+        "title": "Menu ngữ cảnh của tab",
+        "description": "Nhấp chuột phải vào tab để ghim, đổi tên, sao chép đường dẫn hoặc tên tệp, hoặc đóng các tab khác/bên phải/tất cả."
+      },
+      "tabPinning": {
+        "title": "Ghim tab",
+        "description": "Ghim các tab quan trọng để chúng không bị đóng bởi các thao tác đóng hàng loạt."
+      },
+      "tabRename": {
+        "title": "Đổi tên tab",
+        "description": "Đổi tên tệp đã lưu trên đĩa hoặc thay đổi tiêu đề của tab chưa lưu trực tiếp từ tab."
+      },
+      "tabUnsavedTitle": {
+        "title": "Tự động đặt tiêu đề từ dòng đầu tiên",
+        "description": "Các tab chưa lưu giờ đây hiển thị dòng đầu tiên của nội dung làm tiêu đề tab."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Vị trí nút đóng",
+        "description": "Chọn biểu tượng đóng/ghim xuất hiện ở bên trái hoặc bên phải của mỗi tab."
+      },
+      "scrollSyncMode": {
+        "title": "Tùy chọn đồng bộ cuộn",
+        "description": "Chọn cách đồng bộ vị trí cuộn giữa trình soạn thảo và xem trước: một chiều (mặc định), hai chiều, hoặc tắt."
+      },
+      "previewExternalChange": {
+        "title": "Thay đổi tệp bên ngoài trong chế độ xem trước",
+        "description": "Đã sửa lỗi khi các thay đổi tệp bên ngoài không được tải chính xác trong chế độ xem trước."
       }
     }
+  },
+  "preview": {
+    "presentation": "Trình chiếu",
+    "previousSlide": "Slide trước",
+    "nextSlide": "Slide tiếp theo",
+    "slideCounter": "Slide {{current}} / {{total}}"
   }
 }

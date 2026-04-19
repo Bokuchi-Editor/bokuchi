@@ -80,6 +80,12 @@ function AppDesktop() {
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
     handleTabReorder,
+    handleToggleTabPinned,
+    handleCopyFilePath,
+    handleCopyFileName,
+    handleCloseOtherTabs,
+    handleCloseTabsToRight,
+    handleCloseAllTabs,
     handleCheckForUpdate,
     handleDismissUpdate,
     handleWhatsNewClose,
@@ -124,6 +130,7 @@ function AppDesktop() {
     handleRenameRequest,
     handleRenameConfirm,
     handleRenameCancel,
+    handleTabRenameRequest,
 
     // Translation
     t,
@@ -420,6 +427,7 @@ function AppDesktop() {
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}
+          scrollSyncMode={appSettings.interface.scrollSyncMode}
           outlineDisplayMode={appSettings.interface.outlineDisplayMode}
           outlinePanelOpen={outlinePanelOpen}
           onOutlinePanelClose={() => setOutlinePanelOpen(false)}
@@ -435,6 +443,14 @@ function AppDesktop() {
           onFolderTreeRefresh={folderTreeRefreshTree}
           onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
           onRenameRequest={handleRenameRequest}
+          onTabRename={handleTabRenameRequest}
+          onToggleTabPinned={handleToggleTabPinned}
+          onCopyFilePath={handleCopyFilePath}
+          onCopyFileName={handleCopyFileName}
+          onCloseOtherTabs={handleCloseOtherTabs}
+          onCloseTabsToRight={handleCloseTabsToRight}
+          onCloseAllTabs={handleCloseAllTabs}
+          tabCloseButtonPosition={appSettings.interface.tabCloseButtonPosition}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}

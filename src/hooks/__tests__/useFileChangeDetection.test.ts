@@ -4,6 +4,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('../../api/desktopApi', () => ({
   desktopApi: {
     readFileFromPath: vi.fn().mockResolvedValue('new content'),
+    readFileByPath: vi.fn().mockResolvedValue({ content: 'new content', error: null }),
     getFileHash: vi.fn().mockResolvedValue({ hash: 'abc', modified_time: 1000, file_size: 100 }),
   },
 }));
@@ -200,6 +201,247 @@ describe('useFileChangeDetection', () => {
 
     // Dialog must still close despite the error
     expect(result.current.fileChangeDialog.open).toBe(false);
+  });
+
+  // T-FCD-09: polling fires at exactly 5-second intervals
+  it('T-FCD-09: polls for file changes every 5 seconds', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockResolvedValue(false);
+
+      renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // At 4999ms - should NOT have polled yet
+      await act(async () => {
+        vi.advanceTimersByTime(4999);
+      });
+      expect(mockDetect).not.toHaveBeenCalled();
+
+      // At 5000ms - should poll
+      await act(async () => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(1);
+
+      // At 10000ms - should poll again
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-10: polling resumes after dialog is closed
+  it('T-FCD-10: resumes polling after dialog is closed', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockResolvedValue(false);
+
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // Open dialog - stops polling
+      act(() => {
+        result.current.setFileChangeDialog({
+          open: true,
+          fileName: 'test.md',
+          onReload: vi.fn(),
+          onCancel: vi.fn(),
+        });
+      });
+
+      await act(async () => {
+        vi.advanceTimersByTime(10000);
+      });
+      expect(mockDetect).not.toHaveBeenCalled();
+
+      // Close dialog - polling should resume
+      act(() => {
+        result.current.setFileChangeDialog({
+          open: false,
+          fileName: '',
+          onReload: vi.fn(),
+          onCancel: vi.fn(),
+        });
+      });
+
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(mockDetect).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-11: detectFileChange error does not open dialog
+  it('T-FCD-11: error in detectFileChange does not open dialog', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const { detectFileChange } = await import('../../utils/fileChangeDetection');
+      const mockDetect = detectFileChange as ReturnType<typeof vi.fn>;
+      mockDetect.mockClear();
+      mockDetect.mockRejectedValue(new Error('permission denied'));
+
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      await act(async () => {
+        vi.advanceTimersByTime(5000);
+      });
+
+      // Dialog should remain closed despite the error
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-FCD-12: Regression test - reload syncs Monaco model (preview mode fix)
+  it('T-FCD-12: onReload syncs Monaco model when it exists', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'externally updated content',
+      error: null,
+    });
+
+    const mockSetValue = vi.fn();
+    const mockModel = {
+      uri: { toString: () => 'tab1' },
+      getValue: () => 'old content',
+      setValue: mockSetValue,
+    };
+
+    // Set up mock Monaco global with a model for tab1
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = {
+      editor: {
+        getModels: () => [mockModel],
+      },
+    };
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      // Dispatch fileChangeDetected event
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      expect(result.current.fileChangeDialog.open).toBe(true);
+
+      // Click reload
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      // Monaco model should have been synced with the new content
+      expect(mockSetValue).toHaveBeenCalledWith('externally updated content');
+      expect(reloadTabContent).toHaveBeenCalledWith('tab1', 'externally updated content');
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
+    }
+  });
+
+  // T-FCD-13: Regression test - reload skips Monaco sync when model content matches
+  it('T-FCD-13: onReload skips Monaco setValue when model already has correct content', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'same content',
+      error: null,
+    });
+
+    const mockSetValue = vi.fn();
+    const mockModel = {
+      uri: { toString: () => 'tab1' },
+      getValue: () => 'same content',
+      setValue: mockSetValue,
+    };
+
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = {
+      editor: {
+        getModels: () => [mockModel],
+      },
+    };
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      // setValue should NOT be called since content already matches
+      expect(mockSetValue).not.toHaveBeenCalled();
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
+    }
+  });
+
+  // T-FCD-14: Regression test - reload works when Monaco is not available
+  it('T-FCD-14: onReload works gracefully when Monaco global is not available', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'new content',
+      error: null,
+    });
+
+    const originalMonaco = (window as { monaco?: unknown }).monaco;
+    (window as { monaco?: unknown }).monaco = undefined;
+
+    try {
+      const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
+
+      act(() => {
+        const event = new CustomEvent('fileChangeDetected', {
+          detail: {
+            fileName: 'test.md',
+            tabId: 'tab1',
+            onCancel: vi.fn(),
+          },
+        });
+        window.dispatchEvent(event);
+      });
+
+      // Should not throw even without Monaco
+      await act(async () => {
+        await result.current.fileChangeDialog.onReload();
+      });
+
+      expect(reloadTabContent).toHaveBeenCalledWith('tab1', 'new content');
+      expect(result.current.fileChangeDialog.open).toBe(false);
+    } finally {
+      (window as { monaco?: unknown }).monaco = originalMonaco;
+    }
   });
 
   // T-FCD-06: Regression test - polling stops while dialog is open

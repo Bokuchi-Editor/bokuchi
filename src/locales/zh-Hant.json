@@ -306,7 +306,13 @@
       "horizontal": "水平標籤頁",
       "vertical": "垂直標籤頁",
       "horizontalDescription": "標籤頁在編輯器上方水平顯示。",
-      "verticalDescription": "標籤頁在編輯器左側垂直顯示。"
+      "verticalDescription": "標籤頁在編輯器左側垂直顯示。",
+      "closeButtonPosition": "關閉按鈕位置",
+      "closeButtonPositionDescription": "選擇分頁上關閉按鈕和釘選圖示的顯示位置。",
+      "closeButtonLeft": "左側",
+      "closeButtonRight": "右側",
+      "closeButtonLeftDescription": "在分頁左側顯示關閉按鈕和釘選圖示。",
+      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。"
     },
     "viewMode": {
       "title": "檢視模式",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "檔案總管檔案篩選器",
       "folderTreeFileFilterDescription": "選擇在檔案總管中顯示哪些檔案。",
       "folderTreeFileFilterMarkdown": "僅 Markdown 檔案 (.md, .txt)",
-      "folderTreeFileFilterAll": "所有檔案"
+      "folderTreeFileFilterAll": "所有檔案",
+      "scrollSyncMode": "捲動同步（分割檢視）",
+      "scrollSyncModeDescription": "選擇在分割檢視中編輯器與預覽面板如何同步捲動。",
+      "scrollSyncModeEditorToPreview": "編輯器 → 預覽",
+      "scrollSyncModeEditorToPreviewDescription": "捲動編輯器時預覽也會捲動。捲動預覽不會移動編輯器。",
+      "scrollSyncModeBidirectional": "雙向",
+      "scrollSyncModeBidirectionalDescription": "捲動任一面板，另一面板都會同步捲動。",
+      "scrollSyncModeOff": "關閉",
+      "scrollSyncModeOffDescription": "兩個面板各自獨立捲動。"
     },
     "advanced": {
       "title": "進階",
@@ -381,7 +395,9 @@
       "importSuccess": "設定匯入成功",
       "importError": "設定匯入失敗",
       "resetSuccess": "設定重設成功",
-      "resetError": "設定重設失敗"
+      "resetError": "設定重設失敗",
+      "enableMarp": "Marp（簡報）",
+      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。"
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "搜尋所有分頁"
   },
+  "tabs": {
+    "copyFilePath": "複製檔案路徑",
+    "copyFileName": "複製檔案名稱",
+    "pinTab": "釘選分頁",
+    "unpinTab": "取消釘選分頁",
+    "closeTab": "關閉分頁",
+    "closeOtherTabs": "關閉其他分頁",
+    "closeTabsToRight": "關閉右側分頁",
+    "closeTabsBelow": "關閉下方分頁",
+    "closeAllTabs": "關閉所有分頁",
+    "pathCopied": "路徑已複製到剪貼簿",
+    "fileNameCopied": "檔案名稱已複製到剪貼簿",
+    "copyFailed": "複製到剪貼簿失敗"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "了解",
@@ -501,10 +531,44 @@
       "improvement": "改進"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Windows 檔案變更偵測修正",
-        "description": "修正了 Windows 環境下檔案變更偵測無法正常運作的問題。"
+      "marpPreview": {
+        "title": "Marp 簡報預覽",
+        "description": "可將含有 `marp: true` front-matter 的 Markdown 檔案以投影片簡報形式預覽。"
+      },
+      "tabContextMenu": {
+        "title": "分頁右鍵選單",
+        "description": "在分頁上按右鍵可進行釘選、重新命名、複製路徑或檔名，以及關閉其他/右側/全部分頁等操作。"
+      },
+      "tabPinning": {
+        "title": "分頁釘選",
+        "description": "釘選重要分頁，使其不會被批次關閉動作關閉。"
+      },
+      "tabRename": {
+        "title": "分頁重新命名",
+        "description": "直接從分頁重新命名磁碟上已儲存的檔案，或變更未儲存分頁的標題。"
+      },
+      "tabUnsavedTitle": {
+        "title": "依第一行自動設定標題",
+        "description": "未儲存的分頁現在會將內容的第一行顯示為分頁標題。"
+      },
+      "tabCloseButtonPosition": {
+        "title": "關閉按鈕位置",
+        "description": "可選擇關閉/釘選圖示顯示在每個分頁的左側或右側。"
+      },
+      "scrollSyncMode": {
+        "title": "捲動同步選項",
+        "description": "可選擇編輯器與預覽的捲動位置同步方式：單向（預設）、雙向或關閉。"
+      },
+      "previewExternalChange": {
+        "title": "預覽模式下的外部檔案變更",
+        "description": "修正了預覽模式下外部檔案變更無法正確載入的問題。"
       }
     }
+  },
+  "preview": {
+    "presentation": "簡報",
+    "previousSlide": "上一張投影片",
+    "nextSlide": "下一張投影片",
+    "slideCounter": "投影片 {{current}} / {{total}}"
   }
 }

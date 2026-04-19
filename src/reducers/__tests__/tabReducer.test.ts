@@ -10,6 +10,7 @@ function createTab(overrides: Partial<Tab> = {}): Tab {
     isModified: overrides.isModified ?? false,
     isNew: overrides.isNew ?? true,
     filePath: overrides.filePath,
+    isPinned: overrides.isPinned,
     fileHashInfo: overrides.fileHashInfo,
   };
 }
@@ -264,6 +265,64 @@ describe('tabReducer', () => {
         lastOpenedAt: Date.now(),
       },
     });
+    expect(result.activeTabId).toBeNull();
+  });
+
+  // T-TR-17
+  it('TOGGLE_TAB_PINNED toggles isPinned from undefined to true', () => {
+    const tab = createTab({ id: 't1' });
+    const state = stateWith(tab);
+    const result = tabReducer(state, { type: 'TOGGLE_TAB_PINNED', payload: { id: 't1' } });
+    expect(result.tabs[0].isPinned).toBe(true);
+  });
+
+  // T-TR-18
+  it('TOGGLE_TAB_PINNED toggles isPinned from true to false', () => {
+    const tab = createTab({ id: 't1', isPinned: true });
+    const state = stateWith(tab);
+    const result = tabReducer(state, { type: 'TOGGLE_TAB_PINNED', payload: { id: 't1' } });
+    expect(result.tabs[0].isPinned).toBe(false);
+  });
+
+  // T-TR-19
+  it('REMOVE_TABS removes multiple tabs', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+    const tab3 = createTab({ id: 't3' });
+    const state: TabState = { tabs: [tab1, tab2, tab3], activeTabId: 't1' };
+    const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: ['t2', 't3'] } });
+    expect(result.tabs).toHaveLength(1);
+    expect(result.tabs[0].id).toBe('t1');
+    expect(result.activeTabId).toBe('t1');
+  });
+
+  // T-TR-20
+  it('REMOVE_TABS selects next active tab when active is removed', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+    const tab3 = createTab({ id: 't3' });
+    const state: TabState = { tabs: [tab1, tab2, tab3], activeTabId: 't2' };
+    const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: ['t2'] } });
+    expect(result.tabs).toHaveLength(2);
+    expect(result.activeTabId).toBe('t3');
+  });
+
+  // T-TR-21
+  it('REMOVE_TABS with empty ids is no-op', () => {
+    const tab1 = createTab({ id: 't1' });
+    const state = stateWith(tab1);
+    const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: [] } });
+    expect(result.tabs).toHaveLength(1);
+    expect(result.activeTabId).toBe('t1');
+  });
+
+  // T-TR-22
+  it('REMOVE_TABS removing all tabs sets activeTabId to null', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+    const state: TabState = { tabs: [tab1, tab2], activeTabId: 't1' };
+    const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: ['t1', 't2'] } });
+    expect(result.tabs).toHaveLength(0);
     expect(result.activeTabId).toBeNull();
   });
 

@@ -9,8 +9,10 @@ import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
-import { RenderingSettings } from '../types/settings';
+import { RenderingSettings, ScrollSyncMode } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
+import { useResizableSidebar } from '../hooks/useResizableSidebar';
+import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
 
 interface AppContentProps {
   // State
@@ -39,6 +41,9 @@ interface AppContentProps {
     tableConversion: 'auto' | 'confirm' | 'off';
   };
 
+  // Scroll sync between editor and preview in split view
+  scrollSyncMode: ScrollSyncMode;
+
   // Outline
   outlineDisplayMode: OutlineDisplayMode;
   outlinePanelOpen: boolean;
@@ -57,6 +62,14 @@ interface AppContentProps {
   onFolderTreeRefresh: () => void;
   onFolderTreePanelClose: () => void;
   onRenameRequest?: (filePath: string) => void;
+  onTabRename?: (tabId: string) => void;
+  onToggleTabPinned?: (tabId: string) => void;
+  onCopyFilePath?: (tabId: string) => void;
+  onCopyFileName?: (tabId: string) => void;
+  onCloseOtherTabs?: (tabId: string) => void;
+  onCloseTabsToRight?: (tabId: string) => void;
+  onCloseAllTabs?: () => void;
+  tabCloseButtonPosition?: 'left' | 'right';
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -88,6 +101,7 @@ const AppContent: React.FC<AppContentProps> = ({
   isSettingsLoaded,
   renderingSettings,
   editorSettings,
+  scrollSyncMode,
   outlineDisplayMode,
   outlinePanelOpen,
   onOutlinePanelClose,
@@ -103,6 +117,14 @@ const AppContent: React.FC<AppContentProps> = ({
   onFolderTreeRefresh,
   onFolderTreePanelClose,
   onRenameRequest,
+  onTabRename,
+  onToggleTabPinned,
+  onCopyFilePath,
+  onCopyFileName,
+  onCloseOtherTabs,
+  onCloseTabsToRight,
+  onCloseAllTabs,
+  tabCloseButtonPosition,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -116,14 +138,58 @@ const AppContent: React.FC<AppContentProps> = ({
   focusRequestId,
   t,
 }) => {
-  const [scrollFraction, setScrollFraction] = useState(0);
+  const scrollFractionMap = useRef<Map<string, number>>(new Map());
+  const activeTabIdRef = useRef(activeTabId);
+  activeTabIdRef.current = activeTabId;
+  // Track which side initiated the scroll so the originating side ignores its own update
+  // (prevents bidirectional sync from feedback-looping).
+  const [scrollState, setScrollState] = useState<{ fraction: number; source: 'editor' | 'preview' | 'restore' }>({ fraction: 0, source: 'restore' });
   const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
 
   const headings = useOutlineHeadings(activeTab?.content);
 
+  // Restore scroll position when switching tabs
+  useEffect(() => {
+    if (activeTabId) {
+      setScrollState({ fraction: scrollFractionMap.current.get(activeTabId) ?? 0, source: 'restore' });
+    }
+  }, [activeTabId]);
+
+  // Clean up scroll entries for closed tabs
+  useEffect(() => {
+    const currentTabIds = new Set(tabs.map(t => t.id));
+    for (const key of scrollFractionMap.current.keys()) {
+      if (!currentTabIds.has(key)) {
+        scrollFractionMap.current.delete(key);
+      }
+    }
+  }, [tabs]);
+
+  // Use ref for activeTabId to avoid stale closure in Editor's scroll listener.
+  // Editor.tsx registers onScrollChange once at mount, so the callback reference must be stable.
   const handleEditorScrollChange = useCallback((fraction: number) => {
-    setScrollFraction(fraction);
+    setScrollState({ fraction, source: 'editor' });
+    const tabId = activeTabIdRef.current;
+    if (tabId) {
+      scrollFractionMap.current.set(tabId, fraction);
+    }
   }, []);
+
+  const handlePreviewScrollChange = useCallback((fraction: number) => {
+    setScrollState({ fraction, source: 'preview' });
+    const tabId = activeTabIdRef.current;
+    if (tabId) {
+      scrollFractionMap.current.set(tabId, fraction);
+    }
+  }, []);
+
+  // Per-side scroll value for split view: undefined means "do not push update to this side".
+  const editorScrollFraction = scrollSyncMode === 'bidirectional' && scrollState.source === 'preview'
+    ? scrollState.fraction
+    : undefined;
+  const previewSplitScrollFraction = scrollSyncMode !== 'off' && scrollState.source !== 'preview'
+    ? scrollState.fraction
+    : undefined;
 
   const handleHeadingClick = useCallback((lineNumber: number) => {
     setRevealLineRequest(prev => ({ lineNumber, requestId: prev.requestId + 1 }));
@@ -143,74 +209,20 @@ const AppContent: React.FC<AppContentProps> = ({
   const showStandaloneVerticalTabs = tabLayout === 'vertical' && !showMergedLeftSidebar;
 
   // Resizable divider state for merged sidebar
-  const [tabSectionHeight, setTabSectionHeight] = useState(200);
-  const [explorerCollapsed, setExplorerCollapsed] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const explorerHeightBeforeCollapse = useRef(0);
-  const isDraggingRef = useRef(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const handleExplorerHeaderClick = useCallback(() => {
-    if (explorerCollapsed) {
-      // Restore previous height (or default)
-      const restoreH = explorerHeightBeforeCollapse.current || 200;
-      if (sidebarRef.current) {
-        const maxH = sidebarRef.current.getBoundingClientRect().height - 120;
-        setTabSectionHeight(Math.min(restoreH, maxH));
-      } else {
-        setTabSectionHeight(restoreH);
-      }
-      setExplorerCollapsed(false);
-    } else {
-      // Save current height then collapse explorer (body hidden, header stays)
-      explorerHeightBeforeCollapse.current = tabSectionHeight;
-      // Set tab section to fill, leaving room for explorer header + divider
-      if (sidebarRef.current) {
-        const totalH = sidebarRef.current.getBoundingClientRect().height;
-        setTabSectionHeight(totalH - 48);
-      }
-      setExplorerCollapsed(true);
-    }
-  }, [explorerCollapsed, tabSectionHeight]);
-
-  const handleDividerMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    isDraggingRef.current = true;
-    setIsDragging(true);
-
-    const onMouseMove = (ev: MouseEvent) => {
-      if (!isDraggingRef.current || !sidebarRef.current) return;
-      const sidebarRect = sidebarRef.current.getBoundingClientRect();
-      const newHeight = ev.clientY - sidebarRect.top;
-      const minH = 80;
-      // Explorer header (~40px) + divider (4px) = 44px must always remain
-      const maxH = sidebarRect.height - 48;
-      const clamped = Math.max(minH, Math.min(maxH, newHeight));
-      setTabSectionHeight(clamped);
-      // Un-collapse when user drags to give explorer more space
-      setExplorerCollapsed(false);
-    };
-
-    const onMouseUp = () => {
-      isDraggingRef.current = false;
-      setIsDragging(false);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    };
-
-    document.body.style.cursor = 'row-resize';
-    document.body.style.userSelect = 'none';
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  }, []);
+  const {
+    sidebarRef,
+    topSectionHeight: tabSectionHeight,
+    bottomCollapsed: explorerCollapsed,
+    isDragging,
+    toggleBottomCollapsed: handleExplorerHeaderClick,
+    handleDividerMouseDown,
+  } = useResizableSidebar();
 
   // Force Monaco Editor to recalculate layout when persistent panels toggle
   useEffect(() => {
     const timer = setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
-    }, 50);
+    }, LAYOUT_SETTLE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
 
@@ -221,8 +233,8 @@ const AppContent: React.FC<AppContentProps> = ({
         <Box
           ref={sidebarRef}
           sx={{
-            width: 280,
-            minWidth: 280,
+            width: SIDEBAR_WIDTH_PX,
+            minWidth: SIDEBAR_WIDTH_PX,
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
@@ -246,6 +258,14 @@ const AppContent: React.FC<AppContentProps> = ({
               onTabClose={onTabClose}
               onNewTab={onNewTab}
               onTabReorder={onTabReorder}
+              onTabRename={onTabRename}
+              onToggleTabPinned={onToggleTabPinned}
+              onCopyFilePath={onCopyFilePath}
+              onCopyFileName={onCopyFileName}
+              onCloseOtherTabs={onCloseOtherTabs}
+              onCloseTabsToRight={onCloseTabsToRight}
+              onCloseAllTabs={onCloseAllTabs}
+              closeButtonPosition={tabCloseButtonPosition}
               layout="vertical"
               embedded
             />
@@ -254,7 +274,7 @@ const AppContent: React.FC<AppContentProps> = ({
           <Box
             onMouseDown={handleDividerMouseDown}
             sx={{
-              height: 4,
+              height: SIDEBAR_DIVIDER_HEIGHT_PX,
               cursor: 'row-resize',
               flexShrink: 0,
               bgcolor: 'divider',
@@ -281,7 +301,7 @@ const AppContent: React.FC<AppContentProps> = ({
               onClose={onFolderTreePanelClose}
               onHeaderClick={handleExplorerHeaderClick}
               collapsed={explorerCollapsed}
-              width={280}
+              width={SIDEBAR_WIDTH_PX}
               onRenameRequest={onRenameRequest}
             />
           </Box>
@@ -297,6 +317,14 @@ const AppContent: React.FC<AppContentProps> = ({
           onTabClose={onTabClose}
           onNewTab={onNewTab}
           onTabReorder={onTabReorder}
+          onTabRename={onTabRename}
+          onToggleTabPinned={onToggleTabPinned}
+          onCopyFilePath={onCopyFilePath}
+          onCopyFileName={onCopyFileName}
+          onCloseOtherTabs={onCloseOtherTabs}
+          onCloseTabsToRight={onCloseTabsToRight}
+          onCloseAllTabs={onCloseAllTabs}
+          closeButtonPosition={tabCloseButtonPosition}
           layout={tabLayout}
         />
       )}
@@ -327,6 +355,14 @@ const AppContent: React.FC<AppContentProps> = ({
             onTabClose={onTabClose}
             onNewTab={onNewTab}
             onTabReorder={onTabReorder}
+            onTabRename={onTabRename}
+            onToggleTabPinned={onToggleTabPinned}
+            onCopyFilePath={onCopyFilePath}
+            onCopyFileName={onCopyFileName}
+            onCloseOtherTabs={onCloseOtherTabs}
+            onCloseTabsToRight={onCloseTabsToRight}
+            onCloseAllTabs={onCloseAllTabs}
+            closeButtonPosition={tabCloseButtonPosition}
             layout={tabLayout}
           />
         )}
@@ -373,7 +409,8 @@ const AppContent: React.FC<AppContentProps> = ({
                       tableConversion={editorSettings?.tableConversion}
                       onSnackbar={onSnackbar}
                       onTableConversionSettingChange={onTableConversionSettingChange}
-                      onScrollChange={handleEditorScrollChange}
+                      onScrollChange={scrollSyncMode !== 'off' ? handleEditorScrollChange : undefined}
+                      scrollFraction={editorScrollFraction}
                       tabs={tabs}
                       activeTabId={activeTabId}
                       onTabSwitch={onTabChange}
@@ -395,9 +432,11 @@ const AppContent: React.FC<AppContentProps> = ({
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
                       onContentChange={onContentChange}
-                      scrollFraction={scrollFraction}
+                      scrollFraction={previewSplitScrollFraction}
+                      onScrollChange={scrollSyncMode === 'bidirectional' ? handlePreviewScrollChange : undefined}
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
+                      viewMode="split"
                     />
                   </Box>
                 </>
@@ -447,6 +486,9 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
+                    scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
+                    onScrollChange={handlePreviewScrollChange}
+                    viewMode="preview"
                   />
                 </Box>
               )}
@@ -466,13 +508,13 @@ const AppContent: React.FC<AppContentProps> = ({
                   variant="temporary"
                   open={outlinePanelOpen}
                   onClose={onOutlinePanelClose}
-                  PaperProps={{ sx: { width: 280 } }}
+                  PaperProps={{ sx: { width: DRAWER_WIDTH_PX } }}
                 >
                   <OutlinePanel
                     headings={headings}
                     onHeadingClick={handleHeadingClick}
                     onClose={onOutlinePanelClose}
-                    width={280}
+                    width={DRAWER_WIDTH_PX}
                   />
                 </Drawer>
               )}
@@ -488,7 +530,7 @@ const AppContent: React.FC<AppContentProps> = ({
           variant="temporary"
           open={folderTreePanelOpen}
           onClose={onFolderTreePanelClose}
-          PaperProps={{ sx: { width: 280 } }}
+          PaperProps={{ sx: { width: DRAWER_WIDTH_PX } }}
         >
           <FolderTreePanel
             rootFolderName={folderTreeRootFolderName}
@@ -504,7 +546,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onCloseFolder={onFolderTreeCloseFolder}
             onRefresh={onFolderTreeRefresh}
             onClose={onFolderTreePanelClose}
-            width={280}
+            width={DRAWER_WIDTH_PX}
             onRenameRequest={onRenameRequest}
           />
         </Drawer>

@@ -1,13 +1,21 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
+
+// Capture onScrollChange from Editor so tests can simulate scroll events
+let capturedOnScrollChange: ((fraction: number) => void) | undefined;
 
 // Mock heavy child components
 vi.mock('../Editor', () => ({
-  default: () => <div data-testid="editor">Editor</div>,
+  default: ({ onScrollChange }: { onScrollChange?: (fraction: number) => void }) => {
+    capturedOnScrollChange = onScrollChange;
+    return <div data-testid="editor">Editor</div>;
+  },
 }));
 
 vi.mock('../Preview', () => ({
-  default: () => <div data-testid="preview">Preview</div>,
+  default: ({ scrollFraction }: { scrollFraction?: number }) => (
+    <div data-testid="preview" data-scroll-fraction={scrollFraction ?? ''}>Preview</div>
+  ),
 }));
 
 vi.mock('../TabBar', () => ({
@@ -49,6 +57,7 @@ const createDefaultProps = () => ({
   currentZoom: 1.0,
   isInitialized: true,
   isSettingsLoaded: true,
+  scrollSyncMode: 'editor-to-preview' as const,
   outlineDisplayMode: 'persistent' as const,
   outlinePanelOpen: false,
   onOutlinePanelClose: vi.fn(),
@@ -144,5 +153,59 @@ describe('AppContent', () => {
   it('T-AC-10: shows loading when settings not loaded', () => {
     render(<AppContent {...createDefaultProps()} isSettingsLoaded={false} />);
     expect(screen.getByText('app.loading')).toBeInTheDocument();
+  });
+
+  // T-AC-11: new tab starts with scrollFraction 0
+  it('T-AC-11: new tab starts with scrollFraction 0', () => {
+    const tab = { id: 'new-tab', title: 'Untitled', content: '', isModified: false, isNew: true };
+    render(
+      <AppContent
+        {...createDefaultProps()}
+        tabs={[tab]}
+        activeTabId="new-tab"
+        activeTab={tab}
+      />,
+    );
+    const preview = screen.getByTestId('preview');
+    expect(preview.getAttribute('data-scroll-fraction')).toBe('0');
+  });
+
+  // T-AC-12: scroll position is preserved per tab when switching
+  it('T-AC-12: scroll position preserved per tab on switch', () => {
+    const tab1 = { id: 'tab1', title: 'a.md', content: '# A', isModified: false, isNew: false };
+    const tab2 = { id: 'tab2', title: 'b.md', content: '# B', isModified: false, isNew: false };
+    const allTabs = [tab1, tab2];
+
+    // Render with tab1 active
+    const { rerender } = render(
+      <AppContent {...createDefaultProps()} tabs={allTabs} activeTabId="tab1" activeTab={tab1} />,
+    );
+
+    // Simulate scrolling tab1 to 0.7
+    act(() => { capturedOnScrollChange?.(0.7); });
+
+    // Switch to tab2
+    rerender(
+      <AppContent {...createDefaultProps()} tabs={allTabs} activeTabId="tab2" activeTab={tab2} />,
+    );
+    // tab2 should have scrollFraction 0 (never scrolled)
+    expect(screen.getByTestId('preview').getAttribute('data-scroll-fraction')).toBe('0');
+
+    // Simulate scrolling tab2 to 0.3
+    act(() => { capturedOnScrollChange?.(0.3); });
+
+    // Switch back to tab1
+    rerender(
+      <AppContent {...createDefaultProps()} tabs={allTabs} activeTabId="tab1" activeTab={tab1} />,
+    );
+    // tab1 should restore to 0.7
+    expect(screen.getByTestId('preview').getAttribute('data-scroll-fraction')).toBe('0.7');
+
+    // Switch back to tab2
+    rerender(
+      <AppContent {...createDefaultProps()} tabs={allTabs} activeTabId="tab2" activeTab={tab2} />,
+    );
+    // tab2 should restore to 0.3
+    expect(screen.getByTestId('preview').getAttribute('data-scroll-fraction')).toBe('0.3');
   });
 });

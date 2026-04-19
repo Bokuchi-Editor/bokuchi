@@ -306,7 +306,13 @@
       "horizontal": "水平标签页",
       "vertical": "垂直标签页",
       "horizontalDescription": "标签页在编辑器上方水平显示。",
-      "verticalDescription": "标签页在编辑器左侧垂直显示。"
+      "verticalDescription": "标签页在编辑器左侧垂直显示。",
+      "closeButtonPosition": "关闭按钮位置",
+      "closeButtonPositionDescription": "选择标签页上关闭按钮和固定图标的显示位置。",
+      "closeButtonLeft": "左侧",
+      "closeButtonRight": "右侧",
+      "closeButtonLeftDescription": "在标签页左侧显示关闭按钮和固定图标。",
+      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。"
     },
     "viewMode": {
       "title": "视图模式",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "资源管理器文件过滤器",
       "folderTreeFileFilterDescription": "选择在资源管理器中显示哪些文件。",
       "folderTreeFileFilterMarkdown": "仅 Markdown 文件 (.md, .txt)",
-      "folderTreeFileFilterAll": "所有文件"
+      "folderTreeFileFilterAll": "所有文件",
+      "scrollSyncMode": "滚动同步（分屏视图）",
+      "scrollSyncModeDescription": "选择分屏视图中编辑器与预览面板的滚动同步方式。",
+      "scrollSyncModeEditorToPreview": "编辑器 → 预览",
+      "scrollSyncModeEditorToPreviewDescription": "滚动编辑器时预览也会滚动。滚动预览不会移动编辑器。",
+      "scrollSyncModeBidirectional": "双向",
+      "scrollSyncModeBidirectionalDescription": "滚动任一面板，另一面板都会同步滚动。",
+      "scrollSyncModeOff": "关闭",
+      "scrollSyncModeOffDescription": "两个面板各自独立滚动。"
     },
     "advanced": {
       "title": "高级",
@@ -381,7 +395,9 @@
       "importSuccess": "设置导入成功",
       "importError": "设置导入失败",
       "resetSuccess": "设置重置成功",
-      "resetError": "设置重置失败"
+      "resetError": "设置重置失败",
+      "enableMarp": "Marp（演示文稿）",
+      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。"
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "搜索所有标签页"
   },
+  "tabs": {
+    "copyFilePath": "复制文件路径",
+    "copyFileName": "复制文件名",
+    "pinTab": "固定标签页",
+    "unpinTab": "取消固定标签页",
+    "closeTab": "关闭标签页",
+    "closeOtherTabs": "关闭其他标签页",
+    "closeTabsToRight": "关闭右侧标签页",
+    "closeTabsBelow": "关闭下方标签页",
+    "closeAllTabs": "关闭所有标签页",
+    "pathCopied": "路径已复制到剪贴板",
+    "fileNameCopied": "文件名已复制到剪贴板",
+    "copyFailed": "复制到剪贴板失败"
+  },
   "whatsNew": {
     "title": "新功能",
     "gotIt": "知道了",
@@ -501,10 +531,44 @@
       "improvement": "改进"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Windows 文件变更检测修复",
-        "description": "修复了 Windows 环境下文件变更检测无法正常工作的问题。"
+      "marpPreview": {
+        "title": "Marp 演示文稿预览",
+        "description": "可以将带有 `marp: true` front-matter 的 Markdown 文件以幻灯片演示文稿的形式预览。"
+      },
+      "tabContextMenu": {
+        "title": "标签页上下文菜单",
+        "description": "右键单击标签页可进行固定、重命名、复制路径或文件名，以及关闭其他/右侧/所有标签页等操作。"
+      },
+      "tabPinning": {
+        "title": "标签页固定",
+        "description": "固定重要的标签页，使其不会被批量关闭操作影响。"
+      },
+      "tabRename": {
+        "title": "标签页重命名",
+        "description": "直接从标签页重命名磁盘上已保存的文件，或更改未保存标签页的标题。"
+      },
+      "tabUnsavedTitle": {
+        "title": "根据首行自动设置标题",
+        "description": "未保存的标签页现在会将内容的第一行显示为标签页标题。"
+      },
+      "tabCloseButtonPosition": {
+        "title": "关闭按钮位置",
+        "description": "可选择关闭/固定图标显示在每个标签页的左侧或右侧。"
+      },
+      "scrollSyncMode": {
+        "title": "滚动同步选项",
+        "description": "可选择编辑器和预览之间滚动位置的同步方式：单向（默认）、双向或关闭。"
+      },
+      "previewExternalChange": {
+        "title": "预览模式下的外部文件变更",
+        "description": "修复了在预览模式下外部文件变更无法正确加载的问题。"
       }
     }
+  },
+  "preview": {
+    "presentation": "演示文稿",
+    "previousSlide": "上一张幻灯片",
+    "nextSlide": "下一张幻灯片",
+    "slideCounter": "幻灯片 {{current}} / {{total}}"
   }
 }

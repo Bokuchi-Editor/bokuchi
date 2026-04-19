@@ -306,7 +306,13 @@
       "horizontal": "Pestañas horizontales",
       "vertical": "Pestañas verticales",
       "horizontalDescription": "Las pestañas se muestran horizontalmente encima del editor.",
-      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor."
+      "verticalDescription": "Las pestañas se muestran verticalmente en el lado izquierdo del editor.",
+      "closeButtonPosition": "Posición del botón de cerrar",
+      "closeButtonPositionDescription": "Elige dónde mostrar el botón de cerrar y el icono de fijar en las pestañas.",
+      "closeButtonLeft": "Izquierda",
+      "closeButtonRight": "Derecha",
+      "closeButtonLeftDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado izquierdo de la pestaña.",
+      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña."
     },
     "viewMode": {
       "title": "Modo de vista",
@@ -352,7 +358,15 @@
       "folderTreeFileFilter": "Filtro de archivos del explorador",
       "folderTreeFileFilterDescription": "Elija qué archivos mostrar en el explorador.",
       "folderTreeFileFilterMarkdown": "Solo archivos Markdown (.md, .txt)",
-      "folderTreeFileFilterAll": "Todos los archivos"
+      "folderTreeFileFilterAll": "Todos los archivos",
+      "scrollSyncMode": "Sincronización de desplazamiento (Vista dividida)",
+      "scrollSyncModeDescription": "Elija cómo se desplazan juntos los paneles del editor y la vista previa en la vista dividida.",
+      "scrollSyncModeEditorToPreview": "Editor → Vista previa",
+      "scrollSyncModeEditorToPreviewDescription": "Al desplazarse en el editor, también se desplaza la vista previa. Desplazar la vista previa no mueve el editor.",
+      "scrollSyncModeBidirectional": "Bidireccional",
+      "scrollSyncModeBidirectionalDescription": "Al desplazarse en cualquiera de los paneles, el otro se desplaza en sincronía.",
+      "scrollSyncModeOff": "Desactivado",
+      "scrollSyncModeOffDescription": "Cada panel se desplaza de forma independiente."
     },
     "advanced": {
       "title": "Avanzado",
@@ -381,7 +395,9 @@
       "importSuccess": "Configuración importada exitosamente",
       "importError": "Error al importar configuración",
       "resetSuccess": "Configuración restablecida exitosamente",
-      "resetError": "Error al restablecer configuración"
+      "resetError": "Error al restablecer configuración",
+      "enableMarp": "Marp (Presentaciones)",
+      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación."
     }
   },
   "fileOperations": {
@@ -492,6 +508,20 @@
   "search": {
     "searchAllTabs": "Buscar en todas las pestañas"
   },
+  "tabs": {
+    "copyFilePath": "Copiar ruta del archivo",
+    "copyFileName": "Copiar nombre del archivo",
+    "pinTab": "Fijar pestaña",
+    "unpinTab": "Desfijar pestaña",
+    "closeTab": "Cerrar pestaña",
+    "closeOtherTabs": "Cerrar otras pestañas",
+    "closeTabsToRight": "Cerrar pestañas a la derecha",
+    "closeTabsBelow": "Cerrar pestañas de abajo",
+    "closeAllTabs": "Cerrar todas las pestañas",
+    "pathCopied": "Ruta copiada al portapapeles",
+    "fileNameCopied": "Nombre de archivo copiado al portapapeles",
+    "copyFailed": "Error al copiar al portapapeles"
+  },
   "whatsNew": {
     "title": "Novedades",
     "gotIt": "Entendido",
@@ -501,10 +531,44 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "fileChangeDetectionWindows": {
-        "title": "Detección de cambios de archivos en Windows",
-        "description": "Se corrigió un problema en el que la detección de cambios de archivos no funcionaba correctamente en Windows."
+      "marpPreview": {
+        "title": "Vista previa de presentaciones Marp",
+        "description": "Los archivos Markdown con `marp: true` en el front-matter ahora se pueden previsualizar como diapositivas."
+      },
+      "tabContextMenu": {
+        "title": "Menú contextual de pestañas",
+        "description": "Haga clic derecho en una pestaña para fijarla, renombrarla, copiar su ruta o nombre de archivo, o cerrar otras/a la derecha/todas las pestañas."
+      },
+      "tabPinning": {
+        "title": "Fijar pestañas",
+        "description": "Fije las pestañas importantes para excluirlas de las acciones de cierre masivo."
+      },
+      "tabRename": {
+        "title": "Renombrar pestaña",
+        "description": "Renombre archivos guardados en el disco o cambie el título de pestañas sin guardar directamente desde la pestaña."
+      },
+      "tabUnsavedTitle": {
+        "title": "Título automático desde la primera línea",
+        "description": "Las pestañas sin guardar ahora muestran la primera línea de su contenido como título."
+      },
+      "tabCloseButtonPosition": {
+        "title": "Posición del botón de cierre",
+        "description": "Elija si el icono de cierre/fijar aparece a la izquierda o a la derecha de cada pestaña."
+      },
+      "scrollSyncMode": {
+        "title": "Opciones de sincronización de desplazamiento",
+        "description": "Elija cómo se sincroniza el desplazamiento entre editor y vista previa: unidireccional (predeterminado), bidireccional o desactivado."
+      },
+      "previewExternalChange": {
+        "title": "Cambio externo de archivo en modo vista previa",
+        "description": "Se corrigió un problema por el que los cambios externos de archivos no se cargaban correctamente en modo vista previa."
       }
     }
+  },
+  "preview": {
+    "presentation": "Presentación",
+    "previousSlide": "Diapositiva anterior",
+    "nextSlide": "Diapositiva siguiente",
+    "slideCounter": "Diapositiva {{current}} de {{total}}"
   }
 }

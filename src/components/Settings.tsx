@@ -48,6 +48,7 @@ import { AppSettings } from '../types/settings';
 import { storeApi } from '../api/storeApi';
 import { desktopApi } from '../api/desktopApi';
 import { variableApi } from '../api/variableApi';
+import { LANGUAGE_OPTIONS } from '../constants/languages';
 
 interface SettingsProps {
   open: boolean;
@@ -549,20 +550,11 @@ const Settings: React.FC<SettingsProps> = ({
                         onChange={(e) => handleSettingChange('interface', 'language', e.target.value)}
                         label={t('settings.language.selectLanguage')}
                       >
-                        <MenuItem value="en">{t('settings.language.english')}</MenuItem>
-                        <MenuItem value="ja">{t('settings.language.japanese')}</MenuItem>
-                        <MenuItem value="zh-CN">{t('settings.language.chinese')}</MenuItem>
-                        <MenuItem value="zh-Hant">{t('settings.language.chineseTraditional')}</MenuItem>
-                        <MenuItem value="es">{t('settings.language.spanish')}</MenuItem>
-                        <MenuItem value="hi">{t('settings.language.hindi')}</MenuItem>
-                        <MenuItem value="ru">{t('settings.language.russian')}</MenuItem>
-                        <MenuItem value="ko">{t('settings.language.korean')}</MenuItem>
-                        <MenuItem value="pt-BR">{t('settings.language.portuguese')}</MenuItem>
-                        <MenuItem value="ar">{t('settings.language.arabic')}</MenuItem>
-                        <MenuItem value="fr">{t('settings.language.french')}</MenuItem>
-                        <MenuItem value="de">{t('settings.language.german')}</MenuItem>
-                        <MenuItem value="id">{t('settings.language.indonesian')}</MenuItem>
-                        <MenuItem value="vi">{t('settings.language.vietnamese')}</MenuItem>
+                        {LANGUAGE_OPTIONS.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {t(option.translationKey)}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </CardContent>
@@ -602,6 +594,52 @@ const Settings: React.FC<SettingsProps> = ({
                               </Typography>
                               <Typography variant="body2" color="text.secondary">
                                 {t('settings.tabLayout.verticalDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                      {t('settings.tabLayout.closeButtonPosition')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.tabLayout.closeButtonPositionDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.tabCloseButtonPosition}
+                        onChange={(e) => handleSettingChange('interface', 'tabCloseButtonPosition', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="left"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.tabLayout.closeButtonLeft')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.tabLayout.closeButtonLeftDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="right"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.tabLayout.closeButtonRight')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.tabLayout.closeButtonRightDescription')}
                               </Typography>
                             </Box>
                           }
@@ -764,6 +802,67 @@ const Settings: React.FC<SettingsProps> = ({
                           value="all"
                           control={<Radio />}
                           label={t('settings.interface.folderTreeFileFilterAll')}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+
+                {/* Scroll Sync Mode */}
+                <Card sx={{ mt: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {t('settings.interface.scrollSyncMode')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.interface.scrollSyncModeDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.interface.scrollSyncMode}
+                        onChange={(e) => handleSettingChange('interface', 'scrollSyncMode', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="editor-to-preview"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeEditorToPreview')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeEditorToPreviewDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="bidirectional"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeBidirectional')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeBidirectionalDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="off"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.interface.scrollSyncModeOff')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.interface.scrollSyncModeOffDescription')}
+                              </Typography>
+                            </Box>
+                          }
                         />
                       </RadioGroup>
                     </FormControl>
@@ -987,8 +1086,20 @@ const Settings: React.FC<SettingsProps> = ({
                       }
                       label={t('settings.advanced.enableMermaid')}
                     />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.advanced.enableMermaidDescription')}
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.rendering?.enableMarp ?? false}
+                          onChange={(e) => handleSettingChange('rendering', 'enableMarp', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.advanced.enableMarp')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.advanced.enableMarpDescription')}
                     </Typography>
                   </CardContent>
                 </Card>

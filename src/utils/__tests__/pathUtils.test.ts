@@ -5,6 +5,7 @@ import {
   extractFolderNameFromPath,
   checkDuplicateFileInTabs,
   isMarkdownFile,
+  getTabDisplayTitle,
 } from '../pathUtils';
 import type { Tab } from '../../types/tab';
 
@@ -90,6 +91,27 @@ describe('checkDuplicateFileInTabs', () => {
   });
 });
 
+describe('normalizeFilePath - edge cases', () => {
+  // T-PU-18: UNC paths
+  it('T-PU-18: normalizes UNC paths', () => {
+    expect(normalizeFilePath('\\\\server\\share\\file.md')).toBe('//server/share/file.md');
+  });
+
+  // T-PU-19: relative paths pass through with normalization
+  it('T-PU-19: normalizes relative paths with backslashes', () => {
+    expect(normalizeFilePath('.\\docs\\file.md')).toBe('./docs/file.md');
+    expect(normalizeFilePath('..\\file.md')).toBe('../file.md');
+  });
+});
+
+describe('extractFolderNameFromPath - edge cases', () => {
+  // T-PU-20: trailing slash falls back to full path (pop() returns '' which is falsy)
+  it('T-PU-20: returns full path for path with trailing slash', () => {
+    const result = extractFolderNameFromPath('/home/user/');
+    expect(result).toBe('/home/user/');
+  });
+});
+
 describe('isMarkdownFile', () => {
   // T-PU-14
   it('T-PU-14: returns true for .md files', () => {
@@ -110,5 +132,66 @@ describe('isMarkdownFile', () => {
   it('T-PU-17: returns false for non-markdown files', () => {
     expect(isMarkdownFile('script.js')).toBe(false);
     expect(isMarkdownFile('style.css')).toBe(false);
+  });
+
+  // T-PU-21: multiple extensions ending in .md
+  it('T-PU-21: returns true for files with multiple extensions ending in .md', () => {
+    expect(isMarkdownFile('file.test.md')).toBe(true);
+    expect(isMarkdownFile('docs.backup.markdown')).toBe(true);
+  });
+
+  // T-PU-22: .md-like but not .md
+  it('T-PU-22: returns false for similar but non-markdown extensions', () => {
+    expect(isMarkdownFile('file.mdx')).toBe(false);
+    expect(isMarkdownFile('file.mdown')).toBe(false);
+  });
+});
+
+describe('getTabDisplayTitle', () => {
+  const makeTab = (overrides: Partial<Tab>): Tab => ({
+    id: 'test',
+    title: 'Untitled',
+    content: '',
+    isModified: false,
+    isNew: true,
+    ...overrides,
+  });
+
+  // T-PU-23
+  it('T-PU-23: returns file title for saved tabs', () => {
+    const tab = makeTab({ isNew: false, title: 'readme.md', content: '# Hello' });
+    expect(getTabDisplayTitle(tab)).toBe('readme.md');
+  });
+
+  // T-PU-24
+  it('T-PU-24: returns first line of content for new tabs', () => {
+    const tab = makeTab({ content: '# What\'s New\n\n- item1' });
+    expect(getTabDisplayTitle(tab)).toBe('# What\'s New');
+  });
+
+  // T-PU-25
+  it('T-PU-25: returns Untitled for new tabs with empty content', () => {
+    const tab = makeTab({ content: '' });
+    expect(getTabDisplayTitle(tab)).toBe('Untitled');
+  });
+
+  // T-PU-26
+  it('T-PU-26: truncates long first lines to 20 characters', () => {
+    const tab = makeTab({ content: 'This is a very long first line that should be truncated' });
+    const result = getTabDisplayTitle(tab);
+    expect(result).toBe('This is a very long …');
+    expect(result.length).toBe(21); // 20 chars + ellipsis
+  });
+
+  // T-PU-27
+  it('T-PU-27: returns Untitled when first line is whitespace only', () => {
+    const tab = makeTab({ content: '   \n\nsome content' });
+    expect(getTabDisplayTitle(tab)).toBe('Untitled');
+  });
+
+  // T-PU-28
+  it('T-PU-28: does not truncate exactly 20 character lines', () => {
+    const tab = makeTab({ content: '12345678901234567890' }); // exactly 20 chars
+    expect(getTabDisplayTitle(tab)).toBe('12345678901234567890');
   });
 });
