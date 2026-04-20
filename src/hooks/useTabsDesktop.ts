@@ -390,22 +390,26 @@ export const useTabsDesktop = () => {
         const restoredTabs = await Promise.all(
           savedState.tabs.map(async (tab) => {
             if (!tab.isNew && tab.filePath) {
-              try {
-                const content = await desktopApi.readFileFromPath(tab.filePath);
-
-                // Also get file hash info
-                let fileHashInfo = undefined;
-                try {
-                  fileHashInfo = await desktopApi.getFileHash(tab.filePath);
-                } catch (error) {
-                  console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
-                }
-
-                return { ...tab, content, fileHashInfo };
-              } catch (error) {
-                console.error(`Failed to load file: ${tab.filePath}`, error);
+              // Use readFileByPath (custom Tauri command) instead of readFileFromPath
+              // (FS plugin) to avoid scope/path issues on Windows — the FS plugin
+              // rejects paths outside the capabilities scope ($HOME/$DESKTOP/
+              // $DOCUMENT/$DOWNLOAD), which caused restored tabs for files
+              // opened via OS file association from other locations to be
+              // downgraded to new/unsaved tabs.
+              const fileResult = await desktopApi.readFileByPath(tab.filePath);
+              if (fileResult.error) {
+                console.error(`Failed to load file: ${tab.filePath}`, fileResult.error);
                 return { ...tab, isNew: true, filePath: undefined };
               }
+
+              let fileHashInfo = undefined;
+              try {
+                fileHashInfo = await desktopApi.getFileHash(tab.filePath);
+              } catch (error) {
+                console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
+              }
+
+              return { ...tab, content: fileResult.content, fileHashInfo };
             }
             return tab;
           })
