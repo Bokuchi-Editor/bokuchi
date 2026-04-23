@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Tab } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
+import { debugLog, summarize, shortStack } from '../utils/debugLog';
 
 interface UseFileChangeDetectionParams {
   tabs: Tab[];
@@ -48,13 +49,19 @@ export const useFileChangeDetection = ({
             const tab = currentTabs.find(t => t.id === tabId);
 
             if (tab && tab.filePath && !tab.isNew) {
+              debugLog('[FC] dialog-reload readFileByPath', { tabId, filePath: tab.filePath });
               // Use readFileByPath (custom Tauri command) instead of readFileFromPath
               // (FS plugin) to avoid scope/path issues on Windows
               const fileResult = await desktopApi.readFileByPath(tab.filePath);
               if (fileResult.error) {
                 console.error('Failed to read file for reload:', fileResult.error);
+                debugLog('[FC] dialog-reload read-failed', { tabId, error: fileResult.error });
               } else {
                 reloadTabContent(tabId, fileResult.content);
+                debugLog('[FC] dialog-reload reloadTabContent', {
+                  tabId,
+                  contentSummary: summarize(fileResult.content),
+                });
 
                 // Sync Monaco model directly (it may be out of sync if Editor is
                 // unmounted, e.g. in preview mode with keepCurrentModel)
@@ -64,6 +71,11 @@ export const useFileChangeDetection = ({
                     const uriStr = model.uri.toString();
                     if (uriStr === tabId || uriStr.endsWith('/' + tabId)) {
                       if (model.getValue() !== fileResult.content) {
+                        debugLog('[FC] dialog-reload model.setValue', {
+                          tabId,
+                          modelUri: uriStr,
+                          stack: shortStack(),
+                        });
                         model.setValue(fileResult.content);
                       }
                       break;
@@ -104,10 +116,25 @@ export const useFileChangeDetection = ({
 
   // Common file change detection handler
   const checkFileChange = useCallback(async (tab: Tab, source: string) => {
-    if (!tab || tab.isNew || !tab.filePath) return;
+    if (!tab || tab.isNew || !tab.filePath) {
+      debugLog('[FC] checkFileChange skipped', {
+        source,
+        reason: !tab ? 'no-tab' : tab.isNew ? 'isNew' : 'no-filePath',
+        tabId: tab?.id ?? null,
+      });
+      return;
+    }
 
     try {
       const hasChanged = await detectFileChange(tab);
+      debugLog('[FC] checkFileChange detect', {
+        source,
+        tabId: tab.id,
+        filePath: tab.filePath,
+        hasChanged,
+        storedHash: tab.fileHashInfo?.hash ?? null,
+        storedSize: tab.fileHashInfo?.file_size ?? null,
+      });
       if (hasChanged) {
         const event = new CustomEvent('fileChangeDetected', {
           detail: {
@@ -148,11 +175,28 @@ export const useFileChangeDetection = ({
   // Periodic file change check (every 5 seconds)
   // Stop polling while the file change dialog is open to prevent re-triggering
   useEffect(() => {
-    if (!isInitialized || fileChangeDialog.open) return;
+    if (!isInitialized || fileChangeDialog.open) {
+      debugLog('[FC] periodic-check setup skipped', {
+        isInitialized,
+        dialogOpen: fileChangeDialog.open,
+      });
+      return;
+    }
+    debugLog('[FC] periodic-check setup', {
+      activeTabId: activeTab?.id ?? null,
+      activeTabIsNew: activeTab?.isNew ?? null,
+      activeTabFilePath: activeTab?.filePath ?? null,
+    });
 
     const interval = setInterval(async () => {
       if (activeTab && !activeTab.isNew && activeTab.filePath) {
         await checkFileChange(activeTab, 'periodic check');
+      } else {
+        debugLog('[FC] periodic-check tick skipped', {
+          hasActiveTab: !!activeTab,
+          isNew: activeTab?.isNew ?? null,
+          filePath: activeTab?.filePath ?? null,
+        });
       }
     }, 5000);
 

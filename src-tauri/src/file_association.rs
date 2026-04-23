@@ -25,6 +25,7 @@ use std::path::Path;
 use std::sync::Mutex;
 use tauri::Emitter;
 
+use crate::debug_log;
 use crate::types::{OpenFileEvent, PENDING_FILE_PATHS, FRONTEND_READY};
 
 // Check if frontend is ready
@@ -63,6 +64,11 @@ pub fn set_frontend_ready() {
 // Handle file open events (cross-platform)
 pub fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) {
     println!("Handling open file event for: {}", file_path);
+    debug_log::append(&format!(
+        "[RUST][handle_open_file_event] path={:?} frontend_ready={}",
+        file_path,
+        is_frontend_ready()
+    ));
 
     // If file exists and has md or txt extension
     if Path::new(&file_path).exists() {
@@ -82,10 +88,18 @@ pub fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) 
                     ) {
                         Ok(_) => {
                             println!("Successfully emitted open-file event (frontend ready)");
+                            debug_log::append(&format!(
+                                "[RUST][handle_open_file_event] emitted open-file path={:?}",
+                                file_path
+                            ));
                             return;
                         }
                         Err(e) => {
                             println!("Failed to emit open-file event: {}", e);
+                            debug_log::append(&format!(
+                                "[RUST][handle_open_file_event] emit_failed err={:?}",
+                                e.to_string()
+                            ));
                         }
                     }
                 } else {
@@ -96,17 +110,32 @@ pub fn handle_open_file_event(app_handle: &tauri::AppHandle, file_path: String) 
                 println!("Buffering file path for later retrieval: {}", file_path);
                 let pending_paths = PENDING_FILE_PATHS.get_or_init(|| Mutex::new(Vec::new()));
                 if let Ok(mut paths) = pending_paths.lock() {
-                    paths.push(file_path);
-                    println!("File path added to buffer. Total buffered: {}", paths.len());
+                    paths.push(file_path.clone());
+                    let total = paths.len();
+                    println!("File path added to buffer. Total buffered: {}", total);
+                    debug_log::append(&format!(
+                        "[RUST][handle_open_file_event] buffered path={:?} total_pending={}",
+                        file_path,
+                        total
+                    ));
                 }
             } else {
                 println!("Invalid file extension: {}", ext_str);
+                debug_log::append(&format!(
+                    "[RUST][handle_open_file_event] rejected ext={:?}",
+                    ext_str
+                ));
             }
         } else {
             println!("No file extension found");
+            debug_log::append("[RUST][handle_open_file_event] rejected: no extension");
         }
     } else {
         println!("File does not exist: {}", file_path);
+        debug_log::append(&format!(
+            "[RUST][handle_open_file_event] rejected: not_exist path={:?}",
+            file_path
+        ));
     }
 }
 

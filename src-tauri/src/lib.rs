@@ -33,6 +33,7 @@ mod variable_processor;
 mod file_operations;
 mod file_association;
 mod commands;
+pub mod debug_log;
 
 // Re-export types
 pub use types::*;
@@ -52,6 +53,10 @@ pub fn run() {
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             // Focus existing window when new instance is launched
             println!("Single instance: new instance detected with args: {:?}", args);
+            debug_log::append(&format!(
+                "[RUST][single_instance] args={:?}",
+                args
+            ));
             if let Some(main_window) = app.get_webview_window("main") {
                 let _ = main_window.unminimize();
                 let _ = main_window.set_focus();
@@ -64,6 +69,10 @@ pub fn run() {
                     continue;
                 }
                 println!("Single instance: processing file arg: {}", arg);
+                debug_log::append(&format!(
+                    "[RUST][single_instance] processing arg={:?}",
+                    arg
+                ));
                 handle_open_file_event(app, arg.to_string());
             }
         }))
@@ -89,9 +98,20 @@ pub fn run() {
             log_from_frontend,
             set_frontend_ready_command,
             read_directory,
-            rename_file
+            rename_file,
+            append_debug_log
         ])
         .setup(|app| {
+            // Initialize debug log (rotates previous log and creates new one).
+            // This must run before any handle_open_file_event calls so Rust-side
+            // diagnostics from file association also end up in the file.
+            debug_log::init_log(app.handle());
+            debug_log::append(&format!(
+                "[RUST][setup] pid={} args={:?}",
+                std::process::id(),
+                std::env::args().collect::<Vec<_>>()
+            ));
+
             // Get command line arguments
             let args: Vec<String> = std::env::args().collect();
             println!("Command line args: {:?}", args);

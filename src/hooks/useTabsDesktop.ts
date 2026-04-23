@@ -5,6 +5,7 @@ import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 import { normalizeFilePath, extractFileNameFromPath, checkDuplicateFileInTabs } from '../utils/pathUtils';
+import { debugLog, summarize } from '../utils/debugLog';
 
 // Global tab state management (for duplicate checking)
 let globalTabsState: Tab[] = [];
@@ -85,12 +86,17 @@ export const useTabsDesktop = () => {
   }, []);
 
   const openFile = useCallback(async (filePath?: string) => {
+    debugLog('[TABS] openFile called', {
+      inputFilePath: filePath ?? null,
+      existingTabCount: globalTabsState.length,
+    });
     try {
       let result;
       if (filePath) {
         // If file path is provided, read the file directly
         const fileResult = await desktopApi.readFileByPath(filePath);
         if (fileResult.error) {
+          debugLog('[TABS] openFile readFileByPath error', { error: fileResult.error, filePath });
           throw new Error(fileResult.error);
         }
         result = {
@@ -102,6 +108,7 @@ export const useTabsDesktop = () => {
         // If no file path is provided, open the file selection dialog
         result = await desktopApi.openFile();
         if (result.error) {
+          debugLog('[TABS] openFile dialog error', { error: result.error });
           throw new Error(result.error);
         }
       }
@@ -110,6 +117,10 @@ export const useTabsDesktop = () => {
       if (result.filePath) {
         // Check for duplicates from global state
         const existingTab = checkDuplicateFile(result.filePath);
+        debugLog('[TABS] openFile duplicate check', {
+          filePath: result.filePath,
+          matchedExisting: existingTab?.id ?? null,
+        });
 
         if (existingTab) {
           setActiveTab(existingTab.id);
@@ -127,6 +138,7 @@ export const useTabsDesktop = () => {
           fileHashInfo = await desktopApi.getFileHash(result.filePath);
         } catch (error) {
           console.warn('Failed to get file hash, continuing without hash info:', error);
+          debugLog('[TABS] openFile getFileHash failed', { filePath: result.filePath, error: String(error) });
         }
       }
 
@@ -139,6 +151,13 @@ export const useTabsDesktop = () => {
         filePath: normalizedFilePath,
         isModified: false,
         isNew: false,
+        fileHashInfo,
+      });
+
+      debugLog('[TABS] openFile addTab', {
+        tabId,
+        normalizedFilePath,
+        contentSummary: summarize(result.content),
         fileHashInfo,
       });
 
@@ -383,8 +402,14 @@ export const useTabsDesktop = () => {
 
   // Restore state
   const restoreState = useCallback(async () => {
+    debugLog('[TABS] restoreState start');
     try {
       const savedState = await storeApi.loadState();
+      debugLog('[TABS] restoreState loadState', {
+        hasSavedState: !!savedState,
+        tabCount: savedState?.tabs.length ?? 0,
+        activeTabId: savedState?.activeTabId ?? null,
+      });
       if (savedState) {
         // Reload content of saved files
         const restoredTabs = await Promise.all(
@@ -399,6 +424,12 @@ export const useTabsDesktop = () => {
               const fileResult = await desktopApi.readFileByPath(tab.filePath);
               if (fileResult.error) {
                 console.error(`Failed to load file: ${tab.filePath}`, fileResult.error);
+                debugLog('[TABS] restoreState read-failed', {
+                  tabId: tab.id,
+                  filePath: tab.filePath,
+                  error: fileResult.error,
+                  fallbackToNew: true,
+                });
                 return { ...tab, isNew: true, filePath: undefined };
               }
 
@@ -407,8 +438,19 @@ export const useTabsDesktop = () => {
                 fileHashInfo = await desktopApi.getFileHash(tab.filePath);
               } catch (error) {
                 console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
+                debugLog('[TABS] restoreState hash-failed', {
+                  tabId: tab.id,
+                  filePath: tab.filePath,
+                  error: String(error),
+                });
               }
 
+              debugLog('[TABS] restoreState tab-restored', {
+                tabId: tab.id,
+                filePath: tab.filePath,
+                contentSummary: summarize(fileResult.content),
+                hashInfo: fileHashInfo,
+              });
               return { ...tab, content: fileResult.content, fileHashInfo };
             }
             return tab;
@@ -421,18 +463,25 @@ export const useTabsDesktop = () => {
         };
 
         dispatch({ type: 'LOAD_STATE', payload: restoredState });
+        debugLog('[TABS] restoreState LOAD_STATE dispatched', {
+          finalTabCount: restoredTabs.length,
+          finalActiveTabId: restoredState.activeTabId,
+        });
       } else {
         // Create initial state on first launch
         const initialState = storeApi.createInitialState();
         dispatch({ type: 'LOAD_STATE', payload: initialState });
+        debugLog('[TABS] restoreState initial (no saved state)');
       }
     } catch (error) {
       console.error('Failed to restore state:', error);
+      debugLog('[TABS] restoreState error', { error: String(error) });
       // Create initial state on error
       const initialState = storeApi.createInitialState();
       dispatch({ type: 'LOAD_STATE', payload: initialState });
     }
     setIsInitialized(true);
+    debugLog('[TABS] restoreState done');
   }, []);
 
   // Initialization
