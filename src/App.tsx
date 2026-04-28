@@ -9,7 +9,6 @@ import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
 import RenameDialog from './components/RenameDialog';
 import { useAppState } from './hooks/useAppState';
-import { debugLog } from './utils/debugLog';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -244,22 +243,13 @@ function AppDesktop() {
         const currentFilePath = event.payload.file_path;
         const isSameFile = currentFilePath === fileOpenDebounce.lastFilePath;
 
-        debugLog('[APP] open-file event', {
-          payload: currentFilePath,
-          timeDiff,
-          isSameFile,
-          willDebounce: isSameFile && timeDiff < FILE_OPEN_DEBOUNCE_MS,
-        });
-
         // Debounce: same file within time limit
         if (isSameFile && timeDiff < FILE_OPEN_DEBOUNCE_MS) {
           return;
         }
         fileOpenDebounce.lastFileOpenTime = now;
         fileOpenDebounce.lastFilePath = currentFilePath;
-        debugLog('[APP] open-file -> calling openFile', { currentFilePath });
         await handlersRef.current.openFile(currentFilePath);
-        debugLog('[APP] open-file -> requestEditorFocus');
         handlersRef.current.requestEditorFocus();
       });
 
@@ -338,10 +328,8 @@ function AppDesktop() {
     const notifyAndOpenPending = async () => {
       try {
         const { desktopApi } = await import('./api/desktopApi');
-        debugLog('[APP] calling setFrontendReady');
         // setFrontendReady also emits any buffered pending file paths as open-file events
         await desktopApi.setFrontendReady();
-        debugLog('[APP] setFrontendReady resolved');
       } catch (error) {
         console.error('❌ Failed to notify Rust that frontend is ready:', error);
       }

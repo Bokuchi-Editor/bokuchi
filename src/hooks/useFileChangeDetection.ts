@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { Tab } from '../types/tab';
 import { desktopApi } from '../api/desktopApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
-import { debugLog, summarize, shortStack } from '../utils/debugLog';
 
 interface UseFileChangeDetectionParams {
   tabs: Tab[];
@@ -49,39 +48,14 @@ export const useFileChangeDetection = ({
             const tab = currentTabs.find(t => t.id === tabId);
 
             if (tab && tab.filePath && !tab.isNew) {
-              debugLog('[FC] dialog-reload readFileByPath', { tabId, filePath: tab.filePath });
               // Use readFileByPath (custom Tauri command) instead of readFileFromPath
-              // (FS plugin) to avoid scope/path issues on Windows
+              // (FS plugin) to avoid scope/path issues on Windows.
+              // reloadTabContent also silently syncs the Monaco model.
               const fileResult = await desktopApi.readFileByPath(tab.filePath);
               if (fileResult.error) {
                 console.error('Failed to read file for reload:', fileResult.error);
-                debugLog('[FC] dialog-reload read-failed', { tabId, error: fileResult.error });
               } else {
                 reloadTabContent(tabId, fileResult.content);
-                debugLog('[FC] dialog-reload reloadTabContent', {
-                  tabId,
-                  contentSummary: summarize(fileResult.content),
-                });
-
-                // Sync Monaco model directly (it may be out of sync if Editor is
-                // unmounted, e.g. in preview mode with keepCurrentModel)
-                const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-                if (monaco?.editor?.getModels) {
-                  for (const model of monaco.editor.getModels()) {
-                    const uriStr = model.uri.toString();
-                    if (uriStr === tabId || uriStr.endsWith('/' + tabId)) {
-                      if (model.getValue() !== fileResult.content) {
-                        debugLog('[FC] dialog-reload model.setValue', {
-                          tabId,
-                          modelUri: uriStr,
-                          stack: shortStack(),
-                        });
-                        model.setValue(fileResult.content);
-                      }
-                      break;
-                    }
-                  }
-                }
 
                 try {
                   const newHashInfo = await desktopApi.getFileHash(tab.filePath);
@@ -115,26 +89,11 @@ export const useFileChangeDetection = ({
   }, [tabs, reloadTabContent, updateTabFileHash, setActiveTab, isInitialized]);
 
   // Common file change detection handler
-  const checkFileChange = useCallback(async (tab: Tab, source: string) => {
-    if (!tab || tab.isNew || !tab.filePath) {
-      debugLog('[FC] checkFileChange skipped', {
-        source,
-        reason: !tab ? 'no-tab' : tab.isNew ? 'isNew' : 'no-filePath',
-        tabId: tab?.id ?? null,
-      });
-      return;
-    }
+  const checkFileChange = useCallback(async (tab: Tab) => {
+    if (!tab || tab.isNew || !tab.filePath) return;
 
     try {
       const hasChanged = await detectFileChange(tab);
-      debugLog('[FC] checkFileChange detect', {
-        source,
-        tabId: tab.id,
-        filePath: tab.filePath,
-        hasChanged,
-        storedHash: tab.fileHashInfo?.hash ?? null,
-        storedSize: tab.fileHashInfo?.file_size ?? null,
-      });
       if (hasChanged) {
         const event = new CustomEvent('fileChangeDetected', {
           detail: {
@@ -168,35 +127,18 @@ export const useFileChangeDetection = ({
         window.dispatchEvent(event);
       }
     } catch (error) {
-      console.warn(`Failed to check file change during ${source}:`, error);
+      console.warn('Failed to check file change:', error);
     }
   }, [reloadTabContent, updateTabFileHash, setTabModified, setActiveTab]);
 
-  // Periodic file change check (every 5 seconds)
-  // Stop polling while the file change dialog is open to prevent re-triggering
+  // Periodic file change check (every 5 seconds).
+  // Stop polling while the file change dialog is open to prevent re-triggering.
   useEffect(() => {
-    if (!isInitialized || fileChangeDialog.open) {
-      debugLog('[FC] periodic-check setup skipped', {
-        isInitialized,
-        dialogOpen: fileChangeDialog.open,
-      });
-      return;
-    }
-    debugLog('[FC] periodic-check setup', {
-      activeTabId: activeTab?.id ?? null,
-      activeTabIsNew: activeTab?.isNew ?? null,
-      activeTabFilePath: activeTab?.filePath ?? null,
-    });
+    if (!isInitialized || fileChangeDialog.open) return;
 
-    const interval = setInterval(async () => {
+    const interval = setInterval(() => {
       if (activeTab && !activeTab.isNew && activeTab.filePath) {
-        await checkFileChange(activeTab, 'periodic check');
-      } else {
-        debugLog('[FC] periodic-check tick skipped', {
-          hasActiveTab: !!activeTab,
-          isNew: activeTab?.isNew ?? null,
-          filePath: activeTab?.filePath ?? null,
-        });
+        checkFileChange(activeTab);
       }
     }, 5000);
 

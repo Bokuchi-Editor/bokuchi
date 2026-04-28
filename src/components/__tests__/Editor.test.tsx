@@ -90,6 +90,7 @@ vi.mock('@monaco-editor/react', () => ({
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
     onChange?: (value: string | undefined) => void;
     value?: string;
+    defaultValue?: string;
     path?: string;
     options?: Record<string, unknown>;
     theme?: string;
@@ -99,11 +100,12 @@ vi.mock('@monaco-editor/react', () => ({
     capturedOnMount = props.onMount ?? null;
     capturedPath = props.path;
     capturedKeepCurrentModel = props.keepCurrentModel;
+    // The real component uses defaultValue (uncontrolled) — accept either.
     return (
       <div data-testid="monaco-editor" data-theme={props.theme} data-path={props.path}>
         <textarea
           data-testid="monaco-textarea"
-          value={props.value}
+          defaultValue={props.value ?? props.defaultValue}
           onChange={(e) => props.onChange?.(e.target.value)}
         />
       </div>

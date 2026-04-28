@@ -9,7 +9,7 @@ import { TableConversionDialog } from './TableConversionDialog';
 import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
-import { debugLog, summarize, shortStack } from '../utils/debugLog';
+import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
 
 interface EditorProps {
   content: string;
@@ -90,28 +90,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const disposablesRef = useRef<import('monaco-editor').IDisposable[]>([]);
   const isProgrammaticScrollRef = useRef(false);
 
-  // === DEBUG: prop change tracking =========================================
-  useEffect(() => {
-    debugLog('[EDITOR] content-prop-changed', summarize(content));
-  }, [content]);
-
-  useEffect(() => {
-    debugLog('[EDITOR] activeTabId-prop-changed', { activeTabId });
-  }, [activeTabId]);
-
-  useEffect(() => {
-    debugLog('[EDITOR] focusRequestId-prop-changed', { focusRequestId });
-  }, [focusRequestId]);
-
-  useEffect(() => {
-    debugLog('[EDITOR] revealLineRequest-prop-changed', revealLineRequest ?? { nil: true });
-  }, [revealLineRequest]);
-
-  useEffect(() => {
-    debugLog('[EDITOR] scrollFraction-prop-changed', { scrollFraction });
-  }, [scrollFraction]);
-  // =========================================================================
-
   // Dispose Monaco listeners on unmount
   useEffect(() => {
     return () => {
@@ -121,32 +99,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   }, []);
 
   // Dispose Monaco models for closed tabs to prevent memory leaks.
-  // We use getModels() iteration instead of getModel(Uri.parse(...)) because
-  // URI matching via Uri.parse may fail depending on the runtime environment.
   // keepCurrentModel={true} is set on the Editor component so that model
   // lifecycle is entirely managed here (the library won't dispose on unmount).
   const prevTabIdsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
     if (!tabs) return;
     const currentIds = new Set(tabs.map(tab => tab.id));
-    const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-    if (monaco?.editor?.getModels) {
-      const removedIds = new Set<string>();
-      for (const prevId of prevTabIdsRef.current) {
-        if (!currentIds.has(prevId)) {
-          removedIds.add(prevId);
-        }
-      }
-      if (removedIds.size > 0) {
-        for (const model of monaco.editor.getModels()) {
-          const uriStr = model.uri.toString();
-          for (const id of removedIds) {
-            if (uriStr === id || uriStr.endsWith('/' + id)) {
-              model.dispose();
-              break;
-            }
-          }
-        }
+    for (const prevId of prevTabIdsRef.current) {
+      if (!currentIds.has(prevId)) {
+        findModelForTab(prevId)?.dispose();
       }
     }
     prevTabIdsRef.current = currentIds;
@@ -159,16 +120,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   tabsRef.current = tabs;
   useEffect(() => {
     return () => {
-      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-      if (!monaco?.editor?.getModels) return;
       const liveIds = new Set((tabsRef.current ?? []).map(tab => tab.id));
-      for (const model of monaco.editor.getModels()) {
-        const uriStr = model.uri.toString();
-        for (const trackedId of prevTabIdsRef.current) {
-          if ((uriStr === trackedId || uriStr.endsWith('/' + trackedId)) && !liveIds.has(trackedId)) {
-            model.dispose();
-            break;
-          }
+      for (const trackedId of prevTabIdsRef.current) {
+        if (!liveIds.has(trackedId)) {
+          findModelForTab(trackedId)?.dispose();
         }
       }
     };
@@ -382,8 +337,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     const target = editorInstance || editorRef.current;
     if (!target) return;
 
-    debugLog('[EDITOR] focusEditor start', { stack: shortStack() });
-
     // Ensure the Tauri window has OS-level focus (critical for file association & menu interactions)
     try {
       const { getCurrentWindow } = await import('@tauri-apps/api/window');
@@ -397,20 +350,13 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     for (const delay of delays) {
       await new Promise<void>(resolve => {
         setTimeout(() => {
-          try {
-            debugLog('[EDITOR] focusEditor target.focus()', { delay });
-            target.focus();
-          } catch { /* editor may be disposed */ }
+          try { target.focus(); } catch { /* editor may be disposed */ }
           resolve();
         }, delay);
       });
       const dom = target.getDomNode();
-      if (dom && dom.contains(document.activeElement)) {
-        debugLog('[EDITOR] focusEditor confirmed focus', { delay });
-        return;
-      }
+      if (dom && dom.contains(document.activeElement)) return;
     }
-    debugLog('[EDITOR] focusEditor exhausted retries');
   }, []);
 
   // Focus editor when focusRequestId changes
@@ -429,11 +375,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     const targetScroll = scrollFraction * maxScroll;
     if (Math.abs(editor.getScrollTop() - targetScroll) < 1) return;
     isProgrammaticScrollRef.current = true;
-    debugLog('[EDITOR] setScrollTop (from scrollFraction prop)', {
-      targetScroll,
-      scrollFraction,
-      maxScroll,
-    });
     editor.setScrollTop(targetScroll);
     requestAnimationFrame(() => {
       isProgrammaticScrollRef.current = false;
@@ -446,7 +387,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     const editor = editorRef.current;
     if (!editor) return;
 
-    debugLog('[EDITOR] reveal-line-effect', revealLineRequest);
     editor.revealLineInCenter(revealLineRequest.lineNumber);
     editor.setPosition({ lineNumber: revealLineRequest.lineNumber, column: 1 });
     editor.focus();
@@ -454,11 +394,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
-
-    debugLog('[EDITOR] mount', {
-      activeTabId,
-      contentSummary: summarize(content),
-    });
 
     // Focus using the editor instance directly (avoids race condition with editorRef)
     focusEditor(editor);
@@ -509,102 +444,41 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     disposablesRef.current.forEach(d => d.dispose());
     disposablesRef.current = [];
 
-    // === DEBUG: Monaco lifecycle and caret-moving event subscribers ========
-    // Must be set up AFTER the dispose block above, otherwise these get
-    // cleared immediately. Kept distinct from the status/scroll subscriptions
-    // below so reason/source metadata is preserved even when those handlers
-    // are not attached.
-    const subscribeToModelContent = (m: editor.ITextModel | null) => {
-      if (!m) return;
-      disposablesRef.current.push(
-        m.onDidChangeContent((e) => {
-          debugLog('[EDITOR] model-content-changed', {
-            isFlush: e.isFlush,
-            isUndoing: e.isUndoing,
-            isRedoing: e.isRedoing,
-            versionId: e.versionId,
-            changeCount: e.changes.length,
-            // Flush = whole-document replacement (model.setValue etc.).
-            // This is the canonical "cursor jumps to (1,1)" trigger.
-            firstChangeRange: e.changes[0]
-              ? {
-                  startLine: e.changes[0].range.startLineNumber,
-                  startCol: e.changes[0].range.startColumn,
-                  endLine: e.changes[0].range.endLineNumber,
-                  endCol: e.changes[0].range.endColumn,
-                  textLen: e.changes[0].text.length,
-                }
-              : null,
-          });
-        })
-      );
-    };
+    // Monitor cursor position and selection information changes
+    if (onStatusChange) {
+      const updateStatus = () => {
+        const position = editor.getPosition();
+        const selection = editor.getSelection();
+        const model = editor.getModel();
 
-    // Track when @monaco-editor/react swaps the underlying model (path prop
-    // change) — this resets the caret to (1,1) of the new model by default.
-    disposablesRef.current.push(
-      editor.onDidChangeModel((e) => {
-        debugLog('[EDITOR] editor-model-changed', {
-          oldUri: e.oldModelUrl?.toString() ?? null,
-          newUri: e.newModelUrl?.toString() ?? null,
-        });
-        subscribeToModelContent(editor.getModel());
-      })
-    );
+        if (position && model) {
+          const totalCharacters = model.getValue().length;
+          let selectedCharacters = 0;
 
-    subscribeToModelContent(editor.getModel());
-    // =======================================================================
-
-    // Monitor cursor position and selection information changes.
-    // We always subscribe to cursor-position changes (even without
-    // onStatusChange) so the debug log captures `reason` for every caret move
-    // — this is how we identify ContentFlush / Explicit-triggered jumps.
-    const hasStatusChange = !!onStatusChange;
-    const updateStatus = hasStatusChange
-      ? () => {
-          const position = editor.getPosition();
-          const selection = editor.getSelection();
-          const model = editor.getModel();
-
-          if (position && model) {
-            const totalCharacters = model.getValue().length;
-            let selectedCharacters = 0;
-
-            if (selection) {
-              const selectedText = model.getValueInRange(selection);
-              selectedCharacters = selectedText.length;
-            }
-
-            onStatusChange!({
-              line: position.lineNumber,
-              column: position.column,
-              totalCharacters,
-              selectedCharacters
-            });
+          if (selection) {
+            const selectedText = model.getValueInRange(selection);
+            selectedCharacters = selectedText.length;
           }
-        }
-      : null;
 
-    if (updateStatus) {
+          onStatusChange({
+            line: position.lineNumber,
+            column: position.column,
+            totalCharacters,
+            selectedCharacters
+          });
+        }
+      };
+
       // Set initial state
       updateStatus();
-    }
 
-    // Monitor cursor position changes (always on, for debug log)
-    disposablesRef.current.push(
-      editor.onDidChangeCursorPosition((e) => {
-        debugLog('[EDITOR] cursor-pos-changed', {
-          line: e.position.lineNumber,
-          col: e.position.column,
-          reason: e.reason,
-          source: e.source,
-          secondaryCount: e.secondaryPositions.length,
-        });
-        if (updateStatus) updateStatus();
-      })
-    );
+      // Monitor cursor position changes
+      disposablesRef.current.push(
+        editor.onDidChangeCursorPosition(() => {
+          updateStatus();
+        })
+      );
 
-    if (updateStatus) {
       // Monitor selection range changes
       disposablesRef.current.push(
         editor.onDidChangeCursorSelection(() => {
@@ -620,39 +494,30 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       );
     }
 
-    // Sync scroll: notify parent of scroll position.
-    // Always subscribe (even when onScrollChange is undefined) so the debug log
-    // captures Monaco's internal auto-scroll too; this helps correlate scroll
-    // activity with cursor jumps regardless of scroll-sync mode.
-    disposablesRef.current.push(
-      editor.onDidScrollChange(() => {
-        const scrollTop = editor.getScrollTop();
-        const scrollHeight = editor.getScrollHeight();
-        const clientHeight = editor.getLayoutInfo().height;
-        const maxScroll = scrollHeight - clientHeight;
-        debugLog('[EDITOR] scroll-changed', {
-          scrollTop: Math.round(scrollTop),
-          scrollHeight: Math.round(scrollHeight),
-          clientHeight: Math.round(clientHeight),
-          programmatic: isProgrammaticScrollRef.current,
-        });
-        // Skip events triggered by our own programmatic scroll to avoid feedback loops
-        if (isProgrammaticScrollRef.current) return;
-        if (!onScrollChange) return;
-        if (maxScroll > 0) {
-          onScrollChange(scrollTop / maxScroll);
-        }
-      })
-    );
-
+    // Sync scroll: notify parent of scroll position
+    if (onScrollChange) {
+      disposablesRef.current.push(
+        editor.onDidScrollChange(() => {
+          // Skip events triggered by our own programmatic scroll to avoid feedback loops
+          if (isProgrammaticScrollRef.current) return;
+          const scrollTop = editor.getScrollTop();
+          const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
+          if (maxScroll > 0) {
+            onScrollChange(scrollTop / maxScroll);
+          }
+        })
+      );
+    }
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    debugLog('[EDITOR] handleEditorChange', {
-      incoming: summarize(value ?? ''),
-      currentContent: summarize(content),
-      equal: value === content,
-    });
+    // Silent reload: the model was rewritten by setModelContentSilently
+    // (e.g. external file change reload). React state has already been
+    // updated by reloadTabContent; firing onChange here would re-dispatch
+    // UPDATE_TAB_CONTENT and set isModified=true, contradicting the reload.
+    if (isModelSilentlyEditing(editorRef.current?.getModel() ?? null)) {
+      return;
+    }
     if (value !== undefined && value !== content) {
       onChange(value);
     }
@@ -748,7 +613,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             defaultLanguage="markdown"
             path={activeTabId || 'default'}
             keepCurrentModel
-            value={content}
+            // Uncontrolled: defaultValue seeds the model on creation, then the
+            // model is the source of truth. We do NOT pass `value` because the
+            // library's value-prop sync re-applies the prop via executeEdits
+            // on every render, which races with rapid keystrokes (slow IPC on
+            // Windows) and ends up replacing the doc with a stale value —
+            // moving the cursor to EOF via forceMoveMarkers.
+            // External content updates (file reload etc.) push into the model
+            // directly via setModelContentSilently in editorSync.ts.
+            defaultValue={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}

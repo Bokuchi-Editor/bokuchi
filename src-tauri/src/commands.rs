@@ -39,7 +39,6 @@ use tauri::Emitter;
 use crate::variable_processor::VARIABLE_PROCESSOR;
 use crate::file_operations::calculate_file_hash;
 use crate::file_association::{get_pending_file_paths, set_frontend_ready};
-use crate::debug_log;
 use crate::types::FileHashInfo;
 
 // Tauri command: Set global variable
@@ -138,8 +137,11 @@ pub async fn save_file(path: String, content: String) -> Result<(), String> {
         fs::create_dir_all(parent).map_err(|_| "Failed to create directory".to_string())?;
     }
 
-    // Save file
-    fs::write(&path, content).map_err(|_| "Failed to save file".to_string())
+    // Save file. Surface the OS-level error kind so the user sees the
+    // underlying cause (PermissionDenied, sharing violation from a syncing
+    // cloud drive, etc.) rather than a generic "Failed to save file".
+    fs::write(&path, content)
+        .map_err(|e| format!("Failed to save file: {} ({:?})", e, e.kind()))
 }
 
 // Tauri command: Get file hash
@@ -164,37 +166,18 @@ pub fn log_from_frontend(message: String) {
 #[tauri::command]
 pub fn set_frontend_ready_command(app_handle: tauri::AppHandle) {
     set_frontend_ready();
-    debug_log::append("[RUST][set_frontend_ready_command] called");
 
     // Emit any buffered pending file paths immediately
     let pending = get_pending_file_paths();
     if !pending.is_empty() {
         println!("Emitting {} buffered file paths after frontend ready", pending.len());
-        debug_log::append(&format!(
-            "[RUST][set_frontend_ready_command] draining pending count={} paths={:?}",
-            pending.len(),
-            pending
-        ));
         for file_path in pending {
-            let emit_result = app_handle.emit(
+            let _ = app_handle.emit(
                 "open-file",
-                crate::types::OpenFileEvent { file_path: file_path.clone() },
+                crate::types::OpenFileEvent { file_path },
             );
-            debug_log::append(&format!(
-                "[RUST][set_frontend_ready_command] emit path={:?} ok={}",
-                file_path,
-                emit_result.is_ok()
-            ));
         }
-    } else {
-        debug_log::append("[RUST][set_frontend_ready_command] no pending paths");
     }
-}
-
-// Tauri command: Append a line to the debug log file (frontend-initiated).
-#[tauri::command]
-pub fn append_debug_log(line: String) {
-    debug_log::append(&line);
 }
 
 // Tauri command: Read directory entries (for folder tree)

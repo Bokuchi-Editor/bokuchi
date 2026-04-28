@@ -12,7 +12,6 @@ import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
 import { RenderingSettings, ScrollSyncMode } from '../types/settings';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
-import { debugLog } from '../utils/debugLog';
 import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
 
 interface AppContentProps {
@@ -152,12 +151,7 @@ const AppContent: React.FC<AppContentProps> = ({
   // Restore scroll position when switching tabs
   useEffect(() => {
     if (activeTabId) {
-      const saved = scrollFractionMap.current.get(activeTabId);
-      debugLog('[APPCONTENT] activeTabId-effect (restore scroll)', {
-        activeTabId,
-        savedFraction: saved ?? null,
-      });
-      setScrollState({ fraction: saved ?? 0, source: 'restore' });
+      setScrollState({ fraction: scrollFractionMap.current.get(activeTabId) ?? 0, source: 'restore' });
     }
   }, [activeTabId]);
 
@@ -174,7 +168,6 @@ const AppContent: React.FC<AppContentProps> = ({
   // Use ref for activeTabId to avoid stale closure in Editor's scroll listener.
   // Editor.tsx registers onScrollChange once at mount, so the callback reference must be stable.
   const handleEditorScrollChange = useCallback((fraction: number) => {
-    debugLog('[APPCONTENT] editor-scroll-change', { fraction });
     setScrollState({ fraction, source: 'editor' });
     const tabId = activeTabIdRef.current;
     if (tabId) {
@@ -183,7 +176,6 @@ const AppContent: React.FC<AppContentProps> = ({
   }, []);
 
   const handlePreviewScrollChange = useCallback((fraction: number) => {
-    debugLog('[APPCONTENT] preview-scroll-change', { fraction });
     setScrollState({ fraction, source: 'preview' });
     const tabId = activeTabIdRef.current;
     if (tabId) {
