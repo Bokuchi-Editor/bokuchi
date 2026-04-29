@@ -346,6 +346,12 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               srcDoc={srcdoc}
               sandbox="allow-scripts allow-same-origin"
               title="Marp Slides Overview"
+              onLoad={() => {
+                // Force WebKit to re-evaluate scrollbar visibility after the
+                // iframe document finishes layout. On initial app startup the
+                // scrollbar can otherwise stay hidden even when content overflows.
+                iframeRef.current?.contentWindow?.dispatchEvent(new Event('resize'));
+              }}
               style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
           )}
