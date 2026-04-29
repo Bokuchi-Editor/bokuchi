@@ -12,7 +12,15 @@ vi.mock('@marp-team/marp-core', () => ({
   },
 }));
 
-import { contentIsMarp, renderMarp, countSlides, buildSlideDocument, buildAllSlidesDocument } from '../marpRenderer';
+import {
+  contentIsMarp,
+  renderMarp,
+  countSlides,
+  buildSlideDocument,
+  buildAllSlidesDocument,
+  buildThumbnailDocument,
+  LINK_INTERCEPTOR_SCRIPT,
+} from '../marpRenderer';
 
 describe('contentIsMarp', () => {
   it('returns true for markdown with marp: true in frontmatter', () => {
@@ -148,5 +156,46 @@ describe('buildAllSlidesDocument', () => {
     const doc = buildAllSlidesDocument('html', 'css');
     expect(doc).not.toContain('nth-child');
     expect(doc).not.toContain('display: none');
+  });
+});
+
+// T-MR-LINK: Link interception script must be embedded in every iframe srcdoc
+// so that anchor clicks inside sandboxed Marp iframes are forwarded to the
+// host instead of navigating the iframe to the linked website. This is a
+// hard security requirement (see: open-link bug fix).
+describe('link interceptor injection', () => {
+  it('LINK_INTERCEPTOR_SCRIPT posts http(s)/mailto URLs to parent and drops other schemes', () => {
+    expect(LINK_INTERCEPTOR_SCRIPT).toContain("postMessage");
+    expect(LINK_INTERCEPTOR_SCRIPT).toContain("openExternalUrl");
+    expect(LINK_INTERCEPTOR_SCRIPT).toContain("(https?:|mailto:)");
+    expect(LINK_INTERCEPTOR_SCRIPT).toContain("preventDefault");
+    expect(LINK_INTERCEPTOR_SCRIPT).toContain("stopPropagation");
+    // Capture phase listener
+    expect(LINK_INTERCEPTOR_SCRIPT).toMatch(/addEventListener\([^)]*'click'[^)]*true\s*\)/);
+  });
+
+  it('buildSlideDocument injects link interceptor', () => {
+    const doc = buildSlideDocument('<div class="marpit">x</div>', 'css', 0);
+    expect(doc).toContain(LINK_INTERCEPTOR_SCRIPT);
+  });
+
+  it('buildAllSlidesDocument injects link interceptor', () => {
+    const doc = buildAllSlidesDocument('<div class="marpit">x</div>', 'css');
+    expect(doc).toContain(LINK_INTERCEPTOR_SCRIPT);
+  });
+
+  it('buildThumbnailDocument injects link interceptor', () => {
+    const doc = buildThumbnailDocument('<div class="marpit">x</div>', 'css', 0);
+    expect(doc).toContain(LINK_INTERCEPTOR_SCRIPT);
+  });
+
+  // <base target="_blank"> was tried as belt-and-braces but caused Marp SVG
+  // <use href="#defs"> to fail to resolve in some webview engines, blanking
+  // the slide. The JS interceptor's preventDefault() makes the base element
+  // unnecessary, so it must remain absent.
+  it('does not include <base target="_blank"> (regression: blanks SVG slides)', () => {
+    expect(buildSlideDocument('html', 'css', 0)).not.toContain('<base');
+    expect(buildAllSlidesDocument('html', 'css')).not.toContain('<base');
+    expect(buildThumbnailDocument('html', 'css', 0)).not.toContain('<base');
   });
 });

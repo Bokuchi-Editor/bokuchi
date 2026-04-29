@@ -48,6 +48,47 @@ export function countSlides(html: string): number {
 }
 
 /**
+ * JS snippet injected into every Marp iframe srcdoc.
+ * Intercepts all link clicks (capture phase) and forwards external URLs to
+ * the parent window via postMessage so the host can route them to the OS
+ * browser. Without this, sandboxed iframes navigate internally and replace
+ * the slide rendering with the linked website.
+ *
+ * Hosting code must listen for `{ type: 'openExternalUrl', url }` messages
+ * and validate the URL again before opening it.
+ */
+export const LINK_INTERCEPTOR_SCRIPT = `
+(function() {
+  function handleClick(e) {
+    var el = e.target;
+    while (el && el.nodeType === 1 && el.tagName !== 'A') {
+      el = el.parentNode;
+    }
+    if (!el || el.tagName !== 'A') return;
+    var href = el.getAttribute('href');
+    if (!href) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (/^(https?:|mailto:)/i.test(href)) {
+      try {
+        window.parent.postMessage({ type: 'openExternalUrl', url: href }, '*');
+      } catch (err) {}
+    } else if (href.charAt(0) === '#') {
+      try {
+        var target = document.querySelector(href);
+        if (target && target.scrollIntoView) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (err) {}
+    }
+    /* Other schemes (javascript:, file:, data:, etc.) are dropped. */
+  }
+  document.addEventListener('click', handleClick, true);
+  document.addEventListener('auxclick', handleClick, true);
+})();
+`;
+
+/**
  * Build a self-contained HTML document for iframe srcdoc.
  * All slides are loaded once; the visible slide is controlled via postMessage.
  * This avoids full document reloads on slide change, preventing CSS flicker.
@@ -115,6 +156,7 @@ window.addEventListener('message', function(e) {
     showSlide(e.data.slideIndex);
   }
 });
+${LINK_INTERCEPTOR_SCRIPT}
 </script>
 </body>
 </html>`;
@@ -265,6 +307,7 @@ div.marpit {
     }
   });
 })();
+${LINK_INTERCEPTOR_SCRIPT}
 </script>
 </body>
 </html>`;
@@ -306,6 +349,10 @@ div.marpit {
 }
 </style>
 </head>
-<body>${html}</body>
+<body>${html}
+<script>
+${LINK_INTERCEPTOR_SCRIPT}
+</script>
+</body>
 </html>`;
 }

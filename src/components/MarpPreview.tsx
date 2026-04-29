@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit, GridView } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { variableApi } from '../api/variableApi';
 import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument } from '../utils/marpRenderer';
 import { inlineMarpRelativeImages } from '../utils/marpImageInliner';
@@ -181,13 +182,28 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     }
   }, [isSlideMode]);
 
-  // Listen for postMessage from thumbnail iframe (slide selection)
+  // Listen for postMessage from iframes:
+  //   - slideSelect: thumbnail click (changes current slide)
+  //   - openExternalUrl: link click inside any slide iframe — must be routed
+  //     through the OS browser via the Tauri opener plugin. Direct iframe
+  //     navigation would render the linked page inside the slide region.
   const thumbnailIframeRef = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'slideSelect' && typeof e.data.slideIndex === 'number') {
         setCurrentSlide(e.data.slideIndex);
         setIsThumbnailMode(false);
+        return;
+      }
+      if (e.data?.type === 'openExternalUrl' && typeof e.data.url === 'string') {
+        // Re-validate the scheme on the host side — never trust the iframe alone.
+        const url = e.data.url;
+        if (/^(https?:|mailto:)/i.test(url)) {
+          openUrl(url).catch((err) => {
+            console.error('[MarpPreview] Failed to open URL:', url, err);
+          });
+        }
+        return;
       }
     };
     window.addEventListener('message', handleMessage);
