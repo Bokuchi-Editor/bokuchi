@@ -531,37 +531,29 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Xem trước bản trình bày Marp",
-        "description": "Xem trước tệp Markdown có front-matter `marp: true` dưới dạng bản trình bày slide."
+      "marpFullscreenSlide": {
+        "title": "Vị trí slide ở chế độ toàn màn hình",
+        "description": "Đã sửa lỗi khi chuyển sang chế độ toàn màn hình, bài trình chiếu Marp luôn bắt đầu từ slide đầu tiên bất kể slide hiện tại là gì."
       },
-      "tabContextMenu": {
-        "title": "Menu ngữ cảnh của tab",
-        "description": "Nhấp chuột phải vào tab để ghim, đổi tên, sao chép đường dẫn hoặc tên tệp, hoặc đóng các tab khác/bên phải/tất cả."
+      "marpPreviewScrollbar": {
+        "title": "Thanh cuộn trong xem trước Marp",
+        "description": "Đã sửa lỗi thanh cuộn không hiển thị trong xem trước Marp ngay sau khi khởi động ứng dụng."
       },
-      "tabPinning": {
-        "title": "Ghim tab",
-        "description": "Ghim các tab quan trọng để chúng không bị đóng bởi các thao tác đóng hàng loạt."
+      "marpExternalLinks": {
+        "title": "Liên kết bên ngoài trong slide Marp",
+        "description": "Các liên kết trong slide Marp giờ đây luôn được mở trong trình duyệt của hệ điều hành thay vì điều hướng bên trong slide."
       },
-      "tabRename": {
-        "title": "Đổi tên tab",
-        "description": "Đổi tên tệp đã lưu trên đĩa hoặc thay đổi tiêu đề của tab chưa lưu trực tiếp từ tab."
+      "windowsSaveReliability": {
+        "title": "Lưu qua liên kết tệp Windows",
+        "description": "Đã sửa lỗi lưu và khôi phục tab trên Windows cho các tệp được mở qua liên kết tệp của hệ điều hành từ các vị trí ngoài thư mục Documents/Desktop/Downloads."
       },
-      "tabUnsavedTitle": {
-        "title": "Tự động đặt tiêu đề từ dòng đầu tiên",
-        "description": "Các tab chưa lưu giờ đây hiển thị dòng đầu tiên của nội dung làm tiêu đề tab."
+      "editorRapidTyping": {
+        "title": "Trình soạn thảo ổn định khi gõ nhanh",
+        "description": "Đã sửa lỗi đặc trưng của Windows khi gõ phím nhanh có thể thay thế tài liệu bằng nội dung cũ và đưa con trỏ về cuối tệp."
       },
-      "tabCloseButtonPosition": {
-        "title": "Vị trí nút đóng",
-        "description": "Chọn biểu tượng đóng/ghim xuất hiện ở bên trái hoặc bên phải của mỗi tab."
-      },
-      "scrollSyncMode": {
-        "title": "Tùy chọn đồng bộ cuộn",
-        "description": "Chọn cách đồng bộ vị trí cuộn giữa trình soạn thảo và xem trước: một chiều (mặc định), hai chiều, hoặc tắt."
-      },
-      "previewExternalChange": {
-        "title": "Thay đổi tệp bên ngoài trong chế độ xem trước",
-        "description": "Đã sửa lỗi khi các thay đổi tệp bên ngoài không được tải chính xác trong chế độ xem trước."
+      "updateCheckFrequency": {
+        "title": "Tần suất kiểm tra cập nhật",
+        "description": "Ứng dụng giờ chỉ kiểm tra cập nhật tối đa 24 giờ một lần thay vì mỗi lần khởi chạy."
       }
     }
   },

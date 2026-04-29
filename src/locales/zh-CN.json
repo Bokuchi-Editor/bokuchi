@@ -531,37 +531,29 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp 演示文稿预览",
-        "description": "可以将带有 `marp: true` front-matter 的 Markdown 文件以幻灯片演示文稿的形式预览。"
+      "marpFullscreenSlide": {
+        "title": "全屏模式下的幻灯片位置",
+        "description": "修复了在 Marp 幻灯片放映中切换到全屏时，无论当前是哪一张幻灯片都会从第一张开始的问题。"
       },
-      "tabContextMenu": {
-        "title": "标签页上下文菜单",
-        "description": "右键单击标签页可进行固定、重命名、复制路径或文件名，以及关闭其他/右侧/所有标签页等操作。"
+      "marpPreviewScrollbar": {
+        "title": "Marp 预览滚动条",
+        "description": "修复了应用启动后 Marp 预览中滚动条未显示的问题。"
       },
-      "tabPinning": {
-        "title": "标签页固定",
-        "description": "固定重要的标签页，使其不会被批量关闭操作影响。"
+      "marpExternalLinks": {
+        "title": "Marp 幻灯片中的外部链接",
+        "description": "Marp 幻灯片中的链接现在始终在操作系统浏览器中打开，而不是在幻灯片内部跳转。"
       },
-      "tabRename": {
-        "title": "标签页重命名",
-        "description": "直接从标签页重命名磁盘上已保存的文件，或更改未保存标签页的标题。"
+      "windowsSaveReliability": {
+        "title": "Windows 文件关联保存",
+        "description": "修复了在 Windows 上，通过文件关联打开位于文档/桌面/下载文件夹之外的文件时，保存与标签页恢复失败的问题。"
       },
-      "tabUnsavedTitle": {
-        "title": "根据首行自动设置标题",
-        "description": "未保存的标签页现在会将内容的第一行显示为标签页标题。"
+      "editorRapidTyping": {
+        "title": "快速输入时编辑器更稳定",
+        "description": "修复了 Windows 上快速输入时，文档可能被旧内容覆盖且光标跳转到文件末尾的问题。"
       },
-      "tabCloseButtonPosition": {
-        "title": "关闭按钮位置",
-        "description": "可选择关闭/固定图标显示在每个标签页的左侧或右侧。"
-      },
-      "scrollSyncMode": {
-        "title": "滚动同步选项",
-        "description": "可选择编辑器和预览之间滚动位置的同步方式：单向（默认）、双向或关闭。"
-      },
-      "previewExternalChange": {
-        "title": "预览模式下的外部文件变更",
-        "description": "修复了在预览模式下外部文件变更无法正确加载的问题。"
+      "updateCheckFrequency": {
+        "title": "更新检查频率",
+        "description": "应用现在最多每 24 小时检查一次更新，而不是每次启动都检查。"
       }
     }
   },

@@ -531,37 +531,29 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Vista previa de presentaciones Marp",
-        "description": "Los archivos Markdown con `marp: true` en el front-matter ahora se pueden previsualizar como diapositivas."
+      "marpFullscreenSlide": {
+        "title": "Posición de diapositiva en pantalla completa",
+        "description": "Se corrigió un problema por el que la presentación de Marp siempre comenzaba desde la primera diapositiva al pasar a pantalla completa, independientemente de la diapositiva actual."
       },
-      "tabContextMenu": {
-        "title": "Menú contextual de pestañas",
-        "description": "Haga clic derecho en una pestaña para fijarla, renombrarla, copiar su ruta o nombre de archivo, o cerrar otras/a la derecha/todas las pestañas."
+      "marpPreviewScrollbar": {
+        "title": "Barra de desplazamiento de la vista previa Marp",
+        "description": "Se corrigió un problema por el que la barra de desplazamiento no aparecía en la vista previa Marp justo después de iniciar la aplicación."
       },
-      "tabPinning": {
-        "title": "Fijar pestañas",
-        "description": "Fije las pestañas importantes para excluirlas de las acciones de cierre masivo."
+      "marpExternalLinks": {
+        "title": "Enlaces externos en diapositivas Marp",
+        "description": "Los enlaces dentro de las diapositivas Marp ahora se abren siempre en el navegador del sistema en lugar de navegar dentro de la diapositiva."
       },
-      "tabRename": {
-        "title": "Renombrar pestaña",
-        "description": "Renombre archivos guardados en el disco o cambie el título de pestañas sin guardar directamente desde la pestaña."
+      "windowsSaveReliability": {
+        "title": "Guardado mediante asociación de archivos en Windows",
+        "description": "Se corrigieron los fallos de guardado y restauración de pestañas en Windows al abrir archivos mediante la asociación de archivos desde fuera de las carpetas Documentos/Escritorio/Descargas."
       },
-      "tabUnsavedTitle": {
-        "title": "Título automático desde la primera línea",
-        "description": "Las pestañas sin guardar ahora muestran la primera línea de su contenido como título."
+      "editorRapidTyping": {
+        "title": "Editor estable al escribir rápido",
+        "description": "Se corrigió un problema específico de Windows por el que escribir rápido podía reemplazar el documento con contenido obsoleto y mover el cursor al final del archivo."
       },
-      "tabCloseButtonPosition": {
-        "title": "Posición del botón de cierre",
-        "description": "Elija si el icono de cierre/fijar aparece a la izquierda o a la derecha de cada pestaña."
-      },
-      "scrollSyncMode": {
-        "title": "Opciones de sincronización de desplazamiento",
-        "description": "Elija cómo se sincroniza el desplazamiento entre editor y vista previa: unidireccional (predeterminado), bidireccional o desactivado."
-      },
-      "previewExternalChange": {
-        "title": "Cambio externo de archivo en modo vista previa",
-        "description": "Se corrigió un problema por el que los cambios externos de archivos no se cargaban correctamente en modo vista previa."
+      "updateCheckFrequency": {
+        "title": "Frecuencia de comprobación de actualizaciones",
+        "description": "La aplicación ahora comprueba si hay actualizaciones como máximo una vez cada 24 horas, en lugar de en cada inicio."
       }
     }
   },

@@ -531,37 +531,29 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp Presentation Preview",
-        "description": "Preview Markdown files with a `marp: true` front-matter as slide presentations."
+      "marpFullscreenSlide": {
+        "title": "Fullscreen Slide Position",
+        "description": "Fixed an issue where Marp's slideshow always started from the first slide when entering fullscreen mode, regardless of the current slide."
       },
-      "tabContextMenu": {
-        "title": "Tab Context Menu",
-        "description": "Right-click a tab to pin, rename, copy its path or filename, or close other/right/all tabs."
+      "marpPreviewScrollbar": {
+        "title": "Marp Preview Scrollbar",
+        "description": "Fixed an issue where the scrollbar did not appear in the Marp preview immediately after launching the application."
       },
-      "tabPinning": {
-        "title": "Tab Pinning",
-        "description": "Pin important tabs to keep them from being closed by bulk close actions."
+      "marpExternalLinks": {
+        "title": "External Links in Marp Slides",
+        "description": "Links inside Marp slides now always open in the OS browser instead of navigating inside the slide."
       },
-      "tabRename": {
-        "title": "Tab Rename",
-        "description": "Rename saved files on disk or change the title of unsaved tabs directly from the tab."
+      "windowsSaveReliability": {
+        "title": "Windows File Association Save",
+        "description": "Fixed save and tab restore failures on Windows for files opened via OS file association from outside the Documents/Desktop/Downloads folders."
       },
-      "tabUnsavedTitle": {
-        "title": "Auto Title from First Line",
-        "description": "Unsaved tabs now display the first line of their content as the tab title."
+      "editorRapidTyping": {
+        "title": "Stable Editor on Rapid Typing",
+        "description": "Fixed a Windows-specific issue where rapid keystrokes could replace the document with stale content and jump the cursor to the end of the file."
       },
-      "tabCloseButtonPosition": {
-        "title": "Close Button Position",
-        "description": "Choose whether the close/pin icon appears on the left or right side of each tab."
-      },
-      "scrollSyncMode": {
-        "title": "Scroll Sync Options",
-        "description": "Choose how editor and preview scroll positions sync: one-way (default), bidirectional, or off."
-      },
-      "previewExternalChange": {
-        "title": "External File Change in Preview Mode",
-        "description": "Fixed an issue where external file changes were not loaded correctly while in preview mode."
+      "updateCheckFrequency": {
+        "title": "Update Check Frequency",
+        "description": "The app now checks for updates at most once every 24 hours instead of on every launch."
       }
     }
   },

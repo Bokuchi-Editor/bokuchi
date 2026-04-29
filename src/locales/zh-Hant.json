@@ -531,37 +531,29 @@
       "improvement": "改進"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp 簡報預覽",
-        "description": "可將含有 `marp: true` front-matter 的 Markdown 檔案以投影片簡報形式預覽。"
+      "marpFullscreenSlide": {
+        "title": "全螢幕模式下的投影片位置",
+        "description": "修正了 Marp 投影片放映時切換到全螢幕，無論目前在第幾張投影片都會從第一張開始的問題。"
       },
-      "tabContextMenu": {
-        "title": "分頁右鍵選單",
-        "description": "在分頁上按右鍵可進行釘選、重新命名、複製路徑或檔名，以及關閉其他/右側/全部分頁等操作。"
+      "marpPreviewScrollbar": {
+        "title": "Marp 預覽捲軸",
+        "description": "修正了應用程式啟動後 Marp 預覽中捲軸未顯示的問題。"
       },
-      "tabPinning": {
-        "title": "分頁釘選",
-        "description": "釘選重要分頁，使其不會被批次關閉動作關閉。"
+      "marpExternalLinks": {
+        "title": "Marp 投影片內的外部連結",
+        "description": "Marp 投影片內的連結現在一律會以作業系統瀏覽器開啟，而不會在投影片內導覽。"
       },
-      "tabRename": {
-        "title": "分頁重新命名",
-        "description": "直接從分頁重新命名磁碟上已儲存的檔案，或變更未儲存分頁的標題。"
+      "windowsSaveReliability": {
+        "title": "Windows 檔案關聯儲存",
+        "description": "修正了在 Windows 上，透過檔案關聯開啟位於文件／桌面／下載資料夾以外位置的檔案時，儲存與分頁還原失敗的問題。"
       },
-      "tabUnsavedTitle": {
-        "title": "依第一行自動設定標題",
-        "description": "未儲存的分頁現在會將內容的第一行顯示為分頁標題。"
+      "editorRapidTyping": {
+        "title": "快速輸入時編輯器更穩定",
+        "description": "修正了 Windows 上快速輸入時，文件內容可能被舊內容覆蓋且游標跳到檔案結尾的問題。"
       },
-      "tabCloseButtonPosition": {
-        "title": "關閉按鈕位置",
-        "description": "可選擇關閉/釘選圖示顯示在每個分頁的左側或右側。"
-      },
-      "scrollSyncMode": {
-        "title": "捲動同步選項",
-        "description": "可選擇編輯器與預覽的捲動位置同步方式：單向（預設）、雙向或關閉。"
-      },
-      "previewExternalChange": {
-        "title": "預覽模式下的外部檔案變更",
-        "description": "修正了預覽模式下外部檔案變更無法正確載入的問題。"
+      "updateCheckFrequency": {
+        "title": "更新檢查頻率",
+        "description": "應用程式現在最多每 24 小時檢查一次更新，而非每次啟動時都檢查。"
       }
     }
   },

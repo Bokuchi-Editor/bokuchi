@@ -531,37 +531,29 @@
       "improvement": "改善"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marpプレゼンテーションのプレビュー",
-        "description": "`marp: true` フロントマターが設定された Markdown をスライドとしてプレビューできるようになりました。"
+      "marpFullscreenSlide": {
+        "title": "フルスクリーン時のスライド位置を修正",
+        "description": "Marpのスライドショーで、フルスクリーンに切り替えた際に現在のスライド番号に関係なく常に1枚目から開始される問題を修正しました。"
       },
-      "tabContextMenu": {
-        "title": "タブのコンテキストメニュー",
-        "description": "タブを右クリックして、ピン留め・名前変更・パス／ファイル名のコピー・他タブの一括クローズなどができるようになりました。"
+      "marpPreviewScrollbar": {
+        "title": "Marpプレビューのスクロールバー表示を修正",
+        "description": "アプリ起動直後にMarpプレビューのスクロールバーが表示されない問題を修正しました。"
       },
-      "tabPinning": {
-        "title": "タブのピン留め",
-        "description": "重要なタブをピン留めして、一括クローズの対象から除外できるようになりました。"
+      "marpExternalLinks": {
+        "title": "Marpスライド内リンクの挙動を修正",
+        "description": "Marpスライド内のリンクが、常にOSのブラウザで開かれるようになりました。"
       },
-      "tabRename": {
-        "title": "タブ名の変更",
-        "description": "タブから直接、保存済みファイルのリネームや未保存タブのタイトル変更ができるようになりました。"
+      "windowsSaveReliability": {
+        "title": "Windowsのファイル関連付けからの保存を改善",
+        "description": "ドキュメント／デスクトップ／ダウンロード以外の場所にあるファイルをOSのファイル関連付けから開いた際に、保存やタブ復元が失敗する問題を修正しました。"
       },
-      "tabUnsavedTitle": {
-        "title": "未保存タブのタイトル自動表示",
-        "description": "未保存タブのタイトルに、本文の1行目が表示されるようになりました。"
+      "editorRapidTyping": {
+        "title": "高速入力時のエディタの安定性を改善",
+        "description": "Windowsで高速にキー入力した際に、内容が古い状態に戻ったりカーソルが末尾に飛んだりすることがある問題を修正しました。"
       },
-      "tabCloseButtonPosition": {
-        "title": "閉じるボタンの表示位置",
-        "description": "タブの閉じる／ピン留めアイコンの表示位置を左右から選べるようになりました。"
-      },
-      "scrollSyncMode": {
-        "title": "スクロール同期のオプション化",
-        "description": "エディタとプレビューのスクロール同期を、片方向（デフォルト）・双方向・無効から選択できるようになりました。"
-      },
-      "previewExternalChange": {
-        "title": "プレビューモード時の外部変更検知を修正",
-        "description": "プレビューモード中に外部でファイルが変更された際、内容が正しく再読み込みされない問題を修正しました。"
+      "updateCheckFrequency": {
+        "title": "アップデート確認の頻度を変更",
+        "description": "起動のたびに自動更新を確認していたのに加え、24時間に1回確認するようにしました。"
       }
     }
   },
