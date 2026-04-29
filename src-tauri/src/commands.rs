@@ -137,8 +137,11 @@ pub async fn save_file(path: String, content: String) -> Result<(), String> {
         fs::create_dir_all(parent).map_err(|_| "Failed to create directory".to_string())?;
     }
 
-    // Save file
-    fs::write(&path, content).map_err(|_| "Failed to save file".to_string())
+    // Save file. Surface the OS-level error kind so the user sees the
+    // underlying cause (PermissionDenied, sharing violation from a syncing
+    // cloud drive, etc.) rather than a generic "Failed to save file".
+    fs::write(&path, content)
+        .map_err(|e| format!("Failed to save file: {} ({:?})", e, e.kind()))
 }
 
 // Tauri command: Get file hash

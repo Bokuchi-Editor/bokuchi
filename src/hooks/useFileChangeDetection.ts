@@ -49,27 +49,13 @@ export const useFileChangeDetection = ({
 
             if (tab && tab.filePath && !tab.isNew) {
               // Use readFileByPath (custom Tauri command) instead of readFileFromPath
-              // (FS plugin) to avoid scope/path issues on Windows
+              // (FS plugin) to avoid scope/path issues on Windows.
+              // reloadTabContent also silently syncs the Monaco model.
               const fileResult = await desktopApi.readFileByPath(tab.filePath);
               if (fileResult.error) {
                 console.error('Failed to read file for reload:', fileResult.error);
               } else {
                 reloadTabContent(tabId, fileResult.content);
-
-                // Sync Monaco model directly (it may be out of sync if Editor is
-                // unmounted, e.g. in preview mode with keepCurrentModel)
-                const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-                if (monaco?.editor?.getModels) {
-                  for (const model of monaco.editor.getModels()) {
-                    const uriStr = model.uri.toString();
-                    if (uriStr === tabId || uriStr.endsWith('/' + tabId)) {
-                      if (model.getValue() !== fileResult.content) {
-                        model.setValue(fileResult.content);
-                      }
-                      break;
-                    }
-                  }
-                }
 
                 try {
                   const newHashInfo = await desktopApi.getFileHash(tab.filePath);
@@ -103,7 +89,7 @@ export const useFileChangeDetection = ({
   }, [tabs, reloadTabContent, updateTabFileHash, setActiveTab, isInitialized]);
 
   // Common file change detection handler
-  const checkFileChange = useCallback(async (tab: Tab, source: string) => {
+  const checkFileChange = useCallback(async (tab: Tab) => {
     if (!tab || tab.isNew || !tab.filePath) return;
 
     try {
@@ -141,18 +127,18 @@ export const useFileChangeDetection = ({
         window.dispatchEvent(event);
       }
     } catch (error) {
-      console.warn(`Failed to check file change during ${source}:`, error);
+      console.warn('Failed to check file change:', error);
     }
   }, [reloadTabContent, updateTabFileHash, setTabModified, setActiveTab]);
 
-  // Periodic file change check (every 5 seconds)
-  // Stop polling while the file change dialog is open to prevent re-triggering
+  // Periodic file change check (every 5 seconds).
+  // Stop polling while the file change dialog is open to prevent re-triggering.
   useEffect(() => {
     if (!isInitialized || fileChangeDialog.open) return;
 
-    const interval = setInterval(async () => {
+    const interval = setInterval(() => {
       if (activeTab && !activeTab.isNew && activeTab.filePath) {
-        await checkFileChange(activeTab, 'periodic check');
+        checkFileChange(activeTab);
       }
     }, 5000);
 

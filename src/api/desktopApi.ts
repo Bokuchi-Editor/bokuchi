@@ -188,14 +188,21 @@ export const desktopApi = {
     }
   },
 
-  // Save to file path
+  // Save to file path. Uses the custom Rust `save_file` command (std::fs::write)
+  // instead of the FS plugin's writeTextFile, because the FS plugin enforces a
+  // static capabilities scope ($HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD) that
+  // rejects paths from OS-level file association launches on Windows
+  // (e.g. files on G:\, network drives, Google Drive). The dialog-based
+  // saveFile/saveFileAs paths still work with the FS plugin because the
+  // dialog grants per-file runtime scope, but path-based save (used after
+  // file-association open + reload) doesn't have that scope.
   async saveFileToPath(filePath: string, content: string): Promise<SaveResponse> {
     try {
-      await writeTextFile(filePath, content);
+      await invoke('save_file', { path: filePath, content });
       return { success: true, filePath };
     } catch (error: unknown) {
       console.error('Error saving file to path:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save file';
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return { success: false, error: errorMessage };
     }
   },

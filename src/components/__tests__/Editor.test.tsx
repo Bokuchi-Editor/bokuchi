@@ -90,6 +90,7 @@ vi.mock('@monaco-editor/react', () => ({
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
     onChange?: (value: string | undefined) => void;
     value?: string;
+    defaultValue?: string;
     path?: string;
     options?: Record<string, unknown>;
     theme?: string;
@@ -99,11 +100,12 @@ vi.mock('@monaco-editor/react', () => ({
     capturedOnMount = props.onMount ?? null;
     capturedPath = props.path;
     capturedKeepCurrentModel = props.keepCurrentModel;
+    // The real component uses defaultValue (uncontrolled) — accept either.
     return (
       <div data-testid="monaco-editor" data-theme={props.theme} data-path={props.path}>
         <textarea
           data-testid="monaco-textarea"
-          value={props.value}
+          defaultValue={props.value ?? props.defaultValue}
           onChange={(e) => props.onChange?.(e.target.value)}
         />
       </div>
@@ -129,6 +131,7 @@ function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor>
     getModel: vi.fn().mockReturnValue({
       getValue: vi.fn().mockReturnValue('hello'),
       getValueInRange: vi.fn().mockReturnValue(''),
+      onDidChangeContent: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     }),
     executeEdits: vi.fn(),
     setPosition: vi.fn(),
@@ -137,11 +140,13 @@ function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor>
     addAction: vi.fn(),
     onDidChangeCursorPosition: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidChangeCursorSelection: vi.fn().mockReturnValue({ dispose: vi.fn() }),
+    onDidChangeModel: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidChangeModelContent: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidScrollChange: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     getScrollTop: vi.fn().mockReturnValue(0),
     getScrollHeight: vi.fn().mockReturnValue(1000),
     getLayoutInfo: vi.fn().mockReturnValue({ height: 500 }),
+    setScrollTop: vi.fn(),
     ...overrides,
   } as unknown as editor.IStandaloneCodeEditor;
   return mockEditor;
