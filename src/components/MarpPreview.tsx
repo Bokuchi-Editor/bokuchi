@@ -288,6 +288,11 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
               srcDoc={srcdoc}
               sandbox="allow-scripts"
               title="Marp Slide Fullscreen"
+              onLoad={() => {
+                fullscreenIframeRef.current?.contentWindow?.postMessage(
+                  { slideIndex: currentSlide }, '*'
+                );
+              }}
               style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
           </Box>
@@ -443,6 +448,11 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
             srcDoc={srcdoc}
             sandbox="allow-scripts"
             title="Marp Slide Preview"
+            onLoad={() => {
+              slideIframeRef.current?.contentWindow?.postMessage(
+                { slideIndex: currentSlide }, '*'
+              );
+            }}
             style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
           />
         )}
