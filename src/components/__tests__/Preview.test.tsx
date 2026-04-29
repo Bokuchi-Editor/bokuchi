@@ -100,6 +100,7 @@ import { variableApi } from '../../api/variableApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid } from '../../utils/markdownRenderers';
 import { contentIsMarp } from '../../utils/marpRenderer';
+import { DEFAULT_RENDERING_SETTINGS } from '../../types/settings';
 
 /**
  * Helper: render the Preview component and wait until the async markdown
@@ -578,5 +579,87 @@ describe('MarkdownPreview – link clicks', () => {
 
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(openUrl).toHaveBeenCalledWith('https://google.com');
+  });
+
+  // T-PV-17 / T-PV-18 (regression): both the link-click and checkbox-change
+  // listeners must attach even after the component first mounts as a Marp
+  // preview (which returns <MarpPreview/> early and leaves previewRef null)
+  // and then switches to a non-Marp tab. Before the fix, both listeners'
+  // useEffect had empty deps, so they ran once while previewRef was null and
+  // never re-attached when the markdown div finally mounted — link clicks
+  // fell through to native navigation (the app navigated inside Bokuchi
+  // instead of opening the OS browser) and checkbox clicks did nothing.
+  //
+  // These tests are paired: if the early-return-for-Marp pattern at
+  // Preview.tsx:358 is preserved AND either useEffect's deps drift back to
+  // `[]`, one of these tests will fail.
+  it('T-PV-17: link listener attaches after switching from Marp to non-Marp content', async () => {
+    // Start as Marp: contentIsMarp -> true, so MarpPreview branch is taken
+    // and the markdown <div ref={previewRef}> never mounts on first render.
+    vi.mocked(contentIsMarp).mockReturnValue(true);
+    const { rerender, container } = render(
+      <MarkdownPreview
+        content={'---\nmarp: true\n---\n# slide'}
+        darkMode={false}
+        renderingSettings={{ ...DEFAULT_RENDERING_SETTINGS, enableMarp: true }}
+      />,
+    );
+    // Sanity: Marp branch active, markdown div absent.
+    expect(container.querySelector('[data-testid="marp-preview"]')).not.toBeNull();
+    expect(container.querySelector('.markdown-preview')).toBeNull();
+
+    // Switch to a regular markdown document — the markdown div now mounts.
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+    rerender(
+      <MarkdownPreview
+        content={'[Google](https://google.com)'}
+        darkMode={false}
+        renderingSettings={{ ...DEFAULT_RENDERING_SETTINGS, enableMarp: true }}
+      />,
+    );
+    await waitFor(() => {
+      const link = container.querySelector('a[href="https://google.com"]');
+      expect(link).not.toBeNull();
+    });
+
+    const link = container.querySelector('a[href="https://google.com"]') as HTMLAnchorElement;
+    fireEvent.click(link);
+
+    expect(openUrl).toHaveBeenCalledWith('https://google.com');
+  });
+
+  it('T-PV-18: checkbox listener attaches after switching from Marp to non-Marp content', async () => {
+    const onContentChange = vi.fn<(newContent: string) => void>();
+
+    vi.mocked(contentIsMarp).mockReturnValue(true);
+    const { rerender, container } = render(
+      <MarkdownPreview
+        content={'---\nmarp: true\n---\n# slide'}
+        darkMode={false}
+        onContentChange={onContentChange}
+        renderingSettings={{ ...DEFAULT_RENDERING_SETTINGS, enableMarp: true }}
+      />,
+    );
+    expect(container.querySelector('[data-testid="marp-preview"]')).not.toBeNull();
+    expect(container.querySelector('.markdown-preview')).toBeNull();
+
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+    rerender(
+      <MarkdownPreview
+        content={'- [ ] Buy milk'}
+        darkMode={false}
+        onContentChange={onContentChange}
+        renderingSettings={{ ...DEFAULT_RENDERING_SETTINGS, enableMarp: true }}
+      />,
+    );
+    await waitFor(() => {
+      expect(container.querySelector('input.markdown-checkbox')).not.toBeNull();
+    });
+
+    const checkbox = container.querySelector('input.markdown-checkbox') as HTMLInputElement;
+    checkbox.checked = true;
+    fireEvent.change(checkbox);
+
+    expect(onContentChange).toHaveBeenCalledWith('- [x] Buy milk');
   });
 });

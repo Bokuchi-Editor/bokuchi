@@ -207,6 +207,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   // Using delegation avoids the gap between DOM replacement and listener attachment,
   // and capturing ensures we intercept clicks on child elements (e.g. <img> inside <a>)
   // before the default navigation can occur.
+  //
+  // Depend on `isMarp` because the `<div ref={previewRef}>` is conditionally
+  // rendered (the Marp branch returns <MarpPreview/> early). If a Marp tab is
+  // active on first mount, previewRef.current is null when the effect runs;
+  // toggling to a non-Marp tab later mounts the div, and we need the effect
+  // to re-run so the listener actually attaches.
   useEffect(() => {
     const container = previewRef.current;
     if (!container) return;
@@ -236,11 +242,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
     container.addEventListener('click', handler, true);
     return () => container.removeEventListener('click', handler, true);
-  }, []);
+  }, [isMarp]);
 
   // Handle checkbox toggle via event delegation on the container.
   // The container element itself persists across dangerouslySetInnerHTML updates,
   // so a single listener reliably catches events from dynamically replaced children.
+  // See the link-click effect above for why we depend on `isMarp`.
   useEffect(() => {
     const container = previewRef.current;
     if (!container) return;
@@ -280,7 +287,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
     container.addEventListener('change', handleCheckboxChange);
     return () => container.removeEventListener('change', handleCheckboxChange);
-  }, []);
+  }, [isMarp]);
 
 
 

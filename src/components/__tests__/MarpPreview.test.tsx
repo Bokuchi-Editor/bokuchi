@@ -1,8 +1,9 @@
-import { render, waitFor, fireEvent } from '@testing-library/react';
-import { vi, describe, it, expect } from 'vitest';
+import { render, waitFor, fireEvent, act } from '@testing-library/react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock Tauri plugins
 vi.mock('@tauri-apps/api/core');
+vi.mock('@tauri-apps/plugin-opener');
 
 vi.mock('../../api/variableApi', () => ({
   variableApi: {
@@ -23,6 +24,7 @@ vi.mock('../../utils/marpRenderer', () => ({
     (_html: string, _css: string, index: number) => `<html><body>Slide ${index + 1}</body></html>`,
   ),
   buildAllSlidesDocument: vi.fn().mockReturnValue('<html><body>All Slides</body></html>'),
+  buildThumbnailDocument: vi.fn().mockReturnValue('<html><body>Thumbnails</body></html>'),
 }));
 
 // Mock react-i18next
@@ -33,6 +35,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 import MarpPreview from '../MarpPreview';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 const defaultProps = {
   content: '---\nmarp: true\n---\n# Slide 1\n---\n# Slide 2\n---\n# Slide 3',
@@ -141,5 +144,69 @@ describe('MarpPreview - continuous mode (split)', () => {
     // In continuous mode, there should be no navigation buttons
     const buttons = queryAllByRole('button');
     expect(buttons.length).toBe(0);
+  });
+});
+
+// T-MP-LINK: openExternalUrl postMessage from any iframe must be routed to
+// the OS browser via openUrl, never followed inside the webview. Unsafe
+// schemes (javascript:, file:, data:, etc.) must be silently dropped.
+describe('MarpPreview - openExternalUrl postMessage handling', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (openUrl as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+  });
+
+  it('forwards http(s) URLs to openUrl', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} viewMode="preview" />);
+    await waitFor(() => expect(getByText('1 / 3')).toBeTruthy());
+
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', { data: { type: 'openExternalUrl', url: 'https://example.com/page' } }),
+      );
+    });
+
+    expect(openUrl).toHaveBeenCalledWith('https://example.com/page');
+  });
+
+  it('forwards mailto URLs to openUrl', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} viewMode="preview" />);
+    await waitFor(() => expect(getByText('1 / 3')).toBeTruthy());
+
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', { data: { type: 'openExternalUrl', url: 'mailto:foo@example.com' } }),
+      );
+    });
+
+    expect(openUrl).toHaveBeenCalledWith('mailto:foo@example.com');
+  });
+
+  it('drops javascript: and file: URLs without calling openUrl', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} viewMode="preview" />);
+    await waitFor(() => expect(getByText('1 / 3')).toBeTruthy());
+
+    for (const url of ['javascript:alert(1)', 'file:///etc/passwd', 'data:text/html,<script>x</script>']) {
+      act(() => {
+        window.dispatchEvent(
+          new MessageEvent('message', { data: { type: 'openExternalUrl', url } }),
+        );
+      });
+    }
+
+    expect(openUrl).not.toHaveBeenCalled();
+  });
+
+  it('ignores openExternalUrl messages with non-string url payloads', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} viewMode="preview" />);
+    await waitFor(() => expect(getByText('1 / 3')).toBeTruthy());
+
+    for (const payload of [{ type: 'openExternalUrl' }, { type: 'openExternalUrl', url: 42 }, { type: 'openExternalUrl', url: null }]) {
+      act(() => {
+        window.dispatchEvent(new MessageEvent('message', { data: payload }));
+      });
+    }
+
+    expect(openUrl).not.toHaveBeenCalled();
   });
 });
