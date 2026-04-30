@@ -89,6 +89,23 @@ describe('checkDuplicateFileInTabs', () => {
   it('T-PU-13: skips tabs without filePath', () => {
     expect(checkDuplicateFileInTabs('/docs/file2.md', tabs)).toBeNull();
   });
+
+  // T-PU-13b: case-insensitive match (Windows / macOS default volumes)
+  it('T-PU-13b: finds duplicate with different letter case', () => {
+    const result = checkDuplicateFileInTabs('/DOCS/File1.MD', tabs);
+    expect(result).not.toBeNull();
+    expect(result!.id).toBe('t1');
+  });
+
+  // T-PU-13c: case-insensitive match with Windows-style path
+  it('T-PU-13c: finds duplicate combining case and separator differences', () => {
+    const mixedTabs: Tab[] = [
+      { id: 't3', title: 'Doc.md', content: '', isModified: false, isNew: false, filePath: 'C:/Users/Foo/Doc.md' },
+    ];
+    const result = checkDuplicateFileInTabs('c:\\users\\foo\\doc.md', mixedTabs);
+    expect(result).not.toBeNull();
+    expect(result!.id).toBe('t3');
+  });
 });
 
 describe('normalizeFilePath - edge cases', () => {

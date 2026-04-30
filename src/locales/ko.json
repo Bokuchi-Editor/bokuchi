@@ -21,6 +21,7 @@
     "delete": "삭제",
     "close": "닫기",
     "cancel": "취소",
+    "dontSave": "저장 안 함",
     "reset": "재설정",
     "splitView": "분할 보기",
     "editorOnly": "편집기만",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "닫기 전에 변경사항을 저장하시겠습니까?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold>에 저장되지 않은 변경사항이 있습니다. 저장하시겠습니까?",
     "confirmClose": "이 탭을 닫으시겠습니까?",
     "fileChanged": {
       "title": "파일이 변경되었습니다",
@@ -531,37 +533,25 @@
       "improvement": "개선"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp 프레젠테이션 미리보기",
-        "description": "`marp: true` 프런트매터가 있는 Markdown 파일을 슬라이드 프레젠테이션으로 미리볼 수 있습니다."
+      "marpFullscreenSlide": {
+        "title": "전체 화면 시 슬라이드 위치",
+        "description": "Marp 슬라이드쇼에서 전체 화면으로 전환할 때 현재 슬라이드와 관계없이 항상 첫 번째 슬라이드부터 시작되던 문제를 수정했습니다."
       },
-      "tabContextMenu": {
-        "title": "탭 컨텍스트 메뉴",
-        "description": "탭을 마우스 오른쪽 버튼으로 클릭하여 고정, 이름 변경, 경로/파일 이름 복사, 다른 탭/오른쪽 탭/모든 탭 닫기를 할 수 있습니다."
+      "marpPreviewScrollbar": {
+        "title": "Marp 미리보기 스크롤바",
+        "description": "앱 실행 직후 Marp 미리보기에서 스크롤바가 표시되지 않던 문제를 수정했습니다."
       },
-      "tabPinning": {
-        "title": "탭 고정",
-        "description": "중요한 탭을 고정하여 일괄 닫기 동작에서 제외할 수 있습니다."
+      "marpExternalLinks": {
+        "title": "Marp 슬라이드 내 외부 링크",
+        "description": "Marp 슬라이드 내 링크가 슬라이드 안에서 이동하지 않고 항상 운영체제의 브라우저에서 열리도록 변경되었습니다."
       },
-      "tabRename": {
-        "title": "탭 이름 변경",
-        "description": "디스크에 저장된 파일의 이름을 바꾸거나 저장되지 않은 탭의 제목을 탭에서 직접 변경할 수 있습니다."
+      "windowsSaveReliability": {
+        "title": "Windows 파일 연결 저장",
+        "description": "Windows에서 문서/바탕 화면/다운로드 폴더 외부에 있는 파일을 OS 파일 연결로 열었을 때 저장이나 탭 복원이 실패하던 문제를 수정했습니다."
       },
-      "tabUnsavedTitle": {
-        "title": "첫 줄에서 자동 제목",
-        "description": "저장되지 않은 탭이 이제 내용의 첫 줄을 탭 제목으로 표시합니다."
-      },
-      "tabCloseButtonPosition": {
-        "title": "닫기 버튼 위치",
-        "description": "닫기/고정 아이콘을 각 탭의 왼쪽 또는 오른쪽에 표시할지 선택할 수 있습니다."
-      },
-      "scrollSyncMode": {
-        "title": "스크롤 동기화 옵션",
-        "description": "에디터와 미리보기의 스크롤 위치 동기화 방식을 단방향(기본값), 양방향, 끄기 중에서 선택할 수 있습니다."
-      },
-      "previewExternalChange": {
-        "title": "미리보기 모드에서 외부 파일 변경",
-        "description": "미리보기 모드에서 외부 파일 변경 사항이 올바르게 로드되지 않던 문제를 수정했습니다."
+      "editorRapidTyping": {
+        "title": "빠른 입력 시 에디터 안정성",
+        "description": "Windows에서 빠르게 키 입력할 때 내용이 오래된 상태로 되돌아가거나 커서가 파일 끝으로 이동하던 문제를 수정했습니다."
       }
     }
   },

@@ -21,6 +21,7 @@
     "delete": "Löschen",
     "close": "Schließen",
     "cancel": "Abbrechen",
+    "dontSave": "Nicht speichern",
     "reset": "Zurücksetzen",
     "splitView": "Geteilte Ansicht",
     "editorOnly": "Nur Editor",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Änderungen vor dem Schließen speichern?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> hat ungespeicherte Änderungen. Möchten Sie sie speichern?",
     "confirmClose": "Sind Sie sicher, dass Sie diesen Tab schließen möchten?",
     "fileChanged": {
       "title": "Datei wurde geändert",
@@ -531,37 +533,25 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp-Präsentationsvorschau",
-        "description": "Markdown-Dateien mit `marp: true` im Front-Matter können nun als Folienpräsentation angezeigt werden."
+      "marpFullscreenSlide": {
+        "title": "Folienposition im Vollbildmodus",
+        "description": "Ein Problem wurde behoben, bei dem die Marp-Diashow beim Wechsel in den Vollbildmodus immer mit der ersten Folie begann, unabhängig von der aktuellen Folie."
       },
-      "tabContextMenu": {
-        "title": "Tab-Kontextmenü",
-        "description": "Klicken Sie mit der rechten Maustaste auf einen Tab, um ihn anzuheften, umzubenennen, Pfad/Dateiname zu kopieren oder andere/rechte/alle Tabs zu schließen."
+      "marpPreviewScrollbar": {
+        "title": "Bildlaufleiste in der Marp-Vorschau",
+        "description": "Ein Problem wurde behoben, bei dem die Bildlaufleiste in der Marp-Vorschau direkt nach dem Start der Anwendung nicht angezeigt wurde."
       },
-      "tabPinning": {
-        "title": "Tabs anheften",
-        "description": "Heften Sie wichtige Tabs an, damit sie von Sammel-Schließaktionen ausgenommen werden."
+      "marpExternalLinks": {
+        "title": "Externe Links in Marp-Folien",
+        "description": "Links innerhalb von Marp-Folien werden nun immer im OS-Browser geöffnet, anstatt innerhalb der Folie zu navigieren."
       },
-      "tabRename": {
-        "title": "Tab umbenennen",
-        "description": "Benennen Sie gespeicherte Dateien auf der Festplatte um oder ändern Sie den Titel ungespeicherter Tabs direkt im Tab."
+      "windowsSaveReliability": {
+        "title": "Speichern über die Windows-Dateizuordnung",
+        "description": "Speicher- und Tab-Wiederherstellungsfehler unter Windows für Dateien wurden behoben, die über die Dateizuordnung außerhalb der Ordner Dokumente/Desktop/Downloads geöffnet wurden."
       },
-      "tabUnsavedTitle": {
-        "title": "Automatischer Titel aus der ersten Zeile",
-        "description": "Ungespeicherte Tabs zeigen nun die erste Zeile des Inhalts als Tab-Titel an."
-      },
-      "tabCloseButtonPosition": {
-        "title": "Position der Schließen-Schaltfläche",
-        "description": "Wählen Sie, ob das Schließen-/Anheften-Symbol links oder rechts an jedem Tab erscheint."
-      },
-      "scrollSyncMode": {
-        "title": "Optionen für Scroll-Synchronisierung",
-        "description": "Wählen Sie, wie Editor- und Vorschau-Scrollpositionen synchronisiert werden: einseitig (Standard), bidirektional oder aus."
-      },
-      "previewExternalChange": {
-        "title": "Externe Dateiänderung im Vorschaumodus",
-        "description": "Ein Problem wurde behoben, bei dem externe Dateiänderungen im Vorschaumodus nicht korrekt geladen wurden."
+      "editorRapidTyping": {
+        "title": "Stabiler Editor bei schneller Eingabe",
+        "description": "Ein Windows-spezifisches Problem wurde behoben, bei dem schnelle Tastenanschläge das Dokument durch veralteten Inhalt ersetzen und den Cursor an das Dateiende springen lassen konnten."
       }
     }
   },

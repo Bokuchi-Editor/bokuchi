@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.1...HEAD)
+
+## [0.8.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.0...v0.8.1) - 2026-04-30
+
+### Changed
+
+- Auto-update check is now throttled to once every 24 hours (persisted across launches) instead of running on every launch
+
+### Fixed
+
+- Marp slideshow fullscreen now respects the current slide instead of always starting at the first slide
+- Marp preview scrollbar not appearing immediately after launching the application
+- Links inside Marp slides are now always opened in the OS browser instead of navigating inside the slide iframe
+- Save and tab restore reliability on Windows for files opened via OS file association from outside the user's Documents/Desktop/Downloads folders (also surfaces the underlying OS error in the failure message)
+- Windows-only race condition where rapid keystrokes during slow IPC could replace the document with stale content and jump the cursor to the end of the file
+- Preview link and checkbox listeners not attaching after switching from a Marp tab to a non-Marp tab
+- Duplicate file detection now matches paths case-insensitively, so the same file no longer opens in two tabs on Windows / default macOS volumes
 
 ## [0.8.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.7.2...v0.8.0) - 2026-04-19
 

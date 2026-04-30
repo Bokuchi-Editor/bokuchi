@@ -445,6 +445,30 @@ export const storeApi = {
     }
   },
 
+  // Save last update check timestamp (epoch ms)
+  async saveLastUpdateCheckAt(timestamp: number): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('lastUpdateCheckAt', timestamp);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save last update check timestamp:', error);
+      throw error;
+    }
+  },
+
+  // Load last update check timestamp (epoch ms)
+  async loadLastUpdateCheckAt(): Promise<number | null> {
+    try {
+      const storeInstance = await getStore();
+      const timestamp = await storeInstance.get('lastUpdateCheckAt') as number | null;
+      return typeof timestamp === 'number' ? timestamp : null;
+    } catch (error) {
+      console.error('Failed to load last update check timestamp:', error);
+      return null;
+    }
+  },
+
   // Load folder tree root path
   async loadFolderTreeRoot(): Promise<string | null> {
     try {

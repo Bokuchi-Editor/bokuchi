@@ -9,6 +9,7 @@ import { TableConversionDialog } from './TableConversionDialog';
 import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
+import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
 
 interface EditorProps {
   content: string;
@@ -98,32 +99,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   }, []);
 
   // Dispose Monaco models for closed tabs to prevent memory leaks.
-  // We use getModels() iteration instead of getModel(Uri.parse(...)) because
-  // URI matching via Uri.parse may fail depending on the runtime environment.
   // keepCurrentModel={true} is set on the Editor component so that model
   // lifecycle is entirely managed here (the library won't dispose on unmount).
   const prevTabIdsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
     if (!tabs) return;
     const currentIds = new Set(tabs.map(tab => tab.id));
-    const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-    if (monaco?.editor?.getModels) {
-      const removedIds = new Set<string>();
-      for (const prevId of prevTabIdsRef.current) {
-        if (!currentIds.has(prevId)) {
-          removedIds.add(prevId);
-        }
-      }
-      if (removedIds.size > 0) {
-        for (const model of monaco.editor.getModels()) {
-          const uriStr = model.uri.toString();
-          for (const id of removedIds) {
-            if (uriStr === id || uriStr.endsWith('/' + id)) {
-              model.dispose();
-              break;
-            }
-          }
-        }
+    for (const prevId of prevTabIdsRef.current) {
+      if (!currentIds.has(prevId)) {
+        findModelForTab(prevId)?.dispose();
       }
     }
     prevTabIdsRef.current = currentIds;
@@ -136,16 +120,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   tabsRef.current = tabs;
   useEffect(() => {
     return () => {
-      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
-      if (!monaco?.editor?.getModels) return;
       const liveIds = new Set((tabsRef.current ?? []).map(tab => tab.id));
-      for (const model of monaco.editor.getModels()) {
-        const uriStr = model.uri.toString();
-        for (const trackedId of prevTabIdsRef.current) {
-          if ((uriStr === trackedId || uriStr.endsWith('/' + trackedId)) && !liveIds.has(trackedId)) {
-            model.dispose();
-            break;
-          }
+      for (const trackedId of prevTabIdsRef.current) {
+        if (!liveIds.has(trackedId)) {
+          findModelForTab(trackedId)?.dispose();
         }
       }
     };
@@ -523,19 +501,23 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           // Skip events triggered by our own programmatic scroll to avoid feedback loops
           if (isProgrammaticScrollRef.current) return;
           const scrollTop = editor.getScrollTop();
-          const scrollHeight = editor.getScrollHeight();
-          const clientHeight = editor.getLayoutInfo().height;
-          const maxScroll = scrollHeight - clientHeight;
+          const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
           if (maxScroll > 0) {
             onScrollChange(scrollTop / maxScroll);
           }
         })
       );
     }
-
   };
 
   const handleEditorChange = (value: string | undefined) => {
+    // Silent reload: the model was rewritten by setModelContentSilently
+    // (e.g. external file change reload). React state has already been
+    // updated by reloadTabContent; firing onChange here would re-dispatch
+    // UPDATE_TAB_CONTENT and set isModified=true, contradicting the reload.
+    if (isModelSilentlyEditing(editorRef.current?.getModel() ?? null)) {
+      return;
+    }
     if (value !== undefined && value !== content) {
       onChange(value);
     }
@@ -631,7 +613,15 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             defaultLanguage="markdown"
             path={activeTabId || 'default'}
             keepCurrentModel
-            value={content}
+            // Uncontrolled: defaultValue seeds the model on creation, then the
+            // model is the source of truth. We do NOT pass `value` because the
+            // library's value-prop sync re-applies the prop via executeEdits
+            // on every render, which races with rapid keystrokes (slow IPC on
+            // Windows) and ends up replacing the doc with a stale value —
+            // moving the cursor to EOF via forceMoveMarkers.
+            // External content updates (file reload etc.) push into the model
+            // directly via setModelContentSilently in editorSync.ts.
+            defaultValue={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}

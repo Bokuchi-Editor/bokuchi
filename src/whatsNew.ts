@@ -25,47 +25,32 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.8.0',
+  version: '0.8.1',
   changes: [
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.marpPreview.title',
-      descriptionKey: 'whatsNew.changes.marpPreview.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tabContextMenu.title',
-      descriptionKey: 'whatsNew.changes.tabContextMenu.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tabPinning.title',
-      descriptionKey: 'whatsNew.changes.tabPinning.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tabRename.title',
-      descriptionKey: 'whatsNew.changes.tabRename.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tabUnsavedTitle.title',
-      descriptionKey: 'whatsNew.changes.tabUnsavedTitle.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tabCloseButtonPosition.title',
-      descriptionKey: 'whatsNew.changes.tabCloseButtonPosition.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.scrollSyncMode.title',
-      descriptionKey: 'whatsNew.changes.scrollSyncMode.description',
+      type: 'fix',
+      titleKey: 'whatsNew.changes.marpFullscreenSlide.title',
+      descriptionKey: 'whatsNew.changes.marpFullscreenSlide.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.previewExternalChange.title',
-      descriptionKey: 'whatsNew.changes.previewExternalChange.description',
+      titleKey: 'whatsNew.changes.marpPreviewScrollbar.title',
+      descriptionKey: 'whatsNew.changes.marpPreviewScrollbar.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.marpExternalLinks.title',
+      descriptionKey: 'whatsNew.changes.marpExternalLinks.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.windowsSaveReliability.title',
+      descriptionKey: 'whatsNew.changes.windowsSaveReliability.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.editorRapidTyping.title',
+      descriptionKey: 'whatsNew.changes.editorRapidTyping.description',
     },
   ],
 };

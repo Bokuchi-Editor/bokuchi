@@ -21,6 +21,7 @@
     "delete": "Delete",
     "close": "Close",
     "cancel": "Cancel",
+    "dontSave": "Don't Save",
     "reset": "Reset",
     "splitView": "Split View",
     "editorOnly": "Editor Only",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> has unsaved changes. Do you want to save them?",
     "confirmClose": "Are you sure you want to close this tab?",
     "fileChanged": {
       "title": "File has been changed",
@@ -531,37 +533,25 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Marp Presentation Preview",
-        "description": "Preview Markdown files with a `marp: true` front-matter as slide presentations."
+      "marpFullscreenSlide": {
+        "title": "Fullscreen Slide Position",
+        "description": "Fixed an issue where Marp's slideshow always started from the first slide when entering fullscreen mode, regardless of the current slide."
       },
-      "tabContextMenu": {
-        "title": "Tab Context Menu",
-        "description": "Right-click a tab to pin, rename, copy its path or filename, or close other/right/all tabs."
+      "marpPreviewScrollbar": {
+        "title": "Marp Preview Scrollbar",
+        "description": "Fixed an issue where the scrollbar did not appear in the Marp preview immediately after launching the application."
       },
-      "tabPinning": {
-        "title": "Tab Pinning",
-        "description": "Pin important tabs to keep them from being closed by bulk close actions."
+      "marpExternalLinks": {
+        "title": "External Links in Marp Slides",
+        "description": "Links inside Marp slides now always open in the OS browser instead of navigating inside the slide."
       },
-      "tabRename": {
-        "title": "Tab Rename",
-        "description": "Rename saved files on disk or change the title of unsaved tabs directly from the tab."
+      "windowsSaveReliability": {
+        "title": "Windows File Association Save",
+        "description": "Fixed save and tab restore failures on Windows for files opened via OS file association from outside the Documents/Desktop/Downloads folders."
       },
-      "tabUnsavedTitle": {
-        "title": "Auto Title from First Line",
-        "description": "Unsaved tabs now display the first line of their content as the tab title."
-      },
-      "tabCloseButtonPosition": {
-        "title": "Close Button Position",
-        "description": "Choose whether the close/pin icon appears on the left or right side of each tab."
-      },
-      "scrollSyncMode": {
-        "title": "Scroll Sync Options",
-        "description": "Choose how editor and preview scroll positions sync: one-way (default), bidirectional, or off."
-      },
-      "previewExternalChange": {
-        "title": "External File Change in Preview Mode",
-        "description": "Fixed an issue where external file changes were not loaded correctly while in preview mode."
+      "editorRapidTyping": {
+        "title": "Stable Editor on Rapid Typing",
+        "description": "Fixed a Windows-specific issue where rapid keystrokes could replace the document with stale content and jump the cursor to the end of the file."
       }
     }
   },

@@ -21,6 +21,7 @@
     "delete": "Excluir",
     "close": "Fechar",
     "cancel": "Cancelar",
+    "dontSave": "Não Salvar",
     "reset": "Redefinir",
     "splitView": "Visualização dividida",
     "editorOnly": "Apenas editor",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Salvar alterações antes de fechar?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> tem alterações não salvas. Deseja salvá-las?",
     "confirmClose": "Tem certeza de que deseja fechar esta aba?",
     "fileChanged": {
       "title": "Arquivo foi alterado",
@@ -531,37 +533,25 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Pré-visualização de apresentação Marp",
-        "description": "Pré-visualize arquivos Markdown com front-matter `marp: true` como apresentações de slides."
+      "marpFullscreenSlide": {
+        "title": "Posição do slide em tela cheia",
+        "description": "Corrigido um problema em que a apresentação Marp sempre começava no primeiro slide ao entrar em tela cheia, independentemente do slide atual."
       },
-      "tabContextMenu": {
-        "title": "Menu de contexto da aba",
-        "description": "Clique com o botão direito em uma aba para fixar, renomear, copiar caminho ou nome do arquivo, ou fechar outras/à direita/todas as abas."
+      "marpPreviewScrollbar": {
+        "title": "Barra de rolagem da pré-visualização Marp",
+        "description": "Corrigido um problema em que a barra de rolagem não aparecia na pré-visualização Marp logo após iniciar o aplicativo."
       },
-      "tabPinning": {
-        "title": "Fixar abas",
-        "description": "Fixe abas importantes para que não sejam fechadas por ações de fechamento em massa."
+      "marpExternalLinks": {
+        "title": "Links externos em slides Marp",
+        "description": "Os links dentro dos slides Marp agora sempre abrem no navegador do sistema, em vez de navegar dentro do slide."
       },
-      "tabRename": {
-        "title": "Renomear aba",
-        "description": "Renomeie arquivos salvos no disco ou altere o título de abas não salvas diretamente a partir da aba."
+      "windowsSaveReliability": {
+        "title": "Salvamento via associação de arquivos no Windows",
+        "description": "Corrigidas as falhas de salvamento e restauração de abas no Windows para arquivos abertos via associação de arquivos a partir de locais fora das pastas Documentos/Área de Trabalho/Downloads."
       },
-      "tabUnsavedTitle": {
-        "title": "Título automático a partir da primeira linha",
-        "description": "Abas não salvas agora exibem a primeira linha do conteúdo como título da aba."
-      },
-      "tabCloseButtonPosition": {
-        "title": "Posição do botão de fechar",
-        "description": "Escolha se o ícone de fechar/fixar aparece à esquerda ou à direita de cada aba."
-      },
-      "scrollSyncMode": {
-        "title": "Opções de sincronização de rolagem",
-        "description": "Escolha como a rolagem entre editor e pré-visualização é sincronizada: unidirecional (padrão), bidirecional ou desligada."
-      },
-      "previewExternalChange": {
-        "title": "Alteração externa de arquivo no modo pré-visualização",
-        "description": "Corrigido um problema em que alterações externas de arquivos não eram carregadas corretamente no modo pré-visualização."
+      "editorRapidTyping": {
+        "title": "Editor estável durante digitação rápida",
+        "description": "Corrigido um problema específico do Windows em que digitação rápida podia substituir o documento por conteúdo obsoleto e mover o cursor para o final do arquivo."
       }
     }
   },

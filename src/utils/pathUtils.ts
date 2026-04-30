@@ -24,12 +24,17 @@ export const extractFolderNameFromPath = (folderPath: string | null): string | n
 /**
  * Check if a file with the given path already exists in the tabs list.
  * Returns the matching tab or null.
+ *
+ * Comparison is case-insensitive: Windows (NTFS) and macOS (default APFS/HFS+)
+ * treat file paths case-insensitively, and an OS-level file association may
+ * deliver a differently-cased path than the one stored when the user first
+ * opened the file via File > Open.
  */
 export const checkDuplicateFileInTabs = (filePath: string, tabs: Tab[]): Tab | null => {
-  const normalizedPath = normalizeFilePath(filePath);
+  const normalizedPath = normalizeFilePath(filePath).toLowerCase();
   return tabs.find(tab => {
     if (!tab.filePath) return false;
-    const normalizedExistingPath = normalizeFilePath(tab.filePath);
+    const normalizedExistingPath = normalizeFilePath(tab.filePath).toLowerCase();
     return normalizedExistingPath === normalizedPath;
   }) || null;
 };

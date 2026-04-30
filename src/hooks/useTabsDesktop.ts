@@ -5,6 +5,7 @@ import { desktopApi } from '../api/desktopApi';
 import { storeApi } from '../api/storeApi';
 import { detectFileChange } from '../utils/fileChangeDetection';
 import { normalizeFilePath, extractFileNameFromPath, checkDuplicateFileInTabs } from '../utils/pathUtils';
+import { syncModelForTab } from '../utils/editorSync';
 
 // Global tab state management (for duplicate checking)
 let globalTabsState: Tab[] = [];
@@ -56,6 +57,11 @@ export const useTabsDesktop = () => {
   }, []);
 
   const reloadTabContent = useCallback((id: string, content: string) => {
+    // Editor is uncontrolled (no `value` prop), so the React state update from
+    // RELOAD_TAB_CONTENT alone won't push new content into the Monaco model.
+    // Sync the model first; the silent flag suppresses the re-entrant
+    // onChange that would otherwise mark the tab dirty again.
+    syncModelForTab(id, content);
     dispatch({ type: 'RELOAD_TAB_CONTENT', payload: { id, content } });
   }, []);
 
@@ -108,9 +114,7 @@ export const useTabsDesktop = () => {
 
       // Check if the same file is already open (using global state)
       if (result.filePath) {
-        // Check for duplicates from global state
         const existingTab = checkDuplicateFile(result.filePath);
-
         if (existingTab) {
           setActiveTab(existingTab.id);
           return existingTab.id;
@@ -286,7 +290,6 @@ export const useTabsDesktop = () => {
       }
     } catch (error) {
       console.error('Failed to save file:', error);
-      console.error('Error details:', error);
       return false;
     }
   }, [state.tabs, setTabModified, setTabFilePath, updateTabTitle, setTabNew, updateTabContent, reloadTabContent]);
@@ -390,22 +393,26 @@ export const useTabsDesktop = () => {
         const restoredTabs = await Promise.all(
           savedState.tabs.map(async (tab) => {
             if (!tab.isNew && tab.filePath) {
-              try {
-                const content = await desktopApi.readFileFromPath(tab.filePath);
-
-                // Also get file hash info
-                let fileHashInfo = undefined;
-                try {
-                  fileHashInfo = await desktopApi.getFileHash(tab.filePath);
-                } catch (error) {
-                  console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
-                }
-
-                return { ...tab, content, fileHashInfo };
-              } catch (error) {
-                console.error(`Failed to load file: ${tab.filePath}`, error);
+              // Use readFileByPath (custom Tauri command) instead of readFileFromPath
+              // (FS plugin) to avoid scope/path issues on Windows — the FS plugin
+              // rejects paths outside the capabilities scope ($HOME/$DESKTOP/
+              // $DOCUMENT/$DOWNLOAD), which caused restored tabs for files
+              // opened via OS file association from other locations to be
+              // downgraded to new/unsaved tabs.
+              const fileResult = await desktopApi.readFileByPath(tab.filePath);
+              if (fileResult.error) {
+                console.error(`Failed to load file: ${tab.filePath}`, fileResult.error);
                 return { ...tab, isNew: true, filePath: undefined };
               }
+
+              let fileHashInfo = undefined;
+              try {
+                fileHashInfo = await desktopApi.getFileHash(tab.filePath);
+              } catch (error) {
+                console.warn(`Failed to get file hash for ${tab.filePath}:`, error);
+              }
+
+              return { ...tab, content: fileResult.content, fileHashInfo };
             }
             return tab;
           })

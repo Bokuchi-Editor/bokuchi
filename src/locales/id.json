@@ -21,6 +21,7 @@
     "delete": "Hapus",
     "close": "Tutup",
     "cancel": "Batal",
+    "dontSave": "Jangan Simpan",
     "reset": "Reset",
     "splitView": "Tampilan Terbagi",
     "editorOnly": "Editor Saja",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Simpan perubahan sebelum menutup?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> memiliki perubahan yang belum disimpan. Apakah Anda ingin menyimpannya?",
     "confirmClose": "Apakah Anda yakin ingin menutup tab ini?",
     "fileChanged": {
       "title": "File telah diubah",
@@ -531,37 +533,25 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "marpPreview": {
-        "title": "Pratinjau Presentasi Marp",
-        "description": "Pratinjau file Markdown dengan front-matter `marp: true` sebagai presentasi slide."
+      "marpFullscreenSlide": {
+        "title": "Posisi Slide dalam Mode Layar Penuh",
+        "description": "Memperbaiki masalah di mana presentasi Marp selalu dimulai dari slide pertama ketika beralih ke layar penuh, terlepas dari slide saat ini."
       },
-      "tabContextMenu": {
-        "title": "Menu Konteks Tab",
-        "description": "Klik kanan pada tab untuk menyematkan, mengganti nama, menyalin path atau nama file, atau menutup tab lain/kanan/semua."
+      "marpPreviewScrollbar": {
+        "title": "Bilah Gulir Pratinjau Marp",
+        "description": "Memperbaiki masalah di mana bilah gulir tidak muncul pada pratinjau Marp segera setelah aplikasi diluncurkan."
       },
-      "tabPinning": {
-        "title": "Menyematkan Tab",
-        "description": "Sematkan tab penting agar tidak tertutup oleh aksi penutupan massal."
+      "marpExternalLinks": {
+        "title": "Tautan Eksternal di Slide Marp",
+        "description": "Tautan di dalam slide Marp sekarang selalu dibuka di peramban OS, bukan dinavigasi di dalam slide."
       },
-      "tabRename": {
-        "title": "Ganti Nama Tab",
-        "description": "Ganti nama file yang tersimpan di disk atau ubah judul tab yang belum disimpan langsung dari tab."
+      "windowsSaveReliability": {
+        "title": "Simpan via Asosiasi File Windows",
+        "description": "Memperbaiki kegagalan penyimpanan dan pemulihan tab di Windows untuk file yang dibuka melalui asosiasi file OS dari luar folder Documents/Desktop/Downloads."
       },
-      "tabUnsavedTitle": {
-        "title": "Judul Otomatis dari Baris Pertama",
-        "description": "Tab yang belum disimpan sekarang menampilkan baris pertama kontennya sebagai judul tab."
-      },
-      "tabCloseButtonPosition": {
-        "title": "Posisi Tombol Tutup",
-        "description": "Pilih apakah ikon tutup/sematkan muncul di sisi kiri atau kanan setiap tab."
-      },
-      "scrollSyncMode": {
-        "title": "Opsi Sinkronisasi Gulir",
-        "description": "Pilih cara posisi gulir editor dan pratinjau disinkronkan: satu arah (default), dua arah, atau mati."
-      },
-      "previewExternalChange": {
-        "title": "Perubahan File Eksternal di Mode Pratinjau",
-        "description": "Memperbaiki masalah di mana perubahan file eksternal tidak dimuat dengan benar saat dalam mode pratinjau."
+      "editorRapidTyping": {
+        "title": "Editor Stabil saat Mengetik Cepat",
+        "description": "Memperbaiki masalah khusus Windows di mana mengetik dengan cepat dapat menggantikan dokumen dengan konten lama dan memindahkan kursor ke akhir file."
       }
     }
   },

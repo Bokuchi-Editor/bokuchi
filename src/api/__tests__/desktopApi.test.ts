@@ -215,15 +215,22 @@ describe('desktopApi.readFileFromPath', () => {
 // saveFileToPath
 // ---------------------------------------------------------------------------
 describe('desktopApi.saveFileToPath', () => {
-  it('writes and returns success', async () => {
-    vi.mocked(writeTextFile).mockResolvedValue(undefined);
+  // saveFileToPath uses the Rust `save_file` invoke command (std::fs::write)
+  // rather than the FS plugin's writeTextFile, so that paths outside the
+  // static capabilities scope (e.g. files opened via OS file association on
+  // Windows from outside $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD) can still be
+  // saved. See the comment on saveFileToPath in desktopApi.ts.
+  it('invokes save_file and returns success', async () => {
+    vi.mocked(invoke).mockResolvedValue(undefined);
     const result = await desktopApi.saveFileToPath('/file.md', 'content');
     expect(result).toEqual({ success: true, filePath: '/file.md' });
-    expect(writeTextFile).toHaveBeenCalledWith('/file.md', 'content');
+    expect(invoke).toHaveBeenCalledWith('save_file', { path: '/file.md', content: 'content' });
+    // Should NOT use the FS plugin path
+    expect(writeTextFile).not.toHaveBeenCalled();
   });
 
   it('returns error on failure', async () => {
-    vi.mocked(writeTextFile).mockRejectedValue(new Error('disk full'));
+    vi.mocked(invoke).mockRejectedValue(new Error('disk full'));
     const result = await desktopApi.saveFileToPath('/file.md', 'content');
     expect(result.success).toBe(false);
     expect(result.error).toBe('disk full');

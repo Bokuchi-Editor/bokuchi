@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Save, Close, Cancel } from '@mui/icons-material';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface SaveBeforeCloseDialogProps {
   open: boolean;
@@ -26,6 +27,8 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
   onDontSave,
   onCancel,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog
       open={open}
@@ -40,15 +43,16 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
     >
       <DialogTitle>
         <Typography variant="h6" component="div">
-          Save changes?
+          {t('dialogs.saveChanges')}
         </Typography>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <Box component="span" sx={{ fontWeight: 'bold' }}>
-            {fileName}
-          </Box>
-          {' '}has unsaved changes. Do you want to save them?
+          <Trans
+            i18nKey="dialogs.saveChangesMessage"
+            values={{ fileName }}
+            components={{ bold: <Box component="span" sx={{ fontWeight: 'bold' }} /> }}
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ p: 2, gap: 1 }}>
@@ -58,7 +62,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           variant="outlined"
           color="inherit"
         >
-          Cancel
+          {t('buttons.cancel')}
         </Button>
         <Button
           onClick={onDontSave}
@@ -66,7 +70,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           variant="outlined"
           color="warning"
         >
-          Don't Save
+          {t('buttons.dontSave')}
         </Button>
         <Button
           onClick={onSave}
@@ -75,7 +79,7 @@ const SaveBeforeCloseDialog: React.FC<SaveBeforeCloseDialogProps> = ({
           color="primary"
           autoFocus
         >
-          Save
+          {t('buttons.save')}
         </Button>
       </DialogActions>
     </Dialog>
