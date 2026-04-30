@@ -21,6 +21,7 @@
     "delete": "Löschen",
     "close": "Schließen",
     "cancel": "Abbrechen",
+    "dontSave": "Nicht speichern",
     "reset": "Zurücksetzen",
     "splitView": "Geteilte Ansicht",
     "editorOnly": "Nur Editor",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Änderungen vor dem Schließen speichern?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> hat ungespeicherte Änderungen. Möchten Sie sie speichern?",
     "confirmClose": "Sind Sie sicher, dass Sie diesen Tab schließen möchten?",
     "fileChanged": {
       "title": "Datei wurde geändert",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Stabiler Editor bei schneller Eingabe",
         "description": "Ein Windows-spezifisches Problem wurde behoben, bei dem schnelle Tastenanschläge das Dokument durch veralteten Inhalt ersetzen und den Cursor an das Dateiende springen lassen konnten."
-      },
-      "updateCheckFrequency": {
-        "title": "Häufigkeit der Update-Prüfung",
-        "description": "Die App prüft Updates nun höchstens einmal alle 24 Stunden statt bei jedem Start."
       }
     }
   },

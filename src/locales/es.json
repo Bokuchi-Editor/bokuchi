@@ -21,6 +21,7 @@
     "delete": "Eliminar",
     "close": "Cerrar",
     "cancel": "Cancelar",
+    "dontSave": "No guardar",
     "reset": "Restablecer",
     "splitView": "Vista dividida",
     "editorOnly": "Solo editor",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "¿Guardar cambios antes de cerrar?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> tiene cambios sin guardar. ¿Quieres guardarlos?",
     "confirmClose": "¿Estás seguro de que quieres cerrar esta pestaña?",
     "fileChanged": {
       "title": "El archivo ha sido modificado",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Editor estable al escribir rápido",
         "description": "Se corrigió un problema específico de Windows por el que escribir rápido podía reemplazar el documento con contenido obsoleto y mover el cursor al final del archivo."
-      },
-      "updateCheckFrequency": {
-        "title": "Frecuencia de comprobación de actualizaciones",
-        "description": "La aplicación ahora comprueba si hay actualizaciones como máximo una vez cada 24 horas, en lugar de en cada inicio."
       }
     }
   },

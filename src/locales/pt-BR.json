@@ -21,6 +21,7 @@
     "delete": "Excluir",
     "close": "Fechar",
     "cancel": "Cancelar",
+    "dontSave": "Não Salvar",
     "reset": "Redefinir",
     "splitView": "Visualização dividida",
     "editorOnly": "Apenas editor",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Salvar alterações antes de fechar?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> tem alterações não salvas. Deseja salvá-las?",
     "confirmClose": "Tem certeza de que deseja fechar esta aba?",
     "fileChanged": {
       "title": "Arquivo foi alterado",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Editor estável durante digitação rápida",
         "description": "Corrigido um problema específico do Windows em que digitação rápida podia substituir o documento por conteúdo obsoleto e mover o cursor para o final do arquivo."
-      },
-      "updateCheckFrequency": {
-        "title": "Frequência da verificação de atualizações",
-        "description": "O aplicativo agora verifica atualizações no máximo uma vez a cada 24 horas, em vez de a cada inicialização."
       }
     }
   },

@@ -21,6 +21,7 @@
     "delete": "Supprimer",
     "close": "Fermer",
     "cancel": "Annuler",
+    "dontSave": "Ne pas enregistrer",
     "reset": "Réinitialiser",
     "splitView": "Vue partagée",
     "editorOnly": "Éditeur uniquement",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Enregistrer les modifications avant de fermer ?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> contient des modifications non enregistrées. Voulez-vous les enregistrer ?",
     "confirmClose": "Êtes-vous sûr de vouloir fermer cet onglet ?",
     "fileChanged": {
       "title": "Le fichier a été modifié",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Stabilité de l'éditeur lors d'une saisie rapide",
         "description": "Correction d'un problème spécifique à Windows où une saisie rapide pouvait remplacer le document par un contenu obsolète et déplacer le curseur à la fin du fichier."
-      },
-      "updateCheckFrequency": {
-        "title": "Fréquence de vérification des mises à jour",
-        "description": "L'application vérifie désormais les mises à jour au plus une fois toutes les 24 heures, au lieu de le faire à chaque démarrage."
       }
     }
   },

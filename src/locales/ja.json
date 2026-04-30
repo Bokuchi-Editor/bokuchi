@@ -21,6 +21,7 @@
     "delete": "削除",
     "close": "閉じる",
     "cancel": "キャンセル",
+    "dontSave": "保存しない",
     "reset": "リセット",
     "splitView": "分割表示",
     "editorOnly": "エディターのみ",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> に未保存の変更があります。保存しますか？",
     "confirmClose": "このタブを閉じてもよろしいですか？",
     "fileChanged": {
       "title": "ファイルが変更されています",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "高速入力時のエディタの安定性を改善",
         "description": "Windowsで高速にキー入力した際に、内容が古い状態に戻ったりカーソルが末尾に飛んだりすることがある問題を修正しました。"
-      },
-      "updateCheckFrequency": {
-        "title": "アップデート確認の頻度を変更",
-        "description": "起動のたびに自動更新を確認していたのに加え、24時間に1回確認するようにしました。"
       }
     }
   },

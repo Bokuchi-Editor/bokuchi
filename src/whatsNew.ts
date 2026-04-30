@@ -52,10 +52,5 @@ export const whatsNewContent: WhatsNewContent = {
       titleKey: 'whatsNew.changes.editorRapidTyping.title',
       descriptionKey: 'whatsNew.changes.editorRapidTyping.description',
     },
-    {
-      type: 'improvement',
-      titleKey: 'whatsNew.changes.updateCheckFrequency.title',
-      descriptionKey: 'whatsNew.changes.updateCheckFrequency.description',
-    },
   ],
 };

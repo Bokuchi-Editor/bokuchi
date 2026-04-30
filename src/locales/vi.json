@@ -21,6 +21,7 @@
     "delete": "Xóa",
     "close": "Đóng",
     "cancel": "Hủy",
+    "dontSave": "Không lưu",
     "reset": "Đặt lại",
     "splitView": "Chế độ chia đôi",
     "editorOnly": "Chỉ trình soạn thảo",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Lưu thay đổi trước khi đóng?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> có thay đổi chưa được lưu. Bạn có muốn lưu không?",
     "confirmClose": "Bạn có chắc chắn muốn đóng tab này không?",
     "fileChanged": {
       "title": "Tệp đã được thay đổi",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Trình soạn thảo ổn định khi gõ nhanh",
         "description": "Đã sửa lỗi đặc trưng của Windows khi gõ phím nhanh có thể thay thế tài liệu bằng nội dung cũ và đưa con trỏ về cuối tệp."
-      },
-      "updateCheckFrequency": {
-        "title": "Tần suất kiểm tra cập nhật",
-        "description": "Ứng dụng giờ chỉ kiểm tra cập nhật tối đa 24 giờ một lần thay vì mỗi lần khởi chạy."
       }
     }
   },

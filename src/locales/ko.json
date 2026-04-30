@@ -21,6 +21,7 @@
     "delete": "삭제",
     "close": "닫기",
     "cancel": "취소",
+    "dontSave": "저장 안 함",
     "reset": "재설정",
     "splitView": "분할 보기",
     "editorOnly": "편집기만",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "닫기 전에 변경사항을 저장하시겠습니까?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold>에 저장되지 않은 변경사항이 있습니다. 저장하시겠습니까?",
     "confirmClose": "이 탭을 닫으시겠습니까?",
     "fileChanged": {
       "title": "파일이 변경되었습니다",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "빠른 입력 시 에디터 안정성",
         "description": "Windows에서 빠르게 키 입력할 때 내용이 오래된 상태로 되돌아가거나 커서가 파일 끝으로 이동하던 문제를 수정했습니다."
-      },
-      "updateCheckFrequency": {
-        "title": "업데이트 확인 주기",
-        "description": "이제 앱이 실행할 때마다가 아니라 24시간에 한 번만 업데이트를 확인합니다."
       }
     }
   },

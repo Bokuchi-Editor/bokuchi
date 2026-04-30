@@ -21,6 +21,7 @@
     "delete": "刪除",
     "close": "關閉",
     "cancel": "取消",
+    "dontSave": "不儲存",
     "reset": "重設",
     "splitView": "分割檢視",
     "editorOnly": "僅編輯器",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "關閉前是否儲存變更？",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> 有未儲存的變更。是否儲存？",
     "confirmClose": "您確定要關閉此標籤頁嗎？",
     "fileChanged": {
       "title": "檔案已變更",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "快速輸入時編輯器更穩定",
         "description": "修正了 Windows 上快速輸入時，文件內容可能被舊內容覆蓋且游標跳到檔案結尾的問題。"
-      },
-      "updateCheckFrequency": {
-        "title": "更新檢查頻率",
-        "description": "應用程式現在最多每 24 小時檢查一次更新，而非每次啟動時都檢查。"
       }
     }
   },

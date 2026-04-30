@@ -21,6 +21,7 @@
     "delete": "删除",
     "close": "关闭",
     "cancel": "取消",
+    "dontSave": "不保存",
     "reset": "重置",
     "splitView": "分屏视图",
     "editorOnly": "仅编辑器",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "关闭前是否保存更改？",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> 有未保存的更改。是否保存？",
     "confirmClose": "您确定要关闭此标签页吗？",
     "fileChanged": {
       "title": "文件已更改",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "快速输入时编辑器更稳定",
         "description": "修复了 Windows 上快速输入时，文档可能被旧内容覆盖且光标跳转到文件末尾的问题。"
-      },
-      "updateCheckFrequency": {
-        "title": "更新检查频率",
-        "description": "应用现在最多每 24 小时检查一次更新，而不是每次启动都检查。"
       }
     }
   },

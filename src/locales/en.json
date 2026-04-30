@@ -21,6 +21,7 @@
     "delete": "Delete",
     "close": "Close",
     "cancel": "Cancel",
+    "dontSave": "Don't Save",
     "reset": "Reset",
     "splitView": "Split View",
     "editorOnly": "Editor Only",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> has unsaved changes. Do you want to save them?",
     "confirmClose": "Are you sure you want to close this tab?",
     "fileChanged": {
       "title": "File has been changed",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Stable Editor on Rapid Typing",
         "description": "Fixed a Windows-specific issue where rapid keystrokes could replace the document with stale content and jump the cursor to the end of the file."
-      },
-      "updateCheckFrequency": {
-        "title": "Update Check Frequency",
-        "description": "The app now checks for updates at most once every 24 hours instead of on every launch."
       }
     }
   },

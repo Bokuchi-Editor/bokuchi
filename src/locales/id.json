@@ -21,6 +21,7 @@
     "delete": "Hapus",
     "close": "Tutup",
     "cancel": "Batal",
+    "dontSave": "Jangan Simpan",
     "reset": "Reset",
     "splitView": "Tampilan Terbagi",
     "editorOnly": "Editor Saja",
@@ -413,6 +414,7 @@
   },
   "dialogs": {
     "saveChanges": "Simpan perubahan sebelum menutup?",
+    "saveChangesMessage": "<bold>{{fileName}}</bold> memiliki perubahan yang belum disimpan. Apakah Anda ingin menyimpannya?",
     "confirmClose": "Apakah Anda yakin ingin menutup tab ini?",
     "fileChanged": {
       "title": "File telah diubah",
@@ -550,10 +552,6 @@
       "editorRapidTyping": {
         "title": "Editor Stabil saat Mengetik Cepat",
         "description": "Memperbaiki masalah khusus Windows di mana mengetik dengan cepat dapat menggantikan dokumen dengan konten lama dan memindahkan kursor ke akhir file."
-      },
-      "updateCheckFrequency": {
-        "title": "Frekuensi Pemeriksaan Pembaruan",
-        "description": "Aplikasi kini memeriksa pembaruan paling banyak sekali setiap 24 jam, bukan setiap kali peluncuran."
       }
     }
   },
