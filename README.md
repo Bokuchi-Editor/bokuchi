@@ -103,13 +103,13 @@ Set global variables through the Variables settings panel. These are available a
 - [x] Mermaid diagrams
 - [x] Cross-tab search
 - [x] Standalone HTML export (inline CSS)
+- [x] Tab pinning
+- [x] File rename from tab
 - [ ] PDF export
 - [ ] Command palette
 - [ ] PlantUML diagrams
 - [ ] Split editor (two files side by side)
-- [ ] Tab pinning
 - [ ] Image paste / drop management
-- [ ] File rename from tab
 - [ ] Word count with reading time
 - [ ] Undo / redo history persistence
 - [ ] Markdown snippets / templates
