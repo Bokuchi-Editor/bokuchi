@@ -272,7 +272,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       let currentIndex = 0;
 
       for (let i = 0; i < lines.length; i++) {
-        const match = lines[i].match(/^(\s*)([-*]\s+)\[([ x])\]\s*(.*)$/);
+        const match = lines[i].match(/^(\s*)([-*]\s+)\[([ x])\]\s+(.*)$/);
         if (match) {
           if (currentIndex === checkboxIndex) {
             const [, indent, listMarker, , rest] = match;
