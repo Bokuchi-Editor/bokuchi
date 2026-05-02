@@ -14,6 +14,8 @@ import { buildExportHTML } from '../utils/exportStyles';
 import { contentIsMarp } from '../utils/marpRenderer';
 import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../utils/imagePathResolver';
 import MarpPreview from './MarpPreview';
+import RenderingFeatureNotice from './RenderingFeatureNotice';
+import { SettingsFocusTarget } from '../types/settingsFocus';
 
 interface PreviewProps {
   content: string;
@@ -27,12 +29,13 @@ interface PreviewProps {
   filePath?: string;
   renderingSettings?: RenderingSettings;
   viewMode?: 'split' | 'editor' | 'preview';
+  onOpenSettings?: (target?: SettingsFocusTarget) => void;
 }
 
 const BASE_PREVIEW_FONT_SIZE_PX = 16;
 const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split' }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split', onOpenSettings }) => {
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -378,6 +381,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           </IconButton>
         </Tooltip>
       </Box>
+      <RenderingFeatureNotice
+        content={content}
+        filePath={filePath}
+        renderingSettings={renderingSettings}
+        onOpenSettings={onOpenSettings}
+      />
       <Box
         ref={scrollContainerRef}
         sx={{
