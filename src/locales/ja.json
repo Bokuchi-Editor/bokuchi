@@ -559,6 +559,17 @@
     "presentation": "プレゼンテーション",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
-    "slideCounter": "スライド {{current}} / {{total}}"
+    "slideCounter": "スライド {{current}} / {{total}}",
+    "featureNotice": {
+      "message": "このファイルでは {{features}} の記法が使われています。設定でONにするとプレビューに反映されます。",
+      "openSettings": "設定を開く",
+      "dismiss": "閉じる",
+      "separator": "、",
+      "feature": {
+        "mermaid": "Mermaid",
+        "marp": "Marp",
+        "katex": "KaTeX"
+      }
+    }
   }
 }

@@ -20,6 +20,7 @@ function AppDesktop() {
     // State
     theme,
     settingsOpen,
+    settingsFocusTarget,
     helpOpen,
     recentFilesOpen,
     fileMenuAnchor,
@@ -470,6 +471,7 @@ function AppDesktop() {
             };
             handleAppSettingsChange(updatedSettings);
           }}
+          onOpenSettings={handleSettingsOpen}
           focusRequestId={focusRequestId}
           t={t}
         />
@@ -488,6 +490,7 @@ function AppDesktop() {
           currentZoom={currentZoom}
           ZOOM_CONFIG={ZOOM_CONFIG}
           settingsOpen={settingsOpen}
+          settingsFocusTarget={settingsFocusTarget}
           settings={appSettings}
           helpOpen={helpOpen}
           fileChangeDialog={fileChangeDialog}
