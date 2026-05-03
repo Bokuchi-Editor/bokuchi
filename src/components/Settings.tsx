@@ -45,6 +45,11 @@ import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AppSettings } from '../types/settings';
+import {
+  SettingsFocusTarget,
+  SETTINGS_FOCUS_TAB_INDEX,
+  SETTINGS_FOCUS_ELEMENT_ID,
+} from '../types/settingsFocus';
 import { storeApi } from '../api/storeApi';
 import { desktopApi } from '../api/desktopApi';
 import { variableApi } from '../api/variableApi';
@@ -56,7 +61,47 @@ interface SettingsProps {
   settings: AppSettings;
   onSettingsChange: (settings: AppSettings) => void;
   as400Unlocked?: boolean;
+  focusTarget?: SettingsFocusTarget | null;
 }
+
+interface RenderingToggleRowProps {
+  target: SettingsFocusTarget;
+  highlighted: boolean;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+  description: string;
+  sx?: object;
+}
+
+const RenderingToggleRow: React.FC<RenderingToggleRowProps> = ({
+  target,
+  highlighted,
+  checked,
+  onChange,
+  label,
+  description,
+  sx,
+}) => (
+  <Box
+    id={SETTINGS_FOCUS_ELEMENT_ID[target]}
+    sx={{
+      p: 1,
+      borderRadius: 1,
+      transition: 'background-color 600ms ease',
+      backgroundColor: highlighted ? 'action.selected' : 'transparent',
+      ...sx,
+    }}
+  >
+    <FormControlLabel
+      control={<Switch checked={checked} onChange={(e) => onChange(e.target.checked)} />}
+      label={label}
+    />
+    <Typography variant="body2" color="text.secondary">
+      {description}
+    </Typography>
+  </Box>
+);
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -73,10 +118,39 @@ const Settings: React.FC<SettingsProps> = ({
   settings,
   onSettingsChange,
   as400Unlocked,
+  focusTarget,
 }) => {
   const { t } = useTranslation();
   const visibleThemes = getVisibleThemes(as400Unlocked ? ['as400'] : []);
   const [activeTab, setActiveTab] = React.useState(0);
+  const [highlightedTarget, setHighlightedTarget] = React.useState<SettingsFocusTarget | null>(null);
+
+  // Jump to the requested setting when the dialog opens with a focus target.
+  // Switch to the right tab synchronously, then scroll-into-view on the next tick
+  // (the section needs to actually mount before we can find it).
+  React.useEffect(() => {
+    if (!open || !focusTarget) return;
+    setActiveTab(SETTINGS_FOCUS_TAB_INDEX[focusTarget]);
+
+    const elementId = SETTINGS_FOCUS_ELEMENT_ID[focusTarget];
+
+    // Wait for tab content to render, then scroll + highlight
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(elementId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHighlightedTarget(focusTarget);
+        }
+      });
+    });
+
+    const clearId = window.setTimeout(() => setHighlightedTarget(null), 2400);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.clearTimeout(clearId);
+    };
+  }, [open, focusTarget]);
   const [newVariableKey, setNewVariableKey] = React.useState('');
   const [newVariableValue, setNewVariableValue] = React.useState('');
   const [error, setError] = React.useState('');
@@ -1065,42 +1139,32 @@ const Settings: React.FC<SettingsProps> = ({
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t('settings.advanced.renderingDescription')}
                     </Typography>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.rendering?.enableKatex ?? true}
-                          onChange={(e) => handleSettingChange('rendering', 'enableKatex', e.target.checked)}
-                        />
-                      }
+                    <RenderingToggleRow
+                      target="rendering.enableKatex"
+                      highlighted={highlightedTarget === 'rendering.enableKatex'}
+                      checked={settings.rendering?.enableKatex ?? true}
+                      onChange={(checked) => handleSettingChange('rendering', 'enableKatex', checked)}
                       label={t('settings.advanced.enableKatex')}
+                      description={t('settings.advanced.enableKatexDescription')}
+                      sx={{ mb: 1 }}
                     />
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.advanced.enableKatexDescription')}
-                    </Typography>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.rendering?.enableMermaid ?? false}
-                          onChange={(e) => handleSettingChange('rendering', 'enableMermaid', e.target.checked)}
-                        />
-                      }
+                    <RenderingToggleRow
+                      target="rendering.enableMermaid"
+                      highlighted={highlightedTarget === 'rendering.enableMermaid'}
+                      checked={settings.rendering?.enableMermaid ?? false}
+                      onChange={(checked) => handleSettingChange('rendering', 'enableMermaid', checked)}
                       label={t('settings.advanced.enableMermaid')}
+                      description={t('settings.advanced.enableMermaidDescription')}
+                      sx={{ mb: 1 }}
                     />
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.advanced.enableMermaidDescription')}
-                    </Typography>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.rendering?.enableMarp ?? false}
-                          onChange={(e) => handleSettingChange('rendering', 'enableMarp', e.target.checked)}
-                        />
-                      }
+                    <RenderingToggleRow
+                      target="rendering.enableMarp"
+                      highlighted={highlightedTarget === 'rendering.enableMarp'}
+                      checked={settings.rendering?.enableMarp ?? false}
+                      onChange={(checked) => handleSettingChange('rendering', 'enableMarp', checked)}
                       label={t('settings.advanced.enableMarp')}
+                      description={t('settings.advanced.enableMarpDescription')}
                     />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.advanced.enableMarpDescription')}
-                    </Typography>
                   </CardContent>
                 </Card>
 

@@ -354,6 +354,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           resolve();
         }, delay);
       });
+      if (typeof document === 'undefined') return;
       const dom = target.getDomNode();
       if (dom && dom.contains(document.activeElement)) return;
     }

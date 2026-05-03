@@ -152,15 +152,17 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     if (!isSlideMode && !isFullscreen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't capture when user is typing in an input/textarea
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-
+      // Esc must always exit fullscreen, even when focus is on Monaco's hidden
+      // textarea (which happens after the OS window exits its own fullscreen).
       if (e.key === 'Escape' && isFullscreen) {
         e.preventDefault();
         setIsFullscreen(false);
         return;
       }
+      // Don't capture other keys when user is typing in an input/textarea
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
         goToPrev();
@@ -187,6 +189,9 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
   //   - openExternalUrl: link click inside any slide iframe — must be routed
   //     through the OS browser via the Tauri opener plugin. Direct iframe
   //     navigation would render the linked page inside the slide region.
+  //   - marpKey: keyboard event forwarded from inside the sandboxed slide
+  //     iframe. Sandboxed-iframe keydowns don't bubble to the parent window,
+  //     so the host can never see Esc / arrow keys when the iframe has focus.
   const thumbnailIframeRef = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
@@ -205,10 +210,21 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
         }
         return;
       }
+      if (e.data?.type === 'marpKey' && typeof e.data.key === 'string') {
+        const key = e.data.key;
+        if (key === 'Escape' && isFullscreen) {
+          setIsFullscreen(false);
+        } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+          goToPrev();
+        } else if (key === 'ArrowRight' || key === 'ArrowDown' || key === ' ') {
+          goToNext();
+        }
+        return;
+      }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [isFullscreen, goToPrev, goToNext]);
 
   // Build iframe srcdoc — for slide mode, build once with initial slide index.
   // Subsequent slide changes are handled via postMessage (no full reload).
