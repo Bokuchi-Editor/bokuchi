@@ -533,25 +533,21 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "Folienposition im Vollbildmodus",
-        "description": "Ein Problem wurde behoben, bei dem die Marp-Diashow beim Wechsel in den Vollbildmodus immer mit der ersten Folie begann, unabhängig von der aktuellen Folie."
+      "renderingFeatureNotice": {
+        "title": "Hinweis bei deaktiviertem Rendering",
+        "description": "Wenn Sie eine Datei mit KaTeX-, Mermaid- oder Marp-Inhalten öffnen, während die zugehörige Rendering-Option deaktiviert ist, erscheint nun ein einmaliger Hinweis – so wissen Sie sofort, warum Ihre Formeln, Diagramme oder Folien nicht angezeigt werden."
       },
-      "marpPreviewScrollbar": {
-        "title": "Bildlaufleiste in der Marp-Vorschau",
-        "description": "Ein Problem wurde behoben, bei dem die Bildlaufleiste in der Marp-Vorschau direkt nach dem Start der Anwendung nicht angezeigt wurde."
+      "tabFilePathTooltip": {
+        "title": "Dateipfad beim Tab-Hover",
+        "description": "Wenn Sie mit der Maus über einen Tab fahren, wird nun der vollständige Dateipfad angezeigt – ideal, um Tabs mit gleichnamigen Dateien zu unterscheiden."
       },
-      "marpExternalLinks": {
-        "title": "Externe Links in Marp-Folien",
-        "description": "Links innerhalb von Marp-Folien werden nun immer im OS-Browser geöffnet, anstatt innerhalb der Folie zu navigieren."
+      "fullscreenEscKey": {
+        "title": "Esc beendet Marp-Vollbildmodus",
+        "description": "Mit der Esc-Taste lässt sich der Marp-Vollbildmodus jetzt zuverlässig verlassen."
       },
-      "windowsSaveReliability": {
-        "title": "Speichern über die Windows-Dateizuordnung",
-        "description": "Speicher- und Tab-Wiederherstellungsfehler unter Windows für Dateien wurden behoben, die über die Dateizuordnung außerhalb der Ordner Dokumente/Desktop/Downloads geöffnet wurden."
-      },
-      "editorRapidTyping": {
-        "title": "Stabiler Editor bei schneller Eingabe",
-        "description": "Ein Windows-spezifisches Problem wurde behoben, bei dem schnelle Tastenanschläge das Dokument durch veralteten Inhalt ersetzen und den Cursor an das Dateiende springen lassen konnten."
+      "previewCheckbox": {
+        "title": "Checkbox-Umschaltung in der Vorschau",
+        "description": "Behoben: Beim Umschalten einer Checkbox in der Vorschau wurde die Änderung nicht immer auf das Dokument übertragen."
       }
     }
   },

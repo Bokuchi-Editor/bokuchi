@@ -25,32 +25,27 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.8.1',
+  version: '0.8.2',
   changes: [
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.marpFullscreenSlide.title',
-      descriptionKey: 'whatsNew.changes.marpFullscreenSlide.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.renderingFeatureNotice.title',
+      descriptionKey: 'whatsNew.changes.renderingFeatureNotice.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.tabFilePathTooltip.title',
+      descriptionKey: 'whatsNew.changes.tabFilePathTooltip.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.marpPreviewScrollbar.title',
-      descriptionKey: 'whatsNew.changes.marpPreviewScrollbar.description',
+      titleKey: 'whatsNew.changes.fullscreenEscKey.title',
+      descriptionKey: 'whatsNew.changes.fullscreenEscKey.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.marpExternalLinks.title',
-      descriptionKey: 'whatsNew.changes.marpExternalLinks.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.windowsSaveReliability.title',
-      descriptionKey: 'whatsNew.changes.windowsSaveReliability.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.editorRapidTyping.title',
-      descriptionKey: 'whatsNew.changes.editorRapidTyping.description',
+      titleKey: 'whatsNew.changes.previewCheckbox.title',
+      descriptionKey: 'whatsNew.changes.previewCheckbox.description',
     },
   ],
 };

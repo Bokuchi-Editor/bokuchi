@@ -533,25 +533,21 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "Posição do slide em tela cheia",
-        "description": "Corrigido um problema em que a apresentação Marp sempre começava no primeiro slide ao entrar em tela cheia, independentemente do slide atual."
+      "renderingFeatureNotice": {
+        "title": "Aviso quando a renderização está desativada",
+        "description": "Ao abrir um arquivo com conteúdo de KaTeX, Mermaid ou Marp enquanto a opção de renderização correspondente estiver desativada, agora é exibido um aviso único, evitando dúvidas sobre por que fórmulas, diagramas ou slides não aparecem."
       },
-      "marpPreviewScrollbar": {
-        "title": "Barra de rolagem da pré-visualização Marp",
-        "description": "Corrigido um problema em que a barra de rolagem não aparecia na pré-visualização Marp logo após iniciar o aplicativo."
+      "tabFilePathTooltip": {
+        "title": "Caminho do arquivo ao passar o mouse na aba",
+        "description": "Ao passar o mouse sobre uma aba, o caminho completo do arquivo aberto agora é exibido, facilitando a distinção entre abas com nomes iguais."
       },
-      "marpExternalLinks": {
-        "title": "Links externos em slides Marp",
-        "description": "Os links dentro dos slides Marp agora sempre abrem no navegador do sistema, em vez de navegar dentro do slide."
+      "fullscreenEscKey": {
+        "title": "Esc para sair do modo tela cheia do Marp",
+        "description": "A tecla Esc agora sai de forma confiável do modo tela cheia da apresentação Marp."
       },
-      "windowsSaveReliability": {
-        "title": "Salvamento via associação de arquivos no Windows",
-        "description": "Corrigidas as falhas de salvamento e restauração de abas no Windows para arquivos abertos via associação de arquivos a partir de locais fora das pastas Documentos/Área de Trabalho/Downloads."
-      },
-      "editorRapidTyping": {
-        "title": "Editor estável durante digitação rápida",
-        "description": "Corrigido um problema específico do Windows em que digitação rápida podia substituir o documento por conteúdo obsoleto e mover o cursor para o final do arquivo."
+      "previewCheckbox": {
+        "title": "Alternância de checkbox na pré-visualização",
+        "description": "Corrigido um problema em que alternar um checkbox na pré-visualização nem sempre propagava a alteração para o documento."
       }
     }
   },

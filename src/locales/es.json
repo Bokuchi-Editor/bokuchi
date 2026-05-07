@@ -533,25 +533,21 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "Posición de diapositiva en pantalla completa",
-        "description": "Se corrigió un problema por el que la presentación de Marp siempre comenzaba desde la primera diapositiva al pasar a pantalla completa, independientemente de la diapositiva actual."
+      "renderingFeatureNotice": {
+        "title": "Aviso cuando el renderizado está desactivado",
+        "description": "Al abrir un archivo con contenido de KaTeX, Mermaid o Marp mientras la opción de renderizado correspondiente está desactivada, ahora se muestra un aviso único para que sepas por qué no aparecen tus fórmulas, diagramas o diapositivas."
       },
-      "marpPreviewScrollbar": {
-        "title": "Barra de desplazamiento de la vista previa Marp",
-        "description": "Se corrigió un problema por el que la barra de desplazamiento no aparecía en la vista previa Marp justo después de iniciar la aplicación."
+      "tabFilePathTooltip": {
+        "title": "Ruta del archivo al pasar el ratón sobre la pestaña",
+        "description": "Al pasar el ratón por encima de una pestaña, ahora se muestra la ruta completa del archivo, lo que facilita distinguir pestañas con nombres iguales."
       },
-      "marpExternalLinks": {
-        "title": "Enlaces externos en diapositivas Marp",
-        "description": "Los enlaces dentro de las diapositivas Marp ahora se abren siempre en el navegador del sistema en lugar de navegar dentro de la diapositiva."
+      "fullscreenEscKey": {
+        "title": "Esc para salir del modo de pantalla completa de Marp",
+        "description": "Ahora la tecla Esc sale de forma fiable del modo pantalla completa de la presentación de Marp."
       },
-      "windowsSaveReliability": {
-        "title": "Guardado mediante asociación de archivos en Windows",
-        "description": "Se corrigieron los fallos de guardado y restauración de pestañas en Windows al abrir archivos mediante la asociación de archivos desde fuera de las carpetas Documentos/Escritorio/Descargas."
-      },
-      "editorRapidTyping": {
-        "title": "Editor estable al escribir rápido",
-        "description": "Se corrigió un problema específico de Windows por el que escribir rápido podía reemplazar el documento con contenido obsoleto y mover el cursor al final del archivo."
+      "previewCheckbox": {
+        "title": "Cambio de casilla en la vista previa",
+        "description": "Se corrigió un problema por el que al alternar una casilla en la vista previa el cambio no siempre se propagaba al documento."
       }
     }
   },

@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.1...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.2...HEAD)
+
+## [0.8.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.1...v0.8.2) - 2026-05-07
+
+### Added
+
+- Rendering-disabled notice — when a file contains KaTeX, Mermaid, or Marp content but the corresponding rendering option is off, a one-time notification points the user at the relevant setting
+
+### Changed
+
+- Tab tooltip now shows the full file path on hover, making same-name tabs easier to tell apart
+- Dependency updates: `tauri` 2.10.3 → 2.11.1, `@tauri-apps/api` 2.10.1 → 2.11.0, `@tauri-apps/cli` 2.10.1 → 2.11.0, `@tauri-apps/plugin-dialog` 2.7.0 → 2.7.1, `@tauri-apps/plugin-fs` 2.5.0 → 2.5.1, `@tauri-apps/plugin-opener` 2.5.3 → 2.5.4, `@tauri-apps/plugin-store` 2.4.2 → 2.4.3, `tauri-plugin-dialog` / `tauri-plugin-opener` / `tauri-plugin-store` / `tauri-plugin-single-instance` (Rust-side counterparts), `eslint` 10.2.1 → 10.3.0
+
+### Fixed
+
+- Esc key now reliably exits Marp slideshow fullscreen mode
+- Preview checkbox toggle did not always propagate the change back to the document
 
 ## [0.8.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.0...v0.8.1) - 2026-04-30
 
