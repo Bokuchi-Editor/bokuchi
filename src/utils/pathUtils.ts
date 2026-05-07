@@ -1,9 +1,22 @@
 import { Tab } from '../types/tab';
+import { getPlatform } from './platform';
 
 /**
  * Normalize file path by replacing backslashes with forward slashes.
  */
 export const normalizeFilePath = (filePath: string): string => {
+  return filePath.replace(/\\/g, '/');
+};
+
+/**
+ * Format a file path for display using the current OS's native separator.
+ * Windows displays with backslashes; macOS/Linux with forward slashes.
+ * This guards against paths that were stored on a different OS.
+ */
+export const formatFilePathForDisplay = (filePath: string): string => {
+  if (getPlatform() === 'windows') {
+    return filePath.replace(/\//g, '\\');
+  }
   return filePath.replace(/\\/g, '/');
 };
 
