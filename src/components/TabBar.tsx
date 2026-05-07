@@ -16,7 +16,7 @@ import {
 import { Close, Add, PushPin } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
-import { getTabDisplayTitle } from '../utils/pathUtils';
+import { getTabDisplayTitle, formatFilePathForDisplay } from '../utils/pathUtils';
 import {
   DndContext,
   closestCenter,
@@ -110,6 +110,13 @@ const SortableTab: React.FC<{
 
   const isLeft = closeButtonPosition === 'left';
 
+  // File path tooltip text — empty string disables the tooltip in MUI.
+  // Unsaved/new tabs may have no real on-disk path even when filePath is set,
+  // matching the same condition used by the "Copy file path" menu item.
+  const filePathTooltip = tab.filePath && !tab.isNew
+    ? formatFilePathForDisplay(tab.filePath)
+    : '';
+
   // Close/Pin button element for vertical layout
   const verticalActionButton = tab.isPinned ? (
     <PushPin fontSize="small" sx={{ [isLeft ? 'mr' : 'ml']: 1, flexShrink: 0, opacity: 0.7, color: isActive ? 'inherit' : 'primary.main' }} />
@@ -133,67 +140,69 @@ const SortableTab: React.FC<{
 
   if (layout === 'vertical') {
     return (
-      <ListItem
-        ref={mergedRef}
-        style={style}
-        disablePadding
-        sx={{
-          opacity: isDragging ? 0.5 : 1,
-        }}
-      >
-        <ListItemButton
-          selected={isActive}
-          onClick={() => onClick(tab.id)}
-          onDoubleClick={() => onDoubleClick?.(tab.id)}
-          onContextMenu={(e) => onContextMenu?.(e, tab.id)}
+      <Tooltip title={filePathTooltip} followCursor placement="bottom-start" enterDelay={300}>
+        <ListItem
+          ref={mergedRef}
+          style={style}
+          disablePadding
           sx={{
-            py: 1,
-            px: 2,
-            '&.Mui-selected': {
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              '&:hover': {
-                bgcolor: 'primary.dark',
-              },
-            },
+            opacity: isDragging ? 0.5 : 1,
           }}
         >
-          {isLeft && verticalActionButton}
-          <Box
-            {...attributes}
-            {...listeners}
+          <ListItemButton
+            selected={isActive}
+            onClick={() => onClick(tab.id)}
+            onDoubleClick={() => onDoubleClick?.(tab.id)}
+            onContextMenu={(e) => onContextMenu?.(e, tab.id)}
             sx={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'grab',
-              minWidth: 0,
-              '&:active': {
-                cursor: 'grabbing',
+              py: 1,
+              px: 2,
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                },
               },
             }}
           >
+            {isLeft && verticalActionButton}
             <Box
+              {...attributes}
+              {...listeners}
               sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                fontSize: '0.875rem',
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'grab',
                 minWidth: 0,
+                '&:active': {
+                  cursor: 'grabbing',
+                },
               }}
             >
-              {getTabDisplayTitle(tab)}
+              <Box
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  fontSize: '0.875rem',
+                  minWidth: 0,
+                }}
+              >
+                {getTabDisplayTitle(tab)}
+              </Box>
+              <Badge
+                color="error"
+                variant="dot"
+                invisible={!tab.isModified}
+                sx={{ ml: 1, flexShrink: 0 }}
+              />
             </Box>
-            <Badge
-              color="error"
-              variant="dot"
-              invisible={!tab.isModified}
-              sx={{ ml: 1, flexShrink: 0 }}
-            />
-          </Box>
-          {!isLeft && verticalActionButton}
-        </ListItemButton>
-      </ListItem>
+            {!isLeft && verticalActionButton}
+          </ListItemButton>
+        </ListItem>
+      </Tooltip>
     );
   }
 
@@ -233,70 +242,72 @@ const SortableTab: React.FC<{
   );
 
   return (
-    <Tab
-      ref={setNodeRef}
-      style={style}
-      value={tab.id}
-      onClick={() => onClick(tab.id)}
-      onDoubleClick={() => onDoubleClick?.(tab.id)}
-      onContextMenu={(e) => onContextMenu?.(e, tab.id)}
-      label={
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 0 }}>
-          {isLeft && horizontalActionButton}
-          <Box
-            {...attributes}
-            {...listeners}
-            sx={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'grab',
-              minWidth: 0,
-              '&:active': {
-                cursor: 'grabbing',
-              },
-            }}
-          >
+    <Tooltip title={filePathTooltip} followCursor placement="bottom-start" enterDelay={300}>
+      <Tab
+        ref={setNodeRef}
+        style={style}
+        value={tab.id}
+        onClick={() => onClick(tab.id)}
+        onDoubleClick={() => onDoubleClick?.(tab.id)}
+        onContextMenu={(e) => onContextMenu?.(e, tab.id)}
+        label={
+          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 0 }}>
+            {isLeft && horizontalActionButton}
             <Box
+              {...attributes}
+              {...listeners}
               sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'grab',
                 minWidth: 0,
+                '&:active': {
+                  cursor: 'grabbing',
+                },
               }}
             >
-              {getTabDisplayTitle(tab)}
+              <Box
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  minWidth: 0,
+                }}
+              >
+                {getTabDisplayTitle(tab)}
+              </Box>
+              <Badge
+                color="error"
+                variant="dot"
+                invisible={!tab.isModified}
+                sx={{ ml: 1, flexShrink: 0 }}
+              />
             </Box>
-            <Badge
-              color="error"
-              variant="dot"
-              invisible={!tab.isModified}
-              sx={{ ml: 1, flexShrink: 0 }}
-            />
+            {!isLeft && horizontalActionButton}
           </Box>
-          {!isLeft && horizontalActionButton}
-        </Box>
-      }
-      sx={{
-        '& .MuiTab-iconWrapper': {
-          display: 'none',
-        },
-        borderTop: '3px solid',
-        borderTopColor: tab.isPinned && !isActive ? 'primary.main' : 'transparent',
-        ...(isActive && {
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          '&:hover': {
-            bgcolor: 'primary.dark',
+        }
+        sx={{
+          '& .MuiTab-iconWrapper': {
+            display: 'none',
           },
-        }),
-        ...(!isActive && {
-          '&:hover': {
-            bgcolor: 'action.hover',
-          },
-        }),
-      }}
-    />
+          borderTop: '3px solid',
+          borderTopColor: tab.isPinned && !isActive ? 'primary.main' : 'transparent',
+          ...(isActive && {
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            '&:hover': {
+              bgcolor: 'primary.dark',
+            },
+          }),
+          ...(!isActive && {
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
+          }),
+        }}
+      />
+    </Tooltip>
   );
 };
 
