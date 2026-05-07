@@ -533,25 +533,21 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "Fullscreen Slide Position",
-        "description": "Fixed an issue where Marp's slideshow always started from the first slide when entering fullscreen mode, regardless of the current slide."
+      "renderingFeatureNotice": {
+        "title": "Notification When Rendering Is Off",
+        "description": "When you open a Markdown file containing KaTeX, Mermaid, or Marp content while the matching rendering option is disabled, a one-time notice now tells you exactly why the math, diagrams, or slides are not showing up."
       },
-      "marpPreviewScrollbar": {
-        "title": "Marp Preview Scrollbar",
-        "description": "Fixed an issue where the scrollbar did not appear in the Marp preview immediately after launching the application."
+      "tabFilePathTooltip": {
+        "title": "File Path on Tab Hover",
+        "description": "Hovering over a tab now shows the full file path of the open file, making it easy to tell apart tabs whose filenames look the same."
       },
-      "marpExternalLinks": {
-        "title": "External Links in Marp Slides",
-        "description": "Links inside Marp slides now always open in the OS browser instead of navigating inside the slide."
+      "fullscreenEscKey": {
+        "title": "Esc to Exit Marp Fullscreen",
+        "description": "Pressing Esc now reliably leaves the Marp slideshow's fullscreen mode."
       },
-      "windowsSaveReliability": {
-        "title": "Windows File Association Save",
-        "description": "Fixed save and tab restore failures on Windows for files opened via OS file association from outside the Documents/Desktop/Downloads folders."
-      },
-      "editorRapidTyping": {
-        "title": "Stable Editor on Rapid Typing",
-        "description": "Fixed a Windows-specific issue where rapid keystrokes could replace the document with stale content and jump the cursor to the end of the file."
+      "previewCheckbox": {
+        "title": "Preview Checkbox Toggle",
+        "description": "Fixed an issue where toggling a checkbox in the preview did not always propagate the change back to the document."
       }
     }
   },
@@ -559,6 +555,17 @@
     "presentation": "Presentation",
     "previousSlide": "Previous Slide",
     "nextSlide": "Next Slide",
-    "slideCounter": "Slide {{current}} of {{total}}"
+    "slideCounter": "Slide {{current}} of {{total}}",
+    "featureNotice": {
+      "message": "This file uses {{features}}. Enable it in Settings to see it rendered.",
+      "openSettings": "Open Settings",
+      "dismiss": "Dismiss",
+      "separator": ", ",
+      "feature": {
+        "mermaid": "Mermaid",
+        "marp": "Marp",
+        "katex": "KaTeX"
+      }
+    }
   }
 }

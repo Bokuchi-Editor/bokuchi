@@ -48,6 +48,10 @@ async function getMermaid(dark?: boolean) {
         startOnLoad: false,
         theme: dark ? 'dark' : 'default',
         securityLevel: 'strict',
+        // Mermaid 11.14.0 leaks the bomb-icon SVG into document.body on parse
+        // failure (throw happens before removeTempElements). We render our own
+        // error UI in processMermaidBlocks, so suppress Mermaid's built-in one.
+        suppressErrorRendering: true,
       });
       mermaidInitialized = true;
     }
@@ -62,6 +66,7 @@ export function reinitializeMermaid(dark: boolean) {
       startOnLoad: false,
       theme: dark ? 'dark' : 'default',
       securityLevel: 'strict',
+      suppressErrorRendering: true,
     });
   }
 }

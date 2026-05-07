@@ -533,25 +533,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "Vị trí slide ở chế độ toàn màn hình",
-        "description": "Đã sửa lỗi khi chuyển sang chế độ toàn màn hình, bài trình chiếu Marp luôn bắt đầu từ slide đầu tiên bất kể slide hiện tại là gì."
+      "renderingFeatureNotice": {
+        "title": "Thông báo khi tắt kết xuất",
+        "description": "Khi bạn mở tệp chứa nội dung KaTeX, Mermaid hoặc Marp trong khi tùy chọn kết xuất tương ứng đang tắt, hệ thống sẽ hiển thị thông báo một lần để bạn hiểu vì sao công thức, sơ đồ hoặc trang chiếu không hiển thị."
       },
-      "marpPreviewScrollbar": {
-        "title": "Thanh cuộn trong xem trước Marp",
-        "description": "Đã sửa lỗi thanh cuộn không hiển thị trong xem trước Marp ngay sau khi khởi động ứng dụng."
+      "tabFilePathTooltip": {
+        "title": "Đường dẫn tệp khi rê chuột lên tab",
+        "description": "Khi rê chuột qua một tab, đường dẫn đầy đủ của tệp đang mở sẽ được hiển thị, giúp phân biệt các tab có cùng tên tệp."
       },
-      "marpExternalLinks": {
-        "title": "Liên kết bên ngoài trong slide Marp",
-        "description": "Các liên kết trong slide Marp giờ đây luôn được mở trong trình duyệt của hệ điều hành thay vì điều hướng bên trong slide."
+      "fullscreenEscKey": {
+        "title": "Esc để thoát toàn màn hình Marp",
+        "description": "Phím Esc giờ đây thoát khỏi chế độ toàn màn hình của trình chiếu Marp một cách ổn định."
       },
-      "windowsSaveReliability": {
-        "title": "Lưu qua liên kết tệp Windows",
-        "description": "Đã sửa lỗi lưu và khôi phục tab trên Windows cho các tệp được mở qua liên kết tệp của hệ điều hành từ các vị trí ngoài thư mục Documents/Desktop/Downloads."
-      },
-      "editorRapidTyping": {
-        "title": "Trình soạn thảo ổn định khi gõ nhanh",
-        "description": "Đã sửa lỗi đặc trưng của Windows khi gõ phím nhanh có thể thay thế tài liệu bằng nội dung cũ và đưa con trỏ về cuối tệp."
+      "previewCheckbox": {
+        "title": "Sửa lỗi chuyển trạng thái checkbox trong xem trước",
+        "description": "Đã khắc phục lỗi khi chuyển trạng thái checkbox trong khung xem trước, thay đổi đôi khi không được áp dụng vào tài liệu."
       }
     }
   },

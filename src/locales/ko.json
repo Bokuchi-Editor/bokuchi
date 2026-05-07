@@ -533,25 +533,21 @@
       "improvement": "개선"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "전체 화면 시 슬라이드 위치",
-        "description": "Marp 슬라이드쇼에서 전체 화면으로 전환할 때 현재 슬라이드와 관계없이 항상 첫 번째 슬라이드부터 시작되던 문제를 수정했습니다."
+      "renderingFeatureNotice": {
+        "title": "렌더링 비활성 상태 알림",
+        "description": "KaTeX, Mermaid, Marp 콘텐츠가 포함된 파일을 해당 렌더링 옵션이 꺼진 상태로 열면, 한 번만 알림을 표시해 수식·다이어그램·슬라이드가 보이지 않는 이유를 바로 알 수 있도록 했습니다."
       },
-      "marpPreviewScrollbar": {
-        "title": "Marp 미리보기 스크롤바",
-        "description": "앱 실행 직후 Marp 미리보기에서 스크롤바가 표시되지 않던 문제를 수정했습니다."
+      "tabFilePathTooltip": {
+        "title": "탭 마우스오버 시 파일 경로 표시",
+        "description": "탭 위에 마우스를 올리면 열려 있는 파일의 전체 경로가 표시됩니다. 이름이 같은 파일이 여러 개 열려 있어도 쉽게 구분할 수 있습니다."
       },
-      "marpExternalLinks": {
-        "title": "Marp 슬라이드 내 외부 링크",
-        "description": "Marp 슬라이드 내 링크가 슬라이드 안에서 이동하지 않고 항상 운영체제의 브라우저에서 열리도록 변경되었습니다."
+      "fullscreenEscKey": {
+        "title": "Esc 키로 Marp 전체 화면 종료",
+        "description": "Marp 슬라이드쇼를 전체 화면으로 보고 있을 때 Esc 키로 안정적으로 종료할 수 있게 되었습니다."
       },
-      "windowsSaveReliability": {
-        "title": "Windows 파일 연결 저장",
-        "description": "Windows에서 문서/바탕 화면/다운로드 폴더 외부에 있는 파일을 OS 파일 연결로 열었을 때 저장이나 탭 복원이 실패하던 문제를 수정했습니다."
-      },
-      "editorRapidTyping": {
-        "title": "빠른 입력 시 에디터 안정성",
-        "description": "Windows에서 빠르게 키 입력할 때 내용이 오래된 상태로 되돌아가거나 커서가 파일 끝으로 이동하던 문제를 수정했습니다."
+      "previewCheckbox": {
+        "title": "미리보기 체크박스 토글 수정",
+        "description": "미리보기에서 체크박스를 토글했을 때 변경 내용이 문서에 반영되지 않는 경우가 있던 문제를 수정했습니다."
       }
     }
   },

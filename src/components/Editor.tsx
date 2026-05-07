@@ -76,6 +76,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
   const [showReplaceDefault, setShowReplaceDefault] = useState(false);
+  const [searchPanelHeight, setSearchPanelHeight] = useState(0);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -354,6 +355,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           resolve();
         }, delay);
       });
+      if (typeof document === 'undefined') return;
       const dom = target.getDomNode();
       if (dom && dom.contains(document.activeElement)) return;
     }
@@ -574,6 +576,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           onTabSwitch={onTabSwitch}
           searchAllTabsDefault={searchAllTabsDefault}
           showReplaceDefault={showReplaceDefault}
+          onHeightChange={setSearchPanelHeight}
         />
         {fileNotFound ? (
           <Box
@@ -654,6 +657,9 @@ const MarkdownEditor: React.FC<EditorProps> = ({
               },
               links: true,
               colorDecorators: true,
+              padding: {
+                top: searchOpen ? searchPanelHeight + 16 : 0,
+              },
             }}
           />
         )}

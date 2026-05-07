@@ -7,6 +7,7 @@ import SaveBeforeCloseDialog from './SaveBeforeCloseDialog';
 import UpdateDialog, { UpdateDialogPhase } from './UpdateDialog';
 import WhatsNewDialog from './WhatsNewDialog';
 import { AppSettings } from '../types/settings';
+import { SettingsFocusTarget } from '../types/settingsFocus';
 import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
 
 export interface AppDialogsProps {
@@ -25,6 +26,7 @@ export interface AppDialogsProps {
 
   // Settings dialog state
   settingsOpen: boolean;
+  settingsFocusTarget?: SettingsFocusTarget | null;
   settings: AppSettings;
 
   // Help dialog state
@@ -79,6 +81,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   currentZoom,
   ZOOM_CONFIG,
   settingsOpen,
+  settingsFocusTarget,
   settings,
   helpOpen,
   fileChangeDialog,
@@ -135,6 +138,7 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         settings={settings}
         onSettingsChange={onSettingsChange}
         as400Unlocked={as400Unlocked}
+        focusTarget={settingsFocusTarget ?? null}
       />
 
       {/* Help dialog */}

@@ -533,25 +533,21 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "全屏模式下的幻灯片位置",
-        "description": "修复了在 Marp 幻灯片放映中切换到全屏时，无论当前是哪一张幻灯片都会从第一张开始的问题。"
+      "renderingFeatureNotice": {
+        "title": "渲染关闭时的提示",
+        "description": "当对应的渲染选项关闭时打开包含 KaTeX、Mermaid 或 Marp 内容的文件，现在会一次性提示您，从此不再为公式、图表或幻灯片不显示而困惑。"
       },
-      "marpPreviewScrollbar": {
-        "title": "Marp 预览滚动条",
-        "description": "修复了应用启动后 Marp 预览中滚动条未显示的问题。"
+      "tabFilePathTooltip": {
+        "title": "悬停标签显示文件路径",
+        "description": "将鼠标悬停在标签页上时，现在会显示所打开文件的完整路径，便于区分名称相同的标签。"
       },
-      "marpExternalLinks": {
-        "title": "Marp 幻灯片中的外部链接",
-        "description": "Marp 幻灯片中的链接现在始终在操作系统浏览器中打开，而不是在幻灯片内部跳转。"
+      "fullscreenEscKey": {
+        "title": "Esc 退出 Marp 全屏",
+        "description": "Esc 键现在可以可靠地退出 Marp 幻灯片的全屏模式。"
       },
-      "windowsSaveReliability": {
-        "title": "Windows 文件关联保存",
-        "description": "修复了在 Windows 上，通过文件关联打开位于文档/桌面/下载文件夹之外的文件时，保存与标签页恢复失败的问题。"
-      },
-      "editorRapidTyping": {
-        "title": "快速输入时编辑器更稳定",
-        "description": "修复了 Windows 上快速输入时，文档可能被旧内容覆盖且光标跳转到文件末尾的问题。"
+      "previewCheckbox": {
+        "title": "预览中复选框切换的修复",
+        "description": "修复了在预览中切换复选框时，更改有时未同步到文档的问题。"
       }
     }
   },

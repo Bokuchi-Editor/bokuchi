@@ -225,6 +225,31 @@ describe('MarkdownPreview – checkbox toggle', () => {
       '- [ ] First item\n- [x] Second item',
     );
   });
+
+  // Malformed task lines (no space after `]`) are not rendered as checkboxes by
+  // GFM, so they must also be skipped when mapping click index → editor line.
+  // Otherwise the click toggles the wrong line.
+  it('T-PV-03b: skips malformed task lines when mapping click to editor content', async () => {
+    const markdown = '- [ ]NoSpaceTask\n- [ ] RealTask';
+
+    const { container } = await renderPreview({
+      content: markdown,
+      darkMode: false,
+      onContentChange,
+    });
+
+    const checkboxes = container.querySelectorAll('input.markdown-checkbox');
+    expect(checkboxes.length).toBe(1);
+
+    const checkbox = checkboxes[0] as HTMLInputElement;
+    checkbox.checked = true;
+    fireEvent.change(checkbox);
+
+    expect(onContentChange).toHaveBeenCalledTimes(1);
+    expect(onContentChange).toHaveBeenCalledWith(
+      '- [ ]NoSpaceTask\n- [x] RealTask',
+    );
+  });
 });
 
 // =========================================================================

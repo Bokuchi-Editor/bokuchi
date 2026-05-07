@@ -4,6 +4,7 @@ import { useTabsDesktop } from './useTabsDesktop';
 import { useZoom } from './useZoom';
 import { ZOOM_CONFIG } from '../constants/zoom';
 import { Tab } from '../types/tab';
+import { SettingsFocusTarget } from '../types/settingsFocus';
 import { useEditorFocus } from './useEditorFocus';
 import { useFolderTree } from './useFolderTree';
 import { rotateViewMode as rotateViewModeUtil } from '../utils/viewModeUtils';
@@ -30,6 +31,7 @@ export const useAppState = () => {
 
   // UI state (owned by orchestrator)
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsFocusTarget, setSettingsFocusTarget] = useState<SettingsFocusTarget | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const [recentFilesOpen, setRecentFilesOpen] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState<null | HTMLElement>(null);
@@ -221,8 +223,14 @@ export const useAppState = () => {
     }
   };
 
-  const handleSettingsOpen = () => setSettingsOpen(true);
-  const handleSettingsClose = () => setSettingsOpen(false);
+  const handleSettingsOpen = (target?: SettingsFocusTarget) => {
+    setSettingsFocusTarget(target ?? null);
+    setSettingsOpen(true);
+  };
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+    setSettingsFocusTarget(null);
+  };
   const handleHelpOpen = () => setHelpOpen(true);
   const handleHelpClose = () => setHelpOpen(false);
 
@@ -431,6 +439,7 @@ export const useAppState = () => {
     // State
     theme,
     settingsOpen,
+    settingsFocusTarget,
     helpOpen,
     recentFilesOpen,
     fileMenuAnchor,

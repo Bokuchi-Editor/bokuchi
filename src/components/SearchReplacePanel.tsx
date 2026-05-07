@@ -41,6 +41,7 @@ interface SearchReplacePanelProps {
   onTabSwitch?: (tabId: string) => void;
   searchAllTabsDefault?: boolean;
   showReplaceDefault?: boolean;
+  onHeightChange?: (height: number) => void;
 }
 
 const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
@@ -53,6 +54,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   onTabSwitch,
   searchAllTabsDefault = false,
   showReplaceDefault = false,
+  onHeightChange,
 }) => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
@@ -68,8 +70,32 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   const [currentCrossTabIndex, setCurrentCrossTabIndex] = useState(-1);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const decorationIdsRef = useRef<string[]>([]);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Report panel height to parent so the editor can reserve top padding
+  // and avoid hiding content under the floating panel.
+  useEffect(() => {
+    if (!onHeightChange) return;
+    if (!open) {
+      onHeightChange(0);
+      return;
+    }
+    const el = panelRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') {
+      if (el) onHeightChange(el.offsetHeight);
+      return;
+    }
+    onHeightChange(el.offsetHeight);
+    const ro = new ResizeObserver((entries) => {
+      const h = entries[0]?.contentRect.height;
+      if (typeof h === 'number') onHeightChange(h);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open, onHeightChange, showReplace, searchAllTabs, tabs?.length]);
 
   // Sync searchAllTabs and showReplace with defaults when panel opens
   useEffect(() => {
@@ -92,6 +118,22 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
       setCurrentCrossTabIndex(-1);
     }
   }, [open]);
+
+  // Close on Escape regardless of where focus currently is (e.g. inside Monaco
+  // after jumping to a cross-tab match). Capture phase so Monaco's own Esc
+  // handlers don't swallow the event.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', onKey, true);
+    return () => document.removeEventListener('keydown', onKey, true);
+  }, [open, onClose]);
 
   const clearDecorations = useCallback(() => {
     const ed = editorRef.current;
@@ -437,16 +479,16 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
           goToNextMatch();
         }
       }
-    } else if (e.key === 'Escape') {
+    } else if (e.key === 'Tab' && !e.shiftKey && showReplace && !searchAllTabs) {
       e.preventDefault();
-      onClose();
+      replaceInputRef.current?.focus();
     }
   };
 
   const handleReplaceKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === 'Tab' && e.shiftKey) {
       e.preventDefault();
-      onClose();
+      searchInputRef.current?.focus();
     }
   };
 
@@ -480,6 +522,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
 
   return (
     <Box
+      ref={panelRef}
       sx={{
         position: 'absolute',
         top: 8,
@@ -634,6 +677,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
           <Box sx={{ width: 24 }} />
 
           <input
+            ref={replaceInputRef}
             type="text"
             value={replaceText}
             onChange={(e) => setReplaceText(e.target.value)}

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   normalizeFilePath,
   extractFileNameFromPath,
@@ -6,7 +6,9 @@ import {
   checkDuplicateFileInTabs,
   isMarkdownFile,
   getTabDisplayTitle,
+  formatFilePathForDisplay,
 } from '../pathUtils';
+import * as platform from '../platform';
 import type { Tab } from '../../types/tab';
 
 describe('normalizeFilePath', () => {
@@ -161,6 +163,42 @@ describe('isMarkdownFile', () => {
   it('T-PU-22: returns false for similar but non-markdown extensions', () => {
     expect(isMarkdownFile('file.mdx')).toBe(false);
     expect(isMarkdownFile('file.mdown')).toBe(false);
+  });
+});
+
+describe('formatFilePathForDisplay', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  // T-PU-29: Windows displays with backslashes
+  it('T-PU-29: converts forward slashes to backslashes on Windows', () => {
+    vi.spyOn(platform, 'getPlatform').mockReturnValue('windows');
+    expect(formatFilePathForDisplay('C:/Users/foo/file.md')).toBe('C:\\Users\\foo\\file.md');
+  });
+
+  // T-PU-30: Windows leaves backslash paths unchanged
+  it('T-PU-30: keeps native backslash paths unchanged on Windows', () => {
+    vi.spyOn(platform, 'getPlatform').mockReturnValue('windows');
+    expect(formatFilePathForDisplay('C:\\Users\\foo\\file.md')).toBe('C:\\Users\\foo\\file.md');
+  });
+
+  // T-PU-31: macOS displays with forward slashes
+  it('T-PU-31: converts backslashes to forward slashes on macOS', () => {
+    vi.spyOn(platform, 'getPlatform').mockReturnValue('mac');
+    expect(formatFilePathForDisplay('\\Users\\foo\\file.md')).toBe('/Users/foo/file.md');
+  });
+
+  // T-PU-32: macOS leaves native forward-slash paths unchanged
+  it('T-PU-32: keeps native forward-slash paths unchanged on macOS', () => {
+    vi.spyOn(platform, 'getPlatform').mockReturnValue('mac');
+    expect(formatFilePathForDisplay('/Users/foo/file.md')).toBe('/Users/foo/file.md');
+  });
+
+  // T-PU-33: Linux behaves like macOS
+  it('T-PU-33: uses forward slashes on Linux', () => {
+    vi.spyOn(platform, 'getPlatform').mockReturnValue('linux');
+    expect(formatFilePathForDisplay('/home/user/file.md')).toBe('/home/user/file.md');
   });
 });
 

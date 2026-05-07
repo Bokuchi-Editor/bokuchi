@@ -533,25 +533,21 @@
       "improvement": "改善"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "フルスクリーン時のスライド位置を修正",
-        "description": "Marpのスライドショーで、フルスクリーンに切り替えた際に現在のスライド番号に関係なく常に1枚目から開始される問題を修正しました。"
+      "renderingFeatureNotice": {
+        "title": "レンダリング無効時のお知らせ",
+        "description": "KaTeX・Mermaid・Marp の各レンダリングがオフの状態で、それらを含むファイルを開いたときに初回限定でお知らせを表示します。「数式や図、スライドが表示されない」と悩むことがなくなります。"
       },
-      "marpPreviewScrollbar": {
-        "title": "Marpプレビューのスクロールバー表示を修正",
-        "description": "アプリ起動直後にMarpプレビューのスクロールバーが表示されない問題を修正しました。"
+      "tabFilePathTooltip": {
+        "title": "タブホバーでファイルパスを表示",
+        "description": "タブにマウスを乗せると、そのタブで開いているファイルのフルパスが表示されるようになりました。同名ファイルの判別が楽になります。"
       },
-      "marpExternalLinks": {
-        "title": "Marpスライド内リンクの挙動を修正",
-        "description": "Marpスライド内のリンクが、常にOSのブラウザで開かれるようになりました。"
+      "fullscreenEscKey": {
+        "title": "Marp フルスクリーンを Esc で解除",
+        "description": "Marp のスライドショーをフルスクリーン表示中、Esc キーで確実に終了できるようになりました。"
       },
-      "windowsSaveReliability": {
-        "title": "Windowsのファイル関連付けからの保存を改善",
-        "description": "ドキュメント／デスクトップ／ダウンロード以外の場所にあるファイルをOSのファイル関連付けから開いた際に、保存やタブ復元が失敗する問題を修正しました。"
-      },
-      "editorRapidTyping": {
-        "title": "高速入力時のエディタの安定性を改善",
-        "description": "Windowsで高速にキー入力した際に、内容が古い状態に戻ったりカーソルが末尾に飛んだりすることがある問題を修正しました。"
+      "previewCheckbox": {
+        "title": "プレビューのチェックボックス切替を修正",
+        "description": "プレビュー内でチェックボックスを切り替えた際、その変更がドキュメントに反映されないことがある問題を修正しました。"
       }
     }
   },
@@ -559,6 +555,17 @@
     "presentation": "プレゼンテーション",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
-    "slideCounter": "スライド {{current}} / {{total}}"
+    "slideCounter": "スライド {{current}} / {{total}}",
+    "featureNotice": {
+      "message": "このファイルでは {{features}} の記法が使われています。設定でONにするとプレビューに反映されます。",
+      "openSettings": "設定を開く",
+      "dismiss": "閉じる",
+      "separator": "、",
+      "feature": {
+        "mermaid": "Mermaid",
+        "marp": "Marp",
+        "katex": "KaTeX"
+      }
+    }
   }
 }

@@ -53,6 +53,13 @@ export const useTabsDesktop = () => {
 
 
   const updateTabContent = useCallback((id: string, content: string) => {
+    // The Editor is uncontrolled — Monaco's model is the source of truth, and
+    // the `content` prop only seeds it via `defaultValue`. Updates that
+    // originate outside Monaco (e.g. preview checkbox toggles) must therefore
+    // be pushed into the model, otherwise the editor displays stale text.
+    // setModelContentSilently is a no-op when the model already matches, so
+    // edits originating from Monaco itself don't pay any cost here.
+    syncModelForTab(id, content);
     dispatch({ type: 'UPDATE_TAB_CONTENT', payload: { id, content } });
   }, []);
 

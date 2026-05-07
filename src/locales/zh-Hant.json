@@ -533,25 +533,21 @@
       "improvement": "改進"
     },
     "changes": {
-      "marpFullscreenSlide": {
-        "title": "全螢幕模式下的投影片位置",
-        "description": "修正了 Marp 投影片放映時切換到全螢幕，無論目前在第幾張投影片都會從第一張開始的問題。"
+      "renderingFeatureNotice": {
+        "title": "渲染關閉時的提示",
+        "description": "當對應的渲染選項關閉時開啟包含 KaTeX、Mermaid 或 Marp 內容的檔案，現在會單次提示您，從此不再為公式、圖表或投影片不顯示而困惑。"
       },
-      "marpPreviewScrollbar": {
-        "title": "Marp 預覽捲軸",
-        "description": "修正了應用程式啟動後 Marp 預覽中捲軸未顯示的問題。"
+      "tabFilePathTooltip": {
+        "title": "懸停分頁顯示檔案路徑",
+        "description": "將滑鼠懸停在分頁上時，現在會顯示所開啟檔案的完整路徑，便於區分名稱相同的分頁。"
       },
-      "marpExternalLinks": {
-        "title": "Marp 投影片內的外部連結",
-        "description": "Marp 投影片內的連結現在一律會以作業系統瀏覽器開啟，而不會在投影片內導覽。"
+      "fullscreenEscKey": {
+        "title": "Esc 離開 Marp 全螢幕",
+        "description": "Esc 鍵現在可以可靠地離開 Marp 投影片的全螢幕模式。"
       },
-      "windowsSaveReliability": {
-        "title": "Windows 檔案關聯儲存",
-        "description": "修正了在 Windows 上，透過檔案關聯開啟位於文件／桌面／下載資料夾以外位置的檔案時，儲存與分頁還原失敗的問題。"
-      },
-      "editorRapidTyping": {
-        "title": "快速輸入時編輯器更穩定",
-        "description": "修正了 Windows 上快速輸入時，文件內容可能被舊內容覆蓋且游標跳到檔案結尾的問題。"
+      "previewCheckbox": {
+        "title": "預覽中核取方塊切換的修復",
+        "description": "修正了在預覽中切換核取方塊時，變更有時未同步到文件的問題。"
       }
     }
   },

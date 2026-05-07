@@ -10,6 +10,7 @@ import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
 import { RenderingSettings, ScrollSyncMode } from '../types/settings';
+import type { SettingsFocusTarget } from '../types/settingsFocus';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
 import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
@@ -82,6 +83,7 @@ interface AppContentProps {
   onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
   onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
+  onOpenSettings?: (target?: SettingsFocusTarget) => void;
   focusRequestId?: number;
 
   // Translation
@@ -135,6 +137,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onStatusChange,
   onSnackbar,
   onTableConversionSettingChange,
+  onOpenSettings,
   focusRequestId,
   t,
 }) => {
@@ -437,6 +440,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
                       viewMode="split"
+                      onOpenSettings={onOpenSettings}
                     />
                   </Box>
                 </>
@@ -489,6 +493,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
                     onScrollChange={handlePreviewScrollChange}
                     viewMode="preview"
+                    onOpenSettings={onOpenSettings}
                   />
                 </Box>
               )}

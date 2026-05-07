@@ -85,6 +85,21 @@ export const LINK_INTERCEPTOR_SCRIPT = `
   }
   document.addEventListener('click', handleClick, true);
   document.addEventListener('auxclick', handleClick, true);
+
+  // Forward keyboard navigation to the host. The iframe is sandboxed, so
+  // keydown events fired inside it never bubble to the parent window. The
+  // host listens for { type: 'marpKey', key } and routes to fullscreen exit /
+  // slide navigation.
+  function handleKey(e) {
+    var k = e.key;
+    if (k !== 'Escape' && k !== 'ArrowLeft' && k !== 'ArrowRight'
+        && k !== 'ArrowUp' && k !== 'ArrowDown' && k !== ' ') return;
+    e.preventDefault();
+    try {
+      window.parent.postMessage({ type: 'marpKey', key: k }, '*');
+    } catch (err) {}
+  }
+  document.addEventListener('keydown', handleKey, true);
 })();
 `;
 
