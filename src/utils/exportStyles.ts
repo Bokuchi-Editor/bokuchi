@@ -1,3 +1,5 @@
+import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+
 /** Theme color palette for HTML export */
 export interface ExportThemeColors {
   backgroundColor: string;
@@ -39,9 +41,118 @@ export function getHighlightStyleDataUri(darkMode: boolean, theme?: string): str
 }
 
 /**
+ * Build the CSS rules for `<table>` based on the chosen layout mode. Shared by the live
+ * preview (via Preview.tsx) and HTML export so both render identically.
+ *
+ * `prefix` scopes the rules ('' for the standalone export document, '.markdown-preview '
+ * for the in-app preview where rules must not leak to the rest of the UI). The auto-scroll
+ * preview also needs an override against the wildcard `.markdown-preview * { max-width: 100% }`
+ * — without it the table can't grow past its container, so horizontal scroll never triggers.
+ */
+export function generateTableLayoutCSS(
+  mode: TableLayoutMode,
+  prefix: string,
+  borderColor: string,
+  cellBackground: string,
+): string {
+  const tableSelector = `${prefix}table`;
+  const cellSelector = `${prefix}th, ${prefix}td`;
+  const headerSelector = `${prefix}th`;
+
+  const headerRule = `
+        ${headerSelector} {
+            background-color: ${cellBackground};
+            font-weight: 600;
+        }`;
+
+  if (mode === 'equal') {
+    return `
+        ${tableSelector} {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+            table-layout: fixed;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        ${cellSelector} {
+            border: 1px solid ${borderColor};
+            padding: 6px 13px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 0;
+        }
+${headerRule}`;
+  }
+
+  if (mode === 'auto-wrap') {
+    return `
+        ${tableSelector} {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%;
+            margin: 1em 0;
+            table-layout: auto;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        ${cellSelector} {
+            border: 1px solid ${borderColor};
+            padding: 6px 13px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+${headerRule}`;
+  }
+
+  // auto-scroll
+  // The preview-scope override exists to defeat the wide `.markdown-preview *` rule
+  // (max-width: 100% and word-break: break-word). Without these escape hatches the
+  // cells would still wrap aggressively and the table would never grow wide enough
+  // to overflow, so the scrollbar shows up but barely scrolls.
+  const scrollOverride = prefix
+    ? `
+
+        ${tableSelector}, ${prefix}table * {
+            max-width: none;
+            word-break: normal;
+            overflow-wrap: normal;
+        }`
+    : '';
+
+  return `
+        ${tableSelector} {
+            border-collapse: collapse;
+            display: block;
+            overflow-x: auto;
+            max-width: 100%;
+            margin: 1em 0;
+            table-layout: auto;
+        }${scrollOverride}
+
+        ${cellSelector} {
+            border: 1px solid ${borderColor};
+            padding: 6px 13px;
+            white-space: nowrap;
+        }
+${headerRule}`;
+}
+
+/**
  * Generate the full CSS block for HTML export.
  */
-export function generateExportCSS(colors: ExportThemeColors): string {
+export function generateExportCSS(
+  colors: ExportThemeColors,
+  tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
+): string {
+  const tableCSS = generateTableLayoutCSS(
+    tableLayout,
+    '',
+    colors.borderColor,
+    colors.codeBackground,
+  );
   return `
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -115,28 +226,7 @@ export function generateExportCSS(colors: ExportThemeColors): string {
             white-space: pre-wrap;
             line-height: 1.4;
         }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 1em 0;
-            table-layout: fixed;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-
-        th, td {
-            border: 1px solid ${colors.borderColor};
-            padding: 6px 13px;
-            word-break: break-word;
-            overflow-wrap: break-word;
-            max-width: 0;
-        }
-
-        th {
-            background-color: ${colors.codeBackground};
-            font-weight: 600;
-        }
+${tableCSS}
 
         a {
             color: ${colors.linkColor};
@@ -164,9 +254,10 @@ export function buildExportHTML(
   bodyHtml: string,
   darkMode: boolean,
   theme?: string,
+  tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
 ): string {
   const colors = getExportThemeColors(darkMode, theme);
-  const css = generateExportCSS(colors);
+  const css = generateExportCSS(colors, tableLayout);
   const highlightStyle = getHighlightStyleDataUri(darkMode, theme);
 
   return `

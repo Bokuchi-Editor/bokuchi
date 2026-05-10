@@ -9,7 +9,7 @@ import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
-import { RenderingSettings, ScrollSyncMode } from '../types/settings';
+import { RenderingSettings, PreviewSettings, ScrollSyncMode } from '../types/settings';
 import type { SettingsFocusTarget } from '../types/settingsFocus';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
@@ -30,6 +30,9 @@ interface AppContentProps {
 
   // Rendering settings
   renderingSettings?: RenderingSettings;
+
+  // Preview settings (table layout, etc.)
+  previewSettings?: PreviewSettings;
 
   // Editor settings
   editorSettings?: {
@@ -102,6 +105,7 @@ const AppContent: React.FC<AppContentProps> = ({
   isInitialized,
   isSettingsLoaded,
   renderingSettings,
+  previewSettings,
   editorSettings,
   scrollSyncMode,
   outlineDisplayMode,
@@ -439,6 +443,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       onScrollChange={scrollSyncMode === 'bidirectional' ? handlePreviewScrollChange : undefined}
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
+                      previewSettings={previewSettings}
                       viewMode="split"
                       onOpenSettings={onOpenSettings}
                     />
@@ -490,6 +495,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     onContentChange={onContentChange}
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
+                    previewSettings={previewSettings}
                     scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
                     onScrollChange={handlePreviewScrollChange}
                     viewMode="preview"

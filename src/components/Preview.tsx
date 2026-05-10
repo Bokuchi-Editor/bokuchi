@@ -8,9 +8,9 @@ import { variableApi } from '../api/variableApi';
 import { desktopApi } from '../api/desktopApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { readFile } from '@tauri-apps/plugin-fs';
-import { RenderingSettings, DEFAULT_RENDERING_SETTINGS } from '../types/settings';
+import { RenderingSettings, DEFAULT_RENDERING_SETTINGS, PreviewSettings, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { renderCode, processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
-import { buildExportHTML } from '../utils/exportStyles';
+import { buildExportHTML, generateTableLayoutCSS } from '../utils/exportStyles';
 import { contentIsMarp } from '../utils/marpRenderer';
 import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../utils/imagePathResolver';
 import MarpPreview from './MarpPreview';
@@ -28,6 +28,7 @@ interface PreviewProps {
   onScrollChange?: (fraction: number) => void;
   filePath?: string;
   renderingSettings?: RenderingSettings;
+  previewSettings?: PreviewSettings;
   viewMode?: 'split' | 'editor' | 'preview';
   onOpenSettings?: (target?: SettingsFocusTarget) => void;
 }
@@ -35,7 +36,7 @@ interface PreviewProps {
 const BASE_PREVIEW_FONT_SIZE_PX = 16;
 const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, viewMode = 'split', onOpenSettings }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -348,7 +349,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         exportHtml = await processMermaidBlocks(exportHtml, darkMode || theme === 'darcula');
       }
 
-      const fullHTML = buildExportHTML(exportHtml, darkMode, theme);
+      const fullHTML = buildExportHTML(exportHtml, darkMode, theme, previewSettings.tableLayout);
 
       // Select save location via file dialog
       const result = await desktopApi.saveHtmlFile(fullHTML);
@@ -523,28 +524,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
               white-space: pre-wrap;
             }
 
-            .markdown-preview table {
-              border-collapse: collapse;
-              width: 100%;
-              margin: 1em 0;
-              table-layout: fixed;
-              word-break: break-word;
-              overflow-wrap: break-word;
-            }
-
-            .markdown-preview th,
-            .markdown-preview td {
-              border: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5')};
-              padding: 6px 13px;
-              word-break: break-word;
-              overflow-wrap: break-word;
-              max-width: 0;
-            }
-
-            .markdown-preview th {
-              background-color: ${theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa')};
-              font-weight: 600;
-            }
+            ${generateTableLayoutCSS(
+              previewSettings.tableLayout,
+              '.markdown-preview ',
+              theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5'),
+              theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa'),
+            )}
 
             .markdown-preview a {
               color: ${theme === 'darcula' ? '#58a6ff' : (darkMode ? '#58a6ff' : '#0366d6')};

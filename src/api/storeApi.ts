@@ -246,6 +246,7 @@ export const storeApi = {
         interface: { ...DEFAULT_APP_SETTINGS.interface, ...settings?.interface },
         advanced: { ...DEFAULT_APP_SETTINGS.advanced, ...settings?.advanced },
         rendering: { ...DEFAULT_APP_SETTINGS.rendering, ...settings?.rendering },
+        preview: { ...DEFAULT_APP_SETTINGS.preview, ...settings?.preview },
         globalVariables: { ...DEFAULT_APP_SETTINGS.globalVariables, ...settings?.globalVariables },
       };
 
