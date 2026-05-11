@@ -419,6 +419,7 @@ function AppDesktop() {
           isInitialized={isInitialized}
           isSettingsLoaded={isSettingsLoaded}
           renderingSettings={appSettings.rendering}
+          previewSettings={appSettings.preview}
           editorSettings={{
             fontSize: appSettings.editor.fontSize,
             showLineNumbers: appSettings.editor.showLineNumbers,
