@@ -45,7 +45,7 @@
     "@marp-team/marp-core": "^4.3.0",
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^7.3.10",
-    "@mui/material": "^7.3.9",
+    "@mui/material": "^7.3.11",
     "@tauri-apps/api": "^2.11.0",
     "@tauri-apps/plugin-clipboard-manager": "^2.3.1",
     "@tauri-apps/plugin-dialog": "^2.7.1",
