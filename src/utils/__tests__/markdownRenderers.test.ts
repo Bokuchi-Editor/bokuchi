@@ -60,18 +60,30 @@ describe('renderCode', () => {
     expect(result).toContain('<highlighted');
   });
 
-  it('falls back to auto-highlight for unknown languages', () => {
-    const result = renderCode({ text: 'some code', lang: 'unknown-lang' });
+  it('does not auto-highlight unknown languages (escapes HTML and emits plain)', async () => {
+    const hljs = (await import('highlight.js')).default;
+    const autoSpy = vi.mocked(hljs.highlightAuto);
+    autoSpy.mockClear();
+
+    const result = renderCode({ text: 'a < b & c', lang: 'unknown-lang' });
     expect(result).toContain('hljs');
     expect(result).toContain('language-unknown-lang');
-    expect(result).toContain('<auto-highlighted>');
+    expect(result).not.toContain('<auto-highlighted>');
+    expect(result).toContain('a &lt; b &amp; c');
+    expect(autoSpy).not.toHaveBeenCalled();
   });
 
-  it('falls back to auto-highlight when no language specified', () => {
-    const result = renderCode({ text: 'some code' });
+  it('does not auto-highlight when no language specified (escapes HTML and emits plain)', async () => {
+    const hljs = (await import('highlight.js')).default;
+    const autoSpy = vi.mocked(hljs.highlightAuto);
+    autoSpy.mockClear();
+
+    const result = renderCode({ text: 'a < b & c' });
     expect(result).toContain('hljs');
-    expect(result).toContain('<auto-highlighted>');
     expect(result).not.toContain('language-');
+    expect(result).not.toContain('<auto-highlighted>');
+    expect(result).toContain('a &lt; b &amp; c');
+    expect(autoSpy).not.toHaveBeenCalled();
   });
 });
 
