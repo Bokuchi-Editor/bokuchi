@@ -310,7 +310,7 @@
 
 /* Darcula theme specific overrides */
 [data-theme="darcula"] .markdown-preview pre {
-  background-color: #2B2B2B !important;
+  background-color: #3C3F41 !important;
   border: 1px solid #323232 !important;
   color: #A9B7C6 !important;
 }
@@ -328,7 +328,7 @@
 }
 
 [data-theme="darcula"] .hljs {
-  background-color: #2B2B2B !important;
+  background-color: #3C3F41 !important;
   color: #A9B7C6 !important;
   border: none !important;
 }
