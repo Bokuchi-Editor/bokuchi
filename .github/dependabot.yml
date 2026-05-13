@@ -19,6 +19,36 @@ updates:
     labels:
       - "dependencies"
       - "npm"
+    # 相互依存するパッケージ群をまとめて1つのPRに集約し、
+    # バージョン不整合によるCI失敗を防ぐ
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      mui:
+        patterns:
+          - "@mui/*"
+      typescript-eslint:
+        patterns:
+          - "@typescript-eslint/*"
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "vite-plugin-*"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      testing-library:
+        patterns:
+          - "@testing-library/*"
+      tauri:
+        patterns:
+          - "@tauri-apps/*"
     ignore:
       # メジャーバージョンアップは手動で確認
       - dependency-name: "*"
