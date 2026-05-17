@@ -380,6 +380,14 @@
       "tableConversionAuto": "Automatisch konvertieren",
       "tableConversionConfirm": "Vor Konvertierung fragen",
       "tableConversionOff": "Nicht konvertieren",
+      "tableLayout": "Tabellen-Layout (Vorschau)",
+      "tableLayoutDescription": "Wähle, wie Spaltenbreiten in der Markdown-Vorschau und im HTML-Export berechnet werden.",
+      "tableLayoutEqual": "Gleiche Spaltenbreiten",
+      "tableLayoutEqualDescription": "Alle Spalten erhalten dieselbe Breite; langer Text wird innerhalb der Zellen umgebrochen.",
+      "tableLayoutAutoWrap": "An Inhalt anpassen (Umbruch in Zellen)",
+      "tableLayoutAutoWrapDescription": "Spaltenbreiten richten sich nach dem Inhalt. Langer Text wird weiterhin umgebrochen, damit die Tabelle in den Bereich passt.",
+      "tableLayoutAutoScroll": "An Inhalt anpassen (horizontales Scrollen)",
+      "tableLayoutAutoScrollDescription": "Spaltenbreiten richten sich nach dem Inhalt. Die Tabelle kann über den Bereich hinauswachsen und horizontal scrollen.",
       "rendering": "Rendering-Erweiterungen",
       "renderingDescription": "Optionale Rendering-Funktionen aktivieren oder deaktivieren. Deaktivierte Funktionen laden ihre Bibliotheken nicht, wodurch der Editor leichtgewichtig bleibt.",
       "enableKatex": "KaTeX (Mathematische Ausdrücke)",
@@ -533,21 +541,17 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Hinweis bei deaktiviertem Rendering",
-        "description": "Wenn Sie eine Datei mit KaTeX-, Mermaid- oder Marp-Inhalten öffnen, während die zugehörige Rendering-Option deaktiviert ist, erscheint nun ein einmaliger Hinweis – so wissen Sie sofort, warum Ihre Formeln, Diagramme oder Folien nicht angezeigt werden."
+      "tableLayoutSetting": {
+        "title": "Konfigurierbare Spaltenbreite für Tabellen",
+        "description": "Wählen Sie, wie Spalten von Markdown-Tabellen in der Vorschau und im exportierten HTML dimensioniert werden: gleiche Breite, an den Inhalt angepasst mit Umbruch oder an den Inhalt angepasst mit horizontalem Scrollen."
       },
-      "tabFilePathTooltip": {
-        "title": "Dateipfad beim Tab-Hover",
-        "description": "Wenn Sie mit der Maus über einen Tab fahren, wird nun der vollständige Dateipfad angezeigt – ideal, um Tabs mit gleichnamigen Dateien zu unterscheiden."
+      "mermaidInMarp": {
+        "title": "Mermaid-Diagramme in Marp-Folien",
+        "description": "Mermaid-Codeblöcke werden jetzt in Marp-Folien als Diagramme gerendert, statt den Quelltext unverändert anzuzeigen. Der Dunkelmodus wird automatisch berücksichtigt."
       },
-      "fullscreenEscKey": {
-        "title": "Esc beendet Marp-Vollbildmodus",
-        "description": "Mit der Esc-Taste lässt sich der Marp-Vollbildmodus jetzt zuverlässig verlassen."
-      },
-      "previewCheckbox": {
-        "title": "Checkbox-Umschaltung in der Vorschau",
-        "description": "Behoben: Beim Umschalten einer Checkbox in der Vorschau wurde die Änderung nicht immer auf das Dokument übertragen."
+      "darculaCodeContrast": {
+        "title": "Bessere Lesbarkeit der Codeblöcke im Darcula-Theme",
+        "description": "Der Hintergrund von Codeblöcken im Darcula-Theme wurde aufgehellt, sodass syntaxhervorgehobener Code leichter zu lesen ist."
       }
     }
   },

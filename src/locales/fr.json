@@ -380,6 +380,14 @@
       "tableConversionAuto": "Convertir automatiquement",
       "tableConversionConfirm": "Demander avant de convertir",
       "tableConversionOff": "Ne pas convertir",
+      "tableLayout": "Mise en page des tableaux (aperçu)",
+      "tableLayoutDescription": "Choisissez comment la largeur des colonnes est calculée dans l'aperçu Markdown et dans le HTML exporté.",
+      "tableLayoutEqual": "Colonnes de largeur égale",
+      "tableLayoutEqualDescription": "Toutes les colonnes ont la même largeur et le texte long s'enroule à l'intérieur des cellules.",
+      "tableLayoutAutoWrap": "S'ajuster au contenu (retour à la ligne dans les cellules)",
+      "tableLayoutAutoWrapDescription": "Les largeurs de colonne suivent le contenu. Le texte long continue de s'enrouler pour que le tableau tienne dans le volet.",
+      "tableLayoutAutoScroll": "S'ajuster au contenu (défilement horizontal)",
+      "tableLayoutAutoScrollDescription": "Les largeurs de colonne suivent le contenu. Le tableau peut dépasser le volet et défile horizontalement.",
       "rendering": "Extensions de rendu",
       "renderingDescription": "Activer ou désactiver les fonctionnalités de rendu optionnelles. Les fonctionnalités désactivées ne chargent pas leurs bibliothèques, gardant l'éditeur léger.",
       "enableKatex": "KaTeX (Expressions mathématiques)",
@@ -533,21 +541,17 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Notification quand le rendu est désactivé",
-        "description": "À l'ouverture d'un fichier contenant du KaTeX, du Mermaid ou du Marp alors que l'option de rendu correspondante est désactivée, une notification s'affiche désormais une seule fois pour expliquer pourquoi les formules, diagrammes ou diapositives n'apparaissent pas."
+      "tableLayoutSetting": {
+        "title": "Largeur des colonnes de tableau configurable",
+        "description": "Choisissez comment les colonnes des tableaux Markdown sont dimensionnées dans l'aperçu et dans le HTML exporté : largeurs égales, adapté au contenu avec retour à la ligne, ou adapté au contenu avec défilement horizontal."
       },
-      "tabFilePathTooltip": {
-        "title": "Chemin du fichier au survol de l'onglet",
-        "description": "Survoler un onglet avec la souris affiche désormais le chemin complet du fichier ouvert, ce qui facilite la distinction entre onglets aux noms identiques."
+      "mermaidInMarp": {
+        "title": "Diagrammes Mermaid dans les diapositives Marp",
+        "description": "Les blocs de code Mermaid sont désormais rendus comme des diagrammes dans les diapositives Marp, au lieu d'afficher le code source brut. Le mode sombre est automatiquement pris en compte."
       },
-      "fullscreenEscKey": {
-        "title": "Esc pour quitter le plein écran Marp",
-        "description": "La touche Esc permet désormais de quitter de manière fiable le mode plein écran du diaporama Marp."
-      },
-      "previewCheckbox": {
-        "title": "Bascule des cases à cocher dans l'aperçu",
-        "description": "Correction d'un problème où le basculement d'une case à cocher dans l'aperçu n'était pas toujours répercuté sur le document."
+      "darculaCodeContrast": {
+        "title": "Contraste amélioré des blocs de code dans Darcula",
+        "description": "L'arrière-plan des blocs de code du thème Darcula a été éclairci pour faciliter la lecture du code avec coloration syntaxique."
       }
     }
   },

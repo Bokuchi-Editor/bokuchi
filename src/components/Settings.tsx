@@ -1134,6 +1134,66 @@ const Settings: React.FC<SettingsProps> = ({
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
                     <Typography variant="h6" sx={{ mb: 2 }}>
+                      {t('settings.advanced.tableLayout')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {t('settings.advanced.tableLayoutDescription')}
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={settings.preview?.tableLayout ?? 'auto-wrap'}
+                        onChange={(e) => handleSettingChange('preview', 'tableLayout', e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="equal"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.advanced.tableLayoutEqual')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.advanced.tableLayoutEqualDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="auto-wrap"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.advanced.tableLayoutAutoWrap')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.advanced.tableLayoutAutoWrapDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="auto-scroll"
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="body1">
+                                {t('settings.advanced.tableLayoutAutoScroll')}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('settings.advanced.tableLayoutAutoScrollDescription')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
                       {t('settings.advanced.rendering')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>

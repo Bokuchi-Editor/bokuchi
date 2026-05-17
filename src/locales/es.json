@@ -380,6 +380,14 @@
       "tableConversionAuto": "Convertir automáticamente",
       "tableConversionConfirm": "Preguntar antes de convertir",
       "tableConversionOff": "No convertir",
+      "tableLayout": "Diseño de tabla (vista previa)",
+      "tableLayoutDescription": "Elige cómo se calcula el ancho de las columnas en la vista previa de Markdown y en el HTML exportado.",
+      "tableLayoutEqual": "Anchos de columna iguales",
+      "tableLayoutEqualDescription": "Todas las columnas tienen el mismo ancho y el texto largo se ajusta dentro de las celdas.",
+      "tableLayoutAutoWrap": "Ajustar al contenido (ajuste en celdas)",
+      "tableLayoutAutoWrapDescription": "Los anchos de columna se adaptan al contenido. El texto largo sigue ajustándose para que la tabla quepa en el panel.",
+      "tableLayoutAutoScroll": "Ajustar al contenido (desplazamiento horizontal)",
+      "tableLayoutAutoScrollDescription": "Los anchos de columna se adaptan al contenido. La tabla puede superar el ancho del panel y desplazarse horizontalmente.",
       "rendering": "Extensiones de renderizado",
       "renderingDescription": "Habilitar o deshabilitar funciones de renderizado opcionales. Las funciones deshabilitadas no cargan sus bibliotecas, manteniendo el editor ligero.",
       "enableKatex": "KaTeX (Expresiones matemáticas)",
@@ -533,21 +541,17 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Aviso cuando el renderizado está desactivado",
-        "description": "Al abrir un archivo con contenido de KaTeX, Mermaid o Marp mientras la opción de renderizado correspondiente está desactivada, ahora se muestra un aviso único para que sepas por qué no aparecen tus fórmulas, diagramas o diapositivas."
+      "tableLayoutSetting": {
+        "title": "Anchura de columnas de tabla configurable",
+        "description": "Elige cómo se dimensionan las columnas de las tablas Markdown en la vista previa y en el HTML exportado: anchos iguales, ajustadas al contenido con salto de línea o ajustadas al contenido con desplazamiento horizontal."
       },
-      "tabFilePathTooltip": {
-        "title": "Ruta del archivo al pasar el ratón sobre la pestaña",
-        "description": "Al pasar el ratón por encima de una pestaña, ahora se muestra la ruta completa del archivo, lo que facilita distinguir pestañas con nombres iguales."
+      "mermaidInMarp": {
+        "title": "Diagramas Mermaid en diapositivas Marp",
+        "description": "Los bloques de código Mermaid ahora se renderizan como diagramas dentro de las diapositivas de Marp, en lugar de mostrar el código fuente. Se respeta automáticamente el modo oscuro."
       },
-      "fullscreenEscKey": {
-        "title": "Esc para salir del modo de pantalla completa de Marp",
-        "description": "Ahora la tecla Esc sale de forma fiable del modo pantalla completa de la presentación de Marp."
-      },
-      "previewCheckbox": {
-        "title": "Cambio de casilla en la vista previa",
-        "description": "Se corrigió un problema por el que al alternar una casilla en la vista previa el cambio no siempre se propagaba al documento."
+      "darculaCodeContrast": {
+        "title": "Mejor contraste de bloques de código en Darcula",
+        "description": "Se aclaró el fondo de los bloques de código en el tema Darcula para que el código con resaltado de sintaxis sea más fácil de leer."
       }
     }
   },

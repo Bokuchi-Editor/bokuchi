@@ -380,6 +380,14 @@
       "tableConversionAuto": "自動轉換",
       "tableConversionConfirm": "轉換前詢問",
       "tableConversionOff": "不轉換",
+      "tableLayout": "表格版面（預覽）",
+      "tableLayoutDescription": "選擇 Markdown 預覽和匯出 HTML 中欄寬的計算方式。",
+      "tableLayoutEqual": "欄寬均等",
+      "tableLayoutEqualDescription": "所有欄寬相同，過長的內容在儲存格內自動換行。",
+      "tableLayoutAutoWrap": "依內容調整（於儲存格內換行）",
+      "tableLayoutAutoWrapDescription": "欄寬依內容而定，過長的內容仍會換行，使表格符合面板寬度。",
+      "tableLayoutAutoScroll": "依內容調整（水平捲動）",
+      "tableLayoutAutoScrollDescription": "欄寬依內容而定，表格寬度可超出面板，並可水平捲動。",
       "rendering": "渲染擴充",
       "renderingDescription": "啟用或停用可選的渲染功能。停用的功能不會載入其程式庫，保持編輯器輕量。",
       "enableKatex": "KaTeX（數學表達式）",
@@ -533,21 +541,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "渲染關閉時的提示",
-        "description": "當對應的渲染選項關閉時開啟包含 KaTeX、Mermaid 或 Marp 內容的檔案，現在會單次提示您，從此不再為公式、圖表或投影片不顯示而困惑。"
+      "tableLayoutSetting": {
+        "title": "表格欄寬可自訂",
+        "description": "可在預覽和匯出的 HTML 中自訂 Markdown 表格的欄寬方式：等寬、依內容自動換行，或依內容橫向捲動。"
       },
-      "tabFilePathTooltip": {
-        "title": "懸停分頁顯示檔案路徑",
-        "description": "將滑鼠懸停在分頁上時，現在會顯示所開啟檔案的完整路徑，便於區分名稱相同的分頁。"
+      "mermaidInMarp": {
+        "title": "Marp 投影片中的 Mermaid 圖表渲染",
+        "description": "Marp 投影片中的 Mermaid 程式碼區塊現在會渲染為圖表，而不再原樣顯示原始碼。深色模式會自動套用。"
       },
-      "fullscreenEscKey": {
-        "title": "Esc 離開 Marp 全螢幕",
-        "description": "Esc 鍵現在可以可靠地離開 Marp 投影片的全螢幕模式。"
-      },
-      "previewCheckbox": {
-        "title": "預覽中核取方塊切換的修復",
-        "description": "修正了在預覽中切換核取方塊時，變更有時未同步到文件的問題。"
+      "darculaCodeContrast": {
+        "title": "Darcula 佈景中程式碼區塊對比度優化",
+        "description": "調亮了 Darcula 佈景的程式碼區塊背景色，讓語法強調的程式碼更易閱讀。"
       }
     }
   },

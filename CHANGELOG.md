@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.2...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.3...HEAD)
+
+## [0.8.3](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.2...v0.8.3) - 2026-05-18
+
+### Added
+
+- Configurable table column width — choose how Markdown table columns are sized in both the preview and the exported HTML (equal widths, fit-to-content with wrapping, or fit-to-content with horizontal scroll); new setting `tableLayout` with translations across all 14 locales
+
+### Changed
+
+- Brightened the Darcula theme code block background (`#2B2B2B` → `#3C3F41`) so syntax-highlighted code is easier to read
+- Dependency updates: `mermaid` 11.14.0 → 11.15.0, `react` 19.2.5 → 19.2.6, `@mui/icons-material` 7.3.10 → 7.3.11, plus dev-side bumps for `vite`, `@tauri-apps/cli`, the `vitest` group, and the `typescript-eslint` group; removed the obsolete `uuid` package override
+
+### Fixed
+
+- Mermaid code blocks now render as diagrams inside Marp slides instead of being emitted as raw `<pre><code>` markup; the Marp render path now invokes `processMermaidBlocks` (dark-mode aware, with sizing CSS for the iframe srcdoc), and the mermaid block regex was loosened to match Marp's `<pre is="marp-pre" data-auto-scaling="…">` output in addition to the plain `<pre>` emitted by `marked`
 
 ## [0.8.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.1...v0.8.2) - 2026-05-07
 

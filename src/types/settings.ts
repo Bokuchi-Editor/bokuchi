@@ -37,6 +37,17 @@ export interface RenderingSettings {
   enableMarp: boolean;
 }
 
+// How the preview lays out tables.
+// - equal: every column gets the same width; long content wraps inside cells (CSS table-layout: fixed).
+// - auto-wrap: column widths follow content; long content still wraps so the table fits the pane.
+// - auto-scroll: column widths follow content; the table can grow past the pane and scroll horizontally.
+export type TableLayoutMode = 'equal' | 'auto-wrap' | 'auto-scroll';
+
+// Preview settings type definition
+export interface PreviewSettings {
+  tableLayout: TableLayoutMode;
+}
+
 // Advanced settings type definition
 export interface AdvancedSettings {
   autoSave: boolean;
@@ -58,6 +69,7 @@ export interface AppSettings {
   interface: InterfaceSettings;
   advanced: AdvancedSettings;
   rendering: RenderingSettings;
+  preview: PreviewSettings;
   recentFiles: RecentFilesSettings;
   globalVariables: Record<string, string>;
 }
@@ -99,6 +111,10 @@ export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
   enableMarp: false,
 };
 
+export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {
+  tableLayout: 'auto-wrap',
+};
+
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {
   maxRecentFiles: 20,
   showPreview: true,
@@ -111,6 +127,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   interface: DEFAULT_INTERFACE_SETTINGS,
   advanced: DEFAULT_ADVANCED_SETTINGS,
   rendering: DEFAULT_RENDERING_SETTINGS,
+  preview: DEFAULT_PREVIEW_SETTINGS,
   recentFiles: DEFAULT_RECENT_FILES_SETTINGS,
   globalVariables: {},
 };

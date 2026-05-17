@@ -380,6 +380,14 @@
       "tableConversionAuto": "자동 변환",
       "tableConversionConfirm": "변환 전에 묻기",
       "tableConversionOff": "변환하지 않음",
+      "tableLayout": "표 레이아웃 (미리보기)",
+      "tableLayoutDescription": "Markdown 미리보기와 내보낸 HTML에서 열 너비를 결정하는 방식을 선택합니다.",
+      "tableLayoutEqual": "균등한 열 너비",
+      "tableLayoutEqualDescription": "모든 열의 너비가 같아지고, 긴 텍스트는 셀 안에서 줄바꿈됩니다.",
+      "tableLayoutAutoWrap": "내용에 맞춤 (셀 내 줄바꿈)",
+      "tableLayoutAutoWrapDescription": "열 너비가 내용을 따라 결정됩니다. 긴 텍스트는 줄바꿈되어 표가 패널에 맞춰집니다.",
+      "tableLayoutAutoScroll": "내용에 맞춤 (가로 스크롤)",
+      "tableLayoutAutoScrollDescription": "열 너비가 내용을 따라 결정됩니다. 표가 패널보다 넓어지면 가로로 스크롤됩니다.",
       "rendering": "렌더링 확장",
       "renderingDescription": "선택적 렌더링 기능을 활성화하거나 비활성화합니다. 비활성화된 기능은 라이브러리를 로드하지 않아 에디터를 가볍게 유지합니다.",
       "enableKatex": "KaTeX (수학 표현식)",
@@ -533,21 +541,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "렌더링 비활성 상태 알림",
-        "description": "KaTeX, Mermaid, Marp 콘텐츠가 포함된 파일을 해당 렌더링 옵션이 꺼진 상태로 열면, 한 번만 알림을 표시해 수식·다이어그램·슬라이드가 보이지 않는 이유를 바로 알 수 있도록 했습니다."
+      "tableLayoutSetting": {
+        "title": "테이블 열 너비 설정 추가",
+        "description": "미리보기와 내보낸 HTML에서 Markdown 표의 열 너비 동작을 동일 너비, 내용에 맞춰 줄바꿈, 내용에 맞춰 가로 스크롤 중에서 선택할 수 있게 되었습니다."
       },
-      "tabFilePathTooltip": {
-        "title": "탭 마우스오버 시 파일 경로 표시",
-        "description": "탭 위에 마우스를 올리면 열려 있는 파일의 전체 경로가 표시됩니다. 이름이 같은 파일이 여러 개 열려 있어도 쉽게 구분할 수 있습니다."
+      "mermaidInMarp": {
+        "title": "Marp 슬라이드에서 Mermaid 다이어그램 렌더링",
+        "description": "Marp 슬라이드 안의 Mermaid 코드 블록이 원본 소스 대신 다이어그램으로 렌더링되도록 수정했습니다. 다크 모드도 자동으로 따라갑니다."
       },
-      "fullscreenEscKey": {
-        "title": "Esc 키로 Marp 전체 화면 종료",
-        "description": "Marp 슬라이드쇼를 전체 화면으로 보고 있을 때 Esc 키로 안정적으로 종료할 수 있게 되었습니다."
-      },
-      "previewCheckbox": {
-        "title": "미리보기 체크박스 토글 수정",
-        "description": "미리보기에서 체크박스를 토글했을 때 변경 내용이 문서에 반영되지 않는 경우가 있던 문제를 수정했습니다."
+      "darculaCodeContrast": {
+        "title": "Darcula 테마 코드 블록 대비 개선",
+        "description": "Darcula 테마의 코드 블록 배경을 밝게 조정해 구문 강조된 코드를 더 읽기 쉽게 했습니다."
       }
     }
   },

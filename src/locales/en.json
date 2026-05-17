@@ -380,6 +380,14 @@
       "tableConversionAuto": "Auto Convert",
       "tableConversionConfirm": "Ask Before Converting",
       "tableConversionOff": "Don't Convert",
+      "tableLayout": "Table Layout (Preview)",
+      "tableLayoutDescription": "Choose how columns are sized in the markdown preview and exported HTML.",
+      "tableLayoutEqual": "Equal column widths",
+      "tableLayoutEqualDescription": "Every column gets the same width and long text wraps inside cells.",
+      "tableLayoutAutoWrap": "Fit to content (wrap in cells)",
+      "tableLayoutAutoWrapDescription": "Column widths follow content. Long text still wraps so the table fits the pane.",
+      "tableLayoutAutoScroll": "Fit to content (horizontal scroll)",
+      "tableLayoutAutoScrollDescription": "Column widths follow content. The table can grow past the pane and scroll horizontally.",
       "rendering": "Rendering Extensions",
       "renderingDescription": "Enable or disable optional rendering features. Disabled features do not load their libraries, keeping the editor lightweight.",
       "enableKatex": "KaTeX (Math Expressions)",
@@ -533,21 +541,17 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Notification When Rendering Is Off",
-        "description": "When you open a Markdown file containing KaTeX, Mermaid, or Marp content while the matching rendering option is disabled, a one-time notice now tells you exactly why the math, diagrams, or slides are not showing up."
+      "tableLayoutSetting": {
+        "title": "Configurable Table Column Width",
+        "description": "Choose how Markdown table columns are sized in the preview and exported HTML: equal widths, fit to content with wrapping, or fit to content with horizontal scroll."
       },
-      "tabFilePathTooltip": {
-        "title": "File Path on Tab Hover",
-        "description": "Hovering over a tab now shows the full file path of the open file, making it easy to tell apart tabs whose filenames look the same."
+      "mermaidInMarp": {
+        "title": "Mermaid Diagrams in Marp Slides",
+        "description": "Mermaid code blocks now render as diagrams inside Marp slides instead of showing the raw source. Dark mode is honored automatically."
       },
-      "fullscreenEscKey": {
-        "title": "Esc to Exit Marp Fullscreen",
-        "description": "Pressing Esc now reliably leaves the Marp slideshow's fullscreen mode."
-      },
-      "previewCheckbox": {
-        "title": "Preview Checkbox Toggle",
-        "description": "Fixed an issue where toggling a checkbox in the preview did not always propagate the change back to the document."
+      "darculaCodeContrast": {
+        "title": "Darcula Code Block Contrast",
+        "description": "Brightened the code block background in the Darcula theme so syntax-highlighted code is easier to read."
       }
     }
   },

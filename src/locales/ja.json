@@ -380,6 +380,14 @@
       "tableConversionAuto": "自動変換",
       "tableConversionConfirm": "変換前に確認",
       "tableConversionOff": "変換しない",
+      "tableLayout": "テーブルのレイアウト (プレビュー)",
+      "tableLayoutDescription": "Markdown プレビューおよび HTML エクスポートでのテーブル幅の決め方を選びます。",
+      "tableLayoutEqual": "カラム幅を均等にする",
+      "tableLayoutEqualDescription": "すべての列を同じ幅にし、長い文字列はセル内で折り返します。",
+      "tableLayoutAutoWrap": "内容に合わせる (セル内で折り返し)",
+      "tableLayoutAutoWrapDescription": "列幅は内容に合わせて変化します。長い文字列もセル内で折り返してペインに収めます。",
+      "tableLayoutAutoScroll": "内容に合わせる (横スクロール)",
+      "tableLayoutAutoScrollDescription": "列幅は内容に合わせて変化します。幅がペインを超える場合は横スクロールで表示します。",
       "rendering": "レンダリング拡張",
       "renderingDescription": "オプションのレンダリング機能を有効/無効にします。無効にした機能はライブラリを読み込まないため、エディターの軽量性を維持できます。",
       "enableKatex": "KaTeX（数式）",
@@ -533,21 +541,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "レンダリング無効時のお知らせ",
-        "description": "KaTeX・Mermaid・Marp の各レンダリングがオフの状態で、それらを含むファイルを開いたときに初回限定でお知らせを表示します。「数式や図、スライドが表示されない」と悩むことがなくなります。"
+      "tableLayoutSetting": {
+        "title": "テーブル列幅をカスタマイズ可能に",
+        "description": "プレビューと書き出した HTML での Markdown テーブル列幅を、等幅・内容に合わせて折り返し・内容に合わせて横スクロール、の 3 種類から選べるようになりました。"
       },
-      "tabFilePathTooltip": {
-        "title": "タブホバーでファイルパスを表示",
-        "description": "タブにマウスを乗せると、そのタブで開いているファイルのフルパスが表示されるようになりました。同名ファイルの判別が楽になります。"
+      "mermaidInMarp": {
+        "title": "Marp スライド内で Mermaid 図が描画されるように",
+        "description": "Marp スライド内の Mermaid コードブロックがソースのまま表示されてしまう問題を修正し、図として描画されるようになりました。ダークモードにも自動で追従します。"
       },
-      "fullscreenEscKey": {
-        "title": "Marp フルスクリーンを Esc で解除",
-        "description": "Marp のスライドショーをフルスクリーン表示中、Esc キーで確実に終了できるようになりました。"
-      },
-      "previewCheckbox": {
-        "title": "プレビューのチェックボックス切替を修正",
-        "description": "プレビュー内でチェックボックスを切り替えた際、その変更がドキュメントに反映されないことがある問題を修正しました。"
+      "darculaCodeContrast": {
+        "title": "Darcula テーマのコードブロックを見やすく",
+        "description": "Darcula テーマのコードブロック背景色を明るくし、シンタックスハイライトされたコードが読みやすくなりました。"
       }
     }
   },

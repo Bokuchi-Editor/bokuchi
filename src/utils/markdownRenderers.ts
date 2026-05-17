@@ -22,9 +22,12 @@ export function renderCode({ text, lang }: { text: string; lang?: string; escape
       console.warn('Highlight.js error:', err);
     }
   }
+  // No language (or unknown language): do not auto-detect. Emit plain,
+  // HTML-escaped code so the user's intent (unspecified = no highlighting)
+  // is respected.
+  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const langClass = lang ? ` language-${lang}` : '';
-  const highlighted = hljs.highlightAuto(text).value;
-  return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`;
+  return `<pre><code class="hljs${langClass}">${escaped}</code></pre>`;
 }
 
 // Lazy-loaded module caches
@@ -164,7 +167,9 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
 
   // Find mermaid diagram placeholders in the HTML
   // After marked processes ```mermaid blocks, they become <pre><code class="...mermaid...">
-  const mermaidHtmlRe = /<pre><code class="[^"]*(?:language-mermaid|mermaid)[^"]*">([\s\S]*?)<\/code><\/pre>/g;
+  // Marp emits <pre is="marp-pre" data-auto-scaling="..."><code class="language-mermaid">,
+  // so allow attributes on <pre> (matches both forms).
+  const mermaidHtmlRe = /<pre[^>]*><code class="[^"]*(?:language-mermaid|mermaid)[^"]*">([\s\S]*?)<\/code><\/pre>/g;
 
   const matches: { full: string; code: string }[] = [];
   let match;
