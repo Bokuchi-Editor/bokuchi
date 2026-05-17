@@ -7,6 +7,7 @@ import { variableApi } from '../api/variableApi';
 import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument } from '../utils/marpRenderer';
 import { inlineMarpRelativeImages } from '../utils/marpImageInliner';
 import { computeSlideLineRanges, scrollFractionToSlidePosition } from '../utils/marpSlideRanges';
+import { contentHasMermaid, processMermaidBlocks, reinitializeMermaid } from '../utils/markdownRenderers';
 
 interface MarpPreviewProps {
   content: string;
@@ -25,6 +26,8 @@ const SLIDE_COUNTER_MIN_WIDTH_PX = 60;
 
 const MarpPreview: React.FC<MarpPreviewProps> = ({
   content,
+  darkMode,
+  theme,
   globalVariables = {},
   scrollFraction,
   filePath,
@@ -56,7 +59,8 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
         return;
       }
 
-      const inputKey = content + JSON.stringify(globalVariables) + (filePath || '');
+      const isDark = darkMode || theme === 'darcula';
+      const inputKey = content + JSON.stringify(globalVariables) + (filePath || '') + String(isDark);
       if (inputKey === lastInputRef.current) return;
 
       const result = await variableApi.processMarkdown(content, globalVariables);
@@ -64,6 +68,19 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
 
       let { html, css, slideCount: count } = await renderMarp(result.processedContent);
       if (stale) return;
+
+      // Render mermaid code blocks to inline SVG. marp-core has no built-in
+      // mermaid support, so without this step ```mermaid fences emit raw
+      // <pre><code> in the slide HTML (the bug we're fixing here).
+      if (contentHasMermaid(result.processedContent)) {
+        try {
+          reinitializeMermaid(isDark);
+          html = await processMermaidBlocks(html, isDark);
+        } catch (err) {
+          console.warn('[MarpPreview] Mermaid processing failed:', err);
+        }
+        if (stale) return;
+      }
 
       // Inline relative images as data URLs so the iframe can display them
       if (filePath) {
@@ -84,7 +101,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
 
     process();
     return () => { stale = true; };
-  }, [content, globalVariables, filePath]);
+  }, [content, globalVariables, filePath, darkMode, theme]);
 
   // Compute slide line ranges from source content (memoized)
   const slideRanges = React.useMemo(() => computeSlideLineRanges(content), [content]);
