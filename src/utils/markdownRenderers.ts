@@ -167,7 +167,9 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
 
   // Find mermaid diagram placeholders in the HTML
   // After marked processes ```mermaid blocks, they become <pre><code class="...mermaid...">
-  const mermaidHtmlRe = /<pre><code class="[^"]*(?:language-mermaid|mermaid)[^"]*">([\s\S]*?)<\/code><\/pre>/g;
+  // Marp emits <pre is="marp-pre" data-auto-scaling="..."><code class="language-mermaid">,
+  // so allow attributes on <pre> (matches both forms).
+  const mermaidHtmlRe = /<pre[^>]*><code class="[^"]*(?:language-mermaid|mermaid)[^"]*">([\s\S]*?)<\/code><\/pre>/g;
 
   const matches: { full: string; code: string }[] = [];
   let match;

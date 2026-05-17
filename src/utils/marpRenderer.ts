@@ -151,6 +151,22 @@ div.marpit {
     height: 100%;
   }
 }
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
+  max-width: 100%;
+}
+.mermaid-diagram svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+.mermaid-error {
+  margin: 0.5em 0;
+}
 </style>
 </head>
 <body>${html}
@@ -249,6 +265,22 @@ div.marpit {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
+  max-width: 100%;
+}
+.mermaid-diagram svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+.mermaid-error {
+  margin: 0.5em 0;
 }
 
 .slide-number {
@@ -361,6 +393,22 @@ div.marpit > svg[data-marpit-svg] {
 div.marpit {
   padding: 0 16px;
   box-sizing: border-box;
+}
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
+  max-width: 100%;
+}
+.mermaid-diagram svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+.mermaid-error {
+  margin: 0.5em 0;
 }
 </style>
 </head>
