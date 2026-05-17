@@ -541,21 +541,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Notifikasi saat rendering dimatikan",
-        "description": "Saat Anda membuka berkas berisi konten KaTeX, Mermaid, atau Marp ketika opsi rendering terkait sedang nonaktif, kini ditampilkan notifikasi sekali agar Anda tahu mengapa rumus, diagram, atau slide tidak muncul."
+      "tableLayoutSetting": {
+        "title": "Lebar Kolom Tabel yang Dapat Dikonfigurasi",
+        "description": "Pilih cara lebar kolom tabel Markdown ditentukan pada pratinjau dan HTML hasil ekspor: lebar sama, menyesuaikan konten dengan pembungkusan teks, atau menyesuaikan konten dengan gulir horizontal."
       },
-      "tabFilePathTooltip": {
-        "title": "Jalur berkas saat hover pada tab",
-        "description": "Mengarahkan kursor ke sebuah tab kini menampilkan jalur lengkap dari berkas yang dibuka, sehingga memudahkan membedakan tab dengan nama berkas yang sama."
+      "mermaidInMarp": {
+        "title": "Diagram Mermaid di Slide Marp",
+        "description": "Blok kode Mermaid kini ditampilkan sebagai diagram di dalam slide Marp, bukan kode mentah. Mode gelap diikuti secara otomatis."
       },
-      "fullscreenEscKey": {
-        "title": "Esc untuk keluar dari layar penuh Marp",
-        "description": "Tombol Esc kini secara andal keluar dari mode layar penuh tayangan slide Marp."
-      },
-      "previewCheckbox": {
-        "title": "Perbaikan toggle checkbox di pratinjau",
-        "description": "Memperbaiki masalah saat mengubah status checkbox di pratinjau, perubahan kadang tidak diteruskan ke dokumen."
+      "darculaCodeContrast": {
+        "title": "Kontras Blok Kode pada Tema Darcula",
+        "description": "Latar belakang blok kode pada tema Darcula dibuat lebih terang sehingga kode dengan sorotan sintaksis lebih mudah dibaca."
       }
     }
   },

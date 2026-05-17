@@ -541,21 +541,17 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Aviso quando a renderização está desativada",
-        "description": "Ao abrir um arquivo com conteúdo de KaTeX, Mermaid ou Marp enquanto a opção de renderização correspondente estiver desativada, agora é exibido um aviso único, evitando dúvidas sobre por que fórmulas, diagramas ou slides não aparecem."
+      "tableLayoutSetting": {
+        "title": "Largura das colunas de tabela configurável",
+        "description": "Escolha como as colunas das tabelas Markdown são dimensionadas na pré-visualização e no HTML exportado: larguras iguais, ajustadas ao conteúdo com quebra de linha, ou ajustadas ao conteúdo com rolagem horizontal."
       },
-      "tabFilePathTooltip": {
-        "title": "Caminho do arquivo ao passar o mouse na aba",
-        "description": "Ao passar o mouse sobre uma aba, o caminho completo do arquivo aberto agora é exibido, facilitando a distinção entre abas com nomes iguais."
+      "mermaidInMarp": {
+        "title": "Diagramas Mermaid nos slides do Marp",
+        "description": "Os blocos de código Mermaid agora são renderizados como diagramas dentro dos slides do Marp, em vez de mostrar o código-fonte. O modo escuro é respeitado automaticamente."
       },
-      "fullscreenEscKey": {
-        "title": "Esc para sair do modo tela cheia do Marp",
-        "description": "A tecla Esc agora sai de forma confiável do modo tela cheia da apresentação Marp."
-      },
-      "previewCheckbox": {
-        "title": "Alternância de checkbox na pré-visualização",
-        "description": "Corrigido um problema em que alternar um checkbox na pré-visualização nem sempre propagava a alteração para o documento."
+      "darculaCodeContrast": {
+        "title": "Melhor contraste dos blocos de código no Darcula",
+        "description": "O fundo dos blocos de código no tema Darcula foi clareado para facilitar a leitura do código com destaque de sintaxe."
       }
     }
   },

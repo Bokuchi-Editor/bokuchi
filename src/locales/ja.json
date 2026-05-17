@@ -541,21 +541,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "レンダリング無効時のお知らせ",
-        "description": "KaTeX・Mermaid・Marp の各レンダリングがオフの状態で、それらを含むファイルを開いたときに初回限定でお知らせを表示します。「数式や図、スライドが表示されない」と悩むことがなくなります。"
+      "tableLayoutSetting": {
+        "title": "テーブル列幅をカスタマイズ可能に",
+        "description": "プレビューと書き出した HTML での Markdown テーブル列幅を、等幅・内容に合わせて折り返し・内容に合わせて横スクロール、の 3 種類から選べるようになりました。"
       },
-      "tabFilePathTooltip": {
-        "title": "タブホバーでファイルパスを表示",
-        "description": "タブにマウスを乗せると、そのタブで開いているファイルのフルパスが表示されるようになりました。同名ファイルの判別が楽になります。"
+      "mermaidInMarp": {
+        "title": "Marp スライド内で Mermaid 図が描画されるように",
+        "description": "Marp スライド内の Mermaid コードブロックがソースのまま表示されてしまう問題を修正し、図として描画されるようになりました。ダークモードにも自動で追従します。"
       },
-      "fullscreenEscKey": {
-        "title": "Marp フルスクリーンを Esc で解除",
-        "description": "Marp のスライドショーをフルスクリーン表示中、Esc キーで確実に終了できるようになりました。"
-      },
-      "previewCheckbox": {
-        "title": "プレビューのチェックボックス切替を修正",
-        "description": "プレビュー内でチェックボックスを切り替えた際、その変更がドキュメントに反映されないことがある問題を修正しました。"
+      "darculaCodeContrast": {
+        "title": "Darcula テーマのコードブロックを見やすく",
+        "description": "Darcula テーマのコードブロック背景色を明るくし、シンタックスハイライトされたコードが読みやすくなりました。"
       }
     }
   },

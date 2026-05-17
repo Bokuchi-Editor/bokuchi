@@ -541,21 +541,17 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "Thông báo khi tắt kết xuất",
-        "description": "Khi bạn mở tệp chứa nội dung KaTeX, Mermaid hoặc Marp trong khi tùy chọn kết xuất tương ứng đang tắt, hệ thống sẽ hiển thị thông báo một lần để bạn hiểu vì sao công thức, sơ đồ hoặc trang chiếu không hiển thị."
+      "tableLayoutSetting": {
+        "title": "Tùy chỉnh độ rộng cột bảng",
+        "description": "Chọn cách xác định độ rộng cột bảng Markdown trong khung xem trước và HTML xuất ra: độ rộng bằng nhau, vừa nội dung với xuống dòng, hoặc vừa nội dung với cuộn ngang."
       },
-      "tabFilePathTooltip": {
-        "title": "Đường dẫn tệp khi rê chuột lên tab",
-        "description": "Khi rê chuột qua một tab, đường dẫn đầy đủ của tệp đang mở sẽ được hiển thị, giúp phân biệt các tab có cùng tên tệp."
+      "mermaidInMarp": {
+        "title": "Sơ đồ Mermaid trong trang chiếu Marp",
+        "description": "Khối mã Mermaid giờ đây được kết xuất thành sơ đồ trong trang chiếu Marp thay vì hiển thị mã nguồn gốc. Chế độ tối được áp dụng tự động."
       },
-      "fullscreenEscKey": {
-        "title": "Esc để thoát toàn màn hình Marp",
-        "description": "Phím Esc giờ đây thoát khỏi chế độ toàn màn hình của trình chiếu Marp một cách ổn định."
-      },
-      "previewCheckbox": {
-        "title": "Sửa lỗi chuyển trạng thái checkbox trong xem trước",
-        "description": "Đã khắc phục lỗi khi chuyển trạng thái checkbox trong khung xem trước, thay đổi đôi khi không được áp dụng vào tài liệu."
+      "darculaCodeContrast": {
+        "title": "Cải thiện độ tương phản khối mã trong chủ đề Darcula",
+        "description": "Làm sáng nền khối mã trong chủ đề Darcula để mã được tô sáng cú pháp dễ đọc hơn."
       }
     }
   },

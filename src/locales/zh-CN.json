@@ -541,21 +541,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "renderingFeatureNotice": {
-        "title": "渲染关闭时的提示",
-        "description": "当对应的渲染选项关闭时打开包含 KaTeX、Mermaid 或 Marp 内容的文件，现在会一次性提示您，从此不再为公式、图表或幻灯片不显示而困惑。"
+      "tableLayoutSetting": {
+        "title": "表格列宽可自定义",
+        "description": "可在预览和导出的 HTML 中自定义 Markdown 表格的列宽方式：等宽、按内容自适应（换行）或按内容自适应（横向滚动）。"
       },
-      "tabFilePathTooltip": {
-        "title": "悬停标签显示文件路径",
-        "description": "将鼠标悬停在标签页上时，现在会显示所打开文件的完整路径，便于区分名称相同的标签。"
+      "mermaidInMarp": {
+        "title": "Marp 幻灯片中的 Mermaid 图表渲染",
+        "description": "Marp 幻灯片中的 Mermaid 代码块现在会渲染为图表，而不再原样显示源代码。深色模式会自动适配。"
       },
-      "fullscreenEscKey": {
-        "title": "Esc 退出 Marp 全屏",
-        "description": "Esc 键现在可以可靠地退出 Marp 幻灯片的全屏模式。"
-      },
-      "previewCheckbox": {
-        "title": "预览中复选框切换的修复",
-        "description": "修复了在预览中切换复选框时，更改有时未同步到文档的问题。"
+      "darculaCodeContrast": {
+        "title": "Darcula 主题代码块对比度优化",
+        "description": "提亮了 Darcula 主题中代码块的背景色，使语法高亮的代码更易阅读。"
       }
     }
   },
