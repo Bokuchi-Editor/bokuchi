@@ -34,10 +34,12 @@ export const useFileOperations = ({
     open: boolean;
     fileName: string;
     tabId: string | null;
+    queue: Array<{ tabId: string; fileName: string }>;
   }>({
     open: false,
     fileName: '',
     tabId: null,
+    queue: [],
   });
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -112,6 +114,38 @@ export const useFileOperations = ({
     }
   }, [activeTab, globalVariables, setSnackbar, showSaveStatus, t]);
 
+  const advanceCloseQueue = useCallback(() => {
+    setSaveBeforeCloseDialog(prev => {
+      if (prev.queue.length === 0) {
+        return { open: false, fileName: '', tabId: null, queue: [] };
+      }
+      const [next, ...rest] = prev.queue;
+      return {
+        open: true,
+        fileName: next.fileName,
+        tabId: next.tabId,
+        queue: rest,
+      };
+    });
+  }, []);
+
+  const startCloseQueue = useCallback((tabIds: string[]) => {
+    const items = tabIds
+      .map(id => {
+        const tab = tabs.find(entry => entry.id === id);
+        return tab ? { tabId: id, fileName: tab.title } : null;
+      })
+      .filter((item): item is { tabId: string; fileName: string } => item !== null);
+    if (items.length === 0) return;
+    const [first, ...rest] = items;
+    setSaveBeforeCloseDialog({
+      open: true,
+      fileName: first.fileName,
+      tabId: first.tabId,
+      queue: rest,
+    });
+  }, [tabs]);
+
   const handleTabClose = (tabId: string) => {
     const tab = tabs.find(entry => entry.id === tabId);
     if (!tab) return;
@@ -121,6 +155,7 @@ export const useFileOperations = ({
         open: true,
         fileName: tab.title,
         tabId: tabId,
+        queue: [],
       });
     } else {
       removeTab(tabId);
@@ -129,18 +164,19 @@ export const useFileOperations = ({
 
   const handleSaveBeforeClose = async () => {
     if (!saveBeforeCloseDialog.tabId) return;
+    const targetTabId = saveBeforeCloseDialog.tabId;
 
     try {
-      const success = await saveTab(saveBeforeCloseDialog.tabId);
+      const success = await saveTab(targetTabId);
       if (success) {
-        removeTab(saveBeforeCloseDialog.tabId);
+        removeTab(targetTabId);
         showSaveStatus(t('statusBar.saved'));
       }
     } catch (error) {
       console.error('Failed to save file before closing:', error);
       setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
     } finally {
-      setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
+      advanceCloseQueue();
     }
   };
 
@@ -148,11 +184,11 @@ export const useFileOperations = ({
     if (saveBeforeCloseDialog.tabId) {
       removeTab(saveBeforeCloseDialog.tabId);
     }
-    setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
+    advanceCloseQueue();
   };
 
   const handleCancelBeforeClose = () => {
-    setSaveBeforeCloseDialog({ open: false, fileName: '', tabId: null });
+    advanceCloseQueue();
   };
 
   return {
@@ -168,5 +204,6 @@ export const useFileOperations = ({
     handleSaveBeforeClose,
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
+    startCloseQueue,
   };
 };
