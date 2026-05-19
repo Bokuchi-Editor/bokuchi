@@ -169,6 +169,7 @@ export const useAppState = () => {
     handleSaveBeforeClose,
     handleDontSaveBeforeClose,
     handleCancelBeforeClose,
+    startCloseQueue,
   } = useFileOperations({
     activeTab,
     tabs,
@@ -320,34 +321,42 @@ export const useAppState = () => {
   }, [tabs, t]);
 
   const handleCloseOtherTabs = useCallback((tabId: string) => {
-    const idsToClose = tabs
-      .filter(tab => tab.id !== tabId && !tab.isPinned && !tab.isModified)
-      .map(tab => tab.id);
-    if (idsToClose.length > 0) {
-      removeTabs(idsToClose);
+    const targets = tabs.filter(tab => tab.id !== tabId && !tab.isPinned);
+    const cleanIds = targets.filter(tab => !tab.isModified).map(tab => tab.id);
+    const dirtyIds = targets.filter(tab => tab.isModified).map(tab => tab.id);
+    if (cleanIds.length > 0) {
+      removeTabs(cleanIds);
     }
-  }, [tabs, removeTabs]);
+    if (dirtyIds.length > 0) {
+      startCloseQueue(dirtyIds);
+    }
+  }, [tabs, removeTabs, startCloseQueue]);
 
   const handleCloseTabsToRight = useCallback((tabId: string) => {
     const tabIndex = tabs.findIndex(t => t.id === tabId);
     if (tabIndex === -1) return;
-    const idsToClose = tabs
-      .slice(tabIndex + 1)
-      .filter(tab => !tab.isPinned && !tab.isModified)
-      .map(tab => tab.id);
-    if (idsToClose.length > 0) {
-      removeTabs(idsToClose);
+    const targets = tabs.slice(tabIndex + 1).filter(tab => !tab.isPinned);
+    const cleanIds = targets.filter(tab => !tab.isModified).map(tab => tab.id);
+    const dirtyIds = targets.filter(tab => tab.isModified).map(tab => tab.id);
+    if (cleanIds.length > 0) {
+      removeTabs(cleanIds);
     }
-  }, [tabs, removeTabs]);
+    if (dirtyIds.length > 0) {
+      startCloseQueue(dirtyIds);
+    }
+  }, [tabs, removeTabs, startCloseQueue]);
 
   const handleCloseAllTabs = useCallback(() => {
-    const idsToClose = tabs
-      .filter(tab => !tab.isPinned && !tab.isModified)
-      .map(tab => tab.id);
-    if (idsToClose.length > 0) {
-      removeTabs(idsToClose);
+    const targets = tabs.filter(tab => !tab.isPinned);
+    const cleanIds = targets.filter(tab => !tab.isModified).map(tab => tab.id);
+    const dirtyIds = targets.filter(tab => tab.isModified).map(tab => tab.id);
+    if (cleanIds.length > 0) {
+      removeTabs(cleanIds);
     }
-  }, [tabs, removeTabs]);
+    if (dirtyIds.length > 0) {
+      startCloseQueue(dirtyIds);
+    }
+  }, [tabs, removeTabs, startCloseQueue]);
 
   const handleFolderTreeFileClick = useCallback(async (filePath: string) => {
     try {
