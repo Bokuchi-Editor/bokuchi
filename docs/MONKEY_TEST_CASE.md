@@ -76,7 +76,7 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 
 | #    | Test Case             | Steps                                       | Expected Result                                          |
 | ---- | --------------------- | ------------------------------------------- | -------------------------------------------------------- |
-| M-45 | Toggle view mode      | Press `Ctrl+Shift+V` repeatedly             | Rotates through split, preview, editor, split            |
+| M-45 | Toggle view mode      | Press `Ctrl+Shift+D` repeatedly             | Rotates through split, preview, editor, split            |
 | M-46 | Synchronized scrolling | Scroll the editor in split mode             | The preview scrolls in sync                              |
 
 ## 7. Keyboard Shortcuts

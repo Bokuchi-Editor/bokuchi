@@ -74,8 +74,8 @@ export const useKeyboardShortcuts = ({
       event.preventDefault();
       onSettingsOpen();
     }
-    // Ctrl + Shift + V: Rotate View Mode
-    else if (event.ctrlKey && event.shiftKey && event.key === 'V') {
+    // Cmd/Ctrl + Shift + D: Rotate View Mode (D = Display mode)
+    else if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyD') {
       event.preventDefault();
       onRotateViewMode();
     }

@@ -694,7 +694,7 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
       <List>
         <ListItem>
           <ListItemText
-            primary="Ctrl+Shift+V"
+            primary={getShortcutDisplay('D', true)}
             secondary={t('help.keyboardShortcuts.shortcuts.rotateViewMode')}
           />
         </ListItem>

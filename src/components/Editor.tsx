@@ -258,8 +258,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         isShiftPressed = true;
       }
 
-      // Detect and handle Shift + Cmd/Ctrl + V combination directly
-      if (e.key === 'v' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
+      // Detect and handle Shift + Cmd/Ctrl + V combination directly.
+      // Use e.code (physical key) instead of e.key, because e.key returns 'V'
+      // (uppercase) on Windows when Shift is held, which would miss the match.
+      if (e.code === 'KeyV' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation(); // Stop other event listeners as well
