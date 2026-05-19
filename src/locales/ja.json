@@ -9,6 +9,9 @@
     "newFile": "新規ファイル",
     "openFile": "ファイルを開く"
   },
+  "game": {
+    "tagline": "落ちてくる Markdown 関連の単語を、床に着く前にタイプして撃ち落とせ。"
+  },
   "buttons": {
     "open": "開く",
     "save": "保存",

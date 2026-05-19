@@ -9,6 +9,9 @@
     "newFile": "File Baru",
     "openFile": "Buka File"
   },
+  "game": {
+    "tagline": "Ketik kata-kata Markdown yang jatuh untuk menjatuhkannya sebelum menyentuh lantai."
+  },
   "buttons": {
     "open": "Buka",
     "save": "Simpan",

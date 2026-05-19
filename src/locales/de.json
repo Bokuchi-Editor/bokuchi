@@ -9,6 +9,9 @@
     "newFile": "Neue Datei",
     "openFile": "Datei öffnen"
   },
+  "game": {
+    "tagline": "Tippe die fallenden Markdown-Wörter, um sie abzuschießen, bevor sie den Boden berühren."
+  },
   "buttons": {
     "open": "Öffnen",
     "save": "Speichern",

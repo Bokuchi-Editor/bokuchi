@@ -9,6 +9,9 @@
     "newFile": "新建文件",
     "openFile": "打开文件"
   },
+  "game": {
+    "tagline": "在 Markdown 单词落到地面前，输入它们将其击落。"
+  },
   "buttons": {
     "open": "打开",
     "save": "保存",

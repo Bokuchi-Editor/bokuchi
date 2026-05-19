@@ -9,6 +9,9 @@
     "newFile": "新建檔案",
     "openFile": "開啟檔案"
   },
+  "game": {
+    "tagline": "在 Markdown 單字觸地之前，輸入它們將其擊落。"
+  },
   "buttons": {
     "open": "開啟",
     "save": "儲存",

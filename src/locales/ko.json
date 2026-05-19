@@ -9,6 +9,9 @@
     "newFile": "새 파일",
     "openFile": "파일 열기"
   },
+  "game": {
+    "tagline": "떨어지는 Markdown 단어를 바닥에 닿기 전에 입력하여 격추하세요."
+  },
   "buttons": {
     "open": "열기",
     "save": "저장",

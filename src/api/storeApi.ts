@@ -422,6 +422,29 @@ export const storeApi = {
     }
   },
 
+  // Save typing-game high score
+  async saveTypingGameHighScore(score: number): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('typingGameHighScore', score);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save typing game high score:', error);
+    }
+  },
+
+  // Load typing-game high score
+  async loadTypingGameHighScore(): Promise<number> {
+    try {
+      const storeInstance = await getStore();
+      const value = await storeInstance.get('typingGameHighScore');
+      return typeof value === 'number' ? value : 0;
+    } catch (error) {
+      console.error('Failed to load typing game high score:', error);
+      return 0;
+    }
+  },
+
   // Save last seen version for What's New dialog
   async saveLastSeenVersion(version: string): Promise<void> {
     try {

@@ -9,6 +9,9 @@
     "newFile": "Tệp mới",
     "openFile": "Mở tệp"
   },
+  "game": {
+    "tagline": "Gõ các từ Markdown đang rơi để bắn hạ chúng trước khi chạm đất."
+  },
   "buttons": {
     "open": "Mở",
     "save": "Lưu",
