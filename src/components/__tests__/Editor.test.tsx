@@ -1201,4 +1201,77 @@ describe('MarkdownEditor', () => {
       expect(screen.queryByTestId('table-dialog')).toBeNull();
     });
   });
+
+  // =========================================================================
+  // Shift + Cmd/Ctrl + V plain-text paste — cross-platform regression
+  // (Windows reports e.key='V' uppercase when Shift held; we must rely on e.code)
+  // =========================================================================
+
+  describe('Shift+Cmd/Ctrl+V plain-text paste (cross-platform regression)', () => {
+    // T-ED-PP-01: Windows case — Ctrl+Shift+V with e.key='V' (uppercase) still triggers paste
+    it('T-ED-PP-01: Ctrl+Shift+V with uppercase e.key (Windows) pastes plain text', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const { readText } = await import('@tauri-apps/plugin-clipboard-manager');
+      (readText as ReturnType<typeof vi.fn>).mockResolvedValueOnce('windows clipboard text');
+
+      const mockEditor = createMockMonacoEditor();
+      render(<MarkdownEditor {...defaultProps()} tableConversion="confirm" />);
+      capturedOnMount!(mockEditor);
+
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'V',
+        code: 'KeyV',
+        ctrlKey: true,
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      document.dispatchEvent(keyEvent);
+
+      await waitFor(() => {
+        expect(mockEditor.executeEdits).toHaveBeenCalledWith('paste', expect.arrayContaining([
+          expect.objectContaining({ text: 'windows clipboard text' }),
+        ]));
+      });
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-PP-02: Mac case — Cmd+Shift+V with e.key='v' (lowercase) still works
+    it('T-ED-PP-02: Cmd+Shift+V with lowercase e.key (Mac) pastes plain text', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const { readText } = await import('@tauri-apps/plugin-clipboard-manager');
+      (readText as ReturnType<typeof vi.fn>).mockResolvedValueOnce('mac clipboard text');
+
+      const mockEditor = createMockMonacoEditor();
+      render(<MarkdownEditor {...defaultProps()} tableConversion="confirm" />);
+      capturedOnMount!(mockEditor);
+
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'v',
+        code: 'KeyV',
+        metaKey: true,
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      document.dispatchEvent(keyEvent);
+
+      await waitFor(() => {
+        expect(mockEditor.executeEdits).toHaveBeenCalledWith('paste', expect.arrayContaining([
+          expect.objectContaining({ text: 'mac clipboard text' }),
+        ]));
+      });
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+  });
 });
