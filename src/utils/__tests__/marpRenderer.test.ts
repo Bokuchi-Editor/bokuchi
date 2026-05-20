@@ -19,6 +19,7 @@ import {
   buildSlideDocument,
   buildAllSlidesDocument,
   buildThumbnailDocument,
+  buildContinuousStyleContent,
   LINK_INTERCEPTOR_SCRIPT,
 } from '../marpRenderer';
 
@@ -156,6 +157,44 @@ describe('buildAllSlidesDocument', () => {
     const doc = buildAllSlidesDocument('html', 'css');
     expect(doc).not.toContain('nth-child');
     expect(doc).not.toContain('display: none');
+  });
+});
+
+// buildContinuousStyleContent is the single source of truth for the continuous-
+// mode stylesheet text. MarpPreview patches the iframe's <style> in place when
+// the user's Marp CSS changes (theme switch, etc.), so this helper must always
+// produce the same content that buildAllSlidesDocument bakes into srcDoc on
+// initial load — otherwise an imperative CSS swap would diverge from the
+// initial render and break layout.
+describe('buildContinuousStyleContent', () => {
+  it('embeds the provided marp css ahead of the wrapper styles', () => {
+    const result = buildContinuousStyleContent('.marpit { color: red; }');
+    expect(result).toContain('.marpit { color: red; }');
+    // Wrapper styles required for the scrollable continuous layout
+    expect(result).toContain('overflow-y: auto');
+    expect(result).toContain('div.marpit > svg[data-marpit-svg]');
+    // Order matters: caller-supplied CSS must come first so wrapper rules can
+    // override it where they intentionally do.
+    const marpIdx = result.indexOf('.marpit { color: red; }');
+    const wrapperIdx = result.indexOf('overflow-y: auto');
+    expect(marpIdx).toBeLessThan(wrapperIdx);
+  });
+
+  it('handles empty marp css without injecting stray characters', () => {
+    const result = buildContinuousStyleContent('');
+    expect(result).toContain('overflow-y: auto');
+    expect(result).not.toContain('undefined');
+  });
+
+  it('stays consistent with buildAllSlidesDocument output', () => {
+    // Regression guard for the refactor: the document builder must embed
+    // exactly what the standalone helper returns. If these diverge, an
+    // imperative <style> patch in MarpPreview would no longer match what the
+    // iframe was first loaded with.
+    const css = '.theme { background: #fff; }';
+    const styleContent = buildContinuousStyleContent(css);
+    const doc = buildAllSlidesDocument('<div class="marpit">x</div>', css);
+    expect(doc).toContain(styleContent);
   });
 });
 

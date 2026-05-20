@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { NavigateBefore, NavigateNext, Fullscreen, FullscreenExit, GridView } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { variableApi } from '../api/variableApi';
-import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument } from '../utils/marpRenderer';
+import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument, buildContinuousStyleContent } from '../utils/marpRenderer';
 import { inlineMarpRelativeImages } from '../utils/marpImageInliner';
 import { computeSlideLineRanges, scrollFractionToSlidePosition } from '../utils/marpSlideRanges';
 import { contentHasMermaid, processMermaidBlocks, reinitializeMermaid } from '../utils/markdownRenderers';
@@ -111,13 +111,21 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     return scrollFractionToSlidePosition(fraction, totalLines, slideRanges);
   }, [content, slideRanges]);
 
-  // Scroll sync for continuous mode — directly manipulate iframe DOM
-  useEffect(() => {
+  // Tracks the marpHtml / marpCss currently rendered inside the continuous-mode
+  // iframe. Used to skip redundant DOM mutations and detect when an imperative
+  // update is required.
+  const appliedHtmlRef = useRef<string>('');
+  const appliedCssRef = useRef<string>('');
+
+  // Apply scrollFraction to the continuous-mode iframe by translating it into a
+  // pixel scrollTop relative to the SVG slide elements. Reading layout here
+  // (getBoundingClientRect) forces synchronous layout, so callers can rely on
+  // the geometry being up to date — important right after a body.innerHTML swap.
+  const applyContinuousScroll = useCallback(() => {
     if (!isContinuousMode || scrollFraction === undefined) return;
     const iframe = iframeRef.current;
-    if (!iframe?.contentDocument) return;
-
-    const doc = iframe.contentDocument;
+    const doc = iframe?.contentDocument;
+    if (!doc) return;
     const slides = doc.querySelectorAll('div.marpit > svg[data-marpit-svg]');
     if (slides.length === 0) return;
 
@@ -125,19 +133,50 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
     const idx = Math.min(slideIndex, slides.length - 1);
     const slideElement = slides[idx];
 
-    // SVG elements don't have offsetTop/offsetHeight — use getBoundingClientRect
-    // relative to the document's current scroll position
     const docScrollTop = doc.documentElement.scrollTop;
     const rect = slideElement.getBoundingClientRect();
     const slideTop = rect.top + docScrollTop;
     const slideHeight = rect.height;
 
-    // Center the current position in the preview viewport
     const viewportHeight = doc.documentElement.clientHeight;
     const targetPos = slideTop + (subFraction * slideHeight);
     const scrollTarget = targetPos - (viewportHeight / 2);
     doc.documentElement.scrollTop = Math.max(0, scrollTarget);
-  }, [scrollFraction, isContinuousMode, marpHtml, fractionToSlide]);
+  }, [isContinuousMode, scrollFraction, fractionToSlide]);
+
+  // Continuous mode: update iframe content (and scroll) in place instead of
+  // letting React swap srcDoc, which would reload the iframe and reset its
+  // scrollTop to 0 — producing the "preview jumps to slide 1 on every
+  // keystroke" bug. We run as a layout effect so the DOM swap + scroll restore
+  // happens before the browser paints, eliminating any visible flicker.
+  //
+  // The link-interceptor script attaches its listeners to `document` on the
+  // initial srcDoc load, so they survive the innerHTML replacement below.
+  useLayoutEffect(() => {
+    if (!isContinuousMode) return;
+    const iframe = iframeRef.current;
+    const doc = iframe?.contentDocument;
+    if (!doc?.body) return;
+
+    // Bail out if the iframe is still loading its initial srcDoc — the body
+    // will be repopulated by that load, and onLoad triggers a scroll apply.
+    const hasSlides = doc.querySelector('div.marpit > svg[data-marpit-svg]') !== null;
+    if (!hasSlides) return;
+
+    if (marpHtml && marpHtml !== appliedHtmlRef.current) {
+      doc.body.innerHTML = marpHtml;
+      appliedHtmlRef.current = marpHtml;
+    }
+    if (marpCss !== appliedCssRef.current) {
+      const styleEl = doc.querySelector('style');
+      if (styleEl) {
+        styleEl.textContent = buildContinuousStyleContent(marpCss);
+      }
+      appliedCssRef.current = marpCss;
+    }
+
+    applyContinuousScroll();
+  }, [marpHtml, marpCss, isContinuousMode, applyContinuousScroll]);
 
   // Map scrollFraction to slide index for slide mode (preview)
   useEffect(() => {
@@ -249,19 +288,41 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
   const slideIframeRef = useRef<HTMLIFrameElement>(null);
   const fullscreenIframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Rebuild slide document only when html/css content changes, not on slide navigation
+  // Rebuild slide document only when html/css content changes, not on slide navigation.
+  // For continuous mode the iframe is fed a separate, stable srcDoc captured once
+  // per session (see continuousSrcdoc below); we deliberately do NOT include
+  // continuous-mode content here, so React never reassigns the iframe's srcDoc
+  // attribute and the iframe never reloads on edits.
   const srcdoc = React.useMemo(() => {
-    if (!marpHtml) {
+    if (!marpHtml || isContinuousMode) {
       slideDocRef.current = '';
       return '';
-    }
-    if (isContinuousMode) {
-      return buildAllSlidesDocument(marpHtml, marpCss);
     }
     const doc = buildSlideDocument(marpHtml, marpCss, currentSlide);
     slideDocRef.current = doc;
     return doc;
   }, [marpHtml, marpCss, isContinuousMode]);
+
+  // Continuous-mode iframe srcDoc: captured once when marpHtml first becomes
+  // non-empty in this mode, then never changed. Subsequent content updates flow
+  // through the imperative DOM mutation in the useLayoutEffect above. Reset on
+  // mode exit so re-entry rebuilds from the latest marpHtml.
+  const [continuousSrcdoc, setContinuousSrcdoc] = useState<string>('');
+  useLayoutEffect(() => {
+    if (!isContinuousMode || !marpHtml) {
+      if (continuousSrcdoc) {
+        setContinuousSrcdoc('');
+        appliedHtmlRef.current = '';
+        appliedCssRef.current = '';
+      }
+      return;
+    }
+    if (!continuousSrcdoc) {
+      setContinuousSrcdoc(buildAllSlidesDocument(marpHtml, marpCss));
+      appliedHtmlRef.current = marpHtml;
+      appliedCssRef.current = marpCss;
+    }
+  }, [isContinuousMode, marpHtml, marpCss, continuousSrcdoc]);
 
   // Build thumbnail document
   const thumbnailSrcdoc = React.useMemo(() => {
@@ -378,10 +439,10 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
           </Typography>
         </Box>
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
-          {srcdoc && (
+          {continuousSrcdoc && (
             <iframe
               ref={iframeRef}
-              srcDoc={srcdoc}
+              srcDoc={continuousSrcdoc}
               sandbox="allow-scripts allow-same-origin"
               title="Marp Slides Overview"
               onLoad={() => {
@@ -389,6 +450,11 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
                 // iframe document finishes layout. On initial app startup the
                 // scrollbar can otherwise stay hidden even when content overflows.
                 iframeRef.current?.contentWindow?.dispatchEvent(new Event('resize'));
+                // Apply the current scrollFraction now that the slide DOM exists.
+                // The imperative useLayoutEffect bails while the iframe is still
+                // loading, so this onLoad path is what restores the scroll
+                // position on the first render of a session.
+                applyContinuousScroll();
               }}
               style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
