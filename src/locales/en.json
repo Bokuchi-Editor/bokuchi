@@ -544,17 +544,17 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Configurable Table Column Width",
-        "description": "Choose how Markdown table columns are sized in the preview and exported HTML: equal widths, fit to content with wrapping, or fit to content with horizontal scroll."
+      "marpPreviewScroll": {
+        "title": "Marp Preview No Longer Jumps to Top",
+        "description": "Fixed the Marp continuous-mode preview scrolling back to the first slide on every keystroke. Your scroll position is now preserved while you edit."
       },
-      "mermaidInMarp": {
-        "title": "Mermaid Diagrams in Marp Slides",
-        "description": "Mermaid code blocks now render as diagrams inside Marp slides instead of showing the raw source. Dark mode is honored automatically."
+      "editorModeShortcut": {
+        "title": "Editor Mode Toggle Shortcut Changed",
+        "description": "Fixed a keyboard shortcut conflict on Windows. The editor mode toggle is now Cmd/Ctrl+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Darcula Code Block Contrast",
-        "description": "Brightened the code block background in the Darcula theme so syntax-highlighted code is easier to read."
+      "batchCloseUnsavedPrompt": {
+        "title": "Closing Multiple Tabs With Unsaved Changes",
+        "description": "When you close multiple tabs at once, any tab with unsaved changes is no longer silently skipped — you're now prompted to save each one in turn."
       }
     }
   },

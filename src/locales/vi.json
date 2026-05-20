@@ -544,17 +544,17 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Tùy chỉnh độ rộng cột bảng",
-        "description": "Chọn cách xác định độ rộng cột bảng Markdown trong khung xem trước và HTML xuất ra: độ rộng bằng nhau, vừa nội dung với xuống dòng, hoặc vừa nội dung với cuộn ngang."
+      "marpPreviewScroll": {
+        "title": "Khung xem trước Marp không còn nhảy về đầu",
+        "description": "Đã khắc phục lỗi khung xem trước liên tục của Marp quay về trang chiếu đầu tiên sau mỗi lần nhấn phím. Vị trí cuộn của bạn giờ được giữ nguyên trong khi chỉnh sửa."
       },
-      "mermaidInMarp": {
-        "title": "Sơ đồ Mermaid trong trang chiếu Marp",
-        "description": "Khối mã Mermaid giờ đây được kết xuất thành sơ đồ trong trang chiếu Marp thay vì hiển thị mã nguồn gốc. Chế độ tối được áp dụng tự động."
+      "editorModeShortcut": {
+        "title": "Thay đổi phím tắt chuyển chế độ trình soạn thảo",
+        "description": "Đã khắc phục xung đột phím tắt trên Windows. Phím tắt chuyển chế độ trình soạn thảo giờ là Cmd/Ctrl+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Cải thiện độ tương phản khối mã trong chủ đề Darcula",
-        "description": "Làm sáng nền khối mã trong chủ đề Darcula để mã được tô sáng cú pháp dễ đọc hơn."
+      "batchCloseUnsavedPrompt": {
+        "title": "Đóng nhiều tab có thay đổi chưa lưu",
+        "description": "Khi đóng nhiều tab cùng lúc, các tab có thay đổi chưa lưu không còn bị bỏ qua âm thầm — bạn sẽ được hỏi để lưu từng tab một."
       }
     }
   },

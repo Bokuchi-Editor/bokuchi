@@ -5,7 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.3...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.4...HEAD)
+
+## [0.8.4](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.3...v0.8.4) - 2026-05-21
+
+### Changed
+
+- Closing multiple tabs at once no longer silently skips tabs with unsaved changes — the bulk-close flow in `useAppState` / `useFileOperations` now loops through dirty tabs and shows a save prompt for each one
+- Editor mode toggle keyboard shortcut moved to Cmd/Ctrl+Shift+D (was conflicting with another shortcut on Windows); Help text and keyboard-shortcut tests updated
+- Dependency updates: `katex` 0.16.45 → 0.16.47, `tauri` 2.11.1 → 2.11.2, `tauri-build` 2.6.1 → 2.6.2, plus dev-side bumps for `eslint` 10.3.0 → 10.4.0 and `@tauri-apps/cli` 2.11.1 → 2.11.2
+- Security: tightened `npm-audit-allowlist` after the dependency review (`.github/workflows/security-audit.yml`)
+
+### Fixed
+
+- Marp continuous-mode preview scrollbar no longer jumps back to the first slide on every keystroke — `MarpPreview` now captures `srcDoc` once per session and applies subsequent content/CSS updates imperatively via DOM mutation inside a `useLayoutEffect`, preserving the user's scroll position; extracted `buildContinuousStyleContent` as the single source of truth for the continuous-mode stylesheet, with regression tests guarding it against `buildAllSlidesDocument`
 
 ## [0.8.3](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.2...v0.8.3) - 2026-05-18
 

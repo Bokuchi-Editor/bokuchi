@@ -544,17 +544,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "テーブル列幅をカスタマイズ可能に",
-        "description": "プレビューと書き出した HTML での Markdown テーブル列幅を、等幅・内容に合わせて折り返し・内容に合わせて横スクロール、の 3 種類から選べるようになりました。"
+      "marpPreviewScroll": {
+        "title": "Marp プレビューが先頭に戻る問題を修正",
+        "description": "Marp の連続プレビュー（スプリット表示）で、文字を入力するたびにプレビューが先頭スライドに飛んでしまう問題を修正しました。編集中もスクロール位置がそのまま保たれます。"
       },
-      "mermaidInMarp": {
-        "title": "Marp スライド内で Mermaid 図が描画されるように",
-        "description": "Marp スライド内の Mermaid コードブロックがソースのまま表示されてしまう問題を修正し、図として描画されるようになりました。ダークモードにも自動で追従します。"
+      "editorModeShortcut": {
+        "title": "エディタモード切り替えのショートカット変更",
+        "description": "Windows でのキーボードショートカットの不具合を修正しました。エディタの表示モード切り替えは Cmd/Ctrl+Shift+D に変更されています。"
       },
-      "darculaCodeContrast": {
-        "title": "Darcula テーマのコードブロックを見やすく",
-        "description": "Darcula テーマのコードブロック背景色を明るくし、シンタックスハイライトされたコードが読みやすくなりました。"
+      "batchCloseUnsavedPrompt": {
+        "title": "未保存タブの一括クローズ時の挙動を改善",
+        "description": "複数タブを一度に閉じる際、未保存のタブが黙ってスキップされなくなりました。タブごとに保存するかを順番に確認するダイアログが表示されます。"
       }
     }
   },

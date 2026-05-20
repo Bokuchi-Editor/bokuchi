@@ -25,22 +25,22 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.8.3',
+  version: '0.8.4',
   changes: [
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tableLayoutSetting.title',
-      descriptionKey: 'whatsNew.changes.tableLayoutSetting.description',
+      type: 'fix',
+      titleKey: 'whatsNew.changes.marpPreviewScroll.title',
+      descriptionKey: 'whatsNew.changes.marpPreviewScroll.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.mermaidInMarp.title',
-      descriptionKey: 'whatsNew.changes.mermaidInMarp.description',
+      titleKey: 'whatsNew.changes.editorModeShortcut.title',
+      descriptionKey: 'whatsNew.changes.editorModeShortcut.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.darculaCodeContrast.title',
-      descriptionKey: 'whatsNew.changes.darculaCodeContrast.description',
+      titleKey: 'whatsNew.changes.batchCloseUnsavedPrompt.title',
+      descriptionKey: 'whatsNew.changes.batchCloseUnsavedPrompt.description',
     },
   ],
 };

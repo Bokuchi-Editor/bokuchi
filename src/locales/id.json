@@ -544,17 +544,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Lebar Kolom Tabel yang Dapat Dikonfigurasi",
-        "description": "Pilih cara lebar kolom tabel Markdown ditentukan pada pratinjau dan HTML hasil ekspor: lebar sama, menyesuaikan konten dengan pembungkusan teks, atau menyesuaikan konten dengan gulir horizontal."
+      "marpPreviewScroll": {
+        "title": "Pratinjau Marp Tidak Lagi Lompat ke Atas",
+        "description": "Memperbaiki masalah pratinjau Marp mode kontinu yang kembali ke slide pertama setiap kali menekan tombol. Posisi gulir Anda kini dipertahankan selama mengedit."
       },
-      "mermaidInMarp": {
-        "title": "Diagram Mermaid di Slide Marp",
-        "description": "Blok kode Mermaid kini ditampilkan sebagai diagram di dalam slide Marp, bukan kode mentah. Mode gelap diikuti secara otomatis."
+      "editorModeShortcut": {
+        "title": "Pintasan Toggle Mode Editor Berubah",
+        "description": "Memperbaiki konflik pintasan keyboard pada Windows. Toggle mode editor kini menggunakan Cmd/Ctrl+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Kontras Blok Kode pada Tema Darcula",
-        "description": "Latar belakang blok kode pada tema Darcula dibuat lebih terang sehingga kode dengan sorotan sintaksis lebih mudah dibaca."
+      "batchCloseUnsavedPrompt": {
+        "title": "Menutup Beberapa Tab dengan Perubahan Belum Disimpan",
+        "description": "Saat menutup beberapa tab sekaligus, tab dengan perubahan yang belum disimpan tidak lagi dilewati diam-diam — Anda kini diminta menyimpannya satu per satu."
       }
     }
   },

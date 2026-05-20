@@ -544,17 +544,17 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Konfigurierbare Spaltenbreite für Tabellen",
-        "description": "Wählen Sie, wie Spalten von Markdown-Tabellen in der Vorschau und im exportierten HTML dimensioniert werden: gleiche Breite, an den Inhalt angepasst mit Umbruch oder an den Inhalt angepasst mit horizontalem Scrollen."
+      "marpPreviewScroll": {
+        "title": "Marp-Vorschau springt nicht mehr nach oben",
+        "description": "Behoben: Die Marp-Vorschau im fortlaufenden Modus sprang bei jedem Tastendruck zurück zur ersten Folie. Ihre Scroll-Position bleibt nun beim Bearbeiten erhalten."
       },
-      "mermaidInMarp": {
-        "title": "Mermaid-Diagramme in Marp-Folien",
-        "description": "Mermaid-Codeblöcke werden jetzt in Marp-Folien als Diagramme gerendert, statt den Quelltext unverändert anzuzeigen. Der Dunkelmodus wird automatisch berücksichtigt."
+      "editorModeShortcut": {
+        "title": "Tastenkürzel für Editor-Modus geändert",
+        "description": "Konflikt mit Tastenkürzeln unter Windows behoben. Das Umschalten des Editor-Modus erfolgt jetzt mit Cmd/Strg+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Bessere Lesbarkeit der Codeblöcke im Darcula-Theme",
-        "description": "Der Hintergrund von Codeblöcken im Darcula-Theme wurde aufgehellt, sodass syntaxhervorgehobener Code leichter zu lesen ist."
+      "batchCloseUnsavedPrompt": {
+        "title": "Mehrere Tabs mit ungespeicherten Änderungen schließen",
+        "description": "Beim Schließen mehrerer Tabs werden Tabs mit ungespeicherten Änderungen nicht mehr stillschweigend übersprungen — Sie werden jetzt aufgefordert, jeden einzeln zu speichern."
       }
     }
   },

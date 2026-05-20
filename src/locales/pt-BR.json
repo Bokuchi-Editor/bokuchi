@@ -544,17 +544,17 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Largura das colunas de tabela configurável",
-        "description": "Escolha como as colunas das tabelas Markdown são dimensionadas na pré-visualização e no HTML exportado: larguras iguais, ajustadas ao conteúdo com quebra de linha, ou ajustadas ao conteúdo com rolagem horizontal."
+      "marpPreviewScroll": {
+        "title": "A pré-visualização do Marp não volta mais ao topo",
+        "description": "Corrigido o problema em que a pré-visualização contínua do Marp voltava ao primeiro slide a cada tecla pressionada. Sua posição de rolagem agora é mantida enquanto você edita."
       },
-      "mermaidInMarp": {
-        "title": "Diagramas Mermaid nos slides do Marp",
-        "description": "Os blocos de código Mermaid agora são renderizados como diagramas dentro dos slides do Marp, em vez de mostrar o código-fonte. O modo escuro é respeitado automaticamente."
+      "editorModeShortcut": {
+        "title": "Atalho de alternância do modo do editor alterado",
+        "description": "Corrigido um conflito de atalhos de teclado no Windows. O atalho para alternar o modo do editor agora é Cmd/Ctrl+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Melhor contraste dos blocos de código no Darcula",
-        "description": "O fundo dos blocos de código no tema Darcula foi clareado para facilitar a leitura do código com destaque de sintaxe."
+      "batchCloseUnsavedPrompt": {
+        "title": "Fechando várias abas com alterações não salvas",
+        "description": "Ao fechar várias abas de uma vez, abas com alterações não salvas não são mais ignoradas silenciosamente — agora será pedido que você salve cada uma em sequência."
       }
     }
   },
