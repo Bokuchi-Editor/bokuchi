@@ -364,14 +364,7 @@ ${LINK_INTERCEPTOR_SCRIPT}
  * Build a self-contained HTML document showing all slides stacked vertically.
  * Used in split/separate mode for overview while editing.
  */
-export function buildAllSlidesDocument(html: string, css: string): string {
-  return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-${css}
-
+const CONTINUOUS_WRAPPER_STYLES = `
 html, body {
   margin: 0;
   padding: 0;
@@ -409,7 +402,24 @@ div.marpit {
 }
 .mermaid-error {
   margin: 0.5em 0;
+}`;
+
+/**
+ * Compose the full stylesheet text used inside the continuous-mode iframe.
+ * Exposed so MarpPreview can patch the iframe's <style> element when marpCss
+ * changes without reloading the iframe.
+ */
+export function buildContinuousStyleContent(css: string): string {
+  return `${css}\n${CONTINUOUS_WRAPPER_STYLES}`;
 }
+
+export function buildAllSlidesDocument(html: string, css: string): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+${buildContinuousStyleContent(css)}
 </style>
 </head>
 <body>${html}
