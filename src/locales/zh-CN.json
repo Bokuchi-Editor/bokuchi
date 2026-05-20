@@ -9,6 +9,9 @@
     "newFile": "新建文件",
     "openFile": "打开文件"
   },
+  "game": {
+    "tagline": "在 Markdown 单词落到地面前，输入它们将其击落。"
+  },
   "buttons": {
     "open": "打开",
     "save": "保存",
@@ -541,17 +544,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "表格列宽可自定义",
-        "description": "可在预览和导出的 HTML 中自定义 Markdown 表格的列宽方式：等宽、按内容自适应（换行）或按内容自适应（横向滚动）。"
+      "marpPreviewScroll": {
+        "title": "Marp 预览不再跳回顶部",
+        "description": "修复了 Marp 连续预览模式下每次输入都会跳回第一页幻灯片的问题。编辑时滚动位置会被保留。"
       },
-      "mermaidInMarp": {
-        "title": "Marp 幻灯片中的 Mermaid 图表渲染",
-        "description": "Marp 幻灯片中的 Mermaid 代码块现在会渲染为图表，而不再原样显示源代码。深色模式会自动适配。"
+      "editorModeShortcut": {
+        "title": "编辑器模式切换快捷键已更改",
+        "description": "修复了 Windows 上的快捷键冲突。编辑器模式切换的快捷键已更改为 Cmd/Ctrl+Shift+D。"
       },
-      "darculaCodeContrast": {
-        "title": "Darcula 主题代码块对比度优化",
-        "description": "提亮了 Darcula 主题中代码块的背景色，使语法高亮的代码更易阅读。"
+      "batchCloseUnsavedPrompt": {
+        "title": "批量关闭包含未保存更改的标签页",
+        "description": "一次性关闭多个标签页时，包含未保存更改的标签页不再被静默跳过——现在会依次提示你是否保存每一个。"
       }
     }
   },

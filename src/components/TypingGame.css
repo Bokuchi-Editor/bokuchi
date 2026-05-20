@@ -1,0 +1,313 @@
+/* ============================================================================
+ * Bokuchi Typing Game — easter egg styles
+ * Two skins via [data-skin="light" | "dark"] on the root.
+ * ============================================================================ */
+
+.typing-game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  user-select: none;
+}
+
+/* ---------- Dark skin (VSCode-ish) ---------- */
+.typing-game[data-skin='dark'] {
+  --tg-bg:      #1e1e1e;
+  --tg-bg-deep: #141414;
+  --tg-fg:      #e8e8e8;
+  --tg-dim:     #6a6a6a;
+  --tg-accent:  #4fc3f7;
+  --tg-hit:     #81c784;
+  --tg-warn:    #ef5350;
+  --tg-syntax:  #c586c0;
+  --tg-brand:   #ffb74d;
+  --tg-grid:    rgba(255, 255, 255, 0.015);
+  --tg-overlay-bg: rgba(20, 20, 20, 0.92);
+  --tg-glow:    rgba(79, 195, 247, 0.05);
+  --tg-brand-glow: rgba(255, 183, 77, 0.55);
+  --tg-brand-shadow: rgba(255, 183, 77, 0.5);
+  --tg-hit-shadow: rgba(129, 199, 132, 0.6);
+  --tg-key-bg: #2a2a2a;
+  --tg-key-border: #444;
+  --tg-key-accent-bg: rgba(79, 195, 247, 0.08);
+  --tg-key-accent-border: #2d4a5a;
+}
+
+/* ---------- Light skin ---------- */
+.typing-game[data-skin='light'] {
+  --tg-bg:      #fafafa;
+  --tg-bg-deep: #efefef;
+  --tg-fg:      #1e1e1e;
+  --tg-dim:     #9e9e9e;
+  --tg-accent:  #1976d2;
+  --tg-hit:     #2e7d32;
+  --tg-warn:    #d32f2f;
+  --tg-syntax:  #7b1fa2;
+  --tg-brand:   #ed6c02;
+  --tg-grid:    rgba(0, 0, 0, 0.025);
+  --tg-overlay-bg: rgba(250, 250, 250, 0.94);
+  --tg-glow:    rgba(25, 118, 210, 0.05);
+  --tg-brand-glow: rgba(237, 108, 2, 0.4);
+  --tg-brand-shadow: rgba(237, 108, 2, 0.35);
+  --tg-hit-shadow: rgba(46, 125, 50, 0.4);
+  --tg-key-bg: #ffffff;
+  --tg-key-border: #c4c4c4;
+  --tg-key-accent-bg: rgba(25, 118, 210, 0.08);
+  --tg-key-accent-border: #90caf9;
+}
+
+.typing-game {
+  background:
+    radial-gradient(ellipse at center top, var(--tg-glow), transparent 60%),
+    var(--tg-bg);
+  color: var(--tg-fg);
+}
+
+.typing-game::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--tg-grid) 1px, transparent 1px);
+  background-size: 100% 28px;
+  pointer-events: none;
+}
+
+/* ---------- Words layer ---------- */
+.tg-words-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tg-word {
+  position: absolute;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.typing-game[data-skin='dark'] .tg-word {
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+.tg-word .tg-typed {
+  color: var(--tg-hit);
+  text-shadow: 0 0 8px var(--tg-hit-shadow);
+}
+.tg-word .tg-rest { color: var(--tg-fg); }
+.tg-word.target .tg-rest { color: var(--tg-accent); }
+.tg-word.syntax .tg-rest { color: var(--tg-syntax); }
+.tg-word.brand  .tg-rest {
+  color: var(--tg-brand);
+  font-weight: 700;
+  text-shadow: 0 0 14px var(--tg-brand-glow);
+}
+
+.tg-word.exploding { animation: tg-pop 0.3s ease-out forwards; }
+@keyframes tg-pop {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.3); opacity: 1; filter: brightness(1.6); }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+.tg-word.typo, .tg-input-bar.typo {
+  animation: tg-shake 0.2s ease-in-out;
+}
+@keyframes tg-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-4px); }
+  60%      { transform: translateX(4px); }
+  80%      { transform: translateX(-2px); }
+}
+
+/* ---------- Score popups ---------- */
+.tg-pop {
+  position: absolute;
+  color: var(--tg-hit);
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: none;
+  text-shadow: 0 0 8px var(--tg-hit-shadow);
+  animation: tg-floatup 0.7s ease-out forwards;
+}
+@keyframes tg-floatup {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-40px); opacity: 0; }
+}
+
+/* ---------- HUD ---------- */
+.tg-hud {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--tg-dim);
+  pointer-events: none;
+  z-index: 10;
+}
+.tg-hud .tg-group { display: flex; gap: 24px; }
+.tg-hud .tg-label { color: var(--tg-dim); margin-right: 6px; }
+.tg-hud .tg-value { color: var(--tg-fg); font-weight: 600; }
+.tg-hud .tg-combo.active .tg-value { color: var(--tg-accent); }
+.tg-hud .tg-heart { color: var(--tg-warn); margin-right: 2px; }
+.typing-game[data-skin='dark'] .tg-hud .tg-heart.lost { color: #3a3a3a; }
+.typing-game[data-skin='light'] .tg-hud .tg-heart.lost { color: #d4d4d4; }
+
+/* ---------- Input bar ---------- */
+.tg-input-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 24px;
+  background: linear-gradient(to top, var(--tg-bg-deep), transparent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+.tg-prompt { color: var(--tg-accent); font-size: 20px; }
+.tg-input  {
+  color: var(--tg-fg);
+  font-size: 20px;
+  min-height: 26px;
+  letter-spacing: 1px;
+}
+.tg-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 22px;
+  background: var(--tg-accent);
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: tg-blink 1s steps(2, start) infinite;
+}
+@keyframes tg-blink { to { visibility: hidden; } }
+
+/* ---------- Miss flash ---------- */
+.typing-game.miss::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--tg-warn);
+  opacity: 0;
+  pointer-events: none;
+  animation: tg-missflash 0.25s ease-out;
+}
+@keyframes tg-missflash {
+  from { opacity: 0.15; }
+  to   { opacity: 0; }
+}
+
+/* ---------- Overlay (title / result) ---------- */
+.tg-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--tg-overlay-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 20;
+  backdrop-filter: blur(2px);
+}
+
+/* --- Title --- */
+.tg-title-screen h1 {
+  font-size: 32px;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+  color: var(--tg-fg);
+  font-weight: 600;
+}
+.tg-title-screen .tg-sub {
+  color: var(--tg-dim);
+  margin-bottom: 28px;
+  font-size: 14px;
+  max-width: 480px;
+  line-height: 1.6;
+  padding: 0 16px;
+  white-space: pre-line;
+}
+.tg-title-screen .tg-start {
+  color: var(--tg-accent);
+  font-size: 16px;
+  margin-top: 8px;
+  animation: tg-blink 1.2s steps(2, start) infinite;
+  letter-spacing: 1px;
+}
+
+/* --- Result --- */
+.tg-result-screen h1 {
+  font-size: 26px;
+  letter-spacing: 6px;
+  color: var(--tg-dim);
+  margin: 0 0 28px;
+  font-weight: 400;
+}
+.tg-score-label {
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--tg-dim);
+  margin-bottom: 6px;
+}
+.tg-score-value {
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--tg-brand);
+  line-height: 1;
+  text-shadow: 0 0 30px var(--tg-brand-shadow);
+  margin-bottom: 6px;
+}
+.tg-best {
+  font-size: 13px;
+  color: var(--tg-dim);
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  min-height: 18px;
+}
+.tg-best.new {
+  color: var(--tg-brand);
+  font-weight: 700;
+  animation: tg-blink 1s steps(2, start) infinite;
+}
+.tg-result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 0 40px;
+  margin-bottom: 36px;
+}
+.tg-result-grid > div { text-align: center; }
+.tg-result-grid .k {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--tg-dim);
+  margin-bottom: 6px;
+}
+.tg-result-grid .v {
+  font-size: 22px;
+  color: var(--tg-fg);
+  font-weight: 600;
+}
+.tg-continue {
+  color: var(--tg-accent);
+  font-size: 14px;
+  letter-spacing: 1px;
+  animation: tg-blink 1.2s steps(2, start) infinite;
+}
+.tg-key {
+  display: inline-block;
+  border: 1px solid var(--tg-key-accent-border);
+  background: var(--tg-key-accent-bg);
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin: 0 3px;
+  color: var(--tg-accent);
+  font-family: inherit;
+  font-size: 13px;
+}

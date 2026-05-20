@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Box, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { NoteAdd, FolderOpen, InsertDriveFileOutlined } from '@mui/icons-material';
 import { RecentFile } from '../types/recentFiles';
 import { storeApi } from '../api/storeApi';
 import { formatKeyboardShortcut } from '../utils/platform';
+import { useGameTrigger } from '../hooks/useGameTrigger';
+
+// Easter-egg game — code-split. Loads only when the trigger fires.
+const TypingGame = lazy(() => import('./TypingGame'));
 
 interface EmptyStateProps {
   onNewTab: () => void;
@@ -21,6 +26,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   t,
 }) => {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
+  const [gameActive, setGameActive] = useState(false);
+  const theme = useTheme();
+
+  useGameTrigger('play', () => setGameActive(true), !gameActive);
 
   useEffect(() => {
     const loadRecentFiles = async () => {
@@ -33,6 +42,16 @@ const EmptyState: React.FC<EmptyStateProps> = ({
     };
     loadRecentFiles();
   }, []);
+
+  if (gameActive) {
+    return (
+      <Box sx={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <Suspense fallback={null}>
+          <TypingGame mode={theme.palette.mode === 'dark' ? 'dark' : 'light'} />
+        </Suspense>
+      </Box>
+    );
+  }
 
   const extractDir = (filePath: string): string => {
     const separator = filePath.includes('\\') ? '\\' : '/';

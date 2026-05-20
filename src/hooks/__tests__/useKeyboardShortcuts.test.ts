@@ -190,15 +190,37 @@ describe('useKeyboardShortcuts', () => {
     expect(onSaveFile).not.toHaveBeenCalled();
   });
 
-  // T-KS-12: Ctrl+Shift+V rotates view mode
-  it('T-KS-12: Ctrl+Shift+V rotates view mode', () => {
+  // T-KS-12: Ctrl+Shift+D rotates view mode (Windows: e.key is uppercase 'D')
+  it('T-KS-12: Ctrl+Shift+D rotates view mode', () => {
     renderHook(() => useKeyboardShortcuts(defaultParams()));
 
     act(() => {
-      fireKeydown('V', { ctrlKey: true, shiftKey: true });
+      fireKeydown('D', { ctrlKey: true, shiftKey: true, code: 'KeyD' });
     });
 
     expect(onRotateViewMode).toHaveBeenCalledTimes(1);
+  });
+
+  // T-KS-12b: Cmd+Shift+D rotates view mode on Mac (e.key may be lowercase 'd')
+  it('T-KS-12b: Cmd+Shift+D rotates view mode on Mac', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('d', { metaKey: true, shiftKey: true, code: 'KeyD' });
+    });
+
+    expect(onRotateViewMode).toHaveBeenCalledTimes(1);
+  });
+
+  // T-KS-12c: Ctrl+Shift+V no longer triggers rotate view mode (old shortcut removed)
+  it('T-KS-12c: Ctrl+Shift+V does not trigger rotate view mode', () => {
+    renderHook(() => useKeyboardShortcuts(defaultParams()));
+
+    act(() => {
+      fireKeydown('V', { ctrlKey: true, shiftKey: true, code: 'KeyV' });
+    });
+
+    expect(onRotateViewMode).not.toHaveBeenCalled();
   });
 
   // T-KS-13: Ctrl+Shift+1 switches to split view

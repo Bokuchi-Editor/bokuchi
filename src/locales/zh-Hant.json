@@ -9,6 +9,9 @@
     "newFile": "新建檔案",
     "openFile": "開啟檔案"
   },
+  "game": {
+    "tagline": "在 Markdown 單字觸地之前，輸入它們將其擊落。"
+  },
   "buttons": {
     "open": "開啟",
     "save": "儲存",
@@ -541,17 +544,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "表格欄寬可自訂",
-        "description": "可在預覽和匯出的 HTML 中自訂 Markdown 表格的欄寬方式：等寬、依內容自動換行，或依內容橫向捲動。"
+      "marpPreviewScroll": {
+        "title": "Marp 預覽不再跳回頂端",
+        "description": "修正了 Marp 連續預覽模式下每次輸入都會跳回第一張投影片的問題。編輯時捲動位置會被保留。"
       },
-      "mermaidInMarp": {
-        "title": "Marp 投影片中的 Mermaid 圖表渲染",
-        "description": "Marp 投影片中的 Mermaid 程式碼區塊現在會渲染為圖表，而不再原樣顯示原始碼。深色模式會自動套用。"
+      "editorModeShortcut": {
+        "title": "編輯器模式切換快捷鍵已變更",
+        "description": "修正了 Windows 上的快捷鍵衝突。編輯器模式切換的快捷鍵已變更為 Cmd/Ctrl+Shift+D。"
       },
-      "darculaCodeContrast": {
-        "title": "Darcula 佈景中程式碼區塊對比度優化",
-        "description": "調亮了 Darcula 佈景的程式碼區塊背景色，讓語法強調的程式碼更易閱讀。"
+      "batchCloseUnsavedPrompt": {
+        "title": "批次關閉包含未儲存變更的分頁",
+        "description": "一次關閉多個分頁時，包含未儲存變更的分頁不再被靜默略過——系統現在會依序詢問你是否儲存每一個。"
       }
     }
   },

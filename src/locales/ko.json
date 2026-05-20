@@ -9,6 +9,9 @@
     "newFile": "새 파일",
     "openFile": "파일 열기"
   },
+  "game": {
+    "tagline": "떨어지는 Markdown 단어를 바닥에 닿기 전에 입력하여 격추하세요."
+  },
   "buttons": {
     "open": "열기",
     "save": "저장",
@@ -541,17 +544,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "테이블 열 너비 설정 추가",
-        "description": "미리보기와 내보낸 HTML에서 Markdown 표의 열 너비 동작을 동일 너비, 내용에 맞춰 줄바꿈, 내용에 맞춰 가로 스크롤 중에서 선택할 수 있게 되었습니다."
+      "marpPreviewScroll": {
+        "title": "Marp 미리보기가 더 이상 맨 위로 튀지 않음",
+        "description": "Marp 연속 미리보기 모드에서 키를 입력할 때마다 첫 슬라이드로 돌아가는 문제를 수정했습니다. 편집 중에도 스크롤 위치가 그대로 유지됩니다."
       },
-      "mermaidInMarp": {
-        "title": "Marp 슬라이드에서 Mermaid 다이어그램 렌더링",
-        "description": "Marp 슬라이드 안의 Mermaid 코드 블록이 원본 소스 대신 다이어그램으로 렌더링되도록 수정했습니다. 다크 모드도 자동으로 따라갑니다."
+      "editorModeShortcut": {
+        "title": "에디터 모드 전환 단축키 변경",
+        "description": "Windows에서 단축키 충돌 문제를 수정했습니다. 에디터 모드 전환 단축키가 Cmd/Ctrl+Shift+D로 변경되었습니다."
       },
-      "darculaCodeContrast": {
-        "title": "Darcula 테마 코드 블록 대비 개선",
-        "description": "Darcula 테마의 코드 블록 배경을 밝게 조정해 구문 강조된 코드를 더 읽기 쉽게 했습니다."
+      "batchCloseUnsavedPrompt": {
+        "title": "저장되지 않은 변경 사항이 있는 여러 탭 닫기",
+        "description": "여러 탭을 한 번에 닫을 때 저장되지 않은 탭이 더 이상 조용히 건너뛰어지지 않습니다. 이제 각 탭에 대해 차례로 저장 여부를 묻습니다."
       }
     }
   },

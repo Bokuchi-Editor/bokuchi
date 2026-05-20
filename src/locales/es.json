@@ -9,6 +9,9 @@
     "newFile": "Nuevo archivo",
     "openFile": "Abrir archivo"
   },
+  "game": {
+    "tagline": "Escribe las palabras Markdown que caen para derribarlas antes de que toquen el suelo."
+  },
   "buttons": {
     "open": "Abrir",
     "save": "Guardar",
@@ -541,17 +544,17 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "tableLayoutSetting": {
-        "title": "Anchura de columnas de tabla configurable",
-        "description": "Elige cómo se dimensionan las columnas de las tablas Markdown en la vista previa y en el HTML exportado: anchos iguales, ajustadas al contenido con salto de línea o ajustadas al contenido con desplazamiento horizontal."
+      "marpPreviewScroll": {
+        "title": "La vista previa de Marp ya no salta al principio",
+        "description": "Corregido el problema por el cual la vista previa continua de Marp volvía a la primera diapositiva con cada pulsación de tecla. Ahora se conserva la posición de desplazamiento mientras editas."
       },
-      "mermaidInMarp": {
-        "title": "Diagramas Mermaid en diapositivas Marp",
-        "description": "Los bloques de código Mermaid ahora se renderizan como diagramas dentro de las diapositivas de Marp, en lugar de mostrar el código fuente. Se respeta automáticamente el modo oscuro."
+      "editorModeShortcut": {
+        "title": "Cambio en el atajo para alternar el modo de editor",
+        "description": "Se corrigió un conflicto de atajos de teclado en Windows. Ahora el atajo para alternar el modo de editor es Cmd/Ctrl+Shift+D."
       },
-      "darculaCodeContrast": {
-        "title": "Mejor contraste de bloques de código en Darcula",
-        "description": "Se aclaró el fondo de los bloques de código en el tema Darcula para que el código con resaltado de sintaxis sea más fácil de leer."
+      "batchCloseUnsavedPrompt": {
+        "title": "Cierre de varias pestañas con cambios sin guardar",
+        "description": "Al cerrar varias pestañas a la vez, las que tienen cambios sin guardar ya no se omiten en silencio: ahora se te pide guardar cada una en orden."
       }
     }
   },
