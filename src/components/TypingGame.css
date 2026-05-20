@@ -232,6 +232,7 @@
   max-width: 480px;
   line-height: 1.6;
   padding: 0 16px;
+  white-space: pre-line;
 }
 .tg-title-screen .tg-start {
   color: var(--tg-accent);
