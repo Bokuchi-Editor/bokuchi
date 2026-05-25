@@ -144,6 +144,33 @@ let mermaidCounter = 0;
 let mermaidLock: Promise<void> = Promise.resolve();
 
 /**
+ * Remove DOM elements that mermaid leaks into <body>.
+ *
+ * mermaid renders into a temp <div id="d${id}"> appended to document.body, and
+ * several diagram renderers also append measurement helpers straight to <body>:
+ * a bare <svg> (calculateTextDimensions), <div id="cy"> (layout engines) and
+ * <div class="mermaidTooltip">. The text-measurement <svg> is the worst
+ * offender — calculateTextDimensions throws "svg element not in render tree"
+ * *before* it removes its own <svg> whenever getBBox() returns 0×0 (which
+ * happens during window/fullscreen layout transitions), so the stray <svg>
+ * stays in <body> and shows up as a mystery element at the bottom of the app.
+ *
+ * suppressErrorRendering only suppresses mermaid's own bomb overlay; it does
+ * not clean these up. We sweep them ourselves after every render pass. A bare
+ * <svg> / #cy / .mermaidTooltip as a direct child of <body> is never something
+ * this app produces (React mounts under #root, MUI portals are <div>s), so
+ * removing them is safe.
+ */
+function cleanupMermaidArtifacts(): void {
+  if (typeof document === 'undefined' || !document.body) return;
+  const strays = document.body.querySelectorAll(
+    ':scope > svg, :scope > div#cy, :scope > div.mermaidTooltip, ' +
+    ':scope > [id^="dmermaid-"], :scope > [id^="mermaid-"]'
+  );
+  strays.forEach((el) => el.remove());
+}
+
+/**
  * Process mermaid code blocks in HTML (after marked parsing).
  * Replaces ```mermaid blocks with rendered SVG.
  * Serialized to prevent concurrent mermaid.render() calls which conflict.
@@ -158,6 +185,7 @@ export async function processMermaidBlocks(html: string, dark?: boolean): Promis
   try {
     return await processMermaidBlocksInternal(html, dark);
   } finally {
+    cleanupMermaidArtifacts();
     releaseLock!();
   }
 }
