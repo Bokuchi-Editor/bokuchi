@@ -257,10 +257,14 @@
       "theme": "Chủ đề",
       "themeDescription": "Chọn chủ đề trực quan cho giao diện ứng dụng.",
       "themes": {
-        "default": "Mặc định",
-        "dark": "Tối",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Sống động",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },

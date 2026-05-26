@@ -9,6 +9,7 @@ import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
 import RenameDialog from './components/RenameDialog';
 import { useAppState } from './hooks/useAppState';
+import { isDarkTheme } from './themes';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -535,7 +536,7 @@ function AppDesktop() {
         column={editorStatus.column}
         totalCharacters={editorStatus.totalCharacters}
         selectedCharacters={editorStatus.selectedCharacters}
-        darkMode={theme === 'dark' || theme === 'as400'}
+        darkMode={isDarkTheme(theme)}
         theme={theme}
         onThemeChange={handleThemeChange}
         zoomPercentage={zoomPercentage}

@@ -27,7 +27,6 @@ const SLIDE_COUNTER_MIN_WIDTH_PX = 60;
 const MarpPreview: React.FC<MarpPreviewProps> = ({
   content,
   darkMode,
-  theme,
   globalVariables = {},
   scrollFraction,
   filePath,
@@ -59,7 +58,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
         return;
       }
 
-      const isDark = darkMode || theme === 'darcula';
+      const isDark = darkMode;
       const inputKey = content + JSON.stringify(globalVariables) + (filePath || '') + String(isDark);
       if (inputKey === lastInputRef.current) return;
 
@@ -101,7 +100,7 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
 
     process();
     return () => { stale = true; };
-  }, [content, globalVariables, filePath, darkMode, theme]);
+  }, [content, globalVariables, filePath, darkMode]);
 
   // Compute slide line ranges from source content (memoized)
   const slideRanges = React.useMemo(() => computeSlideLineRanges(content), [content]);

@@ -257,11 +257,15 @@
       "theme": "थीम",
       "themeDescription": "एप्लिकेशन इंटरफेस के लिए दृश्य थीम चुनें।",
       "themes": {
-        "default": "डिफ़ॉल्ट",
-        "dark": "डार्क",
-        "pastel": "पेस्टल",
-        "vivid": "विविड",
-        "darcula": "डार्कुला"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {

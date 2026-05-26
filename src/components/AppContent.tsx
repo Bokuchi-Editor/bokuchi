@@ -14,6 +14,7 @@ import type { SettingsFocusTarget } from '../types/settingsFocus';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
 import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
+import { isDarkTheme, ThemeName } from '../themes';
 
 interface AppContentProps {
   // State
@@ -401,7 +402,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     <Editor
                       content={activeTab.content}
                       onChange={onContentChange}
-                      darkMode={theme === 'dark' || theme === 'as400'}
+                      darkMode={isDarkTheme(theme as ThemeName)}
                       theme={theme}
                       onStatusChange={onStatusChange}
                       zoomLevel={currentZoom}
@@ -434,7 +435,7 @@ const AppContent: React.FC<AppContentProps> = ({
                   <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden', borderLeft: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
                     <Preview
                       content={activeTab.content}
-                      darkMode={theme === 'dark' || theme === 'as400'}
+                      darkMode={isDarkTheme(theme as ThemeName)}
                       theme={theme}
                       globalVariables={globalVariables}
                       zoomLevel={currentZoom}
@@ -455,7 +456,7 @@ const AppContent: React.FC<AppContentProps> = ({
                   <Editor
                     content={activeTab.content}
                     onChange={onContentChange}
-                    darkMode={theme === 'dark' || theme === 'as400'}
+                    darkMode={isDarkTheme(theme as ThemeName)}
                     theme={theme}
                     onStatusChange={onStatusChange}
                     zoomLevel={currentZoom}
@@ -488,7 +489,7 @@ const AppContent: React.FC<AppContentProps> = ({
                 <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                   <Preview
                     content={activeTab.content}
-                    darkMode={theme === 'dark' || theme === 'as400'}
+                    darkMode={isDarkTheme(theme as ThemeName)}
                     theme={theme}
                     globalVariables={globalVariables}
                     zoomLevel={currentZoom}

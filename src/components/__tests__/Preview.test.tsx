@@ -397,11 +397,11 @@ describe('MarkdownPreview – themes', () => {
     expect(preview?.classList.contains('hljs-light')).toBe(true);
   });
 
-  // T-PV-12: darcula theme overrides to hljs-dark
-  it('T-PV-12: darcula theme forces hljs-dark class', async () => {
+  // T-PV-12: darcula passed with darkMode=true uses hljs-dark
+  it('T-PV-12: darcula theme uses hljs-dark class', async () => {
     const { container } = await renderPreviewContent({
       content: 'Darcula content',
-      darkMode: false,
+      darkMode: true,
       theme: 'darcula',
     });
 

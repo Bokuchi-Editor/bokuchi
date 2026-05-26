@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { Box, Typography, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
+import { useTheme, alpha } from '@mui/material/styles';
 import { Download } from '@mui/icons-material';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
@@ -37,6 +38,8 @@ const BASE_PREVIEW_FONT_SIZE_PX = 16;
 const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
+  const muiTheme = useTheme();
+  const { palette } = muiTheme;
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -124,9 +127,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         // Process Mermaid diagrams (lazy-loaded, after marked parsing)
         if (renderingSettings.enableMermaid && contentHasMermaid(processedMarkdown)) {
           try {
-            const isDark = darkMode || theme === 'darcula';
-            reinitializeMermaid(isDark);
-            processedHtml = await processMermaidBlocks(processedHtml, isDark);
+            reinitializeMermaid(darkMode);
+            processedHtml = await processMermaidBlocks(processedHtml, darkMode);
           } catch (err) {
             console.warn('Mermaid processing failed, showing raw code blocks:', err);
           }
@@ -346,7 +348,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
       // Process Mermaid diagrams for export (renders as inline SVG)
       if (renderingSettings.enableMermaid && contentHasMermaid(processedContent)) {
-        exportHtml = await processMermaidBlocks(exportHtml, darkMode || theme === 'darcula');
+        exportHtml = await processMermaidBlocks(exportHtml, darkMode);
       }
 
       const fullHTML = buildExportHTML(exportHtml, darkMode, theme, previewSettings.tableLayout);
@@ -394,8 +396,8 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           flex: 1,
           p: 2,
           overflow: 'auto',
-          backgroundColor: theme === 'as400' ? '#000000' : theme === 'darcula' ? '#2B2B2B' : (darkMode ? 'grey.900' : 'grey.50'),
-          color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? 'grey.100' : 'text.primary'),
+          backgroundColor: palette.background.default,
+          color: palette.text.primary,
           ...(theme === 'as400' ? {
             background: 'repeating-linear-gradient(0deg, #000000 0px, #000000 4px, rgba(0,255,0,0.2) 4px, rgba(0,255,0,0.2) 5px)',
           } : {}),
@@ -403,7 +405,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       >
         <div
           ref={previewRef}
-          className={`markdown-preview ${theme === 'darcula' ? 'hljs-dark' : (darkMode ? 'hljs-dark' : 'hljs-light')}`}
+          className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
             fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
@@ -463,13 +465,13 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
             .markdown-preview h1 {
               font-size: 2em;
-              border-bottom: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#eaecef')};
+              border-bottom: 1px solid ${palette.divider};
               padding-bottom: 0.3em;
             }
 
             .markdown-preview h2 {
               font-size: 1.5em;
-              border-bottom: 1px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#eaecef')};
+              border-bottom: 1px solid ${palette.divider};
               padding-bottom: 0.3em;
             }
 
@@ -488,14 +490,14 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             }
 
             .markdown-preview blockquote {
-              border-left: 4px solid ${theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5')};
+              border-left: 4px solid ${palette.divider};
               padding-left: 1em;
               margin: 1em 0;
-              color: ${theme === 'darcula' ? '#a0a0a0' : (darkMode ? '#a0a0a0' : '#6a737d')};
+              color: ${palette.text.secondary};
             }
 
             .markdown-preview code {
-              background-color: ${theme === 'darcula' ? 'rgba(255,255,255,0.1)' : (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(27,31,35,0.05)')};
+              background-color: ${alpha(palette.text.primary, 0.08)};
               padding: 0.2em 0.4em;
               border-radius: 3px;
               font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -504,7 +506,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             }
 
                         .markdown-preview pre {
-              background-color: ${theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa')};
+              background-color: var(--color-pre-background);
               border-radius: 3px;
               padding: 16px;
               overflow: auto;
@@ -527,12 +529,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             ${generateTableLayoutCSS(
               previewSettings.tableLayout,
               '.markdown-preview ',
-              theme === 'darcula' ? '#404040' : (darkMode ? '#404040' : '#dfe2e5'),
-              theme === 'darcula' ? '#2d2d2d' : (darkMode ? '#2d2d2d' : '#f6f8fa'),
+              'var(--color-border)',
+              'var(--color-pre-background)',
             )}
 
             .markdown-preview a {
-              color: ${theme === 'darcula' ? '#58a6ff' : (darkMode ? '#58a6ff' : '#0366d6')};
+              color: ${palette.primary.main};
               text-decoration: none;
             }
 

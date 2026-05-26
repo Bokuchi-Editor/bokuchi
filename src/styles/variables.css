@@ -160,6 +160,138 @@
   --color-status-text: #808080;
 }
 
+/* Dawn theme (Akatsuki - Light with warm terracotta tint) */
+[data-theme="dawn"] {
+  --color-primary: #785e4f;
+  --color-primary-hover: #5e483b;
+  --color-background: #faf6f4;
+  --color-surface: #f4edea;
+  --color-text: #39312d;
+  --color-text-secondary: #796b64;
+  --color-border: #e6dad2;
+  --color-border-light: #ede4dd;
+
+  --color-code-background: rgba(57, 49, 45, 0.08);
+  --color-code-text: #39312d;
+  --color-pre-background: #f4edea;
+  --color-pre-text: #39312d;
+
+  --color-syntax-comment: #796b64;
+  --color-syntax-keyword: #d73a49;
+  --color-syntax-string: #032f62;
+  --color-syntax-number: #005cc5;
+  --color-syntax-function: #6f42c1;
+  --color-syntax-variable: #e36209;
+  --color-syntax-type: #005cc5;
+
+  --color-search-highlight: #ffeb3b;
+  --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
+
+  --color-status-background: #f4edea;
+  --color-status-text: #796b64;
+}
+
+/* Twilight theme (Tasogare - Dark with warm gold tint) */
+[data-theme="twilight"] {
+  --color-primary: #c8be9c;
+  --color-primary-hover: #b3a987;
+  --color-background: #25231d;
+  --color-surface: #2d2a23;
+  --color-text: #e0dccc;
+  --color-text-secondary: #aaa590;
+  --color-border: #3a362e;
+  --color-border-light: #322f27;
+
+  --color-code-background: rgba(224, 220, 204, 0.1);
+  --color-code-text: #e0dccc;
+  --color-pre-background: #2d2a23;
+  --color-pre-text: #e0dccc;
+
+  --color-syntax-comment: #aaa590;
+  --color-syntax-keyword: #ff7b72;
+  --color-syntax-string: #a5d6ff;
+  --color-syntax-number: #79c0ff;
+  --color-syntax-function: #d2a8ff;
+  --color-syntax-variable: #ffa657;
+  --color-syntax-type: #79c0ff;
+
+  --color-search-highlight: #ffd54f;
+  --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
+
+  --color-status-background: #2d2a23;
+  --color-status-text: #aaa590;
+}
+
+/* Silk theme (Kinu - Light cool monotone) */
+[data-theme="silk"] {
+  --color-primary: #6b6b72;
+  --color-primary-hover: #545459;
+  --color-background: #f3f3f8;
+  --color-surface: #ededf2;
+  --color-text: #2a2a2f;
+  --color-text-secondary: #6c6c71;
+  --color-border: #d8d8dd;
+  --color-border-light: #e3e3e8;
+
+  --color-code-background: rgba(42, 42, 47, 0.08);
+  --color-code-text: #2a2a2f;
+  --color-pre-background: #ededf2;
+  --color-pre-text: #2a2a2f;
+
+  --color-syntax-comment: #6c6c71;
+  --color-syntax-keyword: #d73a49;
+  --color-syntax-string: #032f62;
+  --color-syntax-number: #005cc5;
+  --color-syntax-function: #6f42c1;
+  --color-syntax-variable: #e36209;
+  --color-syntax-type: #005cc5;
+
+  --color-search-highlight: #ffeb3b;
+  --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
+
+  --color-status-background: #ededf2;
+  --color-status-text: #6c6c71;
+}
+
+/* Ink theme (Sumi - Dark cool monotone) */
+[data-theme="ink"] {
+  --color-primary: #a3a3ae;
+  --color-primary-hover: #8a8a98;
+  --color-background: #1f1f26;
+  --color-surface: #292930;
+  --color-text: #dcdce3;
+  --color-text-secondary: #a0a0a7;
+  --color-border: #35353c;
+  --color-border-light: #2d2d33;
+
+  --color-code-background: rgba(220, 220, 227, 0.1);
+  --color-code-text: #dcdce3;
+  --color-pre-background: #292930;
+  --color-pre-text: #dcdce3;
+
+  --color-syntax-comment: #a0a0a7;
+  --color-syntax-keyword: #ff7b72;
+  --color-syntax-string: #a5d6ff;
+  --color-syntax-number: #79c0ff;
+  --color-syntax-function: #d2a8ff;
+  --color-syntax-variable: #ffa657;
+  --color-syntax-type: #79c0ff;
+
+  --color-search-highlight: #ffd54f;
+  --color-search-highlight-text: #000000;
+  --color-search-current-highlight: #ff9800;
+  --color-search-current-highlight-text: #000000;
+
+  --color-status-background: #292930;
+  --color-status-text: #a0a0a7;
+}
+
 /* AS/400 theme (IBM Green Screen) */
 [data-theme="as400"] {
   --color-background: #000000;

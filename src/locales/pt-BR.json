@@ -257,10 +257,14 @@
       "theme": "Tema",
       "themeDescription": "Escolha o tema visual para a interface da aplicação.",
       "themes": {
-        "default": "Padrão",
-        "dark": "Escuro",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Vívido",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },

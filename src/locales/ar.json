@@ -257,11 +257,15 @@
       "theme": "السمة",
       "themeDescription": "اختر السمة البصرية لواجهة التطبيق.",
       "themes": {
-        "default": "افتراضي",
-        "dark": "داكن",
-        "pastel": "باستيل",
-        "vivid": "حيوي",
-        "darcula": "داركولا"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {

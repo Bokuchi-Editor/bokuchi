@@ -257,11 +257,15 @@
       "theme": "主題",
       "themeDescription": "選擇應用程式介面的視覺主題。",
       "themes": {
-        "default": "預設",
-        "dark": "深色",
-        "pastel": "柔和",
-        "vivid": "鮮豔",
-        "darcula": "達庫拉"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
