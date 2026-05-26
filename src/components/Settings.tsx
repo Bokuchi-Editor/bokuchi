@@ -490,7 +490,7 @@ const Settings: React.FC<SettingsProps> = ({
                       >
                         {visibleThemes.map((themeOption) => (
                           <MenuItem key={themeOption.name} value={themeOption.name}>
-                            {themeOption.displayName}
+                            {t(`settings.appearance.themes.${themeOption.name}`, themeOption.displayName)}
                           </MenuItem>
                         ))}
                       </Select>

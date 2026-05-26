@@ -257,10 +257,14 @@
       "theme": "Theme",
       "themeDescription": "Wählen Sie das visuelle Theme für die Anwendungsoberfläche.",
       "themes": {
-        "default": "Standard",
-        "dark": "Dunkel",
-        "pastel": "Pastell",
-        "vivid": "Lebhaft",
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },

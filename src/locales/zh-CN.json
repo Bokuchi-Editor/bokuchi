@@ -257,11 +257,15 @@
       "theme": "主题",
       "themeDescription": "选择应用程序界面的视觉主题。",
       "themes": {
-        "default": "默认",
-        "dark": "深色",
-        "pastel": "柔和",
-        "vivid": "鲜艳",
-        "darcula": "达库拉"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {

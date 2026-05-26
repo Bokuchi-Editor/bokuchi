@@ -8,24 +8,36 @@ import {
 } from '../exportStyles';
 
 describe('getExportThemeColors', () => {
-  it('returns light theme colors by default', () => {
-    const colors = getExportThemeColors(false);
+  it('returns default theme palette when no theme specified', () => {
+    const colors = getExportThemeColors();
     expect(colors.backgroundColor).toBe('#ffffff');
-    expect(colors.textColor).toBe('#333333');
-    expect(colors.linkColor).toBe('#0366d6');
+    expect(colors.textColor).toBe('#000000');
+    expect(colors.linkColor).toBe('#1976d2');
   });
 
-  it('returns dark theme colors when darkMode=true', () => {
-    const colors = getExportThemeColors(true);
-    expect(colors.backgroundColor).toBe('#1a1a1a');
-    expect(colors.textColor).toBe('#e0e0e0');
-    expect(colors.linkColor).toBe('#58a6ff');
+  it('returns dark theme palette for theme="dark"', () => {
+    const colors = getExportThemeColors('dark');
+    expect(colors.backgroundColor).toBe('#121212');
+    expect(colors.textColor).toBe('#ffffff');
+    expect(colors.linkColor).toBe('#90caf9');
   });
 
-  it('returns darcula theme colors', () => {
-    const colors = getExportThemeColors(false, 'darcula');
+  it('returns darcula theme palette', () => {
+    const colors = getExportThemeColors('darcula');
     expect(colors.backgroundColor).toBe('#2B2B2B');
-    expect(colors.textColor).toBe('#A9B7C6');
+    expect(colors.linkColor).toBe('#CC7832');
+  });
+
+  it('returns dawn theme palette (new theme)', () => {
+    const colors = getExportThemeColors('dawn');
+    expect(colors.backgroundColor).toBe('#faf6f4');
+    expect(colors.linkColor).toBe('#785e4f');
+  });
+
+  it('returns ink theme palette (new theme)', () => {
+    const colors = getExportThemeColors('ink');
+    expect(colors.backgroundColor).toBe('#1f1f26');
+    expect(colors.linkColor).toBe('#a3a3ae');
   });
 });
 
@@ -46,7 +58,7 @@ describe('getHighlightStyleDataUri', () => {
 
 describe('generateExportCSS', () => {
   it('includes theme colors in CSS output', () => {
-    const colors = getExportThemeColors(false);
+    const colors = getExportThemeColors();
     const css = generateExportCSS(colors);
     expect(css).toContain(colors.backgroundColor);
     expect(css).toContain(colors.textColor);
@@ -56,7 +68,7 @@ describe('generateExportCSS', () => {
   });
 
   it('constrains images to fit within parent element', () => {
-    const colors = getExportThemeColors(false);
+    const colors = getExportThemeColors();
     const css = generateExportCSS(colors);
     expect(css).toContain('img');
     expect(css).toContain('max-width: 100%');
@@ -64,7 +76,7 @@ describe('generateExportCSS', () => {
   });
 
   it('uses auto-wrap as the default table layout', () => {
-    const colors = getExportThemeColors(false);
+    const colors = getExportThemeColors();
     const css = generateExportCSS(colors);
     expect(css).toContain('table-layout: auto');
     expect(css).not.toContain('table-layout: fixed');
@@ -152,16 +164,22 @@ describe('buildExportHTML', () => {
     expect(html).toContain('highlightAll');
   });
 
-  it('uses dark theme colors when darkMode=true', () => {
-    const html = buildExportHTML('<p>Dark</p>', true);
-    expect(html).toContain('#1a1a1a');
-    expect(html).toContain('#e0e0e0');
+  it('uses dark theme palette colors', () => {
+    const html = buildExportHTML('<p>Dark</p>', true, 'dark');
+    expect(html).toContain('#121212');
+    expect(html).toContain('#ffffff');
   });
 
-  it('uses darcula theme colors', () => {
-    const html = buildExportHTML('<p>Darcula</p>', false, 'darcula');
+  it('uses darcula theme palette colors', () => {
+    const html = buildExportHTML('<p>Darcula</p>', true, 'darcula');
     expect(html).toContain('#2B2B2B');
-    expect(html).toContain('#A9B7C6');
+    expect(html).toContain('#CC7832');
+  });
+
+  it('uses ink theme palette colors (new theme)', () => {
+    const html = buildExportHTML('<p>Ink</p>', true, 'ink');
+    expect(html).toContain('#1f1f26');
+    expect(html).toContain('#a3a3ae');
   });
 
   it('honors an explicit tableLayout argument', () => {

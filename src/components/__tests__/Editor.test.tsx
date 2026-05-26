@@ -218,9 +218,9 @@ describe('MarkdownEditor', () => {
   // =========================================================================
 
   describe('settings propagation', () => {
-    // T-ED-04: theme selection
+    // T-ED-04: darcula passed with darkMode true sets vs-dark
     it('T-ED-04: darcula theme sets vs-dark', () => {
-      render(<MarkdownEditor {...defaultProps()} theme="darcula" />);
+      render(<MarkdownEditor {...defaultProps()} theme="darcula" darkMode={true} />);
       expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('vs-dark');
     });
 
