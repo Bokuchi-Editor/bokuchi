@@ -421,6 +421,57 @@ fn test_process_variables_empty_content() {
     assert_eq!(result, "");
 }
 
+// R-VP-16b: regression — `<!-- @var -->` must not panic.
+// The prefix `<!-- @var ` and suffix ` -->` share the same space character in
+// this input, so stripping the prefix first leaves `-->` (3 bytes) which is
+// shorter than the ` -->` (4-byte) suffix. The previous implementation called
+// `.strip_suffix(...).unwrap()` and crashed the Tauri main process, taking the
+// app down on every keystroke that produced this exact comment.
+#[test]
+fn test_parse_empty_var_comment_does_not_panic() {
+    let processor = VariableProcessor::new();
+    let content = "<!-- @var -->\nSome text";
+    let (variables, processed_content) = processor.parse_variables_from_markdown(content);
+    assert_eq!(variables.len(), 0);
+    assert!(processed_content.contains("Some text"));
+}
+
+// R-VP-16c: process_variables must not panic on the same input. This is the
+// entry point invoked by the `process_markdown` Tauri command on every edit.
+#[test]
+fn test_process_variables_with_empty_var_comment_does_not_panic() {
+    let processor = VariableProcessor::new();
+    let result = processor.process_variables("<!-- @var -->");
+    // Either result is acceptable as long as we don't panic; this just
+    // documents the current behavior so changes are caught explicitly.
+    let _ = result;
+}
+
+// R-VP-16d: incremental keystrokes leading up to `<!-- @var -->` must all be
+// processable. This mirrors the live editor flow where MarpPreview invokes
+// process_markdown on every edit.
+#[test]
+fn test_parse_var_comment_incremental_keystrokes() {
+    let processor = VariableProcessor::new();
+    let stages = [
+        "<!---->",
+        "<!-- -->",
+        "<!--  -->",
+        "<!-- @ -->",
+        "<!-- @v -->",
+        "<!-- @va -->",
+        "<!-- @var -->",
+        "<!-- @var  -->",
+        "<!-- @var n -->",
+        "<!-- @var n: -->",
+        "<!-- @var n: v -->",
+    ];
+    for stage in stages {
+        let (_variables, _processed) = processor.parse_variables_from_markdown(stage);
+        let _ = processor.process_variables(stage);
+    }
+}
+
 // R-VP-17
 #[test]
 fn test_yaml_invalid_format() {

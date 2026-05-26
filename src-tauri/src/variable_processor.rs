@@ -61,17 +61,23 @@ impl VariableProcessor {
         let lines: Vec<&str> = content.lines().collect();
         let mut processed_lines = Vec::new();
 
+        const VAR_PREFIX: &str = "<!-- @var ";
+        const VAR_SUFFIX: &str = " -->";
+
         for line in lines {
             let trimmed = line.trim();
 
-            // Check for variable definition pattern
-            if trimmed.starts_with("<!-- @var ") && trimmed.ends_with(" -->") {
+            // Check for variable definition pattern. The length guard prevents
+            // a panic for inputs like `<!-- @var -->`, where the trailing space
+            // of the prefix and the leading space of the suffix are the same
+            // character — stripping the prefix would leave a string shorter
+            // than the suffix, so the previous `.unwrap()` chain crashed.
+            if trimmed.starts_with(VAR_PREFIX)
+                && trimmed.ends_with(VAR_SUFFIX)
+                && trimmed.len() >= VAR_PREFIX.len() + VAR_SUFFIX.len()
+            {
                 // <!-- @var name: value --> format
-                let var_content = trimmed
-                    .strip_prefix("<!-- @var ")
-                    .unwrap()
-                    .strip_suffix(" -->")
-                    .unwrap();
+                let var_content = &trimmed[VAR_PREFIX.len()..trimmed.len() - VAR_SUFFIX.len()];
 
                 if let Some(colon_index) = var_content.find(':') {
                     let name = var_content[..colon_index].trim().to_string();

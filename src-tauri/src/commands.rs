@@ -32,6 +32,7 @@
 
 use std::collections::HashMap;
 use std::fs;
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::path::Path;
 
 use tauri::Emitter;
@@ -71,18 +72,27 @@ pub fn export_variables_to_yaml() -> Result<String, String> {
 }
 
 // Tauri command: Process Markdown (variable expansion)
+//
+// Wrapped in catch_unwind because this is invoked on every keystroke in the
+// editor — a panic here previously killed the whole Tauri main process. We
+// would rather surface the panic as a command error and keep the editor alive
+// than have the app exit in the middle of someone's edit.
 #[tauri::command]
 pub fn process_markdown(
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
-    // Temporarily set global variables
-    for (name, value) in global_variables {
-        VARIABLE_PROCESSOR.set_global_variable(name, value);
-    }
-
-    let result = VARIABLE_PROCESSOR.process_variables(&content);
-    Ok(result)
+    catch_unwind(AssertUnwindSafe(|| {
+        for (name, value) in global_variables {
+            VARIABLE_PROCESSOR.set_global_variable(name, value);
+        }
+        VARIABLE_PROCESSOR.process_variables(&content)
+    }))
+    .map_err(|panic_payload| {
+        let msg = panic_message(&panic_payload);
+        eprintln!("[process_markdown] panic caught: {}", msg);
+        format!("process_markdown panicked: {}", msg)
+    })
 }
 
 // Tauri command: Get expanded Markdown content
@@ -91,13 +101,30 @@ pub fn get_expanded_markdown(
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
-    // Temporarily set global variables
-    for (name, value) in global_variables {
-        VARIABLE_PROCESSOR.set_global_variable(name, value);
-    }
+    catch_unwind(AssertUnwindSafe(|| {
+        for (name, value) in global_variables {
+            VARIABLE_PROCESSOR.set_global_variable(name, value);
+        }
+        VARIABLE_PROCESSOR.process_variables(&content)
+    }))
+    .map_err(|panic_payload| {
+        let msg = panic_message(&panic_payload);
+        eprintln!("[get_expanded_markdown] panic caught: {}", msg);
+        format!("get_expanded_markdown panicked: {}", msg)
+    })
+}
 
-    let result = VARIABLE_PROCESSOR.process_variables(&content);
-    Ok(result)
+// Extract a printable message from a panic payload. Panics carry their payload
+// as `Box<dyn Any + Send>`; the standard library only formats &str and String
+// variants, so we mirror that and fall back to a placeholder.
+fn panic_message(payload: &Box<dyn std::any::Any + Send>) -> String {
+    if let Some(s) = payload.downcast_ref::<&'static str>() {
+        (*s).to_string()
+    } else if let Some(s) = payload.downcast_ref::<String>() {
+        s.clone()
+    } else {
+        "<non-string panic payload>".to_string()
+    }
 }
 
 // Tauri command: Read file
