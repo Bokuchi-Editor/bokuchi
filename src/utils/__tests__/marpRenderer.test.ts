@@ -100,6 +100,64 @@ marp:true
     // The regex MARP_FRONTMATTER_RE uses \s* so space is optional
     expect(contentIsMarp(content)).toBe(true);
   });
+
+  // T-MR-04: regression — a markdown article that demonstrates Marp syntax
+  // inside a fenced code block must NOT be detected as Marp. Front-matter
+  // only counts when it sits at the very start of the document.
+  it('T-MR-04: returns false for marp: true inside a fenced code block', () => {
+    const content = `# Article
+
+Some intro text. The following is an *example* of Marp syntax:
+
+\`\`\`markdown
+---
+marp: true
+theme: default
+---
+
+# Title slide
+\`\`\`
+
+End of article.`;
+    expect(contentIsMarp(content)).toBe(false);
+  });
+
+  // T-MR-05: a document whose body contains thematic breaks (\`---\`) and the
+  // literal text \`marp: true\` must not be detected just because both tokens
+  // happen to appear on their own lines.
+  it('T-MR-05: returns false when --- and marp: true appear only in the body', () => {
+    const content = `# Article
+
+Intro.
+
+---
+
+marp: true is how you enable Marp.
+
+---
+
+End.`;
+    expect(contentIsMarp(content)).toBe(false);
+  });
+
+  // T-MR-06: a real front-matter without marp: true must still return false
+  // even if a fenced code block later in the document contains a marp: true
+  // example.
+  it('T-MR-06: ignores marp: true in code block when front-matter lacks it', () => {
+    const content = `---
+title: Marp Tutorial
+author: Someone
+---
+
+# How to write Marp
+
+\`\`\`markdown
+---
+marp: true
+---
+\`\`\``;
+    expect(contentIsMarp(content)).toBe(false);
+  });
 });
 
 describe('renderMarp', () => {
