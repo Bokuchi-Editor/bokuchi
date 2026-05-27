@@ -261,6 +261,10 @@
         "dark": "Dark",
         "pastel": "Pastel",
         "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },

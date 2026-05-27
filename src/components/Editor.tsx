@@ -51,7 +51,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
   darkMode,
-  theme,
   fileNotFound,
   onStatusChange,
   zoomLevel = 1.0,
@@ -629,7 +628,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             defaultValue={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}
+            theme={darkMode ? 'vs-dark' : 'light'}
             options={{
               minimap: { enabled: minimap },
               fontSize: Math.round(fontSize * zoomLevel),

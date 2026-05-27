@@ -258,9 +258,13 @@
       "themeDescription": "Pilih tema visual untuk antarmuka aplikasi.",
       "themes": {
         "default": "Default",
-        "dark": "Gelap",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Hidup",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },

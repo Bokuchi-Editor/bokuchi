@@ -257,11 +257,15 @@
       "theme": "Тема",
       "themeDescription": "Выберите визуальную тему для интерфейса приложения.",
       "themes": {
-        "default": "По умолчанию",
-        "dark": "Темная",
-        "pastel": "Пастельная",
-        "vivid": "Яркая",
-        "darcula": "Даркула"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
