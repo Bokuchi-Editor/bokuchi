@@ -76,7 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.0",
     "@vitejs/plugin-react": "^4.6.0",
-    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.7",
     "audit-ci": "^7.0.1",
     "eslint": "^10.4.0",
     "globals": "^16.5.0",
