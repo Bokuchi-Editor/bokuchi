@@ -544,17 +544,21 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp 预览不再跳回顶部",
-        "description": "修复了 Marp 连续预览模式下每次输入都会跳回第一页幻灯片的问题。编辑时滚动位置会被保留。"
+      "katexRendering": {
+        "title": "数学公式（KaTeX）渲染修复",
+        "description": "修复了当文档使用某些表达式（如带重音的符号，或表格中的绝对值竖线）时，数学公式可能破坏预览或显示为空白的问题。现在公式可以稳定渲染。"
       },
-      "editorModeShortcut": {
-        "title": "编辑器模式切换快捷键已更改",
-        "description": "修复了 Windows 上的快捷键冲突。编辑器模式切换的快捷键已更改为 Cmd/Ctrl+Shift+D。"
+      "variableCrash": {
+        "title": "修复使用变量功能时的崩溃",
+        "description": "修复了编辑时输入某些变量注释可能导致应用崩溃的问题。变量功能现已稳定。"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "批量关闭包含未保存更改的标签页",
-        "description": "一次性关闭多个标签页时，包含未保存更改的标签页不再被静默跳过——现在会依次提示你是否保存每一个。"
+      "marpFrontmatterPosition": {
+        "title": "Marp 现在仅在文档开头被识别",
+        "description": "显示在代码块内或文档靠后位置的 `marp: true` 前置元数据，不再被误认为真正的 Marp 幻灯片。只有位于文件最开头的前置元数据才会启用 Marp。"
+      },
+      "mermaidStrayElements": {
+        "title": "清理 Mermaid 残留元素",
+        "description": "修复了 Mermaid 可能在窗口底部留下空元素的问题，尤其是在切换到全屏时。"
       }
     }
   },

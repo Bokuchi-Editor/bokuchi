@@ -544,17 +544,21 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "A pré-visualização do Marp não volta mais ao topo",
-        "description": "Corrigido o problema em que a pré-visualização contínua do Marp voltava ao primeiro slide a cada tecla pressionada. Sua posição de rolagem agora é mantida enquanto você edita."
+      "katexRendering": {
+        "title": "Correções na renderização de matemática (KaTeX)",
+        "description": "Corrigido o caso em que fórmulas matemáticas podiam quebrar a pré-visualização ou aparecer em branco quando um documento usava certas expressões (como símbolos acentuados ou barras de valor absoluto dentro de tabelas). As fórmulas agora são renderizadas de forma confiável."
       },
-      "editorModeShortcut": {
-        "title": "Atalho de alternância do modo do editor alterado",
-        "description": "Corrigido um conflito de atalhos de teclado no Windows. O atalho para alternar o modo do editor agora é Cmd/Ctrl+Shift+D."
+      "variableCrash": {
+        "title": "Corrigida uma falha ao usar variáveis",
+        "description": "Corrigido um problema em que digitar certos comentários de variável durante a edição podia travar o aplicativo. O recurso de variáveis agora está estável."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Fechando várias abas com alterações não salvas",
-        "description": "Ao fechar várias abas de uma vez, abas com alterações não salvas não são mais ignoradas silenciosamente — agora será pedido que você salve cada uma em sequência."
+      "marpFrontmatterPosition": {
+        "title": "Marp agora é detectado apenas no início do documento",
+        "description": "Um front matter `marp: true` exibido dentro de um bloco de código ou mais adiante no documento não é mais confundido com um slide Marp real. Apenas o front matter logo no topo do arquivo ativa o Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Limpeza de elementos residuais do Mermaid",
+        "description": "Corrigidos elementos vazios que o Mermaid podia deixar na parte inferior da janela, especialmente ao alternar para tela cheia."
       }
     }
   },

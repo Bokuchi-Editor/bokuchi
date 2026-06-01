@@ -544,17 +544,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Khung xem trước Marp không còn nhảy về đầu",
-        "description": "Đã khắc phục lỗi khung xem trước liên tục của Marp quay về trang chiếu đầu tiên sau mỗi lần nhấn phím. Vị trí cuộn của bạn giờ được giữ nguyên trong khi chỉnh sửa."
+      "katexRendering": {
+        "title": "Sửa lỗi hiển thị công thức (KaTeX)",
+        "description": "Đã sửa các công thức toán có thể làm hỏng bản xem trước hoặc hiển thị trống khi tài liệu dùng một số biểu thức nhất định (như ký hiệu có dấu, hoặc dấu giá trị tuyệt đối bên trong bảng). Công thức nay hiển thị ổn định."
       },
-      "editorModeShortcut": {
-        "title": "Thay đổi phím tắt chuyển chế độ trình soạn thảo",
-        "description": "Đã khắc phục xung đột phím tắt trên Windows. Phím tắt chuyển chế độ trình soạn thảo giờ là Cmd/Ctrl+Shift+D."
+      "variableCrash": {
+        "title": "Sửa lỗi treo ứng dụng khi dùng biến",
+        "description": "Đã sửa lỗi khi gõ một số chú thích biến nhất định trong lúc chỉnh sửa có thể làm treo ứng dụng. Tính năng biến nay đã ổn định."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Đóng nhiều tab có thay đổi chưa lưu",
-        "description": "Khi đóng nhiều tab cùng lúc, các tab có thay đổi chưa lưu không còn bị bỏ qua âm thầm — bạn sẽ được hỏi để lưu từng tab một."
+      "marpFrontmatterPosition": {
+        "title": "Marp chỉ được nhận diện ở đầu tài liệu",
+        "description": "Front matter `marp: true` hiển thị bên trong khối mã hoặc ở phía dưới tài liệu không còn bị nhầm là slide Marp thật. Chỉ front matter ở ngay đầu tệp mới kích hoạt Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Dọn dẹp các phần tử Mermaid còn sót",
+        "description": "Đã sửa các phần tử rỗng mà Mermaid có thể để lại ở cuối cửa sổ, đặc biệt khi chuyển sang chế độ toàn màn hình."
       }
     }
   },

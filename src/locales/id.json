@@ -544,17 +544,21 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Pratinjau Marp Tidak Lagi Lompat ke Atas",
-        "description": "Memperbaiki masalah pratinjau Marp mode kontinu yang kembali ke slide pertama setiap kali menekan tombol. Posisi gulir Anda kini dipertahankan selama mengedit."
+      "katexRendering": {
+        "title": "Perbaikan Render Matematika (KaTeX)",
+        "description": "Memperbaiki rumus matematika yang dapat merusak pratinjau atau tampil kosong ketika dokumen menggunakan ekspresi tertentu (seperti simbol beraksen, atau garis nilai mutlak di dalam tabel). Rumus kini dirender dengan andal."
       },
-      "editorModeShortcut": {
-        "title": "Pintasan Toggle Mode Editor Berubah",
-        "description": "Memperbaiki konflik pintasan keyboard pada Windows. Toggle mode editor kini menggunakan Cmd/Ctrl+Shift+D."
+      "variableCrash": {
+        "title": "Memperbaiki Crash Saat Menggunakan Variabel",
+        "description": "Memperbaiki masalah ketika mengetik komentar variabel tertentu saat menyunting dapat membuat aplikasi crash. Fitur variabel kini stabil."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Menutup Beberapa Tab dengan Perubahan Belum Disimpan",
-        "description": "Saat menutup beberapa tab sekaligus, tab dengan perubahan yang belum disimpan tidak lagi dilewati diam-diam — Anda kini diminta menyimpannya satu per satu."
+      "marpFrontmatterPosition": {
+        "title": "Marp Kini Hanya Dideteksi di Awal Dokumen",
+        "description": "Front matter `marp: true` yang ditampilkan di dalam blok kode atau di bagian bawah dokumen tidak lagi disalahartikan sebagai slide Marp sungguhan. Hanya front matter di paling awal berkas yang mengaktifkan Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Membersihkan Elemen Mermaid yang Tersisa",
+        "description": "Memperbaiki elemen kosong yang dapat ditinggalkan Mermaid di bagian bawah jendela, terutama saat beralih ke layar penuh."
       }
     }
   },
