@@ -11,15 +11,20 @@ async function getMarp(): Promise<Marp> {
   return new MarpClass();
 }
 
-/** YAML front-matter detection for marp: true */
-const MARP_FRONTMATTER_RE = /^---\s*\n[\s\S]*?^marp:\s*true\b[\s\S]*?^---\s*$/m;
+// YAML front-matter is delimited by `---` lines and must sit at the very start
+// of the document. Anchoring the opening fence to position 0 prevents matches
+// against `---` that appear inside fenced code blocks (e.g. a Marp tutorial
+// that shows front-matter as an example).
+const MARP_FRONTMATTER_RE = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 
 /**
  * Check whether the markdown content has a `marp: true` YAML front-matter.
  * Synchronous — no library load needed.
  */
 export function contentIsMarp(content: string): boolean {
-  return MARP_FRONTMATTER_RE.test(content);
+  const match = MARP_FRONTMATTER_RE.exec(content);
+  if (!match) return false;
+  return /^marp:\s*true\b/m.test(match[1]);
 }
 
 export interface MarpRenderResult {

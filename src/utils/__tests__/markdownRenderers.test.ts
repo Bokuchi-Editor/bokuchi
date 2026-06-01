@@ -38,7 +38,6 @@ import {
   processKatex,
   processMermaidBlocks,
   reinitializeMermaid,
-  processRenderingExtensions,
 } from '../markdownRenderers';
 
 import mermaid from 'mermaid';
@@ -141,37 +140,55 @@ describe('contentHasKatex repeated calls', () => {
 });
 
 describe('processKatex', () => {
+  // processKatex replaces math with placeholders and returns a restore() that
+  // swaps the rendered HTML back in (intended to run on marked's output, #354).
+  // For these unit tests we restore against the placeholder markdown directly.
+  const render = async (input: string) => {
+    const { markdown, restore } = await processKatex(input);
+    return { markdown, html: restore(markdown) };
+  };
+
+  it('replaces math with an inert placeholder (no raw HTML before marked)', async () => {
+    const { markdown } = await render('The value $x^2$ is positive');
+    // marked must never see KaTeX output, only an alphanumeric placeholder.
+    expect(markdown).not.toContain('<span');
+    expect(markdown).not.toContain('$');
+    expect(markdown).toMatch(/KaTeXmathPLACEHOLDER\d+END/);
+  });
+
   it('renders display math', async () => {
-    const result = await processKatex('Before $$E = mc^2$$ After');
-    expect(result).toContain('katex-display');
-    expect(result).toContain('E = mc^2');
-    expect(result).toContain('Before');
-    expect(result).toContain('After');
+    const { html } = await render('Before $$E = mc^2$$ After');
+    expect(html).toContain('katex-display');
+    expect(html).toContain('E = mc^2');
+    expect(html).toContain('Before');
+    expect(html).toContain('After');
   });
 
   it('renders inline math', async () => {
-    const result = await processKatex('The value $x^2$ is positive');
-    expect(result).toContain('katex');
-    expect(result).toContain('x^2');
-    expect(result).not.toContain('katex-display');
+    const { html } = await render('The value $x^2$ is positive');
+    expect(html).toContain('katex');
+    expect(html).toContain('x^2');
+    expect(html).not.toContain('katex-display');
   });
 
   it('does not process math inside code blocks', async () => {
     const input = '```\n$x^2$\n```';
-    const result = await processKatex(input);
-    expect(result).toBe(input);
+    const { markdown, html } = await render(input);
+    expect(markdown).toBe(input);
+    expect(html).toBe(input);
   });
 
   it('does not process math inside inline code', async () => {
     const input = 'Use `$x$` for math';
-    const result = await processKatex(input);
-    expect(result).toBe(input);
+    const { markdown, html } = await render(input);
+    expect(markdown).toBe(input);
+    expect(html).toBe(input);
   });
 
   it('handles both display and inline in the same content', async () => {
-    const result = await processKatex('Inline $a$ and display $$b$$');
-    expect(result).toContain('<span class="katex">a</span>');
-    expect(result).toContain('<span class="katex katex-display">b</span>');
+    const { html } = await render('Inline $a$ and display $$b$$');
+    expect(html).toContain('<span class="katex">a</span>');
+    expect(html).toContain('<span class="katex katex-display">b</span>');
   });
 
   it('strips newlines from KaTeX output to prevent table parsing issues', async () => {
@@ -183,9 +200,9 @@ describe('processKatex', () => {
       '<span class="katex"><svg>\n<path d="c-2.7,0,-7.17,-2.7\n-13.5,-8"/>\n</svg></span>'
     );
 
-    const result = await processKatex('$\\sqrt{1}$');
-    expect(result).not.toContain('\n');
-    expect(result).toContain('<svg><path d="c-2.7,0,-7.17,-2.7-13.5,-8"/></svg>');
+    const { html } = await render('$\\sqrt{1}$');
+    expect(html).not.toContain('\n');
+    expect(html).toContain('<svg><path d="c-2.7,0,-7.17,-2.7-13.5,-8"/></svg>');
 
     // Restore default mock behavior
     mockRenderToString.mockImplementation((tex: string, opts?: { displayMode?: boolean }) => {
@@ -264,69 +281,3 @@ describe('reinitializeMermaid', () => {
   });
 });
 
-describe('processRenderingExtensions', () => {
-  beforeEach(() => {
-    mockRender.mockReset();
-  });
-
-  it('processes both KaTeX and Mermaid when enabled and content uses them', async () => {
-    mockRender.mockResolvedValue({ svg: '<svg>diagram</svg>', diagramType: 'flowchart' });
-    const markdown = 'Math: $x^2$ and ```mermaid\ngraph TD\n```';
-    const html = '<p>Math: $x^2$ and</p><pre><code class="language-mermaid">graph TD</code></pre>';
-
-    const result = await processRenderingExtensions(
-      markdown,
-      html,
-      { enableKatex: true, enableMermaid: true, enableMarp: false },
-      false,
-    );
-
-    expect(result.processedMarkdown).toContain('katex');
-    expect(result.processedHtml).toContain('mermaid-diagram');
-  });
-
-  it('skips KaTeX when disabled', async () => {
-    const markdown = 'Math: $x^2$';
-    const html = '<p>Math: $x^2$</p>';
-
-    const result = await processRenderingExtensions(
-      markdown,
-      html,
-      { enableKatex: false, enableMermaid: false, enableMarp: false },
-      false,
-    );
-
-    expect(result.processedMarkdown).toBe(markdown);
-    expect(result.processedHtml).toBe(html);
-  });
-
-  it('skips Mermaid when disabled', async () => {
-    const markdown = '```mermaid\ngraph TD\n```';
-    const html = '<pre><code class="language-mermaid">graph TD</code></pre>';
-
-    const result = await processRenderingExtensions(
-      markdown,
-      html,
-      { enableKatex: true, enableMermaid: false, enableMarp: false },
-      false,
-    );
-
-    expect(result.processedHtml).toBe(html);
-    expect(mockRender).not.toHaveBeenCalled();
-  });
-
-  it('skips processing when content has no matching syntax', async () => {
-    const markdown = 'Hello world';
-    const html = '<p>Hello world</p>';
-
-    const result = await processRenderingExtensions(
-      markdown,
-      html,
-      { enableKatex: true, enableMermaid: true, enableMarp: false },
-      false,
-    );
-
-    expect(result.processedMarkdown).toBe(markdown);
-    expect(result.processedHtml).toBe(html);
-  });
-});
