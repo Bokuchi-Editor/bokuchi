@@ -53,6 +53,10 @@ updates:
       # メジャーバージョンアップは手動で確認
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # KaTeX 0.17.0 で \tilde 等のアクセント×\mathbf が htmlBuilder TypeError でクラッシュ（#354）。
+      # 修正版が出るまで 0.16 系に固定（0.x のため 0.16→0.17 は dependabot 上 minor 扱い）。
+      - dependency-name: "katex"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
 
   # Cargo dependencies
   - package-ecosystem: "cargo"

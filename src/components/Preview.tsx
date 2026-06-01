@@ -45,6 +45,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [exportError, setExportError] = useState<string | null>(null);
   const blobUrlsRef = useRef<string[]>([]);
+  // Latest KaTeX placeholder->HTML restore fn for the current processedContent.
+  // KaTeX renders to placeholders BEFORE marked and is restored AFTER, so both
+  // the preview and the HTML export must run this on marked's output (#354).
+  const katexRestoreRef = useRef<(html: string) => string>((html) => html);
 
   // Revoke all blob URLs on unmount to prevent memory leaks
   useEffect(() => {
@@ -96,15 +100,22 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         if (stale) return;
         let processedMarkdown = processEasterEggBlocks(result.processedContent);
 
-        // Process KaTeX math expressions before marked parsing (lazy-loaded)
+        // Process KaTeX math expressions before marked parsing (lazy-loaded).
+        // Math is replaced with inert placeholders here and the rendered KaTeX
+        // HTML is swapped back in AFTER marked, so marked never sees KaTeX output
+        // (which can collide with markdown syntax — e.g. accent tildes; #354).
+        let restoreKatex: (html: string) => string = (html) => html;
         if (renderingSettings.enableKatex && contentHasKatex(processedMarkdown)) {
           try {
-            processedMarkdown = await processKatex(processedMarkdown);
+            const processed = await processKatex(processedMarkdown);
+            processedMarkdown = processed.markdown;
+            restoreKatex = processed.restore;
           } catch (err) {
             console.warn('KaTeX processing failed, showing raw math syntax:', err);
           }
           if (stale) return;
         }
+        katexRestoreRef.current = restoreKatex;
 
         // Convert Markdown to HTML
         const markedResult = marked(processedMarkdown, {
@@ -120,6 +131,9 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         } else {
           processedHtml = await markedResult;
         }
+
+        // Swap rendered KaTeX HTML back in for its placeholders.
+        processedHtml = restoreKatex(processedHtml);
 
         // Process Mermaid diagrams (lazy-loaded, after marked parsing)
         if (renderingSettings.enableMermaid && contentHasMermaid(processedMarkdown)) {
@@ -343,6 +357,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       } else {
         exportHtml = await markedExportResult;
       }
+
+      // processedContent holds KaTeX placeholders; restore the rendered HTML
+      // after marked (same as the preview path).
+      exportHtml = katexRestoreRef.current(exportHtml);
 
       // Process Mermaid diagrams for export (renders as inline SVG)
       if (renderingSettings.enableMermaid && contentHasMermaid(processedContent)) {
