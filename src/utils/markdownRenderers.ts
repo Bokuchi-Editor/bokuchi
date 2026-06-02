@@ -1,5 +1,4 @@
 import hljs from 'highlight.js';
-import type { RenderingSettings } from '../types/settings';
 
 /** Languages handled by post-processors — skip syntax highlighting */
 const POST_PROCESSED_LANGS = new Set(['mermaid']);
@@ -97,12 +96,37 @@ export function contentHasMermaid(content: string): boolean {
   return MERMAID_BLOCK_DETECT_RE.test(content);
 }
 
+/** Result of {@link processKatex}: placeholder-laden markdown plus a restore step. */
+export interface ProcessedKatex {
+  /** Markdown where each math expression is replaced by an inert placeholder token. */
+  markdown: string;
+  /** Swaps the placeholder tokens back to rendered KaTeX HTML (call after marked). */
+  restore: (html: string) => string;
+}
+
+// Placeholder token wrapping the math index. Intentionally pure [A-Za-z0-9] so
+// marked treats it as a plain word and never transforms it.
+const KATEX_PLACEHOLDER_RE = /KaTeXmathPLACEHOLDER(\d+)END/g;
+const makeKatexPlaceholder = (index: number) => `KaTeXmathPLACEHOLDER${index}END`;
+
 /**
- * Process KaTeX math expressions in markdown.
- * Returns the processed markdown with math rendered to HTML.
- * Code blocks are protected from processing.
+ * Render KaTeX math expressions in markdown, but DON'T inline the HTML — replace
+ * each expression with an inert placeholder and return a `restore()` that swaps
+ * the rendered HTML back in AFTER marked has run.
+ *
+ * Why placeholders instead of inlining the HTML before marked:
+ * KaTeX's output contains characters that are markdown-significant — most
+ * notably a literal tilde for accents (`\tilde` -> `<span class="mord">~</span>`,
+ * in both HTML and MathML output). When two such expressions share a document,
+ * marked's GFM strikethrough (`~...~`) pairs the tildes across expressions and
+ * injects unbalanced `<del>` tags INTO the rendered KaTeX markup, corrupting the
+ * DOM so the whole preview renders blank (issue #354). Keeping the rendered HTML
+ * out of marked's input entirely is the robust fix: marked only ever sees the
+ * alphanumeric placeholders, so no KaTeX output can collide with markdown syntax.
+ *
+ * Code blocks are protected so `$...$` inside them is left untouched.
  */
-export async function processKatex(markdown: string): Promise<string> {
+export async function processKatex(markdown: string): Promise<ProcessedKatex> {
   const katex = await getKatex();
 
   // Protect code blocks
@@ -112,30 +136,32 @@ export async function processKatex(markdown: string): Promise<string> {
     return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
   });
 
-  // Process display math ($$...$$) first
-  result = result.replace(DISPLAY_MATH_RE, (_match, tex: string) => {
+  const renderedMath: string[] = [];
+  const renderMath = (tex: string, displayMode: boolean): string => {
+    let html: string;
     try {
-      return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false }).replace(/\n/g, '');
+      html = katex.renderToString(tex.trim(), { displayMode, throwOnError: false }).replace(/\n/g, '');
     } catch {
-      return `<span class="katex-error" style="color:red;">${tex}</span>`;
+      html = `<span class="katex-error" style="color:red;">${tex}</span>`;
     }
-  });
+    const placeholder = makeKatexPlaceholder(renderedMath.length);
+    renderedMath.push(html);
+    return placeholder;
+  };
 
-  // Process inline math ($...$)
-  result = result.replace(INLINE_MATH_RE, (_match, tex: string) => {
-    try {
-      return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false }).replace(/\n/g, '');
-    } catch {
-      return `<span class="katex-error" style="color:red;">${tex}</span>`;
-    }
-  });
+  // Process display math ($$...$$) first, then inline ($...$).
+  result = result.replace(DISPLAY_MATH_RE, (_match, tex: string) => renderMath(tex, true));
+  result = result.replace(INLINE_MATH_RE, (_match, tex: string) => renderMath(tex, false));
 
   // Restore code blocks
   result = result.replace(/%%CODEBLOCK_(\d+)%%/g, (_match, index: string) => {
     return codeBlocks[parseInt(index)];
   });
 
-  return result;
+  const restore = (html: string): string =>
+    html.replace(KATEX_PLACEHOLDER_RE, (_match, index: string) => renderedMath[parseInt(index)] ?? '');
+
+  return { markdown: result, restore };
 }
 
 let mermaidCounter = 0;
@@ -231,31 +257,4 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
   }
 
   return result;
-}
-
-/**
- * Process markdown content with optional KaTeX and Mermaid rendering.
- * Only loads libraries when the feature is enabled AND the content uses them.
- */
-export async function processRenderingExtensions(
-  markdown: string,
-  html: string,
-  settings: RenderingSettings,
-  darkMode: boolean,
-): Promise<{ processedMarkdown: string; processedHtml: string }> {
-  let processedMarkdown = markdown;
-  let processedHtml = html;
-
-  // KaTeX: process markdown before marked
-  if (settings.enableKatex && contentHasKatex(markdown)) {
-    processedMarkdown = await processKatex(markdown);
-  }
-
-  // Mermaid: process HTML after marked (will be called separately)
-  if (settings.enableMermaid && contentHasMermaid(markdown)) {
-    reinitializeMermaid(darkMode);
-    processedHtml = await processMermaidBlocks(html, darkMode);
-  }
-
-  return { processedMarkdown, processedHtml };
 }

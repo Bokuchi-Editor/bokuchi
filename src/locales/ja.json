@@ -550,17 +550,21 @@
       "improvement": "改善"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp プレビューが先頭に戻る問題を修正",
-        "description": "Marp の連続プレビュー（スプリット表示）で、文字を入力するたびにプレビューが先頭スライドに飛んでしまう問題を修正しました。編集中もスクロール位置がそのまま保たれます。"
+      "katexRendering": {
+        "title": "数式（KaTeX）の表示を修正",
+        "description": "特定の数式（アクセント記号付きの記号や、表内の絶対値の縦棒など）を含む文書で、プレビューが崩れたり真っ白になったりする問題を修正しました。数式が安定して表示されるようになりました。"
       },
-      "editorModeShortcut": {
-        "title": "エディタモード切り替えのショートカット変更",
-        "description": "Windows でのキーボードショートカットの不具合を修正しました。エディタの表示モード切り替えは Cmd/Ctrl+Shift+D に変更されています。"
+      "variableCrash": {
+        "title": "変数機能使用時のクラッシュを修正",
+        "description": "編集中に特定の変数コメントを入力するとアプリがクラッシュする問題を修正しました。変数機能が安定して動作するようになりました。"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "未保存タブの一括クローズ時の挙動を改善",
-        "description": "複数タブを一度に閉じる際、未保存のタブが黙ってスキップされなくなりました。タブごとに保存するかを順番に確認するダイアログが表示されます。"
+      "marpFrontmatterPosition": {
+        "title": "Marp の判定を文書の先頭のみに限定",
+        "description": "コードブロック内や文書の途中に書かれた `marp: true` のフロントマターを、Marp スライドとして誤認しないようにしました。ファイル先頭のフロントマターのみが Marp を有効にします。"
+      },
+      "mermaidStrayElements": {
+        "title": "Mermaid の余分な要素の残留を修正",
+        "description": "特にフルスクリーンに切り替えた際などに、Mermaid がウィンドウ下部に空の要素を残してしまう問題を修正しました。"
       }
     }
   },

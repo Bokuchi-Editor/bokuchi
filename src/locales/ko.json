@@ -550,17 +550,21 @@
       "improvement": "개선"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp 미리보기가 더 이상 맨 위로 튀지 않음",
-        "description": "Marp 연속 미리보기 모드에서 키를 입력할 때마다 첫 슬라이드로 돌아가는 문제를 수정했습니다. 편집 중에도 스크롤 위치가 그대로 유지됩니다."
+      "katexRendering": {
+        "title": "수식(KaTeX) 렌더링 수정",
+        "description": "특정 수식(악센트가 있는 기호나 표 안의 절댓값 막대 등)을 포함한 문서에서 미리 보기가 깨지거나 빈 화면으로 표시되던 문제를 수정했습니다. 이제 수식이 안정적으로 렌더링됩니다."
       },
-      "editorModeShortcut": {
-        "title": "에디터 모드 전환 단축키 변경",
-        "description": "Windows에서 단축키 충돌 문제를 수정했습니다. 에디터 모드 전환 단축키가 Cmd/Ctrl+Shift+D로 변경되었습니다."
+      "variableCrash": {
+        "title": "변수 기능 사용 시 발생하던 충돌 수정",
+        "description": "편집 중 특정 변수 주석을 입력하면 앱이 충돌할 수 있던 문제를 수정했습니다. 변수 기능이 이제 안정적으로 동작합니다."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "저장되지 않은 변경 사항이 있는 여러 탭 닫기",
-        "description": "여러 탭을 한 번에 닫을 때 저장되지 않은 탭이 더 이상 조용히 건너뛰어지지 않습니다. 이제 각 탭에 대해 차례로 저장 여부를 묻습니다."
+      "marpFrontmatterPosition": {
+        "title": "Marp을 문서 시작 부분에서만 인식하도록 변경",
+        "description": "코드 블록 안이나 문서 중간에 표시된 `marp: true` 프런트매터를 더 이상 실제 Marp 슬라이드로 잘못 인식하지 않습니다. 파일 맨 앞의 프런트매터만 Marp을 활성화합니다."
+      },
+      "mermaidStrayElements": {
+        "title": "남아 있던 Mermaid 요소 정리",
+        "description": "특히 전체 화면으로 전환할 때 Mermaid가 창 하단에 빈 요소를 남기던 문제를 수정했습니다."
       }
     }
   },

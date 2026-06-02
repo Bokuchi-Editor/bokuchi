@@ -78,7 +78,19 @@ vi.mock('marked', () => {
 // Mock markdownRenderers for verifying render pipeline calls
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
-  processKatex: vi.fn().mockImplementation(async (md: string) => md.replace(/\$([^$]+)\$/g, '<span class="katex">$1</span>')),
+  // Mirrors the real placeholder/restore contract: math -> placeholder before
+  // marked, rendered HTML swapped back via restore() after marked.
+  processKatex: vi.fn().mockImplementation(async (md: string) => {
+    const rendered: string[] = [];
+    const markdown = md.replace(/\$([^$]+)\$/g, (_m, tex) => {
+      const placeholder = `KaTeXmathPLACEHOLDER${rendered.length}END`;
+      rendered.push(`<span class="katex">${tex}</span>`);
+      return placeholder;
+    });
+    const restore = (html: string) =>
+      html.replace(/KaTeXmathPLACEHOLDER(\d+)END/g, (_m, i) => rendered[Number(i)] ?? '');
+    return { markdown, restore };
+  }),
   contentHasKatex: vi.fn().mockImplementation((content: string) => /\$/.test(content)),
   processMermaidBlocks: vi.fn().mockImplementation(async (html: string) => html.replace(/mermaid-placeholder/g, '<div class="mermaid-rendered">diagram</div>')),
   contentHasMermaid: vi.fn().mockImplementation((content: string) => /mermaid/.test(content)),

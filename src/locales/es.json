@@ -550,17 +550,21 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "La vista previa de Marp ya no salta al principio",
-        "description": "Corregido el problema por el cual la vista previa continua de Marp volvía a la primera diapositiva con cada pulsación de tecla. Ahora se conserva la posición de desplazamiento mientras editas."
+      "katexRendering": {
+        "title": "Correcciones en el renderizado de matemáticas (KaTeX)",
+        "description": "Se corrigió que las fórmulas matemáticas pudieran romper la vista previa o mostrarse en blanco cuando un documento usaba ciertas expresiones (como símbolos con acento o barras de valor absoluto dentro de tablas). Las fórmulas ahora se renderizan de forma fiable."
       },
-      "editorModeShortcut": {
-        "title": "Cambio en el atajo para alternar el modo de editor",
-        "description": "Se corrigió un conflicto de atajos de teclado en Windows. Ahora el atajo para alternar el modo de editor es Cmd/Ctrl+Shift+D."
+      "variableCrash": {
+        "title": "Corregido un cierre inesperado al usar variables",
+        "description": "Se corrigió un problema por el que escribir ciertos comentarios de variable durante la edición podía hacer que la aplicación se cerrara. La función de variables ahora es estable."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Cierre de varias pestañas con cambios sin guardar",
-        "description": "Al cerrar varias pestañas a la vez, las que tienen cambios sin guardar ya no se omiten en silencio: ahora se te pide guardar cada una en orden."
+      "marpFrontmatterPosition": {
+        "title": "Marp ahora se detecta solo al inicio del documento",
+        "description": "Un front matter `marp: true` mostrado dentro de un bloque de código o más abajo en el documento ya no se confunde con una diapositiva Marp real. Solo el front matter situado al principio del archivo activa Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Limpieza de elementos residuales de Mermaid",
+        "description": "Se corrigieron elementos vacíos que Mermaid podía dejar en la parte inferior de la ventana, especialmente al cambiar a pantalla completa."
       }
     }
   },
