@@ -343,7 +343,9 @@
       "wordWrap": "Word Wrap",
       "wordWrapDescription": "Wrap long lines in the editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Show a minimap of the document."
+      "minimapDescription": "Show a minimap of the document.",
+      "showFormattingBar": "Formatting Bar",
+      "showFormattingBarDescription": "Show the formatting toolbar above the editor."
     },
     "interface": {
       "title": "Interface",

@@ -343,7 +343,9 @@
       "wordWrap": "Перенос слов",
       "wordWrapDescription": "Переносить длинные строки в редакторе.",
       "minimap": "Миникарта",
-      "minimapDescription": "Показать миникарту документа."
+      "minimapDescription": "Показать миникарту документа.",
+      "showFormattingBar": "Панель форматирования",
+      "showFormattingBarDescription": "Показать панель инструментов форматирования над редактором."
     },
     "interface": {
       "title": "Интерфейс",

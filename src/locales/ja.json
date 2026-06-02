@@ -343,7 +343,9 @@
       "wordWrap": "ワードラップ",
       "wordWrapDescription": "エディターで長い行を折り返します。",
       "minimap": "ミニマップ",
-      "minimapDescription": "ドキュメントのミニマップを表示します。"
+      "minimapDescription": "ドキュメントのミニマップを表示します。",
+      "showFormattingBar": "書式バー",
+      "showFormattingBarDescription": "エディター上部に書式設定ツールバーを表示します。"
     },
     "interface": {
       "title": "インターフェース",

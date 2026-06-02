@@ -602,6 +602,23 @@ const Settings: React.FC<SettingsProps> = ({
                     </Typography>
                   </CardContent>
                 </Card>
+
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settings.editor.showFormattingBar}
+                          onChange={(e) => handleSettingChange('editor', 'showFormattingBar', e.target.checked)}
+                        />
+                      }
+                      label={t('settings.editor.showFormattingBar')}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {t('settings.editor.showFormattingBarDescription')}
+                    </Typography>
+                  </CardContent>
+                </Card>
               </Box>
             )}
 

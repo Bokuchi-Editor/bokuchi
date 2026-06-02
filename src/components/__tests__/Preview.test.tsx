@@ -376,6 +376,29 @@ describe('MarkdownPreview – scroll sync', () => {
       expect(scrollContainer!.scrollTop).toBe(250);
     });
   });
+
+  // T-PV-09b: a user scroll reports its fraction via onScrollChange.
+  // This is the preview -> editor trigger used by bidirectional sync; if it
+  // regresses, scrolling the preview no longer moves the editor.
+  it('T-PV-09b: user scroll reports fraction through onScrollChange', async () => {
+    const onScrollChange = vi.fn<(fraction: number) => void>();
+    const { container } = await renderPreviewContent({
+      content: 'Long content',
+      onScrollChange,
+    });
+
+    const scrollContainer = container.querySelector('.markdown-preview')?.parentElement as HTMLElement;
+    expect(scrollContainer).not.toBeNull();
+
+    Object.defineProperty(scrollContainer, 'scrollHeight', { value: 1000, configurable: true });
+    Object.defineProperty(scrollContainer, 'clientHeight', { value: 500, configurable: true });
+    scrollContainer.scrollTop = 200;
+
+    fireEvent.scroll(scrollContainer);
+
+    // fraction = 200 / (1000 - 500) = 0.4
+    expect(onScrollChange).toHaveBeenCalledWith(0.4);
+  });
 });
 
 // =========================================================================

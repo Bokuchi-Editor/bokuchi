@@ -343,7 +343,9 @@
       "wordWrap": "Quebra de linha",
       "wordWrapDescription": "Quebre linhas longas no editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Exibir um minimapa do documento."
+      "minimapDescription": "Exibir um minimapa do documento.",
+      "showFormattingBar": "Barra de formatação",
+      "showFormattingBarDescription": "Mostrar a barra de ferramentas de formatação acima do editor."
     },
     "interface": {
       "title": "Interface",
