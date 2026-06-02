@@ -42,6 +42,7 @@ interface AppContentProps {
     tabSize: number;
     wordWrap: boolean;
     minimap: boolean;
+    showFormattingBar: boolean;
     showWhitespace: boolean;
     tableConversion: 'auto' | 'confirm' | 'off';
   };
@@ -413,6 +414,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       tabSize={editorSettings?.tabSize}
                       wordWrap={editorSettings?.wordWrap}
                       minimap={editorSettings?.minimap}
+                      showFormattingBar={editorSettings?.showFormattingBar}
                       showWhitespace={editorSettings?.showWhitespace}
                       tableConversion={editorSettings?.tableConversion}
                       onSnackbar={onSnackbar}
@@ -467,6 +469,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     tabSize={editorSettings?.tabSize}
                     wordWrap={editorSettings?.wordWrap}
                     minimap={editorSettings?.minimap}
+                    showFormattingBar={editorSettings?.showFormattingBar}
                     showWhitespace={editorSettings?.showWhitespace}
                     tableConversion={editorSettings?.tableConversion}
                     onSnackbar={onSnackbar}

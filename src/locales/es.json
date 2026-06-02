@@ -343,7 +343,9 @@
       "wordWrap": "Ajuste de línea",
       "wordWrapDescription": "Ajustar líneas largas en el editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Muestra un minimapa del documento."
+      "minimapDescription": "Muestra un minimapa del documento.",
+      "showFormattingBar": "Barra de formato",
+      "showFormattingBarDescription": "Mostrar la barra de herramientas de formato sobre el editor."
     },
     "interface": {
       "title": "Interfaz",

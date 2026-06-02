@@ -10,6 +10,7 @@ export interface EditorSettings {
   tabSize: number;
   wordWrap: boolean;
   minimap: boolean;
+  showFormattingBar: boolean;
 }
 
 // Appearance settings type definition
@@ -81,6 +82,7 @@ export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   tabSize: 2,
   wordWrap: true,
   minimap: true,
+  showFormattingBar: true,
 };
 
 export const DEFAULT_APPEARANCE_SETTINGS: AppearanceSettings = {
@@ -96,7 +98,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   outlineDisplayMode: 'persistent',
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',
-  scrollSyncMode: 'editor-to-preview',
+  scrollSyncMode: 'bidirectional',
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {

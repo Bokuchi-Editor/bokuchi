@@ -343,7 +343,9 @@
       "wordWrap": "Bungkus Kata",
       "wordWrapDescription": "Bungkus baris panjang di editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Tampilkan minimap dokumen."
+      "minimapDescription": "Tampilkan minimap dokumen.",
+      "showFormattingBar": "Bilah Pemformatan",
+      "showFormattingBarDescription": "Tampilkan bilah alat pemformatan di atas editor."
     },
     "interface": {
       "title": "Antarmuka",

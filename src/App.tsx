@@ -427,6 +427,7 @@ function AppDesktop() {
             tabSize: appSettings.editor.tabSize,
             wordWrap: appSettings.editor.wordWrap,
             minimap: appSettings.editor.minimap,
+            showFormattingBar: appSettings.editor.showFormattingBar,
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}

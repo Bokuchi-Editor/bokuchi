@@ -343,7 +343,9 @@
       "wordWrap": "Zeilenumbruch",
       "wordWrapDescription": "Lange Zeilen im Editor umbrechen.",
       "minimap": "Minimap",
-      "minimapDescription": "Zeigt eine Minimap des Dokuments an."
+      "minimapDescription": "Zeigt eine Minimap des Dokuments an.",
+      "showFormattingBar": "Formatierungsleiste",
+      "showFormattingBarDescription": "Formatierungsleiste über dem Editor anzeigen."
     },
     "interface": {
       "title": "Oberfläche",

@@ -343,7 +343,9 @@
       "wordWrap": "शब्द लपेटना",
       "wordWrapDescription": "संपादक में लंबी लाइनों को लपेटें।",
       "minimap": "मिनीमैप",
-      "minimapDescription": "दस्तावेज़ का मिनीमैप दिखाएं।"
+      "minimapDescription": "दस्तावेज़ का मिनीमैप दिखाएं।",
+      "showFormattingBar": "फ़ॉर्मेटिंग बार",
+      "showFormattingBarDescription": "एडिटर के ऊपर फ़ॉर्मेटिंग टूलबार दिखाएं।"
     },
     "interface": {
       "title": "इंटरफेस",

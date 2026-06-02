@@ -343,7 +343,9 @@
       "wordWrap": "التفاف النص",
       "wordWrapDescription": "التفاف الأسطر الطويلة في المحرر.",
       "minimap": "الخريطة المصغرة",
-      "minimapDescription": "عرض خريطة مصغرة للمستند."
+      "minimapDescription": "عرض خريطة مصغرة للمستند.",
+      "showFormattingBar": "شريط التنسيق",
+      "showFormattingBarDescription": "إظهار شريط أدوات التنسيق أعلى المحرر."
     },
     "interface": {
       "title": "الواجهة",

@@ -35,6 +35,7 @@ interface EditorProps {
   tabSize?: number;
   wordWrap?: boolean;
   minimap?: boolean;
+  showFormattingBar?: boolean;
   showWhitespace?: boolean;
   tableConversion?: 'auto' | 'confirm' | 'off';
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
@@ -61,6 +62,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   tabSize = 2,
   wordWrap = true,
   minimap = false,
+  showFormattingBar = true,
   showWhitespace = false,
   tableConversion = 'confirm',
   onSnackbar,
@@ -89,6 +91,11 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const disposablesRef = useRef<import('monaco-editor').IDisposable[]>([]);
   const isProgrammaticScrollRef = useRef(false);
+  // Keep the latest onScrollChange reachable from the mount-time scroll listener
+  // so that changing scrollSyncMode at runtime (e.g. off -> bidirectional) takes
+  // effect without remounting the editor.
+  const onScrollChangeRef = useRef(onScrollChange);
+  onScrollChangeRef.current = onScrollChange;
 
   // Dispose Monaco listeners on unmount
   useEffect(() => {
@@ -497,20 +504,22 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       );
     }
 
-    // Sync scroll: notify parent of scroll position
-    if (onScrollChange) {
-      disposablesRef.current.push(
-        editor.onDidScrollChange(() => {
-          // Skip events triggered by our own programmatic scroll to avoid feedback loops
-          if (isProgrammaticScrollRef.current) return;
-          const scrollTop = editor.getScrollTop();
-          const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
-          if (maxScroll > 0) {
-            onScrollChange(scrollTop / maxScroll);
-          }
-        })
-      );
-    }
+    // Sync scroll: notify parent of scroll position.
+    // Always register the listener and dispatch through onScrollChangeRef so that
+    // toggling scrollSyncMode at runtime is honored without remounting the editor.
+    disposablesRef.current.push(
+      editor.onDidScrollChange(() => {
+        const report = onScrollChangeRef.current;
+        if (!report) return;
+        // Skip events triggered by our own programmatic scroll to avoid feedback loops
+        if (isProgrammaticScrollRef.current) return;
+        const scrollTop = editor.getScrollTop();
+        const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
+        if (maxScroll > 0) {
+          report(scrollTop / maxScroll);
+        }
+      })
+    );
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -564,7 +573,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         </Box>
       </Box>
 
-      <MarkdownToolbar editorRef={editorRef} />
+      {showFormattingBar && <MarkdownToolbar editorRef={editorRef} />}
 
       <Box sx={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <SearchReplacePanel

@@ -343,7 +343,9 @@
       "wordWrap": "Xuống dòng tự động",
       "wordWrapDescription": "Xuống dòng tự động cho các dòng dài trong trình soạn thảo.",
       "minimap": "Bản đồ thu nhỏ",
-      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu."
+      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu.",
+      "showFormattingBar": "Thanh định dạng",
+      "showFormattingBarDescription": "Hiển thị thanh công cụ định dạng phía trên trình soạn thảo."
     },
     "interface": {
       "title": "Giao diện",

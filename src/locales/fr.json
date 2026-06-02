@@ -343,7 +343,9 @@
       "wordWrap": "Retour à la ligne",
       "wordWrapDescription": "Envelopper les lignes longues dans l'éditeur.",
       "minimap": "Minicarte",
-      "minimapDescription": "Affiche une minimap du document."
+      "minimapDescription": "Affiche une minimap du document.",
+      "showFormattingBar": "Barre de mise en forme",
+      "showFormattingBarDescription": "Afficher la barre d'outils de mise en forme au-dessus de l'éditeur."
     },
     "interface": {
       "title": "Interface",

@@ -343,7 +343,9 @@
       "wordWrap": "自動換行",
       "wordWrapDescription": "在編輯器中自動換行長行。",
       "minimap": "小地圖",
-      "minimapDescription": "顯示文件的縮略圖。"
+      "minimapDescription": "顯示文件的縮略圖。",
+      "showFormattingBar": "格式列",
+      "showFormattingBarDescription": "在編輯器上方顯示格式工具列。"
     },
     "interface": {
       "title": "介面",
