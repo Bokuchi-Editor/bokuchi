@@ -548,17 +548,21 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "L'aperçu Marp ne saute plus en haut",
-        "description": "Correction du problème par lequel l'aperçu continu Marp revenait à la première diapositive à chaque frappe. Votre position de défilement est désormais conservée pendant l'édition."
+      "katexRendering": {
+        "title": "Corrections du rendu mathématique (KaTeX)",
+        "description": "Correction des formules mathématiques qui pouvaient casser l'aperçu ou s'afficher vides lorsqu'un document utilisait certaines expressions (symboles accentués ou barres de valeur absolue dans les tableaux). Les formules s'affichent désormais de façon fiable."
       },
-      "editorModeShortcut": {
-        "title": "Changement du raccourci de bascule du mode d'édition",
-        "description": "Correction d'un conflit de raccourcis clavier sous Windows. Le raccourci pour basculer le mode d'édition est désormais Cmd/Ctrl+Maj+D."
+      "variableCrash": {
+        "title": "Correction d'un plantage lors de l'utilisation des variables",
+        "description": "Correction d'un problème où la saisie de certains commentaires de variable pendant l'édition pouvait faire planter l'application. La fonction de variables est désormais stable."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Fermeture de plusieurs onglets avec modifications non enregistrées",
-        "description": "Lors de la fermeture de plusieurs onglets à la fois, les onglets contenant des modifications non enregistrées ne sont plus ignorés silencieusement : il vous est désormais proposé d'enregistrer chacun à tour de rôle."
+      "marpFrontmatterPosition": {
+        "title": "Marp détecté uniquement au début du document",
+        "description": "Un front matter `marp: true` affiché dans un bloc de code ou plus bas dans le document n'est plus pris à tort pour une vraie diapositive Marp. Seul le front matter situé tout en haut du fichier active Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Nettoyage des éléments Mermaid résiduels",
+        "description": "Correction d'éléments vides que Mermaid pouvait laisser en bas de la fenêtre, en particulier lors du passage en plein écran."
       }
     }
   },

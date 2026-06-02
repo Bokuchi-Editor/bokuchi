@@ -548,17 +548,21 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp Preview No Longer Jumps to Top",
-        "description": "Fixed the Marp continuous-mode preview scrolling back to the first slide on every keystroke. Your scroll position is now preserved while you edit."
+      "katexRendering": {
+        "title": "Math (KaTeX) Rendering Fixes",
+        "description": "Fixed math formulas that could break the preview or render blank when a document used certain expressions (such as accented symbols, or absolute-value bars inside tables). Math now renders reliably."
       },
-      "editorModeShortcut": {
-        "title": "Editor Mode Toggle Shortcut Changed",
-        "description": "Fixed a keyboard shortcut conflict on Windows. The editor mode toggle is now Cmd/Ctrl+Shift+D."
+      "variableCrash": {
+        "title": "Fixed a Crash When Using Variables",
+        "description": "Fixed an issue where typing certain variable comments while editing could crash the app. The variable feature is now stable."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Closing Multiple Tabs With Unsaved Changes",
-        "description": "When you close multiple tabs at once, any tab with unsaved changes is no longer silently skipped — you're now prompted to save each one in turn."
+      "marpFrontmatterPosition": {
+        "title": "Marp Now Detected Only at the Document Start",
+        "description": "A `marp: true` front matter shown inside a code block or further down the document is no longer mistaken for a real Marp slide. Only front matter at the very top of the file enables Marp."
+      },
+      "mermaidStrayElements": {
+        "title": "Cleaned Up Stray Mermaid Elements",
+        "description": "Fixed leftover empty elements that Mermaid could leave at the bottom of the window, especially when switching to fullscreen."
       }
     }
   },
