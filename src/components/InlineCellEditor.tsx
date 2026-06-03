@@ -21,6 +21,7 @@ interface InlineCellEditorProps {
   top: number;
   left: number;
   width: number;
+  /** The cell's height, used as the editor's minimum height. */
   height: number;
   initialValue: string;
   fontSize: number;
@@ -31,10 +32,20 @@ interface InlineCellEditorProps {
   onCancel: () => void;
 }
 
+/** Cap on the editor's auto-grown height; it scrolls internally beyond this. */
+const MAX_EDITOR_HEIGHT = 320;
+
 /**
- * A single-line input floated over a preview table cell for inline editing
+ * A word-wrapping textarea floated over a preview table cell for inline editing
  * (#1). It edits the raw Markdown cell text; the parent maps it back to source.
  * Enter commits and moves down, Tab/Shift+Tab move right/left, Esc cancels.
+ *
+ * A textarea (not an <input>) is used so long cell text wraps the same way the
+ * rendered table wraps it, instead of scrolling out of view on a single line.
+ * The box auto-grows downward to fit the wrapped text — starting at the cell's
+ * height and capping at MAX_EDITOR_HEIGHT, beyond which it scrolls internally.
+ * Note Markdown table cells can't hold a literal newline, so Enter still
+ * commits/navigates rather than inserting one.
  *
  * The component stays MOUNTED across cell navigation (the parent only changes
  * its position/value/cellKey). That avoids a focus event per move, which is
@@ -59,7 +70,7 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
 }) => {
   const [value, setValue] = useState(initialValue);
   const [trackedKey, setTrackedKey] = useState(cellKey);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const doneRef = useRef(false);
   const composingRef = useRef(false);
   // Timestamp of the last composition end. Engines differ on ordering of the
@@ -108,6 +119,16 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
     rafIdsRef.current.push(r1);
   };
 
+  // Grow the textarea to fit the wrapped text (down to the cell height, up to
+  // the cap, scrolling internally beyond it). The CSS minHeight keeps the box
+  // at least as tall as the cell even when the content is shorter.
+  const autoSize = () => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, MAX_EDITOR_HEIGHT)}px`;
+  };
+
   // Focus on first open; select all of the cell text after each cell change.
   // useLayoutEffect runs after the DOM reflects the new value (set during
   // render above) and before paint, so the selection is always the whole cell.
@@ -122,6 +143,7 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
         firstRunRef.current = false;
       }
       el.setSelectionRange(0, el.value.length);
+      autoSize();
     });
   }, [cellKey]);
 
@@ -136,7 +158,7 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
     onCommit(value, dir);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Ignore keys that belong to an IME composition or its confirming Enter.
     if (
       composingRef.current ||
@@ -159,10 +181,15 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
   };
 
   return (
-    <input
+    <textarea
       ref={inputRef}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      rows={1}
+      wrap="soft"
+      onChange={(e) => {
+        setValue(e.target.value);
+        autoSize();
+      }}
       onKeyDown={handleKeyDown}
       onCompositionStart={() => {
         composingRef.current = true;
@@ -170,6 +197,7 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
       onCompositionEnd={() => {
         composingRef.current = false;
         compositionEndedAtRef.current = Date.now();
+        autoSize();
       }}
       onBlur={() => commit(null)}
       spellCheck={false}
@@ -178,13 +206,18 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
         top,
         left,
         width,
-        height,
+        minHeight: height,
+        maxHeight: MAX_EDITOR_HEIGHT,
         boxSizing: 'border-box',
         margin: 0,
-        padding: '0 6px',
+        padding: '4px 6px',
         fontSize: `${fontSize}px`,
         fontFamily: 'inherit',
-        lineHeight: 'normal',
+        lineHeight: 1.4,
+        whiteSpace: 'pre-wrap',
+        overflowWrap: 'anywhere',
+        overflowY: 'auto',
+        resize: 'none',
         border: '2px solid #1976d2',
         borderRadius: 0,
         outline: 'none',
