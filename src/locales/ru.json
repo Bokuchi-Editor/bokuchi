@@ -486,6 +486,7 @@
     "quote": "Цитата",
     "horizontalRule": "Горизонтальная линия",
     "table": "Таблица",
+    "formatTable": "Форматировать таблицу",
     "strikethrough": "Зачёркнутый"
   },
   "outline": {

@@ -486,6 +486,7 @@
     "quote": "Quote",
     "horizontalRule": "Horizontal Rule",
     "table": "Table",
+    "formatTable": "Format Table",
     "strikethrough": "Strikethrough"
   },
   "outline": {

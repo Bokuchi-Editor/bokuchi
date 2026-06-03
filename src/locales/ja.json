@@ -486,6 +486,7 @@
     "quote": "引用",
     "horizontalRule": "水平線",
     "table": "テーブル",
+    "formatTable": "テーブルを整形",
     "strikethrough": "取り消し線"
   },
   "outline": {
