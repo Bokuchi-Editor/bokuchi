@@ -1,48 +1,29 @@
 import React from 'react';
 import {
-  Box,
-  Dialog,
-  IconButton,
-  Typography,
-  FormControlLabel,
-  List,
-  ListItem,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Chip,
   Alert,
-  RadioGroup,
-  Radio,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  Tabs,
-  Tab,
-  Slider,
-  Switch,
-  DialogTitle,
-  DialogContent,
+  Box,
+  Button,
+  Dialog,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Slide,
   Snackbar,
+  Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
-import { Upload, Download } from '@mui/icons-material';
-
 import {
   Close,
-  Settings as SettingsIcon,
   Code,
-  Palette,
-  Edit,
   Computer,
+  Edit,
+  Palette,
+  Settings as SettingsIcon,
   Tune,
-  Refresh,
 } from '@mui/icons-material';
-import { getVisibleThemes } from '../themes';
 import { TransitionProps } from '@mui/material/transitions';
-import { Slide } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AppSettings } from '../types/settings';
 import {
@@ -50,10 +31,15 @@ import {
   SETTINGS_FOCUS_TAB_INDEX,
   SETTINGS_FOCUS_ELEMENT_ID,
 } from '../types/settingsFocus';
-import { storeApi } from '../api/storeApi';
-import { desktopApi } from '../api/desktopApi';
-import { variableApi } from '../api/variableApi';
-import { LANGUAGE_OPTIONS } from '../constants/languages';
+import AppearanceTab from './settings/AppearanceTab';
+import EditorTab from './settings/EditorTab';
+import InterfaceTab from './settings/InterfaceTab';
+import VariablesTab from './settings/VariablesTab';
+import AdvancedTab from './settings/AdvancedTab';
+import { useSettingsActions, SNACKBAR_AUTO_HIDE_DURATION_MS } from './settings/useSettingsActions';
+
+/** How long a deep-linked setting stays highlighted after the dialog opens (ms). */
+const FOCUS_HIGHLIGHT_DURATION_MS = 2400;
 
 interface SettingsProps {
   open: boolean;
@@ -63,45 +49,6 @@ interface SettingsProps {
   as400Unlocked?: boolean;
   focusTarget?: SettingsFocusTarget | null;
 }
-
-interface RenderingToggleRowProps {
-  target: SettingsFocusTarget;
-  highlighted: boolean;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label: string;
-  description: string;
-  sx?: object;
-}
-
-const RenderingToggleRow: React.FC<RenderingToggleRowProps> = ({
-  target,
-  highlighted,
-  checked,
-  onChange,
-  label,
-  description,
-  sx,
-}) => (
-  <Box
-    id={SETTINGS_FOCUS_ELEMENT_ID[target]}
-    sx={{
-      p: 1,
-      borderRadius: 1,
-      transition: 'background-color 600ms ease',
-      backgroundColor: highlighted ? 'action.selected' : 'transparent',
-      ...sx,
-    }}
-  >
-    <FormControlLabel
-      control={<Switch checked={checked} onChange={(e) => onChange(e.target.checked)} />}
-      label={label}
-    />
-    <Typography variant="body2" color="text.secondary">
-      {description}
-    </Typography>
-  </Box>
-);
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -121,9 +68,19 @@ const Settings: React.FC<SettingsProps> = ({
   focusTarget,
 }) => {
   const { t } = useTranslation();
-  const visibleThemes = getVisibleThemes(as400Unlocked ? ['as400'] : []);
   const [activeTab, setActiveTab] = React.useState(0);
   const [highlightedTarget, setHighlightedTarget] = React.useState<SettingsFocusTarget | null>(null);
+  const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
+
+  const {
+    snackbar,
+    closeSnackbar,
+    notify,
+    handleSettingChange,
+    handleExportSettings,
+    handleImportSettings,
+    handleResetSettings,
+  } = useSettingsActions(settings, onSettingsChange);
 
   // Jump to the requested setting when the dialog opens with a focus target.
   // Switch to the right tab synchronously, then scroll-into-view on the next tick
@@ -145,252 +102,17 @@ const Settings: React.FC<SettingsProps> = ({
       });
     });
 
-    const clearId = window.setTimeout(() => setHighlightedTarget(null), 2400);
+    const clearId = window.setTimeout(() => setHighlightedTarget(null), FOCUS_HIGHLIGHT_DURATION_MS);
     return () => {
       cancelAnimationFrame(rafId);
       window.clearTimeout(clearId);
     };
   }, [open, focusTarget]);
-  const [newVariableKey, setNewVariableKey] = React.useState('');
-  const [newVariableValue, setNewVariableValue] = React.useState('');
-  const [error, setError] = React.useState('');
-  const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
 
-  const handleAddVariable = () => {
-    if (!newVariableKey.trim()) {
-      setError(t('settings.globalVariables.errors.nameRequired'));
-      return;
-    }
-    if (newVariableKey.includes(' ')) {
-      setError(t('settings.globalVariables.errors.noSpaces'));
-      return;
-    }
-    if (settings.globalVariables[newVariableKey]) {
-      setError(t('settings.globalVariables.errors.alreadyExists'));
-      return;
-    }
-
-    const updatedVariables = {
-      ...settings.globalVariables,
-      [newVariableKey]: newVariableValue,
-    };
-    onSettingsChange({
-      ...settings,
-      globalVariables: updatedVariables,
-    });
-    setNewVariableKey('');
-    setNewVariableValue('');
-    setError('');
-  };
-
-  const handleRemoveVariable = (key: string) => {
-    const updatedVariables = { ...settings.globalVariables };
-    delete updatedVariables[key];
-    onSettingsChange({
-      ...settings,
-      globalVariables: updatedVariables,
-    });
-  };
-
-  const handleUpdateVariable = (key: string, value: string) => {
-    const updatedVariables = {
-      ...settings.globalVariables,
-      [key]: value,
-    };
-    onSettingsChange({
-      ...settings,
-      globalVariables: updatedVariables,
-    });
-  };
-
-  const handleExportVariables = async () => {
-    try {
-      const yamlContent = await variableApi.exportVariablesToYAML();
-      if (yamlContent) {
-        const result = await desktopApi.saveYamlFile(yamlContent, 'variables.yaml');
-        if (result.success) {
-          setSnackbar({
-            open: true,
-            message: t('settings.globalVariables.exportSuccess'),
-            severity: 'success'
-          });
-        } else {
-          if (result.error === 'Save cancelled by user') {
-            // Don't show notification if user cancelled
-            return;
-          }
-          setSnackbar({
-            open: true,
-            message: result.error || t('settings.globalVariables.exportError'),
-            severity: 'error'
-          });
-        }
-      } else {
-        setSnackbar({
-          open: true,
-          message: t('settings.globalVariables.exportError'),
-          severity: 'error'
-        });
-      }
-    } catch (error) {
-      console.error('Failed to export variables:', error);
-      setSnackbar({
-        open: true,
-        message: t('settings.globalVariables.exportError'),
-        severity: 'error'
-      });
-    }
-  };
-
-  const handleImportVariables = async () => {
-    try {
-      const result = await desktopApi.openYamlFile();
-      if (result.content) {
-        const importResult = await variableApi.loadVariablesFromYAML(result.content);
-        if (importResult.success) {
-          // Reload global variables
-          const updatedVariables = await variableApi.getGlobalVariables();
-          onSettingsChange({
-            ...settings,
-            globalVariables: updatedVariables,
-          });
-          setSnackbar({
-            open: true,
-            message: t('settings.globalVariables.importSuccess'),
-            severity: 'success'
-          });
-        } else {
-          setSnackbar({
-            open: true,
-            message: importResult.error || t('settings.globalVariables.importError'),
-            severity: 'error'
-          });
-        }
-      } else {
-        if (result.error === 'File selection cancelled by user') {
-          // Don't show notification if user cancelled
-          return;
-        }
-        setSnackbar({
-          open: true,
-          message: result.error || t('settings.globalVariables.importError'),
-          severity: 'error'
-        });
-      }
-    } catch (error) {
-      console.error('Failed to import variables:', error);
-      setSnackbar({
-        open: true,
-        message: t('settings.globalVariables.importError'),
-        severity: 'error'
-      });
-    }
-  };
-
-  const handleSettingChange = (category: keyof AppSettings, key: string, value: string | number | boolean) => {
-    onSettingsChange({
-      ...settings,
-      [category]: {
-        ...settings[category],
-        [key]: value,
-      },
-    });
-  };
-
-  const handleExportSettings = async () => {
-    try {
-      const settingsJson = await storeApi.exportAppSettings();
-      const result = await desktopApi.exportSettingsFile(settingsJson);
-
-      if (result.success) {
-        setSnackbar({
-          open: true,
-          message: t('settings.advanced.exportSuccess'),
-          severity: 'success'
-        });
-      } else {
-        if (result.error === 'Export cancelled by user') {
-          // Don't show notification if user cancelled
-          return;
-        }
-        setSnackbar({
-          open: true,
-          message: result.error || t('settings.advanced.exportError'),
-          severity: 'error'
-        });
-      }
-    } catch (error) {
-      console.error('Failed to export settings:', error);
-      setSnackbar({
-        open: true,
-        message: t('settings.advanced.exportError'),
-        severity: 'error'
-      });
-    }
-  };
-
-  const handleImportSettings = async () => {
-    try {
-      const result = await desktopApi.importSettingsFile();
-
-      if (result.error) {
-        if (result.error === 'No file selected') {
-          // Don't show notification if user cancelled
-          return;
-        }
-        setSnackbar({
-          open: true,
-          message: result.error,
-          severity: 'error'
-        });
-        return;
-      }
-
-      await storeApi.importAppSettings(result.content);
-
-      // Reload settings
-      const newSettings = await storeApi.loadAppSettings();
-      onSettingsChange(newSettings);
-
-      setSnackbar({
-        open: true,
-        message: t('settings.advanced.importSuccess'),
-        severity: 'success'
-      });
-    } catch (error) {
-      console.error('Failed to import settings:', error);
-      setSnackbar({
-        open: true,
-        message: t('settings.advanced.importError'),
-        severity: 'error'
-      });
-    }
-  };
-
-  const handleResetSettings = async () => {
-    try {
-      await storeApi.resetAppSettings();
-      const defaultSettings = await storeApi.loadAppSettings();
-      onSettingsChange(defaultSettings);
+  const handleConfirmReset = async () => {
+    const succeeded = await handleResetSettings();
+    if (succeeded) {
       setResetDialogOpen(false);
-
-      setSnackbar({
-        open: true,
-        message: t('settings.advanced.resetSuccess'),
-        severity: 'success'
-      });
-    } catch (error) {
-      console.error('Failed to reset settings:', error);
-      setSnackbar({
-        open: true,
-        message: t('settings.advanced.resetError'),
-        severity: 'error'
-      });
     }
   };
 
@@ -439,888 +161,66 @@ const Settings: React.FC<SettingsProps> = ({
               variant="scrollable"
               scrollButtons="auto"
             >
-              <Tab
-                icon={<Palette />}
-                label={t('settings.appearance.title')}
-                iconPosition="start"
-              />
-              <Tab
-                icon={<Edit />}
-                label={t('settings.editor.title')}
-                iconPosition="start"
-              />
-              <Tab
-                icon={<Computer />}
-                label={t('settings.interface.title')}
-                iconPosition="start"
-              />
-              <Tab
-                icon={<Code />}
-                label={t('settings.globalVariables.title')}
-                iconPosition="start"
-              />
-              <Tab
-                icon={<Tune />}
-                label={t('settings.advanced.title')}
-                iconPosition="start"
-              />
+              <Tab icon={<Palette />} label={t('settings.appearance.title')} iconPosition="start" />
+              <Tab icon={<Edit />} label={t('settings.editor.title')} iconPosition="start" />
+              <Tab icon={<Computer />} label={t('settings.interface.title')} iconPosition="start" />
+              <Tab icon={<Code />} label={t('settings.globalVariables.title')} iconPosition="start" />
+              <Tab icon={<Tune />} label={t('settings.advanced.title')} iconPosition="start" />
             </Tabs>
           </Box>
 
           <Box sx={{ p: 3 }}>
-            {/* Appearance Tab */}
             {activeTab === 0 && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  {t('settings.appearance.title')}
-                </Typography>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.appearance.themeDescription')}
-                    </Typography>
-                    <FormControl fullWidth>
-                      <InputLabel id="theme-select-label">{t('settings.appearance.theme')}</InputLabel>
-                      <Select
-                        labelId="theme-select-label"
-                        value={settings.appearance.theme}
-                        label={t('settings.appearance.theme')}
-                        onChange={(e) => handleSettingChange('appearance', 'theme', e.target.value)}
-                      >
-                        {visibleThemes.map((themeOption) => (
-                          <MenuItem key={themeOption.name} value={themeOption.name}>
-                            {t(`settings.appearance.themes.${themeOption.name}`, themeOption.displayName)}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-              </Box>
+              <AppearanceTab
+                settings={settings}
+                onSettingChange={handleSettingChange}
+                as400Unlocked={as400Unlocked}
+              />
             )}
-
-            {/* Editor Tab */}
             {activeTab === 1 && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  {t('settings.editor.title')}
-                </Typography>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.editor.fontSizeDescription')}
-                    </Typography>
-                    <Box sx={{ px: 2, maxWidth: 400 }}>
-                      <Typography gutterBottom>
-                        {t('settings.editor.fontSize')}: {settings.editor.fontSize}px
-                      </Typography>
-                      <Slider
-                        value={settings.editor.fontSize}
-                        onChange={(_, value) => handleSettingChange('editor', 'fontSize', value)}
-                        min={10}
-                        max={24}
-                        step={1}
-                        marks
-                        valueLabelDisplay="auto"
-                      />
-                    </Box>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.editor.showLineNumbers}
-                          onChange={(e) => handleSettingChange('editor', 'showLineNumbers', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.editor.showLineNumbers')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.editor.showLineNumbersDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.editor.tabSizeDescription')}
-                    </Typography>
-                    <Box sx={{ px: 2, maxWidth: 400 }}>
-                      <Typography gutterBottom>
-                        {t('settings.editor.tabSize')}: {settings.editor.tabSize}
-                      </Typography>
-                      <Slider
-                        value={settings.editor.tabSize}
-                        onChange={(_, value) => handleSettingChange('editor', 'tabSize', value)}
-                        min={2}
-                        max={8}
-                        step={1}
-                        marks
-                        valueLabelDisplay="auto"
-                      />
-                    </Box>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.editor.wordWrap}
-                          onChange={(e) => handleSettingChange('editor', 'wordWrap', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.editor.wordWrap')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.editor.wordWrapDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.editor.minimap}
-                          onChange={(e) => handleSettingChange('editor', 'minimap', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.editor.minimap')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.editor.minimapDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.editor.showFormattingBar}
-                          onChange={(e) => handleSettingChange('editor', 'showFormattingBar', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.editor.showFormattingBar')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.editor.showFormattingBarDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
+              <EditorTab settings={settings} onSettingChange={handleSettingChange} />
             )}
-
-            {/* Interface Tab */}
             {activeTab === 2 && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  {t('settings.interface.title')}
-                </Typography>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.language.description')}
-                    </Typography>
-                    <FormControl fullWidth>
-                      <InputLabel>{t('settings.language.selectLanguage')}</InputLabel>
-                      <Select
-                        value={settings.interface.language}
-                        onChange={(e) => handleSettingChange('interface', 'language', e.target.value)}
-                        label={t('settings.language.selectLanguage')}
-                      >
-                        {LANGUAGE_OPTIONS.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {t(option.translationKey)}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.tabLayout.description')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.tabLayout}
-                        onChange={(e) => handleSettingChange('interface', 'tabLayout', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="horizontal"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.tabLayout.horizontal')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.tabLayout.horizontalDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="vertical"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.tabLayout.vertical')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.tabLayout.verticalDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="subtitle1" gutterBottom>
-                      {t('settings.tabLayout.closeButtonPosition')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.tabLayout.closeButtonPositionDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.tabCloseButtonPosition}
-                        onChange={(e) => handleSettingChange('interface', 'tabCloseButtonPosition', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="left"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.tabLayout.closeButtonLeft')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.tabLayout.closeButtonLeftDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="right"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.tabLayout.closeButtonRight')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.tabLayout.closeButtonRightDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.interface.zoomLevelDescription')}
-                    </Typography>
-                    <Box sx={{ px: 2, maxWidth: 400 }}>
-                      <Typography gutterBottom>
-                        {t('settings.interface.zoomLevel')}: {Math.round(settings.interface.zoomLevel * 100)}%
-                      </Typography>
-                      <Slider
-                        value={settings.interface.zoomLevel}
-                        onChange={(_, value) => handleSettingChange('interface', 'zoomLevel', value)}
-                        min={0.5}
-                        max={2.0}
-                        step={0.1}
-                        marks
-                        valueLabelDisplay="auto"
-                        valueLabelFormat={(value) => `${Math.round(value * 100)}%`}
-                      />
-                    </Box>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 1 }}>
-                      {t('settings.interface.outlineDisplayMode')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.interface.outlineDisplayModeDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.outlineDisplayMode}
-                        onChange={(e) => handleSettingChange('interface', 'outlineDisplayMode', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="persistent"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.outlineDisplayModePersistent')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.outlineDisplayModePersistentDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="overlay"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.outlineDisplayModeOverlay')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.outlineDisplayModeOverlayDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                {/* Explorer Panel Display Mode */}
-                <Card sx={{ mt: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 1 }}>
-                      {t('settings.interface.folderTreeDisplayMode')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.interface.folderTreeDisplayModeDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.folderTreeDisplayMode}
-                        onChange={(e) => handleSettingChange('interface', 'folderTreeDisplayMode', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="persistent"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.folderTreeDisplayModePersistent')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.folderTreeDisplayModePersistentDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="overlay"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.folderTreeDisplayModeOverlay')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.folderTreeDisplayModeOverlayDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="off"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.folderTreeDisplayModeOff')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.folderTreeDisplayModeOffDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                {/* Explorer File Filter */}
-                <Card sx={{ mt: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 1 }}>
-                      {t('settings.interface.folderTreeFileFilter')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.interface.folderTreeFileFilterDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.folderTreeFileFilter}
-                        onChange={(e) => handleSettingChange('interface', 'folderTreeFileFilter', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="markdown"
-                          control={<Radio />}
-                          label={t('settings.interface.folderTreeFileFilterMarkdown')}
-                        />
-                        <FormControlLabel
-                          value="all"
-                          control={<Radio />}
-                          label={t('settings.interface.folderTreeFileFilterAll')}
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                {/* Scroll Sync Mode */}
-                <Card sx={{ mt: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 1 }}>
-                      {t('settings.interface.scrollSyncMode')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.interface.scrollSyncModeDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.interface.scrollSyncMode}
-                        onChange={(e) => handleSettingChange('interface', 'scrollSyncMode', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="editor-to-preview"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.scrollSyncModeEditorToPreview')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.scrollSyncModeEditorToPreviewDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="bidirectional"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.scrollSyncModeBidirectional')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.scrollSyncModeBidirectionalDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="off"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.interface.scrollSyncModeOff')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.interface.scrollSyncModeOffDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-              </Box>
+              <InterfaceTab settings={settings} onSettingChange={handleSettingChange} />
             )}
-
-            {/* Variables Tab */}
             {activeTab === 3 && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  {t('settings.globalVariables.title')}
-                </Typography>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.globalVariables.description')}
-                    </Typography>
-
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.globalVariables.addNewVariable')}
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                      <TextField
-                        sx={{ flex: '1 1 200px', minWidth: 0 }}
-                        label={t('settings.globalVariables.variableName')}
-                        value={newVariableKey}
-                        onChange={(e) => setNewVariableKey(e.target.value)}
-                        placeholder={t('settings.globalVariables.variableNamePlaceholder')}
-                        size="small"
-                      />
-                      <TextField
-                        sx={{ flex: '1 1 200px', minWidth: 0 }}
-                        label={t('settings.globalVariables.value')}
-                        value={newVariableValue}
-                        onChange={(e) => setNewVariableValue(e.target.value)}
-                        placeholder={t('settings.globalVariables.valuePlaceholder')}
-                        size="small"
-                      />
-                      <Button
-                        variant="contained"
-                        onClick={handleAddVariable}
-                        sx={{ height: 40, minWidth: 80 }}
-                      >
-                        {t('buttons.add')}
-                      </Button>
-                    </Box>
-                    {error && (
-                      <Alert severity="error" sx={{ mt: 1 }}>
-                        {error}
-                      </Alert>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="h6">
-                        {t('settings.globalVariables.existingVariables')}
-                      </Typography>
-                      <Box>
-                        <Button
-                          startIcon={<Upload />}
-                          onClick={handleImportVariables}
-                          sx={{ mr: 1 }}
-                          size="small"
-                        >
-                          {t('buttons.import')}
-                        </Button>
-                        <Button
-                          startIcon={<Download />}
-                          onClick={handleExportVariables}
-                          size="small"
-                        >
-                          {t('buttons.export')}
-                        </Button>
-                      </Box>
-                    </Box>
-                    {Object.keys(settings.globalVariables).length === 0 ? (
-                      <Typography variant="body2" color="text.secondary">
-                        {t('settings.globalVariables.noVariables')}
-                      </Typography>
-                    ) : (
-                      <List>
-                        {Object.entries(settings.globalVariables).map(([key, value]) => (
-                          <ListItem key={key} sx={{ px: 0, flexDirection: 'column', alignItems: 'stretch' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                              <Chip label={key} size="small" color="primary" />
-                              <Typography variant="body2">
-                                {t('settings.globalVariables.usageExample').replace('{{variableName}}', `{{${key}}}`)}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                              <TextField
-                                fullWidth
-                                value={value}
-                                onChange={(e) => handleUpdateVariable(key, e.target.value)}
-                                size="small"
-                              />
-                              <Button
-                                color="error"
-                                size="small"
-                                onClick={() => handleRemoveVariable(key)}
-                                sx={{ minWidth: 80, px: 2, flexShrink: 0 }}
-                              >
-                                {t('buttons.delete')}
-                              </Button>
-                            </Box>
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
-                  </CardContent>
-                </Card>
-              </Box>
+              <VariablesTab
+                settings={settings}
+                onSettingsChange={onSettingsChange}
+                notify={notify}
+              />
             )}
-
-            {/* Advanced Tab */}
             {activeTab === 4 && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  {t('settings.advanced.title')}
-                </Typography>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.advanced.autoSave}
-                          onChange={(e) => handleSettingChange('advanced', 'autoSave', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.advanced.autoSave')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.advanced.autoSaveDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settings.advanced.showWhitespace}
-                          onChange={(e) => handleSettingChange('advanced', 'showWhitespace', e.target.checked)}
-                        />
-                      }
-                      label={t('settings.advanced.showWhitespace')}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {t('settings.advanced.showWhitespaceDescription')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.advanced.tableConversion')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.advanced.tableConversionDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.advanced.tableConversion}
-                        onChange={(e) => handleSettingChange('advanced', 'tableConversion', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="auto"
-                          control={<Radio />}
-                          label={t('settings.advanced.tableConversionAuto')}
-                        />
-                        <FormControlLabel
-                          value="confirm"
-                          control={<Radio />}
-                          label={t('settings.advanced.tableConversionConfirm')}
-                        />
-                        <FormControlLabel
-                          value="off"
-                          control={<Radio />}
-                          label={t('settings.advanced.tableConversionOff')}
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.advanced.tableLayout')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.advanced.tableLayoutDescription')}
-                    </Typography>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        value={settings.preview?.tableLayout ?? 'auto-wrap'}
-                        onChange={(e) => handleSettingChange('preview', 'tableLayout', e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="equal"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.advanced.tableLayoutEqual')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.advanced.tableLayoutEqualDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="auto-wrap"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.advanced.tableLayoutAutoWrap')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.advanced.tableLayoutAutoWrapDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <FormControlLabel
-                          value="auto-scroll"
-                          control={<Radio />}
-                          label={
-                            <Box>
-                              <Typography variant="body1">
-                                {t('settings.advanced.tableLayoutAutoScroll')}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {t('settings.advanced.tableLayoutAutoScrollDescription')}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-
-                <Card sx={{ mb: 3 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.advanced.rendering')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {t('settings.advanced.renderingDescription')}
-                    </Typography>
-                    <RenderingToggleRow
-                      target="rendering.enableKatex"
-                      highlighted={highlightedTarget === 'rendering.enableKatex'}
-                      checked={settings.rendering?.enableKatex ?? true}
-                      onChange={(checked) => handleSettingChange('rendering', 'enableKatex', checked)}
-                      label={t('settings.advanced.enableKatex')}
-                      description={t('settings.advanced.enableKatexDescription')}
-                      sx={{ mb: 1 }}
-                    />
-                    <RenderingToggleRow
-                      target="rendering.enableMermaid"
-                      highlighted={highlightedTarget === 'rendering.enableMermaid'}
-                      checked={settings.rendering?.enableMermaid ?? false}
-                      onChange={(checked) => handleSettingChange('rendering', 'enableMermaid', checked)}
-                      label={t('settings.advanced.enableMermaid')}
-                      description={t('settings.advanced.enableMermaidDescription')}
-                      sx={{ mb: 1 }}
-                    />
-                    <RenderingToggleRow
-                      target="rendering.enableMarp"
-                      highlighted={highlightedTarget === 'rendering.enableMarp'}
-                      checked={settings.rendering?.enableMarp ?? false}
-                      onChange={(checked) => handleSettingChange('rendering', 'enableMarp', checked)}
-                      label={t('settings.advanced.enableMarp')}
-                      description={t('settings.advanced.enableMarpDescription')}
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      {t('settings.advanced.importExport')}
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<Download />}
-                        onClick={handleExportSettings}
-                      >
-                        {t('settings.advanced.exportSettings')}
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        startIcon={<Upload />}
-                        onClick={handleImportSettings}
-                      >
-                        {t('settings.advanced.importSettings')}
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        startIcon={<Refresh />}
-                        onClick={() => setResetDialogOpen(true)}
-                      >
-                        {t('settings.advanced.resetSettings')}
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-
-              </Box>
+              <AdvancedTab
+                settings={settings}
+                onSettingChange={handleSettingChange}
+                highlightedTarget={highlightedTarget}
+                onExportSettings={handleExportSettings}
+                onImportSettings={handleImportSettings}
+                onResetClick={() => setResetDialogOpen(true)}
+              />
             )}
           </Box>
         </Box>
       </Box>
 
       {/* Reset Confirmation Dialog */}
-      <Dialog
-        open={resetDialogOpen}
-        onClose={() => setResetDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={resetDialogOpen} onClose={() => setResetDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{t('settings.advanced.resetSettings')}</DialogTitle>
         <DialogContent>
-          <Typography>
-            {t('settings.advanced.resetConfirm')}
-          </Typography>
+          <Typography>{t('settings.advanced.resetConfirm')}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setResetDialogOpen(false)}>
-            {t('buttons.cancel')}
-          </Button>
-          <Button
-            onClick={handleResetSettings}
-            color="error"
-            variant="contained"
-          >
+          <Button onClick={() => setResetDialogOpen(false)}>{t('buttons.cancel')}</Button>
+          <Button onClick={handleConfirmReset} color="error" variant="contained">
             {t('settings.advanced.resetSettings')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={snackbar.open} autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION_MS} onClose={closeSnackbar}>
+        <Alert onClose={closeSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>
