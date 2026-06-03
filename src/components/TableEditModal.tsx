@@ -86,7 +86,6 @@ const cellInputStyle: React.CSSProperties = {
 
 interface SortableRowProps {
   id: string;
-  rowIndex: number;
   cells: string[];
   onCellChange: (col: number, val: string) => void;
   onOpenMenu: (anchorEl: HTMLElement) => void;
@@ -96,7 +95,6 @@ interface SortableRowProps {
 /** One draggable body row: the handle reorders on drag, opens a menu on click. */
 const SortableRow: React.FC<SortableRowProps> = ({
   id,
-  rowIndex,
   cells,
   onCellChange,
   onOpenMenu,
@@ -127,7 +125,6 @@ const SortableRow: React.FC<SortableRowProps> = ({
             style={cellInputStyle}
             value={cell}
             spellCheck={false}
-            data-row={rowIndex}
             onChange={(e) => onCellChange(ci, e.target.value)}
           />
         </Box>
@@ -271,7 +268,6 @@ const TableEditModal: React.FC<TableEditModalProps> = ({ table, onApply, onClose
                 <SortableRow
                   key={ri}
                   id={`row-${ri}`}
-                  rowIndex={ri}
                   cells={row}
                   rowActionsLabel={t('tableEditor.rowActions')}
                   onCellChange={(ci, val) => setCell(ri, ci, val)}
