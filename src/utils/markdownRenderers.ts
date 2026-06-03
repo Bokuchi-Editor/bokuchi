@@ -1,7 +1,54 @@
 import hljs from 'highlight.js';
+import type { Token, Tokens } from 'marked';
 
 /** Languages handled by post-processors — skip syntax highlighting */
 const POST_PROCESSED_LANGS = new Set(['mermaid']);
+
+/**
+ * Build a custom `marked` table renderer that tags every cell with its source
+ * coordinates (`data-bk-table` = Nth table in the document, `data-bk-row` =
+ * -1 for the header / 0-based for body rows, `data-bk-col`). These let the
+ * preview map a clicked cell back to the Markdown source for inline editing.
+ *
+ * A fresh renderer is created per parse so the table counter resets. Assign the
+ * returned function to `renderer.table`; marked binds `this` to the renderer
+ * (which exposes `parser.parseInline` for rendering cell content).
+ */
+export function createTableRenderer() {
+  let tableIndex = 0;
+  return function (this: { parser: { parseInline: (tokens: Token[]) => string } }, token: Tokens.Table): string {
+    const ti = tableIndex++;
+    const parser = this.parser;
+    const aligns = token.align || [];
+
+    const renderCell = (cell: Tokens.TableCell, tag: 'th' | 'td', row: number, col: number): string => {
+      const align = aligns[col];
+      const alignAttr = align ? ` align="${align}"` : '';
+      const content = parser.parseInline(cell.tokens);
+      return `<${tag}${alignAttr} data-bk-table="${ti}" data-bk-row="${row}" data-bk-col="${col}">${content}</${tag}>`;
+    };
+
+    let header = '';
+    token.header.forEach((cell, col) => {
+      header += renderCell(cell, 'th', -1, col);
+    });
+
+    let body = '';
+    token.rows.forEach((rowCells, row) => {
+      let tr = '';
+      rowCells.forEach((cell, col) => {
+        tr += renderCell(cell, 'td', row, col);
+      });
+      body += `<tr>\n${tr}</tr>\n`;
+    });
+
+    return (
+      `<table>\n<thead>\n<tr>\n${header}</tr>\n</thead>\n` +
+      (body ? `<tbody>\n${body}</tbody>\n` : '') +
+      `</table>\n`
+    );
+  };
+}
 
 /**
  * Custom code renderer for marked that applies syntax highlighting

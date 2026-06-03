@@ -486,6 +486,7 @@
     "quote": "인용",
     "horizontalRule": "수평선",
     "table": "표",
+    "formatTable": "표 서식",
     "strikethrough": "취소선"
   },
   "outline": {

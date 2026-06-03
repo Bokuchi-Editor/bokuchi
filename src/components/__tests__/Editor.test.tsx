@@ -131,6 +131,9 @@ function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor>
     getModel: vi.fn().mockReturnValue({
       getValue: vi.fn().mockReturnValue('hello'),
       getValueInRange: vi.fn().mockReturnValue(''),
+      getLinesContent: vi.fn().mockReturnValue(['hello']),
+      getLineContent: vi.fn().mockReturnValue('hello'),
+      getLineMaxColumn: vi.fn().mockReturnValue(6),
       onDidChangeContent: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     }),
     executeEdits: vi.fn(),
@@ -138,6 +141,9 @@ function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor>
     revealLineInCenter: vi.fn(),
     addCommand: vi.fn(),
     addAction: vi.fn(),
+    createContextKey: vi.fn().mockReturnValue({ set: vi.fn(), get: vi.fn(), reset: vi.fn() }),
+    onDidCompositionStart: vi.fn().mockReturnValue({ dispose: vi.fn() }),
+    onDidCompositionEnd: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidChangeCursorPosition: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidChangeCursorSelection: vi.fn().mockReturnValue({ dispose: vi.fn() }),
     onDidChangeModel: vi.fn().mockReturnValue({ dispose: vi.fn() }),
@@ -433,9 +439,12 @@ describe('MarkdownEditor', () => {
       const mockEditor = createMockMonacoEditor();
       capturedOnMount!(mockEditor);
 
-      expect(mockEditor.onDidChangeCursorPosition).toHaveBeenCalledTimes(1);
+      // Cursor-position and content listeners are registered twice: once for
+      // status reporting and once for the table-editing context key. Selection
+      // is only used by status reporting.
+      expect(mockEditor.onDidChangeCursorPosition).toHaveBeenCalledTimes(2);
       expect(mockEditor.onDidChangeCursorSelection).toHaveBeenCalledTimes(1);
-      expect(mockEditor.onDidChangeModelContent).toHaveBeenCalledTimes(1);
+      expect(mockEditor.onDidChangeModelContent).toHaveBeenCalledTimes(2);
 
       delete (window as unknown as Record<string, unknown>).monaco;
     });

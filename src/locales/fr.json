@@ -486,6 +486,7 @@
     "quote": "Citation",
     "horizontalRule": "Ligne horizontale",
     "table": "Tableau",
+    "formatTable": "Formater le tableau",
     "strikethrough": "Barré"
   },
   "outline": {

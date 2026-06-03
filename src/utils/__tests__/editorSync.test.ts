@@ -7,16 +7,24 @@ import {
   syncModelForTab,
 } from '../editorSync';
 
-// Build a minimal model stub backed by a string. setValue is observable;
-// getValue returns the current backing store.
+// Build a minimal model stub backed by a string. setModelContentSilently now
+// uses an undoable pushEditOperations with a minimal range; the stub applies
+// the op to the backing store and encodes offsets as column numbers (line 1)
+// so getPositionAt and the op range round-trip.
 function makeModel(initial: string, uri = 'tab-1'): editor.ITextModel {
   let value = initial;
-  const setValue = vi.fn((v: string) => {
-    value = v;
-  });
+  const pushEditOperations = vi.fn(
+    (_before: unknown, ops: { range: { startColumn: number; endColumn: number }; text: string }[]) => {
+      const op = ops[0];
+      const start = op.range.startColumn - 1;
+      const end = op.range.endColumn - 1;
+      value = value.slice(0, start) + op.text + value.slice(end);
+    },
+  );
   return {
     getValue: () => value,
-    setValue,
+    getPositionAt: (offset: number) => ({ lineNumber: 1, column: offset + 1 }),
+    pushEditOperations,
     uri: { toString: () => uri },
   } as unknown as editor.ITextModel;
 }
@@ -24,26 +32,40 @@ function makeModel(initial: string, uri = 'tab-1'): editor.ITextModel {
 describe('editorSync', () => {
   describe('setModelContentSilently', () => {
     // T-ES-01: writes content when it differs from the model's current value
-    it('T-ES-01: calls setValue when content differs', () => {
+    it('T-ES-01: applies an undoable edit when content differs', () => {
       const model = makeModel('old');
       setModelContentSilently(model, 'new');
-      expect(model.setValue).toHaveBeenCalledWith('new');
+      expect(model.pushEditOperations).toHaveBeenCalled();
+      expect(model.getValue()).toBe('new');
     });
 
-    // T-ES-02: skips setValue when content already matches (avoids spurious
+    // T-ES-01b: only the changed span is replaced (common prefix/suffix kept),
+    // so the edit is minimal and the caret outside it is preserved.
+    it('T-ES-01b: replaces only the changed span', () => {
+      const model = makeModel('hello world');
+      setModelContentSilently(model, 'hello brave world');
+      const op = (model.pushEditOperations as ReturnType<typeof vi.fn>).mock.calls[0][1][0];
+      // "hello " is the common prefix, "world" the common suffix.
+      expect(op.range.startColumn - 1).toBe(6);
+      expect(op.range.endColumn - 1).toBe(6);
+      expect(op.text).toBe('brave ');
+      expect(model.getValue()).toBe('hello brave world');
+    });
+
+    // T-ES-02: skips the edit when content already matches (avoids spurious
     // ContentFlush events that would scroll/reset the editor)
-    it('T-ES-02: skips setValue when content already matches', () => {
+    it('T-ES-02: skips the edit when content already matches', () => {
       const model = makeModel('same');
       setModelContentSilently(model, 'same');
-      expect(model.setValue).not.toHaveBeenCalled();
+      expect(model.pushEditOperations).not.toHaveBeenCalled();
     });
 
-    // T-ES-03: while setValue is mid-flight, the model reports itself as
+    // T-ES-03: while the edit is mid-flight, the model reports itself as
     // silently editing — this is what the editor's onChange handler keys off.
-    it('T-ES-03: model reports silently-editing during setValue', () => {
+    it('T-ES-03: model reports silently-editing during the edit', () => {
       const model = makeModel('old');
       let observedDuring: boolean | null = null;
-      (model.setValue as ReturnType<typeof vi.fn>).mockImplementation(() => {
+      (model.pushEditOperations as ReturnType<typeof vi.fn>).mockImplementation(() => {
         observedDuring = isModelSilentlyEditing(model);
       });
       setModelContentSilently(model, 'new');
@@ -58,11 +80,11 @@ describe('editorSync', () => {
       expect(isModelSilentlyEditing(model)).toBe(false);
     });
 
-    // T-ES-05: if setValue throws, the silent flag is still cleared so the
+    // T-ES-05: if the edit throws, the silent flag is still cleared so the
     // model isn't permanently stuck in silent mode.
-    it('T-ES-05: silent-edit flag is cleared even if setValue throws', () => {
+    it('T-ES-05: silent-edit flag is cleared even if the edit throws', () => {
       const model = makeModel('old');
-      (model.setValue as ReturnType<typeof vi.fn>).mockImplementation(() => {
+      (model.pushEditOperations as ReturnType<typeof vi.fn>).mockImplementation(() => {
         throw new Error('boom');
       });
       expect(() => setModelContentSilently(model, 'new')).toThrow('boom');
@@ -149,7 +171,7 @@ describe('editorSync', () => {
       };
       try {
         syncModelForTab('tab-1', 'new');
-        expect(model.setValue).toHaveBeenCalledWith('new');
+        expect(model.getValue()).toBe('new');
       } finally {
         (window as { monaco?: unknown }).monaco = originalMonaco;
       }
@@ -164,7 +186,7 @@ describe('editorSync', () => {
       };
       try {
         syncModelForTab('tab-1', 'new');
-        expect(model.setValue).toHaveBeenCalledWith('new');
+        expect(model.getValue()).toBe('new');
       } finally {
         (window as { monaco?: unknown }).monaco = originalMonaco;
       }
@@ -180,8 +202,9 @@ describe('editorSync', () => {
       };
       try {
         syncModelForTab('tab-1', 'new');
-        expect(target.setValue).toHaveBeenCalledWith('new');
-        expect(other.setValue).not.toHaveBeenCalled();
+        expect(target.getValue()).toBe('new');
+        expect(other.pushEditOperations).not.toHaveBeenCalled();
+        expect(other.getValue()).toBe('untouched');
       } finally {
         (window as { monaco?: unknown }).monaco = originalMonaco;
       }
@@ -209,7 +232,7 @@ describe('editorSync', () => {
       };
       try {
         expect(() => syncModelForTab('tab-missing', 'new')).not.toThrow();
-        expect(other.setValue).not.toHaveBeenCalled();
+        expect(other.pushEditOperations).not.toHaveBeenCalled();
       } finally {
         (window as { monaco?: unknown }).monaco = originalMonaco;
       }

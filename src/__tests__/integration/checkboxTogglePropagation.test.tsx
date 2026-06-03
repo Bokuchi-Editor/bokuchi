@@ -119,6 +119,7 @@ vi.mock('marked', () => {
 
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
+  createTableRenderer: vi.fn(() => () => ''),
   processKatex: vi.fn().mockImplementation(async (md: string) => md),
   contentHasKatex: vi.fn().mockReturnValue(false),
   processMermaidBlocks: vi.fn().mockImplementation(async (html: string) => html),

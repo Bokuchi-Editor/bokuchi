@@ -10,6 +10,8 @@ import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } f
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
+import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
+import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
 
 interface EditorProps {
   content: string;
@@ -402,16 +404,27 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     editor.focus();
   }, [revealLineRequest?.requestId]);
 
-  const handleEditorDidMount: OnMount = (editor) => {
+  const handleEditorDidMount: OnMount = (editor, monacoNs) => {
     editorRef.current = editor;
 
     // Focus using the editor instance directly (avoids race condition with editorRef)
     focusEditor(editor);
 
+    // Dispose listeners from any previous mount before registering new ones.
+    // This MUST run before the table-context listeners are registered below,
+    // otherwise they would be torn down immediately and the context key would
+    // freeze at its initial value (breaking Tab/Enter table handling).
+    disposablesRef.current.forEach(d => d.dispose());
+    disposablesRef.current = [];
+
     // Set up search and replace keyboard shortcuts
     try {
-      // Use correct Monaco Editor key codes
-      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+      // Prefer the monaco namespace from @monaco-editor/react's onMount
+      // argument; it is always provided at runtime, which avoids the
+      // load-order race that left these actions unregistered "sometimes" when
+      // we read window.monaco. The global is only a fallback for callers that
+      // invoke onMount without the argument (e.g. the test harness).
+      const monaco = monacoNs || (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(false);
@@ -445,14 +458,103 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             // Do nothing
           }
         });
+
+        // --- Markdown table editing (#5 format, #6 Enter, #7 Tab) ---
+
+        // #5: Format the table block at the cursor.
+        editor.addAction({
+          id: 'format-markdown-table',
+          label: 'Format Markdown Table',
+          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyL],
+          run: (ed) => {
+            formatTableInEditor(ed as editor.IStandaloneCodeEditor);
+          },
+        });
+
+        // Context key gating Enter/Tab overrides. It is set to false while an
+        // IME composition is active so Japanese conversion (Enter to confirm)
+        // and default Tab are never hijacked.
+        const inTableRowKey = editor.createContextKey<boolean>('bokuchiInTableRow', false);
+        let isComposing = false;
+
+        const updateTableContext = () => {
+          if (isComposing) {
+            inTableRowKey.set(false);
+            return;
+          }
+          const model = editor.getModel();
+          const pos = editor.getPosition();
+          if (!model || !pos) {
+            inTableRowKey.set(false);
+            return;
+          }
+          const block = findTableBlock(model.getLinesContent(), pos.lineNumber);
+          const inRow = !!block && !isTableSeparatorLine(model.getLineContent(pos.lineNumber));
+          inTableRowKey.set(inRow);
+        };
+
+        disposablesRef.current.push(
+          editor.onDidCompositionStart(() => {
+            isComposing = true;
+            inTableRowKey.set(false);
+          }),
+        );
+        disposablesRef.current.push(
+          editor.onDidCompositionEnd(() => {
+            isComposing = false;
+            updateTableContext();
+          }),
+        );
+        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateTableContext));
+        disposablesRef.current.push(editor.onDidChangeModelContent(updateTableContext));
+        updateTableContext();
+
+        // #6: Enter adds a new row / exits the table when on an empty row.
+        // If the handler declines (e.g. an active selection), fall back to a
+        // normal newline so the key is never swallowed.
+        editor.addAction({
+          id: 'table-enter-new-row',
+          label: 'Table: New Row',
+          keybindings: [monaco.KeyCode.Enter],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableEnter(e)) {
+              e.trigger('keyboard', 'type', { text: '\n' });
+            }
+          },
+        });
+
+        // #7: Tab / Shift+Tab move between cells; fall back to default
+        // indent/outdent when the handler declines.
+        editor.addAction({
+          id: 'table-next-cell',
+          label: 'Table: Next Cell',
+          keybindings: [monaco.KeyCode.Tab],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableTab(e, false)) {
+              e.trigger('keyboard', 'tab', null);
+            }
+          },
+        });
+        editor.addAction({
+          id: 'table-prev-cell',
+          label: 'Table: Previous Cell',
+          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableTab(e, true)) {
+              e.trigger('keyboard', 'outdent', null);
+            }
+          },
+        });
       }
     } catch (error) {
       console.warn('Failed to set keyboard shortcuts:', error);
     }
-
-    // Dispose previous listeners before registering new ones
-    disposablesRef.current.forEach(d => d.dispose());
-    disposablesRef.current = [];
 
     // Monitor cursor position and selection information changes
     if (onStatusChange) {
