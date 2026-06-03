@@ -464,6 +464,31 @@ function getBlockTable(content: string, blockIndex: number) {
   return { lines, block, table: parseTableBlock(lines.slice(block.start - 1, block.end)) };
 }
 
+/** Parsed model of the Nth table (cells in source form), or null. */
+export function getParsedTable(content: string, blockIndex: number): ParsedTable | null {
+  return getBlockTable(content, blockIndex)?.table ?? null;
+}
+
+/**
+ * Replace the Nth table block wholesale with a serialized (formatted) version
+ * of `table`, returning the full updated content. Used by the spreadsheet
+ * editor's explicit "Apply" — reformatting on an explicit action is fine.
+ */
+export function applyTableReplace(
+  content: string,
+  blockIndex: number,
+  table: ParsedTable,
+): string | null {
+  const lines = content.split(/\r?\n/);
+  const blocks = findAllTableBlocks(lines);
+  const block = blocks[blockIndex];
+  if (!block) return null;
+  const serialized = serializeTable(table).split('\n');
+  const before = lines.slice(0, block.start - 1);
+  const after = lines.slice(block.end);
+  return [...before, ...serialized, ...after].join('\n');
+}
+
 /** Body-row count and column count of the Nth table, or null. */
 export function getTableDimensions(
   content: string,

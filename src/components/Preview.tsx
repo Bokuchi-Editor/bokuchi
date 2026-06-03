@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { Box, Typography, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
 import { useTheme, alpha } from '@mui/material/styles';
-import { Download } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import { Download, GridOn } from '@mui/icons-material';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
 import { variableApi } from '../api/variableApi';
@@ -11,8 +12,9 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { readFile } from '@tauri-apps/plugin-fs';
 import { RenderingSettings, DEFAULT_RENDERING_SETTINGS, PreviewSettings, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { renderCode, createTableRenderer, processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid, reinitializeMermaid } from '../utils/markdownRenderers';
-import { getCellText, applyCellEdit, getTableDimensions, nextCell, type NavDir } from '../utils/tableFormatter';
+import { getCellText, applyCellEdit, getTableDimensions, nextCell, getParsedTable, applyTableReplace, type NavDir, type ParsedTable } from '../utils/tableFormatter';
 import InlineCellEditor from './InlineCellEditor';
+import TableEditModal from './TableEditModal';
 import { buildExportHTML, generateTableLayoutCSS } from '../utils/exportStyles';
 import { contentIsMarp } from '../utils/marpRenderer';
 import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../utils/imagePathResolver';
@@ -42,6 +44,7 @@ const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
   const muiTheme = useTheme();
   const { palette } = muiTheme;
+  const { t } = useTranslation();
   const isMarp = renderingSettings.enableMarp && contentIsMarp(content);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -62,6 +65,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     value: string;
   } | null>(null);
   const pendingFocusCellRef = useRef<{ ti: number; row: number; col: number } | null>(null);
+  // Spreadsheet editor (#3/#9): a hover affordance per table, and the modal.
+  const [tableHover, setTableHover] = useState<{ ti: number; top: number; left: number } | null>(null);
+  const hoverHideTimerRef = useRef<number | null>(null);
+  const [editTable, setEditTable] = useState<{ ti: number; table: ParsedTable } | null>(null);
   const blobUrlsRef = useRef<string[]>([]);
   // Latest KaTeX placeholder->HTML restore fn for the current processedContent.
   // KaTeX renders to placeholders BEFORE marked and is restored AFTER, so both
@@ -433,6 +440,76 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     preserveScrollAcrossClose();
     setEditing(null);
   }, [preserveScrollAcrossClose]);
+
+  // --- Spreadsheet editor affordance (#3) ---
+
+  const cancelHoverHide = useCallback(() => {
+    if (hoverHideTimerRef.current !== null) {
+      clearTimeout(hoverHideTimerRef.current);
+      hoverHideTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleHoverHide = useCallback(() => {
+    cancelHoverHide();
+    hoverHideTimerRef.current = window.setTimeout(() => setTableHover(null), 200);
+  }, [cancelHoverHide]);
+
+  // Show an "edit table" button at the top-right of the table under the cursor.
+  useEffect(() => {
+    const container = previewRef.current;
+    const scroller = scrollContainerRef.current;
+    if (!container || !scroller) return;
+    const onOver = (e: Event) => {
+      if (!onContentChangeRef.current) return;
+      const target = e.target as HTMLElement;
+      const cell = target.closest('[data-bk-table]');
+      const tableEl = cell?.closest('table');
+      if (cell && tableEl && container.contains(cell)) {
+        const ti = Number(cell.getAttribute('data-bk-table'));
+        const cRect = scroller.getBoundingClientRect();
+        const tRect = tableEl.getBoundingClientRect();
+        const top = tRect.top - cRect.top + scroller.scrollTop + 2;
+        const left = tRect.right - cRect.left + scroller.scrollLeft - 34;
+        cancelHoverHide();
+        // Bail out of a re-render while hovering within the same table.
+        setTableHover((prev) =>
+          prev && prev.ti === ti && Math.abs(prev.top - top) < 1 && Math.abs(prev.left - left) < 1
+            ? prev
+            : { ti, top, left },
+        );
+      } else {
+        scheduleHoverHide();
+      }
+    };
+    const onLeave = () => scheduleHoverHide();
+    container.addEventListener('mouseover', onOver);
+    scroller.addEventListener('mouseleave', onLeave);
+    return () => {
+      container.removeEventListener('mouseover', onOver);
+      scroller.removeEventListener('mouseleave', onLeave);
+    };
+  }, [isMarp, cancelHoverHide, scheduleHoverHide]);
+
+  const editTableRef = useRef(editTable);
+  editTableRef.current = editTable;
+
+  const openTableEditor = useCallback((ti: number) => {
+    const tbl = getParsedTable(contentRef.current, ti);
+    if (tbl) setEditTable({ ti, table: tbl });
+    setTableHover(null);
+  }, []);
+
+  const handleTableApply = useCallback((newTable: ParsedTable) => {
+    const cur = editTableRef.current;
+    if (cur) {
+      const updated = applyTableReplace(contentRef.current, cur.ti, newTable);
+      if (updated !== null && updated !== contentRef.current) {
+        onContentChangeRef.current?.(updated);
+      }
+    }
+    setEditTable(null);
+  }, []);
 
   // Double-click a table cell to edit it in place.
   useEffect(() => {
@@ -829,7 +906,38 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             onCancel={handleCellCancel}
           />
         )}
+
+        {tableHover && !editing && (
+          <Tooltip title={t('tableEditor.editTableTooltip')}>
+            <IconButton
+              size="small"
+              onMouseEnter={cancelHoverHide}
+              onMouseLeave={scheduleHoverHide}
+              onClick={() => openTableEditor(tableHover.ti)}
+              sx={{
+                position: 'absolute',
+                top: tableHover.top,
+                left: tableHover.left,
+                zIndex: 4,
+                p: 0.5,
+                bgcolor: 'background.paper',
+                boxShadow: 1,
+                '&:hover': { bgcolor: 'background.paper' },
+              }}
+            >
+              <GridOn fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
+
+      {editTable && (
+        <TableEditModal
+          table={editTable.table}
+          onApply={handleTableApply}
+          onClose={() => setEditTable(null)}
+        />
+      )}
 
       {/* Snackbar for error display */}
       <Snackbar

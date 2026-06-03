@@ -27,6 +27,8 @@ import {
   getCellText,
   applyCellEdit,
   nextCell,
+  getParsedTable,
+  applyTableReplace,
 } from '../tableFormatter';
 
 describe('tableFormatter', () => {
@@ -366,6 +368,27 @@ describe('tableFormatter', () => {
       expect(outLines[1]).toBe('| --- | --- |');
       // The untouched cell keeps its original padding; only cell (0,1) changed.
       expect(outLines[2]).toBe('| a    | 2 |');
+    });
+
+    // T-TF-39c: getParsedTable returns the Nth table's model
+    it('T-TF-39c: parses the Nth table', () => {
+      const t = getParsedTable(content, 1);
+      expect(t).not.toBeNull();
+      expect(t!.header).toEqual(['x', 'y', 'z']);
+      expect(t!.rows).toEqual([['7', '8', '9']]);
+      expect(getParsedTable(content, 9)).toBeNull();
+    });
+
+    // T-TF-39d: applyTableReplace serializes the block back, leaving the rest
+    it('T-TF-39d: replaces a whole table block with a serialized table', () => {
+      const t = getParsedTable(content, 0)!;
+      t.rows[0][0] = 'ONE';
+      const out = applyTableReplace(content, 0, t)!;
+      expect(getCellText(out, 0, 0, 0)).toBe('ONE');
+      // The prose and the second table are untouched.
+      expect(out).toContain('between');
+      expect(getCellText(out, 1, 0, 2)).toBe('9');
+      expect(applyTableReplace(content, 9, t)).toBeNull();
     });
   });
 
