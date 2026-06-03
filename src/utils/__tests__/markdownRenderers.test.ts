@@ -33,6 +33,7 @@ vi.mock('mermaid', () => ({
 
 import {
   renderCode,
+  createTableRenderer,
   contentHasKatex,
   contentHasMermaid,
   processKatex,
@@ -40,6 +41,7 @@ import {
   reinitializeMermaid,
 } from '../markdownRenderers';
 
+import { marked } from 'marked';
 import mermaid from 'mermaid';
 
 const mockRender = vi.mocked(mermaid.render);
@@ -278,6 +280,37 @@ describe('reinitializeMermaid', () => {
     expect(mermaid.initialize).toHaveBeenCalledWith(
       expect.objectContaining({ theme: 'default' }),
     );
+  });
+});
+
+describe('createTableRenderer', () => {
+  const render = (md: string): string => {
+    const renderer = new marked.Renderer();
+    renderer.table = createTableRenderer();
+    return marked(md, { gfm: true, renderer, async: false }) as string;
+  };
+
+  it('tags header cells with row -1 and body cells with 0-based rows', () => {
+    const html = render('| a | b |\n| --- | --- |\n| 1 | 2 |');
+    expect(html).toContain('data-bk-table="0" data-bk-row="-1" data-bk-col="0"');
+    expect(html).toContain('data-bk-table="0" data-bk-row="-1" data-bk-col="1"');
+    expect(html).toContain('data-bk-table="0" data-bk-row="0" data-bk-col="0"');
+    expect(html).toContain('data-bk-table="0" data-bk-row="0" data-bk-col="1"');
+    expect(html).toContain('>1</td>');
+  });
+
+  it('numbers multiple tables in document order', () => {
+    const html = render(
+      '| a |\n| --- |\n| 1 |\n\ntext\n\n| b |\n| --- |\n| 2 |',
+    );
+    expect(html).toContain('data-bk-table="0" data-bk-row="-1" data-bk-col="0"');
+    expect(html).toContain('data-bk-table="1" data-bk-row="-1" data-bk-col="0"');
+  });
+
+  it('preserves column alignment', () => {
+    const html = render('| a | b |\n| :--- | ---: |\n| 1 | 2 |');
+    expect(html).toContain('align="left"');
+    expect(html).toContain('align="right"');
   });
 });
 

@@ -95,6 +95,11 @@ export function escapeCell(text: string): string {
   return text.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|');
 }
 
+/** Inverse of {@link escapeCell} for display in an editor field. */
+export function unescapeCell(text: string): string {
+  return text.replace(/\\\|/g, '|');
+}
+
 function parseAlign(cell: string): Align {
   const c = cell.trim();
   const left = c.startsWith(':');
@@ -421,4 +426,155 @@ export function formatTableAtLine(
   const blockLines = lines.slice(block.start - 1, block.end);
   const text = serializeTable(parseTableBlock(blockLines));
   return { start: block.start, end: block.end, text };
+}
+
+// ---------------------------------------------------------------------------
+// Source mapping for preview-side editing (#1/#2/#3/#9)
+// ---------------------------------------------------------------------------
+
+/**
+ * Enumerate every table block in document order. Returns 1-based inclusive
+ * `{ start, end }` ranges. The Nth entry corresponds to the Nth `<table>` the
+ * Markdown renderer emits, which is how preview cells map back to source.
+ */
+export function findAllTableBlocks(lines: string[]): { start: number; end: number }[] {
+  const blocks: { start: number; end: number }[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (!isPipeRow(lines[i])) {
+      i++;
+      continue;
+    }
+    let end = i;
+    while (end + 1 < lines.length && isPipeRow(lines[end + 1])) end++;
+    if (end - i >= 1 && isTableSeparatorLine(lines[i + 1])) {
+      blocks.push({ start: i + 1, end: end + 1 });
+    }
+    i = end + 1;
+  }
+  return blocks;
+}
+
+/** Parse the Nth table block out of full document content (0-based index). */
+function getBlockTable(content: string, blockIndex: number) {
+  const lines = content.split(/\r?\n/);
+  const blocks = findAllTableBlocks(lines);
+  const block = blocks[blockIndex];
+  if (!block) return null;
+  return { lines, block, table: parseTableBlock(lines.slice(block.start - 1, block.end)) };
+}
+
+/** Body-row count and column count of the Nth table, or null. */
+export function getTableDimensions(
+  content: string,
+  blockIndex: number,
+): { rows: number; cols: number } | null {
+  const parsed = getBlockTable(content, blockIndex);
+  if (!parsed) return null;
+  return { rows: parsed.table.rows.length, cols: parsed.table.header.length };
+}
+
+/**
+ * Raw (unescaped) text of a cell in the Nth table. `row === -1` is the header
+ * row; body rows are 0-based. Returns null if the coordinates are out of range.
+ */
+export function getCellText(
+  content: string,
+  blockIndex: number,
+  row: number,
+  col: number,
+): string | null {
+  const parsed = getBlockTable(content, blockIndex);
+  if (!parsed) return null;
+  const cells = row === -1 ? parsed.table.header : parsed.table.rows[row];
+  if (!cells || col < 0 || col >= cells.length) return null;
+  return unescapeCell(cells[col]);
+}
+
+/**
+ * Replace the content between the cell's surrounding pipes with ` text `,
+ * leaving every other cell on the line byte-for-byte unchanged. Returns null if
+ * the line has no such cell.
+ */
+export function replaceCellInLine(
+  line: string,
+  cellIndex: number,
+  escapedText: string,
+): string | null {
+  const pipes = pipeIndices(line);
+  if (pipes.length < 2 || cellIndex < 0 || cellIndex >= pipes.length - 1) return null;
+  const start = pipes[cellIndex] + 1;
+  const end = pipes[cellIndex + 1];
+  return line.slice(0, start) + ' ' + escapedText + ' ' + line.slice(end);
+}
+
+/**
+ * Write `rawText` into a cell of the Nth table and return the full updated
+ * document content. Only the edited cell is rewritten — the rest of the table's
+ * source formatting is preserved (no reformatting). Returns null if the
+ * coordinates are out of range.
+ *
+ * Reformatting is intentionally NOT done here: it changes source whitespace
+ * without changing the rendered HTML, which would stall the preview's
+ * re-render-driven cell navigation. Formatting stays an explicit action (the
+ * toolbar button / Ctrl+Shift+L).
+ */
+export function applyCellEdit(
+  content: string,
+  blockIndex: number,
+  row: number,
+  col: number,
+  rawText: string,
+): string | null {
+  const parsed = getBlockTable(content, blockIndex);
+  if (!parsed) return null;
+  const { lines, block, table } = parsed;
+
+  if (row === -1) {
+    if (col < 0 || col >= table.header.length) return null;
+  } else if (row < 0 || row >= table.rows.length || col < 0 || col >= table.header.length) {
+    return null;
+  }
+
+  const lineIdx = row === -1 ? block.start - 1 : block.start + 1 + row;
+  const newLine = replaceCellInLine(lines[lineIdx], col, escapeCell(rawText));
+  if (newLine === null) return null;
+  lines[lineIdx] = newLine;
+  return lines.join('\n');
+}
+
+export type NavDir = 'right' | 'left' | 'down' | 'up';
+
+/**
+ * Next cell coordinate when navigating a table grid. `row === -1` is the header.
+ * Tab wraps to the next/previous row; Enter/arrows stay in the column. Returns
+ * null when navigation would leave the table.
+ */
+export function nextCell(
+  row: number,
+  col: number,
+  rows: number,
+  cols: number,
+  dir: NavDir,
+): { row: number; col: number } | null {
+  switch (dir) {
+    case 'right': {
+      if (col < cols - 1) return { row, col: col + 1 };
+      const nr = row + 1;
+      return nr <= rows - 1 ? { row: nr, col: 0 } : null;
+    }
+    case 'left': {
+      if (col > 0) return { row, col: col - 1 };
+      const pr = row - 1;
+      return pr >= -1 ? { row: pr, col: cols - 1 } : null;
+    }
+    case 'down': {
+      const nr = row + 1;
+      return nr <= rows - 1 ? { row: nr, col } : null;
+    }
+    case 'up': {
+      const pr = row - 1;
+      return pr >= -1 ? { row: pr, col } : null;
+    }
+  }
 }

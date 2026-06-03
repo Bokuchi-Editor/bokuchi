@@ -78,6 +78,9 @@ vi.mock('marked', () => {
 // Mock markdownRenderers for verifying render pipeline calls
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
+  // Returns a marked table renderer; tables aren't exercised here, so a no-op
+  // that yields empty output is sufficient.
+  createTableRenderer: vi.fn(() => () => ''),
   // Mirrors the real placeholder/restore contract: math -> placeholder before
   // marked, rendered HTML swapped back via restore() after marked.
   processKatex: vi.fn().mockImplementation(async (md: string) => {

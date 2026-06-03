@@ -21,6 +21,12 @@ import {
   deleteColumn,
   moveColumn,
   formatTableAtLine,
+  unescapeCell,
+  findAllTableBlocks,
+  getTableDimensions,
+  getCellText,
+  applyCellEdit,
+  nextCell,
 } from '../tableFormatter';
 
 describe('tableFormatter', () => {
@@ -278,6 +284,112 @@ describe('tableFormatter', () => {
     // T-TF-32: null when the cursor is not in a table
     it('T-TF-32: returns null outside a table', () => {
       expect(formatTableAtLine(lines, 1)).toBeNull();
+    });
+  });
+
+  describe('source mapping (preview editing)', () => {
+    const content = [
+      '# Doc',
+      '',
+      '| a | b |',
+      '| --- | --- |',
+      '| 1 | 2 |',
+      '',
+      'between',
+      '',
+      '| x | y | z |',
+      '| --- | --- | --- |',
+      '| 7 | 8 | 9 |',
+    ].join('\n');
+
+    // T-TF-33: enumerates all table blocks in order
+    it('T-TF-33: finds all table blocks', () => {
+      expect(findAllTableBlocks(content.split('\n'))).toEqual([
+        { start: 3, end: 5 },
+        { start: 9, end: 11 },
+      ]);
+    });
+
+    // T-TF-34: reports dimensions per table
+    it('T-TF-34: returns table dimensions', () => {
+      expect(getTableDimensions(content, 0)).toEqual({ rows: 1, cols: 2 });
+      expect(getTableDimensions(content, 1)).toEqual({ rows: 1, cols: 3 });
+      expect(getTableDimensions(content, 2)).toBeNull();
+    });
+
+    // T-TF-35: reads header and body cell text
+    it('T-TF-35: reads cell text (header row is -1)', () => {
+      expect(getCellText(content, 0, -1, 0)).toBe('a');
+      expect(getCellText(content, 0, 0, 1)).toBe('2');
+      expect(getCellText(content, 1, 0, 2)).toBe('9');
+      expect(getCellText(content, 0, 5, 0)).toBeNull();
+    });
+
+    // T-TF-36: edits only the targeted cell of the targeted table
+    it('T-TF-36: applies a cell edit and leaves the rest intact', () => {
+      const out = applyCellEdit(content, 1, 0, 1, 'EIGHT');
+      expect(out).not.toBeNull();
+      const outLines = out!.split('\n');
+      // The first table and surrounding prose are unchanged.
+      expect(outLines.slice(0, 8)).toEqual(content.split('\n').slice(0, 8));
+      // The second table now carries the new value.
+      expect(out).toContain('EIGHT');
+      expect(getCellText(out!, 1, 0, 1)).toBe('EIGHT');
+      expect(getCellText(out!, 1, 0, 0)).toBe('7');
+    });
+
+    // T-TF-37: escapes pipes written from the preview
+    it('T-TF-37: escapes pipes on write and unescapes on read', () => {
+      const out = applyCellEdit(content, 0, -1, 0, 'a|b')!;
+      expect(out).toContain('a\\|b');
+      expect(getCellText(out, 0, -1, 0)).toBe('a|b');
+    });
+
+    // T-TF-38: unescapeCell
+    it('T-TF-38: unescapes pipes', () => {
+      expect(unescapeCell('a\\|b')).toBe('a|b');
+    });
+
+    // T-TF-39: out-of-range edit returns null
+    it('T-TF-39: returns null for an out-of-range edit', () => {
+      expect(applyCellEdit(content, 0, 9, 0, 'x')).toBeNull();
+      expect(applyCellEdit(content, 5, 0, 0, 'x')).toBeNull();
+    });
+
+    // T-TF-39b: edits in place without reformatting the rest of the table
+    it('T-TF-39b: replaces only the target cell, preserving other formatting', () => {
+      const src = ['| h1 | h2 |', '| --- | --- |', '| a    | 1 |'].join('\n');
+      const out = applyCellEdit(src, 0, 0, 1, '2')!;
+      const outLines = out.split('\n');
+      // Header and separator are byte-identical (no reformat).
+      expect(outLines[0]).toBe('| h1 | h2 |');
+      expect(outLines[1]).toBe('| --- | --- |');
+      // The untouched cell keeps its original padding; only cell (0,1) changed.
+      expect(outLines[2]).toBe('| a    | 2 |');
+    });
+  });
+
+  describe('nextCell navigation', () => {
+    // 2 cols, 2 body rows; row -1 = header
+    // T-TF-40: right moves and wraps to next row
+    it('T-TF-40: navigates right with row wrap', () => {
+      expect(nextCell(-1, 0, 2, 2, 'right')).toEqual({ row: -1, col: 1 });
+      expect(nextCell(-1, 1, 2, 2, 'right')).toEqual({ row: 0, col: 0 });
+      expect(nextCell(1, 1, 2, 2, 'right')).toBeNull();
+    });
+
+    // T-TF-41: left moves and wraps to previous row
+    it('T-TF-41: navigates left with row wrap', () => {
+      expect(nextCell(0, 0, 2, 2, 'left')).toEqual({ row: -1, col: 1 });
+      expect(nextCell(-1, 0, 2, 2, 'left')).toBeNull();
+    });
+
+    // T-TF-42: down/up stay in the column and stop at edges
+    it('T-TF-42: navigates down and up', () => {
+      expect(nextCell(-1, 1, 2, 2, 'down')).toEqual({ row: 0, col: 1 });
+      expect(nextCell(1, 1, 2, 2, 'down')).toBeNull();
+      expect(nextCell(0, 1, 2, 2, 'up')).toEqual({ row: -1, col: 1 });
+      expect(nextCell(-1, 0, 2, 2, 'up')).toBeNull();
     });
   });
 });

@@ -404,7 +404,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     editor.focus();
   }, [revealLineRequest?.requestId]);
 
-  const handleEditorDidMount: OnMount = (editor, monaco) => {
+  const handleEditorDidMount: OnMount = (editor, monacoNs) => {
     editorRef.current = editor;
 
     // Focus using the editor instance directly (avoids race condition with editorRef)
@@ -419,10 +419,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
 
     // Set up search and replace keyboard shortcuts
     try {
-      // monaco comes from @monaco-editor/react's onMount argument. Using the
-      // argument instead of window.monaco avoids a load-order race that could
-      // leave these actions unregistered (the symptom: table shortcuts only
-      // working "sometimes" after a restart).
+      // Prefer the monaco namespace from @monaco-editor/react's onMount
+      // argument; it is always provided at runtime, which avoids the
+      // load-order race that left these actions unregistered "sometimes" when
+      // we read window.monaco. The global is only a fallback for callers that
+      // invoke onMount without the argument (e.g. the test harness).
+      const monaco = monacoNs || (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(false);
