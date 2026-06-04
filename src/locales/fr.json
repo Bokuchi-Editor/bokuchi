@@ -574,5 +574,15 @@
     "previousSlide": "Diapositive précédente",
     "nextSlide": "Diapositive suivante",
     "slideCounter": "Diapositive {{current}} sur {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Mode concentration Rin",
+    "exit": "Quitter Rin (Échap)",
+    "toggleWidth": "Basculer la largeur de l'éditeur"
+  },
+  "tabSidebar": {
+    "pin": "Épingler la barre latérale",
+    "unpin": "Détacher la barre latérale"
   }
 }

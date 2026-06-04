@@ -29,6 +29,9 @@ export interface InterfaceSettings {
   folderTreeDisplayMode: FolderTreeDisplayMode;
   folderTreeFileFilter: 'markdown' | 'all';
   scrollSyncMode: ScrollSyncMode;
+  // Vertical-tab sidebar: pinned/fixed (true, always shown) vs hover/auto-hide (false).
+  // Distinct from per-tab `tab.isPinned`.
+  tabSidebarPinned: boolean;
 }
 
 // Rendering settings type definition
@@ -99,6 +102,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',
   scrollSyncMode: 'bidirectional',
+  tabSidebarPinned: true,
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {

@@ -186,6 +186,30 @@ export const storeApi = {
     }
   },
 
+  // Save tab sidebar pinned setting (vertical-tab sidebar fixed vs hover/auto-hide)
+  async saveTabSidebarPinned(pinned: boolean): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('tabSidebarPinned', pinned);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save tab sidebar pinned:', error);
+      throw error;
+    }
+  },
+
+  // Load tab sidebar pinned setting
+  async loadTabSidebarPinned(): Promise<boolean> {
+    try {
+      const storeInstance = await getStore();
+      const pinned = await storeInstance.get('tabSidebarPinned') as boolean | undefined;
+      return pinned ?? true; // default pinned; `false` is meaningful so use ??
+    } catch (error) {
+      console.error('Failed to load tab sidebar pinned:', error);
+      return true;
+    }
+  },
+
   // Save view mode setting
   async saveViewMode(viewMode: 'split' | 'editor' | 'preview'): Promise<void> {
     try {

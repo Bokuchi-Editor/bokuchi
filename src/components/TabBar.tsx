@@ -12,7 +12,9 @@ import {
   Divider,
   Menu,
   MenuItem,
+  SvgIcon,
 } from '@mui/material';
+import type { SvgIconProps } from '@mui/material';
 import { Close, Add, PushPin } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
@@ -40,6 +42,18 @@ import { CSS } from '@dnd-kit/utilities';
 import { dragConfig } from '../config/dragConfig';
 import { SIDEBAR_WIDTH_PX } from '../constants/layout';
 
+// Sidebar pin toggle icon (fixed vs hover). Colored via currentColor so it
+// follows the theme. Distinct from the per-tab PushPin icon.
+const PinIcon: React.FC<SvgIconProps> = (props) => (
+  <SvgIcon viewBox="0 0 512 512" {...props}>
+    <rect
+      x="26.49" y="26.49" width="459.01" height="459.01" rx="48.25" ry="48.25"
+      fill="none" stroke="currentColor" strokeWidth={30} strokeLinecap="round" strokeLinejoin="round"
+    />
+    <rect x="68.53" y="71" width="187.47" height="370.01" rx="23.12" ry="23.12" fill="currentColor" />
+  </SvgIcon>
+);
+
 interface TabBarProps {
   tabs: TabType[];
   activeTabId: string | null;
@@ -57,6 +71,10 @@ interface TabBarProps {
   closeButtonPosition?: 'left' | 'right';
   layout?: 'horizontal' | 'vertical';
   embedded?: boolean;
+  // Vertical-tab sidebar pin (fixed) vs hover/auto-hide. When the toggle handler
+  // is provided, the pin button is shown in the vertical sidebar header.
+  tabSidebarPinned?: boolean;
+  onToggleSidebarPinned?: () => void;
 }
 
 // Custom pointer sensor with drag start threshold
@@ -330,6 +348,8 @@ const TabBar: React.FC<TabBarProps> = ({
   closeButtonPosition = 'right',
   layout = 'horizontal',
   embedded = false,
+  tabSidebarPinned,
+  onToggleSidebarPinned,
 }) => {
   const { t } = useTranslation();
   const sensors = useSensors(
@@ -440,7 +460,26 @@ const TabBar: React.FC<TabBarProps> = ({
           ...(embedded && { overflow: 'hidden', height: '100%' }),
         }}
       >
-        <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
+          {onToggleSidebarPinned && (
+            <Tooltip title={tabSidebarPinned ? t('tabSidebar.unpin') : t('tabSidebar.pin')}>
+              <IconButton
+                onClick={onToggleSidebarPinned}
+                color={tabSidebarPinned ? 'primary' : 'default'}
+                size="small"
+                sx={{
+                  position: 'absolute',
+                  left: 12,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  zIndex: 1,
+                  opacity: tabSidebarPinned ? 1 : 0.6,
+                }}
+              >
+                <PinIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title="New Tab">
             <IconButton
               onClick={onNewTab}

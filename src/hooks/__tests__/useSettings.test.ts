@@ -19,7 +19,7 @@ vi.mock('../../api/storeApi', () => ({
     loadAppSettings: vi.fn().mockResolvedValue({
       editor: { fontSize: 14, showLineNumbers: true, tabSize: 2, wordWrap: true, minimap: false },
       appearance: { theme: 'dark', showLineNumbers: true },
-      interface: { language: 'ja', tabLayout: 'vertical', zoomLevel: 1.0, outlineDisplayMode: 'persistent', folderTreeDisplayMode: 'off', folderTreeFileFilter: 'markdown' },
+      interface: { language: 'ja', tabLayout: 'vertical', tabSidebarPinned: true, zoomLevel: 1.0, outlineDisplayMode: 'persistent', folderTreeDisplayMode: 'off', folderTreeFileFilter: 'markdown' },
       advanced: { autoSave: true, showWhitespace: false, tableConversion: 'confirm' },
       recentFiles: { maxRecentFiles: 20, showPreview: true, previewLength: 100 },
       globalVariables: { author: 'Test' },
@@ -28,6 +28,7 @@ vi.mock('../../api/storeApi', () => ({
     saveTheme: vi.fn().mockResolvedValue(undefined),
     saveGlobalVariables: vi.fn().mockResolvedValue(undefined),
     saveTabLayout: vi.fn().mockResolvedValue(undefined),
+    saveTabSidebarPinned: vi.fn().mockResolvedValue(undefined),
     saveViewMode: vi.fn().mockResolvedValue(undefined),
     saveAppSettings: vi.fn().mockResolvedValue(undefined),
   },

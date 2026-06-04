@@ -574,5 +574,15 @@
     "previousSlide": "上一張投影片",
     "nextSlide": "下一張投影片",
     "slideCounter": "投影片 {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin 專注模式",
+    "exit": "結束 Rin (Esc)",
+    "toggleWidth": "切換編輯器寬度"
+  },
+  "tabSidebar": {
+    "pin": "釘選側邊欄",
+    "unpin": "取消釘選側邊欄"
   }
 }

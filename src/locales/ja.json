@@ -608,5 +608,15 @@
         "katex": "KaTeX"
       }
     }
+  },
+  "rin": {
+    "label": "臨",
+    "tooltip": "臨モード",
+    "exit": "臨モードを終了 (Esc)",
+    "toggleWidth": "エディタ幅を切り替え"
+  },
+  "tabSidebar": {
+    "pin": "サイドバーを固定",
+    "unpin": "サイドバーの固定を解除"
   }
 }

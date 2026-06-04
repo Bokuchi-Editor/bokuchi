@@ -47,6 +47,10 @@ import AppContent from '../AppContent';
 const createDefaultProps = () => ({
   tabLayout: 'horizontal' as const,
   viewMode: 'split' as const,
+  tabSidebarPinned: true,
+  onToggleSidebarPinned: vi.fn(),
+  rinActive: false,
+  rinFullWidth: false,
   tabs: [
     { id: 'tab1', title: 'test.md', content: '# Hello', isModified: false, isNew: false },
   ],
