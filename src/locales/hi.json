@@ -574,5 +574,15 @@
     "previousSlide": "पिछली स्लाइड",
     "nextSlide": "अगली स्लाइड",
     "slideCounter": "स्लाइड {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin फ़ोकस मोड",
+    "exit": "Rin से बाहर निकलें (Esc)",
+    "toggleWidth": "एडिटर चौड़ाई टॉगल करें"
+  },
+  "tabSidebar": {
+    "pin": "साइडबार पिन करें",
+    "unpin": "साइडबार अनपिन करें"
   }
 }

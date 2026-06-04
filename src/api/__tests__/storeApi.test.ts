@@ -211,6 +211,29 @@ describe('storeApi.loadTabLayout', () => {
 });
 
 // ---------------------------------------------------------------------------
+// saveTabSidebarPinned / loadTabSidebarPinned
+// ---------------------------------------------------------------------------
+describe('storeApi.saveTabSidebarPinned', () => {
+  it('stores the pinned flag and persists to disk', async () => {
+    await storeApi.saveTabSidebarPinned(false);
+    expect(mockStore.set).toHaveBeenCalledWith('tabSidebarPinned', false);
+    expect(mockStore.save).toHaveBeenCalled();
+  });
+});
+
+describe('storeApi.loadTabSidebarPinned', () => {
+  it('returns the stored flag (false is meaningful)', async () => {
+    mockStore.get.mockResolvedValue(false);
+    expect(await storeApi.loadTabSidebarPinned()).toBe(false);
+  });
+
+  it('returns true as default when unset', async () => {
+    mockStore.get.mockResolvedValue(undefined);
+    expect(await storeApi.loadTabSidebarPinned()).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // saveViewMode / loadViewMode
 // ---------------------------------------------------------------------------
 describe('storeApi.saveViewMode', () => {

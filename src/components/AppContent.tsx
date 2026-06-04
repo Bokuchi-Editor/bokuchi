@@ -20,6 +20,13 @@ interface AppContentProps {
   // State
   tabLayout: 'horizontal' | 'vertical';
   viewMode: 'split' | 'editor' | 'preview';
+  // Vertical-tab sidebar pinned (fixed) vs hover/auto-hide.
+  tabSidebarPinned: boolean;
+  onToggleSidebarPinned: () => void;
+  // 臨 (Rin) focus mode active — hides all chrome.
+  rinActive: boolean;
+  // 臨 editor width: false = 1000px centered, true = full width (minus the button gutter).
+  rinFullWidth: boolean;
   tabs: Tab[];
   activeTabId: string | null;
   activeTab: Tab | null;
@@ -98,6 +105,10 @@ interface AppContentProps {
 const AppContent: React.FC<AppContentProps> = ({
   tabLayout,
   viewMode,
+  tabSidebarPinned,
+  onToggleSidebarPinned,
+  rinActive,
+  rinFullWidth,
   tabs,
   activeTabId,
   activeTab,
@@ -154,6 +165,8 @@ const AppContent: React.FC<AppContentProps> = ({
   // (prevents bidirectional sync from feedback-looping).
   const [scrollState, setScrollState] = useState<{ fraction: number; source: 'editor' | 'preview' | 'restore' }>({ fraction: 0, source: 'restore' });
   const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
+  // Whether the auto-hide vertical sidebar overlay is currently slid in (hover).
+  const [sidebarOverlayOpen, setSidebarOverlayOpen] = useState(false);
 
   const headings = useOutlineHeadings(activeTab?.content);
 
@@ -204,18 +217,25 @@ const AppContent: React.FC<AppContentProps> = ({
     setRevealLineRequest(prev => ({ lineNumber, requestId: prev.requestId + 1 }));
   }, []);
 
-  const showPersistentOutline = outlineDisplayMode === 'persistent' && outlinePanelOpen && activeTab;
-  const showOverlayOutline = outlineDisplayMode === 'overlay' && activeTab;
+  // 臨 (Rin) focus mode hides all chrome (tabs, outline, folder tree, etc.).
+  const showPersistentOutline = outlineDisplayMode === 'persistent' && outlinePanelOpen && activeTab && !rinActive;
+  const showOverlayOutline = outlineDisplayMode === 'overlay' && activeTab && !rinActive;
 
   const showPersistentFolderTree =
     folderTreeDisplayMode === 'persistent' &&
-    folderTreePanelOpen;
-  const showOverlayFolderTree = folderTreeDisplayMode === 'overlay';
+    folderTreePanelOpen &&
+    !rinActive;
+  const showOverlayFolderTree = folderTreeDisplayMode === 'overlay' && !rinActive;
 
-  // When persistent folder tree is active with vertical tabs, they merge into one sidebar
-  const showMergedLeftSidebar = showPersistentFolderTree && tabLayout === 'vertical';
-  // Show standalone vertical tab bar only when folder tree is not persistent or panel is closed
-  const showStandaloneVerticalTabs = tabLayout === 'vertical' && !showMergedLeftSidebar;
+  // When persistent folder tree is active with vertical tabs, the sidebar also hosts the folder tree.
+  const sidebarHasFolderTree = showPersistentFolderTree && tabLayout === 'vertical';
+  // Auto-hide (hover) mode applies to the whole vertical sidebar — with or without the folder
+  // tree — so toggling the folder tree never changes the pin/hover behavior.
+  const sidebarHoverMode = tabLayout === 'vertical' && !tabSidebarPinned && !rinActive;
+  // Fixed merged sidebar (tabs + folder tree): vertical, has folder tree, pinned.
+  const showMergedLeftSidebar = sidebarHasFolderTree && tabSidebarPinned;
+  // Fixed standalone vertical tab bar: vertical, no folder tree, pinned.
+  const showStandaloneVerticalTabs = tabLayout === 'vertical' && !sidebarHasFolderTree && tabSidebarPinned && !rinActive;
 
   // Resizable divider state for merged sidebar
   const {
@@ -235,9 +255,90 @@ const AppContent: React.FC<AppContentProps> = ({
     return () => clearTimeout(timer);
   }, [outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
 
+  // Vertical sidebar body, shared by the fixed sidebar and the hover overlay so the
+  // pin/hover behavior is identical whether or not the folder tree is merged in.
+  // `inOverlay` makes selecting a tab/file also dismiss the overlay.
+  const renderVerticalSidebarBody = (inOverlay: boolean) => {
+    const afterSelect = inOverlay ? () => setSidebarOverlayOpen(false) : undefined;
+    const handleTabChange = (tabId: string) => {
+      onTabChange(tabId);
+      afterSelect?.();
+    };
+    const tabBar = (
+      <TabBar
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabChange={handleTabChange}
+        onTabClose={onTabClose}
+        onNewTab={onNewTab}
+        onTabReorder={onTabReorder}
+        onTabRename={onTabRename}
+        onToggleTabPinned={onToggleTabPinned}
+        onCopyFilePath={onCopyFilePath}
+        onCopyFileName={onCopyFileName}
+        onCloseOtherTabs={onCloseOtherTabs}
+        onCloseTabsToRight={onCloseTabsToRight}
+        onCloseAllTabs={onCloseAllTabs}
+        closeButtonPosition={tabCloseButtonPosition}
+        layout="vertical"
+        embedded
+        tabSidebarPinned={tabSidebarPinned}
+        onToggleSidebarPinned={onToggleSidebarPinned}
+      />
+    );
+    if (!sidebarHasFolderTree) return tabBar;
+    return (
+      <>
+        {/* Open Editors section (vertical tabs) */}
+        <Box sx={{
+          height: tabSectionHeight,
+          minHeight: 0,
+          overflow: 'hidden',
+          transition: isDragging ? 'none' : 'height 0.2s ease',
+        }}>
+          {tabBar}
+        </Box>
+        {/* Draggable divider */}
+        <Box
+          onMouseDown={handleDividerMouseDown}
+          sx={{
+            height: SIDEBAR_DIVIDER_HEIGHT_PX,
+            cursor: 'row-resize',
+            flexShrink: 0,
+            bgcolor: 'divider',
+            '&:hover': { bgcolor: 'primary.main' },
+            transition: 'background-color 0.15s',
+          }}
+        />
+        {/* Explorer section */}
+        <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+          <FolderTreePanel
+            rootFolderName={folderTreeRootFolderName}
+            tree={folderTree}
+            isLoading={folderTreeIsLoading}
+            activeFilePath={activeTab?.filePath}
+            onFileClick={(filePath) => {
+              onFolderTreeFileClick(filePath);
+              afterSelect?.();
+            }}
+            onToggleExpand={onFolderTreeToggleExpand}
+            onOpenFolder={onFolderTreeOpenFolder}
+            onCloseFolder={onFolderTreeCloseFolder}
+            onRefresh={onFolderTreeRefresh}
+            onClose={onFolderTreePanelClose}
+            onHeaderClick={handleExplorerHeaderClick}
+            collapsed={explorerCollapsed}
+            width={SIDEBAR_WIDTH_PX}
+            onRenameRequest={onRenameRequest}
+          />
+        </Box>
+      </>
+    );
+  };
+
   return (
-    <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-      {/* Merged left sidebar: vertical tabs + folder tree */}
+    <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
+      {/* Merged left sidebar (fixed): vertical tabs + folder tree */}
       {showMergedLeftSidebar && (
         <Box
           ref={sidebarRef}
@@ -253,71 +354,11 @@ const AppContent: React.FC<AppContentProps> = ({
             overflow: 'hidden',
           }}
         >
-          {/* Open Editors section (vertical tabs) */}
-          <Box sx={{
-            height: tabSectionHeight,
-            minHeight: 0,
-            overflow: 'hidden',
-            transition: isDragging ? 'none' : 'height 0.2s ease',
-          }}>
-            <TabBar
-              tabs={tabs}
-              activeTabId={activeTabId}
-              onTabChange={onTabChange}
-              onTabClose={onTabClose}
-              onNewTab={onNewTab}
-              onTabReorder={onTabReorder}
-              onTabRename={onTabRename}
-              onToggleTabPinned={onToggleTabPinned}
-              onCopyFilePath={onCopyFilePath}
-              onCopyFileName={onCopyFileName}
-              onCloseOtherTabs={onCloseOtherTabs}
-              onCloseTabsToRight={onCloseTabsToRight}
-              onCloseAllTabs={onCloseAllTabs}
-              closeButtonPosition={tabCloseButtonPosition}
-              layout="vertical"
-              embedded
-            />
-          </Box>
-          {/* Draggable divider */}
-          <Box
-            onMouseDown={handleDividerMouseDown}
-            sx={{
-              height: SIDEBAR_DIVIDER_HEIGHT_PX,
-              cursor: 'row-resize',
-              flexShrink: 0,
-              bgcolor: 'divider',
-              '&:hover': { bgcolor: 'primary.main' },
-              transition: 'background-color 0.15s',
-            }}
-          />
-          {/* Explorer section */}
-          <Box sx={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'hidden',
-          }}>
-            <FolderTreePanel
-              rootFolderName={folderTreeRootFolderName}
-              tree={folderTree}
-              isLoading={folderTreeIsLoading}
-              activeFilePath={activeTab?.filePath}
-              onFileClick={onFolderTreeFileClick}
-              onToggleExpand={onFolderTreeToggleExpand}
-              onOpenFolder={onFolderTreeOpenFolder}
-              onCloseFolder={onFolderTreeCloseFolder}
-              onRefresh={onFolderTreeRefresh}
-              onClose={onFolderTreePanelClose}
-              onHeaderClick={handleExplorerHeaderClick}
-              collapsed={explorerCollapsed}
-              width={SIDEBAR_WIDTH_PX}
-              onRenameRequest={onRenameRequest}
-            />
-          </Box>
+          {renderVerticalSidebarBody(false)}
         </Box>
       )}
 
-      {/* Standalone vertical tab bar */}
+      {/* Standalone vertical tab bar (pinned/fixed) */}
       {showStandaloneVerticalTabs && (
         <TabBar
           tabs={tabs}
@@ -335,7 +376,62 @@ const AppContent: React.FC<AppContentProps> = ({
           onCloseAllTabs={onCloseAllTabs}
           closeButtonPosition={tabCloseButtonPosition}
           layout={tabLayout}
+          tabSidebarPinned={tabSidebarPinned}
+          onToggleSidebarPinned={onToggleSidebarPinned}
         />
+      )}
+
+      {/* Auto-hide (hover) vertical tab sidebar: left-edge zone + nub + sliding overlay */}
+      {sidebarHoverMode && (
+        <>
+          <Box
+            onMouseEnter={() => setSidebarOverlayOpen(true)}
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 12,
+              zIndex: 1100,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {/* Discoverability nub */}
+            <Box
+              sx={{
+                width: 8,
+                height: 80,
+                borderRadius: 1,
+                bgcolor: 'primary.main',
+                opacity: sidebarOverlayOpen ? 0 : 1,
+                transition: 'opacity 0.2s',
+              }}
+            />
+          </Box>
+          <Box
+            ref={sidebarHasFolderTree ? sidebarRef : undefined}
+            onMouseLeave={() => setSidebarOverlayOpen(false)}
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: SIDEBAR_WIDTH_PX,
+              zIndex: 1101,
+              bgcolor: 'background.paper',
+              borderRight: 1,
+              borderColor: 'divider',
+              boxShadow: 6,
+              display: 'flex',
+              flexDirection: 'column',
+              transform: sidebarOverlayOpen ? 'translateX(0)' : 'translateX(-100%)',
+              transition: 'transform 0.2s ease',
+            }}
+          >
+            {renderVerticalSidebarBody(true)}
+          </Box>
+        </>
       )}
 
       {/* Standalone persistent folder tree (horizontal tab mode) */}
@@ -356,7 +452,7 @@ const AppContent: React.FC<AppContentProps> = ({
       )}
 
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-        {tabLayout === 'horizontal' && (
+        {tabLayout === 'horizontal' && !rinActive && (
           <TabBar
             tabs={tabs}
             activeTabId={activeTabId}
@@ -454,7 +550,15 @@ const AppContent: React.FC<AppContentProps> = ({
                 </>
               )}
               {viewMode === 'editor' && (
-                <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                <Box sx={{
+                  flex: 1,
+                  minWidth: 0,
+                  overflow: 'hidden',
+                  ...(rinActive && (rinFullWidth
+                    // Full width, but keep a gutter on the right so text never sits under the 臨 buttons.
+                    ? { width: '100%', pr: '64px' }
+                    : { maxWidth: 1000, mx: 'auto', width: '100%' })),
+                }}>
                   <Editor
                     content={activeTab.content}
                     onChange={onContentChange}

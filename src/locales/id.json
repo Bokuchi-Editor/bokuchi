@@ -574,5 +574,15 @@
     "previousSlide": "Slide sebelumnya",
     "nextSlide": "Slide berikutnya",
     "slideCounter": "Slide {{current}} dari {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Mode fokus Rin",
+    "exit": "Keluar dari Rin (Esc)",
+    "toggleWidth": "Alihkan lebar editor"
+  },
+  "tabSidebar": {
+    "pin": "Sematkan bilah sisi",
+    "unpin": "Lepas sematan bilah sisi"
   }
 }

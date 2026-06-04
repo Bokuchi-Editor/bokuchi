@@ -25,6 +25,7 @@ export const useSettings = ({
   const [theme, setTheme] = useState<ThemeName>('default');
   const [language, setLanguage] = useState('en');
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [tabSidebarPinned, setTabSidebarPinned] = useState(true);
   const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
   const [appSettings, setAppSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
@@ -60,6 +61,7 @@ export const useSettings = ({
 
         setGlobalVariables(settings.globalVariables);
         setTabLayout(settings.interface.tabLayout);
+        setTabSidebarPinned(settings.interface.tabSidebarPinned);
 
         setIsSettingsLoaded(true);
       } catch (error) {
@@ -127,6 +129,14 @@ export const useSettings = ({
     saveTabLayout();
   }, [tabLayout, isSettingsLoaded]);
 
+  // Save tab sidebar pinned setting
+  useEffect(() => {
+    if (!isSettingsLoaded) return;
+    storeApi.saveTabSidebarPinned(tabSidebarPinned).catch((error) =>
+      console.error('Failed to save tab sidebar pinned:', error)
+    );
+  }, [tabSidebarPinned, isSettingsLoaded]);
+
   // Save view mode setting
   useEffect(() => {
     if (!isSettingsLoaded) return;
@@ -171,6 +181,7 @@ export const useSettings = ({
 
     setGlobalVariables(newSettings.globalVariables);
     setTabLayout(newSettings.interface.tabLayout);
+    setTabSidebarPinned(newSettings.interface.tabSidebarPinned);
 
     // If zoom level changed, also update useZoom state
     if (newSettings.interface.zoomLevel !== currentZoom) {
@@ -189,11 +200,33 @@ export const useSettings = ({
     await storeApi.saveAppSettings(newSettings);
   }, [i18n, currentZoom, zoomIn, zoomOut]);
 
+  // Toggle the vertical-tab sidebar pinned/hover state, keeping appSettings in sync
+  // so the Settings dialog and the in-app pin button agree.
+  const toggleTabSidebarPinned = useCallback(() => {
+    setTabSidebarPinned((prev) => {
+      const next = !prev;
+      setAppSettings((s) => {
+        const merged: AppSettings = {
+          ...s,
+          interface: { ...s.interface, tabSidebarPinned: next },
+        };
+        storeApi.saveAppSettings(merged).catch((err) =>
+          console.error('Failed to save tab sidebar pinned to app settings:', err)
+        );
+        return merged;
+      });
+      return next;
+    });
+  }, []);
+
   return {
     theme,
     language,
     tabLayout,
     setTabLayout,
+    tabSidebarPinned,
+    setTabSidebarPinned,
+    toggleTabSidebarPinned,
     globalVariables,
     setGlobalVariables,
     appSettings,

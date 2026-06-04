@@ -608,5 +608,15 @@
         "katex": "KaTeX"
       }
     }
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin focus mode",
+    "exit": "Exit Rin (Esc)",
+    "toggleWidth": "Toggle editor width"
+  },
+  "tabSidebar": {
+    "pin": "Pin sidebar",
+    "unpin": "Unpin sidebar"
   }
 }

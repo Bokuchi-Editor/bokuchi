@@ -574,5 +574,15 @@
     "previousSlide": "الشريحة السابقة",
     "nextSlide": "الشريحة التالية",
     "slideCounter": "شريحة {{current}} من {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "وضع التركيز Rin",
+    "exit": "الخروج من Rin (Esc)",
+    "toggleWidth": "تبديل عرض المحرر"
+  },
+  "tabSidebar": {
+    "pin": "تثبيت الشريط الجانبي",
+    "unpin": "إلغاء تثبيت الشريط الجانبي"
   }
 }

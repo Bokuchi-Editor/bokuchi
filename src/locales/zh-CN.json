@@ -574,5 +574,15 @@
     "previousSlide": "上一张幻灯片",
     "nextSlide": "下一张幻灯片",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin 专注模式",
+    "exit": "退出 Rin (Esc)",
+    "toggleWidth": "切换编辑器宽度"
+  },
+  "tabSidebar": {
+    "pin": "固定侧边栏",
+    "unpin": "取消固定侧边栏"
   }
 }

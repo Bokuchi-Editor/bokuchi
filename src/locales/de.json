@@ -574,5 +574,15 @@
     "previousSlide": "Vorherige Folie",
     "nextSlide": "Nächste Folie",
     "slideCounter": "Folie {{current}} von {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin-Fokusmodus",
+    "exit": "Rin beenden (Esc)",
+    "toggleWidth": "Editorbreite umschalten"
+  },
+  "tabSidebar": {
+    "pin": "Seitenleiste anheften",
+    "unpin": "Seitenleiste lösen"
   }
 }

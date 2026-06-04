@@ -574,5 +574,15 @@
     "previousSlide": "Slide anterior",
     "nextSlide": "Próximo slide",
     "slideCounter": "Slide {{current}} de {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Modo de foco Rin",
+    "exit": "Sair do Rin (Esc)",
+    "toggleWidth": "Alternar largura do editor"
+  },
+  "tabSidebar": {
+    "pin": "Fixar barra lateral",
+    "unpin": "Desafixar barra lateral"
   }
 }

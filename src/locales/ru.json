@@ -574,5 +574,15 @@
     "previousSlide": "Предыдущий слайд",
     "nextSlide": "Следующий слайд",
     "slideCounter": "Слайд {{current}} из {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Режим фокусировки Rin",
+    "exit": "Выйти из Rin (Esc)",
+    "toggleWidth": "Переключить ширину редактора"
+  },
+  "tabSidebar": {
+    "pin": "Закрепить боковую панель",
+    "unpin": "Открепить боковую панель"
   }
 }

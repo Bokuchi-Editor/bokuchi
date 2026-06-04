@@ -574,5 +574,15 @@
     "previousSlide": "Slide trước",
     "nextSlide": "Slide tiếp theo",
     "slideCounter": "Slide {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Chế độ tập trung Rin",
+    "exit": "Thoát Rin (Esc)",
+    "toggleWidth": "Chuyển đổi chiều rộng trình soạn thảo"
+  },
+  "tabSidebar": {
+    "pin": "Ghim thanh bên",
+    "unpin": "Bỏ ghim thanh bên"
   }
 }
