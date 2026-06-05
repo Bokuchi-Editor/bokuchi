@@ -415,7 +415,17 @@
       "resetSuccess": "設定重設成功",
       "resetError": "設定重設失敗",
       "enableMarp": "Marp（簡報）",
-      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。"
+      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。",
+      "marpThemeFolder": "Marp 佈景主題資料夾",
+      "marpThemeFolderDescription": "從包含 CSS 檔案的資料夾註冊自訂 Marp 佈景主題。每個帶有 /* @theme name */ 標頭的檔案都可透過 theme: 指令在投影片中選擇。",
+      "marpThemeFolderBrowse": "選擇資料夾…",
+      "marpThemeFolderReload": "重新載入",
+      "marpThemeFolderClear": "清除",
+      "marpThemeFolderNone": "未選擇資料夾。",
+      "marpThemeFolderScanning": "掃描中…",
+      "marpThemeFolderDetected": "偵測到的佈景主題",
+      "marpThemeFolderEmpty": "找不到帶有 @theme 標頭的佈景主題。",
+      "marpThemeFolderIgnored": "已忽略（缺少 @theme 標頭）"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "簡報",
     "previousSlide": "上一張投影片",
     "nextSlide": "下一張投影片",
+    "reloadThemes": "重新載入佈景主題",
     "slideCounter": "投影片 {{current}} / {{total}}"
   },
   "rin": {

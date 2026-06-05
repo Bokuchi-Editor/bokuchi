@@ -415,7 +415,17 @@
       "resetSuccess": "सेटिंग्स सफलतापूर्वक रीसेट की गईं",
       "resetError": "सेटिंग्स रीसेट करने में विफल",
       "enableMarp": "Marp (प्रस्तुतियाँ)",
-      "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।"
+      "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।",
+      "marpThemeFolder": "Marp थीम फ़ोल्डर",
+      "marpThemeFolderDescription": "CSS फ़ाइलों के फ़ोल्डर से कस्टम Marp थीम पंजीकृत करें। /* @theme name */ हेडर वाली प्रत्येक फ़ाइल theme: डायरेक्टिव के माध्यम से स्लाइड में चयन योग्य हो जाती है।",
+      "marpThemeFolderBrowse": "फ़ोल्डर चुनें…",
+      "marpThemeFolderReload": "पुनः लोड करें",
+      "marpThemeFolderClear": "साफ़ करें",
+      "marpThemeFolderNone": "कोई फ़ोल्डर चयनित नहीं।",
+      "marpThemeFolderScanning": "स्कैन हो रहा है…",
+      "marpThemeFolderDetected": "पहचानी गई थीम",
+      "marpThemeFolderEmpty": "@theme हेडर वाली कोई थीम नहीं मिली।",
+      "marpThemeFolderIgnored": "अनदेखा किया गया (@theme हेडर नहीं)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "प्रस्तुति",
     "previousSlide": "पिछली स्लाइड",
     "nextSlide": "अगली स्लाइड",
+    "reloadThemes": "थीम पुनः लोड करें",
     "slideCounter": "स्लाइड {{current}} / {{total}}"
   },
   "rin": {

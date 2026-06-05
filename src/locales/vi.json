@@ -415,7 +415,17 @@
       "resetSuccess": "Đặt lại cài đặt thành công",
       "resetError": "Không thể đặt lại cài đặt",
       "enableMarp": "Marp (Trình chiếu)",
-      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu."
+      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu.",
+      "marpThemeFolder": "Thư mục giao diện Marp",
+      "marpThemeFolderDescription": "Đăng ký giao diện Marp tùy chỉnh từ một thư mục chứa các tệp CSS. Mỗi tệp có tiêu đề /* @theme name */ sẽ có thể được chọn trong slide thông qua chỉ thị theme:.",
+      "marpThemeFolderBrowse": "Chọn thư mục…",
+      "marpThemeFolderReload": "Tải lại",
+      "marpThemeFolderClear": "Xóa",
+      "marpThemeFolderNone": "Chưa chọn thư mục.",
+      "marpThemeFolderScanning": "Đang quét…",
+      "marpThemeFolderDetected": "Giao diện đã phát hiện",
+      "marpThemeFolderEmpty": "Không tìm thấy giao diện nào có tiêu đề @theme.",
+      "marpThemeFolderIgnored": "Đã bỏ qua (thiếu tiêu đề @theme)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Trình chiếu",
     "previousSlide": "Slide trước",
     "nextSlide": "Slide tiếp theo",
+    "reloadThemes": "Tải lại giao diện",
     "slideCounter": "Slide {{current}} / {{total}}"
   },
   "rin": {

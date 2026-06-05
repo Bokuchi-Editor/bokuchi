@@ -415,7 +415,17 @@
       "resetSuccess": "Настройки успешно сброшены",
       "resetError": "Не удалось сбросить настройки",
       "enableMarp": "Marp (Презентации)",
-      "enableMarpDescription": "Предпросмотр слайдов Markdown с marp: true в виде презентации."
+      "enableMarpDescription": "Предпросмотр слайдов Markdown с marp: true в виде презентации.",
+      "marpThemeFolder": "Папка тем Marp",
+      "marpThemeFolderDescription": "Регистрируйте пользовательские темы Marp из папки с CSS-файлами. Каждый файл с заголовком /* @theme name */ можно выбрать на слайде через директиву theme:.",
+      "marpThemeFolderBrowse": "Выбрать папку…",
+      "marpThemeFolderReload": "Перезагрузить",
+      "marpThemeFolderClear": "Очистить",
+      "marpThemeFolderNone": "Папка не выбрана.",
+      "marpThemeFolderScanning": "Сканирование…",
+      "marpThemeFolderDetected": "Обнаруженные темы",
+      "marpThemeFolderEmpty": "Темы с заголовком @theme не найдены.",
+      "marpThemeFolderIgnored": "Пропущено (отсутствует заголовок @theme)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Презентация",
     "previousSlide": "Предыдущий слайд",
     "nextSlide": "Следующий слайд",
+    "reloadThemes": "Перезагрузить темы",
     "slideCounter": "Слайд {{current}} из {{total}}"
   },
   "rin": {

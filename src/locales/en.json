@@ -415,7 +415,17 @@
       "resetSuccess": "Settings reset successfully",
       "resetError": "Failed to reset settings",
       "enableMarp": "Marp (Presentations)",
-      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation."
+      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation.",
+      "marpThemeFolder": "Marp Theme Folder",
+      "marpThemeFolderDescription": "Register custom Marp themes from a folder of CSS files. Each file with a /* @theme name */ header becomes selectable in a slide via the theme: directive.",
+      "marpThemeFolderBrowse": "Choose Folder…",
+      "marpThemeFolderReload": "Reload",
+      "marpThemeFolderClear": "Clear",
+      "marpThemeFolderNone": "No folder selected.",
+      "marpThemeFolderScanning": "Scanning…",
+      "marpThemeFolderDetected": "Detected themes",
+      "marpThemeFolderEmpty": "No themes with an @theme header were found.",
+      "marpThemeFolderIgnored": "Ignored (missing @theme header)"
     }
   },
   "fileOperations": {
@@ -596,6 +606,7 @@
     "presentation": "Presentation",
     "previousSlide": "Previous Slide",
     "nextSlide": "Next Slide",
+    "reloadThemes": "Reload themes",
     "slideCounter": "Slide {{current}} of {{total}}",
     "featureNotice": {
       "message": "This file uses {{features}}. Enable it in Settings to see it rendered.",

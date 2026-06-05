@@ -39,6 +39,10 @@ export interface RenderingSettings {
   enableKatex: boolean;
   enableMermaid: boolean;
   enableMarp: boolean;
+  // Absolute path to a folder of custom Marp theme CSS files. Each `.css` file
+  // carrying a `/* @theme name */` header is registered so slides can select it
+  // via the `theme:` front-matter directive. Empty string = no custom themes.
+  marpThemeFolder?: string;
 }
 
 // How the preview lays out tables.
@@ -115,6 +119,7 @@ export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
   enableKatex: true,
   enableMermaid: false,
   enableMarp: false,
+  marpThemeFolder: '',
 };
 
 export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {

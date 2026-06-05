@@ -415,7 +415,17 @@
       "resetSuccess": "设置重置成功",
       "resetError": "设置重置失败",
       "enableMarp": "Marp（演示文稿）",
-      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。"
+      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。",
+      "marpThemeFolder": "Marp 主题文件夹",
+      "marpThemeFolderDescription": "从包含 CSS 文件的文件夹注册自定义 Marp 主题。每个带有 /* @theme name */ 头部的文件都可通过 theme: 指令在幻灯片中选择。",
+      "marpThemeFolderBrowse": "选择文件夹…",
+      "marpThemeFolderReload": "重新加载",
+      "marpThemeFolderClear": "清除",
+      "marpThemeFolderNone": "未选择文件夹。",
+      "marpThemeFolderScanning": "正在扫描…",
+      "marpThemeFolderDetected": "检测到的主题",
+      "marpThemeFolderEmpty": "未找到带有 @theme 头部的主题。",
+      "marpThemeFolderIgnored": "已忽略（缺少 @theme 头部）"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "演示文稿",
     "previousSlide": "上一张幻灯片",
     "nextSlide": "下一张幻灯片",
+    "reloadThemes": "重新加载主题",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
   },
   "rin": {

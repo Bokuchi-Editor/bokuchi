@@ -415,7 +415,17 @@
       "resetSuccess": "Paramètres réinitialisés avec succès",
       "resetError": "Échec de la réinitialisation des paramètres",
       "enableMarp": "Marp (Présentations)",
-      "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation."
+      "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation.",
+      "marpThemeFolder": "Dossier de thèmes Marp",
+      "marpThemeFolderDescription": "Enregistrez des thèmes Marp personnalisés à partir d'un dossier de fichiers CSS. Chaque fichier comportant un en-tête /* @theme name */ devient sélectionnable dans une diapositive via la directive theme:.",
+      "marpThemeFolderBrowse": "Choisir un dossier…",
+      "marpThemeFolderReload": "Recharger",
+      "marpThemeFolderClear": "Effacer",
+      "marpThemeFolderNone": "Aucun dossier sélectionné.",
+      "marpThemeFolderScanning": "Analyse…",
+      "marpThemeFolderDetected": "Thèmes détectés",
+      "marpThemeFolderEmpty": "Aucun thème avec en-tête @theme trouvé.",
+      "marpThemeFolderIgnored": "Ignorés (en-tête @theme manquant)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Présentation",
     "previousSlide": "Diapositive précédente",
     "nextSlide": "Diapositive suivante",
+    "reloadThemes": "Recharger les thèmes",
     "slideCounter": "Diapositive {{current}} sur {{total}}"
   },
   "rin": {

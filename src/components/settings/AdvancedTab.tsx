@@ -22,6 +22,7 @@ import {
   type RadioSettingOption,
   type SettingChangeHandler,
 } from './SettingControls';
+import MarpThemeFolderCard from './MarpThemeFolderCard';
 
 interface RenderingToggleRowProps {
   target: SettingsFocusTarget;
@@ -188,6 +189,13 @@ const AdvancedTab: React.FC<AdvancedTabProps> = ({
           />
         </CardContent>
       </Card>
+
+      {(settings.rendering?.enableMarp ?? false) && (
+        <MarpThemeFolderCard
+          folder={settings.rendering?.marpThemeFolder ?? ''}
+          onChange={(folder) => onSettingChange('rendering', 'marpThemeFolder', folder)}
+        />
+      )}
 
       <Card>
         <CardContent>
