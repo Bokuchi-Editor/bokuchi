@@ -6,6 +6,7 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { variableApi } from '../api/variableApi';
 import { renderMarp, buildSlideDocument, buildAllSlidesDocument, buildThumbnailDocument, buildContinuousStyleContent } from '../utils/marpRenderer';
 import { inlineMarpRelativeImages } from '../utils/marpImageInliner';
+import { loadThemeSrcCss } from '../utils/marpThemeLoader';
 import { computeSlideLineRanges, scrollFractionToSlidePosition } from '../utils/marpSlideRanges';
 import { contentHasMermaid, processMermaidBlocks, reinitializeMermaid } from '../utils/markdownRenderers';
 
@@ -87,6 +88,17 @@ const MarpPreview: React.FC<MarpPreviewProps> = ({
           html = await inlineMarpRelativeImages(html, filePath);
         } catch (err) {
           console.error('[MarpPreview] inlineMarpRelativeImages failed:', err);
+        }
+        if (stale) return;
+
+        // Append CSS referenced by the `theme-src` front-matter directive,
+        // after the Marp-generated theme CSS so its rules win on equal
+        // specificity (standard last-wins cascade).
+        try {
+          const extraCss = await loadThemeSrcCss(result.processedContent, filePath);
+          if (extraCss) css = `${css}\n${extraCss}`;
+        } catch (err) {
+          console.error('[MarpPreview] loadThemeSrcCss failed:', err);
         }
         if (stale) return;
       }

@@ -15,7 +15,7 @@ async function getMarp(): Promise<Marp> {
 // of the document. Anchoring the opening fence to position 0 prevents matches
 // against `---` that appear inside fenced code blocks (e.g. a Marp tutorial
 // that shows front-matter as an example).
-const MARP_FRONTMATTER_RE = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
+export const MARP_FRONTMATTER_RE = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 
 /**
  * Check whether the markdown content has a `marp: true` YAML front-matter.
