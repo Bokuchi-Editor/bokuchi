@@ -81,9 +81,12 @@ interface TabBarProps {
 const createThresholdPointerSensor = () => {
   return useSensor(PointerSensor, {
     activationConstraint: {
+      // Use a distance-only constraint. Combining `distance` with `delay`
+      // makes dnd-kit treat it as a press-and-hold (delay) constraint and
+      // cancel the drag if the pointer moves beyond `tolerance` before the
+      // delay elapses, so a quick grab-and-drag never starts. Distance alone
+      // means: move beyond the threshold to start dragging, otherwise it's a click.
       distance: dragConfig.dragThreshold,
-      delay: dragConfig.dragDelay,
-      tolerance: 3,
     },
   });
 };

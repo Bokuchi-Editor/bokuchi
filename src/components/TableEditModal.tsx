@@ -151,9 +151,9 @@ const TableEditModal: React.FC<TableEditModalProps> = ({ table, onApply, onClose
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
+        // Distance-only constraint (see TabBar.tsx): combining `distance` with
+        // `delay` makes dnd-kit cancel a quick grab-and-drag before it starts.
         distance: dragConfig.dragThreshold,
-        delay: dragConfig.dragDelay,
-        tolerance: 3,
       },
     }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
