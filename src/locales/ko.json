@@ -415,7 +415,17 @@
       "resetSuccess": "설정이 성공적으로 재설정되었습니다",
       "resetError": "설정 재설정에 실패했습니다",
       "enableMarp": "Marp (프레젠테이션)",
-      "enableMarpDescription": "marp: true 프론트매터가 있는 Markdown 슬라이드를 프레젠테이션으로 미리 봅니다."
+      "enableMarpDescription": "marp: true 프론트매터가 있는 Markdown 슬라이드를 프레젠테이션으로 미리 봅니다.",
+      "marpThemeFolder": "Marp 테마 폴더",
+      "marpThemeFolderDescription": "CSS 파일이 있는 폴더에서 사용자 지정 Marp 테마를 등록합니다. /* @theme name */ 헤더가 있는 각 파일은 theme: 디렉티브로 슬라이드에서 선택할 수 있습니다.",
+      "marpThemeFolderBrowse": "폴더 선택…",
+      "marpThemeFolderReload": "새로고침",
+      "marpThemeFolderClear": "지우기",
+      "marpThemeFolderNone": "선택된 폴더가 없습니다.",
+      "marpThemeFolderScanning": "검색 중…",
+      "marpThemeFolderDetected": "감지된 테마",
+      "marpThemeFolderEmpty": "@theme 헤더가 있는 테마를 찾을 수 없습니다.",
+      "marpThemeFolderIgnored": "무시됨 (@theme 헤더 없음)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "프레젠테이션",
     "previousSlide": "이전 슬라이드",
     "nextSlide": "다음 슬라이드",
+    "reloadThemes": "테마 새로고침",
     "slideCounter": "슬라이드 {{current}} / {{total}}"
   },
   "rin": {

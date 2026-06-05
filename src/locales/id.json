@@ -415,7 +415,17 @@
       "resetSuccess": "Pengaturan berhasil direset",
       "resetError": "Gagal mereset pengaturan",
       "enableMarp": "Marp (Presentasi)",
-      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi."
+      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi.",
+      "marpThemeFolder": "Folder Tema Marp",
+      "marpThemeFolderDescription": "Daftarkan tema Marp kustom dari folder berisi file CSS. Setiap file dengan header /* @theme name */ dapat dipilih dalam slide melalui direktif theme:.",
+      "marpThemeFolderBrowse": "Pilih Folder…",
+      "marpThemeFolderReload": "Muat ulang",
+      "marpThemeFolderClear": "Hapus",
+      "marpThemeFolderNone": "Tidak ada folder yang dipilih.",
+      "marpThemeFolderScanning": "Memindai…",
+      "marpThemeFolderDetected": "Tema terdeteksi",
+      "marpThemeFolderEmpty": "Tidak ada tema dengan header @theme yang ditemukan.",
+      "marpThemeFolderIgnored": "Diabaikan (header @theme tidak ada)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Presentasi",
     "previousSlide": "Slide sebelumnya",
     "nextSlide": "Slide berikutnya",
+    "reloadThemes": "Muat ulang tema",
     "slideCounter": "Slide {{current}} dari {{total}}"
   },
   "rin": {

@@ -415,7 +415,17 @@
       "resetSuccess": "Einstellungen erfolgreich zurückgesetzt",
       "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
       "enableMarp": "Marp (Präsentationen)",
-      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen."
+      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen.",
+      "marpThemeFolder": "Marp-Themenordner",
+      "marpThemeFolderDescription": "Registriere benutzerdefinierte Marp-Themes aus einem Ordner mit CSS-Dateien. Jede Datei mit einem /* @theme name */-Header wird in einer Folie über die theme:-Direktive auswählbar.",
+      "marpThemeFolderBrowse": "Ordner auswählen…",
+      "marpThemeFolderReload": "Neu laden",
+      "marpThemeFolderClear": "Löschen",
+      "marpThemeFolderNone": "Kein Ordner ausgewählt.",
+      "marpThemeFolderScanning": "Wird gescannt…",
+      "marpThemeFolderDetected": "Erkannte Themes",
+      "marpThemeFolderEmpty": "Keine Themes mit @theme-Header gefunden.",
+      "marpThemeFolderIgnored": "Ignoriert (fehlender @theme-Header)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Präsentation",
     "previousSlide": "Vorherige Folie",
     "nextSlide": "Nächste Folie",
+    "reloadThemes": "Themes neu laden",
     "slideCounter": "Folie {{current}} von {{total}}"
   },
   "rin": {

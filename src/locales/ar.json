@@ -415,7 +415,17 @@
       "resetSuccess": "تم إعادة تعيين الإعدادات بنجاح",
       "resetError": "فشل في إعادة تعيين الإعدادات",
       "enableMarp": "Marp (عروض تقديمية)",
-      "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي."
+      "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي.",
+      "marpThemeFolder": "مجلد سمات Marp",
+      "marpThemeFolderDescription": "سجّل سمات Marp مخصصة من مجلد يحتوي على ملفات CSS. كل ملف يحتوي على ترويسة /* @theme name */ يصبح قابلاً للاختيار في الشريحة عبر توجيه theme:.",
+      "marpThemeFolderBrowse": "اختر مجلدًا…",
+      "marpThemeFolderReload": "إعادة التحميل",
+      "marpThemeFolderClear": "مسح",
+      "marpThemeFolderNone": "لم يتم اختيار مجلد.",
+      "marpThemeFolderScanning": "جارٍ الفحص…",
+      "marpThemeFolderDetected": "السمات المكتشفة",
+      "marpThemeFolderEmpty": "لم يتم العثور على سمات تحتوي على ترويسة @theme.",
+      "marpThemeFolderIgnored": "تم التجاهل (ترويسة @theme مفقودة)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "عرض تقديمي",
     "previousSlide": "الشريحة السابقة",
     "nextSlide": "الشريحة التالية",
+    "reloadThemes": "إعادة تحميل السمات",
     "slideCounter": "شريحة {{current}} من {{total}}"
   },
   "rin": {

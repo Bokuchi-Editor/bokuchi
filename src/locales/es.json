@@ -415,7 +415,17 @@
       "resetSuccess": "Configuración restablecida exitosamente",
       "resetError": "Error al restablecer configuración",
       "enableMarp": "Marp (Presentaciones)",
-      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación."
+      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación.",
+      "marpThemeFolder": "Carpeta de temas de Marp",
+      "marpThemeFolderDescription": "Registra temas personalizados de Marp desde una carpeta de archivos CSS. Cada archivo con un encabezado /* @theme name */ se podrá seleccionar en una diapositiva mediante la directiva theme:.",
+      "marpThemeFolderBrowse": "Elegir carpeta…",
+      "marpThemeFolderReload": "Recargar",
+      "marpThemeFolderClear": "Borrar",
+      "marpThemeFolderNone": "Ninguna carpeta seleccionada.",
+      "marpThemeFolderScanning": "Escaneando…",
+      "marpThemeFolderDetected": "Temas detectados",
+      "marpThemeFolderEmpty": "No se encontraron temas con encabezado @theme.",
+      "marpThemeFolderIgnored": "Ignorados (falta el encabezado @theme)"
     }
   },
   "fileOperations": {
@@ -573,6 +583,7 @@
     "presentation": "Presentación",
     "previousSlide": "Diapositiva anterior",
     "nextSlide": "Diapositiva siguiente",
+    "reloadThemes": "Recargar temas",
     "slideCounter": "Diapositiva {{current}} de {{total}}"
   },
   "rin": {
