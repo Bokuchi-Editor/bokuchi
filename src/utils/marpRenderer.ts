@@ -36,9 +36,24 @@ export interface MarpRenderResult {
 /**
  * Render markdown as Marp presentation HTML + CSS.
  * Lazy-loads @marp-team/marp-core on first call.
+ *
+ * `customThemeCss` is a list of theme CSS strings (from the user's configured
+ * Marp theme folder). Each is registered so a slide's `theme:` directive can
+ * select it. Files without a valid `@theme` header throw on registration and
+ * are skipped, so one bad file never breaks the render.
  */
-export async function renderMarp(markdown: string): Promise<MarpRenderResult> {
+export async function renderMarp(
+  markdown: string,
+  customThemeCss: string[] = [],
+): Promise<MarpRenderResult> {
   const marp = await getMarp();
+  for (const themeCss of customThemeCss) {
+    try {
+      marp.themeSet.add(themeCss);
+    } catch (err) {
+      console.warn('[MarpPreview] Skipped invalid Marp theme CSS:', err);
+    }
+  }
   const { html, css } = marp.render(markdown);
   const slideCount = countSlides(html);
   return { html, css, slideCount };

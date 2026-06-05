@@ -415,7 +415,17 @@
       "resetSuccess": "設定が正常にリセットされました",
       "resetError": "設定のリセットに失敗しました",
       "enableMarp": "Marp（プレゼンテーション）",
-      "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。"
+      "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。",
+      "marpThemeFolder": "Marp テーマフォルダ",
+      "marpThemeFolderDescription": "CSSファイルを集めたフォルダからカスタムMarpテーマを登録します。/* @theme 名前 */ ヘッダーを持つファイルが、スライドの theme: ディレクティブで選択できるようになります。",
+      "marpThemeFolderBrowse": "フォルダを選択…",
+      "marpThemeFolderReload": "再読み込み",
+      "marpThemeFolderClear": "クリア",
+      "marpThemeFolderNone": "フォルダが未選択です。",
+      "marpThemeFolderScanning": "スキャン中…",
+      "marpThemeFolderDetected": "検出されたテーマ",
+      "marpThemeFolderEmpty": "@theme ヘッダーを持つテーマが見つかりませんでした。",
+      "marpThemeFolderIgnored": "無視（@theme ヘッダーなし）"
     }
   },
   "fileOperations": {
@@ -596,6 +606,7 @@
     "presentation": "プレゼンテーション",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
+    "reloadThemes": "テーマを再読み込み",
     "slideCounter": "スライド {{current}} / {{total}}",
     "featureNotice": {
       "message": "このファイルでは {{features}} の記法が使われています。設定でONにするとプレビューに反映されます。",

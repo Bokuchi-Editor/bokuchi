@@ -99,7 +99,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // Delegate to MarpPreview for Marp presentations
   if (isMarp) {
-    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} viewMode={viewMode} />;
+    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} viewMode={viewMode} marpThemeFolder={renderingSettings.marpThemeFolder} />;
   }
 
   return (

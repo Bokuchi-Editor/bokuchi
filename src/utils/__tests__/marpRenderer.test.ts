@@ -1,8 +1,19 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Records every css string passed to themeSet.add across all MockMarp instances
+// so tests can assert which custom themes were registered before render.
+const themeAddSpy = vi.fn();
 
 // Mock @marp-team/marp-core
 vi.mock('@marp-team/marp-core', () => ({
   default: class MockMarp {
+    themeSet = {
+      add: (css: string) => {
+        // Mirror marp-core: reject CSS without an @theme header.
+        if (!/@theme\s+\S+/.test(css)) throw new Error('Marpit theme CSS requires @theme meta.');
+        themeAddSpy(css);
+      },
+    };
     render() {
       return {
         html: '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject><section>Slide 1</section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject><section>Slide 2</section></foreignObject></svg></div>',
@@ -161,10 +172,35 @@ marp: true
 });
 
 describe('renderMarp', () => {
+  beforeEach(() => themeAddSpy.mockReset());
+
   it('returns html, css, and slideCount from marp-core render', async () => {
     const result = await renderMarp('---\nmarp: true\n---\n# Slide');
     expect(result.html).toContain('marpit');
     expect(result.css).toContain('.marpit');
+    expect(result.slideCount).toBe(2);
+  });
+
+  it('does not register any theme when no custom themes are passed', async () => {
+    await renderMarp('---\nmarp: true\n---\n# Slide');
+    expect(themeAddSpy).not.toHaveBeenCalled();
+  });
+
+  it('registers each custom theme CSS before rendering', async () => {
+    await renderMarp('---\nmarp: true\n---\n# Slide', [
+      '/* @theme a */ section{}',
+      '/* @theme b */ section{}',
+    ]);
+    expect(themeAddSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('skips invalid theme CSS (no @theme) without throwing', async () => {
+    const result = await renderMarp('---\nmarp: true\n---\n# Slide', [
+      'section{}',                 // invalid — no @theme header
+      '/* @theme ok */ section{}', // valid
+    ]);
+    expect(themeAddSpy).toHaveBeenCalledTimes(1);
+    expect(themeAddSpy).toHaveBeenCalledWith('/* @theme ok */ section{}');
     expect(result.slideCount).toBe(2);
   });
 });
