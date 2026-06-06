@@ -32,6 +32,13 @@ Built with Tauri, React, and Rust.
 - **Markdown toolbar**: Quick-access toolbar for headings, bold, italic, lists, links, tables, and more
 - **Auto-save**: Automatic saving with debounce
 - **State persistence**: Automatically saves and restores application state
+- **Word count**: Live word count in the status bar (CJK-aware)
+
+### Advanced Rendering
+
+- **Math expressions**: KaTeX rendering with `$...$` (inline) and `$$...$$` (display) syntax
+- **Diagrams**: Mermaid flowcharts, sequence diagrams, and more from fenced code blocks
+- **Presentations**: Marp slide preview for documents with `marp: true` front-matter, including custom theme folders and external CSS
 
 ### File Operations
 
@@ -43,7 +50,7 @@ Built with Tauri, React, and Rust.
 
 ### Customization & Themes
 
-- **Multiple themes**: Default, Dark, Pastel, Vivid, and Darcula themes
+- **Multiple themes**: Default, Dark, Pastel, Vivid, Dawn, Twilight, Silk, Ink, and Darcula themes
 - **Variable system**: Support for custom variables in Markdown (local and global)
 - **Internationalization**: Multi-language support (14 languages)
 - **Responsive design**: Optimized for different screen sizes
@@ -110,7 +117,7 @@ Set global variables through the Variables settings panel. These are available a
 - [ ] PlantUML diagrams
 - [ ] Split editor (two files side by side)
 - [ ] Image paste / drop management
-- [ ] Word count with reading time
+- [ ] Reading time estimate
 - [ ] Undo / redo history persistence
 - [ ] Markdown snippets / templates
 
