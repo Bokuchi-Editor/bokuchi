@@ -572,21 +572,41 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "katexRendering": {
-        "title": "Korrekturen bei der Mathe-Darstellung (KaTeX)",
-        "description": "Behoben: Mathematische Formeln konnten die Vorschau zerstören oder leer dargestellt werden, wenn ein Dokument bestimmte Ausdrücke enthielt (etwa Symbole mit Akzent oder Betragsstriche in Tabellen). Formeln werden nun zuverlässig dargestellt."
+      "newThemes": {
+        "title": "Vier neue Themes",
+        "description": "Vier neue Farb-Themes hinzugefügt – Dawn, Twilight, Silk und Ink –, sodass du mehr Looks für Editor und Vorschau zur Auswahl hast."
       },
-      "variableCrash": {
-        "title": "Absturz bei Verwendung von Variablen behoben",
-        "description": "Behoben: Das Eingeben bestimmter Variablen-Kommentare während des Bearbeitens konnte die App zum Absturz bringen. Die Variablenfunktion ist nun stabil."
+      "tableEditing": {
+        "title": "Tabellen visuell bearbeiten",
+        "description": "Bearbeite Markdown-Tabellen direkt im Editor und in der Vorschau. Ein eigener Tabelleneditor erlaubt das Hinzufügen und Entfernen von Zeilen und Spalten sowie das Bearbeiten von Zellen direkt vor Ort und schreibt anschließend sauberes Markdown zurück."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp wird nur noch am Dokumentanfang erkannt",
-        "description": "Ein `marp: true`-Frontmatter innerhalb eines Codeblocks oder weiter unten im Dokument wird nicht mehr fälschlich als echte Marp-Folie erkannt. Nur Frontmatter ganz am Anfang der Datei aktiviert Marp."
+      "verticalTabHover": {
+        "title": "Automatisch ausblendende vertikale Tabs & Fokusmodus",
+        "description": "Wenn die Tabs vertikal angezeigt werden, kann die Tableiste eingeklappt bleiben und beim Überfahren mit der Maus ausfahren. Ein neuer Fokusmodus (Rin) maximiert den Bearbeitungsbereich, indem die umgebende Oberfläche ausgeblendet wird."
       },
-      "mermaidStrayElements": {
-        "title": "Übrig gebliebene Mermaid-Elemente bereinigt",
-        "description": "Behoben: Mermaid konnte leere Elemente am unteren Rand des Fensters hinterlassen, insbesondere beim Wechsel in den Vollbildmodus."
+      "marpExternalCss": {
+        "title": "Eigene Marp-Themes & externes CSS",
+        "description": "Verweise Bokuchi auf einen Ordner mit deinen eigenen Marp-Theme-Dateien und lade externes CSS, sodass deine Folien Stile über die integrierten Themes hinaus verwenden können."
+      },
+      "newTabButtonPosition": {
+        "title": "Position der Schaltfläche „Neuer Tab“ wählen",
+        "description": "Eine neue Option lässt dich die Schaltfläche „Tab hinzufügen (Neu)“ dort platzieren, wo du sie haben möchtest – auch direkt unter dem aktuell geöffneten Tab."
+      },
+      "formattingBarToggle": {
+        "title": "Formatierungsleiste ein- oder ausblenden",
+        "description": "Die Markdown-Formatierungsleiste lässt sich jetzt in den Einstellungen ein- oder ausschalten, sodass du den Editor so minimal halten kannst, wie du möchtest."
+      },
+      "statusBarSettings": {
+        "title": "Schnelleinstellungen in der Statusleiste",
+        "description": "Häufig verwendete Einstellungen sind jetzt direkt in der Statusleiste für schnellen Zugriff verfügbar."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Standardmäßig beidseitige Scroll-Synchronisierung",
+        "description": "Die Scroll-Synchronisierung ist jetzt standardmäßig beidseitig: Wenn du den Editor oder die Vorschau scrollst, zieht die jeweils andere Seite mit."
+      },
+      "tabDragFix": {
+        "title": "Tab-Ziehen behoben",
+        "description": "Ein Fehler wurde behoben, durch den sich Tabs beim Ziehen zum Neuanordnen fehlerhaft verhalten konnten."
       }
     }
   },

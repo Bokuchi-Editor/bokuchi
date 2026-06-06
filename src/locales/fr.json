@@ -572,21 +572,41 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "katexRendering": {
-        "title": "Corrections du rendu mathématique (KaTeX)",
-        "description": "Correction des formules mathématiques qui pouvaient casser l'aperçu ou s'afficher vides lorsqu'un document utilisait certaines expressions (symboles accentués ou barres de valeur absolue dans les tableaux). Les formules s'affichent désormais de façon fiable."
+      "newThemes": {
+        "title": "Quatre nouveaux thèmes",
+        "description": "Quatre nouveaux thèmes de couleur ont été ajoutés — Dawn, Twilight, Silk et Ink — pour vous offrir plus de styles au choix pour l’éditeur et l’aperçu."
       },
-      "variableCrash": {
-        "title": "Correction d'un plantage lors de l'utilisation des variables",
-        "description": "Correction d'un problème où la saisie de certains commentaires de variable pendant l'édition pouvait faire planter l'application. La fonction de variables est désormais stable."
+      "tableEditing": {
+        "title": "Modifier les tableaux visuellement",
+        "description": "Modifiez les tableaux Markdown directement dans l’éditeur et dans l’aperçu. Un éditeur de tableau dédié permet d’ajouter ou de supprimer des lignes et des colonnes et de modifier les cellules sur place, puis réécrit un Markdown propre pour vous."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp détecté uniquement au début du document",
-        "description": "Un front matter `marp: true` affiché dans un bloc de code ou plus bas dans le document n'est plus pris à tort pour une vraie diapositive Marp. Seul le front matter situé tout en haut du fichier active Marp."
+      "verticalTabHover": {
+        "title": "Onglets verticaux à masquage automatique et mode focus",
+        "description": "Lorsque les onglets sont affichés verticalement, la barre d’onglets peut rester repliée et se déployer au survol. Un nouveau mode focus (Rin) agrandit la zone d’édition en masquant l’interface environnante."
       },
-      "mermaidStrayElements": {
-        "title": "Nettoyage des éléments Mermaid résiduels",
-        "description": "Correction d'éléments vides que Mermaid pouvait laisser en bas de la fenêtre, en particulier lors du passage en plein écran."
+      "marpExternalCss": {
+        "title": "Thèmes Marp personnalisés et CSS externe",
+        "description": "Indiquez à Bokuchi un dossier contenant vos propres fichiers de thème Marp et chargez du CSS externe, pour que vos diapositives puissent utiliser des styles au-delà des thèmes intégrés."
+      },
+      "newTabButtonPosition": {
+        "title": "Choisir la position du bouton Nouvel onglet",
+        "description": "Une nouvelle option vous permet de placer le bouton Ajouter un onglet (Nouveau) où vous préférez, y compris juste sous l’onglet actuellement ouvert."
+      },
+      "formattingBarToggle": {
+        "title": "Afficher ou masquer la barre de mise en forme",
+        "description": "La barre d’outils de mise en forme Markdown peut désormais être activée ou désactivée dans les paramètres, pour garder l’éditeur aussi épuré que vous le souhaitez."
+      },
+      "statusBarSettings": {
+        "title": "Réglages rapides dans la barre d’état",
+        "description": "Les réglages fréquemment utilisés sont désormais accessibles directement depuis la barre d’état pour un accès plus rapide."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Synchronisation du défilement bidirectionnelle par défaut",
+        "description": "La synchronisation du défilement est désormais bidirectionnelle par défaut : faire défiler l’éditeur ou l’aperçu maintient l’autre au même niveau."
+      },
+      "tabDragFix": {
+        "title": "Correction du glissement des onglets",
+        "description": "Correction d’un bug qui pouvait faire mal se comporter les onglets lorsqu’on les faisait glisser pour les réorganiser."
       }
     }
   },

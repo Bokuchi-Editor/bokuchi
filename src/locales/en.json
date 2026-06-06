@@ -595,21 +595,41 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "katexRendering": {
-        "title": "Math (KaTeX) Rendering Fixes",
-        "description": "Fixed math formulas that could break the preview or render blank when a document used certain expressions (such as accented symbols, or absolute-value bars inside tables). Math now renders reliably."
+      "newThemes": {
+        "title": "Four New Themes",
+        "description": "Added four new color themes — Dawn, Twilight, Silk, and Ink — giving you more looks to choose from for the editor and preview."
       },
-      "variableCrash": {
-        "title": "Fixed a Crash When Using Variables",
-        "description": "Fixed an issue where typing certain variable comments while editing could crash the app. The variable feature is now stable."
+      "tableEditing": {
+        "title": "Edit Tables Visually",
+        "description": "Edit Markdown tables directly in the editor and in the preview. A dedicated table editor lets you add or remove rows and columns and edit cells inline, then writes clean Markdown back for you."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp Now Detected Only at the Document Start",
-        "description": "A `marp: true` front matter shown inside a code block or further down the document is no longer mistaken for a real Marp slide. Only front matter at the very top of the file enables Marp."
+      "verticalTabHover": {
+        "title": "Auto-Hiding Vertical Tabs & Focus Mode",
+        "description": "When tabs are shown vertically, the tab bar can stay tucked away and slide out on hover. A new focus mode (Rin) maximizes the editing area by hiding the surrounding UI."
       },
-      "mermaidStrayElements": {
-        "title": "Cleaned Up Stray Mermaid Elements",
-        "description": "Fixed leftover empty elements that Mermaid could leave at the bottom of the window, especially when switching to fullscreen."
+      "marpExternalCss": {
+        "title": "Custom Marp Themes & External CSS",
+        "description": "Point Bokuchi at a folder of your own Marp theme files and load external CSS, so your slides can use custom styles beyond the built-in themes."
+      },
+      "newTabButtonPosition": {
+        "title": "Choose the New Tab Button Position",
+        "description": "A new option lets you place the Add Tab (New) button where you prefer — including just below the currently open tab."
+      },
+      "formattingBarToggle": {
+        "title": "Show or Hide the Formatting Bar",
+        "description": "The Markdown formatting toolbar can now be turned on or off from settings, so you can keep the editor as minimal as you like."
+      },
+      "statusBarSettings": {
+        "title": "Quick Settings in the Status Bar",
+        "description": "Frequently used settings are now available right from the status bar for faster access."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Two-Way Scroll Sync by Default",
+        "description": "Scroll synchronization now defaults to two-way, so scrolling either the editor or the preview keeps the other in step."
+      },
+      "tabDragFix": {
+        "title": "Fixed Tab Dragging",
+        "description": "Fixed a bug that could cause tabs to misbehave while being dragged to reorder them."
       }
     }
   },

@@ -572,21 +572,41 @@
       "improvement": "改进"
     },
     "changes": {
-      "katexRendering": {
-        "title": "数学公式（KaTeX）渲染修复",
-        "description": "修复了当文档使用某些表达式（如带重音的符号，或表格中的绝对值竖线）时，数学公式可能破坏预览或显示为空白的问题。现在公式可以稳定渲染。"
+      "newThemes": {
+        "title": "四款全新主题",
+        "description": "新增了四款配色主题——Dawn、Twilight、Silk 和 Ink，为编辑器和预览提供更多外观可选。"
       },
-      "variableCrash": {
-        "title": "修复使用变量功能时的崩溃",
-        "description": "修复了编辑时输入某些变量注释可能导致应用崩溃的问题。变量功能现已稳定。"
+      "tableEditing": {
+        "title": "可视化编辑表格",
+        "description": "直接在编辑器和预览中编辑 Markdown 表格。专用的表格编辑器可让你添加或删除行和列、就地编辑单元格，然后为你写回整洁的 Markdown。"
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp 现在仅在文档开头被识别",
-        "description": "显示在代码块内或文档靠后位置的 `marp: true` 前置元数据，不再被误认为真正的 Marp 幻灯片。只有位于文件最开头的前置元数据才会启用 Marp。"
+      "verticalTabHover": {
+        "title": "自动隐藏的垂直标签页与专注模式",
+        "description": "当标签页垂直显示时，标签栏可以保持收起，并在悬停时滑出。新的专注模式（Rin）通过隐藏周围界面来最大化编辑区域。"
       },
-      "mermaidStrayElements": {
-        "title": "清理 Mermaid 残留元素",
-        "description": "修复了 Mermaid 可能在窗口底部留下空元素的问题，尤其是在切换到全屏时。"
+      "marpExternalCss": {
+        "title": "自定义 Marp 主题与外部 CSS",
+        "description": "将 Bokuchi 指向存放你自己的 Marp 主题文件的文件夹并加载外部 CSS，让你的幻灯片可以使用内置主题之外的样式。"
+      },
+      "newTabButtonPosition": {
+        "title": "选择新建标签按钮的位置",
+        "description": "新增选项可让你将“添加标签（新建）”按钮放在你喜欢的位置，包括当前打开标签的正下方。"
+      },
+      "formattingBarToggle": {
+        "title": "显示或隐藏格式栏",
+        "description": "现在可以在设置中开启或关闭 Markdown 格式工具栏，让你按需将编辑器保持得尽量简洁。"
+      },
+      "statusBarSettings": {
+        "title": "状态栏中的快捷设置",
+        "description": "常用设置现在可直接从状态栏使用，访问更快捷。"
+      },
+      "scrollSyncTwoWay": {
+        "title": "默认采用双向滚动同步",
+        "description": "滚动同步现在默认为双向，因此滚动编辑器或预览都会让另一侧保持同步。"
+      },
+      "tabDragFix": {
+        "title": "修复标签拖动问题",
+        "description": "修复了一个在拖动标签以重新排序时可能导致标签行为异常的错误。"
       }
     }
   },

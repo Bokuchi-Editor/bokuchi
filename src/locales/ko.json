@@ -572,21 +572,41 @@
       "improvement": "개선"
     },
     "changes": {
-      "katexRendering": {
-        "title": "수식(KaTeX) 렌더링 수정",
-        "description": "특정 수식(악센트가 있는 기호나 표 안의 절댓값 막대 등)을 포함한 문서에서 미리 보기가 깨지거나 빈 화면으로 표시되던 문제를 수정했습니다. 이제 수식이 안정적으로 렌더링됩니다."
+      "newThemes": {
+        "title": "새로운 테마 4종",
+        "description": "Dawn, Twilight, Silk, Ink 등 4가지 색상 테마를 추가했습니다. 편집기와 미리 보기의 모습을 더 다양하게 고를 수 있습니다."
       },
-      "variableCrash": {
-        "title": "변수 기능 사용 시 발생하던 충돌 수정",
-        "description": "편집 중 특정 변수 주석을 입력하면 앱이 충돌할 수 있던 문제를 수정했습니다. 변수 기능이 이제 안정적으로 동작합니다."
+      "tableEditing": {
+        "title": "표를 시각적으로 편집",
+        "description": "편집기와 미리 보기 모두에서 Markdown 표를 직접 편집할 수 있습니다. 전용 표 편집기로 행과 열을 추가하거나 삭제하고 셀을 인라인으로 편집한 다음, 깔끔한 Markdown으로 다시 작성해 줍니다."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp을 문서 시작 부분에서만 인식하도록 변경",
-        "description": "코드 블록 안이나 문서 중간에 표시된 `marp: true` 프런트매터를 더 이상 실제 Marp 슬라이드로 잘못 인식하지 않습니다. 파일 맨 앞의 프런트매터만 Marp을 활성화합니다."
+      "verticalTabHover": {
+        "title": "자동으로 숨겨지는 세로 탭과 집중 모드",
+        "description": "탭을 세로로 표시할 때 탭 막대를 평소에는 숨겨 두었다가 마우스를 올리면 펼쳐지게 할 수 있습니다. 새로운 집중 모드(Rin)는 주변 UI를 숨겨 편집 영역을 최대화합니다."
       },
-      "mermaidStrayElements": {
-        "title": "남아 있던 Mermaid 요소 정리",
-        "description": "특히 전체 화면으로 전환할 때 Mermaid가 창 하단에 빈 요소를 남기던 문제를 수정했습니다."
+      "marpExternalCss": {
+        "title": "사용자 지정 Marp 테마와 외부 CSS",
+        "description": "자신만의 Marp 테마 파일이 담긴 폴더를 지정하고 외부 CSS를 불러올 수 있어, 기본 제공 테마를 넘어선 스타일을 슬라이드에 적용할 수 있습니다."
+      },
+      "newTabButtonPosition": {
+        "title": "새 탭 버튼 위치 선택",
+        "description": "새 옵션으로 탭 추가(새로 만들기) 버튼을 원하는 위치에 둘 수 있으며, 현재 열린 탭 바로 아래에 표시할 수도 있습니다."
+      },
+      "formattingBarToggle": {
+        "title": "서식 막대 표시/숨기기",
+        "description": "Markdown 서식 도구 막대를 이제 설정에서 켜거나 끌 수 있어, 편집기를 원하는 만큼 간결하게 유지할 수 있습니다."
+      },
+      "statusBarSettings": {
+        "title": "상태 표시줄의 빠른 설정",
+        "description": "자주 쓰는 설정을 이제 상태 표시줄에서 바로 사용할 수 있어 더 빠르게 접근할 수 있습니다."
+      },
+      "scrollSyncTwoWay": {
+        "title": "기본값이 양방향 스크롤 동기화로 변경",
+        "description": "스크롤 동기화의 기본값이 양방향으로 바뀌어, 편집기나 미리 보기 중 어느 쪽을 스크롤해도 다른 쪽이 함께 움직입니다."
+      },
+      "tabDragFix": {
+        "title": "탭 드래그 오류 수정",
+        "description": "탭을 재정렬하려고 드래그할 때 제대로 동작하지 않을 수 있던 버그를 수정했습니다."
       }
     }
   },

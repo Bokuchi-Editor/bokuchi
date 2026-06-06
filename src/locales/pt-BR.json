@@ -572,21 +572,41 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "katexRendering": {
-        "title": "Correções na renderização de matemática (KaTeX)",
-        "description": "Corrigido o caso em que fórmulas matemáticas podiam quebrar a pré-visualização ou aparecer em branco quando um documento usava certas expressões (como símbolos acentuados ou barras de valor absoluto dentro de tabelas). As fórmulas agora são renderizadas de forma confiável."
+      "newThemes": {
+        "title": "Quatro novos temas",
+        "description": "Foram adicionados quatro novos temas de cor — Dawn, Twilight, Silk e Ink — dando mais visuais para você escolher no editor e na pré-visualização."
       },
-      "variableCrash": {
-        "title": "Corrigida uma falha ao usar variáveis",
-        "description": "Corrigido um problema em que digitar certos comentários de variável durante a edição podia travar o aplicativo. O recurso de variáveis agora está estável."
+      "tableEditing": {
+        "title": "Edite tabelas visualmente",
+        "description": "Edite tabelas Markdown diretamente no editor e na pré-visualização. Um editor de tabelas dedicado permite adicionar ou remover linhas e colunas e editar células no local, e depois grava um Markdown limpo de volta para você."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp agora é detectado apenas no início do documento",
-        "description": "Um front matter `marp: true` exibido dentro de um bloco de código ou mais adiante no documento não é mais confundido com um slide Marp real. Apenas o front matter logo no topo do arquivo ativa o Marp."
+      "verticalTabHover": {
+        "title": "Abas verticais com ocultação automática e modo de foco",
+        "description": "Quando as abas são exibidas na vertical, a barra de abas pode ficar recolhida e aparecer ao passar o mouse. Um novo modo de foco (Rin) maximiza a área de edição ocultando a interface ao redor."
       },
-      "mermaidStrayElements": {
-        "title": "Limpeza de elementos residuais do Mermaid",
-        "description": "Corrigidos elementos vazios que o Mermaid podia deixar na parte inferior da janela, especialmente ao alternar para tela cheia."
+      "marpExternalCss": {
+        "title": "Temas personalizados de Marp e CSS externo",
+        "description": "Aponte o Bokuchi para uma pasta com seus próprios arquivos de tema do Marp e carregue CSS externo, para que seus slides possam usar estilos além dos temas integrados."
+      },
+      "newTabButtonPosition": {
+        "title": "Escolha a posição do botão de nova aba",
+        "description": "Uma nova opção permite posicionar o botão Adicionar aba (Nova) onde você preferir — inclusive logo abaixo da aba aberta no momento."
+      },
+      "formattingBarToggle": {
+        "title": "Mostrar ou ocultar a barra de formatação",
+        "description": "A barra de ferramentas de formatação Markdown agora pode ser ativada ou desativada nas configurações, para você manter o editor tão minimalista quanto quiser."
+      },
+      "statusBarSettings": {
+        "title": "Configurações rápidas na barra de status",
+        "description": "As configurações usadas com frequência agora estão disponíveis diretamente na barra de status para acesso mais rápido."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Sincronização de rolagem bidirecional por padrão",
+        "description": "A sincronização de rolagem agora é bidirecional por padrão, então rolar o editor ou a pré-visualização mantém o outro acompanhando."
+      },
+      "tabDragFix": {
+        "title": "Correção do arraste de abas",
+        "description": "Corrigido um bug que podia fazer as abas se comportarem mal ao serem arrastadas para reordená-las."
       }
     }
   },

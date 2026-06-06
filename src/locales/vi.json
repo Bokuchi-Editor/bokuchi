@@ -572,21 +572,41 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "katexRendering": {
-        "title": "Sửa lỗi hiển thị công thức (KaTeX)",
-        "description": "Đã sửa các công thức toán có thể làm hỏng bản xem trước hoặc hiển thị trống khi tài liệu dùng một số biểu thức nhất định (như ký hiệu có dấu, hoặc dấu giá trị tuyệt đối bên trong bảng). Công thức nay hiển thị ổn định."
+      "newThemes": {
+        "title": "Bốn chủ đề mới",
+        "description": "Đã thêm bốn chủ đề màu mới — Dawn, Twilight, Silk và Ink — mang đến cho bạn nhiều giao diện hơn để chọn cho trình soạn thảo và bản xem trước."
       },
-      "variableCrash": {
-        "title": "Sửa lỗi treo ứng dụng khi dùng biến",
-        "description": "Đã sửa lỗi khi gõ một số chú thích biến nhất định trong lúc chỉnh sửa có thể làm treo ứng dụng. Tính năng biến nay đã ổn định."
+      "tableEditing": {
+        "title": "Chỉnh sửa bảng trực quan",
+        "description": "Chỉnh sửa bảng Markdown trực tiếp trong trình soạn thảo và trong bản xem trước. Một trình chỉnh sửa bảng chuyên dụng cho phép bạn thêm hoặc xóa hàng và cột và chỉnh sửa ô ngay tại chỗ, rồi ghi lại Markdown gọn gàng cho bạn."
       },
-      "marpFrontmatterPosition": {
-        "title": "Marp chỉ được nhận diện ở đầu tài liệu",
-        "description": "Front matter `marp: true` hiển thị bên trong khối mã hoặc ở phía dưới tài liệu không còn bị nhầm là slide Marp thật. Chỉ front matter ở ngay đầu tệp mới kích hoạt Marp."
+      "verticalTabHover": {
+        "title": "Thẻ dọc tự ẩn & chế độ tập trung",
+        "description": "Khi các thẻ được hiển thị theo chiều dọc, thanh thẻ có thể luôn được thu gọn và trượt ra khi di chuột. Chế độ tập trung mới (Rin) tối đa hóa vùng soạn thảo bằng cách ẩn giao diện xung quanh."
       },
-      "mermaidStrayElements": {
-        "title": "Dọn dẹp các phần tử Mermaid còn sót",
-        "description": "Đã sửa các phần tử rỗng mà Mermaid có thể để lại ở cuối cửa sổ, đặc biệt khi chuyển sang chế độ toàn màn hình."
+      "marpExternalCss": {
+        "title": "Chủ đề Marp tùy chỉnh & CSS bên ngoài",
+        "description": "Trỏ Bokuchi đến một thư mục chứa các tệp chủ đề Marp của riêng bạn và tải CSS bên ngoài, để các trang chiếu của bạn có thể dùng kiểu dáng vượt ra ngoài các chủ đề tích hợp."
+      },
+      "newTabButtonPosition": {
+        "title": "Chọn vị trí nút thẻ mới",
+        "description": "Một tùy chọn mới cho phép bạn đặt nút Thêm thẻ (Mới) ở nơi bạn muốn — kể cả ngay bên dưới thẻ đang mở."
+      },
+      "formattingBarToggle": {
+        "title": "Hiện hoặc ẩn thanh định dạng",
+        "description": "Thanh công cụ định dạng Markdown giờ đây có thể bật hoặc tắt từ phần cài đặt, để bạn giữ trình soạn thảo tối giản tùy ý."
+      },
+      "statusBarSettings": {
+        "title": "Cài đặt nhanh trên thanh trạng thái",
+        "description": "Các cài đặt thường dùng giờ đây có sẵn ngay trên thanh trạng thái để truy cập nhanh hơn."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Đồng bộ cuộn hai chiều theo mặc định",
+        "description": "Đồng bộ cuộn giờ mặc định là hai chiều, nên cuộn trình soạn thảo hoặc bản xem trước sẽ giữ cho bên còn lại đi cùng nhịp."
+      },
+      "tabDragFix": {
+        "title": "Sửa lỗi kéo thẻ",
+        "description": "Đã sửa một lỗi có thể khiến các thẻ hoạt động không đúng khi được kéo để sắp xếp lại."
       }
     }
   },
