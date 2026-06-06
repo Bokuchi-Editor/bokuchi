@@ -605,6 +605,18 @@ function AppDesktop() {
           column={editorStatus.column}
           totalCharacters={editorStatus.totalCharacters}
           selectedCharacters={editorStatus.selectedCharacters}
+          totalWords={editorStatus.totalWords}
+          selectedWords={editorStatus.selectedWords}
+          wordWrap={appSettings.editor.wordWrap}
+          onToggleWordWrap={() => handleAppSettingsChange({
+            ...appSettings,
+            editor: { ...appSettings.editor, wordWrap: !appSettings.editor.wordWrap },
+          })}
+          autoSave={appSettings.advanced.autoSave}
+          onToggleAutoSave={() => handleAppSettingsChange({
+            ...appSettings,
+            advanced: { ...appSettings.advanced, autoSave: !appSettings.advanced.autoSave },
+          })}
           darkMode={isDarkTheme(theme)}
           theme={theme}
           onThemeChange={handleThemeChange}

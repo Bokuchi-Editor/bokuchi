@@ -475,7 +475,12 @@
     "column": "Spalte",
     "characters": "Zeichen",
     "selected": "ausgewählt",
-    "saved": "Gespeichert"
+    "saved": "Gespeichert",
+    "words": "Wörter",
+    "wordWrap": "Zeilenumbruch",
+    "autoSave": "Automatisches Speichern",
+    "on": "Ein",
+    "off": "Aus"
   },
   "zoom": {
     "maxLimitReached": "Maximale Zoom-Stufe ({{maxZoom}}%) erreicht",

@@ -475,7 +475,12 @@
     "column": "Column",
     "characters": "characters",
     "selected": "selected",
-    "saved": "Saved"
+    "saved": "Saved",
+    "words": "words",
+    "wordWrap": "Word Wrap",
+    "autoSave": "Auto Save",
+    "on": "On",
+    "off": "Off"
   },
   "zoom": {
     "maxLimitReached": "Maximum zoom level ({{maxZoom}}%) reached",

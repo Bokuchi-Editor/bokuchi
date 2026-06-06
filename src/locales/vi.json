@@ -475,7 +475,12 @@
     "column": "Cột",
     "characters": "ký tự",
     "selected": "đã chọn",
-    "saved": "Đã lưu"
+    "saved": "Đã lưu",
+    "words": "từ",
+    "wordWrap": "Ngắt dòng",
+    "autoSave": "Tự động lưu",
+    "on": "Bật",
+    "off": "Tắt"
   },
   "zoom": {
     "maxLimitReached": "Đã đạt mức zoom tối đa ({{maxZoom}}%)",

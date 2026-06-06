@@ -475,7 +475,12 @@
     "column": "Kolom",
     "characters": "karakter",
     "selected": "dipilih",
-    "saved": "Tersimpan"
+    "saved": "Tersimpan",
+    "words": "kata",
+    "wordWrap": "Bungkus Kata",
+    "autoSave": "Simpan Otomatis",
+    "on": "Aktif",
+    "off": "Nonaktif"
   },
   "zoom": {
     "maxLimitReached": "Level zoom maksimum ({{maxZoom}}%) tercapai",

@@ -93,7 +93,7 @@ interface AppContentProps {
   onRecentFileSelect: (filePath: string) => void;
   onTabReorder: (tabs: Tab[]) => void;
   onContentChange: (content: string) => void;
-  onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
+  onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number; totalWords: number; selectedWords: number }) => void;
   onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
   onOpenSettings?: (target?: SettingsFocusTarget) => void;

@@ -475,7 +475,12 @@
     "column": "कॉलम",
     "characters": "वर्ण",
     "selected": "चयनित",
-    "saved": "सहेजा गया"
+    "saved": "सहेजा गया",
+    "words": "शब्द",
+    "wordWrap": "वर्ड रैप",
+    "autoSave": "स्वतः सहेजें",
+    "on": "चालू",
+    "off": "बंद"
   },
   "zoom": {
     "maxLimitReached": "अधिकतम ज़ूम स्तर ({{maxZoom}}%) पहुँच गया",

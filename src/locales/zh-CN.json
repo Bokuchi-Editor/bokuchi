@@ -475,7 +475,12 @@
     "column": "列",
     "characters": "字符",
     "selected": "已选择",
-    "saved": "已保存"
+    "saved": "已保存",
+    "words": "词",
+    "wordWrap": "自动换行",
+    "autoSave": "自动保存",
+    "on": "开",
+    "off": "关"
   },
   "zoom": {
     "maxLimitReached": "已达到最大缩放级别（{{maxZoom}}%）",

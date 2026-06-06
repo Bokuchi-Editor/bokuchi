@@ -475,7 +475,12 @@
     "column": "열",
     "characters": "문자",
     "selected": "선택됨",
-    "saved": "저장 완료"
+    "saved": "저장 완료",
+    "words": "단어",
+    "wordWrap": "자동 줄바꿈",
+    "autoSave": "자동 저장",
+    "on": "켜짐",
+    "off": "꺼짐"
   },
   "zoom": {
     "maxLimitReached": "최대 확대 수준 ({{maxZoom}}%)에 도달했습니다",

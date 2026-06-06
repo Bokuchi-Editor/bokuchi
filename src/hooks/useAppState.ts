@@ -56,7 +56,9 @@ export const useAppState = () => {
     line: 1,
     column: 1,
     totalCharacters: 0,
-    selectedCharacters: 0
+    selectedCharacters: 0,
+    totalWords: 0,
+    selectedWords: 0
   });
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [outlinePanelOpen, setOutlinePanelOpen] = useState(true);

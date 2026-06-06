@@ -475,7 +475,12 @@
     "column": "欄",
     "characters": "字元",
     "selected": "已選擇",
-    "saved": "已儲存"
+    "saved": "已儲存",
+    "words": "字詞",
+    "wordWrap": "自動換行",
+    "autoSave": "自動儲存",
+    "on": "開",
+    "off": "關"
   },
   "zoom": {
     "maxLimitReached": "已達到最大縮放層級（{{maxZoom}}%）",
