@@ -320,7 +320,13 @@
       "closeButtonLeft": "Links",
       "closeButtonRight": "Rechts",
       "closeButtonLeftDescription": "Schließen-Schaltfläche und Anheften-Symbol links auf dem Tab anzeigen.",
-      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen."
+      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen.",
+      "newButtonPosition": "Position der Schaltfläche „Neuer Tab“",
+      "newButtonPositionDescription": "Wählen Sie, wo die Schaltfläche „Neuer Tab“ (+) in der vertikalen Tab-Seitenleiste angezeigt wird.",
+      "newButtonTop": "Oben",
+      "newButtonTopDescription": "Die Schaltfläche oben in der Seitenleiste fixieren.",
+      "newButtonBottom": "Unten",
+      "newButtonBottomDescription": "Die Schaltfläche unter dem letzten Tab platzieren; sie bleibt am unteren Rand, wenn die Tabs überlaufen."
     },
     "viewMode": {
       "title": "Ansichtsmodus",
@@ -469,7 +475,12 @@
     "column": "Spalte",
     "characters": "Zeichen",
     "selected": "ausgewählt",
-    "saved": "Gespeichert"
+    "saved": "Gespeichert",
+    "words": "Wörter",
+    "wordWrap": "Zeilenumbruch",
+    "autoSave": "Automatisches Speichern",
+    "on": "Ein",
+    "off": "Aus"
   },
   "zoom": {
     "maxLimitReached": "Maximale Zoom-Stufe ({{maxZoom}}%) erreicht",

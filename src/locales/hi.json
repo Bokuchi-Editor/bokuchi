@@ -320,7 +320,13 @@
       "closeButtonLeft": "बाएं",
       "closeButtonRight": "दाएं",
       "closeButtonLeftDescription": "टैब के बाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
-      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।"
+      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
+      "newButtonPosition": "नया टैब बटन स्थिति",
+      "newButtonPositionDescription": "चुनें कि वर्टिकल टैब साइडबार में नया टैब (+) बटन कहाँ दिखाई दे।",
+      "newButtonTop": "ऊपर",
+      "newButtonTopDescription": "बटन को साइडबार के शीर्ष पर स्थिर रखें।",
+      "newButtonBottom": "नीचे",
+      "newButtonBottomDescription": "बटन को अंतिम टैब के नीचे रखें; टैब अधिक होने पर यह नीचे चिपका रहता है।"
     },
     "viewMode": {
       "title": "दृश्य मोड",
@@ -469,7 +475,12 @@
     "column": "कॉलम",
     "characters": "वर्ण",
     "selected": "चयनित",
-    "saved": "सहेजा गया"
+    "saved": "सहेजा गया",
+    "words": "शब्द",
+    "wordWrap": "वर्ड रैप",
+    "autoSave": "स्वतः सहेजें",
+    "on": "चालू",
+    "off": "बंद"
   },
   "zoom": {
     "maxLimitReached": "अधिकतम ज़ूम स्तर ({{maxZoom}}%) पहुँच गया",

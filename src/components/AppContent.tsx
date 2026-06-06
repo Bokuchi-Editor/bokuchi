@@ -83,6 +83,7 @@ interface AppContentProps {
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
   tabCloseButtonPosition?: 'left' | 'right';
+  tabNewButtonPosition?: 'top' | 'bottom';
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -92,7 +93,7 @@ interface AppContentProps {
   onRecentFileSelect: (filePath: string) => void;
   onTabReorder: (tabs: Tab[]) => void;
   onContentChange: (content: string) => void;
-  onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number }) => void;
+  onStatusChange: (status: { line: number; column: number; totalCharacters: number; selectedCharacters: number; totalWords: number; selectedWords: number }) => void;
   onSnackbar: (message: string, severity: 'success' | 'error' | 'warning') => void;
   onTableConversionSettingChange?: (newSetting: 'auto' | 'confirm' | 'off') => void;
   onOpenSettings?: (target?: SettingsFocusTarget) => void;
@@ -144,6 +145,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onCloseTabsToRight,
   onCloseAllTabs,
   tabCloseButtonPosition,
+  tabNewButtonPosition,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -280,6 +282,7 @@ const AppContent: React.FC<AppContentProps> = ({
         onCloseTabsToRight={onCloseTabsToRight}
         onCloseAllTabs={onCloseAllTabs}
         closeButtonPosition={tabCloseButtonPosition}
+        newButtonPosition={tabNewButtonPosition}
         layout="vertical"
         embedded
         tabSidebarPinned={tabSidebarPinned}
@@ -375,6 +378,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onCloseTabsToRight={onCloseTabsToRight}
           onCloseAllTabs={onCloseAllTabs}
           closeButtonPosition={tabCloseButtonPosition}
+          newButtonPosition={tabNewButtonPosition}
           layout={tabLayout}
           tabSidebarPinned={tabSidebarPinned}
           onToggleSidebarPinned={onToggleSidebarPinned}

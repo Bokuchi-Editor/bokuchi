@@ -12,6 +12,7 @@ import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
 import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
 import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
+import { countWords } from '../utils/wordCount';
 
 interface EditorProps {
   content: string;
@@ -27,6 +28,8 @@ interface EditorProps {
     column: number;
     totalCharacters: number;
     selectedCharacters: number;
+    totalWords: number;
+    selectedWords: number;
   }) => void;
   zoomLevel?: number;
   focusRequestId?: number;
@@ -564,19 +567,25 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         const model = editor.getModel();
 
         if (position && model) {
-          const totalCharacters = model.getValue().length;
+          const fullText = model.getValue();
+          const totalCharacters = fullText.length;
+          const totalWords = countWords(fullText);
           let selectedCharacters = 0;
+          let selectedWords = 0;
 
           if (selection) {
             const selectedText = model.getValueInRange(selection);
             selectedCharacters = selectedText.length;
+            selectedWords = countWords(selectedText);
           }
 
           onStatusChange({
             line: position.lineNumber,
             column: position.column,
             totalCharacters,
-            selectedCharacters
+            selectedCharacters,
+            totalWords,
+            selectedWords
           });
         }
       };

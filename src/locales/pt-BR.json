@@ -320,7 +320,13 @@
       "closeButtonLeft": "Esquerda",
       "closeButtonRight": "Direita",
       "closeButtonLeftDescription": "Exibir o botão de fechar e o ícone de fixar no lado esquerdo da aba.",
-      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba."
+      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba.",
+      "newButtonPosition": "Posição do botão de nova aba",
+      "newButtonPositionDescription": "Escolha onde o botão de nova aba (+) aparece na barra lateral de abas vertical.",
+      "newButtonTop": "Topo",
+      "newButtonTopDescription": "Fixar o botão no topo da barra lateral.",
+      "newButtonBottom": "Base",
+      "newButtonBottomDescription": "Coloca o botão abaixo da última aba; ele fica fixo na parte inferior quando há muitas abas."
     },
     "viewMode": {
       "title": "Modo de visualização",
@@ -469,7 +475,12 @@
     "column": "Coluna",
     "characters": "caracteres",
     "selected": "selecionado",
-    "saved": "Salvo"
+    "saved": "Salvo",
+    "words": "palavras",
+    "wordWrap": "Quebra de linha",
+    "autoSave": "Salvamento automático",
+    "on": "Ativado",
+    "off": "Desativado"
   },
   "zoom": {
     "maxLimitReached": "Nível máximo de zoom ({{maxZoom}}%) atingido",

@@ -24,6 +24,11 @@ export interface InterfaceSettings {
   language: string;
   tabLayout: 'horizontal' | 'vertical';
   tabCloseButtonPosition: 'left' | 'right';
+  // Vertical-tab sidebar: where the new-tab (+) button sits.
+  // - top: fixed at the top header (legacy).
+  // - bottom: follows the end of the tab list and sticks to the bottom edge once
+  //   the tabs overflow (hybrid). Only affects the vertical layout.
+  tabNewButtonPosition: 'top' | 'bottom';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
   folderTreeDisplayMode: FolderTreeDisplayMode;
@@ -101,6 +106,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   language: 'en',
   tabLayout: 'horizontal',
   tabCloseButtonPosition: 'right',
+  tabNewButtonPosition: 'top',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
   folderTreeDisplayMode: 'off',

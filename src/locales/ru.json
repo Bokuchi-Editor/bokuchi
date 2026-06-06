@@ -320,7 +320,13 @@
       "closeButtonLeft": "Слева",
       "closeButtonRight": "Справа",
       "closeButtonLeftDescription": "Отображать кнопку закрытия и значок закрепления слева на вкладке.",
-      "closeButtonRightDescription": "Отображать кнопку закрытия и значок закрепления справа на вкладке."
+      "closeButtonRightDescription": "Отображать кнопку закрытия и значок закрепления справа на вкладке.",
+      "newButtonPosition": "Положение кнопки новой вкладки",
+      "newButtonPositionDescription": "Выберите, где отображается кнопка новой вкладки (+) на вертикальной боковой панели вкладок.",
+      "newButtonTop": "Сверху",
+      "newButtonTopDescription": "Закрепить кнопку вверху боковой панели.",
+      "newButtonBottom": "Снизу",
+      "newButtonBottomDescription": "Разместить кнопку под последней вкладкой; она закрепляется внизу, когда вкладки не помещаются."
     },
     "viewMode": {
       "title": "Режим просмотра",
@@ -469,7 +475,12 @@
     "column": "Столбец",
     "characters": "символов",
     "selected": "выбрано",
-    "saved": "Сохранено"
+    "saved": "Сохранено",
+    "words": "слов",
+    "wordWrap": "Перенос строк",
+    "autoSave": "Автосохранение",
+    "on": "Вкл",
+    "off": "Выкл"
   },
   "zoom": {
     "maxLimitReached": "Достигнут максимальный уровень масштаба ({{maxZoom}}%)",

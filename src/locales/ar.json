@@ -320,7 +320,13 @@
       "closeButtonLeft": "يسار",
       "closeButtonRight": "يمين",
       "closeButtonLeftDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيسر من علامة التبويب.",
-      "closeButtonRightDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيمن من علامة التبويب."
+      "closeButtonRightDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيمن من علامة التبويب.",
+      "newButtonPosition": "موضع زر علامة التبويب الجديدة",
+      "newButtonPositionDescription": "اختر مكان ظهور زر علامة التبويب الجديدة (+) في الشريط الجانبي العمودي لعلامات التبويب.",
+      "newButtonTop": "أعلى",
+      "newButtonTopDescription": "تثبيت الزر في أعلى الشريط الجانبي.",
+      "newButtonBottom": "أسفل",
+      "newButtonBottomDescription": "ضع الزر أسفل آخر علامة تبويب؛ يبقى في الأسفل عند تجاوز عدد علامات التبويب."
     },
     "viewMode": {
       "title": "وضع العرض",
@@ -469,7 +475,12 @@
     "column": "العمود",
     "characters": "أحرف",
     "selected": "محدد",
-    "saved": "تم الحفظ"
+    "saved": "تم الحفظ",
+    "words": "كلمات",
+    "wordWrap": "التفاف النص",
+    "autoSave": "الحفظ التلقائي",
+    "on": "تشغيل",
+    "off": "إيقاف"
   },
   "zoom": {
     "maxLimitReached": "تم الوصول إلى الحد الأقصى لمستوى التكبير ({{maxZoom}}%)",

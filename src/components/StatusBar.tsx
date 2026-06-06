@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Menu, MenuItem, IconButton, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { ZoomIn, ZoomOut, RestartAlt } from '@mui/icons-material';
+import { ZoomIn, ZoomOut, RestartAlt, WrapText, Save } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getVisibleThemes } from '../themes';
 
@@ -10,6 +10,12 @@ interface StatusBarProps {
   column: number;
   totalCharacters: number;
   selectedCharacters: number;
+  totalWords?: number;
+  selectedWords?: number;
+  wordWrap?: boolean;
+  onToggleWordWrap?: () => void;
+  autoSave?: boolean;
+  onToggleAutoSave?: () => void;
   darkMode?: boolean;
   theme?: string;
   onThemeChange?: (theme: ThemeName) => void;
@@ -29,6 +35,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
   column,
   totalCharacters,
   selectedCharacters,
+  totalWords,
+  selectedWords,
+  wordWrap,
+  onToggleWordWrap,
+  autoSave,
+  onToggleAutoSave,
   theme,
   onThemeChange,
   zoomPercentage,
@@ -86,6 +98,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
           : `${totalCharacters} ${t('statusBar.characters')}`
         }
       </Typography>
+
+      {totalWords !== undefined && (
+        <Typography variant="caption" sx={{ mr: 2 }}>
+          {`${selectedCharacters > 0 ? (selectedWords ?? 0) : totalWords} ${t('statusBar.words')}`}
+        </Typography>
+      )}
 
       {/* Late night message */}
       {isLateNight && (
@@ -179,8 +197,48 @@ const StatusBar: React.FC<StatusBarProps> = ({
         </Typography>
       )}
 
-      {/* Theme display and toggle - positioned at right end */}
-      <Box sx={{ ml: saveStatusMessage ? 0 : 'auto', display: 'flex', alignItems: 'center' }}>
+      {/* Quick-toggle settings + theme picker - positioned at right end */}
+      <Box sx={{ ml: saveStatusMessage ? 0 : 'auto', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        {onToggleWordWrap && (
+          <Tooltip title={`${t('statusBar.wordWrap')}: ${wordWrap ? t('statusBar.on') : t('statusBar.off')}`} placement="top">
+            <IconButton
+              size="small"
+              onClick={onToggleWordWrap}
+              sx={{
+                color: wordWrap ? palette.primary.main : 'inherit',
+                padding: '2px',
+                minWidth: 'auto',
+                opacity: wordWrap ? 1 : 0.45,
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                }
+              }}
+            >
+              <WrapText sx={{ fontSize: '16px' }} />
+            </IconButton>
+          </Tooltip>
+        )}
+
+        {onToggleAutoSave && (
+          <Tooltip title={`${t('statusBar.autoSave')}: ${autoSave ? t('statusBar.on') : t('statusBar.off')}`} placement="top">
+            <IconButton
+              size="small"
+              onClick={onToggleAutoSave}
+              sx={{
+                color: autoSave ? palette.primary.main : 'inherit',
+                padding: '2px',
+                minWidth: 'auto',
+                opacity: autoSave ? 1 : 0.45,
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                }
+              }}
+            >
+              <Save sx={{ fontSize: '16px' }} />
+            </IconButton>
+          </Tooltip>
+        )}
+
         <IconButton
           size="small"
           onClick={handleThemeMenuOpen}

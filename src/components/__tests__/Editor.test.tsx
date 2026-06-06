@@ -422,6 +422,8 @@ describe('MarkdownEditor', () => {
         column: 1,
         totalCharacters: 5, // "hello"
         selectedCharacters: 0,
+        totalWords: 1, // "hello"
+        selectedWords: 0,
       });
 
       delete (window as unknown as Record<string, unknown>).monaco;

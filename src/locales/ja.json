@@ -320,7 +320,13 @@
       "closeButtonLeft": "左",
       "closeButtonRight": "右",
       "closeButtonLeftDescription": "タブの左側に閉じるボタンとピンアイコンを表示します。",
-      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。"
+      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。",
+      "newButtonPosition": "新規タブボタンの位置",
+      "newButtonPositionDescription": "縦タブサイドバーで新規タブ（＋）ボタンを表示する位置を選択します。",
+      "newButtonTop": "上",
+      "newButtonTopDescription": "ボタンをサイドバーの一番上に固定します。",
+      "newButtonBottom": "下",
+      "newButtonBottomDescription": "ボタンを最後のタブの下に配置します。タブが多くなると下端に固定されます。"
     },
     "viewMode": {
       "title": "ビューモード",
@@ -469,7 +475,12 @@
     "column": "列",
     "characters": "文字",
     "selected": "選択中",
-    "saved": "保存完了"
+    "saved": "保存完了",
+    "words": "単語",
+    "wordWrap": "ワードラップ",
+    "autoSave": "オートセーブ",
+    "on": "オン",
+    "off": "オフ"
   },
   "zoom": {
     "maxLimitReached": "最大ズームレベル ({{maxZoom}}%) に達しました",

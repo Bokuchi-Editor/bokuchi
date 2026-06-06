@@ -320,7 +320,13 @@
       "closeButtonLeft": "Trái",
       "closeButtonRight": "Phải",
       "closeButtonLeftDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên trái tab.",
-      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab."
+      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab.",
+      "newButtonPosition": "Vị trí nút Tab mới",
+      "newButtonPositionDescription": "Chọn nơi hiển thị nút tab mới (+) trong thanh bên tab dọc.",
+      "newButtonTop": "Trên cùng",
+      "newButtonTopDescription": "Cố định nút ở phía trên thanh bên.",
+      "newButtonBottom": "Dưới cùng",
+      "newButtonBottomDescription": "Đặt nút bên dưới tab cuối cùng; nút sẽ dính ở dưới cùng khi có quá nhiều tab."
     },
     "viewMode": {
       "title": "Chế độ xem",
@@ -469,7 +475,12 @@
     "column": "Cột",
     "characters": "ký tự",
     "selected": "đã chọn",
-    "saved": "Đã lưu"
+    "saved": "Đã lưu",
+    "words": "từ",
+    "wordWrap": "Ngắt dòng",
+    "autoSave": "Tự động lưu",
+    "on": "Bật",
+    "off": "Tắt"
   },
   "zoom": {
     "maxLimitReached": "Đã đạt mức zoom tối đa ({{maxZoom}}%)",
