@@ -476,6 +476,7 @@ function AppDesktop() {
           onCloseTabsToRight={handleCloseTabsToRight}
           onCloseAllTabs={handleCloseAllTabs}
           tabCloseButtonPosition={appSettings.interface.tabCloseButtonPosition}
+          tabNewButtonPosition={appSettings.interface.tabNewButtonPosition}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}

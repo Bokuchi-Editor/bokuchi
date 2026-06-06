@@ -320,7 +320,13 @@
       "closeButtonLeft": "Gauche",
       "closeButtonRight": "Droite",
       "closeButtonLeftDescription": "Afficher le bouton de fermeture et l'icône d'épingle à gauche de l'onglet.",
-      "closeButtonRightDescription": "Afficher le bouton de fermeture et l'icône d'épingle à droite de l'onglet."
+      "closeButtonRightDescription": "Afficher le bouton de fermeture et l'icône d'épingle à droite de l'onglet.",
+      "newButtonPosition": "Position du bouton Nouvel onglet",
+      "newButtonPositionDescription": "Choisissez où le bouton Nouvel onglet (+) apparaît dans la barre latérale des onglets verticaux.",
+      "newButtonTop": "Haut",
+      "newButtonTopDescription": "Fixer le bouton en haut de la barre latérale.",
+      "newButtonBottom": "Bas",
+      "newButtonBottomDescription": "Placer le bouton sous le dernier onglet ; il reste en bas lorsque les onglets débordent."
     },
     "viewMode": {
       "title": "Mode d'affichage",

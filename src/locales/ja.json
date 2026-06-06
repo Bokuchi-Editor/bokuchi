@@ -320,7 +320,13 @@
       "closeButtonLeft": "左",
       "closeButtonRight": "右",
       "closeButtonLeftDescription": "タブの左側に閉じるボタンとピンアイコンを表示します。",
-      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。"
+      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。",
+      "newButtonPosition": "新規タブボタンの位置",
+      "newButtonPositionDescription": "縦タブサイドバーで新規タブ（＋）ボタンを表示する位置を選択します。",
+      "newButtonTop": "上",
+      "newButtonTopDescription": "ボタンをサイドバーの一番上に固定します。",
+      "newButtonBottom": "下",
+      "newButtonBottomDescription": "ボタンを最後のタブの下に配置します。タブが多くなると下端に固定されます。"
     },
     "viewMode": {
       "title": "ビューモード",

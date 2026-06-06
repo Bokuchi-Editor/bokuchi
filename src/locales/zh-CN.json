@@ -320,7 +320,13 @@
       "closeButtonLeft": "左侧",
       "closeButtonRight": "右侧",
       "closeButtonLeftDescription": "在标签页左侧显示关闭按钮和固定图标。",
-      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。"
+      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。",
+      "newButtonPosition": "新建标签按钮位置",
+      "newButtonPositionDescription": "选择新建标签（+）按钮在垂直标签侧边栏中的显示位置。",
+      "newButtonTop": "顶部",
+      "newButtonTopDescription": "将按钮固定在侧边栏顶部。",
+      "newButtonBottom": "底部",
+      "newButtonBottomDescription": "将按钮放在最后一个标签下方；标签过多时它会固定在底部。"
     },
     "viewMode": {
       "title": "视图模式",

@@ -320,7 +320,13 @@
       "closeButtonLeft": "왼쪽",
       "closeButtonRight": "오른쪽",
       "closeButtonLeftDescription": "탭 왼쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
-      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다."
+      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
+      "newButtonPosition": "새 탭 버튼 위치",
+      "newButtonPositionDescription": "세로 탭 사이드바에서 새 탭(+) 버튼이 표시될 위치를 선택합니다.",
+      "newButtonTop": "위",
+      "newButtonTopDescription": "버튼을 사이드바 맨 위에 고정합니다.",
+      "newButtonBottom": "아래",
+      "newButtonBottomDescription": "버튼을 마지막 탭 아래에 배치합니다. 탭이 많으면 하단에 고정됩니다."
     },
     "viewMode": {
       "title": "보기 모드",

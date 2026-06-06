@@ -320,7 +320,13 @@
       "closeButtonLeft": "Izquierda",
       "closeButtonRight": "Derecha",
       "closeButtonLeftDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado izquierdo de la pestaña.",
-      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña."
+      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña.",
+      "newButtonPosition": "Posición del botón de nueva pestaña",
+      "newButtonPositionDescription": "Elige dónde aparece el botón de nueva pestaña (+) en la barra lateral de pestañas vertical.",
+      "newButtonTop": "Arriba",
+      "newButtonTopDescription": "Fija el botón en la parte superior de la barra lateral.",
+      "newButtonBottom": "Abajo",
+      "newButtonBottomDescription": "Coloca el botón debajo de la última pestaña; se mantiene en la parte inferior cuando hay demasiadas pestañas."
     },
     "viewMode": {
       "title": "Modo de vista",

@@ -83,6 +83,7 @@ interface AppContentProps {
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
   tabCloseButtonPosition?: 'left' | 'right';
+  tabNewButtonPosition?: 'top' | 'bottom';
 
   // Handlers
   onTabChange: (tabId: string) => void;
@@ -144,6 +145,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onCloseTabsToRight,
   onCloseAllTabs,
   tabCloseButtonPosition,
+  tabNewButtonPosition,
   onTabChange,
   onTabClose,
   onNewTab,
@@ -280,6 +282,7 @@ const AppContent: React.FC<AppContentProps> = ({
         onCloseTabsToRight={onCloseTabsToRight}
         onCloseAllTabs={onCloseAllTabs}
         closeButtonPosition={tabCloseButtonPosition}
+        newButtonPosition={tabNewButtonPosition}
         layout="vertical"
         embedded
         tabSidebarPinned={tabSidebarPinned}
@@ -375,6 +378,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onCloseTabsToRight={onCloseTabsToRight}
           onCloseAllTabs={onCloseAllTabs}
           closeButtonPosition={tabCloseButtonPosition}
+          newButtonPosition={tabNewButtonPosition}
           layout={tabLayout}
           tabSidebarPinned={tabSidebarPinned}
           onToggleSidebarPinned={onToggleSidebarPinned}

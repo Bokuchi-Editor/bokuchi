@@ -320,7 +320,13 @@
       "closeButtonLeft": "Left",
       "closeButtonRight": "Right",
       "closeButtonLeftDescription": "Display close button and pin icon on the left side of the tab.",
-      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab."
+      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab.",
+      "newButtonPosition": "New Tab Button Position",
+      "newButtonPositionDescription": "Choose where the new tab (+) button appears in the vertical tab sidebar.",
+      "newButtonTop": "Top",
+      "newButtonTopDescription": "Fix the button at the top of the sidebar.",
+      "newButtonBottom": "Bottom",
+      "newButtonBottomDescription": "Place the button below the last tab; it sticks to the bottom edge when tabs overflow."
     },
     "viewMode": {
       "title": "View Mode",

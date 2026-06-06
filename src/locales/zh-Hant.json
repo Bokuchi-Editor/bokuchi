@@ -320,7 +320,13 @@
       "closeButtonLeft": "左側",
       "closeButtonRight": "右側",
       "closeButtonLeftDescription": "在分頁左側顯示關閉按鈕和釘選圖示。",
-      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。"
+      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。",
+      "newButtonPosition": "新增標籤按鈕位置",
+      "newButtonPositionDescription": "選擇新增標籤（+）按鈕在垂直標籤側邊欄中的顯示位置。",
+      "newButtonTop": "頂部",
+      "newButtonTopDescription": "將按鈕固定在側邊欄頂部。",
+      "newButtonBottom": "底部",
+      "newButtonBottomDescription": "將按鈕放在最後一個標籤下方；標籤過多時會固定在底部。"
     },
     "viewMode": {
       "title": "檢視模式",

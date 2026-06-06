@@ -320,7 +320,13 @@
       "closeButtonLeft": "Kiri",
       "closeButtonRight": "Kanan",
       "closeButtonLeftDescription": "Tampilkan tombol tutup dan ikon pin di sisi kiri tab.",
-      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab."
+      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab.",
+      "newButtonPosition": "Posisi Tombol Tab Baru",
+      "newButtonPositionDescription": "Pilih di mana tombol tab baru (+) muncul di bilah sisi tab vertikal.",
+      "newButtonTop": "Atas",
+      "newButtonTopDescription": "Tetapkan tombol di bagian atas bilah sisi.",
+      "newButtonBottom": "Bawah",
+      "newButtonBottomDescription": "Tempatkan tombol di bawah tab terakhir; tombol menempel di bagian bawah saat tab melebihi layar."
     },
     "viewMode": {
       "title": "Mode Tampilan",

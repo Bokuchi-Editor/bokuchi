@@ -59,6 +59,19 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange }
     },
   ];
 
+  const newButtonOptions: RadioSettingOption[] = [
+    {
+      value: 'top',
+      label: t('settings.tabLayout.newButtonTop'),
+      description: t('settings.tabLayout.newButtonTopDescription'),
+    },
+    {
+      value: 'bottom',
+      label: t('settings.tabLayout.newButtonBottom'),
+      description: t('settings.tabLayout.newButtonBottomDescription'),
+    },
+  ];
+
   const outlineOptions: RadioSettingOption[] = [
     {
       value: 'persistent',
@@ -159,6 +172,19 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange }
         onChange={(value) => onSettingChange('interface', 'tabCloseButtonPosition', value)}
         options={closeButtonOptions}
       />
+
+      {ui.tabLayout === 'vertical' && (
+        <RadioSettingCard
+          sx={{ mb: 3 }}
+          title={t('settings.tabLayout.newButtonPosition')}
+          titleVariant="subtitle1"
+          titleGutterBottom
+          description={t('settings.tabLayout.newButtonPositionDescription')}
+          value={ui.tabNewButtonPosition}
+          onChange={(value) => onSettingChange('interface', 'tabNewButtonPosition', value)}
+          options={newButtonOptions}
+        />
+      )}
 
       <SliderSettingCard
         sx={{ mb: 3 }}

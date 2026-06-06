@@ -70,6 +70,9 @@ interface TabBarProps {
   onCloseAllTabs?: () => void;
   closeButtonPosition?: 'left' | 'right';
   layout?: 'horizontal' | 'vertical';
+  // Vertical-tab sidebar: where the new-tab (+) button sits ('top' header, or
+  // 'bottom' following the list end / sticking to the bottom edge). Default 'top'.
+  newButtonPosition?: 'top' | 'bottom';
   embedded?: boolean;
   // Vertical-tab sidebar pin (fixed) vs hover/auto-hide. When the toggle handler
   // is provided, the pin button is shown in the vertical sidebar header.
@@ -350,6 +353,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onCloseAllTabs,
   closeButtonPosition = 'right',
   layout = 'horizontal',
+  newButtonPosition = 'top',
   embedded = false,
   tabSidebarPinned,
   onToggleSidebarPinned,
@@ -449,6 +453,35 @@ const TabBar: React.FC<TabBarProps> = ({
   let content: React.ReactNode;
 
   if (layout === 'vertical') {
+    const newAtBottom = newButtonPosition === 'bottom';
+    const newTabButton = (
+      <Tooltip title="New Tab">
+        <IconButton
+          onClick={onNewTab}
+          sx={{
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
+          <Add />
+        </IconButton>
+      </Tooltip>
+    );
+    const pinButton = onToggleSidebarPinned && (
+      <Tooltip title={tabSidebarPinned ? t('tabSidebar.unpin') : t('tabSidebar.pin')}>
+        <IconButton
+          onClick={onToggleSidebarPinned}
+          color={tabSidebarPinned ? 'primary' : 'default'}
+          size="small"
+          sx={{
+            opacity: tabSidebarPinned ? 1 : 0.6,
+          }}
+        >
+          <PinIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    );
     content = (
       <Box
         sx={{
@@ -463,68 +496,95 @@ const TabBar: React.FC<TabBarProps> = ({
           ...(embedded && { overflow: 'hidden', height: '100%' }),
         }}
       >
-        <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
-          {onToggleSidebarPinned && (
-            <Tooltip title={tabSidebarPinned ? t('tabSidebar.unpin') : t('tabSidebar.pin')}>
-              <IconButton
-                onClick={onToggleSidebarPinned}
-                color={tabSidebarPinned ? 'primary' : 'default'}
-                size="small"
-                sx={{
-                  position: 'absolute',
-                  left: 12,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  zIndex: 1,
-                  opacity: tabSidebarPinned ? 1 : 0.6,
-                }}
-              >
-                <PinIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="New Tab">
-            <IconButton
-              onClick={onNewTab}
+        {/* Header: pin toggle, plus the new-tab button when positioned at the top.
+            With the button at the top the pin floats at the left and the button is
+            centered (legacy layout); at the bottom the pin sits inline on the left. */}
+        {(pinButton || !newAtBottom) && (
+          <Box
+            sx={{
+              p: 1,
+              borderBottom: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              alignItems: 'center',
+              ...(newAtBottom
+                ? {}
+                : { position: 'relative', justifyContent: 'center' }),
+            }}
+          >
+            {newAtBottom ? (
+              pinButton
+            ) : (
+              <>
+                {pinButton && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      zIndex: 1,
+                    }}
+                  >
+                    {pinButton}
+                  </Box>
+                )}
+                {newTabButton}
+              </>
+            )}
+          </Box>
+        )}
+        {/* Tab list + (optional) bottom new-tab button. The scroll area sizes to its
+            content (flex: 0 1 auto) so the bottom button sits directly below the last
+            tab; once the tabs overflow, the area caps to the available height and the
+            sticky button pins to the bottom edge so it stays reachable. */}
+        <Box sx={{ flex: '0 1 auto', minHeight: 0, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={tabs.map(tab => tab.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <List sx={{ p: 0 }}>
+                {tabs.map((tab, index) => (
+                  <React.Fragment key={tab.id}>
+                    <SortableTab
+                      tab={tab}
+                      isActive={tab.id === activeTabId}
+                      onClose={handleTabClose}
+                      onClick={onTabChange}
+                      onContextMenu={handleContextMenu}
+                      onDoubleClick={handleDoubleClick}
+                      closeButtonPosition={closeButtonPosition}
+                      layout="vertical"
+                    />
+                    {index < tabs.length - 1 && <Divider />}
+                  </React.Fragment>
+                ))}
+              </List>
+            </SortableContext>
+          </DndContext>
+          {newAtBottom && (
+            <Box
               sx={{
-                width: '100%',
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                },
+                position: 'sticky',
+                bottom: 0,
+                flexShrink: 0,
+                display: 'flex',
+                justifyContent: 'center',
+                p: 1,
+                borderTop: 1,
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
               }}
             >
-              <Add />
-            </IconButton>
-          </Tooltip>
+              {newTabButton}
+            </Box>
+          )}
         </Box>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={tabs.map(tab => tab.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
-              {tabs.map((tab, index) => (
-                <React.Fragment key={tab.id}>
-                  <SortableTab
-                    tab={tab}
-                    isActive={tab.id === activeTabId}
-                    onClose={handleTabClose}
-                    onClick={onTabChange}
-                    onContextMenu={handleContextMenu}
-                    onDoubleClick={handleDoubleClick}
-                    closeButtonPosition={closeButtonPosition}
-                    layout="vertical"
-                  />
-                  {index < tabs.length - 1 && <Divider />}
-                </React.Fragment>
-              ))}
-            </List>
-          </SortableContext>
-        </DndContext>
       </Box>
     );
   } else {
