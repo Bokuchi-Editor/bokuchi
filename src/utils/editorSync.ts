@@ -19,11 +19,49 @@ type ModelWithFlag = editor.ITextModel & { [SILENT_EDIT_FLAG]?: boolean };
  * the isModified=false that RELOAD_TAB_CONTENT just set).
  */
 export const setModelContentSilently = (model: editor.ITextModel, content: string): void => {
-  if (model.getValue() === content) return;
+  const oldValue = model.getValue();
+  if (oldValue === content) return;
   const tagged = model as ModelWithFlag;
   tagged[SILENT_EDIT_FLAG] = true;
   try {
-    model.setValue(content);
+    // Replace only the changed span (trim the common prefix and suffix) via an
+    // undoable edit. model.setValue would clear the undo/redo stack AND move the
+    // caret to the end of the document (jumping the editor's scroll position);
+    // a minimal pushEditOperations keeps the edit undoable and leaves the
+    // cursor/scroll outside the changed region untouched — important for
+    // preview-driven edits like table cells and checkboxes (#2/#4).
+    let start = 0;
+    const minLen = Math.min(oldValue.length, content.length);
+    while (start < minLen && oldValue.charCodeAt(start) === content.charCodeAt(start)) {
+      start++;
+    }
+    let oldEnd = oldValue.length;
+    let newEnd = content.length;
+    while (
+      oldEnd > start &&
+      newEnd > start &&
+      oldValue.charCodeAt(oldEnd - 1) === content.charCodeAt(newEnd - 1)
+    ) {
+      oldEnd--;
+      newEnd--;
+    }
+    const startPos = model.getPositionAt(start);
+    const endPos = model.getPositionAt(oldEnd);
+    model.pushEditOperations(
+      null,
+      [
+        {
+          range: {
+            startLineNumber: startPos.lineNumber,
+            startColumn: startPos.column,
+            endLineNumber: endPos.lineNumber,
+            endColumn: endPos.column,
+          },
+          text: content.substring(start, newEnd),
+        },
+      ],
+      () => null,
+    );
   } finally {
     tagged[SILENT_EDIT_FLAG] = false;
   }

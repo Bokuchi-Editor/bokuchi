@@ -257,10 +257,14 @@
       "theme": "Tema",
       "themeDescription": "Elige el tema visual para la interfaz de la aplicación.",
       "themes": {
-        "default": "Predeterminado",
-        "dark": "Oscuro",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Vívido",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Izquierda",
       "closeButtonRight": "Derecha",
       "closeButtonLeftDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado izquierdo de la pestaña.",
-      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña."
+      "closeButtonRightDescription": "Mostrar el botón de cerrar y el icono de fijar en el lado derecho de la pestaña.",
+      "newButtonPosition": "Posición del botón de nueva pestaña",
+      "newButtonPositionDescription": "Elige dónde aparece el botón de nueva pestaña (+) en la barra lateral de pestañas vertical.",
+      "newButtonTop": "Arriba",
+      "newButtonTopDescription": "Fija el botón en la parte superior de la barra lateral.",
+      "newButtonBottom": "Abajo",
+      "newButtonBottomDescription": "Coloca el botón debajo de la última pestaña; se mantiene en la parte inferior cuando hay demasiadas pestañas."
     },
     "viewMode": {
       "title": "Modo de vista",
@@ -339,7 +349,9 @@
       "wordWrap": "Ajuste de línea",
       "wordWrapDescription": "Ajustar líneas largas en el editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Muestra un minimapa del documento."
+      "minimapDescription": "Muestra un minimapa del documento.",
+      "showFormattingBar": "Barra de formato",
+      "showFormattingBarDescription": "Mostrar la barra de herramientas de formato sobre el editor."
     },
     "interface": {
       "title": "Interfaz",
@@ -409,7 +421,17 @@
       "resetSuccess": "Configuración restablecida exitosamente",
       "resetError": "Error al restablecer configuración",
       "enableMarp": "Marp (Presentaciones)",
-      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación."
+      "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación.",
+      "marpThemeFolder": "Carpeta de temas de Marp",
+      "marpThemeFolderDescription": "Registra temas personalizados de Marp desde una carpeta de archivos CSS. Cada archivo con un encabezado /* @theme name */ se podrá seleccionar en una diapositiva mediante la directiva theme:.",
+      "marpThemeFolderBrowse": "Elegir carpeta…",
+      "marpThemeFolderReload": "Recargar",
+      "marpThemeFolderClear": "Borrar",
+      "marpThemeFolderNone": "Ninguna carpeta seleccionada.",
+      "marpThemeFolderScanning": "Escaneando…",
+      "marpThemeFolderDetected": "Temas detectados",
+      "marpThemeFolderEmpty": "No se encontraron temas con encabezado @theme.",
+      "marpThemeFolderIgnored": "Ignorados (falta el encabezado @theme)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Columna",
     "characters": "caracteres",
     "selected": "seleccionado",
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "words": "palabras",
+    "wordWrap": "Ajuste de línea",
+    "autoSave": "Autoguardado",
+    "on": "Activado",
+    "off": "Desactivado"
   },
   "zoom": {
     "maxLimitReached": "Nivel máximo de zoom ({{maxZoom}}%) alcanzado",
@@ -480,6 +507,7 @@
     "quote": "Cita",
     "horizontalRule": "Línea horizontal",
     "table": "Tabla",
+    "formatTable": "Formatear tabla",
     "strikethrough": "Tachado"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "La vista previa de Marp ya no salta al principio",
-        "description": "Corregido el problema por el cual la vista previa continua de Marp volvía a la primera diapositiva con cada pulsación de tecla. Ahora se conserva la posición de desplazamiento mientras editas."
+      "newThemes": {
+        "title": "Cuatro temas nuevos",
+        "description": "Se añadieron cuatro temas de color nuevos —Dawn, Twilight, Silk e Ink— para darte más estilos a elegir para el editor y la vista previa."
       },
-      "editorModeShortcut": {
-        "title": "Cambio en el atajo para alternar el modo de editor",
-        "description": "Se corrigió un conflicto de atajos de teclado en Windows. Ahora el atajo para alternar el modo de editor es Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "Edita tablas visualmente",
+        "description": "Edita tablas de Markdown directamente en el editor y en la vista previa. Un editor de tablas dedicado te permite añadir o quitar filas y columnas y editar celdas en línea, y luego vuelve a escribir Markdown limpio por ti."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Cierre de varias pestañas con cambios sin guardar",
-        "description": "Al cerrar varias pestañas a la vez, las que tienen cambios sin guardar ya no se omiten en silencio: ahora se te pide guardar cada una en orden."
+      "verticalTabHover": {
+        "title": "Pestañas verticales que se ocultan y modo de enfoque",
+        "description": "Cuando las pestañas se muestran en vertical, la barra de pestañas puede permanecer oculta y aparecer al pasar el ratón por encima. Un nuevo modo de enfoque (Rin) maximiza el área de edición ocultando la interfaz que la rodea."
+      },
+      "marpExternalCss": {
+        "title": "Temas de Marp personalizados y CSS externo",
+        "description": "Indica a Bokuchi una carpeta con tus propios archivos de tema de Marp y carga CSS externo, para que tus diapositivas puedan usar estilos más allá de los temas integrados."
+      },
+      "newTabButtonPosition": {
+        "title": "Elige la posición del botón de pestaña nueva",
+        "description": "Una nueva opción te permite colocar el botón Añadir pestaña (Nueva) donde prefieras, incluso justo debajo de la pestaña abierta actualmente."
+      },
+      "formattingBarToggle": {
+        "title": "Muestra u oculta la barra de formato",
+        "description": "La barra de herramientas de formato de Markdown ahora se puede activar o desactivar desde los ajustes, para que mantengas el editor tan minimalista como quieras."
+      },
+      "statusBarSettings": {
+        "title": "Ajustes rápidos en la barra de estado",
+        "description": "Los ajustes de uso frecuente ahora están disponibles directamente en la barra de estado para un acceso más rápido."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Sincronización de desplazamiento bidireccional por defecto",
+        "description": "La sincronización del desplazamiento ahora es bidireccional de forma predeterminada, así que desplazar el editor o la vista previa mantiene la otra al mismo ritmo."
+      },
+      "tabDragFix": {
+        "title": "Arrastre de pestañas corregido",
+        "description": "Se corrigió un error que podía hacer que las pestañas se comportaran mal al arrastrarlas para reordenarlas."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Presentación",
     "previousSlide": "Diapositiva anterior",
     "nextSlide": "Diapositiva siguiente",
+    "reloadThemes": "Recargar temas",
     "slideCounter": "Diapositiva {{current}} de {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Modo de concentración Rin",
+    "exit": "Salir de Rin (Esc)",
+    "toggleWidth": "Alternar ancho del editor"
+  },
+  "tabSidebar": {
+    "pin": "Fijar barra lateral",
+    "unpin": "Dejar de fijar la barra lateral"
   }
 }

@@ -257,10 +257,14 @@
       "theme": "Chủ đề",
       "themeDescription": "Chọn chủ đề trực quan cho giao diện ứng dụng.",
       "themes": {
-        "default": "Mặc định",
-        "dark": "Tối",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Sống động",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Trái",
       "closeButtonRight": "Phải",
       "closeButtonLeftDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên trái tab.",
-      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab."
+      "closeButtonRightDescription": "Hiển thị nút đóng và biểu tượng ghim ở bên phải tab.",
+      "newButtonPosition": "Vị trí nút Tab mới",
+      "newButtonPositionDescription": "Chọn nơi hiển thị nút tab mới (+) trong thanh bên tab dọc.",
+      "newButtonTop": "Trên cùng",
+      "newButtonTopDescription": "Cố định nút ở phía trên thanh bên.",
+      "newButtonBottom": "Dưới cùng",
+      "newButtonBottomDescription": "Đặt nút bên dưới tab cuối cùng; nút sẽ dính ở dưới cùng khi có quá nhiều tab."
     },
     "viewMode": {
       "title": "Chế độ xem",
@@ -339,7 +349,9 @@
       "wordWrap": "Xuống dòng tự động",
       "wordWrapDescription": "Xuống dòng tự động cho các dòng dài trong trình soạn thảo.",
       "minimap": "Bản đồ thu nhỏ",
-      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu."
+      "minimapDescription": "Hiển thị bản đồ thu nhỏ của tài liệu.",
+      "showFormattingBar": "Thanh định dạng",
+      "showFormattingBarDescription": "Hiển thị thanh công cụ định dạng phía trên trình soạn thảo."
     },
     "interface": {
       "title": "Giao diện",
@@ -409,7 +421,17 @@
       "resetSuccess": "Đặt lại cài đặt thành công",
       "resetError": "Không thể đặt lại cài đặt",
       "enableMarp": "Marp (Trình chiếu)",
-      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu."
+      "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu.",
+      "marpThemeFolder": "Thư mục giao diện Marp",
+      "marpThemeFolderDescription": "Đăng ký giao diện Marp tùy chỉnh từ một thư mục chứa các tệp CSS. Mỗi tệp có tiêu đề /* @theme name */ sẽ có thể được chọn trong slide thông qua chỉ thị theme:.",
+      "marpThemeFolderBrowse": "Chọn thư mục…",
+      "marpThemeFolderReload": "Tải lại",
+      "marpThemeFolderClear": "Xóa",
+      "marpThemeFolderNone": "Chưa chọn thư mục.",
+      "marpThemeFolderScanning": "Đang quét…",
+      "marpThemeFolderDetected": "Giao diện đã phát hiện",
+      "marpThemeFolderEmpty": "Không tìm thấy giao diện nào có tiêu đề @theme.",
+      "marpThemeFolderIgnored": "Đã bỏ qua (thiếu tiêu đề @theme)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Cột",
     "characters": "ký tự",
     "selected": "đã chọn",
-    "saved": "Đã lưu"
+    "saved": "Đã lưu",
+    "words": "từ",
+    "wordWrap": "Ngắt dòng",
+    "autoSave": "Tự động lưu",
+    "on": "Bật",
+    "off": "Tắt"
   },
   "zoom": {
     "maxLimitReached": "Đã đạt mức zoom tối đa ({{maxZoom}}%)",
@@ -480,6 +507,7 @@
     "quote": "Trích dẫn",
     "horizontalRule": "Đường kẻ ngang",
     "table": "Bảng",
+    "formatTable": "Định dạng bảng",
     "strikethrough": "Gạch ngang"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Khung xem trước Marp không còn nhảy về đầu",
-        "description": "Đã khắc phục lỗi khung xem trước liên tục của Marp quay về trang chiếu đầu tiên sau mỗi lần nhấn phím. Vị trí cuộn của bạn giờ được giữ nguyên trong khi chỉnh sửa."
+      "newThemes": {
+        "title": "Bốn chủ đề mới",
+        "description": "Đã thêm bốn chủ đề màu mới — Dawn, Twilight, Silk và Ink — mang đến cho bạn nhiều giao diện hơn để chọn cho trình soạn thảo và bản xem trước."
       },
-      "editorModeShortcut": {
-        "title": "Thay đổi phím tắt chuyển chế độ trình soạn thảo",
-        "description": "Đã khắc phục xung đột phím tắt trên Windows. Phím tắt chuyển chế độ trình soạn thảo giờ là Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "Chỉnh sửa bảng trực quan",
+        "description": "Chỉnh sửa bảng Markdown trực tiếp trong trình soạn thảo và trong bản xem trước. Một trình chỉnh sửa bảng chuyên dụng cho phép bạn thêm hoặc xóa hàng và cột và chỉnh sửa ô ngay tại chỗ, rồi ghi lại Markdown gọn gàng cho bạn."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Đóng nhiều tab có thay đổi chưa lưu",
-        "description": "Khi đóng nhiều tab cùng lúc, các tab có thay đổi chưa lưu không còn bị bỏ qua âm thầm — bạn sẽ được hỏi để lưu từng tab một."
+      "verticalTabHover": {
+        "title": "Thẻ dọc tự ẩn & chế độ tập trung",
+        "description": "Khi các thẻ được hiển thị theo chiều dọc, thanh thẻ có thể luôn được thu gọn và trượt ra khi di chuột. Chế độ tập trung mới (Rin) tối đa hóa vùng soạn thảo bằng cách ẩn giao diện xung quanh."
+      },
+      "marpExternalCss": {
+        "title": "Chủ đề Marp tùy chỉnh & CSS bên ngoài",
+        "description": "Trỏ Bokuchi đến một thư mục chứa các tệp chủ đề Marp của riêng bạn và tải CSS bên ngoài, để các trang chiếu của bạn có thể dùng kiểu dáng vượt ra ngoài các chủ đề tích hợp."
+      },
+      "newTabButtonPosition": {
+        "title": "Chọn vị trí nút thẻ mới",
+        "description": "Một tùy chọn mới cho phép bạn đặt nút Thêm thẻ (Mới) ở nơi bạn muốn — kể cả ngay bên dưới thẻ đang mở."
+      },
+      "formattingBarToggle": {
+        "title": "Hiện hoặc ẩn thanh định dạng",
+        "description": "Thanh công cụ định dạng Markdown giờ đây có thể bật hoặc tắt từ phần cài đặt, để bạn giữ trình soạn thảo tối giản tùy ý."
+      },
+      "statusBarSettings": {
+        "title": "Cài đặt nhanh trên thanh trạng thái",
+        "description": "Các cài đặt thường dùng giờ đây có sẵn ngay trên thanh trạng thái để truy cập nhanh hơn."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Đồng bộ cuộn hai chiều theo mặc định",
+        "description": "Đồng bộ cuộn giờ mặc định là hai chiều, nên cuộn trình soạn thảo hoặc bản xem trước sẽ giữ cho bên còn lại đi cùng nhịp."
+      },
+      "tabDragFix": {
+        "title": "Sửa lỗi kéo thẻ",
+        "description": "Đã sửa một lỗi có thể khiến các thẻ hoạt động không đúng khi được kéo để sắp xếp lại."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Trình chiếu",
     "previousSlide": "Slide trước",
     "nextSlide": "Slide tiếp theo",
+    "reloadThemes": "Tải lại giao diện",
     "slideCounter": "Slide {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Chế độ tập trung Rin",
+    "exit": "Thoát Rin (Esc)",
+    "toggleWidth": "Chuyển đổi chiều rộng trình soạn thảo"
+  },
+  "tabSidebar": {
+    "pin": "Ghim thanh bên",
+    "unpin": "Bỏ ghim thanh bên"
   }
 }

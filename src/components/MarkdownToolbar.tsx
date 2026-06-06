@@ -13,6 +13,7 @@ import {
   FormatQuote,
   HorizontalRule,
   TableChart,
+  BorderAll,
   Title,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,7 @@ import {
   buildBlockInsertEdit,
   buildHeadingEdit,
 } from '../utils/markdownToolbarActions';
+import { formatTableInEditor } from '../utils/tableEditorActions';
 
 interface MarkdownToolbarProps {
   editorRef: React.RefObject<editor.IStandaloneCodeEditor | null>;
@@ -89,6 +91,12 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     ed.focus();
   };
 
+  const formatTable = () => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    formatTableInEditor(ed);
+  };
+
   const handleHeadingClick = (event: React.MouseEvent<HTMLElement>) => {
     setHeadingAnchor(event.currentTarget);
   };
@@ -133,6 +141,7 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({ editorRef }) => {
     { icon: <FormatQuote fontSize="small" />, tooltip: t('toolbar.quote'), action: () => insertLinePrefix('> ') },
     { icon: <HorizontalRule fontSize="small" />, tooltip: t('toolbar.horizontalRule'), action: () => insertBlock('---') },
     { icon: <TableChart fontSize="small" />, tooltip: t('toolbar.table'), action: () => insertBlock('| Header 1 | Header 2 | Header 3 |\n| --- | --- | --- |\n| Cell 1 | Cell 2 | Cell 3 |') },
+    { icon: <BorderAll fontSize="small" />, tooltip: `${t('toolbar.formatTable')} (Ctrl+Shift+L)`, action: () => formatTable() },
   ];
 
   return (

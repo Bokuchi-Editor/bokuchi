@@ -257,11 +257,15 @@
       "theme": "السمة",
       "themeDescription": "اختر السمة البصرية لواجهة التطبيق.",
       "themes": {
-        "default": "افتراضي",
-        "dark": "داكن",
-        "pastel": "باستيل",
-        "vivid": "حيوي",
-        "darcula": "داركولا"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "يسار",
       "closeButtonRight": "يمين",
       "closeButtonLeftDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيسر من علامة التبويب.",
-      "closeButtonRightDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيمن من علامة التبويب."
+      "closeButtonRightDescription": "عرض زر الإغلاق وأيقونة التثبيت على الجانب الأيمن من علامة التبويب.",
+      "newButtonPosition": "موضع زر علامة التبويب الجديدة",
+      "newButtonPositionDescription": "اختر مكان ظهور زر علامة التبويب الجديدة (+) في الشريط الجانبي العمودي لعلامات التبويب.",
+      "newButtonTop": "أعلى",
+      "newButtonTopDescription": "تثبيت الزر في أعلى الشريط الجانبي.",
+      "newButtonBottom": "أسفل",
+      "newButtonBottomDescription": "ضع الزر أسفل آخر علامة تبويب؛ يبقى في الأسفل عند تجاوز عدد علامات التبويب."
     },
     "viewMode": {
       "title": "وضع العرض",
@@ -339,7 +349,9 @@
       "wordWrap": "التفاف النص",
       "wordWrapDescription": "التفاف الأسطر الطويلة في المحرر.",
       "minimap": "الخريطة المصغرة",
-      "minimapDescription": "عرض خريطة مصغرة للمستند."
+      "minimapDescription": "عرض خريطة مصغرة للمستند.",
+      "showFormattingBar": "شريط التنسيق",
+      "showFormattingBarDescription": "إظهار شريط أدوات التنسيق أعلى المحرر."
     },
     "interface": {
       "title": "الواجهة",
@@ -409,7 +421,17 @@
       "resetSuccess": "تم إعادة تعيين الإعدادات بنجاح",
       "resetError": "فشل في إعادة تعيين الإعدادات",
       "enableMarp": "Marp (عروض تقديمية)",
-      "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي."
+      "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي.",
+      "marpThemeFolder": "مجلد سمات Marp",
+      "marpThemeFolderDescription": "سجّل سمات Marp مخصصة من مجلد يحتوي على ملفات CSS. كل ملف يحتوي على ترويسة /* @theme name */ يصبح قابلاً للاختيار في الشريحة عبر توجيه theme:.",
+      "marpThemeFolderBrowse": "اختر مجلدًا…",
+      "marpThemeFolderReload": "إعادة التحميل",
+      "marpThemeFolderClear": "مسح",
+      "marpThemeFolderNone": "لم يتم اختيار مجلد.",
+      "marpThemeFolderScanning": "جارٍ الفحص…",
+      "marpThemeFolderDetected": "السمات المكتشفة",
+      "marpThemeFolderEmpty": "لم يتم العثور على سمات تحتوي على ترويسة @theme.",
+      "marpThemeFolderIgnored": "تم التجاهل (ترويسة @theme مفقودة)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "العمود",
     "characters": "أحرف",
     "selected": "محدد",
-    "saved": "تم الحفظ"
+    "saved": "تم الحفظ",
+    "words": "كلمات",
+    "wordWrap": "التفاف النص",
+    "autoSave": "الحفظ التلقائي",
+    "on": "تشغيل",
+    "off": "إيقاف"
   },
   "zoom": {
     "maxLimitReached": "تم الوصول إلى الحد الأقصى لمستوى التكبير ({{maxZoom}}%)",
@@ -480,6 +507,7 @@
     "quote": "اقتباس",
     "horizontalRule": "خط أفقي",
     "table": "جدول",
+    "formatTable": "تنسيق الجدول",
     "strikethrough": "يتوسطه خط"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "تحسين"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "معاينة Marp لم تعد تقفز إلى الأعلى",
-        "description": "تم إصلاح مشكلة عودة معاينة Marp في الوضع المتواصل إلى الشريحة الأولى مع كل ضغطة مفتاح. يتم الآن الحفاظ على موضع التمرير أثناء التحرير."
+      "newThemes": {
+        "title": "أربع سمات جديدة",
+        "description": "تمت إضافة أربع سمات ألوان جديدة — Dawn وTwilight وSilk وInk — لتمنحك مظاهر أكثر للاختيار من بينها للمحرّر والمعاينة."
       },
-      "editorModeShortcut": {
-        "title": "تغيير اختصار تبديل وضع المحرر",
-        "description": "تم إصلاح تعارض في اختصارات لوحة المفاتيح على Windows. أصبح اختصار تبديل وضع المحرر الآن Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "تحرير الجداول بصريًا",
+        "description": "حرّر جداول Markdown مباشرةً في المحرّر وفي المعاينة. يتيح لك محرّر جداول مخصّص إضافة الصفوف والأعمدة أو إزالتها وتحرير الخلايا في مكانها، ثم يعيد كتابة Markdown نظيف نيابةً عنك."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "إغلاق عدة علامات تبويب تحتوي على تغييرات غير محفوظة",
-        "description": "عند إغلاق عدة علامات تبويب دفعة واحدة، لم تعد علامات التبويب التي تحتوي على تغييرات غير محفوظة تُتخطى بصمت — بل سيُطلب منك حفظ كل واحدة منها على التوالي."
+      "verticalTabHover": {
+        "title": "علامات تبويب عمودية تختفي تلقائيًا ووضع التركيز",
+        "description": "عند عرض علامات التبويب عموديًا، يمكن لشريط علامات التبويب أن يبقى مطويًا ويظهر عند تمرير المؤشر فوقه. يعمل وضع تركيز جديد (Rin) على تكبير منطقة التحرير بإخفاء الواجهة المحيطة."
+      },
+      "marpExternalCss": {
+        "title": "سمات Marp مخصّصة وCSS خارجي",
+        "description": "وجّه Bokuchi إلى مجلد يحتوي على ملفات سمات Marp الخاصة بك وحمّل CSS خارجيًا، حتى تتمكن شرائحك من استخدام أنماط تتجاوز السمات المدمجة."
+      },
+      "newTabButtonPosition": {
+        "title": "اختر موضع زر علامة التبويب الجديدة",
+        "description": "يتيح لك خيار جديد وضع زر إضافة علامة تبويب (جديدة) في المكان الذي تفضّله، بما في ذلك أسفل علامة التبويب المفتوحة حاليًا مباشرةً."
+      },
+      "formattingBarToggle": {
+        "title": "إظهار شريط التنسيق أو إخفاؤه",
+        "description": "يمكن الآن تشغيل شريط أدوات تنسيق Markdown أو إيقافه من الإعدادات، لتُبقي المحرّر بسيطًا بالقدر الذي تريده."
+      },
+      "statusBarSettings": {
+        "title": "إعدادات سريعة في شريط الحالة",
+        "description": "أصبحت الإعدادات الأكثر استخدامًا متاحة الآن مباشرةً من شريط الحالة للوصول الأسرع."
+      },
+      "scrollSyncTwoWay": {
+        "title": "مزامنة التمرير ثنائية الاتجاه افتراضيًا",
+        "description": "أصبحت مزامنة التمرير ثنائية الاتجاه افتراضيًا، فتمرير المحرّر أو المعاينة يُبقي الآخر متزامنًا معه."
+      },
+      "tabDragFix": {
+        "title": "إصلاح سحب علامات التبويب",
+        "description": "تم إصلاح خلل قد يتسبّب في سلوك غير صحيح لعلامات التبويب أثناء سحبها لإعادة ترتيبها."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "عرض تقديمي",
     "previousSlide": "الشريحة السابقة",
     "nextSlide": "الشريحة التالية",
+    "reloadThemes": "إعادة تحميل السمات",
     "slideCounter": "شريحة {{current}} من {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "وضع التركيز Rin",
+    "exit": "الخروج من Rin (Esc)",
+    "toggleWidth": "تبديل عرض المحرر"
+  },
+  "tabSidebar": {
+    "pin": "تثبيت الشريط الجانبي",
+    "unpin": "إلغاء تثبيت الشريط الجانبي"
   }
 }

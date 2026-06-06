@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, defaultValue?: string) => defaultValue ?? key,
   }),
 }));
 
@@ -139,5 +139,45 @@ describe('StatusBar', () => {
   it('T-SB-11: displays current theme display name', () => {
     renderStatusBar({ theme: 'default' });
     expect(screen.getByText('Default')).toBeInTheDocument();
+  });
+
+  // T-SB-12: shows the total word count when provided
+  it('T-SB-12: displays the total word count', () => {
+    renderStatusBar({ totalWords: 300 });
+    expect(screen.getByText(/300 statusBar\.words/)).toBeInTheDocument();
+  });
+
+  // T-SB-13: shows the selected word count when there is a selection
+  it('T-SB-13: displays selected word count when a selection exists', () => {
+    renderStatusBar({ selectedCharacters: 5, totalWords: 300, selectedWords: 2 });
+    expect(screen.getByText(/2 statusBar\.words/)).toBeInTheDocument();
+  });
+
+  // T-SB-14: word-wrap toggle calls its handler
+  it('T-SB-14: calls onToggleWordWrap when the word-wrap button is clicked', () => {
+    const onToggleWordWrap = vi.fn();
+    const onToggleAutoSave = vi.fn();
+    renderStatusBar({ wordWrap: true, onToggleWordWrap, autoSave: true, onToggleAutoSave });
+    // Order: ZoomOut, ZoomIn, ResetZoom, WordWrap, AutoSave, Theme
+    const buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[3]);
+    expect(onToggleWordWrap).toHaveBeenCalledTimes(1);
+  });
+
+  // T-SB-15: auto-save toggle calls its handler
+  it('T-SB-15: calls onToggleAutoSave when the auto-save button is clicked', () => {
+    const onToggleWordWrap = vi.fn();
+    const onToggleAutoSave = vi.fn();
+    renderStatusBar({ wordWrap: false, onToggleWordWrap, autoSave: false, onToggleAutoSave });
+    const buttons = screen.getAllByRole('button');
+    fireEvent.click(buttons[4]);
+    expect(onToggleAutoSave).toHaveBeenCalledTimes(1);
+  });
+
+  // T-SB-16: toggles are hidden when no handler is provided
+  it('T-SB-16: does not render quick toggles without handlers', () => {
+    renderStatusBar();
+    // Only the 3 zoom buttons + theme button (no word-wrap/auto-save toggles).
+    expect(screen.getAllByRole('button')).toHaveLength(4);
   });
 });

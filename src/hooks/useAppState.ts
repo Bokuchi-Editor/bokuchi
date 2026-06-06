@@ -56,11 +56,19 @@ export const useAppState = () => {
     line: 1,
     column: 1,
     totalCharacters: 0,
-    selectedCharacters: 0
+    selectedCharacters: 0,
+    totalWords: 0,
+    selectedWords: 0
   });
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [outlinePanelOpen, setOutlinePanelOpen] = useState(true);
   const [folderTreePanelOpen, setFolderTreePanelOpen] = useState(false);
+
+  // 臨 (Rin) focus mode — session-only (never persisted). Hides all chrome and
+  // shows only the current file's editor. Forces Editor view-mode while active
+  // and restores the previous view-mode on exit.
+  const [rinActive, setRinActive] = useState(false);
+  const prevViewModeRef = useRef<'split' | 'editor' | 'preview'>('split');
 
   // Tab management
   const {
@@ -106,6 +114,8 @@ export const useAppState = () => {
     language,
     tabLayout,
     setTabLayout,
+    tabSidebarPinned,
+    toggleTabSidebarPinned,
     globalVariables,
     setGlobalVariables,
     appSettings,
@@ -412,6 +422,33 @@ export const useAppState = () => {
     setViewMode(mode);
   }, []);
 
+  // 臨 (Rin) focus mode toggle. Enter: snapshot current view-mode, force Editor.
+  // Exit: restore the snapshot. Session-only — not persisted.
+  const enterRin = useCallback(() => {
+    setRinActive((active) => {
+      if (active) return true;
+      prevViewModeRef.current = viewMode;
+      setViewMode('editor');
+      return true;
+    });
+  }, [viewMode]);
+
+  const exitRin = useCallback(() => {
+    setRinActive((active) => {
+      if (!active) return false;
+      setViewMode(prevViewModeRef.current);
+      return false;
+    });
+  }, []);
+
+  const toggleRin = useCallback(() => {
+    if (rinActive) {
+      exitRin();
+    } else {
+      enterRin();
+    }
+  }, [rinActive, enterRin, exitRin]);
+
   // Focus editor when switching to a mode that shows the editor
   useEffect(() => {
     if (isSettingsLoaded && (viewMode === 'split' || viewMode === 'editor')) {
@@ -456,7 +493,12 @@ export const useAppState = () => {
     globalVariables,
     language,
     tabLayout,
+    tabSidebarPinned,
+    toggleTabSidebarPinned,
     viewMode,
+    rinActive,
+    toggleRin,
+    exitRin,
     isSettingsLoaded,
     editorStatus,
     fileChangeDialog,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Menu, MenuItem, IconButton, Tooltip } from '@mui/material';
-import { ZoomIn, ZoomOut, RestartAlt } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { ZoomIn, ZoomOut, RestartAlt, WrapText, Save } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { ThemeName, getVisibleThemes } from '../themes';
 
@@ -9,7 +10,13 @@ interface StatusBarProps {
   column: number;
   totalCharacters: number;
   selectedCharacters: number;
-  darkMode: boolean;
+  totalWords?: number;
+  selectedWords?: number;
+  wordWrap?: boolean;
+  onToggleWordWrap?: () => void;
+  autoSave?: boolean;
+  onToggleAutoSave?: () => void;
+  darkMode?: boolean;
   theme?: string;
   onThemeChange?: (theme: ThemeName) => void;
   zoomPercentage: number;
@@ -28,7 +35,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
   column,
   totalCharacters,
   selectedCharacters,
-  darkMode,
+  totalWords,
+  selectedWords,
+  wordWrap,
+  onToggleWordWrap,
+  autoSave,
+  onToggleAutoSave,
   theme,
   onThemeChange,
   zoomPercentage,
@@ -42,6 +54,8 @@ const StatusBar: React.FC<StatusBarProps> = ({
   saveStatusMessage
 }) => {
   const { t } = useTranslation();
+  const muiTheme = useTheme();
+  const { palette } = muiTheme;
   const [themeMenuAnchor, setThemeMenuAnchor] = useState<null | HTMLElement>(null);
   const visibleThemes = getVisibleThemes(as400Unlocked ? ['as400'] : []);
 
@@ -64,14 +78,14 @@ const StatusBar: React.FC<StatusBarProps> = ({
       className="status-bar"
       sx={{
         height: '24px',
-        backgroundColor: theme === 'as400' ? '#001a00' : theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#f3f3f3'),
+        backgroundColor: palette.background.paper,
         borderTop: 1,
-        borderColor: theme === 'as400' ? '#003300' : theme === 'darcula' ? '#323232' : 'divider',
+        borderColor: palette.divider,
         display: 'flex',
         alignItems: 'center',
         px: 2,
         fontSize: '12px',
-        color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#666666'),
+        color: palette.text.secondary,
         fontFamily: 'monospace'
       }}
     >
@@ -84,6 +98,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
           : `${totalCharacters} ${t('statusBar.characters')}`
         }
       </Typography>
+
+      {totalWords !== undefined && (
+        <Typography variant="caption" sx={{ mr: 2 }}>
+          {`${selectedCharacters > 0 ? (selectedWords ?? 0) : totalWords} ${t('statusBar.words')}`}
+        </Typography>
+      )}
 
       {/* Late night message */}
       {isLateNight && (
@@ -105,7 +125,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
               minWidth: 'auto',
               opacity: canZoomOut ? 1 : 0.5,
               '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: palette.action.hover,
               }
             }}
           >
@@ -136,7 +156,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
               minWidth: 'auto',
               opacity: canZoomIn ? 1 : 0.5,
               '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: palette.action.hover,
               }
             }}
           >
@@ -153,7 +173,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
               padding: '2px',
               minWidth: 'auto',
               '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: palette.action.hover,
               }
             }}
           >
@@ -177,8 +197,48 @@ const StatusBar: React.FC<StatusBarProps> = ({
         </Typography>
       )}
 
-      {/* Theme display and toggle - positioned at right end */}
-      <Box sx={{ ml: saveStatusMessage ? 0 : 'auto', display: 'flex', alignItems: 'center' }}>
+      {/* Quick-toggle settings + theme picker - positioned at right end */}
+      <Box sx={{ ml: saveStatusMessage ? 0 : 'auto', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        {onToggleWordWrap && (
+          <Tooltip title={`${t('statusBar.wordWrap')}: ${wordWrap ? t('statusBar.on') : t('statusBar.off')}`} placement="top">
+            <IconButton
+              size="small"
+              onClick={onToggleWordWrap}
+              sx={{
+                color: wordWrap ? palette.primary.main : 'inherit',
+                padding: '2px',
+                minWidth: 'auto',
+                opacity: wordWrap ? 1 : 0.45,
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                }
+              }}
+            >
+              <WrapText sx={{ fontSize: '16px' }} />
+            </IconButton>
+          </Tooltip>
+        )}
+
+        {onToggleAutoSave && (
+          <Tooltip title={`${t('statusBar.autoSave')}: ${autoSave ? t('statusBar.on') : t('statusBar.off')}`} placement="top">
+            <IconButton
+              size="small"
+              onClick={onToggleAutoSave}
+              sx={{
+                color: autoSave ? palette.primary.main : 'inherit',
+                padding: '2px',
+                minWidth: 'auto',
+                opacity: autoSave ? 1 : 0.45,
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                }
+              }}
+            >
+              <Save sx={{ fontSize: '16px' }} />
+            </IconButton>
+          </Tooltip>
+        )}
+
         <IconButton
           size="small"
           onClick={handleThemeMenuOpen}
@@ -188,12 +248,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
             padding: '2px 8px',
             minWidth: 'auto',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: palette.action.hover,
             }
           }}
         >
           <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
-            {theme ? visibleThemes.find(t => t.name === theme)?.displayName || 'Default' : 'Default'}
+            {theme ? t(`settings.appearance.themes.${theme}`, visibleThemes.find(tc => tc.name === theme)?.displayName || 'Default') : 'Default'}
           </Typography>
         </IconButton>
 
@@ -211,8 +271,8 @@ const StatusBar: React.FC<StatusBarProps> = ({
           }}
           PaperProps={{
             sx: {
-              backgroundColor: theme === 'as400' ? '#0a0a0a' : theme === 'darcula' ? '#3C3F41' : (darkMode ? '#1e1e1e' : '#ffffff'),
-              border: theme === 'as400' ? '1px solid #003300' : theme === 'darcula' ? '1px solid #323232' : (darkMode ? '1px solid #404040' : '1px solid #e0e0e0'),
+              backgroundColor: palette.background.paper,
+              border: `1px solid ${palette.divider}`,
               minWidth: '120px',
             }
           }}
@@ -222,23 +282,23 @@ const StatusBar: React.FC<StatusBarProps> = ({
               key={themeOption.name}
               onClick={() => handleThemeSelect(themeOption.name)}
               sx={{
-                color: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#A9B7C6' : (darkMode ? '#cccccc' : '#333333'),
+                color: palette.text.primary,
                 fontSize: '12px',
                 padding: '4px 12px',
                 '&:hover': {
-                  backgroundColor: theme === 'as400' ? '#003300' : theme === 'darcula' ? '#4C4F51' : (darkMode ? '#2d2d2d' : '#f5f5f5'),
+                  backgroundColor: palette.action.hover,
                 },
                 '&.Mui-selected': {
-                  backgroundColor: theme === 'as400' ? '#00FF00' : theme === 'darcula' ? '#CC7832' : (darkMode ? '#007acc' : '#e3f2fd'),
-                  color: theme === 'as400' ? '#000000' : theme === 'darcula' ? '#2B2B2B' : (darkMode ? '#ffffff' : '#1976d2'),
+                  backgroundColor: palette.primary.main,
+                  color: palette.primary.contrastText,
                   '&:hover': {
-                    backgroundColor: theme === 'as400' ? '#33FF33' : theme === 'darcula' ? '#D18F4A' : (darkMode ? '#005a9e' : '#bbdefb'),
+                    backgroundColor: palette.primary.dark,
                   }
                 }
               }}
               selected={theme === themeOption.name}
             >
-              {themeOption.displayName}
+              {t(`settings.appearance.themes.${themeOption.name}`, themeOption.displayName)}
             </MenuItem>
           ))}
         </Menu>

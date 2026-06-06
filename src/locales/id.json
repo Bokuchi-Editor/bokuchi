@@ -258,9 +258,13 @@
       "themeDescription": "Pilih tema visual untuk antarmuka aplikasi.",
       "themes": {
         "default": "Default",
-        "dark": "Gelap",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Hidup",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Kiri",
       "closeButtonRight": "Kanan",
       "closeButtonLeftDescription": "Tampilkan tombol tutup dan ikon pin di sisi kiri tab.",
-      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab."
+      "closeButtonRightDescription": "Tampilkan tombol tutup dan ikon pin di sisi kanan tab.",
+      "newButtonPosition": "Posisi Tombol Tab Baru",
+      "newButtonPositionDescription": "Pilih di mana tombol tab baru (+) muncul di bilah sisi tab vertikal.",
+      "newButtonTop": "Atas",
+      "newButtonTopDescription": "Tetapkan tombol di bagian atas bilah sisi.",
+      "newButtonBottom": "Bawah",
+      "newButtonBottomDescription": "Tempatkan tombol di bawah tab terakhir; tombol menempel di bagian bawah saat tab melebihi layar."
     },
     "viewMode": {
       "title": "Mode Tampilan",
@@ -339,7 +349,9 @@
       "wordWrap": "Bungkus Kata",
       "wordWrapDescription": "Bungkus baris panjang di editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Tampilkan minimap dokumen."
+      "minimapDescription": "Tampilkan minimap dokumen.",
+      "showFormattingBar": "Bilah Pemformatan",
+      "showFormattingBarDescription": "Tampilkan bilah alat pemformatan di atas editor."
     },
     "interface": {
       "title": "Antarmuka",
@@ -409,7 +421,17 @@
       "resetSuccess": "Pengaturan berhasil direset",
       "resetError": "Gagal mereset pengaturan",
       "enableMarp": "Marp (Presentasi)",
-      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi."
+      "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi.",
+      "marpThemeFolder": "Folder Tema Marp",
+      "marpThemeFolderDescription": "Daftarkan tema Marp kustom dari folder berisi file CSS. Setiap file dengan header /* @theme name */ dapat dipilih dalam slide melalui direktif theme:.",
+      "marpThemeFolderBrowse": "Pilih Folder…",
+      "marpThemeFolderReload": "Muat ulang",
+      "marpThemeFolderClear": "Hapus",
+      "marpThemeFolderNone": "Tidak ada folder yang dipilih.",
+      "marpThemeFolderScanning": "Memindai…",
+      "marpThemeFolderDetected": "Tema terdeteksi",
+      "marpThemeFolderEmpty": "Tidak ada tema dengan header @theme yang ditemukan.",
+      "marpThemeFolderIgnored": "Diabaikan (header @theme tidak ada)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Kolom",
     "characters": "karakter",
     "selected": "dipilih",
-    "saved": "Tersimpan"
+    "saved": "Tersimpan",
+    "words": "kata",
+    "wordWrap": "Bungkus Kata",
+    "autoSave": "Simpan Otomatis",
+    "on": "Aktif",
+    "off": "Nonaktif"
   },
   "zoom": {
     "maxLimitReached": "Level zoom maksimum ({{maxZoom}}%) tercapai",
@@ -480,6 +507,7 @@
     "quote": "Kutipan",
     "horizontalRule": "Garis Horizontal",
     "table": "Tabel",
+    "formatTable": "Format Tabel",
     "strikethrough": "Coret"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Pratinjau Marp Tidak Lagi Lompat ke Atas",
-        "description": "Memperbaiki masalah pratinjau Marp mode kontinu yang kembali ke slide pertama setiap kali menekan tombol. Posisi gulir Anda kini dipertahankan selama mengedit."
+      "newThemes": {
+        "title": "Empat Tema Baru",
+        "description": "Menambahkan empat tema warna baru — Dawn, Twilight, Silk, dan Ink — memberi Anda lebih banyak tampilan untuk dipilih bagi editor dan pratinjau."
       },
-      "editorModeShortcut": {
-        "title": "Pintasan Toggle Mode Editor Berubah",
-        "description": "Memperbaiki konflik pintasan keyboard pada Windows. Toggle mode editor kini menggunakan Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "Edit Tabel Secara Visual",
+        "description": "Edit tabel Markdown langsung di editor dan di pratinjau. Editor tabel khusus memungkinkan Anda menambah atau menghapus baris dan kolom serta mengedit sel secara inline, lalu menuliskan kembali Markdown yang rapi untuk Anda."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Menutup Beberapa Tab dengan Perubahan Belum Disimpan",
-        "description": "Saat menutup beberapa tab sekaligus, tab dengan perubahan yang belum disimpan tidak lagi dilewati diam-diam — Anda kini diminta menyimpannya satu per satu."
+      "verticalTabHover": {
+        "title": "Tab Vertikal yang Menyembunyi Otomatis & Mode Fokus",
+        "description": "Saat tab ditampilkan secara vertikal, bilah tab dapat tetap tersembunyi dan muncul saat disorot kursor. Mode fokus baru (Rin) memaksimalkan area pengeditan dengan menyembunyikan antarmuka di sekitarnya."
+      },
+      "marpExternalCss": {
+        "title": "Tema Marp Kustom & CSS Eksternal",
+        "description": "Arahkan Bokuchi ke folder berisi file tema Marp Anda sendiri dan muat CSS eksternal, sehingga slide Anda dapat memakai gaya di luar tema bawaan."
+      },
+      "newTabButtonPosition": {
+        "title": "Pilih Posisi Tombol Tab Baru",
+        "description": "Opsi baru memungkinkan Anda menempatkan tombol Tambah Tab (Baru) sesuai keinginan — termasuk tepat di bawah tab yang sedang terbuka."
+      },
+      "formattingBarToggle": {
+        "title": "Tampilkan atau Sembunyikan Bilah Pemformatan",
+        "description": "Bilah alat pemformatan Markdown kini dapat diaktifkan atau dinonaktifkan dari pengaturan, sehingga Anda bisa menjaga editor tetap seminimal yang Anda mau."
+      },
+      "statusBarSettings": {
+        "title": "Pengaturan Cepat di Bilah Status",
+        "description": "Pengaturan yang sering dipakai kini tersedia langsung dari bilah status untuk akses yang lebih cepat."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Sinkronisasi Gulir Dua Arah secara Default",
+        "description": "Sinkronisasi gulir kini secara default dua arah, jadi menggulir editor maupun pratinjau membuat keduanya tetap selaras."
+      },
+      "tabDragFix": {
+        "title": "Perbaikan Seret Tab",
+        "description": "Memperbaiki bug yang dapat membuat tab berperilaku tidak semestinya saat diseret untuk diurutkan ulang."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Presentasi",
     "previousSlide": "Slide sebelumnya",
     "nextSlide": "Slide berikutnya",
+    "reloadThemes": "Muat ulang tema",
     "slideCounter": "Slide {{current}} dari {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Mode fokus Rin",
+    "exit": "Keluar dari Rin (Esc)",
+    "toggleWidth": "Alihkan lebar editor"
+  },
+  "tabSidebar": {
+    "pin": "Sematkan bilah sisi",
+    "unpin": "Lepas sematan bilah sisi"
   }
 }

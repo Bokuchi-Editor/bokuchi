@@ -25,22 +25,52 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.8.4',
+  version: '0.9.0',
   changes: [
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.marpPreviewScroll.title',
-      descriptionKey: 'whatsNew.changes.marpPreviewScroll.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.newThemes.title',
+      descriptionKey: 'whatsNew.changes.newThemes.description',
     },
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.editorModeShortcut.title',
-      descriptionKey: 'whatsNew.changes.editorModeShortcut.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.tableEditing.title',
+      descriptionKey: 'whatsNew.changes.tableEditing.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.verticalTabHover.title',
+      descriptionKey: 'whatsNew.changes.verticalTabHover.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.marpExternalCss.title',
+      descriptionKey: 'whatsNew.changes.marpExternalCss.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.newTabButtonPosition.title',
+      descriptionKey: 'whatsNew.changes.newTabButtonPosition.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.formattingBarToggle.title',
+      descriptionKey: 'whatsNew.changes.formattingBarToggle.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.batchCloseUnsavedPrompt.title',
-      descriptionKey: 'whatsNew.changes.batchCloseUnsavedPrompt.description',
+      titleKey: 'whatsNew.changes.statusBarSettings.title',
+      descriptionKey: 'whatsNew.changes.statusBarSettings.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.scrollSyncTwoWay.title',
+      descriptionKey: 'whatsNew.changes.scrollSyncTwoWay.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.tabDragFix.title',
+      descriptionKey: 'whatsNew.changes.tabDragFix.description',
     },
   ],
 };

@@ -10,6 +10,9 @@ import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } f
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
+import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
+import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
+import { countWords } from '../utils/wordCount';
 
 interface EditorProps {
   content: string;
@@ -25,6 +28,8 @@ interface EditorProps {
     column: number;
     totalCharacters: number;
     selectedCharacters: number;
+    totalWords: number;
+    selectedWords: number;
   }) => void;
   zoomLevel?: number;
   focusRequestId?: number;
@@ -35,6 +40,7 @@ interface EditorProps {
   tabSize?: number;
   wordWrap?: boolean;
   minimap?: boolean;
+  showFormattingBar?: boolean;
   showWhitespace?: boolean;
   tableConversion?: 'auto' | 'confirm' | 'off';
   onSnackbar?: (message: string, severity: 'success' | 'error' | 'warning') => void;
@@ -51,7 +57,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
   darkMode,
-  theme,
   fileNotFound,
   onStatusChange,
   zoomLevel = 1.0,
@@ -62,6 +67,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   tabSize = 2,
   wordWrap = true,
   minimap = false,
+  showFormattingBar = true,
   showWhitespace = false,
   tableConversion = 'confirm',
   onSnackbar,
@@ -90,6 +96,11 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const disposablesRef = useRef<import('monaco-editor').IDisposable[]>([]);
   const isProgrammaticScrollRef = useRef(false);
+  // Keep the latest onScrollChange reachable from the mount-time scroll listener
+  // so that changing scrollSyncMode at runtime (e.g. off -> bidirectional) takes
+  // effect without remounting the editor.
+  const onScrollChangeRef = useRef(onScrollChange);
+  onScrollChangeRef.current = onScrollChange;
 
   // Dispose Monaco listeners on unmount
   useEffect(() => {
@@ -396,16 +407,27 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     editor.focus();
   }, [revealLineRequest?.requestId]);
 
-  const handleEditorDidMount: OnMount = (editor) => {
+  const handleEditorDidMount: OnMount = (editor, monacoNs) => {
     editorRef.current = editor;
 
     // Focus using the editor instance directly (avoids race condition with editorRef)
     focusEditor(editor);
 
+    // Dispose listeners from any previous mount before registering new ones.
+    // This MUST run before the table-context listeners are registered below,
+    // otherwise they would be torn down immediately and the context key would
+    // freeze at its initial value (breaking Tab/Enter table handling).
+    disposablesRef.current.forEach(d => d.dispose());
+    disposablesRef.current = [];
+
     // Set up search and replace keyboard shortcuts
     try {
-      // Use correct Monaco Editor key codes
-      const monaco = (window as { monaco?: typeof import('monaco-editor') }).monaco;
+      // Prefer the monaco namespace from @monaco-editor/react's onMount
+      // argument; it is always provided at runtime, which avoids the
+      // load-order race that left these actions unregistered "sometimes" when
+      // we read window.monaco. The global is only a fallback for callers that
+      // invoke onMount without the argument (e.g. the test harness).
+      const monaco = monacoNs || (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           setSearchAllTabsDefault(false);
@@ -439,14 +461,103 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             // Do nothing
           }
         });
+
+        // --- Markdown table editing (#5 format, #6 Enter, #7 Tab) ---
+
+        // #5: Format the table block at the cursor.
+        editor.addAction({
+          id: 'format-markdown-table',
+          label: 'Format Markdown Table',
+          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyL],
+          run: (ed) => {
+            formatTableInEditor(ed as editor.IStandaloneCodeEditor);
+          },
+        });
+
+        // Context key gating Enter/Tab overrides. It is set to false while an
+        // IME composition is active so Japanese conversion (Enter to confirm)
+        // and default Tab are never hijacked.
+        const inTableRowKey = editor.createContextKey<boolean>('bokuchiInTableRow', false);
+        let isComposing = false;
+
+        const updateTableContext = () => {
+          if (isComposing) {
+            inTableRowKey.set(false);
+            return;
+          }
+          const model = editor.getModel();
+          const pos = editor.getPosition();
+          if (!model || !pos) {
+            inTableRowKey.set(false);
+            return;
+          }
+          const block = findTableBlock(model.getLinesContent(), pos.lineNumber);
+          const inRow = !!block && !isTableSeparatorLine(model.getLineContent(pos.lineNumber));
+          inTableRowKey.set(inRow);
+        };
+
+        disposablesRef.current.push(
+          editor.onDidCompositionStart(() => {
+            isComposing = true;
+            inTableRowKey.set(false);
+          }),
+        );
+        disposablesRef.current.push(
+          editor.onDidCompositionEnd(() => {
+            isComposing = false;
+            updateTableContext();
+          }),
+        );
+        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateTableContext));
+        disposablesRef.current.push(editor.onDidChangeModelContent(updateTableContext));
+        updateTableContext();
+
+        // #6: Enter adds a new row / exits the table when on an empty row.
+        // If the handler declines (e.g. an active selection), fall back to a
+        // normal newline so the key is never swallowed.
+        editor.addAction({
+          id: 'table-enter-new-row',
+          label: 'Table: New Row',
+          keybindings: [monaco.KeyCode.Enter],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableEnter(e)) {
+              e.trigger('keyboard', 'type', { text: '\n' });
+            }
+          },
+        });
+
+        // #7: Tab / Shift+Tab move between cells; fall back to default
+        // indent/outdent when the handler declines.
+        editor.addAction({
+          id: 'table-next-cell',
+          label: 'Table: Next Cell',
+          keybindings: [monaco.KeyCode.Tab],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableTab(e, false)) {
+              e.trigger('keyboard', 'tab', null);
+            }
+          },
+        });
+        editor.addAction({
+          id: 'table-prev-cell',
+          label: 'Table: Previous Cell',
+          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
+          precondition: 'bokuchiInTableRow',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleTableTab(e, true)) {
+              e.trigger('keyboard', 'outdent', null);
+            }
+          },
+        });
       }
     } catch (error) {
       console.warn('Failed to set keyboard shortcuts:', error);
     }
-
-    // Dispose previous listeners before registering new ones
-    disposablesRef.current.forEach(d => d.dispose());
-    disposablesRef.current = [];
 
     // Monitor cursor position and selection information changes
     if (onStatusChange) {
@@ -456,19 +567,25 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         const model = editor.getModel();
 
         if (position && model) {
-          const totalCharacters = model.getValue().length;
+          const fullText = model.getValue();
+          const totalCharacters = fullText.length;
+          const totalWords = countWords(fullText);
           let selectedCharacters = 0;
+          let selectedWords = 0;
 
           if (selection) {
             const selectedText = model.getValueInRange(selection);
             selectedCharacters = selectedText.length;
+            selectedWords = countWords(selectedText);
           }
 
           onStatusChange({
             line: position.lineNumber,
             column: position.column,
             totalCharacters,
-            selectedCharacters
+            selectedCharacters,
+            totalWords,
+            selectedWords
           });
         }
       };
@@ -498,20 +615,22 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       );
     }
 
-    // Sync scroll: notify parent of scroll position
-    if (onScrollChange) {
-      disposablesRef.current.push(
-        editor.onDidScrollChange(() => {
-          // Skip events triggered by our own programmatic scroll to avoid feedback loops
-          if (isProgrammaticScrollRef.current) return;
-          const scrollTop = editor.getScrollTop();
-          const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
-          if (maxScroll > 0) {
-            onScrollChange(scrollTop / maxScroll);
-          }
-        })
-      );
-    }
+    // Sync scroll: notify parent of scroll position.
+    // Always register the listener and dispatch through onScrollChangeRef so that
+    // toggling scrollSyncMode at runtime is honored without remounting the editor.
+    disposablesRef.current.push(
+      editor.onDidScrollChange(() => {
+        const report = onScrollChangeRef.current;
+        if (!report) return;
+        // Skip events triggered by our own programmatic scroll to avoid feedback loops
+        if (isProgrammaticScrollRef.current) return;
+        const scrollTop = editor.getScrollTop();
+        const maxScroll = editor.getScrollHeight() - editor.getLayoutInfo().height;
+        if (maxScroll > 0) {
+          report(scrollTop / maxScroll);
+        }
+      })
+    );
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -565,7 +684,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         </Box>
       </Box>
 
-      <MarkdownToolbar editorRef={editorRef} />
+      {showFormattingBar && <MarkdownToolbar editorRef={editorRef} />}
 
       <Box sx={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <SearchReplacePanel
@@ -629,7 +748,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             defaultValue={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={theme === 'darcula' ? 'vs-dark' : (darkMode ? 'vs-dark' : 'light')}
+            theme={darkMode ? 'vs-dark' : 'light'}
             options={{
               minimap: { enabled: minimap },
               fontSize: Math.round(fontSize * zoomLevel),

@@ -5,7 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.4...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...HEAD)
+
+## [0.9.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.5...v0.9.0) - 2026-06-07
+
+### Added
+
+- Visual table editing: edit Markdown tables directly in both the editor and the preview. A dedicated table edit modal plus inline cell editing (multi-line text areas) let you add/remove rows and columns and edit cells, backed by new `tableFormatter` / `tableEditorActions` utilities that write normalized Markdown back. A table action was also added to the editor toolbar
+- Auto-hiding vertical tab bar that stays tucked away and slides out on hover, plus a new focus mode (Rin, 臨) that maximizes the editing area by hiding the surrounding UI
+- Four new color themes: Dawn, Twilight, Silk, and Ink (with full MUI palette and CSS-variable coverage)
+- Marp: configurable theme directory and support for loading external CSS files, so slides can use custom themes beyond the built-ins
+- Option to choose the placement of the Add Tab (New) button, including directly below the currently open tab
+- Setting to show or hide the Markdown formatting toolbar
+- Frequently used settings surfaced directly in the status bar for quicker access
+
+### Changed
+
+- Scroll synchronization now defaults to two-way (previously one-way)
+- Inline table cell editing in Live mode switched from a single-line text box to a multi-line text area
+- Large internal refactor for separation of concerns: `Preview.tsx` and `Settings.tsx` were split into focused hooks (`src/components/preview/*`) and per-tab settings components (`src/components/settings/*`); removed dead code along the way
+- Dependency updates: dev-side bumps for the `vite` group (vite 7.3.3 → 7.3.5, vite-plugin-checker 0.13.0 → 0.14.1), the `vitest` group (vitest / `@vitest/coverage-v8` 4.1.7 → 4.1.8), the `typescript-eslint` group (8.59.4 → 8.60.0), and `eslint` (10.4.0 → 10.4.1)
+
+### Fixed
+
+- Fixed a bug that could cause tabs to misbehave while being dragged to reorder them
+
+## [0.8.5](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.4...v0.8.5) - 2026-06-01
+
+### Changed
+
+- Pinned `katex` to the `0.16.x` line and added a dependabot ignore rule for it: KaTeX 0.17.0 throws an unsuppressable `TypeError` when an accent command (`\tilde`, `\hat`, …) wraps a command that has its own `htmlBuilder` (e.g. `\mathbf`)
+- `processKatex` now renders math to inert placeholders **before** `marked` runs and swaps the rendered HTML back in afterward (in both the preview and HTML export), so KaTeX output can never collide with Markdown syntax such as GFM strikethrough (`~…~`) or table cell separators (`|`)
+- Hardened the `process_markdown` / `get_expanded_markdown` Tauri commands with `catch_unwind` so a panic in variable processing surfaces as a command error instead of taking down the whole app process
+- Removed the now-unused `processRenderingExtensions` helper
+- Dependency updates: dev-side bumps for the `vitest` group (4.1.6 → 4.1.7), the `typescript-eslint` group (8.59.3 → 8.59.4) and `@types/react` (19.2.14 → 19.2.15); Rust-side bumps for `serde_json` (1.0.149 → 1.0.150) and the indirect `tar` (0.4.45 → 0.4.46)
+
+### Fixed
+
+- Fixed math formulas breaking the preview or rendering blank — two separate issues with the same root cause: KaTeX accent output (a literal `~`) being paired by GFM strikethrough across two expressions and injecting `<del>` into the math markup (#354), and single-bar absolute values like `$|x - y|$` inside a table being split into extra cells by the table parser (#358). Both are resolved by the placeholder pipeline above
+- Fixed a panic that crashed the app on every keystroke producing `<!-- @var -->`: the prefix's trailing space and the suffix's leading space are the same character, so the previous `strip_prefix(...).unwrap().strip_suffix(...).unwrap()` chain underflowed. Now guarded by a length check that slices the comment body directly
+- Marp front matter is now only detected at the very start of the document — a `marp: true` example shown inside a fenced code block or in body text no longer switches the file into Marp mode
+- Mermaid no longer leaves stray empty elements (a bare `<svg>`, `#cy`, `.mermaidTooltip`, etc.) at the bottom of the window; `cleanupMermaidArtifacts()` sweeps them after every render pass, fixing the mystery element that appeared during fullscreen/layout transitions
 
 ## [0.8.4](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.3...v0.8.4) - 2026-05-21
 

@@ -257,11 +257,15 @@
       "theme": "主题",
       "themeDescription": "选择应用程序界面的视觉主题。",
       "themes": {
-        "default": "默认",
-        "dark": "深色",
-        "pastel": "柔和",
-        "vivid": "鲜艳",
-        "darcula": "达库拉"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "左侧",
       "closeButtonRight": "右侧",
       "closeButtonLeftDescription": "在标签页左侧显示关闭按钮和固定图标。",
-      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。"
+      "closeButtonRightDescription": "在标签页右侧显示关闭按钮和固定图标。",
+      "newButtonPosition": "新建标签按钮位置",
+      "newButtonPositionDescription": "选择新建标签（+）按钮在垂直标签侧边栏中的显示位置。",
+      "newButtonTop": "顶部",
+      "newButtonTopDescription": "将按钮固定在侧边栏顶部。",
+      "newButtonBottom": "底部",
+      "newButtonBottomDescription": "将按钮放在最后一个标签下方；标签过多时它会固定在底部。"
     },
     "viewMode": {
       "title": "视图模式",
@@ -339,7 +349,9 @@
       "wordWrap": "自动换行",
       "wordWrapDescription": "在编辑器中自动换行长行。",
       "minimap": "小地图",
-      "minimapDescription": "显示文档的缩略图。"
+      "minimapDescription": "显示文档的缩略图。",
+      "showFormattingBar": "格式栏",
+      "showFormattingBarDescription": "在编辑器上方显示格式工具栏。"
     },
     "interface": {
       "title": "界面",
@@ -409,7 +421,17 @@
       "resetSuccess": "设置重置成功",
       "resetError": "设置重置失败",
       "enableMarp": "Marp（演示文稿）",
-      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。"
+      "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。",
+      "marpThemeFolder": "Marp 主题文件夹",
+      "marpThemeFolderDescription": "从包含 CSS 文件的文件夹注册自定义 Marp 主题。每个带有 /* @theme name */ 头部的文件都可通过 theme: 指令在幻灯片中选择。",
+      "marpThemeFolderBrowse": "选择文件夹…",
+      "marpThemeFolderReload": "重新加载",
+      "marpThemeFolderClear": "清除",
+      "marpThemeFolderNone": "未选择文件夹。",
+      "marpThemeFolderScanning": "正在扫描…",
+      "marpThemeFolderDetected": "检测到的主题",
+      "marpThemeFolderEmpty": "未找到带有 @theme 头部的主题。",
+      "marpThemeFolderIgnored": "已忽略（缺少 @theme 头部）"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "列",
     "characters": "字符",
     "selected": "已选择",
-    "saved": "已保存"
+    "saved": "已保存",
+    "words": "词",
+    "wordWrap": "自动换行",
+    "autoSave": "自动保存",
+    "on": "开",
+    "off": "关"
   },
   "zoom": {
     "maxLimitReached": "已达到最大缩放级别（{{maxZoom}}%）",
@@ -480,6 +507,7 @@
     "quote": "引用",
     "horizontalRule": "水平线",
     "table": "表格",
+    "formatTable": "格式化表格",
     "strikethrough": "删除线"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp 预览不再跳回顶部",
-        "description": "修复了 Marp 连续预览模式下每次输入都会跳回第一页幻灯片的问题。编辑时滚动位置会被保留。"
+      "newThemes": {
+        "title": "四款全新主题",
+        "description": "新增了四款配色主题——Dawn、Twilight、Silk 和 Ink，为编辑器和预览提供更多外观可选。"
       },
-      "editorModeShortcut": {
-        "title": "编辑器模式切换快捷键已更改",
-        "description": "修复了 Windows 上的快捷键冲突。编辑器模式切换的快捷键已更改为 Cmd/Ctrl+Shift+D。"
+      "tableEditing": {
+        "title": "可视化编辑表格",
+        "description": "直接在编辑器和预览中编辑 Markdown 表格。专用的表格编辑器可让你添加或删除行和列、就地编辑单元格，然后为你写回整洁的 Markdown。"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "批量关闭包含未保存更改的标签页",
-        "description": "一次性关闭多个标签页时，包含未保存更改的标签页不再被静默跳过——现在会依次提示你是否保存每一个。"
+      "verticalTabHover": {
+        "title": "自动隐藏的垂直标签页与专注模式",
+        "description": "当标签页垂直显示时，标签栏可以保持收起，并在悬停时滑出。新的专注模式（Rin）通过隐藏周围界面来最大化编辑区域。"
+      },
+      "marpExternalCss": {
+        "title": "自定义 Marp 主题与外部 CSS",
+        "description": "将 Bokuchi 指向存放你自己的 Marp 主题文件的文件夹并加载外部 CSS，让你的幻灯片可以使用内置主题之外的样式。"
+      },
+      "newTabButtonPosition": {
+        "title": "选择新建标签按钮的位置",
+        "description": "新增选项可让你将“添加标签（新建）”按钮放在你喜欢的位置，包括当前打开标签的正下方。"
+      },
+      "formattingBarToggle": {
+        "title": "显示或隐藏格式栏",
+        "description": "现在可以在设置中开启或关闭 Markdown 格式工具栏，让你按需将编辑器保持得尽量简洁。"
+      },
+      "statusBarSettings": {
+        "title": "状态栏中的快捷设置",
+        "description": "常用设置现在可直接从状态栏使用，访问更快捷。"
+      },
+      "scrollSyncTwoWay": {
+        "title": "默认采用双向滚动同步",
+        "description": "滚动同步现在默认为双向，因此滚动编辑器或预览都会让另一侧保持同步。"
+      },
+      "tabDragFix": {
+        "title": "修复标签拖动问题",
+        "description": "修复了一个在拖动标签以重新排序时可能导致标签行为异常的错误。"
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "演示文稿",
     "previousSlide": "上一张幻灯片",
     "nextSlide": "下一张幻灯片",
+    "reloadThemes": "重新加载主题",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin 专注模式",
+    "exit": "退出 Rin (Esc)",
+    "toggleWidth": "切换编辑器宽度"
+  },
+  "tabSidebar": {
+    "pin": "固定侧边栏",
+    "unpin": "取消固定侧边栏"
   }
 }

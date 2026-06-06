@@ -10,7 +10,7 @@ import {
 
 describe('getThemeByName', () => {
   it('returns correct theme for each known name', () => {
-    const knownNames: ThemeName[] = ['default', 'dark', 'pastel', 'vivid', 'darcula'];
+    const knownNames: ThemeName[] = ['default', 'dark', 'pastel', 'vivid', 'dawn', 'twilight', 'silk', 'ink', 'darcula'];
     for (const name of knownNames) {
       const theme = getThemeByName(name);
       expect(theme).toBeDefined();
@@ -65,8 +65,8 @@ describe('applyThemeToDocument', () => {
 });
 
 describe('themes array', () => {
-  it('contains exactly 6 themes', () => {
-    expect(themes).toHaveLength(6);
+  it('contains exactly 10 themes', () => {
+    expect(themes).toHaveLength(10);
   });
 
   it('each entry has name, displayName, and theme', () => {
@@ -92,31 +92,35 @@ describe('themes array', () => {
     }
   });
 
-  // T-TH-03: all 6 theme names are present
+  // T-TH-03: all 10 theme names are present in expected order
   it('T-TH-03: contains all expected theme names', () => {
     const names = themes.map(t => t.name);
-    expect(names).toEqual(['default', 'dark', 'pastel', 'vivid', 'darcula', 'as400']);
+    expect(names).toEqual([
+      'default', 'dark', 'pastel', 'vivid',
+      'dawn', 'twilight', 'silk', 'ink',
+      'darcula', 'as400',
+    ]);
   });
 });
 
 describe('getVisibleThemes', () => {
-  // T-TH-04: without unlock returns 5 themes (excludes hidden)
+  // T-TH-04: without unlock returns 9 themes (excludes hidden)
   it('T-TH-04: returns only non-hidden themes by default', () => {
     const visible = getVisibleThemes();
-    expect(visible).toHaveLength(5);
+    expect(visible).toHaveLength(9);
     expect(visible.find(t => t.name === 'as400')).toBeUndefined();
   });
 
-  // T-TH-05: with as400 unlocked returns all 6 themes
+  // T-TH-05: with as400 unlocked returns all 10 themes
   it('T-TH-05: includes unlocked secret themes', () => {
     const visible = getVisibleThemes(['as400']);
-    expect(visible).toHaveLength(6);
+    expect(visible).toHaveLength(10);
     expect(visible.find(t => t.name === 'as400')).toBeDefined();
   });
 
   // T-TH-06: empty unlock array still excludes hidden
   it('T-TH-06: empty unlock array excludes hidden themes', () => {
     const visible = getVisibleThemes([]);
-    expect(visible).toHaveLength(5);
+    expect(visible).toHaveLength(9);
   });
 });

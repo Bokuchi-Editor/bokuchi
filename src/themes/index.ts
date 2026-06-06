@@ -1,6 +1,6 @@
 import { createTheme, Theme } from '@mui/material/styles';
 
-export type ThemeName = 'default' | 'dark' | 'pastel' | 'vivid' | 'darcula' | 'as400';
+export type ThemeName = 'default' | 'dark' | 'pastel' | 'vivid' | 'dawn' | 'twilight' | 'silk' | 'ink' | 'darcula' | 'as400';
 
 export interface ThemeConfig {
   name: ThemeName;
@@ -161,6 +161,142 @@ const vividTheme = createTheme({
   // Improve code syntax highlight visibility with custom CSS variables
   shape: {
     borderRadius: 12,
+  },
+});
+
+// Dawn Theme (Akatsuki - Light with subtle warm/terracotta tint)
+const dawnTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#785e4f',
+    },
+    secondary: {
+      main: '#977e71',
+    },
+    background: {
+      default: '#faf6f4',
+      paper: '#f4edea',
+    },
+    text: {
+      primary: '#39312d',
+      secondary: '#796b64',
+    },
+    divider: '#e6dad2',
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Twilight Theme (Tasogare - Dark with subtle warm yellow tint)
+const twilightTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#c8be9c',
+    },
+    secondary: {
+      main: '#9a9078',
+    },
+    background: {
+      default: '#25231d',
+      paper: '#2d2a23',
+    },
+    text: {
+      primary: '#e0dccc',
+      secondary: '#aaa590',
+    },
+    divider: '#3a362e',
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Silk Theme (Kinu - Light monotone with faint blue tint)
+const silkTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#6b6b72',
+    },
+    secondary: {
+      main: '#7c7c81',
+    },
+    background: {
+      default: '#f3f3f8',
+      paper: '#ededf2',
+    },
+    text: {
+      primary: '#2a2a2f',
+      secondary: '#6c6c71',
+    },
+    divider: '#d8d8dd',
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Ink Theme (Sumi - Dark monotone with faint blue tint)
+const inkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#a3a3ae',
+    },
+    secondary: {
+      main: '#86868d',
+    },
+    background: {
+      default: '#1f1f26',
+      paper: '#292930',
+    },
+    text: {
+      primary: '#dcdce3',
+      secondary: '#a0a0a7',
+    },
+    divider: '#35353c',
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          '&::before': {
+            display: 'none',
+          },
+        },
+      },
+    },
   },
 });
 
@@ -380,6 +516,26 @@ export const themes: ThemeConfig[] = [
     theme: vividTheme,
   },
   {
+    name: 'dawn',
+    displayName: 'Dawn',
+    theme: dawnTheme,
+  },
+  {
+    name: 'twilight',
+    displayName: 'Twilight',
+    theme: twilightTheme,
+  },
+  {
+    name: 'silk',
+    displayName: 'Silk',
+    theme: silkTheme,
+  },
+  {
+    name: 'ink',
+    displayName: 'Ink',
+    theme: inkTheme,
+  },
+  {
     name: 'darcula',
     displayName: 'Darcula',
     theme: darculaTheme,
@@ -404,6 +560,11 @@ export const getThemeByName = (name: ThemeName): Theme => {
 export const getThemeDisplayName = (name: ThemeName): string => {
   const themeConfig = themes.find(t => t.name === name);
   return themeConfig ? themeConfig.displayName : 'Default';
+};
+
+export const isDarkTheme = (name: ThemeName): boolean => {
+  const themeConfig = themes.find(t => t.name === name);
+  return themeConfig ? themeConfig.theme.palette.mode === 'dark' : false;
 };
 
 // Set the data-theme attribute on the HTML element

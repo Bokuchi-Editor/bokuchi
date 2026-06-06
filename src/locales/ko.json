@@ -257,11 +257,15 @@
       "theme": "테마",
       "themeDescription": "애플리케이션 인터페이스의 시각적 테마를 선택하세요.",
       "themes": {
-        "default": "기본값",
-        "dark": "다크",
-        "pastel": "파스텔",
-        "vivid": "생생한",
-        "darcula": "다큘라"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "왼쪽",
       "closeButtonRight": "오른쪽",
       "closeButtonLeftDescription": "탭 왼쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
-      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다."
+      "closeButtonRightDescription": "탭 오른쪽에 닫기 버튼과 고정 아이콘을 표시합니다.",
+      "newButtonPosition": "새 탭 버튼 위치",
+      "newButtonPositionDescription": "세로 탭 사이드바에서 새 탭(+) 버튼이 표시될 위치를 선택합니다.",
+      "newButtonTop": "위",
+      "newButtonTopDescription": "버튼을 사이드바 맨 위에 고정합니다.",
+      "newButtonBottom": "아래",
+      "newButtonBottomDescription": "버튼을 마지막 탭 아래에 배치합니다. 탭이 많으면 하단에 고정됩니다."
     },
     "viewMode": {
       "title": "보기 모드",
@@ -339,7 +349,9 @@
       "wordWrap": "단어 줄바꿈",
       "wordWrapDescription": "편집기에서 긴 줄을 줄바꿈합니다.",
       "minimap": "미니맵",
-      "minimapDescription": "문서의 미니맵을 표시합니다."
+      "minimapDescription": "문서의 미니맵을 표시합니다.",
+      "showFormattingBar": "서식 도구 모음",
+      "showFormattingBarDescription": "편집기 위에 서식 도구 모음을 표시합니다."
     },
     "interface": {
       "title": "인터페이스",
@@ -409,7 +421,17 @@
       "resetSuccess": "설정이 성공적으로 재설정되었습니다",
       "resetError": "설정 재설정에 실패했습니다",
       "enableMarp": "Marp (프레젠테이션)",
-      "enableMarpDescription": "marp: true 프론트매터가 있는 Markdown 슬라이드를 프레젠테이션으로 미리 봅니다."
+      "enableMarpDescription": "marp: true 프론트매터가 있는 Markdown 슬라이드를 프레젠테이션으로 미리 봅니다.",
+      "marpThemeFolder": "Marp 테마 폴더",
+      "marpThemeFolderDescription": "CSS 파일이 있는 폴더에서 사용자 지정 Marp 테마를 등록합니다. /* @theme name */ 헤더가 있는 각 파일은 theme: 디렉티브로 슬라이드에서 선택할 수 있습니다.",
+      "marpThemeFolderBrowse": "폴더 선택…",
+      "marpThemeFolderReload": "새로고침",
+      "marpThemeFolderClear": "지우기",
+      "marpThemeFolderNone": "선택된 폴더가 없습니다.",
+      "marpThemeFolderScanning": "검색 중…",
+      "marpThemeFolderDetected": "감지된 테마",
+      "marpThemeFolderEmpty": "@theme 헤더가 있는 테마를 찾을 수 없습니다.",
+      "marpThemeFolderIgnored": "무시됨 (@theme 헤더 없음)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "열",
     "characters": "문자",
     "selected": "선택됨",
-    "saved": "저장 완료"
+    "saved": "저장 완료",
+    "words": "단어",
+    "wordWrap": "자동 줄바꿈",
+    "autoSave": "자동 저장",
+    "on": "켜짐",
+    "off": "꺼짐"
   },
   "zoom": {
     "maxLimitReached": "최대 확대 수준 ({{maxZoom}}%)에 도달했습니다",
@@ -480,6 +507,7 @@
     "quote": "인용",
     "horizontalRule": "수평선",
     "table": "표",
+    "formatTable": "표 서식",
     "strikethrough": "취소선"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "개선"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp 미리보기가 더 이상 맨 위로 튀지 않음",
-        "description": "Marp 연속 미리보기 모드에서 키를 입력할 때마다 첫 슬라이드로 돌아가는 문제를 수정했습니다. 편집 중에도 스크롤 위치가 그대로 유지됩니다."
+      "newThemes": {
+        "title": "새로운 테마 4종",
+        "description": "Dawn, Twilight, Silk, Ink 등 4가지 색상 테마를 추가했습니다. 편집기와 미리 보기의 모습을 더 다양하게 고를 수 있습니다."
       },
-      "editorModeShortcut": {
-        "title": "에디터 모드 전환 단축키 변경",
-        "description": "Windows에서 단축키 충돌 문제를 수정했습니다. 에디터 모드 전환 단축키가 Cmd/Ctrl+Shift+D로 변경되었습니다."
+      "tableEditing": {
+        "title": "표를 시각적으로 편집",
+        "description": "편집기와 미리 보기 모두에서 Markdown 표를 직접 편집할 수 있습니다. 전용 표 편집기로 행과 열을 추가하거나 삭제하고 셀을 인라인으로 편집한 다음, 깔끔한 Markdown으로 다시 작성해 줍니다."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "저장되지 않은 변경 사항이 있는 여러 탭 닫기",
-        "description": "여러 탭을 한 번에 닫을 때 저장되지 않은 탭이 더 이상 조용히 건너뛰어지지 않습니다. 이제 각 탭에 대해 차례로 저장 여부를 묻습니다."
+      "verticalTabHover": {
+        "title": "자동으로 숨겨지는 세로 탭과 집중 모드",
+        "description": "탭을 세로로 표시할 때 탭 막대를 평소에는 숨겨 두었다가 마우스를 올리면 펼쳐지게 할 수 있습니다. 새로운 집중 모드(Rin)는 주변 UI를 숨겨 편집 영역을 최대화합니다."
+      },
+      "marpExternalCss": {
+        "title": "사용자 지정 Marp 테마와 외부 CSS",
+        "description": "자신만의 Marp 테마 파일이 담긴 폴더를 지정하고 외부 CSS를 불러올 수 있어, 기본 제공 테마를 넘어선 스타일을 슬라이드에 적용할 수 있습니다."
+      },
+      "newTabButtonPosition": {
+        "title": "새 탭 버튼 위치 선택",
+        "description": "새 옵션으로 탭 추가(새로 만들기) 버튼을 원하는 위치에 둘 수 있으며, 현재 열린 탭 바로 아래에 표시할 수도 있습니다."
+      },
+      "formattingBarToggle": {
+        "title": "서식 막대 표시/숨기기",
+        "description": "Markdown 서식 도구 막대를 이제 설정에서 켜거나 끌 수 있어, 편집기를 원하는 만큼 간결하게 유지할 수 있습니다."
+      },
+      "statusBarSettings": {
+        "title": "상태 표시줄의 빠른 설정",
+        "description": "자주 쓰는 설정을 이제 상태 표시줄에서 바로 사용할 수 있어 더 빠르게 접근할 수 있습니다."
+      },
+      "scrollSyncTwoWay": {
+        "title": "기본값이 양방향 스크롤 동기화로 변경",
+        "description": "스크롤 동기화의 기본값이 양방향으로 바뀌어, 편집기나 미리 보기 중 어느 쪽을 스크롤해도 다른 쪽이 함께 움직입니다."
+      },
+      "tabDragFix": {
+        "title": "탭 드래그 오류 수정",
+        "description": "탭을 재정렬하려고 드래그할 때 제대로 동작하지 않을 수 있던 버그를 수정했습니다."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "프레젠테이션",
     "previousSlide": "이전 슬라이드",
     "nextSlide": "다음 슬라이드",
+    "reloadThemes": "테마 새로고침",
     "slideCounter": "슬라이드 {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin 집중 모드",
+    "exit": "Rin 종료 (Esc)",
+    "toggleWidth": "에디터 너비 전환"
+  },
+  "tabSidebar": {
+    "pin": "사이드바 고정",
+    "unpin": "사이드바 고정 해제"
   }
 }

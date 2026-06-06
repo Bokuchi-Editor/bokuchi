@@ -257,10 +257,14 @@
       "theme": "Theme",
       "themeDescription": "Wählen Sie das visuelle Theme für die Anwendungsoberfläche.",
       "themes": {
-        "default": "Standard",
-        "dark": "Dunkel",
-        "pastel": "Pastell",
-        "vivid": "Lebhaft",
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Links",
       "closeButtonRight": "Rechts",
       "closeButtonLeftDescription": "Schließen-Schaltfläche und Anheften-Symbol links auf dem Tab anzeigen.",
-      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen."
+      "closeButtonRightDescription": "Schließen-Schaltfläche und Anheften-Symbol rechts auf dem Tab anzeigen.",
+      "newButtonPosition": "Position der Schaltfläche „Neuer Tab“",
+      "newButtonPositionDescription": "Wählen Sie, wo die Schaltfläche „Neuer Tab“ (+) in der vertikalen Tab-Seitenleiste angezeigt wird.",
+      "newButtonTop": "Oben",
+      "newButtonTopDescription": "Die Schaltfläche oben in der Seitenleiste fixieren.",
+      "newButtonBottom": "Unten",
+      "newButtonBottomDescription": "Die Schaltfläche unter dem letzten Tab platzieren; sie bleibt am unteren Rand, wenn die Tabs überlaufen."
     },
     "viewMode": {
       "title": "Ansichtsmodus",
@@ -339,7 +349,9 @@
       "wordWrap": "Zeilenumbruch",
       "wordWrapDescription": "Lange Zeilen im Editor umbrechen.",
       "minimap": "Minimap",
-      "minimapDescription": "Zeigt eine Minimap des Dokuments an."
+      "minimapDescription": "Zeigt eine Minimap des Dokuments an.",
+      "showFormattingBar": "Formatierungsleiste",
+      "showFormattingBarDescription": "Formatierungsleiste über dem Editor anzeigen."
     },
     "interface": {
       "title": "Oberfläche",
@@ -409,7 +421,17 @@
       "resetSuccess": "Einstellungen erfolgreich zurückgesetzt",
       "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
       "enableMarp": "Marp (Präsentationen)",
-      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen."
+      "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen.",
+      "marpThemeFolder": "Marp-Themenordner",
+      "marpThemeFolderDescription": "Registriere benutzerdefinierte Marp-Themes aus einem Ordner mit CSS-Dateien. Jede Datei mit einem /* @theme name */-Header wird in einer Folie über die theme:-Direktive auswählbar.",
+      "marpThemeFolderBrowse": "Ordner auswählen…",
+      "marpThemeFolderReload": "Neu laden",
+      "marpThemeFolderClear": "Löschen",
+      "marpThemeFolderNone": "Kein Ordner ausgewählt.",
+      "marpThemeFolderScanning": "Wird gescannt…",
+      "marpThemeFolderDetected": "Erkannte Themes",
+      "marpThemeFolderEmpty": "Keine Themes mit @theme-Header gefunden.",
+      "marpThemeFolderIgnored": "Ignoriert (fehlender @theme-Header)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Spalte",
     "characters": "Zeichen",
     "selected": "ausgewählt",
-    "saved": "Gespeichert"
+    "saved": "Gespeichert",
+    "words": "Wörter",
+    "wordWrap": "Zeilenumbruch",
+    "autoSave": "Automatisches Speichern",
+    "on": "Ein",
+    "off": "Aus"
   },
   "zoom": {
     "maxLimitReached": "Maximale Zoom-Stufe ({{maxZoom}}%) erreicht",
@@ -480,6 +507,7 @@
     "quote": "Zitat",
     "horizontalRule": "Horizontale Linie",
     "table": "Tabelle",
+    "formatTable": "Tabelle formatieren",
     "strikethrough": "Durchgestrichen"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp-Vorschau springt nicht mehr nach oben",
-        "description": "Behoben: Die Marp-Vorschau im fortlaufenden Modus sprang bei jedem Tastendruck zurück zur ersten Folie. Ihre Scroll-Position bleibt nun beim Bearbeiten erhalten."
+      "newThemes": {
+        "title": "Vier neue Themes",
+        "description": "Vier neue Farb-Themes hinzugefügt – Dawn, Twilight, Silk und Ink –, sodass du mehr Looks für Editor und Vorschau zur Auswahl hast."
       },
-      "editorModeShortcut": {
-        "title": "Tastenkürzel für Editor-Modus geändert",
-        "description": "Konflikt mit Tastenkürzeln unter Windows behoben. Das Umschalten des Editor-Modus erfolgt jetzt mit Cmd/Strg+Shift+D."
+      "tableEditing": {
+        "title": "Tabellen visuell bearbeiten",
+        "description": "Bearbeite Markdown-Tabellen direkt im Editor und in der Vorschau. Ein eigener Tabelleneditor erlaubt das Hinzufügen und Entfernen von Zeilen und Spalten sowie das Bearbeiten von Zellen direkt vor Ort und schreibt anschließend sauberes Markdown zurück."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Mehrere Tabs mit ungespeicherten Änderungen schließen",
-        "description": "Beim Schließen mehrerer Tabs werden Tabs mit ungespeicherten Änderungen nicht mehr stillschweigend übersprungen — Sie werden jetzt aufgefordert, jeden einzeln zu speichern."
+      "verticalTabHover": {
+        "title": "Automatisch ausblendende vertikale Tabs & Fokusmodus",
+        "description": "Wenn die Tabs vertikal angezeigt werden, kann die Tableiste eingeklappt bleiben und beim Überfahren mit der Maus ausfahren. Ein neuer Fokusmodus (Rin) maximiert den Bearbeitungsbereich, indem die umgebende Oberfläche ausgeblendet wird."
+      },
+      "marpExternalCss": {
+        "title": "Eigene Marp-Themes & externes CSS",
+        "description": "Verweise Bokuchi auf einen Ordner mit deinen eigenen Marp-Theme-Dateien und lade externes CSS, sodass deine Folien Stile über die integrierten Themes hinaus verwenden können."
+      },
+      "newTabButtonPosition": {
+        "title": "Position der Schaltfläche „Neuer Tab“ wählen",
+        "description": "Eine neue Option lässt dich die Schaltfläche „Tab hinzufügen (Neu)“ dort platzieren, wo du sie haben möchtest – auch direkt unter dem aktuell geöffneten Tab."
+      },
+      "formattingBarToggle": {
+        "title": "Formatierungsleiste ein- oder ausblenden",
+        "description": "Die Markdown-Formatierungsleiste lässt sich jetzt in den Einstellungen ein- oder ausschalten, sodass du den Editor so minimal halten kannst, wie du möchtest."
+      },
+      "statusBarSettings": {
+        "title": "Schnelleinstellungen in der Statusleiste",
+        "description": "Häufig verwendete Einstellungen sind jetzt direkt in der Statusleiste für schnellen Zugriff verfügbar."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Standardmäßig beidseitige Scroll-Synchronisierung",
+        "description": "Die Scroll-Synchronisierung ist jetzt standardmäßig beidseitig: Wenn du den Editor oder die Vorschau scrollst, zieht die jeweils andere Seite mit."
+      },
+      "tabDragFix": {
+        "title": "Tab-Ziehen behoben",
+        "description": "Ein Fehler wurde behoben, durch den sich Tabs beim Ziehen zum Neuanordnen fehlerhaft verhalten konnten."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Präsentation",
     "previousSlide": "Vorherige Folie",
     "nextSlide": "Nächste Folie",
+    "reloadThemes": "Themes neu laden",
     "slideCounter": "Folie {{current}} von {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin-Fokusmodus",
+    "exit": "Rin beenden (Esc)",
+    "toggleWidth": "Editorbreite umschalten"
+  },
+  "tabSidebar": {
+    "pin": "Seitenleiste anheften",
+    "unpin": "Seitenleiste lösen"
   }
 }

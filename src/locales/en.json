@@ -261,6 +261,10 @@
         "dark": "Dark",
         "pastel": "Pastel",
         "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Left",
       "closeButtonRight": "Right",
       "closeButtonLeftDescription": "Display close button and pin icon on the left side of the tab.",
-      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab."
+      "closeButtonRightDescription": "Display close button and pin icon on the right side of the tab.",
+      "newButtonPosition": "New Tab Button Position",
+      "newButtonPositionDescription": "Choose where the new tab (+) button appears in the vertical tab sidebar.",
+      "newButtonTop": "Top",
+      "newButtonTopDescription": "Fix the button at the top of the sidebar.",
+      "newButtonBottom": "Bottom",
+      "newButtonBottomDescription": "Place the button below the last tab; it sticks to the bottom edge when tabs overflow."
     },
     "viewMode": {
       "title": "View Mode",
@@ -339,7 +349,9 @@
       "wordWrap": "Word Wrap",
       "wordWrapDescription": "Wrap long lines in the editor.",
       "minimap": "Minimap",
-      "minimapDescription": "Show a minimap of the document."
+      "minimapDescription": "Show a minimap of the document.",
+      "showFormattingBar": "Formatting Bar",
+      "showFormattingBarDescription": "Show the formatting toolbar above the editor."
     },
     "interface": {
       "title": "Interface",
@@ -409,7 +421,17 @@
       "resetSuccess": "Settings reset successfully",
       "resetError": "Failed to reset settings",
       "enableMarp": "Marp (Presentations)",
-      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation."
+      "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation.",
+      "marpThemeFolder": "Marp Theme Folder",
+      "marpThemeFolderDescription": "Register custom Marp themes from a folder of CSS files. Each file with a /* @theme name */ header becomes selectable in a slide via the theme: directive.",
+      "marpThemeFolderBrowse": "Choose Folder…",
+      "marpThemeFolderReload": "Reload",
+      "marpThemeFolderClear": "Clear",
+      "marpThemeFolderNone": "No folder selected.",
+      "marpThemeFolderScanning": "Scanning…",
+      "marpThemeFolderDetected": "Detected themes",
+      "marpThemeFolderEmpty": "No themes with an @theme header were found.",
+      "marpThemeFolderIgnored": "Ignored (missing @theme header)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Column",
     "characters": "characters",
     "selected": "selected",
-    "saved": "Saved"
+    "saved": "Saved",
+    "words": "words",
+    "wordWrap": "Word Wrap",
+    "autoSave": "Auto Save",
+    "on": "On",
+    "off": "Off"
   },
   "zoom": {
     "maxLimitReached": "Maximum zoom level ({{maxZoom}}%) reached",
@@ -480,7 +507,31 @@
     "quote": "Quote",
     "horizontalRule": "Horizontal Rule",
     "table": "Table",
+    "formatTable": "Format Table",
     "strikethrough": "Strikethrough"
+  },
+  "tableEditor": {
+    "title": "Edit Table",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "addRow": "Add row",
+    "addColumn": "Add column",
+    "rowActions": "Row actions",
+    "columnActions": "Column actions",
+    "insertRowAbove": "Insert row above",
+    "insertRowBelow": "Insert row below",
+    "deleteRow": "Delete row",
+    "moveRowUp": "Move row up",
+    "moveRowDown": "Move row down",
+    "insertColumnLeft": "Insert column left",
+    "insertColumnRight": "Insert column right",
+    "deleteColumn": "Delete column",
+    "moveColumnLeft": "Move column left",
+    "moveColumnRight": "Move column right",
+    "alignLeft": "Align left",
+    "alignCenter": "Align center",
+    "alignRight": "Align right",
+    "editTableTooltip": "Edit table"
   },
   "outline": {
     "title": "Outline",
@@ -544,17 +595,41 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp Preview No Longer Jumps to Top",
-        "description": "Fixed the Marp continuous-mode preview scrolling back to the first slide on every keystroke. Your scroll position is now preserved while you edit."
+      "newThemes": {
+        "title": "Four New Themes",
+        "description": "Added four new color themes — Dawn, Twilight, Silk, and Ink — giving you more looks to choose from for the editor and preview."
       },
-      "editorModeShortcut": {
-        "title": "Editor Mode Toggle Shortcut Changed",
-        "description": "Fixed a keyboard shortcut conflict on Windows. The editor mode toggle is now Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "Edit Tables Visually",
+        "description": "Edit Markdown tables directly in the editor and in the preview. A dedicated table editor lets you add or remove rows and columns and edit cells inline, then writes clean Markdown back for you."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Closing Multiple Tabs With Unsaved Changes",
-        "description": "When you close multiple tabs at once, any tab with unsaved changes is no longer silently skipped — you're now prompted to save each one in turn."
+      "verticalTabHover": {
+        "title": "Auto-Hiding Vertical Tabs & Focus Mode",
+        "description": "When tabs are shown vertically, the tab bar can stay tucked away and slide out on hover. A new focus mode (Rin) maximizes the editing area by hiding the surrounding UI."
+      },
+      "marpExternalCss": {
+        "title": "Custom Marp Themes & External CSS",
+        "description": "Point Bokuchi at a folder of your own Marp theme files and load external CSS, so your slides can use custom styles beyond the built-in themes."
+      },
+      "newTabButtonPosition": {
+        "title": "Choose the New Tab Button Position",
+        "description": "A new option lets you place the Add Tab (New) button where you prefer — including just below the currently open tab."
+      },
+      "formattingBarToggle": {
+        "title": "Show or Hide the Formatting Bar",
+        "description": "The Markdown formatting toolbar can now be turned on or off from settings, so you can keep the editor as minimal as you like."
+      },
+      "statusBarSettings": {
+        "title": "Quick Settings in the Status Bar",
+        "description": "Frequently used settings are now available right from the status bar for faster access."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Two-Way Scroll Sync by Default",
+        "description": "Scroll synchronization now defaults to two-way, so scrolling either the editor or the preview keeps the other in step."
+      },
+      "tabDragFix": {
+        "title": "Fixed Tab Dragging",
+        "description": "Fixed a bug that could cause tabs to misbehave while being dragged to reorder them."
       }
     }
   },
@@ -562,6 +637,7 @@
     "presentation": "Presentation",
     "previousSlide": "Previous Slide",
     "nextSlide": "Next Slide",
+    "reloadThemes": "Reload themes",
     "slideCounter": "Slide {{current}} of {{total}}",
     "featureNotice": {
       "message": "This file uses {{features}}. Enable it in Settings to see it rendered.",
@@ -574,5 +650,15 @@
         "katex": "KaTeX"
       }
     }
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin focus mode",
+    "exit": "Exit Rin (Esc)",
+    "toggleWidth": "Toggle editor width"
+  },
+  "tabSidebar": {
+    "pin": "Pin sidebar",
+    "unpin": "Unpin sidebar"
   }
 }

@@ -10,6 +10,7 @@ export interface EditorSettings {
   tabSize: number;
   wordWrap: boolean;
   minimap: boolean;
+  showFormattingBar: boolean;
 }
 
 // Appearance settings type definition
@@ -23,11 +24,19 @@ export interface InterfaceSettings {
   language: string;
   tabLayout: 'horizontal' | 'vertical';
   tabCloseButtonPosition: 'left' | 'right';
+  // Vertical-tab sidebar: where the new-tab (+) button sits.
+  // - top: fixed at the top header (legacy).
+  // - bottom: follows the end of the tab list and sticks to the bottom edge once
+  //   the tabs overflow (hybrid). Only affects the vertical layout.
+  tabNewButtonPosition: 'top' | 'bottom';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
   folderTreeDisplayMode: FolderTreeDisplayMode;
   folderTreeFileFilter: 'markdown' | 'all';
   scrollSyncMode: ScrollSyncMode;
+  // Vertical-tab sidebar: pinned/fixed (true, always shown) vs hover/auto-hide (false).
+  // Distinct from per-tab `tab.isPinned`.
+  tabSidebarPinned: boolean;
 }
 
 // Rendering settings type definition
@@ -35,6 +44,10 @@ export interface RenderingSettings {
   enableKatex: boolean;
   enableMermaid: boolean;
   enableMarp: boolean;
+  // Absolute path to a folder of custom Marp theme CSS files. Each `.css` file
+  // carrying a `/* @theme name */` header is registered so slides can select it
+  // via the `theme:` front-matter directive. Empty string = no custom themes.
+  marpThemeFolder?: string;
 }
 
 // How the preview lays out tables.
@@ -81,6 +94,7 @@ export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   tabSize: 2,
   wordWrap: true,
   minimap: true,
+  showFormattingBar: true,
 };
 
 export const DEFAULT_APPEARANCE_SETTINGS: AppearanceSettings = {
@@ -92,11 +106,13 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   language: 'en',
   tabLayout: 'horizontal',
   tabCloseButtonPosition: 'right',
+  tabNewButtonPosition: 'top',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',
-  scrollSyncMode: 'editor-to-preview',
+  scrollSyncMode: 'bidirectional',
+  tabSidebarPinned: true,
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
@@ -109,6 +125,7 @@ export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
   enableKatex: true,
   enableMermaid: false,
   enableMarp: false,
+  marpThemeFolder: '',
 };
 
 export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {

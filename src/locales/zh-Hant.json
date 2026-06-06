@@ -257,11 +257,15 @@
       "theme": "主題",
       "themeDescription": "選擇應用程式介面的視覺主題。",
       "themes": {
-        "default": "預設",
-        "dark": "深色",
-        "pastel": "柔和",
-        "vivid": "鮮豔",
-        "darcula": "達庫拉"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "左側",
       "closeButtonRight": "右側",
       "closeButtonLeftDescription": "在分頁左側顯示關閉按鈕和釘選圖示。",
-      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。"
+      "closeButtonRightDescription": "在分頁右側顯示關閉按鈕和釘選圖示。",
+      "newButtonPosition": "新增標籤按鈕位置",
+      "newButtonPositionDescription": "選擇新增標籤（+）按鈕在垂直標籤側邊欄中的顯示位置。",
+      "newButtonTop": "頂部",
+      "newButtonTopDescription": "將按鈕固定在側邊欄頂部。",
+      "newButtonBottom": "底部",
+      "newButtonBottomDescription": "將按鈕放在最後一個標籤下方；標籤過多時會固定在底部。"
     },
     "viewMode": {
       "title": "檢視模式",
@@ -339,7 +349,9 @@
       "wordWrap": "自動換行",
       "wordWrapDescription": "在編輯器中自動換行長行。",
       "minimap": "小地圖",
-      "minimapDescription": "顯示文件的縮略圖。"
+      "minimapDescription": "顯示文件的縮略圖。",
+      "showFormattingBar": "格式列",
+      "showFormattingBarDescription": "在編輯器上方顯示格式工具列。"
     },
     "interface": {
       "title": "介面",
@@ -409,7 +421,17 @@
       "resetSuccess": "設定重設成功",
       "resetError": "設定重設失敗",
       "enableMarp": "Marp（簡報）",
-      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。"
+      "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。",
+      "marpThemeFolder": "Marp 佈景主題資料夾",
+      "marpThemeFolderDescription": "從包含 CSS 檔案的資料夾註冊自訂 Marp 佈景主題。每個帶有 /* @theme name */ 標頭的檔案都可透過 theme: 指令在投影片中選擇。",
+      "marpThemeFolderBrowse": "選擇資料夾…",
+      "marpThemeFolderReload": "重新載入",
+      "marpThemeFolderClear": "清除",
+      "marpThemeFolderNone": "未選擇資料夾。",
+      "marpThemeFolderScanning": "掃描中…",
+      "marpThemeFolderDetected": "偵測到的佈景主題",
+      "marpThemeFolderEmpty": "找不到帶有 @theme 標頭的佈景主題。",
+      "marpThemeFolderIgnored": "已忽略（缺少 @theme 標頭）"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "欄",
     "characters": "字元",
     "selected": "已選擇",
-    "saved": "已儲存"
+    "saved": "已儲存",
+    "words": "字詞",
+    "wordWrap": "自動換行",
+    "autoSave": "自動儲存",
+    "on": "開",
+    "off": "關"
   },
   "zoom": {
     "maxLimitReached": "已達到最大縮放層級（{{maxZoom}}%）",
@@ -480,6 +507,7 @@
     "quote": "引用",
     "horizontalRule": "水平線",
     "table": "表格",
+    "formatTable": "格式化表格",
     "strikethrough": "刪除線"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "改進"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp 預覽不再跳回頂端",
-        "description": "修正了 Marp 連續預覽模式下每次輸入都會跳回第一張投影片的問題。編輯時捲動位置會被保留。"
+      "newThemes": {
+        "title": "四款全新佈景主題",
+        "description": "新增了四款配色佈景主題——Dawn、Twilight、Silk 與 Ink，為編輯器和預覽提供更多外觀可選。"
       },
-      "editorModeShortcut": {
-        "title": "編輯器模式切換快捷鍵已變更",
-        "description": "修正了 Windows 上的快捷鍵衝突。編輯器模式切換的快捷鍵已變更為 Cmd/Ctrl+Shift+D。"
+      "tableEditing": {
+        "title": "視覺化編輯表格",
+        "description": "直接在編輯器和預覽中編輯 Markdown 表格。專用的表格編輯器可讓你新增或刪除列與欄、就地編輯儲存格，然後為你寫回整潔的 Markdown。"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "批次關閉包含未儲存變更的分頁",
-        "description": "一次關閉多個分頁時，包含未儲存變更的分頁不再被靜默略過——系統現在會依序詢問你是否儲存每一個。"
+      "verticalTabHover": {
+        "title": "自動隱藏的垂直分頁與專注模式",
+        "description": "當分頁垂直顯示時，分頁列可以保持收合，並在游標懸停時滑出。新的專注模式（Rin）透過隱藏周圍介面來放大編輯區域。"
+      },
+      "marpExternalCss": {
+        "title": "自訂 Marp 佈景主題與外部 CSS",
+        "description": "將 Bokuchi 指向存放你自己 Marp 佈景主題檔案的資料夾並載入外部 CSS，讓你的投影片能使用內建主題以外的樣式。"
+      },
+      "newTabButtonPosition": {
+        "title": "選擇新分頁按鈕的位置",
+        "description": "新選項可讓你將「新增分頁（新增）」按鈕放在你偏好的位置，包括目前開啟分頁的正下方。"
+      },
+      "formattingBarToggle": {
+        "title": "顯示或隱藏格式列",
+        "description": "現在可以在設定中開啟或關閉 Markdown 格式工具列，讓你依需求將編輯器保持得盡量簡潔。"
+      },
+      "statusBarSettings": {
+        "title": "狀態列中的快捷設定",
+        "description": "常用設定現在可直接從狀態列使用，存取更快速。"
+      },
+      "scrollSyncTwoWay": {
+        "title": "預設採用雙向捲動同步",
+        "description": "捲動同步現在預設為雙向，因此捲動編輯器或預覽都會讓另一側保持同步。"
+      },
+      "tabDragFix": {
+        "title": "修正分頁拖曳問題",
+        "description": "修正了一個在拖曳分頁以重新排序時可能導致分頁行為異常的錯誤。"
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "簡報",
     "previousSlide": "上一張投影片",
     "nextSlide": "下一張投影片",
+    "reloadThemes": "重新載入佈景主題",
     "slideCounter": "投影片 {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin 專注模式",
+    "exit": "結束 Rin (Esc)",
+    "toggleWidth": "切換編輯器寬度"
+  },
+  "tabSidebar": {
+    "pin": "釘選側邊欄",
+    "unpin": "取消釘選側邊欄"
   }
 }

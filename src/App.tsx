@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Box, Typography } from '@mui/material';
+import { CssBaseline, Box, Typography, IconButton, Tooltip } from '@mui/material';
+import { Close, Fullscreen, FullscreenExit } from '@mui/icons-material';
 
 import AppHeader from './components/AppHeader';
 import AppContent from './components/AppContent';
@@ -9,6 +10,8 @@ import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
 import RenameDialog from './components/RenameDialog';
 import { useAppState } from './hooks/useAppState';
+import { useRinExitButton } from './hooks/useRinExitButton';
+import { isDarkTheme } from './themes';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -27,7 +30,12 @@ function AppDesktop() {
     snackbar,
     globalVariables,
     tabLayout,
+    tabSidebarPinned,
+    toggleTabSidebarPinned,
     viewMode,
+    rinActive,
+    toggleRin,
+    exitRin,
     editorStatus,
     fileChangeDialog,
     saveBeforeCloseDialog,
@@ -139,6 +147,11 @@ function AppDesktop() {
     // Constants
     ZOOM_CONFIG,
   } = useAppState();
+
+  // 臨 (Rin) focus-mode exit button visibility (mouse-move shows, typing fades, Esc exits)
+  const { exitVisible: rinExitVisible } = useRinExitButton(rinActive, exitRin);
+  // 臨 editor width: false = 1000px centered, true = full width (session-only).
+  const [rinFullWidth, setRinFullWidth] = useState(false);
 
   // Track whether event listeners are fully registered
   const [listenersReady, setListenersReady] = useState(false);
@@ -383,33 +396,41 @@ function AppDesktop() {
           })
         }}
       >
-        <AppHeader
-          viewMode={viewMode}
-          fileMenuAnchor={fileMenuAnchor}
-          activeTab={activeTab}
-          outlinePanelOpen={outlinePanelOpen}
-          folderTreePanelOpen={folderTreePanelOpen}
-          folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}
-          onViewModeChange={setViewMode}
-          onFileMenuOpen={handleFileMenuOpen}
-          onFileMenuClose={handleFileMenuClose}
-          onNewTab={handleNewTab}
-          onOpenFile={handleOpenFile}
-          onOpenFolder={handleOpenFolder}
-          onSaveFile={handleSaveFile}
-          onSaveFileAs={handleSaveFileAs}
-          onSaveWithVariables={handleSaveWithVariables}
-          onSettingsOpen={handleSettingsOpen}
-          onHelpOpen={handleHelpOpen}
-          onRecentFileSelect={handleRecentFileSelect}
-          onOutlineToggle={() => setOutlinePanelOpen(prev => !prev)}
-          onFolderTreeToggle={() => setFolderTreePanelOpen(prev => !prev)}
-          t={t}
-        />
+        {!rinActive && (
+          <AppHeader
+            viewMode={viewMode}
+            fileMenuAnchor={fileMenuAnchor}
+            activeTab={activeTab}
+            outlinePanelOpen={outlinePanelOpen}
+            folderTreePanelOpen={folderTreePanelOpen}
+            folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}
+            rinActive={rinActive}
+            onViewModeChange={setViewMode}
+            onRinToggle={toggleRin}
+            onFileMenuOpen={handleFileMenuOpen}
+            onFileMenuClose={handleFileMenuClose}
+            onNewTab={handleNewTab}
+            onOpenFile={handleOpenFile}
+            onOpenFolder={handleOpenFolder}
+            onSaveFile={handleSaveFile}
+            onSaveFileAs={handleSaveFileAs}
+            onSaveWithVariables={handleSaveWithVariables}
+            onSettingsOpen={handleSettingsOpen}
+            onHelpOpen={handleHelpOpen}
+            onRecentFileSelect={handleRecentFileSelect}
+            onOutlineToggle={() => setOutlinePanelOpen(prev => !prev)}
+            onFolderTreeToggle={() => setFolderTreePanelOpen(prev => !prev)}
+            t={t}
+          />
+        )}
 
         <AppContent
           tabLayout={tabLayout}
           viewMode={viewMode}
+          tabSidebarPinned={tabSidebarPinned}
+          onToggleSidebarPinned={toggleTabSidebarPinned}
+          rinActive={rinActive}
+          rinFullWidth={rinFullWidth}
           tabs={tabs}
           activeTabId={activeTabId}
           activeTab={activeTab}
@@ -426,6 +447,8 @@ function AppDesktop() {
             tabSize: appSettings.editor.tabSize,
             wordWrap: appSettings.editor.wordWrap,
             minimap: appSettings.editor.minimap,
+            // 臨 mode hides the formatting toolbar for a clean writing surface.
+            showFormattingBar: rinActive ? false : appSettings.editor.showFormattingBar,
             showWhitespace: appSettings.advanced.showWhitespace,
             tableConversion: appSettings.advanced.tableConversion,
           }}
@@ -453,6 +476,7 @@ function AppDesktop() {
           onCloseTabsToRight={handleCloseTabsToRight}
           onCloseAllTabs={handleCloseAllTabs}
           tabCloseButtonPosition={appSettings.interface.tabCloseButtonPosition}
+          tabNewButtonPosition={appSettings.interface.tabNewButtonPosition}
           onTabChange={handleTabChange}
           onTabClose={handleTabClose}
           onNewTab={handleNewTab}
@@ -476,6 +500,51 @@ function AppDesktop() {
           focusRequestId={focusRequestId}
           t={t}
         />
+
+        {/* 臨 (Rin) focus-mode controls: shown on mouse-move, fade over 3s while typing.
+            Stacked top-right (exit on top, width toggle below). */}
+        {rinActive && (
+          <>
+            <Tooltip title={t('rin.exit')}>
+              <IconButton
+                onClick={exitRin}
+                aria-label={t('rin.exit')}
+                sx={{
+                  position: 'fixed',
+                  top: 12,
+                  right: 12,
+                  zIndex: 1300,
+                  bgcolor: 'action.selected',
+                  opacity: rinExitVisible ? 1 : 0,
+                  pointerEvents: rinExitVisible ? 'auto' : 'none',
+                  transition: rinExitVisible ? 'opacity 0.15s ease' : 'opacity 3s ease',
+                  '&:hover': { bgcolor: 'action.focus' },
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('rin.toggleWidth')}>
+              <IconButton
+                onClick={() => setRinFullWidth((v) => !v)}
+                aria-label={t('rin.toggleWidth')}
+                sx={{
+                  position: 'fixed',
+                  top: 56,
+                  right: 12,
+                  zIndex: 1300,
+                  bgcolor: 'action.selected',
+                  opacity: rinExitVisible ? 1 : 0,
+                  pointerEvents: rinExitVisible ? 'auto' : 'none',
+                  transition: rinExitVisible ? 'opacity 0.15s ease' : 'opacity 3s ease',
+                  '&:hover': { bgcolor: 'action.focus' },
+                }}
+              >
+                {rinFullWidth ? <FullscreenExit /> : <Fullscreen />}
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
 
         {(!isInitialized || !isSettingsLoaded) && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
@@ -529,25 +598,39 @@ function AppDesktop() {
           onCancel={handleRenameCancel}
         />
 
-      {/* Status bar */}
-      <StatusBar
-        line={editorStatus.line}
-        column={editorStatus.column}
-        totalCharacters={editorStatus.totalCharacters}
-        selectedCharacters={editorStatus.selectedCharacters}
-        darkMode={theme === 'dark' || theme === 'as400'}
-        theme={theme}
-        onThemeChange={handleThemeChange}
-        zoomPercentage={zoomPercentage}
-        onZoomIn={zoomIn}
-        onZoomOut={zoomOut}
-        onResetZoom={resetZoom}
-        canZoomIn={canZoomIn}
-        canZoomOut={canZoomOut}
-        as400Unlocked={as400Unlocked}
-        isLateNight={isLateNight}
-        saveStatusMessage={saveStatusMessage}
-      />
+      {/* Status bar (hidden in 臨 focus mode) */}
+      {!rinActive && (
+        <StatusBar
+          line={editorStatus.line}
+          column={editorStatus.column}
+          totalCharacters={editorStatus.totalCharacters}
+          selectedCharacters={editorStatus.selectedCharacters}
+          totalWords={editorStatus.totalWords}
+          selectedWords={editorStatus.selectedWords}
+          wordWrap={appSettings.editor.wordWrap}
+          onToggleWordWrap={() => handleAppSettingsChange({
+            ...appSettings,
+            editor: { ...appSettings.editor, wordWrap: !appSettings.editor.wordWrap },
+          })}
+          autoSave={appSettings.advanced.autoSave}
+          onToggleAutoSave={() => handleAppSettingsChange({
+            ...appSettings,
+            advanced: { ...appSettings.advanced, autoSave: !appSettings.advanced.autoSave },
+          })}
+          darkMode={isDarkTheme(theme)}
+          theme={theme}
+          onThemeChange={handleThemeChange}
+          zoomPercentage={zoomPercentage}
+          onZoomIn={zoomIn}
+          onZoomOut={zoomOut}
+          onResetZoom={resetZoom}
+          canZoomIn={canZoomIn}
+          canZoomOut={canZoomOut}
+          as400Unlocked={as400Unlocked}
+          isLateNight={isLateNight}
+          saveStatusMessage={saveStatusMessage}
+        />
+      )}
       {/* Konami Code unlock animation */}
       {showUnlockAnimation && (
         <Box

@@ -257,10 +257,14 @@
       "theme": "Tema",
       "themeDescription": "Escolha o tema visual para a interface da aplicação.",
       "themes": {
-        "default": "Padrão",
-        "dark": "Escuro",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Vívido",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Esquerda",
       "closeButtonRight": "Direita",
       "closeButtonLeftDescription": "Exibir o botão de fechar e o ícone de fixar no lado esquerdo da aba.",
-      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba."
+      "closeButtonRightDescription": "Exibir o botão de fechar e o ícone de fixar no lado direito da aba.",
+      "newButtonPosition": "Posição do botão de nova aba",
+      "newButtonPositionDescription": "Escolha onde o botão de nova aba (+) aparece na barra lateral de abas vertical.",
+      "newButtonTop": "Topo",
+      "newButtonTopDescription": "Fixar o botão no topo da barra lateral.",
+      "newButtonBottom": "Base",
+      "newButtonBottomDescription": "Coloca o botão abaixo da última aba; ele fica fixo na parte inferior quando há muitas abas."
     },
     "viewMode": {
       "title": "Modo de visualização",
@@ -339,7 +349,9 @@
       "wordWrap": "Quebra de linha",
       "wordWrapDescription": "Quebre linhas longas no editor.",
       "minimap": "Minimapa",
-      "minimapDescription": "Exibir um minimapa do documento."
+      "minimapDescription": "Exibir um minimapa do documento.",
+      "showFormattingBar": "Barra de formatação",
+      "showFormattingBarDescription": "Mostrar a barra de ferramentas de formatação acima do editor."
     },
     "interface": {
       "title": "Interface",
@@ -409,7 +421,17 @@
       "resetSuccess": "Configurações redefinidas com sucesso",
       "resetError": "Falha ao redefinir configurações",
       "enableMarp": "Marp (Apresentações)",
-      "enableMarpDescription": "Visualizar slides Markdown com marp: true como apresentação."
+      "enableMarpDescription": "Visualizar slides Markdown com marp: true como apresentação.",
+      "marpThemeFolder": "Pasta de temas do Marp",
+      "marpThemeFolderDescription": "Registre temas personalizados do Marp a partir de uma pasta de arquivos CSS. Cada arquivo com um cabeçalho /* @theme name */ fica selecionável em um slide pela diretiva theme:.",
+      "marpThemeFolderBrowse": "Escolher pasta…",
+      "marpThemeFolderReload": "Recarregar",
+      "marpThemeFolderClear": "Limpar",
+      "marpThemeFolderNone": "Nenhuma pasta selecionada.",
+      "marpThemeFolderScanning": "Verificando…",
+      "marpThemeFolderDetected": "Temas detectados",
+      "marpThemeFolderEmpty": "Nenhum tema com cabeçalho @theme foi encontrado.",
+      "marpThemeFolderIgnored": "Ignorados (cabeçalho @theme ausente)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Coluna",
     "characters": "caracteres",
     "selected": "selecionado",
-    "saved": "Salvo"
+    "saved": "Salvo",
+    "words": "palavras",
+    "wordWrap": "Quebra de linha",
+    "autoSave": "Salvamento automático",
+    "on": "Ativado",
+    "off": "Desativado"
   },
   "zoom": {
     "maxLimitReached": "Nível máximo de zoom ({{maxZoom}}%) atingido",
@@ -480,6 +507,7 @@
     "quote": "Citação",
     "horizontalRule": "Linha horizontal",
     "table": "Tabela",
+    "formatTable": "Formatar tabela",
     "strikethrough": "Tachado"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "A pré-visualização do Marp não volta mais ao topo",
-        "description": "Corrigido o problema em que a pré-visualização contínua do Marp voltava ao primeiro slide a cada tecla pressionada. Sua posição de rolagem agora é mantida enquanto você edita."
+      "newThemes": {
+        "title": "Quatro novos temas",
+        "description": "Foram adicionados quatro novos temas de cor — Dawn, Twilight, Silk e Ink — dando mais visuais para você escolher no editor e na pré-visualização."
       },
-      "editorModeShortcut": {
-        "title": "Atalho de alternância do modo do editor alterado",
-        "description": "Corrigido um conflito de atalhos de teclado no Windows. O atalho para alternar o modo do editor agora é Cmd/Ctrl+Shift+D."
+      "tableEditing": {
+        "title": "Edite tabelas visualmente",
+        "description": "Edite tabelas Markdown diretamente no editor e na pré-visualização. Um editor de tabelas dedicado permite adicionar ou remover linhas e colunas e editar células no local, e depois grava um Markdown limpo de volta para você."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Fechando várias abas com alterações não salvas",
-        "description": "Ao fechar várias abas de uma vez, abas com alterações não salvas não são mais ignoradas silenciosamente — agora será pedido que você salve cada uma em sequência."
+      "verticalTabHover": {
+        "title": "Abas verticais com ocultação automática e modo de foco",
+        "description": "Quando as abas são exibidas na vertical, a barra de abas pode ficar recolhida e aparecer ao passar o mouse. Um novo modo de foco (Rin) maximiza a área de edição ocultando a interface ao redor."
+      },
+      "marpExternalCss": {
+        "title": "Temas personalizados de Marp e CSS externo",
+        "description": "Aponte o Bokuchi para uma pasta com seus próprios arquivos de tema do Marp e carregue CSS externo, para que seus slides possam usar estilos além dos temas integrados."
+      },
+      "newTabButtonPosition": {
+        "title": "Escolha a posição do botão de nova aba",
+        "description": "Uma nova opção permite posicionar o botão Adicionar aba (Nova) onde você preferir — inclusive logo abaixo da aba aberta no momento."
+      },
+      "formattingBarToggle": {
+        "title": "Mostrar ou ocultar a barra de formatação",
+        "description": "A barra de ferramentas de formatação Markdown agora pode ser ativada ou desativada nas configurações, para você manter o editor tão minimalista quanto quiser."
+      },
+      "statusBarSettings": {
+        "title": "Configurações rápidas na barra de status",
+        "description": "As configurações usadas com frequência agora estão disponíveis diretamente na barra de status para acesso mais rápido."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Sincronização de rolagem bidirecional por padrão",
+        "description": "A sincronização de rolagem agora é bidirecional por padrão, então rolar o editor ou a pré-visualização mantém o outro acompanhando."
+      },
+      "tabDragFix": {
+        "title": "Correção do arraste de abas",
+        "description": "Corrigido um bug que podia fazer as abas se comportarem mal ao serem arrastadas para reordená-las."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Apresentação",
     "previousSlide": "Slide anterior",
     "nextSlide": "Próximo slide",
+    "reloadThemes": "Recarregar temas",
     "slideCounter": "Slide {{current}} de {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Modo de foco Rin",
+    "exit": "Sair do Rin (Esc)",
+    "toggleWidth": "Alternar largura do editor"
+  },
+  "tabSidebar": {
+    "pin": "Fixar barra lateral",
+    "unpin": "Desafixar barra lateral"
   }
 }

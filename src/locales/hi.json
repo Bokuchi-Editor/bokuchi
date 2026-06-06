@@ -257,11 +257,15 @@
       "theme": "थीम",
       "themeDescription": "एप्लिकेशन इंटरफेस के लिए दृश्य थीम चुनें।",
       "themes": {
-        "default": "डिफ़ॉल्ट",
-        "dark": "डार्क",
-        "pastel": "पेस्टल",
-        "vivid": "विविड",
-        "darcula": "डार्कुला"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "बाएं",
       "closeButtonRight": "दाएं",
       "closeButtonLeftDescription": "टैब के बाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
-      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।"
+      "closeButtonRightDescription": "टैब के दाईं ओर बंद करें बटन और पिन आइकन प्रदर्शित करें।",
+      "newButtonPosition": "नया टैब बटन स्थिति",
+      "newButtonPositionDescription": "चुनें कि वर्टिकल टैब साइडबार में नया टैब (+) बटन कहाँ दिखाई दे।",
+      "newButtonTop": "ऊपर",
+      "newButtonTopDescription": "बटन को साइडबार के शीर्ष पर स्थिर रखें।",
+      "newButtonBottom": "नीचे",
+      "newButtonBottomDescription": "बटन को अंतिम टैब के नीचे रखें; टैब अधिक होने पर यह नीचे चिपका रहता है।"
     },
     "viewMode": {
       "title": "दृश्य मोड",
@@ -339,7 +349,9 @@
       "wordWrap": "शब्द लपेटना",
       "wordWrapDescription": "संपादक में लंबी लाइनों को लपेटें।",
       "minimap": "मिनीमैप",
-      "minimapDescription": "दस्तावेज़ का मिनीमैप दिखाएं।"
+      "minimapDescription": "दस्तावेज़ का मिनीमैप दिखाएं।",
+      "showFormattingBar": "फ़ॉर्मेटिंग बार",
+      "showFormattingBarDescription": "एडिटर के ऊपर फ़ॉर्मेटिंग टूलबार दिखाएं।"
     },
     "interface": {
       "title": "इंटरफेस",
@@ -409,7 +421,17 @@
       "resetSuccess": "सेटिंग्स सफलतापूर्वक रीसेट की गईं",
       "resetError": "सेटिंग्स रीसेट करने में विफल",
       "enableMarp": "Marp (प्रस्तुतियाँ)",
-      "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।"
+      "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।",
+      "marpThemeFolder": "Marp थीम फ़ोल्डर",
+      "marpThemeFolderDescription": "CSS फ़ाइलों के फ़ोल्डर से कस्टम Marp थीम पंजीकृत करें। /* @theme name */ हेडर वाली प्रत्येक फ़ाइल theme: डायरेक्टिव के माध्यम से स्लाइड में चयन योग्य हो जाती है।",
+      "marpThemeFolderBrowse": "फ़ोल्डर चुनें…",
+      "marpThemeFolderReload": "पुनः लोड करें",
+      "marpThemeFolderClear": "साफ़ करें",
+      "marpThemeFolderNone": "कोई फ़ोल्डर चयनित नहीं।",
+      "marpThemeFolderScanning": "स्कैन हो रहा है…",
+      "marpThemeFolderDetected": "पहचानी गई थीम",
+      "marpThemeFolderEmpty": "@theme हेडर वाली कोई थीम नहीं मिली।",
+      "marpThemeFolderIgnored": "अनदेखा किया गया (@theme हेडर नहीं)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "कॉलम",
     "characters": "वर्ण",
     "selected": "चयनित",
-    "saved": "सहेजा गया"
+    "saved": "सहेजा गया",
+    "words": "शब्द",
+    "wordWrap": "वर्ड रैप",
+    "autoSave": "स्वतः सहेजें",
+    "on": "चालू",
+    "off": "बंद"
   },
   "zoom": {
     "maxLimitReached": "अधिकतम ज़ूम स्तर ({{maxZoom}}%) पहुँच गया",
@@ -480,6 +507,7 @@
     "quote": "उद्धरण",
     "horizontalRule": "क्षैतिज रेखा",
     "table": "तालिका",
+    "formatTable": "तालिका प्रारूपित करें",
     "strikethrough": "स्ट्राइकथ्रू"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "सुधार"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp प्रीव्यू अब शीर्ष पर नहीं जाता",
-        "description": "Marp के निरंतर प्रीव्यू मोड में हर कीस्ट्रोक पर पहले स्लाइड पर वापस चले जाने की समस्या ठीक की गई। संपादन के दौरान आपकी स्क्रॉल स्थिति अब बनी रहती है।"
+      "newThemes": {
+        "title": "चार नई थीम",
+        "description": "चार नई रंग थीम जोड़ी गईं — Dawn, Twilight, Silk और Ink — जिससे आपको एडिटर और प्रीव्यू के लिए चुनने हेतु और भी रूप मिलते हैं।"
       },
-      "editorModeShortcut": {
-        "title": "एडिटर मोड टॉगल शॉर्टकट बदला गया",
-        "description": "Windows पर कीबोर्ड शॉर्टकट के टकराव को ठीक किया गया। एडिटर मोड टॉगल अब Cmd/Ctrl+Shift+D है।"
+      "tableEditing": {
+        "title": "टेबल को दृश्य रूप में संपादित करें",
+        "description": "एडिटर और प्रीव्यू दोनों में Markdown टेबल को सीधे संपादित करें। एक समर्पित टेबल एडिटर आपको पंक्तियाँ और कॉलम जोड़ने या हटाने और सेल को इनलाइन संपादित करने देता है, और फिर आपके लिए साफ़ Markdown वापस लिख देता है।"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "बिना सहेजे गए परिवर्तनों वाले कई टैब बंद करना",
-        "description": "एक साथ कई टैब बंद करते समय, बिना सहेजे गए परिवर्तनों वाले टैब अब चुपचाप छोड़े नहीं जाते — अब आपसे प्रत्येक को बारी-बारी से सहेजने के लिए कहा जाएगा।"
+      "verticalTabHover": {
+        "title": "स्वतः छिपने वाले वर्टिकल टैब और फ़ोकस मोड",
+        "description": "जब टैब वर्टिकल रूप में दिखाए जाते हैं, तो टैब बार छिपा रह सकता है और होवर करने पर बाहर आ सकता है। एक नया फ़ोकस मोड (Rin) आसपास के इंटरफ़ेस को छिपाकर संपादन क्षेत्र को बड़ा कर देता है।"
+      },
+      "marpExternalCss": {
+        "title": "कस्टम Marp थीम और बाहरी CSS",
+        "description": "Bokuchi को अपनी खुद की Marp थीम फ़ाइलों वाले फ़ोल्डर की ओर इंगित करें और बाहरी CSS लोड करें, ताकि आपकी स्लाइड्स अंतर्निहित थीम से आगे की शैलियाँ इस्तेमाल कर सकें।"
+      },
+      "newTabButtonPosition": {
+        "title": "नया टैब बटन की स्थिति चुनें",
+        "description": "एक नया विकल्प आपको टैब जोड़ें (नया) बटन को अपनी पसंद की जगह रखने देता है — जिसमें वर्तमान में खुले टैब के ठीक नीचे भी शामिल है।"
+      },
+      "formattingBarToggle": {
+        "title": "फ़ॉर्मैटिंग बार दिखाएँ या छिपाएँ",
+        "description": "Markdown फ़ॉर्मैटिंग टूलबार को अब सेटिंग्स से चालू या बंद किया जा सकता है, ताकि आप एडिटर को जितना चाहें उतना सरल रख सकें।"
+      },
+      "statusBarSettings": {
+        "title": "स्टेटस बार में त्वरित सेटिंग्स",
+        "description": "अक्सर इस्तेमाल होने वाली सेटिंग्स अब तेज़ पहुँच के लिए सीधे स्टेटस बार से उपलब्ध हैं।"
+      },
+      "scrollSyncTwoWay": {
+        "title": "डिफ़ॉल्ट रूप से दो-तरफ़ा स्क्रॉल सिंक",
+        "description": "स्क्रॉल सिंक्रनाइज़ेशन अब डिफ़ॉल्ट रूप से दो-तरफ़ा है, इसलिए एडिटर या प्रीव्यू को स्क्रॉल करने पर दूसरा भी साथ चलता रहता है।"
+      },
+      "tabDragFix": {
+        "title": "टैब खींचने की समस्या ठीक की",
+        "description": "एक बग ठीक किया गया जिससे टैब को पुनः क्रमबद्ध करने के लिए खींचते समय वे गलत व्यवहार कर सकते थे।"
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "प्रस्तुति",
     "previousSlide": "पिछली स्लाइड",
     "nextSlide": "अगली स्लाइड",
+    "reloadThemes": "थीम पुनः लोड करें",
     "slideCounter": "स्लाइड {{current}} / {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Rin फ़ोकस मोड",
+    "exit": "Rin से बाहर निकलें (Esc)",
+    "toggleWidth": "एडिटर चौड़ाई टॉगल करें"
+  },
+  "tabSidebar": {
+    "pin": "साइडबार पिन करें",
+    "unpin": "साइडबार अनपिन करें"
   }
 }

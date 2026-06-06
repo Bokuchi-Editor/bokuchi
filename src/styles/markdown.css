@@ -134,14 +134,20 @@
 }
 
 /* ダークテーマ用のチェックボックススタイル */
-[data-theme="dark"] .markdown-preview .checkbox-item:hover {
+[data-theme="dark"] .markdown-preview .checkbox-item:hover,
+[data-theme="twilight"] .markdown-preview .checkbox-item:hover,
+[data-theme="ink"] .markdown-preview .checkbox-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="dark"] .markdown-preview .checkbox-item.checked:hover {
+[data-theme="dark"] .markdown-preview .checkbox-item.checked:hover,
+[data-theme="twilight"] .markdown-preview .checkbox-item.checked:hover,
+[data-theme="ink"] .markdown-preview .checkbox-item.checked:hover {
   background-color: rgba(25, 118, 210, 0.25);
 }
 
-[data-theme="dark"] .markdown-preview .markdown-checkbox {
+[data-theme="dark"] .markdown-preview .markdown-checkbox,
+[data-theme="twilight"] .markdown-preview .markdown-checkbox,
+[data-theme="ink"] .markdown-preview .markdown-checkbox {
   accent-color: #42a5f5;
 }

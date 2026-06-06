@@ -257,11 +257,15 @@
       "theme": "テーマ",
       "themeDescription": "アプリケーションの視覚テーマが選択できます。",
       "themes": {
-        "default": "デフォルト",
-        "dark": "ダーク",
-        "pastel": "パステル",
-        "vivid": "ビビッド",
-        "darcula": "ダーキュラ"
+        "default": "Default",
+        "dark": "Dark",
+        "pastel": "Pastel",
+        "vivid": "Vivid",
+        "dawn": "暁",
+        "twilight": "黄昏",
+        "silk": "絹",
+        "ink": "墨",
+        "darcula": "Darcula"
       }
     },
     "globalVariables": {
@@ -316,7 +320,13 @@
       "closeButtonLeft": "左",
       "closeButtonRight": "右",
       "closeButtonLeftDescription": "タブの左側に閉じるボタンとピンアイコンを表示します。",
-      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。"
+      "closeButtonRightDescription": "タブの右側に閉じるボタンとピンアイコンを表示します。",
+      "newButtonPosition": "新規タブボタンの位置",
+      "newButtonPositionDescription": "縦タブサイドバーで新規タブ（＋）ボタンを表示する位置を選択します。",
+      "newButtonTop": "上",
+      "newButtonTopDescription": "ボタンをサイドバーの一番上に固定します。",
+      "newButtonBottom": "下",
+      "newButtonBottomDescription": "ボタンを最後のタブの下に配置します。タブが多くなると下端に固定されます。"
     },
     "viewMode": {
       "title": "ビューモード",
@@ -339,7 +349,9 @@
       "wordWrap": "ワードラップ",
       "wordWrapDescription": "エディターで長い行を折り返します。",
       "minimap": "ミニマップ",
-      "minimapDescription": "ドキュメントのミニマップを表示します。"
+      "minimapDescription": "ドキュメントのミニマップを表示します。",
+      "showFormattingBar": "書式バー",
+      "showFormattingBarDescription": "エディター上部に書式設定ツールバーを表示します。"
     },
     "interface": {
       "title": "インターフェース",
@@ -409,7 +421,17 @@
       "resetSuccess": "設定が正常にリセットされました",
       "resetError": "設定のリセットに失敗しました",
       "enableMarp": "Marp（プレゼンテーション）",
-      "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。"
+      "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。",
+      "marpThemeFolder": "Marp テーマフォルダ",
+      "marpThemeFolderDescription": "CSSファイルを集めたフォルダからカスタムMarpテーマを登録します。/* @theme 名前 */ ヘッダーを持つファイルが、スライドの theme: ディレクティブで選択できるようになります。",
+      "marpThemeFolderBrowse": "フォルダを選択…",
+      "marpThemeFolderReload": "再読み込み",
+      "marpThemeFolderClear": "クリア",
+      "marpThemeFolderNone": "フォルダが未選択です。",
+      "marpThemeFolderScanning": "スキャン中…",
+      "marpThemeFolderDetected": "検出されたテーマ",
+      "marpThemeFolderEmpty": "@theme ヘッダーを持つテーマが見つかりませんでした。",
+      "marpThemeFolderIgnored": "無視（@theme ヘッダーなし）"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "列",
     "characters": "文字",
     "selected": "選択中",
-    "saved": "保存完了"
+    "saved": "保存完了",
+    "words": "単語",
+    "wordWrap": "ワードラップ",
+    "autoSave": "オートセーブ",
+    "on": "オン",
+    "off": "オフ"
   },
   "zoom": {
     "maxLimitReached": "最大ズームレベル ({{maxZoom}}%) に達しました",
@@ -480,7 +507,31 @@
     "quote": "引用",
     "horizontalRule": "水平線",
     "table": "テーブル",
+    "formatTable": "テーブルを整形",
     "strikethrough": "取り消し線"
+  },
+  "tableEditor": {
+    "title": "テーブルを編集",
+    "apply": "適用",
+    "cancel": "キャンセル",
+    "addRow": "行を追加",
+    "addColumn": "列を追加",
+    "rowActions": "行の操作",
+    "columnActions": "列の操作",
+    "insertRowAbove": "上に行を挿入",
+    "insertRowBelow": "下に行を挿入",
+    "deleteRow": "行を削除",
+    "moveRowUp": "行を上へ移動",
+    "moveRowDown": "行を下へ移動",
+    "insertColumnLeft": "左に列を挿入",
+    "insertColumnRight": "右に列を挿入",
+    "deleteColumn": "列を削除",
+    "moveColumnLeft": "列を左へ移動",
+    "moveColumnRight": "列を右へ移動",
+    "alignLeft": "左揃え",
+    "alignCenter": "中央揃え",
+    "alignRight": "右揃え",
+    "editTableTooltip": "テーブルを編集"
   },
   "outline": {
     "title": "アウトライン",
@@ -544,17 +595,41 @@
       "improvement": "改善"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "Marp プレビューが先頭に戻る問題を修正",
-        "description": "Marp の連続プレビュー（スプリット表示）で、文字を入力するたびにプレビューが先頭スライドに飛んでしまう問題を修正しました。編集中もスクロール位置がそのまま保たれます。"
+      "newThemes": {
+        "title": "4つの新しいテーマ",
+        "description": "暁、黄昏、絹、墨 の4つのカラーテーマを追加しました。エディターとプレビューの見た目をさらに選べるようになりました。"
       },
-      "editorModeShortcut": {
-        "title": "エディタモード切り替えのショートカット変更",
-        "description": "Windows でのキーボードショートカットの不具合を修正しました。エディタの表示モード切り替えは Cmd/Ctrl+Shift+D に変更されています。"
+      "tableEditing": {
+        "title": "表をビジュアルに編集",
+        "description": "エディターとプレビューの両方で Markdown の表を直接編集できるようになりました。専用の表エディターで行や列の追加・削除、セルのインライン編集ができ、整形された Markdown が自動で書き戻されます。"
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "未保存タブの一括クローズ時の挙動を改善",
-        "description": "複数タブを一度に閉じる際、未保存のタブが黙ってスキップされなくなりました。タブごとに保存するかを順番に確認するダイアログが表示されます。"
+      "verticalTabHover": {
+        "title": "自動で隠れる縦タブとフォーカスモード",
+        "description": "タブを縦に表示しているとき、タブバーを普段は隠しておき、ホバーでスライド表示できるようになりました。新しいフォーカスモード（臨）は周囲の UI を隠して編集領域を最大化します。"
+      },
+      "marpExternalCss": {
+        "title": "Marp のカスタムテーマと外部 CSS",
+        "description": "独自の Marp テーマファイルを置いたフォルダーを指定したり、外部 CSS を読み込めるようになりました。組み込みテーマを超えたスタイルをスライドに適用できます。"
+      },
+      "newTabButtonPosition": {
+        "title": "新規タブボタンの位置を選択",
+        "description": "「タブを追加（新規）」ボタンの位置を選べるオプションを追加しました。現在開いているタブのすぐ下に表示することもできます。"
+      },
+      "formattingBarToggle": {
+        "title": "フォーマットバーの表示切り替え",
+        "description": "Markdown のフォーマットツールバーを設定からオン・オフできるようになりました。エディターを好みに合わせてすっきり保てます。"
+      },
+      "statusBarSettings": {
+        "title": "ステータスバーからのクイック設定",
+        "description": "よく使う設定にステータスバーから直接アクセスできるようになり、すばやく切り替えられます。"
+      },
+      "scrollSyncTwoWay": {
+        "title": "スクロール同期を既定で双方向に",
+        "description": "スクロール同期の既定値を双方向にしました。エディターとプレビューのどちらをスクロールしても、もう一方が連動します。"
+      },
+      "tabDragFix": {
+        "title": "タブのドラッグの不具合を修正",
+        "description": "タブを並べ替えるためにドラッグした際に、正しく動作しないことがある不具合を修正しました。"
       }
     }
   },
@@ -562,6 +637,7 @@
     "presentation": "プレゼンテーション",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
+    "reloadThemes": "テーマを再読み込み",
     "slideCounter": "スライド {{current}} / {{total}}",
     "featureNotice": {
       "message": "このファイルでは {{features}} の記法が使われています。設定でONにするとプレビューに反映されます。",
@@ -574,5 +650,15 @@
         "katex": "KaTeX"
       }
     }
+  },
+  "rin": {
+    "label": "臨",
+    "tooltip": "臨モード",
+    "exit": "臨モードを終了 (Esc)",
+    "toggleWidth": "エディタ幅を切り替え"
+  },
+  "tabSidebar": {
+    "pin": "サイドバーを固定",
+    "unpin": "サイドバーの固定を解除"
   }
 }

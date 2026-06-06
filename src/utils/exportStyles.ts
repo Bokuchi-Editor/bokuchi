@@ -1,4 +1,6 @@
+import { alpha } from '@mui/material/styles';
 import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+import { getThemeByName, ThemeName } from '../themes';
 
 /** Theme color palette for HTML export */
 export interface ExportThemeColors {
@@ -13,17 +15,24 @@ export interface ExportThemeColors {
 
 /**
  * Compute theme-aware colors for HTML export.
+ * Reads the actual MUI palette of the selected theme so all themes (including
+ * the new Dawn / Twilight / Silk / Ink) export with their proper colors.
  */
-export function getExportThemeColors(darkMode: boolean, theme?: string): ExportThemeColors {
-  const isDark = darkMode || theme === 'darcula';
+export function getExportThemeColors(theme?: string): ExportThemeColors {
+  const themeName = (theme || 'default') as ThemeName;
+  const muiTheme = getThemeByName(themeName);
+  const { palette } = muiTheme;
+  // Code block bg derived from text color so it stays visible even when a
+  // theme leaves background.paper === background.default (Default / Vivid).
+  const codeBackground = alpha(palette.text.primary, palette.mode === 'dark' ? 0.10 : 0.06);
   return {
-    backgroundColor: theme === 'darcula' ? '#2B2B2B' : (isDark ? '#1a1a1a' : '#ffffff'),
-    textColor: theme === 'darcula' ? '#A9B7C6' : (isDark ? '#e0e0e0' : '#333333'),
-    codeBackground: theme === 'darcula' ? '#2d2d2d' : (isDark ? '#2d2d2d' : '#f6f8fa'),
-    borderColor: theme === 'darcula' ? '#404040' : (isDark ? '#404040' : '#eaecef'),
-    linkColor: theme === 'darcula' ? '#58a6ff' : (isDark ? '#58a6ff' : '#0366d6'),
-    blockquoteColor: theme === 'darcula' ? '#a0a0a0' : (isDark ? '#a0a0a0' : '#6a737d'),
-    inlineCodeBackground: theme === 'darcula' ? 'rgba(255,255,255,0.1)' : (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(27,31,35,0.05)'),
+    backgroundColor: palette.background.default,
+    textColor: palette.text.primary,
+    codeBackground,
+    borderColor: palette.divider,
+    linkColor: palette.primary.main,
+    blockquoteColor: palette.text.secondary,
+    inlineCodeBackground: alpha(palette.text.primary, 0.08),
   };
 }
 
@@ -34,9 +43,8 @@ const HLJS_LIGHT_CSS = `.hljs{display:block;overflow-x:auto;padding:0.5em;color:
 /**
  * Get a data URI for highlight.js CSS based on theme.
  */
-export function getHighlightStyleDataUri(darkMode: boolean, theme?: string): string {
-  const isDark = darkMode || theme === 'darcula';
-  const css = isDark ? HLJS_DARK_CSS : HLJS_LIGHT_CSS;
+export function getHighlightStyleDataUri(darkMode: boolean): string {
+  const css = darkMode ? HLJS_DARK_CSS : HLJS_LIGHT_CSS;
   return 'data:text/css;base64,' + btoa(css);
 }
 
@@ -256,9 +264,9 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
 ): string {
-  const colors = getExportThemeColors(darkMode, theme);
+  const colors = getExportThemeColors(theme);
   const css = generateExportCSS(colors, tableLayout);
-  const highlightStyle = getHighlightStyleDataUri(darkMode, theme);
+  const highlightStyle = getHighlightStyleDataUri(darkMode);
 
   return `
 <!DOCTYPE html>

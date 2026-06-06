@@ -257,10 +257,14 @@
       "theme": "Thème",
       "themeDescription": "Choisissez le thème visuel pour l'interface de l'application.",
       "themes": {
-        "default": "Par défaut",
-        "dark": "Sombre",
+        "default": "Default",
+        "dark": "Dark",
         "pastel": "Pastel",
-        "vivid": "Vif",
+        "vivid": "Vivid",
+        "dawn": "Dawn",
+        "twilight": "Twilight",
+        "silk": "Silk",
+        "ink": "Ink",
         "darcula": "Darcula"
       }
     },
@@ -316,7 +320,13 @@
       "closeButtonLeft": "Gauche",
       "closeButtonRight": "Droite",
       "closeButtonLeftDescription": "Afficher le bouton de fermeture et l'icône d'épingle à gauche de l'onglet.",
-      "closeButtonRightDescription": "Afficher le bouton de fermeture et l'icône d'épingle à droite de l'onglet."
+      "closeButtonRightDescription": "Afficher le bouton de fermeture et l'icône d'épingle à droite de l'onglet.",
+      "newButtonPosition": "Position du bouton Nouvel onglet",
+      "newButtonPositionDescription": "Choisissez où le bouton Nouvel onglet (+) apparaît dans la barre latérale des onglets verticaux.",
+      "newButtonTop": "Haut",
+      "newButtonTopDescription": "Fixer le bouton en haut de la barre latérale.",
+      "newButtonBottom": "Bas",
+      "newButtonBottomDescription": "Placer le bouton sous le dernier onglet ; il reste en bas lorsque les onglets débordent."
     },
     "viewMode": {
       "title": "Mode d'affichage",
@@ -339,7 +349,9 @@
       "wordWrap": "Retour à la ligne",
       "wordWrapDescription": "Envelopper les lignes longues dans l'éditeur.",
       "minimap": "Minicarte",
-      "minimapDescription": "Affiche une minimap du document."
+      "minimapDescription": "Affiche une minimap du document.",
+      "showFormattingBar": "Barre de mise en forme",
+      "showFormattingBarDescription": "Afficher la barre d'outils de mise en forme au-dessus de l'éditeur."
     },
     "interface": {
       "title": "Interface",
@@ -409,7 +421,17 @@
       "resetSuccess": "Paramètres réinitialisés avec succès",
       "resetError": "Échec de la réinitialisation des paramètres",
       "enableMarp": "Marp (Présentations)",
-      "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation."
+      "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation.",
+      "marpThemeFolder": "Dossier de thèmes Marp",
+      "marpThemeFolderDescription": "Enregistrez des thèmes Marp personnalisés à partir d'un dossier de fichiers CSS. Chaque fichier comportant un en-tête /* @theme name */ devient sélectionnable dans une diapositive via la directive theme:.",
+      "marpThemeFolderBrowse": "Choisir un dossier…",
+      "marpThemeFolderReload": "Recharger",
+      "marpThemeFolderClear": "Effacer",
+      "marpThemeFolderNone": "Aucun dossier sélectionné.",
+      "marpThemeFolderScanning": "Analyse…",
+      "marpThemeFolderDetected": "Thèmes détectés",
+      "marpThemeFolderEmpty": "Aucun thème avec en-tête @theme trouvé.",
+      "marpThemeFolderIgnored": "Ignorés (en-tête @theme manquant)"
     }
   },
   "fileOperations": {
@@ -453,7 +475,12 @@
     "column": "Colonne",
     "characters": "caractères",
     "selected": "sélectionné",
-    "saved": "Enregistré"
+    "saved": "Enregistré",
+    "words": "mots",
+    "wordWrap": "Retour à la ligne",
+    "autoSave": "Enregistrement auto",
+    "on": "Activé",
+    "off": "Désactivé"
   },
   "zoom": {
     "maxLimitReached": "Niveau de zoom maximum ({{maxZoom}}%) atteint",
@@ -480,6 +507,7 @@
     "quote": "Citation",
     "horizontalRule": "Ligne horizontale",
     "table": "Tableau",
+    "formatTable": "Formater le tableau",
     "strikethrough": "Barré"
   },
   "outline": {
@@ -544,17 +572,41 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "marpPreviewScroll": {
-        "title": "L'aperçu Marp ne saute plus en haut",
-        "description": "Correction du problème par lequel l'aperçu continu Marp revenait à la première diapositive à chaque frappe. Votre position de défilement est désormais conservée pendant l'édition."
+      "newThemes": {
+        "title": "Quatre nouveaux thèmes",
+        "description": "Quatre nouveaux thèmes de couleur ont été ajoutés — Dawn, Twilight, Silk et Ink — pour vous offrir plus de styles au choix pour l’éditeur et l’aperçu."
       },
-      "editorModeShortcut": {
-        "title": "Changement du raccourci de bascule du mode d'édition",
-        "description": "Correction d'un conflit de raccourcis clavier sous Windows. Le raccourci pour basculer le mode d'édition est désormais Cmd/Ctrl+Maj+D."
+      "tableEditing": {
+        "title": "Modifier les tableaux visuellement",
+        "description": "Modifiez les tableaux Markdown directement dans l’éditeur et dans l’aperçu. Un éditeur de tableau dédié permet d’ajouter ou de supprimer des lignes et des colonnes et de modifier les cellules sur place, puis réécrit un Markdown propre pour vous."
       },
-      "batchCloseUnsavedPrompt": {
-        "title": "Fermeture de plusieurs onglets avec modifications non enregistrées",
-        "description": "Lors de la fermeture de plusieurs onglets à la fois, les onglets contenant des modifications non enregistrées ne sont plus ignorés silencieusement : il vous est désormais proposé d'enregistrer chacun à tour de rôle."
+      "verticalTabHover": {
+        "title": "Onglets verticaux à masquage automatique et mode focus",
+        "description": "Lorsque les onglets sont affichés verticalement, la barre d’onglets peut rester repliée et se déployer au survol. Un nouveau mode focus (Rin) agrandit la zone d’édition en masquant l’interface environnante."
+      },
+      "marpExternalCss": {
+        "title": "Thèmes Marp personnalisés et CSS externe",
+        "description": "Indiquez à Bokuchi un dossier contenant vos propres fichiers de thème Marp et chargez du CSS externe, pour que vos diapositives puissent utiliser des styles au-delà des thèmes intégrés."
+      },
+      "newTabButtonPosition": {
+        "title": "Choisir la position du bouton Nouvel onglet",
+        "description": "Une nouvelle option vous permet de placer le bouton Ajouter un onglet (Nouveau) où vous préférez, y compris juste sous l’onglet actuellement ouvert."
+      },
+      "formattingBarToggle": {
+        "title": "Afficher ou masquer la barre de mise en forme",
+        "description": "La barre d’outils de mise en forme Markdown peut désormais être activée ou désactivée dans les paramètres, pour garder l’éditeur aussi épuré que vous le souhaitez."
+      },
+      "statusBarSettings": {
+        "title": "Réglages rapides dans la barre d’état",
+        "description": "Les réglages fréquemment utilisés sont désormais accessibles directement depuis la barre d’état pour un accès plus rapide."
+      },
+      "scrollSyncTwoWay": {
+        "title": "Synchronisation du défilement bidirectionnelle par défaut",
+        "description": "La synchronisation du défilement est désormais bidirectionnelle par défaut : faire défiler l’éditeur ou l’aperçu maintient l’autre au même niveau."
+      },
+      "tabDragFix": {
+        "title": "Correction du glissement des onglets",
+        "description": "Correction d’un bug qui pouvait faire mal se comporter les onglets lorsqu’on les faisait glisser pour les réorganiser."
       }
     }
   },
@@ -562,6 +614,17 @@
     "presentation": "Présentation",
     "previousSlide": "Diapositive précédente",
     "nextSlide": "Diapositive suivante",
+    "reloadThemes": "Recharger les thèmes",
     "slideCounter": "Diapositive {{current}} sur {{total}}"
+  },
+  "rin": {
+    "label": "Rin",
+    "tooltip": "Mode concentration Rin",
+    "exit": "Quitter Rin (Échap)",
+    "toggleWidth": "Basculer la largeur de l'éditeur"
+  },
+  "tabSidebar": {
+    "pin": "Épingler la barre latérale",
+    "unpin": "Détacher la barre latérale"
   }
 }
