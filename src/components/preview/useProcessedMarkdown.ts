@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { variableApi } from '../../api/variableApi';
 import type { RenderingSettings } from '../../types/settings';
 import {
@@ -147,7 +148,7 @@ export function useProcessedMarkdown({
 
         lastProcessedInputRef.current = inputKey;
         setProcessedContent(processedMarkdown);
-        setHtmlContent(processedHtml);
+        setHtmlContent(DOMPurify.sanitize(processedHtml, { ADD_ATTR: ['style', 'target'] }));
       } else {
         setProcessedContent('');
         setHtmlContent('');
