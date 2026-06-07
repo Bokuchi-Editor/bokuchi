@@ -76,3 +76,25 @@ export function scrollFractionToSlidePosition(
   }
   return { slideIndex: 0, subFraction: 0 };
 }
+
+/**
+ * Inverse of {@link scrollFractionToSlidePosition}: convert a slide index and a
+ * sub-fraction (how far through that slide) back into an editor scroll fraction
+ * (0..1) in source-line terms. Used for preview→editor sync in Marp continuous
+ * mode, where the user scrolls the slide iframe and we map the visible slide
+ * position back onto the source document.
+ */
+export function slidePositionToScrollFraction(
+  slideIndex: number,
+  subFraction: number,
+  totalLines: number,
+  ranges: SlideLineRange[],
+): number {
+  if (ranges.length === 0 || totalLines <= 1) return 0;
+  const idx = Math.min(Math.max(0, slideIndex), ranges.length - 1);
+  const range = ranges[idx];
+  const rangeSize = range.endLine - range.startLine;
+  const sub = Math.min(1, Math.max(0, subFraction));
+  const line = range.startLine + sub * rangeSize;
+  return Math.min(1, Math.max(0, line / (totalLines - 1)));
+}

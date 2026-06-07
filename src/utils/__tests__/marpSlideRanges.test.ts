@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   computeSlideLineRanges,
   scrollFractionToSlidePosition,
+  slidePositionToScrollFraction,
 } from '../marpSlideRanges';
 
 describe('computeSlideLineRanges', () => {
@@ -68,5 +69,40 @@ describe('scrollFractionToSlidePosition', () => {
   it('returns zero position for empty ranges', () => {
     const pos = scrollFractionToSlidePosition(0.5, 6, []);
     expect(pos).toEqual({ slideIndex: 0, subFraction: 0 });
+  });
+});
+
+describe('slidePositionToScrollFraction', () => {
+  const ranges = [
+    { startLine: 0, endLine: 1 },
+    { startLine: 2, endLine: 3 },
+    { startLine: 4, endLine: 5 },
+  ];
+  const totalLines = 6;
+
+  it('maps the first slide start to fraction 0', () => {
+    expect(slidePositionToScrollFraction(0, 0, totalLines, ranges)).toBe(0);
+  });
+
+  it('maps the last slide end to fraction 1', () => {
+    expect(slidePositionToScrollFraction(2, 1, totalLines, ranges)).toBe(1);
+  });
+
+  it('round-trips with scrollFractionToSlidePosition', () => {
+    for (const fraction of [0, 0.2, 0.5, 0.8, 1]) {
+      const pos = scrollFractionToSlidePosition(fraction, totalLines, ranges);
+      const back = slidePositionToScrollFraction(pos.slideIndex, pos.subFraction, totalLines, ranges);
+      expect(back).toBeCloseTo(fraction, 5);
+    }
+  });
+
+  it('clamps out-of-range slide indices and sub-fractions', () => {
+    expect(slidePositionToScrollFraction(99, 5, totalLines, ranges)).toBe(1);
+    expect(slidePositionToScrollFraction(-1, -1, totalLines, ranges)).toBe(0);
+  });
+
+  it('returns 0 for empty ranges or single-line documents', () => {
+    expect(slidePositionToScrollFraction(0, 0.5, 6, [])).toBe(0);
+    expect(slidePositionToScrollFraction(0, 0.5, 1, ranges)).toBe(0);
   });
 });
