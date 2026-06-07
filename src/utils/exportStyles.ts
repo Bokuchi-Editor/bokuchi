@@ -263,10 +263,15 @@ export function buildExportHTML(
   darkMode: boolean,
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
+  katexCss?: string,
 ): string {
   const colors = getExportThemeColors(theme);
   const css = generateExportCSS(colors, tableLayout);
   const highlightStyle = getHighlightStyleDataUri(darkMode);
+  // Inject KaTeX's stylesheet (with fonts inlined) only when the document has
+  // math — without it the exported render breaks (see katexExportCss.ts). The
+  // caller passes it lazily so font-free exports stay small.
+  const katexStyle = katexCss ? `\n    <style>${katexCss}</style>` : '';
 
   return `
 <!DOCTYPE html>
@@ -276,7 +281,7 @@ export function buildExportHTML(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Export</title>
     <style>${css}
-    </style>
+    </style>${katexStyle}
     <link rel="stylesheet" href="${highlightStyle}">
 </head>
 <body>

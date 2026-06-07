@@ -59,7 +59,15 @@ export function useHtmlExport({
         exportHtml = await processMermaidBlocks(exportHtml, darkMode);
       }
 
-      const fullHTML = buildExportHTML(exportHtml, darkMode, theme, tableLayout);
+      // Inline KaTeX's CSS + fonts only when the output actually contains a
+      // rendered equation, so math-free exports don't carry the font payload.
+      // Without this the export has no KaTeX styles and math renders broken.
+      let katexCss: string | undefined;
+      if (exportHtml.includes('class="katex')) {
+        katexCss = (await import('../../utils/katexExportCss')).KATEX_EXPORT_CSS;
+      }
+
+      const fullHTML = buildExportHTML(exportHtml, darkMode, theme, tableLayout, katexCss);
 
       // Select save location via file dialog
       const result = await desktopApi.saveHtmlFile(fullHTML);
