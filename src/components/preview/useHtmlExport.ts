@@ -51,6 +51,10 @@ export function useHtmlExport({
         exportHtml = await markedExportResult;
       }
 
+      // Sanitize marked output BEFORE KaTeX/Mermaid add their trusted HTML,
+      // so Mermaid SVGs (which contain <style> elements) are not stripped.
+      exportHtml = DOMPurify.sanitize(exportHtml);
+
       // processedContent holds KaTeX placeholders; restore the rendered HTML
       // after marked (same as the preview path).
       exportHtml = katexRestoreRef.current(exportHtml);
@@ -68,7 +72,7 @@ export function useHtmlExport({
         katexCss = (await import('../../utils/katexExportCss')).KATEX_EXPORT_CSS;
       }
 
-      const fullHTML = buildExportHTML(DOMPurify.sanitize(exportHtml), darkMode, theme, tableLayout, katexCss);
+      const fullHTML = buildExportHTML(exportHtml, darkMode, theme, tableLayout, katexCss);
 
       // Select save location via file dialog
       const result = await desktopApi.saveHtmlFile(fullHTML);

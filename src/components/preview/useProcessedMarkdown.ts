@@ -116,6 +116,11 @@ export function useProcessedMarkdown({
           processedHtml = await markedResult;
         }
 
+        // XSS sanitize marked output BEFORE KaTeX/Mermaid add their trusted HTML.
+        // Mermaid SVGs contain <style> elements that DOMPurify strips, and KaTeX
+        // output includes inline styles — sanitizing first avoids breaking them.
+        processedHtml = DOMPurify.sanitize(processedHtml, { ADD_ATTR: ['style', 'target'] });
+
         // Swap rendered KaTeX HTML back in for its placeholders.
         processedHtml = restoreKatex(processedHtml);
 
@@ -148,7 +153,7 @@ export function useProcessedMarkdown({
 
         lastProcessedInputRef.current = inputKey;
         setProcessedContent(processedMarkdown);
-        setHtmlContent(DOMPurify.sanitize(processedHtml, { ADD_ATTR: ['style', 'target'] }));
+        setHtmlContent(processedHtml);
       } else {
         setProcessedContent('');
         setHtmlContent('');
