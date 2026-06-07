@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 import { variableApi } from '../../api/variableApi';
 import type { RenderingSettings } from '../../types/settings';
 import {
@@ -13,6 +12,7 @@ import {
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
 import { processEasterEggBlocks, transformCheckboxes, resolveImagePaths } from './previewHtmlProcessing';
+import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 
 interface UseProcessedMarkdownParams {
   content: string;
@@ -116,10 +116,12 @@ export function useProcessedMarkdown({
           processedHtml = await markedResult;
         }
 
-        // XSS sanitize marked output BEFORE KaTeX/Mermaid add their trusted HTML.
-        // Mermaid SVGs contain <style> elements that DOMPurify strips, and KaTeX
-        // output includes inline styles — sanitizing first avoids breaking them.
-        processedHtml = DOMPurify.sanitize(processedHtml, { ADD_ATTR: ['style', 'target'] });
+        // Sanitize the user-authored HTML BEFORE splicing in trusted content.
+        // KaTeX is still an inert placeholder token, Mermaid is still a code
+        // block, and images still hold their original relative src here, so the
+        // rendered KaTeX/Mermaid/blob HTML injected below is never sanitized
+        // (DOMPurify would otherwise strip MathML, <foreignObject> and blob:).
+        processedHtml = sanitizeUserHtml(processedHtml);
 
         // Swap rendered KaTeX HTML back in for its placeholders.
         processedHtml = restoreKatex(processedHtml);
