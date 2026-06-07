@@ -1,5 +1,6 @@
 import { useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { desktopApi } from '../../api/desktopApi';
 import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
@@ -67,7 +68,7 @@ export function useHtmlExport({
         katexCss = (await import('../../utils/katexExportCss')).KATEX_EXPORT_CSS;
       }
 
-      const fullHTML = buildExportHTML(exportHtml, darkMode, theme, tableLayout, katexCss);
+      const fullHTML = buildExportHTML(DOMPurify.sanitize(exportHtml), darkMode, theme, tableLayout, katexCss);
 
       // Select save location via file dialog
       const result = await desktopApi.saveHtmlFile(fullHTML);
