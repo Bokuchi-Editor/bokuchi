@@ -64,7 +64,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     theme,
   });
 
-  usePreviewScrollSync(scrollContainerRef, scrollFraction, onScrollChange);
+  const setScrollContainer = usePreviewScrollSync(scrollContainerRef, scrollFraction, onScrollChange);
   usePreviewLinkClicks(previewRef, isMarp);
   usePreviewCheckboxToggle({ previewRef, isMarp, contentRef, onContentChangeRef });
 
@@ -99,7 +99,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
 
   // Delegate to MarpPreview for Marp presentations
   if (isMarp) {
-    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} filePath={filePath} viewMode={viewMode} marpThemeFolder={renderingSettings.marpThemeFolder} />;
+    return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} onScrollChange={onScrollChange} filePath={filePath} viewMode={viewMode} marpThemeFolder={renderingSettings.marpThemeFolder} />;
   }
 
   return (
@@ -121,7 +121,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         onOpenSettings={onOpenSettings}
       />
       <Box
-        ref={scrollContainerRef}
+        ref={setScrollContainer}
         sx={{
           flex: 1,
           p: 2,
