@@ -6,7 +6,7 @@ import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from 
  * Inner content is HTML-escaped and newlines become `<br>`. Runs before marked.
  */
 export function processEasterEggBlocks(markdown: string): string {
-  const easterEggPattern = /^:::(shake|rainbow|glow|bounce|blink)\s*\n([\s\S]*?)^:::\s*$/gm;
+  const easterEggPattern = /^:::(shake|rainbow|glow|bounce|blink)\s*\n([\s\S]*?)^:::[ \t]*$/gm;
   return markdown.replace(easterEggPattern, (_match, effect: string, innerContent: string) => {
     // Convert inner content to simple HTML (escape HTML entities, preserve line breaks)
     const escapedContent = innerContent
@@ -14,7 +14,9 @@ export function processEasterEggBlocks(markdown: string): string {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/\n/g, '<br>');
-    return `<div class="ee-block ee-${effect}" data-effect="${effect}">${escapedContent}</div>`;
+    // Ensure trailing newline so subsequent markdown is not consumed
+    // by the HTML block (CommonMark: <div> swallows until blank line).
+    return `<div class="ee-block ee-${effect}" data-effect="${effect}">${escapedContent}</div>\n`;
   });
 }
 
