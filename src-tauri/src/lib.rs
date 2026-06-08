@@ -33,6 +33,7 @@ mod variable_processor;
 mod file_operations;
 mod file_association;
 mod commands;
+mod pdf_export;
 
 // Re-export types
 pub use types::*;
@@ -89,7 +90,8 @@ pub fn run() {
             log_from_frontend,
             set_frontend_ready_command,
             read_directory,
-            rename_file
+            rename_file,
+            pdf_export::export_pdf
         ])
         .setup(|app| {
             // Get command line arguments

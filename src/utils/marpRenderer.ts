@@ -433,6 +433,51 @@ export function buildContinuousStyleContent(css: string): string {
   return `${css}\n${CONTINUOUS_WRAPPER_STYLES}`;
 }
 
+/**
+ * Build a print-ready document for PDF export of Marp slides: one slide per
+ * page. The page box is sized to the slide's own pixel dimensions (read from
+ * the first slide's viewBox, default 1280×720 for 16:9) so each slide fills its
+ * page with the correct aspect ratio and no surrounding margin.
+ */
+export function buildMarpPrintDocument(html: string, css: string): string {
+  const vb = html.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/);
+  const slideWidth = vb ? vb[1] : '1280';
+  const slideHeight = vb ? vb[2] : '720';
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+${css}
+
+html, body { margin: 0; padding: 0; background: #fff; }
+div.marpit { padding: 0; }
+div.marpit > svg[data-marpit-svg] {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  break-after: page;
+}
+div.marpit > svg[data-marpit-svg]:last-child { break-after: auto; }
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram { display: flex; justify-content: center; margin: 0.5em 0; max-width: 100%; }
+.mermaid-diagram svg { max-width: 100%; max-height: 100%; height: auto; }
+.mermaid-error { margin: 0.5em 0; }
+
+@media print {
+  @page { size: ${slideWidth}px ${slideHeight}px; margin: 0; }
+  html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>${html}</body>
+</html>`;
+}
+
 export function buildAllSlidesDocument(html: string, css: string): string {
   return `<!DOCTYPE html>
 <html>

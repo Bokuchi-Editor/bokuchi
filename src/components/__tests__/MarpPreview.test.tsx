@@ -137,13 +137,15 @@ describe('MarpPreview - continuous mode (split)', () => {
   });
 
   it('does not render navigation buttons', async () => {
-    const { getByText, queryAllByRole } = render(<MarpPreview {...splitProps} />);
+    const { getByText, queryAllByRole, queryByText } = render(<MarpPreview {...splitProps} />);
     await waitFor(() => {
       expect(getByText('Presentation')).toBeTruthy();
     });
-    // In continuous mode, there should be no navigation buttons
+    // In continuous mode there is no slide navigation: the slide counter is
+    // absent and the only button present is the PDF export button.
+    expect(queryByText('1 / 3')).toBeNull();
     const buttons = queryAllByRole('button');
-    expect(buttons.length).toBe(0);
+    expect(buttons.length).toBe(1);
   });
 });
 
