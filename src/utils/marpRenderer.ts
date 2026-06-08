@@ -452,10 +452,14 @@ ${css}
 
 html, body { margin: 0; padding: 0; background: #fff; }
 div.marpit { padding: 0; }
+/* Render each slide SVG at its intrinsic pixel size (matching the page), so the
+   scale factor is exactly 1. Scaling the SVG (width:100%) made WebKit reflow the
+   slide's <foreignObject> contents during printing, which broke the vertical
+   centering and image sizing. At scale 1 the slide prints exactly as previewed. */
 div.marpit > svg[data-marpit-svg] {
   display: block;
-  width: 100%;
-  height: auto;
+  width: ${slideWidth}px;
+  height: ${slideHeight}px;
   margin: 0;
   box-shadow: none;
   border-radius: 0;

@@ -250,8 +250,12 @@ ${tableCSS}
             height: auto;
         }
 
+        /* The enclosing <pre> already paints the code background. Keep the
+           highlighted <code class="hljs"> itself transparent — codeBackground is
+           semi-transparent, so painting it on both <pre> and <code> stacked the
+           alpha and produced a darker inner box (visible in PDF export). */
         .hljs {
-            background: ${colors.codeBackground} !important;
+            background: transparent !important;
         }`;
 }
 
