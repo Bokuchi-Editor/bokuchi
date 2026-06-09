@@ -572,9 +572,9 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Segurança: prévia reforçada",
-        "description": "O HTML incorporado na prévia agora é higienizado e sobreposições CSS maliciosas são bloqueadas, de modo que abrir um arquivo Markdown malicioso não pode mais cobrir o aplicativo com caixas de diálogo falsas, executar scripts ou travar a interface. A mesma proteção se aplica ao HTML exportado."
+      "marpDisplayFix": {
+        "title": "Correção de exibição do Marp",
+        "description": "Corrigido um problema em que os slides do Marp eram exibidos em tamanho real e ultrapassavam a visualização em vez de se ajustarem ao painel."
       }
     }
   },

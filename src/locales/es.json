@@ -572,9 +572,9 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Seguridad: vista previa reforzada",
-        "description": "El HTML incrustado en la vista previa ahora se sanea y se bloquean las superposiciones CSS maliciosas, de modo que abrir un archivo Markdown manipulado ya no puede cubrir la aplicación con diálogos falsos, ejecutar scripts ni bloquear la interfaz. La misma protección se aplica al HTML exportado."
+      "marpDisplayFix": {
+        "title": "Corrección de visualización de Marp",
+        "description": "Se corrigió un problema por el que las diapositivas de Marp se mostraban a tamaño completo y desbordaban la vista previa en lugar de ajustarse al panel."
       }
     }
   },

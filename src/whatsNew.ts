@@ -25,12 +25,12 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.9.1',
+  version: '0.9.2',
   changes: [
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.previewSecurity.title',
-      descriptionKey: 'whatsNew.changes.previewSecurity.description',
+      titleKey: 'whatsNew.changes.marpDisplayFix.title',
+      descriptionKey: 'whatsNew.changes.marpDisplayFix.description',
     },
   ],
 };

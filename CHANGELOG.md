@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.1...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.2...HEAD)
+
+## [0.9.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.1...v0.9.2) - 2026-06-10
+
+### Fixed
+
+- Marp slides could render at their native size and overflow the preview — oversized headings and content clipped on the right — in packaged (production) builds instead of scaling to fit the pane. Slides now display correctly across split, slide, fullscreen, and thumbnail modes.
 
 ## [0.9.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...v0.9.1) - 2026-06-09
 

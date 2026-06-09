@@ -572,9 +572,9 @@
       "improvement": "改進"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "安全性：預覽防護強化",
-        "description": "現在會淨化預覽中嵌入的 HTML，並攔截惡意 CSS 覆蓋層。開啟經過精心構造的 Markdown 檔案，將無法再以假對話框遮蓋應用程式、執行指令碼或鎖死介面。匯出的 HTML 也享有相同的保護。"
+      "marpDisplayFix": {
+        "title": "修正 Marp 顯示異常",
+        "description": "修正了 Marp 投影片未依比例縮放、以原始尺寸溢出預覽區域而導致顯示錯亂的問題。"
       }
     }
   },

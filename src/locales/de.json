@@ -572,9 +572,9 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Sicherheit: Verbesserter Schutz der Vorschau",
-        "description": "Eingebettetes HTML in der Vorschau wird nun bereinigt und schädliche CSS-Overlays werden blockiert. Eine präparierte Markdown-Datei kann die App damit nicht mehr mit gefälschten Dialogen überdecken, Skripte ausführen oder die Oberfläche blockieren. Derselbe Schutz gilt für den HTML-Export."
+      "marpDisplayFix": {
+        "title": "Korrektur der Marp-Darstellung",
+        "description": "Ein Problem wurde behoben, bei dem Marp-Folien in voller Größe dargestellt wurden und über die Vorschau hinausragten, anstatt passend skaliert zu werden."
       }
     }
   },
