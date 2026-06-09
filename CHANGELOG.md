@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.1...HEAD)
+
+## [0.9.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...v0.9.1) - 2026-06-09
+
+### Security
+
+- Markdown preview now sanitizes embedded HTML before rendering. `<script>`, event-handler attributes (`onerror`, `onload`, …) and `javascript:` URLs are stripped via DOMPurify on both the live preview and the HTML export path, where previously raw HTML present in a Markdown file was injected as-is.
+- Hardened the preview against CSS-injection UI redressing ([GHSA-5qr5-6vh4-6g2j](https://github.com/Bokuchi-Editor/bokuchi/security/advisories/GHSA-5qr5-6vh4-6g2j)). Overlay positioning (`position: fixed/absolute/sticky`, including `var()`-indirected and `!important` variants) is stripped from inline `style`, `<style>` blocks are forbidden, and the preview pane establishes a CSS containing block / stacking context as defense-in-depth. A crafted file can no longer cover the application with a full-screen overlay or fake dialog, run scripts, or lock the user out of the UI. The same sanitization protects exported HTML.
 
 ## [0.9.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.5...v0.9.0) - 2026-06-07
 

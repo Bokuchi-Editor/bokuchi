@@ -572,41 +572,9 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "newThemes": {
-        "title": "Cuatro temas nuevos",
-        "description": "Se añadieron cuatro temas de color nuevos —Dawn, Twilight, Silk e Ink— para darte más estilos a elegir para el editor y la vista previa."
-      },
-      "tableEditing": {
-        "title": "Edita tablas visualmente",
-        "description": "Edita tablas de Markdown directamente en el editor y en la vista previa. Un editor de tablas dedicado te permite añadir o quitar filas y columnas y editar celdas en línea, y luego vuelve a escribir Markdown limpio por ti."
-      },
-      "verticalTabHover": {
-        "title": "Pestañas verticales que se ocultan y modo de enfoque",
-        "description": "Cuando las pestañas se muestran en vertical, la barra de pestañas puede permanecer oculta y aparecer al pasar el ratón por encima. Un nuevo modo de enfoque (Rin) maximiza el área de edición ocultando la interfaz que la rodea."
-      },
-      "marpExternalCss": {
-        "title": "Temas de Marp personalizados y CSS externo",
-        "description": "Indica a Bokuchi una carpeta con tus propios archivos de tema de Marp y carga CSS externo, para que tus diapositivas puedan usar estilos más allá de los temas integrados."
-      },
-      "newTabButtonPosition": {
-        "title": "Elige la posición del botón de pestaña nueva",
-        "description": "Una nueva opción te permite colocar el botón Añadir pestaña (Nueva) donde prefieras, incluso justo debajo de la pestaña abierta actualmente."
-      },
-      "formattingBarToggle": {
-        "title": "Muestra u oculta la barra de formato",
-        "description": "La barra de herramientas de formato de Markdown ahora se puede activar o desactivar desde los ajustes, para que mantengas el editor tan minimalista como quieras."
-      },
-      "statusBarSettings": {
-        "title": "Ajustes rápidos en la barra de estado",
-        "description": "Los ajustes de uso frecuente ahora están disponibles directamente en la barra de estado para un acceso más rápido."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Sincronización de desplazamiento bidireccional por defecto",
-        "description": "La sincronización del desplazamiento ahora es bidireccional de forma predeterminada, así que desplazar el editor o la vista previa mantiene la otra al mismo ritmo."
-      },
-      "tabDragFix": {
-        "title": "Arrastre de pestañas corregido",
-        "description": "Se corrigió un error que podía hacer que las pestañas se comportaran mal al arrastrarlas para reordenarlas."
+      "previewSecurity": {
+        "title": "Seguridad: vista previa reforzada",
+        "description": "El HTML incrustado en la vista previa ahora se sanea y se bloquean las superposiciones CSS maliciosas, de modo que abrir un archivo Markdown manipulado ya no puede cubrir la aplicación con diálogos falsos, ejecutar scripts ni bloquear la interfaz. La misma protección se aplica al HTML exportado."
       }
     }
   },

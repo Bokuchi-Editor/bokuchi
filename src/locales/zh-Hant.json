@@ -572,41 +572,9 @@
       "improvement": "改進"
     },
     "changes": {
-      "newThemes": {
-        "title": "四款全新佈景主題",
-        "description": "新增了四款配色佈景主題——Dawn、Twilight、Silk 與 Ink，為編輯器和預覽提供更多外觀可選。"
-      },
-      "tableEditing": {
-        "title": "視覺化編輯表格",
-        "description": "直接在編輯器和預覽中編輯 Markdown 表格。專用的表格編輯器可讓你新增或刪除列與欄、就地編輯儲存格，然後為你寫回整潔的 Markdown。"
-      },
-      "verticalTabHover": {
-        "title": "自動隱藏的垂直分頁與專注模式",
-        "description": "當分頁垂直顯示時，分頁列可以保持收合，並在游標懸停時滑出。新的專注模式（Rin）透過隱藏周圍介面來放大編輯區域。"
-      },
-      "marpExternalCss": {
-        "title": "自訂 Marp 佈景主題與外部 CSS",
-        "description": "將 Bokuchi 指向存放你自己 Marp 佈景主題檔案的資料夾並載入外部 CSS，讓你的投影片能使用內建主題以外的樣式。"
-      },
-      "newTabButtonPosition": {
-        "title": "選擇新分頁按鈕的位置",
-        "description": "新選項可讓你將「新增分頁（新增）」按鈕放在你偏好的位置，包括目前開啟分頁的正下方。"
-      },
-      "formattingBarToggle": {
-        "title": "顯示或隱藏格式列",
-        "description": "現在可以在設定中開啟或關閉 Markdown 格式工具列，讓你依需求將編輯器保持得盡量簡潔。"
-      },
-      "statusBarSettings": {
-        "title": "狀態列中的快捷設定",
-        "description": "常用設定現在可直接從狀態列使用，存取更快速。"
-      },
-      "scrollSyncTwoWay": {
-        "title": "預設採用雙向捲動同步",
-        "description": "捲動同步現在預設為雙向，因此捲動編輯器或預覽都會讓另一側保持同步。"
-      },
-      "tabDragFix": {
-        "title": "修正分頁拖曳問題",
-        "description": "修正了一個在拖曳分頁以重新排序時可能導致分頁行為異常的錯誤。"
+      "previewSecurity": {
+        "title": "安全性：預覽防護強化",
+        "description": "現在會淨化預覽中嵌入的 HTML，並攔截惡意 CSS 覆蓋層。開啟經過精心構造的 Markdown 檔案，將無法再以假對話框遮蓋應用程式、執行指令碼或鎖死介面。匯出的 HTML 也享有相同的保護。"
       }
     }
   },
