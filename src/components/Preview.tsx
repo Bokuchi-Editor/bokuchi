@@ -127,6 +127,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           p: 2,
           overflow: 'auto',
           position: 'relative',
+          // New stacking context so no preview-internal z-index can paint over
+          // the app chrome (defense-in-depth backing up sanitizeUserHtml, which
+          // already strips overlay positioning from user style attributes).
+          isolation: 'isolate',
           backgroundColor: palette.background.default,
           color: palette.text.primary,
           ...(theme === 'as400' ? {
@@ -139,6 +143,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
+            // `transform` makes this div the containing block for any
+            // `position: fixed` descendant, so an injected overlay is confined to
+            // the preview pane instead of covering the whole window. `scale(1)` is
+            // a visual no-op. Defense-in-depth: sanitizeUserHtml already removes
+            // overlay positioning, this is the second wall if anything slips past.
+            transform: 'scale(1)',
             fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
             lineHeight: `${Math.round(BASE_PREVIEW_LINE_HEIGHT * zoomLevel)}`,
             fontFamily: theme === 'as400'
