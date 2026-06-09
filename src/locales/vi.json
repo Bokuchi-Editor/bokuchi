@@ -572,41 +572,9 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "newThemes": {
-        "title": "Bốn chủ đề mới",
-        "description": "Đã thêm bốn chủ đề màu mới — Dawn, Twilight, Silk và Ink — mang đến cho bạn nhiều giao diện hơn để chọn cho trình soạn thảo và bản xem trước."
-      },
-      "tableEditing": {
-        "title": "Chỉnh sửa bảng trực quan",
-        "description": "Chỉnh sửa bảng Markdown trực tiếp trong trình soạn thảo và trong bản xem trước. Một trình chỉnh sửa bảng chuyên dụng cho phép bạn thêm hoặc xóa hàng và cột và chỉnh sửa ô ngay tại chỗ, rồi ghi lại Markdown gọn gàng cho bạn."
-      },
-      "verticalTabHover": {
-        "title": "Thẻ dọc tự ẩn & chế độ tập trung",
-        "description": "Khi các thẻ được hiển thị theo chiều dọc, thanh thẻ có thể luôn được thu gọn và trượt ra khi di chuột. Chế độ tập trung mới (Rin) tối đa hóa vùng soạn thảo bằng cách ẩn giao diện xung quanh."
-      },
-      "marpExternalCss": {
-        "title": "Chủ đề Marp tùy chỉnh & CSS bên ngoài",
-        "description": "Trỏ Bokuchi đến một thư mục chứa các tệp chủ đề Marp của riêng bạn và tải CSS bên ngoài, để các trang chiếu của bạn có thể dùng kiểu dáng vượt ra ngoài các chủ đề tích hợp."
-      },
-      "newTabButtonPosition": {
-        "title": "Chọn vị trí nút thẻ mới",
-        "description": "Một tùy chọn mới cho phép bạn đặt nút Thêm thẻ (Mới) ở nơi bạn muốn — kể cả ngay bên dưới thẻ đang mở."
-      },
-      "formattingBarToggle": {
-        "title": "Hiện hoặc ẩn thanh định dạng",
-        "description": "Thanh công cụ định dạng Markdown giờ đây có thể bật hoặc tắt từ phần cài đặt, để bạn giữ trình soạn thảo tối giản tùy ý."
-      },
-      "statusBarSettings": {
-        "title": "Cài đặt nhanh trên thanh trạng thái",
-        "description": "Các cài đặt thường dùng giờ đây có sẵn ngay trên thanh trạng thái để truy cập nhanh hơn."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Đồng bộ cuộn hai chiều theo mặc định",
-        "description": "Đồng bộ cuộn giờ mặc định là hai chiều, nên cuộn trình soạn thảo hoặc bản xem trước sẽ giữ cho bên còn lại đi cùng nhịp."
-      },
-      "tabDragFix": {
-        "title": "Sửa lỗi kéo thẻ",
-        "description": "Đã sửa một lỗi có thể khiến các thẻ hoạt động không đúng khi được kéo để sắp xếp lại."
+      "previewSecurity": {
+        "title": "Bảo mật: tăng cường bảo vệ bản xem trước",
+        "description": "HTML nhúng trong bản xem trước giờ được làm sạch và các lớp phủ CSS độc hại bị chặn, nên việc mở một tệp Markdown được tạo ác ý không còn có thể che ứng dụng bằng hộp thoại giả, chạy mã script hay khóa giao diện. Cùng một cơ chế bảo vệ cũng áp dụng cho HTML đã xuất."
       }
     }
   },

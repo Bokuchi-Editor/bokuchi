@@ -595,41 +595,9 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "newThemes": {
-        "title": "Four New Themes",
-        "description": "Added four new color themes — Dawn, Twilight, Silk, and Ink — giving you more looks to choose from for the editor and preview."
-      },
-      "tableEditing": {
-        "title": "Edit Tables Visually",
-        "description": "Edit Markdown tables directly in the editor and in the preview. A dedicated table editor lets you add or remove rows and columns and edit cells inline, then writes clean Markdown back for you."
-      },
-      "verticalTabHover": {
-        "title": "Auto-Hiding Vertical Tabs & Focus Mode",
-        "description": "When tabs are shown vertically, the tab bar can stay tucked away and slide out on hover. A new focus mode (Rin) maximizes the editing area by hiding the surrounding UI."
-      },
-      "marpExternalCss": {
-        "title": "Custom Marp Themes & External CSS",
-        "description": "Point Bokuchi at a folder of your own Marp theme files and load external CSS, so your slides can use custom styles beyond the built-in themes."
-      },
-      "newTabButtonPosition": {
-        "title": "Choose the New Tab Button Position",
-        "description": "A new option lets you place the Add Tab (New) button where you prefer — including just below the currently open tab."
-      },
-      "formattingBarToggle": {
-        "title": "Show or Hide the Formatting Bar",
-        "description": "The Markdown formatting toolbar can now be turned on or off from settings, so you can keep the editor as minimal as you like."
-      },
-      "statusBarSettings": {
-        "title": "Quick Settings in the Status Bar",
-        "description": "Frequently used settings are now available right from the status bar for faster access."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Two-Way Scroll Sync by Default",
-        "description": "Scroll synchronization now defaults to two-way, so scrolling either the editor or the preview keeps the other in step."
-      },
-      "tabDragFix": {
-        "title": "Fixed Tab Dragging",
-        "description": "Fixed a bug that could cause tabs to misbehave while being dragged to reorder them."
+      "previewSecurity": {
+        "title": "Security: Hardened Markdown Preview",
+        "description": "Embedded HTML in the preview is now sanitized and malicious CSS overlays are blocked, so opening a crafted Markdown file can no longer cover the app with fake dialogs, run scripts, or lock up the interface. The same protection also applies to exported HTML."
       }
     }
   },

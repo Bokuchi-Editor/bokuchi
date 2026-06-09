@@ -572,41 +572,9 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "newThemes": {
-        "title": "Empat Tema Baru",
-        "description": "Menambahkan empat tema warna baru — Dawn, Twilight, Silk, dan Ink — memberi Anda lebih banyak tampilan untuk dipilih bagi editor dan pratinjau."
-      },
-      "tableEditing": {
-        "title": "Edit Tabel Secara Visual",
-        "description": "Edit tabel Markdown langsung di editor dan di pratinjau. Editor tabel khusus memungkinkan Anda menambah atau menghapus baris dan kolom serta mengedit sel secara inline, lalu menuliskan kembali Markdown yang rapi untuk Anda."
-      },
-      "verticalTabHover": {
-        "title": "Tab Vertikal yang Menyembunyi Otomatis & Mode Fokus",
-        "description": "Saat tab ditampilkan secara vertikal, bilah tab dapat tetap tersembunyi dan muncul saat disorot kursor. Mode fokus baru (Rin) memaksimalkan area pengeditan dengan menyembunyikan antarmuka di sekitarnya."
-      },
-      "marpExternalCss": {
-        "title": "Tema Marp Kustom & CSS Eksternal",
-        "description": "Arahkan Bokuchi ke folder berisi file tema Marp Anda sendiri dan muat CSS eksternal, sehingga slide Anda dapat memakai gaya di luar tema bawaan."
-      },
-      "newTabButtonPosition": {
-        "title": "Pilih Posisi Tombol Tab Baru",
-        "description": "Opsi baru memungkinkan Anda menempatkan tombol Tambah Tab (Baru) sesuai keinginan — termasuk tepat di bawah tab yang sedang terbuka."
-      },
-      "formattingBarToggle": {
-        "title": "Tampilkan atau Sembunyikan Bilah Pemformatan",
-        "description": "Bilah alat pemformatan Markdown kini dapat diaktifkan atau dinonaktifkan dari pengaturan, sehingga Anda bisa menjaga editor tetap seminimal yang Anda mau."
-      },
-      "statusBarSettings": {
-        "title": "Pengaturan Cepat di Bilah Status",
-        "description": "Pengaturan yang sering dipakai kini tersedia langsung dari bilah status untuk akses yang lebih cepat."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Sinkronisasi Gulir Dua Arah secara Default",
-        "description": "Sinkronisasi gulir kini secara default dua arah, jadi menggulir editor maupun pratinjau membuat keduanya tetap selaras."
-      },
-      "tabDragFix": {
-        "title": "Perbaikan Seret Tab",
-        "description": "Memperbaiki bug yang dapat membuat tab berperilaku tidak semestinya saat diseret untuk diurutkan ulang."
+      "previewSecurity": {
+        "title": "Keamanan: Pratinjau Lebih Aman",
+        "description": "HTML yang tertanam di pratinjau kini dibersihkan dan overlay CSS berbahaya diblokir, sehingga membuka berkas Markdown yang dirancang jahat tidak lagi dapat menutupi aplikasi dengan dialog palsu, menjalankan skrip, atau mengunci antarmuka. Perlindungan yang sama berlaku untuk HTML yang diekspor."
       }
     }
   },

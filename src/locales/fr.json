@@ -572,41 +572,9 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "newThemes": {
-        "title": "Quatre nouveaux thèmes",
-        "description": "Quatre nouveaux thèmes de couleur ont été ajoutés — Dawn, Twilight, Silk et Ink — pour vous offrir plus de styles au choix pour l’éditeur et l’aperçu."
-      },
-      "tableEditing": {
-        "title": "Modifier les tableaux visuellement",
-        "description": "Modifiez les tableaux Markdown directement dans l’éditeur et dans l’aperçu. Un éditeur de tableau dédié permet d’ajouter ou de supprimer des lignes et des colonnes et de modifier les cellules sur place, puis réécrit un Markdown propre pour vous."
-      },
-      "verticalTabHover": {
-        "title": "Onglets verticaux à masquage automatique et mode focus",
-        "description": "Lorsque les onglets sont affichés verticalement, la barre d’onglets peut rester repliée et se déployer au survol. Un nouveau mode focus (Rin) agrandit la zone d’édition en masquant l’interface environnante."
-      },
-      "marpExternalCss": {
-        "title": "Thèmes Marp personnalisés et CSS externe",
-        "description": "Indiquez à Bokuchi un dossier contenant vos propres fichiers de thème Marp et chargez du CSS externe, pour que vos diapositives puissent utiliser des styles au-delà des thèmes intégrés."
-      },
-      "newTabButtonPosition": {
-        "title": "Choisir la position du bouton Nouvel onglet",
-        "description": "Une nouvelle option vous permet de placer le bouton Ajouter un onglet (Nouveau) où vous préférez, y compris juste sous l’onglet actuellement ouvert."
-      },
-      "formattingBarToggle": {
-        "title": "Afficher ou masquer la barre de mise en forme",
-        "description": "La barre d’outils de mise en forme Markdown peut désormais être activée ou désactivée dans les paramètres, pour garder l’éditeur aussi épuré que vous le souhaitez."
-      },
-      "statusBarSettings": {
-        "title": "Réglages rapides dans la barre d’état",
-        "description": "Les réglages fréquemment utilisés sont désormais accessibles directement depuis la barre d’état pour un accès plus rapide."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Synchronisation du défilement bidirectionnelle par défaut",
-        "description": "La synchronisation du défilement est désormais bidirectionnelle par défaut : faire défiler l’éditeur ou l’aperçu maintient l’autre au même niveau."
-      },
-      "tabDragFix": {
-        "title": "Correction du glissement des onglets",
-        "description": "Correction d’un bug qui pouvait faire mal se comporter les onglets lorsqu’on les faisait glisser pour les réorganiser."
+      "previewSecurity": {
+        "title": "Sécurité : aperçu renforcé",
+        "description": "Le HTML intégré dans l'aperçu est désormais nettoyé et les superpositions CSS malveillantes sont bloquées. Ouvrir un fichier Markdown piégé ne peut plus recouvrir l'application de fausses boîtes de dialogue, exécuter des scripts ni bloquer l'interface. La même protection s'applique au HTML exporté."
       }
     }
   },

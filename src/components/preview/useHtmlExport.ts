@@ -4,6 +4,7 @@ import { desktopApi } from '../../api/desktopApi';
 import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { buildExportHTML } from '../../utils/exportStyles';
+import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 
 interface UseHtmlExportParams {
   /** Processed markdown (with KaTeX placeholders) — same input the preview rendered. */
@@ -49,6 +50,10 @@ export function useHtmlExport({
       } else {
         exportHtml = await markedExportResult;
       }
+
+      // Sanitize the user HTML before splicing in trusted KaTeX/Mermaid output
+      // (see sanitizeUserHtml / the preview path for why ordering matters).
+      exportHtml = sanitizeUserHtml(exportHtml);
 
       // processedContent holds KaTeX placeholders; restore the rendered HTML
       // after marked (same as the preview path).

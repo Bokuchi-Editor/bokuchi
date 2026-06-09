@@ -572,41 +572,9 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "newThemes": {
-        "title": "Quatro novos temas",
-        "description": "Foram adicionados quatro novos temas de cor — Dawn, Twilight, Silk e Ink — dando mais visuais para você escolher no editor e na pré-visualização."
-      },
-      "tableEditing": {
-        "title": "Edite tabelas visualmente",
-        "description": "Edite tabelas Markdown diretamente no editor e na pré-visualização. Um editor de tabelas dedicado permite adicionar ou remover linhas e colunas e editar células no local, e depois grava um Markdown limpo de volta para você."
-      },
-      "verticalTabHover": {
-        "title": "Abas verticais com ocultação automática e modo de foco",
-        "description": "Quando as abas são exibidas na vertical, a barra de abas pode ficar recolhida e aparecer ao passar o mouse. Um novo modo de foco (Rin) maximiza a área de edição ocultando a interface ao redor."
-      },
-      "marpExternalCss": {
-        "title": "Temas personalizados de Marp e CSS externo",
-        "description": "Aponte o Bokuchi para uma pasta com seus próprios arquivos de tema do Marp e carregue CSS externo, para que seus slides possam usar estilos além dos temas integrados."
-      },
-      "newTabButtonPosition": {
-        "title": "Escolha a posição do botão de nova aba",
-        "description": "Uma nova opção permite posicionar o botão Adicionar aba (Nova) onde você preferir — inclusive logo abaixo da aba aberta no momento."
-      },
-      "formattingBarToggle": {
-        "title": "Mostrar ou ocultar a barra de formatação",
-        "description": "A barra de ferramentas de formatação Markdown agora pode ser ativada ou desativada nas configurações, para você manter o editor tão minimalista quanto quiser."
-      },
-      "statusBarSettings": {
-        "title": "Configurações rápidas na barra de status",
-        "description": "As configurações usadas com frequência agora estão disponíveis diretamente na barra de status para acesso mais rápido."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Sincronização de rolagem bidirecional por padrão",
-        "description": "A sincronização de rolagem agora é bidirecional por padrão, então rolar o editor ou a pré-visualização mantém o outro acompanhando."
-      },
-      "tabDragFix": {
-        "title": "Correção do arraste de abas",
-        "description": "Corrigido um bug que podia fazer as abas se comportarem mal ao serem arrastadas para reordená-las."
+      "previewSecurity": {
+        "title": "Segurança: prévia reforçada",
+        "description": "O HTML incorporado na prévia agora é higienizado e sobreposições CSS maliciosas são bloqueadas, de modo que abrir um arquivo Markdown malicioso não pode mais cobrir o aplicativo com caixas de diálogo falsas, executar scripts ou travar a interface. A mesma proteção se aplica ao HTML exportado."
       }
     }
   },

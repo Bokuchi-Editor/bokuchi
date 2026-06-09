@@ -12,6 +12,7 @@ import {
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
 import { processEasterEggBlocks, transformCheckboxes, resolveImagePaths } from './previewHtmlProcessing';
+import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 
 interface UseProcessedMarkdownParams {
   content: string;
@@ -114,6 +115,13 @@ export function useProcessedMarkdown({
         } else {
           processedHtml = await markedResult;
         }
+
+        // Sanitize the user-authored HTML BEFORE splicing in trusted content.
+        // KaTeX is still an inert placeholder token, Mermaid is still a code
+        // block, and images still hold their original relative src here, so the
+        // rendered KaTeX/Mermaid/blob HTML injected below is never sanitized
+        // (DOMPurify would otherwise strip MathML, <foreignObject> and blob:).
+        processedHtml = sanitizeUserHtml(processedHtml);
 
         // Swap rendered KaTeX HTML back in for its placeholders.
         processedHtml = restoreKatex(processedHtml);

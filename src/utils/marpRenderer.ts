@@ -8,7 +8,18 @@ async function getMarp(): Promise<Marp> {
     marpModule = await import('@marp-team/marp-core');
   }
   const MarpClass = marpModule.default ?? marpModule.Marp;
-  return new MarpClass();
+  // Keep Marp fully offline (Bokuchi is an offline-first editor) and CSP-friendly.
+  // Marp's defaults reach out to the jsDelivr CDN at render time; override them:
+  //  - script.source 'inline' embeds Marp's auto-scaling/fitting browser script
+  //    instead of loading browser.js from the CDN.
+  //  - emoji as native Unicode (system font) instead of fetching Twemoji images.
+  //  - katexFontPath false drops the CDN @font-face URLs; renderMarp() appends the
+  //    locally-bundled, data-URL KaTeX CSS instead when a slide contains math.
+  return new MarpClass({
+    script: { source: 'inline' },
+    emoji: { shortcode: true, unicode: false },
+    math: { katexFontPath: false },
+  });
 }
 
 // YAML front-matter is delimited by `---` lines and must sit at the very start
@@ -55,8 +66,18 @@ export async function renderMarp(
     }
   }
   const { html, css } = marp.render(markdown);
+  // With katexFontPath: false, Marp's math CSS no longer points at the CDN, so the
+  // fonts must be supplied locally. Reuse the app's inlined (data-URL) KaTeX CSS —
+  // lazy-loaded and appended last so its @font-face wins over Marp's relative one —
+  // but only when the slides actually contain rendered math, to avoid shipping the
+  // ~370 kB font payload to every render.
+  let finalCss = css;
+  if (html.includes('katex')) {
+    const { KATEX_EXPORT_CSS } = await import('./katexExportCss');
+    finalCss = `${css}\n${KATEX_EXPORT_CSS}`;
+  }
   const slideCount = countSlides(html);
-  return { html, css, slideCount };
+  return { html, css: finalCss, slideCount };
 }
 
 /**

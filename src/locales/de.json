@@ -572,41 +572,9 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "newThemes": {
-        "title": "Vier neue Themes",
-        "description": "Vier neue Farb-Themes hinzugefügt – Dawn, Twilight, Silk und Ink –, sodass du mehr Looks für Editor und Vorschau zur Auswahl hast."
-      },
-      "tableEditing": {
-        "title": "Tabellen visuell bearbeiten",
-        "description": "Bearbeite Markdown-Tabellen direkt im Editor und in der Vorschau. Ein eigener Tabelleneditor erlaubt das Hinzufügen und Entfernen von Zeilen und Spalten sowie das Bearbeiten von Zellen direkt vor Ort und schreibt anschließend sauberes Markdown zurück."
-      },
-      "verticalTabHover": {
-        "title": "Automatisch ausblendende vertikale Tabs & Fokusmodus",
-        "description": "Wenn die Tabs vertikal angezeigt werden, kann die Tableiste eingeklappt bleiben und beim Überfahren mit der Maus ausfahren. Ein neuer Fokusmodus (Rin) maximiert den Bearbeitungsbereich, indem die umgebende Oberfläche ausgeblendet wird."
-      },
-      "marpExternalCss": {
-        "title": "Eigene Marp-Themes & externes CSS",
-        "description": "Verweise Bokuchi auf einen Ordner mit deinen eigenen Marp-Theme-Dateien und lade externes CSS, sodass deine Folien Stile über die integrierten Themes hinaus verwenden können."
-      },
-      "newTabButtonPosition": {
-        "title": "Position der Schaltfläche „Neuer Tab“ wählen",
-        "description": "Eine neue Option lässt dich die Schaltfläche „Tab hinzufügen (Neu)“ dort platzieren, wo du sie haben möchtest – auch direkt unter dem aktuell geöffneten Tab."
-      },
-      "formattingBarToggle": {
-        "title": "Formatierungsleiste ein- oder ausblenden",
-        "description": "Die Markdown-Formatierungsleiste lässt sich jetzt in den Einstellungen ein- oder ausschalten, sodass du den Editor so minimal halten kannst, wie du möchtest."
-      },
-      "statusBarSettings": {
-        "title": "Schnelleinstellungen in der Statusleiste",
-        "description": "Häufig verwendete Einstellungen sind jetzt direkt in der Statusleiste für schnellen Zugriff verfügbar."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Standardmäßig beidseitige Scroll-Synchronisierung",
-        "description": "Die Scroll-Synchronisierung ist jetzt standardmäßig beidseitig: Wenn du den Editor oder die Vorschau scrollst, zieht die jeweils andere Seite mit."
-      },
-      "tabDragFix": {
-        "title": "Tab-Ziehen behoben",
-        "description": "Ein Fehler wurde behoben, durch den sich Tabs beim Ziehen zum Neuanordnen fehlerhaft verhalten konnten."
+      "previewSecurity": {
+        "title": "Sicherheit: Verbesserter Schutz der Vorschau",
+        "description": "Eingebettetes HTML in der Vorschau wird nun bereinigt und schädliche CSS-Overlays werden blockiert. Eine präparierte Markdown-Datei kann die App damit nicht mehr mit gefälschten Dialogen überdecken, Skripte ausführen oder die Oberfläche blockieren. Derselbe Schutz gilt für den HTML-Export."
       }
     }
   },
