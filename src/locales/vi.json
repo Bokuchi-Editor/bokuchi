@@ -572,9 +572,9 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Bảo mật: tăng cường bảo vệ bản xem trước",
-        "description": "HTML nhúng trong bản xem trước giờ được làm sạch và các lớp phủ CSS độc hại bị chặn, nên việc mở một tệp Markdown được tạo ác ý không còn có thể che ứng dụng bằng hộp thoại giả, chạy mã script hay khóa giao diện. Cùng một cơ chế bảo vệ cũng áp dụng cho HTML đã xuất."
+      "marpDisplayFix": {
+        "title": "Sửa lỗi hiển thị Marp",
+        "description": "Đã sửa lỗi các trang chiếu Marp hiển thị ở kích thước gốc và tràn ra ngoài khung xem trước thay vì thu nhỏ cho vừa khung."
       }
     }
   },

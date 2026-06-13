@@ -169,6 +169,7 @@ Tests for the Marp slide rendering feature (Settings > Advanced > enableMarp). T
 | M-93 | Relative-path image inlining                             | Open a Marp document that references a sibling image (e.g. `![](./image.png)`)                                                                        | The image is rendered correctly inside slides (loaded as inlined data URL)                                                                    |
 | M-94 | Configure a custom Marp theme folder | In Settings > Rendering, set the Marp theme folder to a directory of `.css` files (some carrying a `/* @theme name */` header, some not) | Each detected `@theme` name is listed as a chip; files lacking an `@theme` header are shown as ignored. Clearing the folder empties the list |
 | M-95 | Apply a custom theme via front matter | With a theme folder configured, open a Marp document whose front matter selects a detected theme (`theme: <name>`) | The slides render with the external CSS theme; an unknown or cleared theme name falls back to the built-in default without crashing |
+| M-159 | Slides scale correctly in production build *(0.9.2 regression)* | In a **production build** (`npm run tauri:build`, NOT `tauri:dev`), open a Marp document and view it in split / slide / fullscreen / thumbnail mode | Every slide is scaled to fit the preview width. It must NOT render at native size overflowing the pane (oversized headings/bullets clipped on the right). Reproduces only in the packaged app, not in dev — verify against the built app |
 
 ## 15. Link Handling in Preview
 

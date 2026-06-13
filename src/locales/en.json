@@ -595,9 +595,9 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Security: Hardened Markdown Preview",
-        "description": "Embedded HTML in the preview is now sanitized and malicious CSS overlays are blocked, so opening a crafted Markdown file can no longer cover the app with fake dialogs, run scripts, or lock up the interface. The same protection also applies to exported HTML."
+      "marpDisplayFix": {
+        "title": "Marp Slide Display Fix",
+        "description": "Fixed an issue where Marp slides could render at full size and overflow the preview instead of scaling to fit the pane."
       }
     }
   },

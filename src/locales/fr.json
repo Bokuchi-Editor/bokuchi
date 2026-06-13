@@ -572,9 +572,9 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "Sécurité : aperçu renforcé",
-        "description": "Le HTML intégré dans l'aperçu est désormais nettoyé et les superpositions CSS malveillantes sont bloquées. Ouvrir un fichier Markdown piégé ne peut plus recouvrir l'application de fausses boîtes de dialogue, exécuter des scripts ni bloquer l'interface. La même protection s'applique au HTML exporté."
+      "marpDisplayFix": {
+        "title": "Correction de l'affichage Marp",
+        "description": "Correction d'un problème où les diapositives Marp s'affichaient à leur taille réelle et débordaient de l'aperçu au lieu de s'adapter au panneau."
       }
     }
   },

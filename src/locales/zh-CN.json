@@ -572,9 +572,9 @@
       "improvement": "改进"
     },
     "changes": {
-      "previewSecurity": {
-        "title": "安全性：预览防护增强",
-        "description": "现在会对预览中嵌入的 HTML 进行净化，并拦截恶意 CSS 覆盖层。打开经过精心构造的 Markdown 文件，将无法再用虚假对话框遮盖应用、运行脚本或锁死界面。导出的 HTML 也享有同样的保护。"
+      "marpDisplayFix": {
+        "title": "修复 Marp 显示异常",
+        "description": "修复了 Marp 幻灯片未按比例缩放、以原始尺寸溢出预览区域而导致显示错乱的问题。"
       }
     }
   },
