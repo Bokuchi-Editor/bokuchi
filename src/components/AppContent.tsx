@@ -166,7 +166,10 @@ const AppContent: React.FC<AppContentProps> = ({
   // Track which side initiated the scroll so the originating side ignores its own update
   // (prevents bidirectional sync from feedback-looping).
   const [scrollState, setScrollState] = useState<{ fraction: number; source: 'editor' | 'preview' | 'restore' }>({ fraction: 0, source: 'restore' });
-  const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; requestId: number }>({ lineNumber: 0, requestId: 0 });
+  // headingIndex is the heading's ordinal in the outline; the editor scrolls by
+  // lineNumber, the preview (which has no editor to drive) scrolls to the
+  // matching heading element by index (#376).
+  const [revealLineRequest, setRevealLineRequest] = useState<{ lineNumber: number; headingIndex: number; requestId: number }>({ lineNumber: 0, headingIndex: 0, requestId: 0 });
   // Whether the auto-hide vertical sidebar overlay is currently slid in (hover).
   const [sidebarOverlayOpen, setSidebarOverlayOpen] = useState(false);
 
@@ -215,8 +218,8 @@ const AppContent: React.FC<AppContentProps> = ({
     ? scrollState.fraction
     : undefined;
 
-  const handleHeadingClick = useCallback((lineNumber: number) => {
-    setRevealLineRequest(prev => ({ lineNumber, requestId: prev.requestId + 1 }));
+  const handleHeadingClick = useCallback((lineNumber: number, headingIndex: number) => {
+    setRevealLineRequest(prev => ({ lineNumber, headingIndex, requestId: prev.requestId + 1 }));
   }, []);
 
   // 臨 (Rin) focus mode hides all chrome (tabs, outline, folder tree, etc.).
@@ -610,6 +613,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     previewSettings={previewSettings}
                     scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
                     onScrollChange={handlePreviewScrollChange}
+                    revealHeadingRequest={revealLineRequest.requestId > 0 ? { index: revealLineRequest.headingIndex, requestId: revealLineRequest.requestId } : undefined}
                     viewMode="preview"
                     onOpenSettings={onOpenSettings}
                   />
