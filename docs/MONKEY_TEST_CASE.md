@@ -288,6 +288,7 @@ This area has regressed at least three times. The chain has multiple independent
 | M-146 | Rin label switches by locale                    | Check the Rin button tooltip/label in Japanese vs other-language UI                                                          | Japanese shows "臨"; all other locales show "Rin"                                                                                            |
 | M-147 | Rin editor width toggle                         | While in Rin, click the width-toggle button below the exit button → in full width, check the editor's right edge          | Toggles between "1000px fixed (centered)" and "full width". In full width the editor stops left of the button column so text never sits under the buttons |
 | M-148 | Hover stays consistent with the folder tree     | Turn the folder tree ON (merged with vertical tabs) → unpin → move the mouse to the left edge                              | Pin/hover behavior does not change with the folder tree present; hovering reveals the overlay sidebar containing both tabs and the folder tree |
+| M-162 | Rin button tooltips appear on the left, not over the button below | While in Rin, hover the top-right exit button, then the width-toggle button below it | Each tooltip ("Exit Rin mode" / width-toggle label) renders to the **left** of its button and never overlaps the button beneath it, so the lower button stays clickable |
 
 ## 26. In-editor Markdown Table Editing
 
