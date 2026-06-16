@@ -250,8 +250,13 @@ ${tableCSS}
             height: auto;
         }
 
+        /* The code element only ever appears as <pre><code class="hljs">. Keep it
+           transparent so the single translucent background lives on <pre> alone.
+           Painting codeBackground here too would stack a second translucent layer
+           and make the inner code lighter than its frame (and it also overrides
+           highlight.js's own opaque .hljs background, e.g. github-dark #0d1117). */
         .hljs {
-            background: ${colors.codeBackground} !important;
+            background: transparent !important;
         }`;
 }
 
