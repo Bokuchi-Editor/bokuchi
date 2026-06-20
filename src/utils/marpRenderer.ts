@@ -7,7 +7,26 @@ async function getMarp(): Promise<Marp> {
   if (!marpModule) {
     marpModule = await import('@marp-team/marp-core');
   }
-  const MarpClass = marpModule.default ?? marpModule.Marp;
+  // Resolve the Marp constructor robustly across bundler interop shapes. marp-core
+  // is CommonJS and exports BOTH `exports.Marp` and `exports.default` (same class).
+  // Depending on the bundler's CJS→ESM interop the dynamic-import namespace can be:
+  //  - { Marp: <class>, default: <class> }                    (Node / Vite 7)
+  //  - { default: { Marp: <class>, default: <class> } }       (Vite 8 prebundle —
+  //    `export default require_marp()`, no named `Marp` re-export)
+  // The old `marpModule.default ?? marpModule.Marp` picked the exports *object* under
+  // Vite 8, so `new` threw "Object is not a constructor". Unwrap one level if needed.
+  const mod = marpModule as unknown as {
+    Marp?: typeof Marp;
+    default?: typeof Marp | { Marp?: typeof Marp; default?: typeof Marp };
+  };
+  const candidate = mod.Marp ?? mod.default;
+  const MarpClass =
+    typeof candidate === 'function'
+      ? candidate
+      : (candidate?.Marp ?? candidate?.default);
+  if (typeof MarpClass !== 'function') {
+    throw new Error('Could not resolve the Marp constructor from @marp-team/marp-core');
+  }
   // Keep Marp fully offline (Bokuchi is an offline-first editor) and CSP-friendly.
   // Marp's defaults reach out to the jsDelivr CDN at render time; override them:
   //  - script.source 'inline' embeds Marp's auto-scaling/fitting browser script

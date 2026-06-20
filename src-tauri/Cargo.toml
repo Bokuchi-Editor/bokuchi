@@ -1,6 +1,6 @@
 [package]
 name = "bokuchi"
-version = "0.9.2"
+version = "0.9.3"
 description = "A lightweight Markdown editor"
 authors = ["saita_shinya"]
 edition = "2024"
@@ -18,7 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["protocol-asset"] }
 tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-store = "2"

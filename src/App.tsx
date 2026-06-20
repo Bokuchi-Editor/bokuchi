@@ -505,7 +505,7 @@ function AppDesktop() {
             Stacked top-right (exit on top, width toggle below). */}
         {rinActive && (
           <>
-            <Tooltip title={t('rin.exit')}>
+            <Tooltip title={t('rin.exit')} placement="left">
               <IconButton
                 onClick={exitRin}
                 aria-label={t('rin.exit')}
@@ -524,7 +524,7 @@ function AppDesktop() {
                 <Close />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('rin.toggleWidth')}>
+            <Tooltip title={t('rin.toggleWidth')} placement="left">
               <IconButton
                 onClick={() => setRinFullWidth((v) => !v)}
                 aria-label={t('rin.toggleWidth')}

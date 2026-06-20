@@ -572,9 +572,29 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Corrección de visualización de Marp",
-        "description": "Se corrigió un problema por el que las diapositivas de Marp se mostraban a tamaño completo y desbordaban la vista previa en lugar de ajustarse al panel."
+      "marpImageMemory": {
+        "title": "Menor uso de memoria en diapositivas con muchas imágenes",
+        "description": "Las imágenes de las diapositivas Marp ahora se cargan directamente desde el disco en lugar de incrustarse en la vista previa, lo que reduce notablemente el uso de memoria en presentaciones con muchas imágenes o imágenes grandes. Todo sigue funcionando sin conexión."
+      },
+      "outlineJumpPreview": {
+        "title": "Salto de esquema en modo vista previa",
+        "description": "Al hacer clic en un encabezado del esquema, la vista previa ahora se desplaza hasta ese encabezado, incluso en el modo de solo vista previa."
+      },
+      "rinEscapePriority": {
+        "title": "Tecla Escape en el modo de enfoque",
+        "description": "En el modo de enfoque Rin, al pulsar Escape ahora se cierra primero un diálogo abierto o el panel de búsqueda, en lugar de salir inmediatamente del modo de enfoque."
+      },
+      "htmlExportCodeBlock": {
+        "title": "Corrección de bloques de código en la exportación HTML",
+        "description": "Se corrigió que los bloques de código aparecieran con un fondo incorrecto o duplicado en el HTML exportado."
+      },
+      "rinButtonPlacement": {
+        "title": "Ubicación de los botones del modo de enfoque",
+        "description": "Se movieron los botones de control del modo de enfoque y sus descripciones emergentes a la izquierda para que ya no se salgan del borde de la ventana."
+      },
+      "dependencyUpdates": {
+        "title": "Actualizaciones de dependencias y seguridad",
+        "description": "Se actualizaron las bibliotecas incluidas y se resolvieron varias alertas de seguridad de dependencias."
       }
     }
   },

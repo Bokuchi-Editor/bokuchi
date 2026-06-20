@@ -24,7 +24,8 @@ export function isAbsoluteUrl(src: string): boolean {
     src.startsWith('http://') ||
     src.startsWith('https://') ||
     src.startsWith('data:') ||
-    src.startsWith('blob:')
+    src.startsWith('blob:') ||
+    src.startsWith('asset:')
   );
 }
 
