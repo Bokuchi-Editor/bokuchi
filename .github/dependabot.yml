@@ -8,6 +8,10 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
+    # Supply-chain hardening: only update to releases at least 3 days old
+    # (cooldown — avoids pulling a malicious release that gets yanked soon after).
+    cooldown:
+      default-days: 3
     open-pull-requests-limit: 10
     reviewers:
       - "shinya"
@@ -66,6 +70,10 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
+    # Supply-chain hardening: only update to releases at least 3 days old
+    # (cooldown — avoids pulling a malicious release that gets yanked soon after).
+    cooldown:
+      default-days: 3
     open-pull-requests-limit: 10
     reviewers:
       - "shinya"
@@ -98,6 +106,10 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
+    # Supply-chain hardening: only update to releases at least 3 days old
+    # (cooldown — avoids pulling a malicious release that gets yanked soon after).
+    cooldown:
+      default-days: 3
     open-pull-requests-limit: 5
     reviewers:
       - "shinya"
