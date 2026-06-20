@@ -25,12 +25,37 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.9.2',
+  version: '0.9.3',
   changes: [
     {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.marpImageMemory.title',
+      descriptionKey: 'whatsNew.changes.marpImageMemory.description',
+    },
+    {
       type: 'fix',
-      titleKey: 'whatsNew.changes.marpDisplayFix.title',
-      descriptionKey: 'whatsNew.changes.marpDisplayFix.description',
+      titleKey: 'whatsNew.changes.outlineJumpPreview.title',
+      descriptionKey: 'whatsNew.changes.outlineJumpPreview.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.rinEscapePriority.title',
+      descriptionKey: 'whatsNew.changes.rinEscapePriority.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.htmlExportCodeBlock.title',
+      descriptionKey: 'whatsNew.changes.htmlExportCodeBlock.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.rinButtonPlacement.title',
+      descriptionKey: 'whatsNew.changes.rinButtonPlacement.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.dependencyUpdates.title',
+      descriptionKey: 'whatsNew.changes.dependencyUpdates.description',
     },
   ],
 };

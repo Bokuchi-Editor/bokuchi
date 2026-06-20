@@ -572,9 +572,29 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Correção de exibição do Marp",
-        "description": "Corrigido um problema em que os slides do Marp eram exibidos em tamanho real e ultrapassavam a visualização em vez de se ajustarem ao painel."
+      "marpImageMemory": {
+        "title": "Menor uso de memória em slides com muitas imagens",
+        "description": "As imagens dos slides Marp agora são carregadas diretamente do disco, em vez de incorporadas à pré-visualização, reduzindo bastante o uso de memória em apresentações com muitas imagens ou imagens grandes. Tudo continua funcionando totalmente offline."
+      },
+      "outlineJumpPreview": {
+        "title": "Salto pelo sumário no modo de pré-visualização",
+        "description": "Clicar em um título no sumário agora rola a pré-visualização até esse título, mesmo no modo somente pré-visualização."
+      },
+      "rinEscapePriority": {
+        "title": "Tecla Escape no modo de foco",
+        "description": "No modo de foco Rin, pressionar Escape agora fecha primeiro uma caixa de diálogo aberta ou o painel de busca, em vez de sair imediatamente do modo de foco."
+      },
+      "htmlExportCodeBlock": {
+        "title": "Correção de blocos de código na exportação HTML",
+        "description": "Corrigido um problema em que os blocos de código apareciam com fundo incorreto ou duplicado no HTML exportado."
+      },
+      "rinButtonPlacement": {
+        "title": "Posição dos botões do modo de foco",
+        "description": "Os botões de controle do modo de foco e suas dicas foram movidos para a esquerda para não ultrapassarem a borda da janela."
+      },
+      "dependencyUpdates": {
+        "title": "Atualizações de dependências e segurança",
+        "description": "Bibliotecas incluídas foram atualizadas e vários alertas de segurança de dependências foram resolvidos."
       }
     }
   },

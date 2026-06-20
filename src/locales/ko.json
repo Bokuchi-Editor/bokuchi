@@ -572,9 +572,29 @@
       "improvement": "개선"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Marp 표시 깨짐 수정",
-        "description": "Marp 슬라이드가 미리보기에 맞게 축소되지 않고 원래 크기로 표시되어 화면을 벗어나던 문제를 수정했습니다."
+      "marpImageMemory": {
+        "title": "이미지가 많은 슬라이드의 메모리 절감",
+        "description": "Marp 슬라이드 이미지를 미리 보기에 포함하지 않고 디스크에서 직접 불러오도록 변경하여, 이미지가 많거나 큰 슬라이드의 메모리 사용량을 크게 줄였습니다. 모든 기능은 여전히 완전히 오프라인으로 동작합니다."
+      },
+      "outlineJumpPreview": {
+        "title": "미리 보기 모드에서 개요 이동",
+        "description": "개요에서 제목을 클릭하면 미리 보기 전용 모드에서도 해당 제목으로 스크롤됩니다."
+      },
+      "rinEscapePriority": {
+        "title": "집중 모드에서의 Escape 키",
+        "description": "Rin 집중 모드에서 Escape를 누르면 집중 모드를 즉시 종료하지 않고 열려 있는 대화 상자나 검색 패널을 먼저 닫습니다."
+      },
+      "htmlExportCodeBlock": {
+        "title": "HTML 내보내기 코드 블록 수정",
+        "description": "내보낸 HTML에서 코드 블록 배경이 잘못되거나 이중으로 표시되던 문제를 수정했습니다."
+      },
+      "rinButtonPlacement": {
+        "title": "집중 모드 버튼 위치",
+        "description": "집중 모드 제어 버튼과 툴팁을 왼쪽으로 옮겨 창 가장자리를 벗어나지 않도록 했습니다."
+      },
+      "dependencyUpdates": {
+        "title": "의존성 및 보안 업데이트",
+        "description": "포함된 라이브러리를 업데이트하고 여러 의존성 보안 권고 사항을 해결했습니다."
       }
     }
   },

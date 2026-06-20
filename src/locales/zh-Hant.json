@@ -572,9 +572,29 @@
       "improvement": "改進"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "修正 Marp 顯示異常",
-        "description": "修正了 Marp 投影片未依比例縮放、以原始尺寸溢出預覽區域而導致顯示錯亂的問題。"
+      "marpImageMemory": {
+        "title": "降低多圖投影片的記憶體用量",
+        "description": "Marp 投影片中的圖片現在直接從磁碟載入，而不再內嵌至預覽中，大幅降低了包含大量或大尺寸圖片的簡報的記憶體用量。所有功能仍然完全離線運作。"
+      },
+      "outlineJumpPreview": {
+        "title": "預覽模式下的大綱跳轉",
+        "description": "點按大綱中的標題，現在即使在僅預覽模式下也會將預覽捲動至該標題。"
+      },
+      "rinEscapePriority": {
+        "title": "專注模式下的 Escape 鍵",
+        "description": "在臨（專注）模式下按 Escape 鍵，現在會先關閉已開啟的對話框或搜尋面板，而不是立即退出專注模式。"
+      },
+      "htmlExportCodeBlock": {
+        "title": "HTML 匯出程式碼區塊修正",
+        "description": "修正了匯出的 HTML 中程式碼區塊背景顏色錯誤或重疊的問題。"
+      },
+      "rinButtonPlacement": {
+        "title": "專注模式按鈕位置",
+        "description": "將專注模式的控制按鈕及其提示移至左側，使其不再超出視窗邊緣。"
+      },
+      "dependencyUpdates": {
+        "title": "相依套件與安全性更新",
+        "description": "更新了內建函式庫並解決了多個相依套件安全性公告。"
       }
     }
   },

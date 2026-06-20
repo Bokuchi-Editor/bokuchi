@@ -572,9 +572,29 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Sửa lỗi hiển thị Marp",
-        "description": "Đã sửa lỗi các trang chiếu Marp hiển thị ở kích thước gốc và tràn ra ngoài khung xem trước thay vì thu nhỏ cho vừa khung."
+      "marpImageMemory": {
+        "title": "Giảm bộ nhớ cho slide nhiều hình ảnh",
+        "description": "Hình ảnh trong slide Marp giờ được tải trực tiếp từ ổ đĩa thay vì nhúng vào bản xem trước, giúp giảm đáng kể mức sử dụng bộ nhớ cho các bản trình bày có nhiều hình hoặc hình lớn. Mọi thứ vẫn hoạt động hoàn toàn ngoại tuyến."
+      },
+      "outlineJumpPreview": {
+        "title": "Nhảy theo dàn ý trong chế độ xem trước",
+        "description": "Nhấp vào một tiêu đề trong dàn ý giờ sẽ cuộn bản xem trước đến tiêu đề đó, ngay cả trong chế độ chỉ xem trước."
+      },
+      "rinEscapePriority": {
+        "title": "Phím Escape trong chế độ tập trung",
+        "description": "Trong chế độ tập trung Rin, nhấn Escape giờ sẽ đóng hộp thoại đang mở hoặc bảng tìm kiếm trước, thay vì thoát ngay khỏi chế độ tập trung."
+      },
+      "htmlExportCodeBlock": {
+        "title": "Sửa khối mã khi xuất HTML",
+        "description": "Đã sửa lỗi khối mã hiển thị nền sai hoặc bị nhân đôi trong HTML đã xuất."
+      },
+      "rinButtonPlacement": {
+        "title": "Vị trí nút chế độ tập trung",
+        "description": "Đã chuyển các nút điều khiển chế độ tập trung và chú giải của chúng sang bên trái để không tràn ra ngoài mép cửa sổ."
+      },
+      "dependencyUpdates": {
+        "title": "Cập nhật phụ thuộc và bảo mật",
+        "description": "Đã cập nhật các thư viện đi kèm và xử lý một số cảnh báo bảo mật liên quan đến phụ thuộc."
       }
     }
   },

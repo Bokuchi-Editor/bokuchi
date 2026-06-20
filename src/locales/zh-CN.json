@@ -572,9 +572,29 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "修复 Marp 显示异常",
-        "description": "修复了 Marp 幻灯片未按比例缩放、以原始尺寸溢出预览区域而导致显示错乱的问题。"
+      "marpImageMemory": {
+        "title": "降低多图幻灯片的内存占用",
+        "description": "Marp 幻灯片中的图片现在直接从磁盘加载，而不再嵌入预览中，大幅降低了包含大量或大尺寸图片的演示文稿的内存占用。所有功能仍然完全离线运行。"
+      },
+      "outlineJumpPreview": {
+        "title": "预览模式下的大纲跳转",
+        "description": "点击大纲中的标题，现在即使在仅预览模式下也会将预览滚动到该标题。"
+      },
+      "rinEscapePriority": {
+        "title": "专注模式下的 Escape 键",
+        "description": "在临（专注）模式下按 Escape 键，现在会先关闭已打开的对话框或搜索面板，而不是立即退出专注模式。"
+      },
+      "htmlExportCodeBlock": {
+        "title": "HTML 导出代码块修复",
+        "description": "修复了导出的 HTML 中代码块背景颜色错误或重叠的问题。"
+      },
+      "rinButtonPlacement": {
+        "title": "专注模式按钮位置",
+        "description": "将专注模式的控制按钮及其提示移到左侧，使其不再超出窗口边缘。"
+      },
+      "dependencyUpdates": {
+        "title": "依赖项与安全更新",
+        "description": "更新了内置库并解决了多个依赖项安全公告。"
       }
     }
   },

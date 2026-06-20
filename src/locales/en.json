@@ -595,9 +595,29 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Marp Slide Display Fix",
-        "description": "Fixed an issue where Marp slides could render at full size and overflow the preview instead of scaling to fit the pane."
+      "marpImageMemory": {
+        "title": "Lower Memory for Image-Heavy Slides",
+        "description": "Marp slide images now load directly from disk instead of being embedded in the preview, greatly reducing memory use for decks with many or large images. Everything still works fully offline."
+      },
+      "outlineJumpPreview": {
+        "title": "Outline Jump in Preview Mode",
+        "description": "Clicking a heading in the outline now scrolls the preview to that heading, even in preview-only mode."
+      },
+      "rinEscapePriority": {
+        "title": "Escape Key in Focus Mode",
+        "description": "In Rin focus mode, pressing Escape now closes an open dialog or the search panel first, instead of immediately exiting focus mode."
+      },
+      "htmlExportCodeBlock": {
+        "title": "HTML Export Code Block Fix",
+        "description": "Fixed code block backgrounds appearing with an incorrect or doubled shade in exported HTML."
+      },
+      "rinButtonPlacement": {
+        "title": "Focus Mode Button Placement",
+        "description": "Moved the focus-mode control buttons and their tooltips to the left so they no longer run off the edge of the window."
+      },
+      "dependencyUpdates": {
+        "title": "Dependency & Security Updates",
+        "description": "Updated bundled libraries and resolved several dependency security advisories."
       }
     }
   },

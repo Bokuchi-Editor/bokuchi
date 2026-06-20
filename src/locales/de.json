@@ -572,9 +572,29 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "marpDisplayFix": {
-        "title": "Korrektur der Marp-Darstellung",
-        "description": "Ein Problem wurde behoben, bei dem Marp-Folien in voller Größe dargestellt wurden und über die Vorschau hinausragten, anstatt passend skaliert zu werden."
+      "marpImageMemory": {
+        "title": "Weniger Speicher bei bildreichen Folien",
+        "description": "Bilder in Marp-Folien werden jetzt direkt von der Festplatte geladen, statt in die Vorschau eingebettet zu werden. Das senkt den Speicherbedarf bei Folien mit vielen oder großen Bildern deutlich – und funktioniert weiterhin vollständig offline."
+      },
+      "outlineJumpPreview": {
+        "title": "Gliederungssprung im Vorschaumodus",
+        "description": "Ein Klick auf eine Überschrift in der Gliederung scrollt die Vorschau jetzt auch im reinen Vorschaumodus zu dieser Überschrift."
+      },
+      "rinEscapePriority": {
+        "title": "Escape-Taste im Fokusmodus",
+        "description": "Im Rin-Fokusmodus schließt Escape jetzt zuerst einen offenen Dialog oder das Suchfeld, anstatt den Fokusmodus sofort zu verlassen."
+      },
+      "htmlExportCodeBlock": {
+        "title": "Korrektur von Codeblöcken beim HTML-Export",
+        "description": "Behoben, dass Codeblöcke im exportierten HTML einen falschen oder doppelten Hintergrund hatten."
+      },
+      "rinButtonPlacement": {
+        "title": "Platzierung der Fokusmodus-Schaltflächen",
+        "description": "Die Steuerschaltflächen des Fokusmodus und ihre Tooltips wurden nach links verschoben, damit sie nicht mehr über den Fensterrand hinausragen."
+      },
+      "dependencyUpdates": {
+        "title": "Abhängigkeits- und Sicherheitsupdates",
+        "description": "Mitgelieferte Bibliotheken aktualisiert und mehrere Sicherheitshinweise zu Abhängigkeiten behoben."
       }
     }
   },
