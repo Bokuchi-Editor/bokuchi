@@ -572,41 +572,29 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "newThemes": {
-        "title": "Vier neue Themes",
-        "description": "Vier neue Farb-Themes hinzugefügt – Dawn, Twilight, Silk und Ink –, sodass du mehr Looks für Editor und Vorschau zur Auswahl hast."
+      "marpImageMemory": {
+        "title": "Weniger Speicher bei bildreichen Folien",
+        "description": "Bilder in Marp-Folien werden jetzt direkt von der Festplatte geladen, statt in die Vorschau eingebettet zu werden. Das senkt den Speicherbedarf bei Folien mit vielen oder großen Bildern deutlich – und funktioniert weiterhin vollständig offline."
       },
-      "tableEditing": {
-        "title": "Tabellen visuell bearbeiten",
-        "description": "Bearbeite Markdown-Tabellen direkt im Editor und in der Vorschau. Ein eigener Tabelleneditor erlaubt das Hinzufügen und Entfernen von Zeilen und Spalten sowie das Bearbeiten von Zellen direkt vor Ort und schreibt anschließend sauberes Markdown zurück."
+      "outlineJumpPreview": {
+        "title": "Gliederungssprung im Vorschaumodus",
+        "description": "Ein Klick auf eine Überschrift in der Gliederung scrollt die Vorschau jetzt auch im reinen Vorschaumodus zu dieser Überschrift."
       },
-      "verticalTabHover": {
-        "title": "Automatisch ausblendende vertikale Tabs & Fokusmodus",
-        "description": "Wenn die Tabs vertikal angezeigt werden, kann die Tableiste eingeklappt bleiben und beim Überfahren mit der Maus ausfahren. Ein neuer Fokusmodus (Rin) maximiert den Bearbeitungsbereich, indem die umgebende Oberfläche ausgeblendet wird."
+      "rinEscapePriority": {
+        "title": "Escape-Taste im Fokusmodus",
+        "description": "Im Rin-Fokusmodus schließt Escape jetzt zuerst einen offenen Dialog oder das Suchfeld, anstatt den Fokusmodus sofort zu verlassen."
       },
-      "marpExternalCss": {
-        "title": "Eigene Marp-Themes & externes CSS",
-        "description": "Verweise Bokuchi auf einen Ordner mit deinen eigenen Marp-Theme-Dateien und lade externes CSS, sodass deine Folien Stile über die integrierten Themes hinaus verwenden können."
+      "htmlExportCodeBlock": {
+        "title": "Korrektur von Codeblöcken beim HTML-Export",
+        "description": "Behoben, dass Codeblöcke im exportierten HTML einen falschen oder doppelten Hintergrund hatten."
       },
-      "newTabButtonPosition": {
-        "title": "Position der Schaltfläche „Neuer Tab“ wählen",
-        "description": "Eine neue Option lässt dich die Schaltfläche „Tab hinzufügen (Neu)“ dort platzieren, wo du sie haben möchtest – auch direkt unter dem aktuell geöffneten Tab."
+      "rinButtonPlacement": {
+        "title": "Platzierung der Fokusmodus-Schaltflächen",
+        "description": "Die Steuerschaltflächen des Fokusmodus und ihre Tooltips wurden nach links verschoben, damit sie nicht mehr über den Fensterrand hinausragen."
       },
-      "formattingBarToggle": {
-        "title": "Formatierungsleiste ein- oder ausblenden",
-        "description": "Die Markdown-Formatierungsleiste lässt sich jetzt in den Einstellungen ein- oder ausschalten, sodass du den Editor so minimal halten kannst, wie du möchtest."
-      },
-      "statusBarSettings": {
-        "title": "Schnelleinstellungen in der Statusleiste",
-        "description": "Häufig verwendete Einstellungen sind jetzt direkt in der Statusleiste für schnellen Zugriff verfügbar."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Standardmäßig beidseitige Scroll-Synchronisierung",
-        "description": "Die Scroll-Synchronisierung ist jetzt standardmäßig beidseitig: Wenn du den Editor oder die Vorschau scrollst, zieht die jeweils andere Seite mit."
-      },
-      "tabDragFix": {
-        "title": "Tab-Ziehen behoben",
-        "description": "Ein Fehler wurde behoben, durch den sich Tabs beim Ziehen zum Neuanordnen fehlerhaft verhalten konnten."
+      "dependencyUpdates": {
+        "title": "Abhängigkeits- und Sicherheitsupdates",
+        "description": "Mitgelieferte Bibliotheken aktualisiert und mehrere Sicherheitshinweise zu Abhängigkeiten behoben."
       }
     }
   },

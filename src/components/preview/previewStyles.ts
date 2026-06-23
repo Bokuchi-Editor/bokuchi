@@ -18,7 +18,12 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               overflow-wrap: break-word;
               hyphens: auto;
               max-width: 100%;
-              overflow-x: hidden;
+              /* Clip anything painting outside the preview box. With the
+                 transform-based containing block on this element, this keeps an
+                 injected overlay from spilling over the app chrome — belt-and
+                 -suspenders behind sanitizeUserHtml's overlay-positioning strip. */
+              overflow: hidden;
+              contain: paint;
             }
 
             .markdown-preview * {

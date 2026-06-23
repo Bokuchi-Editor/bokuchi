@@ -572,41 +572,29 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "newThemes": {
-        "title": "Quatre nouveaux thèmes",
-        "description": "Quatre nouveaux thèmes de couleur ont été ajoutés — Dawn, Twilight, Silk et Ink — pour vous offrir plus de styles au choix pour l’éditeur et l’aperçu."
+      "marpImageMemory": {
+        "title": "Moins de mémoire pour les diapositives riches en images",
+        "description": "Les images des diapositives Marp sont désormais chargées directement depuis le disque au lieu d'être intégrées à l'aperçu, ce qui réduit nettement l'utilisation de la mémoire pour les présentations comportant de nombreuses ou de grandes images. Tout continue de fonctionner hors ligne."
       },
-      "tableEditing": {
-        "title": "Modifier les tableaux visuellement",
-        "description": "Modifiez les tableaux Markdown directement dans l’éditeur et dans l’aperçu. Un éditeur de tableau dédié permet d’ajouter ou de supprimer des lignes et des colonnes et de modifier les cellules sur place, puis réécrit un Markdown propre pour vous."
+      "outlineJumpPreview": {
+        "title": "Saut depuis le plan en mode aperçu",
+        "description": "Cliquer sur un titre dans le plan fait désormais défiler l'aperçu jusqu'à ce titre, même en mode aperçu seul."
       },
-      "verticalTabHover": {
-        "title": "Onglets verticaux à masquage automatique et mode focus",
-        "description": "Lorsque les onglets sont affichés verticalement, la barre d’onglets peut rester repliée et se déployer au survol. Un nouveau mode focus (Rin) agrandit la zone d’édition en masquant l’interface environnante."
+      "rinEscapePriority": {
+        "title": "Touche Échap en mode focus",
+        "description": "En mode focus Rin, appuyer sur Échap ferme désormais d'abord une boîte de dialogue ouverte ou le panneau de recherche, au lieu de quitter immédiatement le mode focus."
       },
-      "marpExternalCss": {
-        "title": "Thèmes Marp personnalisés et CSS externe",
-        "description": "Indiquez à Bokuchi un dossier contenant vos propres fichiers de thème Marp et chargez du CSS externe, pour que vos diapositives puissent utiliser des styles au-delà des thèmes intégrés."
+      "htmlExportCodeBlock": {
+        "title": "Correction des blocs de code à l'export HTML",
+        "description": "Correction d'un problème où les blocs de code apparaissaient avec un arrière-plan incorrect ou dédoublé dans le HTML exporté."
       },
-      "newTabButtonPosition": {
-        "title": "Choisir la position du bouton Nouvel onglet",
-        "description": "Une nouvelle option vous permet de placer le bouton Ajouter un onglet (Nouveau) où vous préférez, y compris juste sous l’onglet actuellement ouvert."
+      "rinButtonPlacement": {
+        "title": "Placement des boutons du mode focus",
+        "description": "Les boutons de contrôle du mode focus et leurs info-bulles ont été déplacés vers la gauche afin de ne plus dépasser du bord de la fenêtre."
       },
-      "formattingBarToggle": {
-        "title": "Afficher ou masquer la barre de mise en forme",
-        "description": "La barre d’outils de mise en forme Markdown peut désormais être activée ou désactivée dans les paramètres, pour garder l’éditeur aussi épuré que vous le souhaitez."
-      },
-      "statusBarSettings": {
-        "title": "Réglages rapides dans la barre d’état",
-        "description": "Les réglages fréquemment utilisés sont désormais accessibles directement depuis la barre d’état pour un accès plus rapide."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Synchronisation du défilement bidirectionnelle par défaut",
-        "description": "La synchronisation du défilement est désormais bidirectionnelle par défaut : faire défiler l’éditeur ou l’aperçu maintient l’autre au même niveau."
-      },
-      "tabDragFix": {
-        "title": "Correction du glissement des onglets",
-        "description": "Correction d’un bug qui pouvait faire mal se comporter les onglets lorsqu’on les faisait glisser pour les réorganiser."
+      "dependencyUpdates": {
+        "title": "Mises à jour des dépendances et de la sécurité",
+        "description": "Mise à jour des bibliothèques intégrées et résolution de plusieurs alertes de sécurité liées aux dépendances."
       }
     }
   },

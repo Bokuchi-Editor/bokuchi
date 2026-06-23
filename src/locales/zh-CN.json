@@ -572,41 +572,29 @@
       "improvement": "改进"
     },
     "changes": {
-      "newThemes": {
-        "title": "四款全新主题",
-        "description": "新增了四款配色主题——Dawn、Twilight、Silk 和 Ink，为编辑器和预览提供更多外观可选。"
+      "marpImageMemory": {
+        "title": "降低多图幻灯片的内存占用",
+        "description": "Marp 幻灯片中的图片现在直接从磁盘加载，而不再嵌入预览中，大幅降低了包含大量或大尺寸图片的演示文稿的内存占用。所有功能仍然完全离线运行。"
       },
-      "tableEditing": {
-        "title": "可视化编辑表格",
-        "description": "直接在编辑器和预览中编辑 Markdown 表格。专用的表格编辑器可让你添加或删除行和列、就地编辑单元格，然后为你写回整洁的 Markdown。"
+      "outlineJumpPreview": {
+        "title": "预览模式下的大纲跳转",
+        "description": "点击大纲中的标题，现在即使在仅预览模式下也会将预览滚动到该标题。"
       },
-      "verticalTabHover": {
-        "title": "自动隐藏的垂直标签页与专注模式",
-        "description": "当标签页垂直显示时，标签栏可以保持收起，并在悬停时滑出。新的专注模式（Rin）通过隐藏周围界面来最大化编辑区域。"
+      "rinEscapePriority": {
+        "title": "专注模式下的 Escape 键",
+        "description": "在临（专注）模式下按 Escape 键，现在会先关闭已打开的对话框或搜索面板，而不是立即退出专注模式。"
       },
-      "marpExternalCss": {
-        "title": "自定义 Marp 主题与外部 CSS",
-        "description": "将 Bokuchi 指向存放你自己的 Marp 主题文件的文件夹并加载外部 CSS，让你的幻灯片可以使用内置主题之外的样式。"
+      "htmlExportCodeBlock": {
+        "title": "HTML 导出代码块修复",
+        "description": "修复了导出的 HTML 中代码块背景颜色错误或重叠的问题。"
       },
-      "newTabButtonPosition": {
-        "title": "选择新建标签按钮的位置",
-        "description": "新增选项可让你将“添加标签（新建）”按钮放在你喜欢的位置，包括当前打开标签的正下方。"
+      "rinButtonPlacement": {
+        "title": "专注模式按钮位置",
+        "description": "将专注模式的控制按钮及其提示移到左侧，使其不再超出窗口边缘。"
       },
-      "formattingBarToggle": {
-        "title": "显示或隐藏格式栏",
-        "description": "现在可以在设置中开启或关闭 Markdown 格式工具栏，让你按需将编辑器保持得尽量简洁。"
-      },
-      "statusBarSettings": {
-        "title": "状态栏中的快捷设置",
-        "description": "常用设置现在可直接从状态栏使用，访问更快捷。"
-      },
-      "scrollSyncTwoWay": {
-        "title": "默认采用双向滚动同步",
-        "description": "滚动同步现在默认为双向，因此滚动编辑器或预览都会让另一侧保持同步。"
-      },
-      "tabDragFix": {
-        "title": "修复标签拖动问题",
-        "description": "修复了一个在拖动标签以重新排序时可能导致标签行为异常的错误。"
+      "dependencyUpdates": {
+        "title": "依赖项与安全更新",
+        "description": "更新了内置库并解决了多个依赖项安全公告。"
       }
     }
   },

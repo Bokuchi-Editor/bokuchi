@@ -4,9 +4,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // so tests can assert which custom themes were registered before render.
 const themeAddSpy = vi.fn();
 
-// Mock @marp-team/marp-core
-vi.mock('@marp-team/marp-core', () => ({
-  default: class MockMarp {
+// Mock @marp-team/marp-core. marp-core is CJS and exposes the same class as BOTH
+// `Marp` and `default`, so mirror that here (the resolver in getMarp reads `.Marp`).
+vi.mock('@marp-team/marp-core', () => {
+  class MockMarp {
     themeSet = {
       add: (css: string) => {
         // Mirror marp-core: reject CSS without an @theme header.
@@ -20,8 +21,9 @@ vi.mock('@marp-team/marp-core', () => ({
         css: '.marpit { color: red; }',
       };
     }
-  },
-}));
+  }
+  return { Marp: MockMarp, default: MockMarp };
+});
 
 import {
   contentIsMarp,

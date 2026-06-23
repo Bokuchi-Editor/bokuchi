@@ -25,52 +25,37 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.9.0',
+  version: '0.9.3',
   changes: [
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.newThemes.title',
-      descriptionKey: 'whatsNew.changes.newThemes.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.tableEditing.title',
-      descriptionKey: 'whatsNew.changes.tableEditing.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.verticalTabHover.title',
-      descriptionKey: 'whatsNew.changes.verticalTabHover.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.marpExternalCss.title',
-      descriptionKey: 'whatsNew.changes.marpExternalCss.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.newTabButtonPosition.title',
-      descriptionKey: 'whatsNew.changes.newTabButtonPosition.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.formattingBarToggle.title',
-      descriptionKey: 'whatsNew.changes.formattingBarToggle.description',
-    },
-    {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.statusBarSettings.title',
-      descriptionKey: 'whatsNew.changes.statusBarSettings.description',
-    },
-    {
-      type: 'improvement',
-      titleKey: 'whatsNew.changes.scrollSyncTwoWay.title',
-      descriptionKey: 'whatsNew.changes.scrollSyncTwoWay.description',
+      titleKey: 'whatsNew.changes.marpImageMemory.title',
+      descriptionKey: 'whatsNew.changes.marpImageMemory.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.tabDragFix.title',
-      descriptionKey: 'whatsNew.changes.tabDragFix.description',
+      titleKey: 'whatsNew.changes.outlineJumpPreview.title',
+      descriptionKey: 'whatsNew.changes.outlineJumpPreview.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.rinEscapePriority.title',
+      descriptionKey: 'whatsNew.changes.rinEscapePriority.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.htmlExportCodeBlock.title',
+      descriptionKey: 'whatsNew.changes.htmlExportCodeBlock.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.rinButtonPlacement.title',
+      descriptionKey: 'whatsNew.changes.rinButtonPlacement.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.dependencyUpdates.title',
+      descriptionKey: 'whatsNew.changes.dependencyUpdates.description',
     },
   ],
 };

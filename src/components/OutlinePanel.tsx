@@ -6,7 +6,7 @@ import { HeadingItem } from '../types/outline';
 
 interface OutlinePanelProps {
   headings: HeadingItem[];
-  onHeadingClick: (lineNumber: number) => void;
+  onHeadingClick: (lineNumber: number, index: number) => void;
   onClose?: () => void;
   width?: number;
 }
@@ -67,7 +67,7 @@ const OutlinePanel: React.FC<OutlinePanelProps> = ({
             {headings.map((heading, index) => (
               <ListItemButton
                 key={`${heading.lineNumber}-${index}`}
-                onClick={() => onHeadingClick(heading.lineNumber)}
+                onClick={() => onHeadingClick(heading.lineNumber, index)}
                 sx={{
                   pl: 1.5 + (heading.level - 1) * 2,
                   py: 0.5,

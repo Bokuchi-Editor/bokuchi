@@ -7,8 +7,38 @@ async function getMarp(): Promise<Marp> {
   if (!marpModule) {
     marpModule = await import('@marp-team/marp-core');
   }
-  const MarpClass = marpModule.default ?? marpModule.Marp;
-  return new MarpClass();
+  // Resolve the Marp constructor robustly across bundler interop shapes. marp-core
+  // is CommonJS and exports BOTH `exports.Marp` and `exports.default` (same class).
+  // Depending on the bundler's CJS→ESM interop the dynamic-import namespace can be:
+  //  - { Marp: <class>, default: <class> }                    (Node / Vite 7)
+  //  - { default: { Marp: <class>, default: <class> } }       (Vite 8 prebundle —
+  //    `export default require_marp()`, no named `Marp` re-export)
+  // The old `marpModule.default ?? marpModule.Marp` picked the exports *object* under
+  // Vite 8, so `new` threw "Object is not a constructor". Unwrap one level if needed.
+  const mod = marpModule as unknown as {
+    Marp?: typeof Marp;
+    default?: typeof Marp | { Marp?: typeof Marp; default?: typeof Marp };
+  };
+  const candidate = mod.Marp ?? mod.default;
+  const MarpClass =
+    typeof candidate === 'function'
+      ? candidate
+      : (candidate?.Marp ?? candidate?.default);
+  if (typeof MarpClass !== 'function') {
+    throw new Error('Could not resolve the Marp constructor from @marp-team/marp-core');
+  }
+  // Keep Marp fully offline (Bokuchi is an offline-first editor) and CSP-friendly.
+  // Marp's defaults reach out to the jsDelivr CDN at render time; override them:
+  //  - script.source 'inline' embeds Marp's auto-scaling/fitting browser script
+  //    instead of loading browser.js from the CDN.
+  //  - emoji as native Unicode (system font) instead of fetching Twemoji images.
+  //  - katexFontPath false drops the CDN @font-face URLs; renderMarp() appends the
+  //    locally-bundled, data-URL KaTeX CSS instead when a slide contains math.
+  return new MarpClass({
+    script: { source: 'inline' },
+    emoji: { shortcode: true, unicode: false },
+    math: { katexFontPath: false },
+  });
 }
 
 // YAML front-matter is delimited by `---` lines and must sit at the very start
@@ -55,8 +85,18 @@ export async function renderMarp(
     }
   }
   const { html, css } = marp.render(markdown);
+  // With katexFontPath: false, Marp's math CSS no longer points at the CDN, so the
+  // fonts must be supplied locally. Reuse the app's inlined (data-URL) KaTeX CSS —
+  // lazy-loaded and appended last so its @font-face wins over Marp's relative one —
+  // but only when the slides actually contain rendered math, to avoid shipping the
+  // ~370 kB font payload to every render.
+  let finalCss = css;
+  if (html.includes('katex')) {
+    const { KATEX_EXPORT_CSS } = await import('./katexExportCss');
+    finalCss = `${css}\n${KATEX_EXPORT_CSS}`;
+  }
   const slideCount = countSlides(html);
-  return { html, css, slideCount };
+  return { html, css: finalCss, slideCount };
 }
 
 /**

@@ -572,41 +572,29 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "newThemes": {
-        "title": "Cuatro temas nuevos",
-        "description": "Se añadieron cuatro temas de color nuevos —Dawn, Twilight, Silk e Ink— para darte más estilos a elegir para el editor y la vista previa."
+      "marpImageMemory": {
+        "title": "Menor uso de memoria en diapositivas con muchas imágenes",
+        "description": "Las imágenes de las diapositivas Marp ahora se cargan directamente desde el disco en lugar de incrustarse en la vista previa, lo que reduce notablemente el uso de memoria en presentaciones con muchas imágenes o imágenes grandes. Todo sigue funcionando sin conexión."
       },
-      "tableEditing": {
-        "title": "Edita tablas visualmente",
-        "description": "Edita tablas de Markdown directamente en el editor y en la vista previa. Un editor de tablas dedicado te permite añadir o quitar filas y columnas y editar celdas en línea, y luego vuelve a escribir Markdown limpio por ti."
+      "outlineJumpPreview": {
+        "title": "Salto de esquema en modo vista previa",
+        "description": "Al hacer clic en un encabezado del esquema, la vista previa ahora se desplaza hasta ese encabezado, incluso en el modo de solo vista previa."
       },
-      "verticalTabHover": {
-        "title": "Pestañas verticales que se ocultan y modo de enfoque",
-        "description": "Cuando las pestañas se muestran en vertical, la barra de pestañas puede permanecer oculta y aparecer al pasar el ratón por encima. Un nuevo modo de enfoque (Rin) maximiza el área de edición ocultando la interfaz que la rodea."
+      "rinEscapePriority": {
+        "title": "Tecla Escape en el modo de enfoque",
+        "description": "En el modo de enfoque Rin, al pulsar Escape ahora se cierra primero un diálogo abierto o el panel de búsqueda, en lugar de salir inmediatamente del modo de enfoque."
       },
-      "marpExternalCss": {
-        "title": "Temas de Marp personalizados y CSS externo",
-        "description": "Indica a Bokuchi una carpeta con tus propios archivos de tema de Marp y carga CSS externo, para que tus diapositivas puedan usar estilos más allá de los temas integrados."
+      "htmlExportCodeBlock": {
+        "title": "Corrección de bloques de código en la exportación HTML",
+        "description": "Se corrigió que los bloques de código aparecieran con un fondo incorrecto o duplicado en el HTML exportado."
       },
-      "newTabButtonPosition": {
-        "title": "Elige la posición del botón de pestaña nueva",
-        "description": "Una nueva opción te permite colocar el botón Añadir pestaña (Nueva) donde prefieras, incluso justo debajo de la pestaña abierta actualmente."
+      "rinButtonPlacement": {
+        "title": "Ubicación de los botones del modo de enfoque",
+        "description": "Se movieron los botones de control del modo de enfoque y sus descripciones emergentes a la izquierda para que ya no se salgan del borde de la ventana."
       },
-      "formattingBarToggle": {
-        "title": "Muestra u oculta la barra de formato",
-        "description": "La barra de herramientas de formato de Markdown ahora se puede activar o desactivar desde los ajustes, para que mantengas el editor tan minimalista como quieras."
-      },
-      "statusBarSettings": {
-        "title": "Ajustes rápidos en la barra de estado",
-        "description": "Los ajustes de uso frecuente ahora están disponibles directamente en la barra de estado para un acceso más rápido."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Sincronización de desplazamiento bidireccional por defecto",
-        "description": "La sincronización del desplazamiento ahora es bidireccional de forma predeterminada, así que desplazar el editor o la vista previa mantiene la otra al mismo ritmo."
-      },
-      "tabDragFix": {
-        "title": "Arrastre de pestañas corregido",
-        "description": "Se corrigió un error que podía hacer que las pestañas se comportaran mal al arrastrarlas para reordenarlas."
+      "dependencyUpdates": {
+        "title": "Actualizaciones de dependencias y seguridad",
+        "description": "Se actualizaron las bibliotecas incluidas y se resolvieron varias alertas de seguridad de dependencias."
       }
     }
   },

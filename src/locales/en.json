@@ -595,41 +595,29 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "newThemes": {
-        "title": "Four New Themes",
-        "description": "Added four new color themes — Dawn, Twilight, Silk, and Ink — giving you more looks to choose from for the editor and preview."
+      "marpImageMemory": {
+        "title": "Lower Memory for Image-Heavy Slides",
+        "description": "Marp slide images now load directly from disk instead of being embedded in the preview, greatly reducing memory use for decks with many or large images. Everything still works fully offline."
       },
-      "tableEditing": {
-        "title": "Edit Tables Visually",
-        "description": "Edit Markdown tables directly in the editor and in the preview. A dedicated table editor lets you add or remove rows and columns and edit cells inline, then writes clean Markdown back for you."
+      "outlineJumpPreview": {
+        "title": "Outline Jump in Preview Mode",
+        "description": "Clicking a heading in the outline now scrolls the preview to that heading, even in preview-only mode."
       },
-      "verticalTabHover": {
-        "title": "Auto-Hiding Vertical Tabs & Focus Mode",
-        "description": "When tabs are shown vertically, the tab bar can stay tucked away and slide out on hover. A new focus mode (Rin) maximizes the editing area by hiding the surrounding UI."
+      "rinEscapePriority": {
+        "title": "Escape Key in Focus Mode",
+        "description": "In Rin focus mode, pressing Escape now closes an open dialog or the search panel first, instead of immediately exiting focus mode."
       },
-      "marpExternalCss": {
-        "title": "Custom Marp Themes & External CSS",
-        "description": "Point Bokuchi at a folder of your own Marp theme files and load external CSS, so your slides can use custom styles beyond the built-in themes."
+      "htmlExportCodeBlock": {
+        "title": "HTML Export Code Block Fix",
+        "description": "Fixed code block backgrounds appearing with an incorrect or doubled shade in exported HTML."
       },
-      "newTabButtonPosition": {
-        "title": "Choose the New Tab Button Position",
-        "description": "A new option lets you place the Add Tab (New) button where you prefer — including just below the currently open tab."
+      "rinButtonPlacement": {
+        "title": "Focus Mode Button Placement",
+        "description": "Moved the focus-mode control buttons and their tooltips to the left so they no longer run off the edge of the window."
       },
-      "formattingBarToggle": {
-        "title": "Show or Hide the Formatting Bar",
-        "description": "The Markdown formatting toolbar can now be turned on or off from settings, so you can keep the editor as minimal as you like."
-      },
-      "statusBarSettings": {
-        "title": "Quick Settings in the Status Bar",
-        "description": "Frequently used settings are now available right from the status bar for faster access."
-      },
-      "scrollSyncTwoWay": {
-        "title": "Two-Way Scroll Sync by Default",
-        "description": "Scroll synchronization now defaults to two-way, so scrolling either the editor or the preview keeps the other in step."
-      },
-      "tabDragFix": {
-        "title": "Fixed Tab Dragging",
-        "description": "Fixed a bug that could cause tabs to misbehave while being dragged to reorder them."
+      "dependencyUpdates": {
+        "title": "Dependency & Security Updates",
+        "description": "Updated bundled libraries and resolved several dependency security advisories."
       }
     }
   },

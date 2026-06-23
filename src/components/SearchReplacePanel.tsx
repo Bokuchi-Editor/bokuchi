@@ -523,6 +523,9 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   return (
     <Box
       ref={panelRef}
+      // Marks this as a foreground overlay so Rin mode's Esc handler defers to
+      // the panel's own close-on-Escape instead of exiting Rin first (#375).
+      data-bokuchi-overlay="search"
       sx={{
         position: 'absolute',
         top: 8,

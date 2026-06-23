@@ -5,6 +5,16 @@ import type { Token, Tokens } from 'marked';
 const POST_PROCESSED_LANGS = new Set(['mermaid']);
 
 /**
+ * Escape HTML-significant characters in untrusted text. Used for content that is
+ * spliced into the preview HTML *after* DOMPurify has run (code blocks, and the
+ * KaTeX/Mermaid error branches that echo raw user input), so it can never inject
+ * live markup that bypasses sanitization.
+ */
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
  * Build a custom `marked` table renderer that tags every cell with its source
  * coordinates (`data-bk-table` = Nth table in the document, `data-bk-row` =
  * -1 for the header / 0-based for body rows, `data-bk-col`). These let the
@@ -57,7 +67,7 @@ export function createTableRenderer() {
 export function renderCode({ text, lang }: { text: string; lang?: string; escaped?: boolean }): string {
   // Post-processed languages: output raw text with language class preserved
   if (lang && POST_PROCESSED_LANGS.has(lang)) {
-    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escaped = escapeHtml(text);
     return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
   }
   if (lang && hljs.getLanguage(lang)) {
@@ -71,7 +81,7 @@ export function renderCode({ text, lang }: { text: string; lang?: string; escape
   // No language (or unknown language): do not auto-detect. Emit plain,
   // HTML-escaped code so the user's intent (unspecified = no highlighting)
   // is respected.
-  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escaped = escapeHtml(text);
   const langClass = lang ? ` language-${lang}` : '';
   return `<pre><code class="hljs${langClass}">${escaped}</code></pre>`;
 }
@@ -189,7 +199,9 @@ export async function processKatex(markdown: string): Promise<ProcessedKatex> {
     try {
       html = katex.renderToString(tex.trim(), { displayMode, throwOnError: false }).replace(/\n/g, '');
     } catch {
-      html = `<span class="katex-error" style="color:red;">${tex}</span>`;
+      // tex is raw user input and this HTML is restored AFTER DOMPurify, so it
+      // must be escaped to avoid an XSS that bypasses sanitization.
+      html = `<span class="katex-error" style="color:red;">${escapeHtml(tex)}</span>`;
     }
     const placeholder = makeKatexPlaceholder(renderedMath.length);
     renderedMath.push(html);
@@ -295,7 +307,11 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
       const { svg } = await mermaid.render(id, decoded);
       result = result.replace(m.full, `<div class="mermaid-diagram">${svg}</div>`);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
+      // Mermaid's parse-error message echoes the offending source line verbatim,
+      // so it can carry attacker-controlled markup (e.g. `<img onerror>`). This
+      // HTML is spliced in AFTER DOMPurify has run, so escape it to prevent an
+      // XSS that bypasses sanitization.
+      const errorMsg = escapeHtml(err instanceof Error ? err.message : String(err));
       result = result.replace(
         m.full,
         `<div class="mermaid-error" style="color:red;border:1px solid red;padding:8px;border-radius:4px;"><strong>Mermaid Error:</strong> ${errorMsg}</div>`

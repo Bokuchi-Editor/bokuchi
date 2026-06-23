@@ -5,7 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.3...HEAD)
+
+## [0.9.3](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.2...v0.9.3) - 2026-06-21
+
+### Changed
+
+- Marp slide images now load directly from disk via the Tauri asset protocol (`asset://`) instead of being inlined as base64 data URLs. This greatly reduces memory use for decks with many or large images (a base64-inlined deck could previously bloat the preview iframe to tens of MB) while staying fully offline. HTML/PDF export keeps its own self-contained base64 path.
+- Repositioned the Rin (focus) mode control buttons and their tooltips to the left so they no longer overflow the window edge.
+
+### Fixed
+
+- Clicking a heading in the outline did not scroll the preview in preview-only mode; it now jumps to the corresponding heading.
+- In Rin (focus) mode, Escape exited focus mode even when a dialog or the search panel was open. Escape now closes the topmost overlay first and only exits Rin when nothing is layered on top.
+- Code blocks could render with an incorrect or doubled background in exported HTML. The inner `.hljs` background is now transparent so the single translucent layer lives on `<pre>` alone (and no longer overrides highlight.js's own theme background).
+
+### Security
+
+- Resolved npm dependency security advisories by updating `dompurify` (3.4.0 → 3.4.11), `js-yaml` (4.1.1 → 4.2.0), `markdown-it` (→ 14.2.0) and `undici` (7.24.1 → 7.28.0). `npm audit` now reports no known vulnerabilities.
+- Dependabot now waits 3 days after a release before opening update PRs (cooldown), reducing exposure to a malicious package version that is published and then yanked shortly after.
+
+## [0.9.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.1...v0.9.2) - 2026-06-10
+
+### Fixed
+
+- Marp slides could render at their native size and overflow the preview — oversized headings and content clipped on the right — in packaged (production) builds instead of scaling to fit the pane. Slides now display correctly across split, slide, fullscreen, and thumbnail modes.
+
+## [0.9.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.0...v0.9.1) - 2026-06-09
+
+### Security
+
+- Markdown preview now sanitizes embedded HTML before rendering. `<script>`, event-handler attributes (`onerror`, `onload`, …) and `javascript:` URLs are stripped via DOMPurify on both the live preview and the HTML export path, where previously raw HTML present in a Markdown file was injected as-is.
+- Hardened the preview against CSS-injection UI redressing ([GHSA-5qr5-6vh4-6g2j](https://github.com/Bokuchi-Editor/bokuchi/security/advisories/GHSA-5qr5-6vh4-6g2j)). Overlay positioning (`position: fixed/absolute/sticky`, including `var()`-indirected and `!important` variants) is stripped from inline `style`, `<style>` blocks are forbidden, and the preview pane establishes a CSS containing block / stacking context as defense-in-depth. A crafted file can no longer cover the application with a full-screen overlay or fake dialog, run scripts, or lock the user out of the UI. The same sanitization protects exported HTML.
 
 ## [0.9.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.8.5...v0.9.0) - 2026-06-07
 

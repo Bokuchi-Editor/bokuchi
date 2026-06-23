@@ -237,6 +237,17 @@ describe('processMermaidBlocks', () => {
     expect(result).toContain('Parse error');
   });
 
+  it('escapes HTML in the mermaid error message (XSS bypasses DOMPurify otherwise)', async () => {
+    // Mermaid parse errors echo the offending source line verbatim, so a crafted
+    // block can smuggle markup into the message. This HTML is injected AFTER the
+    // DOMPurify pass, so it must be escaped here.
+    mockRender.mockRejectedValue(new Error('Parse error: <img src=x onerror=alert(1)>'));
+    const html = '<pre><code class="language-mermaid">graph TD<img src=x onerror=alert(1)></code></pre>';
+    const result = await processMermaidBlocks(html);
+    expect(result).not.toContain('<img src=x onerror');
+    expect(result).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
   it('returns html unchanged when no mermaid blocks', async () => {
     const html = '<pre><code class="language-javascript">const a = 1;</code></pre>';
     const result = await processMermaidBlocks(html);

@@ -250,10 +250,13 @@ ${tableCSS}
             height: auto;
         }
 
-        /* The enclosing <pre> already paints the code background. Keep the
-           highlighted <code class="hljs"> itself transparent — codeBackground is
-           semi-transparent, so painting it on both <pre> and <code> stacked the
-           alpha and produced a darker inner box (visible in PDF export). */
+        /* The code element only ever appears as <pre><code class="hljs">, and the
+           enclosing <pre> already paints the code background. Keep <code> itself
+           transparent so the single translucent background lives on <pre> alone:
+           codeBackground is semi-transparent, so painting it here too would stack
+           a second translucent layer and make the inner box render differently
+           from its frame (visible in PDF export). It also overrides highlight.js's
+           own opaque .hljs background, e.g. github-dark #0d1117. */
         .hljs {
             background: transparent !important;
         }`;

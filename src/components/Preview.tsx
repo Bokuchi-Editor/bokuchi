@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Tooltip, Snackbar, Alert, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,11 @@ interface PreviewProps {
   onContentChange?: (newContent: string) => void;
   scrollFraction?: number;
   onScrollChange?: (fraction: number) => void;
+  /**
+   * Scroll the preview to the Nth heading. Used in preview-only mode where there
+   * is no Monaco editor to drive the jump from an outline click (#376).
+   */
+  revealHeadingRequest?: { index: number; requestId: number };
   filePath?: string;
   renderingSettings?: RenderingSettings;
   previewSettings?: PreviewSettings;
@@ -40,7 +45,7 @@ const BASE_PREVIEW_FONT_SIZE_PX = 16;
 const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 const EXPORT_ERROR_AUTO_HIDE_MS = 6000;
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, revealHeadingRequest, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
   const muiTheme = useTheme();
   const { palette } = muiTheme;
   const { t } = useTranslation();
@@ -101,6 +106,21 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const [exportMenuAnchor, setExportMenuAnchor] = useState<HTMLElement | null>(null);
   const closeExportMenu = () => setExportMenuAnchor(null);
 
+  // Outline jump in preview-only mode: scroll to the clicked heading. The
+  // outline's Nth item maps to the Nth rendered heading element (#376). Deps are
+  // intentionally limited to requestId so editing content does not re-trigger a
+  // jump; by the time the user clicks the outline the headings are rendered.
+  useEffect(() => {
+    if (!revealHeadingRequest || revealHeadingRequest.requestId === 0) return;
+    const root = previewRef.current;
+    if (!root) return;
+    const headingEls = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    const target = headingEls[revealHeadingRequest.index];
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [revealHeadingRequest?.requestId]);
+
   // Delegate to MarpPreview for Marp presentations
   if (isMarp) {
     return <MarpPreview content={content} darkMode={darkMode} theme={theme} globalVariables={globalVariables} zoomLevel={zoomLevel} scrollFraction={scrollFraction} onScrollChange={onScrollChange} filePath={filePath} viewMode={viewMode} marpThemeFolder={renderingSettings.marpThemeFolder} />;
@@ -145,6 +165,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           p: 2,
           overflow: 'auto',
           position: 'relative',
+          // New stacking context so no preview-internal z-index can paint over
+          // the app chrome (defense-in-depth backing up sanitizeUserHtml, which
+          // already strips overlay positioning from user style attributes).
+          isolation: 'isolate',
           backgroundColor: palette.background.default,
           color: palette.text.primary,
           ...(theme === 'as400' ? {
@@ -157,6 +181,12 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
+            // `transform` makes this div the containing block for any
+            // `position: fixed` descendant, so an injected overlay is confined to
+            // the preview pane instead of covering the whole window. `scale(1)` is
+            // a visual no-op. Defense-in-depth: sanitizeUserHtml already removes
+            // overlay positioning, this is the second wall if anything slips past.
+            transform: 'scale(1)',
             fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
             lineHeight: `${Math.round(BASE_PREVIEW_LINE_HEIGHT * zoomLevel)}`,
             fontFamily: theme === 'as400'
