@@ -5,6 +5,7 @@ import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
+import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
 
 interface UseHtmlExportParams {
   /** Processed markdown (with KaTeX placeholders) — same input the preview rendered. */
@@ -39,8 +40,10 @@ export function useHtmlExport({
       const renderer = new marked.Renderer();
       renderer.code = renderCode;
 
+      // fixCjkEmphasis matches the preview path so emphasis renders for CJK
+      // prose (#400); the invisible markers are stripped right after marked.
       let exportHtml: string;
-      const markedExportResult = marked(processedContent, {
+      const markedExportResult = marked(fixCjkEmphasis(processedContent), {
         breaks: true,
         gfm: true,
         renderer: renderer,
@@ -50,6 +53,7 @@ export function useHtmlExport({
       } else {
         exportHtml = await markedExportResult;
       }
+      exportHtml = stripCjkEmphasisMarker(exportHtml);
 
       // Sanitize the user HTML before splicing in trusted KaTeX/Mermaid output
       // (see sanitizeUserHtml / the preview path for why ordering matters).
