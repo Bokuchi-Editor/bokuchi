@@ -17,7 +17,7 @@ interface UseKeyboardShortcutsParams {
   activeTabId: string | null;
   setActiveTab: (tabId: string) => void;
   appSettings: AppSettings;
-  setOutlinePanelOpen: Dispatch<SetStateAction<boolean>>;
+  onToggleOutline: () => void;
   setFolderTreePanelOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -35,7 +35,7 @@ export const useKeyboardShortcuts = ({
   activeTabId,
   setActiveTab,
   appSettings,
-  setOutlinePanelOpen,
+  onToggleOutline,
   setFolderTreePanelOpen,
 }: UseKeyboardShortcutsParams) => {
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
@@ -101,10 +101,10 @@ export const useKeyboardShortcuts = ({
         setFolderTreePanelOpen(prev => !prev);
       }
     }
-    // Ctrl + Shift + O: Toggle Outline Panel
+    // Ctrl + Shift + O: Toggle Outline Panel (off ⇆ remembered style; same as the header button)
     else if (event.ctrlKey && event.shiftKey && (event.key === 'O' || event.key === 'o') && !event.metaKey) {
       event.preventDefault();
-      setOutlinePanelOpen(prev => !prev);
+      onToggleOutline();
     }
     // Ctrl + Tab: Switch Tabs (Next)
     else if (event.ctrlKey && event.key === 'Tab' && !event.shiftKey) {
@@ -138,7 +138,7 @@ export const useKeyboardShortcuts = ({
     activeTabId,
     setActiveTab,
     appSettings.interface.folderTreeDisplayMode,
-    setOutlinePanelOpen,
+    onToggleOutline,
     setFolderTreePanelOpen,
   ]);
 

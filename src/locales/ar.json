@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "يتم عرض لوحة المخطط دائمًا كجزء من التخطيط.",
       "outlineDisplayModeOverlay": "تراكب",
       "outlineDisplayModeOverlayDescription": "تنزلق لوحة المخطط من اليمين كتراكب.",
+      "outlineDisplayModeOff": "إيقاف",
+      "outlineDisplayModeOffDescription": "تظل لوحة المخطط مخفية حتى تقوم بتشغيلها مرة أخرى.",
       "folderTreeDisplayMode": "لوحة المستكشف",
       "folderTreeDisplayModeDescription": "اختر كيفية عرض لوحة المستكشف (شجرة المجلدات).",
       "folderTreeDisplayModePersistent": "مرئي دائمًا",

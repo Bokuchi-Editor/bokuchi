@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Das Gliederungspanel wird immer als Teil des Layouts angezeigt.",
       "outlineDisplayModeOverlay": "Überlagerung",
       "outlineDisplayModeOverlayDescription": "Das Gliederungspanel gleitet von rechts als Überlagerung ein.",
+      "outlineDisplayModeOff": "Aus",
+      "outlineDisplayModeOffDescription": "Das Gliederungspanel bleibt ausgeblendet, bis Sie es wieder einschalten.",
       "folderTreeDisplayMode": "Explorer-Panel",
       "folderTreeDisplayModeDescription": "Wählen Sie, wie das Explorer-Panel (Ordnerbaum) angezeigt wird.",
       "folderTreeDisplayModePersistent": "Immer sichtbar",

@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "El panel de esquema siempre se muestra como parte del diseño.",
       "outlineDisplayModeOverlay": "Superposición",
       "outlineDisplayModeOverlayDescription": "El panel de esquema se desliza desde la derecha como una superposición.",
+      "outlineDisplayModeOff": "Desactivado",
+      "outlineDisplayModeOffDescription": "El panel de esquema permanece oculto hasta que vuelvas a activarlo.",
       "folderTreeDisplayMode": "Panel del explorador",
       "folderTreeDisplayModeDescription": "Elija cómo se muestra el panel del explorador (árbol de carpetas).",
       "folderTreeDisplayModePersistent": "Siempre visible",

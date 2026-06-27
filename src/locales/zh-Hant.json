@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
       "outlineDisplayModeOverlay": "覆蓋層",
       "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。",
+      "outlineDisplayModeOff": "關閉",
+      "outlineDisplayModeOffDescription": "大綱面板將保持隱藏，直到您重新開啟。",
       "folderTreeDisplayMode": "檔案總管面板",
       "folderTreeDisplayModeDescription": "選擇檔案總管（資料夾樹）面板的顯示方式。",
       "folderTreeDisplayModePersistent": "始終顯示",

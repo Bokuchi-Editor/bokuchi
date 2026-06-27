@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
       "outlineDisplayModeOverlay": "覆盖层",
       "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。",
+      "outlineDisplayModeOff": "关闭",
+      "outlineDisplayModeOffDescription": "大纲面板将保持隐藏，直到您重新开启。",
       "folderTreeDisplayMode": "资源管理器面板",
       "folderTreeDisplayModeDescription": "选择资源管理器（文件夹树）面板的显示方式。",
       "folderTreeDisplayModePersistent": "始终显示",

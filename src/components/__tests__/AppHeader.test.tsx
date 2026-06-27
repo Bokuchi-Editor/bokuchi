@@ -20,7 +20,7 @@ describe('AppHeader', () => {
     viewMode: 'split' as const,
     fileMenuAnchor: null as HTMLElement | null,
     activeTab: { id: '1', title: 'test.md', content: '', isModified: false, isNew: false },
-    outlinePanelOpen: false,
+    outlineActive: false,
     folderTreePanelOpen: false,
     folderTreeDisplayMode: 'persistent' as const,
     rinActive: false,

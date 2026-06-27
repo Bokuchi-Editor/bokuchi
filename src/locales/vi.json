@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
       "outlineDisplayModeOverlay": "Lớp phủ",
       "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ.",
+      "outlineDisplayModeOff": "Tắt",
+      "outlineDisplayModeOffDescription": "Bảng dàn ý vẫn bị ẩn cho đến khi bạn bật lại.",
       "folderTreeDisplayMode": "Bảng điều khiển Explorer",
       "folderTreeDisplayModeDescription": "Chọn cách hiển thị bảng điều khiển explorer (cây thư mục).",
       "folderTreeDisplayModePersistent": "Luôn hiển thị",

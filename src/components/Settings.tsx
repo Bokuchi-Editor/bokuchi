@@ -181,7 +181,7 @@ const Settings: React.FC<SettingsProps> = ({
               <EditorTab settings={settings} onSettingChange={handleSettingChange} />
             )}
             {activeTab === 2 && (
-              <InterfaceTab settings={settings} onSettingChange={handleSettingChange} />
+              <InterfaceTab settings={settings} onSettingChange={handleSettingChange} onSettingsChange={onSettingsChange} />
             )}
             {activeTab === 3 && (
               <VariablesTab
