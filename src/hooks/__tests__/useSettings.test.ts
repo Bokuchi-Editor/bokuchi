@@ -30,6 +30,7 @@ vi.mock('../../api/storeApi', () => ({
     saveTabLayout: vi.fn().mockResolvedValue(undefined),
     saveTabSidebarPinned: vi.fn().mockResolvedValue(undefined),
     saveViewMode: vi.fn().mockResolvedValue(undefined),
+    loadViewMode: vi.fn().mockResolvedValue('split'),
     saveAppSettings: vi.fn().mockResolvedValue(undefined),
   },
 }));
@@ -50,6 +51,7 @@ describe('useSettings', () => {
     zoomIn: asMock<() => void>(vi.fn()),
     zoomOut: asMock<() => void>(vi.fn()),
     viewMode: 'split' as const,
+    setViewMode: asMock<(mode: 'split' | 'editor' | 'preview') => void>(vi.fn()),
   });
 
   // T-SETT-01: initial default state
@@ -161,5 +163,21 @@ describe('useSettings', () => {
     expect(storeApi.saveAppSettings).toHaveBeenCalledWith(newSettings);
     expect(result.current.appSettings.interface.outlineDisplayMode).toBe('persistent');
     expect(result.current.appSettings.interface.folderTreeDisplayMode).toBe('persistent');
+  });
+
+  // T-SETT-08: restores the persisted view mode on initialization so the app
+  // reopens in whatever mode it was closed in (not always 'split').
+  it('T-SETT-08: restores persisted view mode on initialization', async () => {
+    vi.mocked(storeApi.loadViewMode).mockResolvedValueOnce('preview');
+    const setViewMode = asMock<(mode: 'split' | 'editor' | 'preview') => void>(vi.fn());
+
+    const { result } = renderHook(() => useSettings({ ...defaultParams(), setViewMode }));
+
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+
+    expect(storeApi.loadViewMode).toHaveBeenCalled();
+    expect(setViewMode).toHaveBeenCalledWith('preview');
   });
 });

@@ -130,6 +130,7 @@ export const useAppState = () => {
     zoomIn,
     zoomOut,
     viewMode,
+    setViewMode,
   });
 
   // Easter eggs
