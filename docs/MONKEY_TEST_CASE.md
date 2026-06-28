@@ -78,6 +78,7 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | ---- | --------------------- | ------------------------------------------- | -------------------------------------------------------- |
 | M-45 | Toggle view mode      | Press `Ctrl+Shift+D` repeatedly             | Rotates through split, preview, editor, split            |
 | M-46 | Synchronized scrolling | Scroll the editor in split mode             | The preview scrolls in sync                              |
+| M-171 | View mode persists across restart | Switch to Editor (or Preview) view, fully quit and relaunch the app | The app reopens in the same view mode it was closed in, not always Split. First-ever launch (no saved value) still defaults to Split |
 
 ## 7. Keyboard Shortcuts
 
