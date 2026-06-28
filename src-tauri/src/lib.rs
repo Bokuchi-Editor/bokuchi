@@ -46,8 +46,44 @@ pub use file_association::*;
 // Re-export commands
 pub use commands::*;
 
+/// Work around corrupted rendering on Raspberry Pi.
+///
+/// WebKitGTK >= 2.42 enables a DMABUF-based GPU renderer by default. On the
+/// Raspberry Pi (VideoCore / V3D driver) this produces garbled, scanline-like
+/// noise instead of the UI. The failure is silent — rendering "succeeds" and
+/// only the result is broken — so it cannot be detected after the fact. We
+/// instead detect the known-bad environment (a Pi) up front and disable the
+/// DMABUF renderer before WebKitGTK is initialized.
+///
+/// Must run before any webview is created (i.e. before `tauri::Builder`).
+#[cfg(target_os = "linux")]
+fn workaround_webkit_dmabuf() {
+    // Respect an explicit user setting (escape hatch to force-enable on a
+    // normal desktop, or force-disable elsewhere).
+    if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_some() {
+        return;
+    }
+
+    // The Raspberry Pi exposes its model name via the device tree.
+    let is_raspberry_pi = std::fs::read_to_string("/proc/device-tree/model")
+        .map(|model| model.contains("Raspberry Pi"))
+        .unwrap_or(false);
+
+    if is_raspberry_pi {
+        // SAFETY: called at the very start of `run()`, before Tauri spawns any
+        // threads, so there is no concurrent access to the environment.
+        unsafe {
+            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        }
+        println!("Detected Raspberry Pi: disabled WebKitGTK DMABUF renderer");
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(target_os = "linux")]
+    workaround_webkit_dmabuf();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
