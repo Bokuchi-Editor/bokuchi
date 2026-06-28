@@ -11,6 +11,7 @@ interface UseSettingsParams {
   zoomIn: () => void;
   zoomOut: () => void;
   viewMode: 'split' | 'editor' | 'preview';
+  setViewMode: (mode: 'split' | 'editor' | 'preview') => void;
 }
 
 export const useSettings = ({
@@ -19,6 +20,7 @@ export const useSettings = ({
   zoomIn,
   zoomOut,
   viewMode,
+  setViewMode,
 }: UseSettingsParams) => {
   const { i18n } = useTranslation();
 
@@ -62,6 +64,12 @@ export const useSettings = ({
         setGlobalVariables(settings.globalVariables);
         setTabLayout(settings.interface.tabLayout);
         setTabSidebarPinned(settings.interface.tabSidebarPinned);
+
+        // Restore the view mode used at the previous session's exit. Defaults to
+        // 'split' on first launch (see storeApi.loadViewMode). Must run before
+        // setIsSettingsLoaded so the save effect doesn't fire on the stale 'split'.
+        const savedViewMode = await storeApi.loadViewMode();
+        setViewMode(savedViewMode);
 
         setIsSettingsLoaded(true);
       } catch (error) {
