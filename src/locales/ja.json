@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "アウトラインパネルをレイアウトの一部として常に表示します。",
       "outlineDisplayModeOverlay": "オーバーレイ",
       "outlineDisplayModeOverlayDescription": "アウトラインパネルを右側からスライドインするオーバーレイとして表示します。",
+      "outlineDisplayModeOff": "オフ",
+      "outlineDisplayModeOffDescription": "再びオンにするまでアウトラインパネルを非表示にします。",
       "folderTreeDisplayMode": "エクスプローラーパネル",
       "folderTreeDisplayModeDescription": "エクスプローラー（フォルダツリー）パネルの表示方法を選択してください。",
       "folderTreeDisplayModePersistent": "常時表示",

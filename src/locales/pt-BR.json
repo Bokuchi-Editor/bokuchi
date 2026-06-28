@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
       "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
+      "outlineDisplayModeOff": "Desativado",
+      "outlineDisplayModeOffDescription": "O painel de esboço permanece oculto até você ativá-lo novamente.",
       "folderTreeDisplayMode": "Painel do explorador",
       "folderTreeDisplayModeDescription": "Escolha como o painel do explorador (árvore de pastas) é exibido.",
       "folderTreeDisplayModePersistent": "Sempre visível",

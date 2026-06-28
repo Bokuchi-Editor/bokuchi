@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "रूपरेखा पैनल लेआउट के हिस्से के रूप में हमेशा दिखाई जाती है।",
       "outlineDisplayModeOverlay": "ओवरले",
       "outlineDisplayModeOverlayDescription": "रूपरेखा पैनल दाईं ओर से ओवरले के रूप में स्लाइड करती है।",
+      "outlineDisplayModeOff": "बंद",
+      "outlineDisplayModeOffDescription": "जब तक आप इसे फिर से चालू नहीं करते, रूपरेखा पैनल छिपी रहती है।",
       "folderTreeDisplayMode": "एक्सप्लोरर पैनल",
       "folderTreeDisplayModeDescription": "एक्सप्लोरर (फ़ोल्डर ट्री) पैनल कैसे प्रदर्शित हो, चुनें।",
       "folderTreeDisplayModePersistent": "हमेशा दिखाएं",

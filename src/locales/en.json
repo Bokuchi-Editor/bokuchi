@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "The outline panel is always shown as part of the layout.",
       "outlineDisplayModeOverlay": "Overlay",
       "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay.",
+      "outlineDisplayModeOff": "Off",
+      "outlineDisplayModeOffDescription": "The outline panel stays hidden until you turn it on again.",
       "folderTreeDisplayMode": "Explorer Panel",
       "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
       "folderTreeDisplayModePersistent": "Always visible",

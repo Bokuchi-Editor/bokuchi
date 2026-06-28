@@ -5,6 +5,7 @@ import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
+import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
 
 // A4 page geometry in inches (210×297mm). Margins are applied via the CSS
 // @page box (WebKit honours those for the page margin), so the native margin
@@ -49,12 +50,15 @@ export function useHtmlExport({
     const renderer = new marked.Renderer();
     renderer.code = renderCode;
 
-    const markedResult = marked(processedContent, {
+    // fixCjkEmphasis matches the preview path so emphasis renders for CJK
+    // prose (#400); the invisible markers are stripped right after marked.
+    const markedResult = marked(fixCjkEmphasis(processedContent), {
       breaks: true,
       gfm: true,
       renderer: renderer,
     });
     let html = typeof markedResult === 'string' ? markedResult : await markedResult;
+    html = stripCjkEmphasisMarker(html);
 
     // Sanitize the user HTML before splicing in trusted KaTeX/Mermaid output
     // (see sanitizeUserHtml / the preview path for why ordering matters).

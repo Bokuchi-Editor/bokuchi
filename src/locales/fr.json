@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Le panneau du plan est toujours affiché comme partie de la mise en page.",
       "outlineDisplayModeOverlay": "Superposition",
       "outlineDisplayModeOverlayDescription": "Le panneau du plan glisse depuis la droite en superposition.",
+      "outlineDisplayModeOff": "Désactivé",
+      "outlineDisplayModeOffDescription": "Le panneau du plan reste masqué jusqu'à ce que vous le réactiviez.",
       "folderTreeDisplayMode": "Panneau de l'explorateur",
       "folderTreeDisplayModeDescription": "Choisissez comment le panneau de l'explorateur (arborescence) est affiché.",
       "folderTreeDisplayModePersistent": "Toujours visible",
