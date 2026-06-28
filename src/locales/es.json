@@ -574,29 +574,29 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Menor uso de memoria en diapositivas con muchas imágenes",
-        "description": "Las imágenes de las diapositivas Marp ahora se cargan directamente desde el disco en lugar de incrustarse en la vista previa, lo que reduce notablemente el uso de memoria en presentaciones con muchas imágenes o imágenes grandes. Todo sigue funcionando sin conexión."
+      "outlineOff": {
+        "title": "Ocultar el esquema",
+        "description": "El panel de esquema ahora tiene una opción «Desactivado» en Ajustes, y puede ocultarse con el botón de la barra de herramientas o Ctrl+Mayús+O. Tu elección se recuerda la próxima vez que abras la aplicación."
       },
-      "outlineJumpPreview": {
-        "title": "Salto de esquema en modo vista previa",
-        "description": "Al hacer clic en un encabezado del esquema, la vista previa ahora se desplaza hasta ese encabezado, incluso en el modo de solo vista previa."
+      "raspberryPiBuild": {
+        "title": "Compilación para Raspberry Pi (arm64)",
+        "description": "Se añadió una compilación nativa de Linux para arm64 que funciona en Raspberry Pi, incluida una solución para el renderizado distorsionado en su GPU."
       },
-      "rinEscapePriority": {
-        "title": "Tecla Escape en el modo de enfoque",
-        "description": "En el modo de enfoque Rin, al pulsar Escape ahora se cierra primero un diálogo abierto o el panel de búsqueda, en lugar de salir inmediatamente del modo de enfoque."
+      "viewModePersistence": {
+        "title": "Recuerda tu modo de vista",
+        "description": "La aplicación ahora vuelve a abrirse en la vista que dejaste —edición, vista previa o dividida— en lugar de empezar siempre en vista dividida."
       },
-      "htmlExportCodeBlock": {
-        "title": "Corrección de bloques de código en la exportación HTML",
-        "description": "Se corrigió que los bloques de código aparecieran con un fondo incorrecto o duplicado en el HTML exportado."
+      "cjkEmphasis": {
+        "title": "Negrita y cursiva junto a texto japonés",
+        "description": "Se corrigió que la negrita y la cursiva no se mostraran cuando los marcadores tocan caracteres japoneses u otros CJK, como alrededor de los corchetes 「」. Los asteriscos ya no aparecen como texto literal."
       },
-      "rinButtonPlacement": {
-        "title": "Ubicación de los botones del modo de enfoque",
-        "description": "Se movieron los botones de control del modo de enfoque y sus descripciones emergentes a la izquierda para que ya no se salgan del borde de la ventana."
+      "externalImages": {
+        "title": "Imágenes externas restauradas",
+        "description": "Se corrigieron las imágenes externas (https) que habían dejado de cargarse en la vista previa."
       },
       "dependencyUpdates": {
-        "title": "Actualizaciones de dependencias y seguridad",
-        "description": "Se actualizaron las bibliotecas incluidas y se resolvieron varias alertas de seguridad de dependencias."
+        "title": "Actualizaciones de dependencias",
+        "description": "Se actualizaron las bibliotecas incluidas a sus últimas versiones."
       }
     }
   },

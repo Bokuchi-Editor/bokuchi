@@ -25,32 +25,32 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.9.3',
+  version: '0.9.4',
   changes: [
     {
-      type: 'improvement',
-      titleKey: 'whatsNew.changes.marpImageMemory.title',
-      descriptionKey: 'whatsNew.changes.marpImageMemory.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.outlineOff.title',
+      descriptionKey: 'whatsNew.changes.outlineOff.description',
     },
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.outlineJumpPreview.title',
-      descriptionKey: 'whatsNew.changes.outlineJumpPreview.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.rinEscapePriority.title',
-      descriptionKey: 'whatsNew.changes.rinEscapePriority.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.htmlExportCodeBlock.title',
-      descriptionKey: 'whatsNew.changes.htmlExportCodeBlock.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.raspberryPiBuild.title',
+      descriptionKey: 'whatsNew.changes.raspberryPiBuild.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.rinButtonPlacement.title',
-      descriptionKey: 'whatsNew.changes.rinButtonPlacement.description',
+      titleKey: 'whatsNew.changes.viewModePersistence.title',
+      descriptionKey: 'whatsNew.changes.viewModePersistence.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.cjkEmphasis.title',
+      descriptionKey: 'whatsNew.changes.cjkEmphasis.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.externalImages.title',
+      descriptionKey: 'whatsNew.changes.externalImages.description',
     },
     {
       type: 'improvement',
