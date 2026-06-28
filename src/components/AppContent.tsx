@@ -59,6 +59,8 @@ interface AppContentProps {
 
   // Outline
   outlineDisplayMode: OutlineDisplayMode;
+  // Master on/off (persisted). When false the outline never renders.
+  outlineEnabled: boolean;
   outlinePanelOpen: boolean;
   onOutlinePanelClose: () => void;
 
@@ -123,6 +125,7 @@ const AppContent: React.FC<AppContentProps> = ({
   editorSettings,
   scrollSyncMode,
   outlineDisplayMode,
+  outlineEnabled,
   outlinePanelOpen,
   onOutlinePanelClose,
   folderTreeDisplayMode,
@@ -223,8 +226,12 @@ const AppContent: React.FC<AppContentProps> = ({
   }, []);
 
   // 臨 (Rin) focus mode hides all chrome (tabs, outline, folder tree, etc.).
-  const showPersistentOutline = outlineDisplayMode === 'persistent' && outlinePanelOpen && activeTab && !rinActive;
-  const showOverlayOutline = outlineDisplayMode === 'overlay' && activeTab && !rinActive;
+  // `outlineEnabled` is the persisted master switch; when off the outline never shows.
+  // Persistent visibility is governed by `outlineEnabled` alone (the header button
+  // turns the panel on/off via that flag). Overlay keeps a transient `outlinePanelOpen`
+  // for the drawer's open/close within an enabled session.
+  const showPersistentOutline = outlineEnabled && outlineDisplayMode === 'persistent' && activeTab && !rinActive;
+  const showOverlayOutline = outlineEnabled && outlineDisplayMode === 'overlay' && activeTab && !rinActive;
 
   const showPersistentFolderTree =
     folderTreeDisplayMode === 'persistent' &&
@@ -258,7 +265,7 @@ const AppContent: React.FC<AppContentProps> = ({
       window.dispatchEvent(new Event('resize'));
     }, LAYOUT_SETTLE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
+  }, [outlineEnabled, outlinePanelOpen, outlineDisplayMode, folderTreePanelOpen, folderTreeDisplayMode]);
 
   // Vertical sidebar body, shared by the fixed sidebar and the hover overlay so the
   // pin/hover behavior is identical whether or not the folder tree is merged in.

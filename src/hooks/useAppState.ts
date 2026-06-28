@@ -413,6 +413,32 @@ export const useAppState = () => {
     reorderTabs(reorderedTabs);
   };
 
+  // Outline panel toggle (header button + Ctrl+Shift+O).
+  // The outline setting persists as one of persistent / overlay / off
+  // (off = `outlineEnabled` false). The button is a single entry point:
+  //   - off            → restore to the remembered style and show
+  //   - on, persistent → turn off (persisted; the only way to hide the docked panel)
+  //   - on, overlay    → open/close the transient drawer (off stays in Settings)
+  const handleOutlineToggle = useCallback(() => {
+    const { outlineDisplayMode: mode, outlineEnabled: enabled } = appSettings.interface;
+    if (!enabled) {
+      handleAppSettingsChange({
+        ...appSettings,
+        interface: { ...appSettings.interface, outlineEnabled: true },
+      });
+      setOutlinePanelOpen(true);
+      return;
+    }
+    if (mode === 'overlay') {
+      setOutlinePanelOpen((prev) => !prev);
+    } else {
+      handleAppSettingsChange({
+        ...appSettings,
+        interface: { ...appSettings.interface, outlineEnabled: false },
+      });
+    }
+  }, [appSettings, handleAppSettingsChange]);
+
   // View mode
   const rotateViewMode = useCallback(() => {
     setViewMode(rotateViewModeUtil(viewMode));
@@ -477,7 +503,7 @@ export const useAppState = () => {
     activeTabId,
     setActiveTab,
     appSettings,
-    setOutlinePanelOpen,
+    onToggleOutline: handleOutlineToggle,
     setFolderTreePanelOpen,
   });
 
@@ -520,6 +546,7 @@ export const useAppState = () => {
 
     // Outline panel
     outlinePanelOpen,
+    handleOutlineToggle,
 
     // Folder tree
     folderTreePanelOpen,

@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Панель структуры всегда отображается как часть макета.",
       "outlineDisplayModeOverlay": "Наложение",
       "outlineDisplayModeOverlayDescription": "Панель структуры выдвигается справа как наложение.",
+      "outlineDisplayModeOff": "Выключено",
+      "outlineDisplayModeOffDescription": "Панель структуры остаётся скрытой, пока вы снова её не включите.",
       "folderTreeDisplayMode": "Панель проводника",
       "folderTreeDisplayModeDescription": "Выберите способ отображения панели проводника (дерева папок).",
       "folderTreeDisplayModePersistent": "Всегда видимая",

@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "개요 패널이 레이아웃의 일부로 항상 표시됩니다.",
       "outlineDisplayModeOverlay": "오버레이",
       "outlineDisplayModeOverlayDescription": "개요 패널이 오른쪽에서 오버레이로 슬라이드됩니다.",
+      "outlineDisplayModeOff": "끄기",
+      "outlineDisplayModeOffDescription": "다시 켤 때까지 개요 패널이 숨겨진 상태로 유지됩니다.",
       "folderTreeDisplayMode": "탐색기 패널",
       "folderTreeDisplayModeDescription": "탐색기(폴더 트리) 패널의 표시 방법을 선택합니다.",
       "folderTreeDisplayModePersistent": "항상 표시",

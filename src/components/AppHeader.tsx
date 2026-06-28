@@ -42,7 +42,8 @@ interface AppHeaderProps {
   viewMode: 'split' | 'editor' | 'preview';
   fileMenuAnchor: HTMLElement | null;
   activeTab: Tab | null;
-  outlinePanelOpen: boolean;
+  // Whether the outline is currently showing (drives the button's lit/dimmed state).
+  outlineActive: boolean;
   folderTreePanelOpen: boolean;
   folderTreeDisplayMode: FolderTreeDisplayMode;
   rinActive: boolean;
@@ -72,7 +73,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   viewMode,
   fileMenuAnchor,
   activeTab,
-  outlinePanelOpen,
+  outlineActive,
   folderTreePanelOpen,
   folderTreeDisplayMode,
   onViewModeChange,
@@ -184,7 +185,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             onClick={onOutlineToggle}
             sx={{
               mr: 0.5,
-              opacity: outlinePanelOpen ? 1 : 0.5,
+              opacity: outlineActive ? 1 : 0.5,
             }}
           >
             <FormatListBulleted />

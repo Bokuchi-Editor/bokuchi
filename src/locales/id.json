@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Panel kerangka selalu ditampilkan sebagai bagian dari tata letak.",
       "outlineDisplayModeOverlay": "Overlay",
       "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay.",
+      "outlineDisplayModeOff": "Nonaktif",
+      "outlineDisplayModeOffDescription": "Panel kerangka tetap disembunyikan hingga Anda mengaktifkannya kembali.",
       "folderTreeDisplayMode": "Panel Explorer",
       "folderTreeDisplayModeDescription": "Pilih bagaimana panel explorer (pohon folder) ditampilkan.",
       "folderTreeDisplayModePersistent": "Selalu terlihat",

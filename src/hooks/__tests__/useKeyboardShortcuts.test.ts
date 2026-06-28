@@ -17,7 +17,7 @@ describe('useKeyboardShortcuts', () => {
   let onRotateViewMode: ReturnType<typeof vi.fn>;
   let onChangeViewMode: ReturnType<typeof vi.fn>;
   let setActiveTab: ReturnType<typeof vi.fn>;
-  let setOutlinePanelOpen: ReturnType<typeof vi.fn>;
+  let onToggleOutline: ReturnType<typeof vi.fn>;
   let setFolderTreePanelOpen: ReturnType<typeof vi.fn>;
 
   const tabs: Tab[] = [
@@ -37,7 +37,7 @@ describe('useKeyboardShortcuts', () => {
     onRotateViewMode = vi.fn();
     onChangeViewMode = vi.fn();
     setActiveTab = vi.fn();
-    setOutlinePanelOpen = vi.fn();
+    onToggleOutline = vi.fn();
     setFolderTreePanelOpen = vi.fn();
   });
 
@@ -55,7 +55,7 @@ describe('useKeyboardShortcuts', () => {
     activeTabId: 'tab1',
     setActiveTab: asMock<(tabId: string) => void>(setActiveTab),
     appSettings: DEFAULT_APP_SETTINGS,
-    setOutlinePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setOutlinePanelOpen),
+    onToggleOutline: asMock<() => void>(onToggleOutline),
     setFolderTreePanelOpen: asMock<React.Dispatch<React.SetStateAction<boolean>>>(setFolderTreePanelOpen),
   });
 
@@ -175,7 +175,7 @@ describe('useKeyboardShortcuts', () => {
       fireKeydown('O', { ctrlKey: true, shiftKey: true });
     });
 
-    expect(setOutlinePanelOpen).toHaveBeenCalled();
+    expect(onToggleOutline).toHaveBeenCalled();
   });
 
   // T-KS-11: Cmd+Shift+S triggers save as
