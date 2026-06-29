@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "O painel de esboço é sempre mostrado como parte do layout.",
       "outlineDisplayModeOverlay": "Sobreposição",
       "outlineDisplayModeOverlayDescription": "O painel de esboço desliza da direita como uma sobreposição.",
+      "outlineDisplayModeOff": "Desativado",
+      "outlineDisplayModeOffDescription": "O painel de esboço permanece oculto até você ativá-lo novamente.",
       "folderTreeDisplayMode": "Painel do explorador",
       "folderTreeDisplayModeDescription": "Escolha como o painel do explorador (árvore de pastas) é exibido.",
       "folderTreeDisplayModePersistent": "Sempre visível",
@@ -572,29 +574,29 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Menor uso de memória em slides com muitas imagens",
-        "description": "As imagens dos slides Marp agora são carregadas diretamente do disco, em vez de incorporadas à pré-visualização, reduzindo bastante o uso de memória em apresentações com muitas imagens ou imagens grandes. Tudo continua funcionando totalmente offline."
+      "outlineOff": {
+        "title": "Ocultar o sumário",
+        "description": "O painel de sumário agora tem uma opção «Desativado» nas configurações e pode ser ocultado pelo botão da barra de ferramentas ou Ctrl+Shift+O. Sua escolha é lembrada na próxima vez que você abrir o aplicativo."
       },
-      "outlineJumpPreview": {
-        "title": "Salto pelo sumário no modo de pré-visualização",
-        "description": "Clicar em um título no sumário agora rola a pré-visualização até esse título, mesmo no modo somente pré-visualização."
+      "raspberryPiBuild": {
+        "title": "Build para Raspberry Pi (arm64)",
+        "description": "Adicionado um build nativo de Linux arm64 que roda no Raspberry Pi, incluindo uma solução para a renderização distorcida em sua GPU."
       },
-      "rinEscapePriority": {
-        "title": "Tecla Escape no modo de foco",
-        "description": "No modo de foco Rin, pressionar Escape agora fecha primeiro uma caixa de diálogo aberta ou o painel de busca, em vez de sair imediatamente do modo de foco."
+      "viewModePersistence": {
+        "title": "Lembra o seu modo de exibição",
+        "description": "O aplicativo agora reabre na exibição em que você o deixou — edição, visualização ou dividida — em vez de sempre iniciar na exibição dividida."
       },
-      "htmlExportCodeBlock": {
-        "title": "Correção de blocos de código na exportação HTML",
-        "description": "Corrigido um problema em que os blocos de código apareciam com fundo incorreto ou duplicado no HTML exportado."
+      "cjkEmphasis": {
+        "title": "Negrito e itálico ao lado de texto japonês",
+        "description": "Corrigido o negrito e o itálico que não eram exibidos quando os marcadores tocavam caracteres japoneses ou outros CJK, como ao redor dos colchetes 「」. Os asteriscos não aparecem mais como texto literal."
       },
-      "rinButtonPlacement": {
-        "title": "Posição dos botões do modo de foco",
-        "description": "Os botões de controle do modo de foco e suas dicas foram movidos para a esquerda para não ultrapassarem a borda da janela."
+      "externalImages": {
+        "title": "Imagens externas restauradas",
+        "description": "Corrigidas as imagens externas (https) que haviam parado de carregar na visualização."
       },
       "dependencyUpdates": {
-        "title": "Atualizações de dependências e segurança",
-        "description": "Bibliotecas incluídas foram atualizadas e vários alertas de segurança de dependências foram resolvidos."
+        "title": "Atualizações de dependências",
+        "description": "Bibliotecas incluídas atualizadas para suas versões mais recentes."
       }
     }
   },

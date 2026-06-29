@@ -13,6 +13,7 @@ import {
 } from '../../utils/markdownRenderers';
 import { processEasterEggBlocks, transformCheckboxes, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
+import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
 
 interface UseProcessedMarkdownParams {
   content: string;
@@ -101,8 +102,9 @@ export function useProcessedMarkdown({
         }
         katexRestoreRef.current = restoreKatex;
 
-        // Convert Markdown to HTML
-        const markedResult = marked(processedMarkdown, {
+        // Convert Markdown to HTML. fixCjkEmphasis inserts invisible markers so
+        // CommonMark emphasis renders for CJK prose (#400); stripped right after.
+        const markedResult = marked(fixCjkEmphasis(processedMarkdown), {
           breaks: true,
           gfm: true,
           renderer: renderer,
@@ -115,6 +117,7 @@ export function useProcessedMarkdown({
         } else {
           processedHtml = await markedResult;
         }
+        processedHtml = stripCjkEmphasisMarker(processedHtml);
 
         // Sanitize the user-authored HTML BEFORE splicing in trusted content.
         // KaTeX is still an inert placeholder token, Mermaid is still a code

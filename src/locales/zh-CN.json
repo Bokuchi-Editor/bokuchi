@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "大纲面板作为布局的一部分始终显示。",
       "outlineDisplayModeOverlay": "覆盖层",
       "outlineDisplayModeOverlayDescription": "大纲面板从右侧滑入作为覆盖层显示。",
+      "outlineDisplayModeOff": "关闭",
+      "outlineDisplayModeOffDescription": "大纲面板将保持隐藏，直到您重新开启。",
       "folderTreeDisplayMode": "资源管理器面板",
       "folderTreeDisplayModeDescription": "选择资源管理器（文件夹树）面板的显示方式。",
       "folderTreeDisplayModePersistent": "始终显示",
@@ -572,29 +574,29 @@
       "improvement": "改进"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "降低多图幻灯片的内存占用",
-        "description": "Marp 幻灯片中的图片现在直接从磁盘加载，而不再嵌入预览中，大幅降低了包含大量或大尺寸图片的演示文稿的内存占用。所有功能仍然完全离线运行。"
+      "outlineOff": {
+        "title": "隐藏大纲",
+        "description": "大纲面板现在在设置中提供「关闭」选项，可通过工具栏按钮或 Ctrl+Shift+O 隐藏。下次打开应用时会记住你的选择。"
       },
-      "outlineJumpPreview": {
-        "title": "预览模式下的大纲跳转",
-        "description": "点击大纲中的标题，现在即使在仅预览模式下也会将预览滚动到该标题。"
+      "raspberryPiBuild": {
+        "title": "树莓派（arm64）版本",
+        "description": "新增可在树莓派上运行的原生 arm64 Linux 版本，并修复了其 GPU 上画面错乱的问题。"
       },
-      "rinEscapePriority": {
-        "title": "专注模式下的 Escape 键",
-        "description": "在临（专注）模式下按 Escape 键，现在会先关闭已打开的对话框或搜索面板，而不是立即退出专注模式。"
+      "viewModePersistence": {
+        "title": "记住视图模式",
+        "description": "应用现在会以你上次退出时的视图（编辑、预览或分屏）重新打开，而不再总是以分屏启动。"
       },
-      "htmlExportCodeBlock": {
-        "title": "HTML 导出代码块修复",
-        "description": "修复了导出的 HTML 中代码块背景颜色错误或重叠的问题。"
+      "cjkEmphasis": {
+        "title": "日文旁的粗体与斜体",
+        "description": "修复了当标记紧贴日文或其他 CJK 字符（如 「」 括号周围）时粗体和斜体无法显示的问题。星号不再显示为普通文字。"
       },
-      "rinButtonPlacement": {
-        "title": "专注模式按钮位置",
-        "description": "将专注模式的控制按钮及其提示移到左侧，使其不再超出窗口边缘。"
+      "externalImages": {
+        "title": "恢复外部图片",
+        "description": "修复了预览中外部（https）图片无法加载的问题。"
       },
       "dependencyUpdates": {
-        "title": "依赖项与安全更新",
-        "description": "更新了内置库并解决了多个依赖项安全公告。"
+        "title": "依赖更新",
+        "description": "已将内置库更新至最新版本。"
       }
     }
   },

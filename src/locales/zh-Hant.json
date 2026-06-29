@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "大綱面板作為佈局的一部分始終顯示。",
       "outlineDisplayModeOverlay": "覆蓋層",
       "outlineDisplayModeOverlayDescription": "大綱面板從右側滑入作為覆蓋層顯示。",
+      "outlineDisplayModeOff": "關閉",
+      "outlineDisplayModeOffDescription": "大綱面板將保持隱藏，直到您重新開啟。",
       "folderTreeDisplayMode": "檔案總管面板",
       "folderTreeDisplayModeDescription": "選擇檔案總管（資料夾樹）面板的顯示方式。",
       "folderTreeDisplayModePersistent": "始終顯示",
@@ -572,29 +574,29 @@
       "improvement": "改進"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "降低多圖投影片的記憶體用量",
-        "description": "Marp 投影片中的圖片現在直接從磁碟載入，而不再內嵌至預覽中，大幅降低了包含大量或大尺寸圖片的簡報的記憶體用量。所有功能仍然完全離線運作。"
+      "outlineOff": {
+        "title": "隱藏大綱",
+        "description": "大綱面板現在於設定中提供「關閉」選項，可透過工具列按鈕或 Ctrl+Shift+O 隱藏。下次開啟應用程式時會記住你的選擇。"
       },
-      "outlineJumpPreview": {
-        "title": "預覽模式下的大綱跳轉",
-        "description": "點按大綱中的標題，現在即使在僅預覽模式下也會將預覽捲動至該標題。"
+      "raspberryPiBuild": {
+        "title": "樹莓派（arm64）版本",
+        "description": "新增可在樹莓派上執行的原生 arm64 Linux 版本，並修正其 GPU 上畫面錯亂的問題。"
       },
-      "rinEscapePriority": {
-        "title": "專注模式下的 Escape 鍵",
-        "description": "在臨（專注）模式下按 Escape 鍵，現在會先關閉已開啟的對話框或搜尋面板，而不是立即退出專注模式。"
+      "viewModePersistence": {
+        "title": "記住檢視模式",
+        "description": "應用程式現在會以你上次結束時的檢視（編輯、預覽或分割）重新開啟，而不再總是以分割模式啟動。"
       },
-      "htmlExportCodeBlock": {
-        "title": "HTML 匯出程式碼區塊修正",
-        "description": "修正了匯出的 HTML 中程式碼區塊背景顏色錯誤或重疊的問題。"
+      "cjkEmphasis": {
+        "title": "日文旁的粗體與斜體",
+        "description": "修正了當標記緊貼日文或其他 CJK 字元（如 「」 括號周圍）時粗體與斜體無法顯示的問題。星號不再顯示為一般文字。"
       },
-      "rinButtonPlacement": {
-        "title": "專注模式按鈕位置",
-        "description": "將專注模式的控制按鈕及其提示移至左側，使其不再超出視窗邊緣。"
+      "externalImages": {
+        "title": "恢復外部圖片",
+        "description": "修正了預覽中外部（https）圖片無法載入的問題。"
       },
       "dependencyUpdates": {
-        "title": "相依套件與安全性更新",
-        "description": "更新了內建函式庫並解決了多個相依套件安全性公告。"
+        "title": "相依套件更新",
+        "description": "已將內建函式庫更新至最新版本。"
       }
     }
   },

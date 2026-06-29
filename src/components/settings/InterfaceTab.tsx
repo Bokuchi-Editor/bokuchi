@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { AppSettings } from '../../types/settings';
+import type { OutlineDisplayMode } from '../../types/outline';
 import { LANGUAGE_OPTIONS } from '../../constants/languages';
 import {
   RadioSettingCard,
@@ -26,12 +27,39 @@ const toPercent = (value: number) => `${Math.round(value * 100)}%`;
 interface InterfaceTabProps {
   settings: AppSettings;
   onSettingChange: SettingChangeHandler;
+  /** Used by the outline radio, which updates two interface fields atomically. */
+  onSettingsChange: (settings: AppSettings) => void;
 }
 
 /** Interface settings: language, tab layout, zoom, outline / explorer / scroll-sync modes. */
-const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange }) => {
+const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange, onSettingsChange }) => {
   const { t } = useTranslation();
   const { interface: ui } = settings;
+
+  // The outline radio presents three choices but is backed by two persisted fields:
+  // `outlineDisplayMode` (the style — persistent/overlay) and `outlineEnabled` (on/off).
+  // Selecting "off" only flips `outlineEnabled`, preserving the style so the header
+  // button can later restore it. Both fields must change together when picking a style
+  // (handleSettingChange rebuilds from `settings` each call, so a single merged update
+  // is required instead of two sequential calls).
+  const outlineSelectedValue = ui.outlineEnabled ? ui.outlineDisplayMode : 'off';
+  const handleOutlineChange = (value: string) => {
+    if (value === 'off') {
+      onSettingsChange({
+        ...settings,
+        interface: { ...settings.interface, outlineEnabled: false },
+      });
+    } else {
+      onSettingsChange({
+        ...settings,
+        interface: {
+          ...settings.interface,
+          outlineDisplayMode: value as OutlineDisplayMode,
+          outlineEnabled: true,
+        },
+      });
+    }
+  };
 
   const tabLayoutOptions: RadioSettingOption[] = [
     {
@@ -82,6 +110,11 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange }
       value: 'overlay',
       label: t('settings.interface.outlineDisplayModeOverlay'),
       description: t('settings.interface.outlineDisplayModeOverlayDescription'),
+    },
+    {
+      value: 'off',
+      label: t('settings.interface.outlineDisplayModeOff'),
+      description: t('settings.interface.outlineDisplayModeOffDescription'),
     },
   ];
 
@@ -202,8 +235,8 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange }
         title={t('settings.interface.outlineDisplayMode')}
         titleSx={{ mb: 1 }}
         description={t('settings.interface.outlineDisplayModeDescription')}
-        value={ui.outlineDisplayMode}
-        onChange={(value) => onSettingChange('interface', 'outlineDisplayMode', value)}
+        value={outlineSelectedValue}
+        onChange={handleOutlineChange}
         options={outlineOptions}
       />
 

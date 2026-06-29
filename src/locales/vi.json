@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Bảng dàn ý luôn được hiển thị như một phần của bố cục.",
       "outlineDisplayModeOverlay": "Lớp phủ",
       "outlineDisplayModeOverlayDescription": "Bảng dàn ý trượt vào từ bên phải như một lớp phủ.",
+      "outlineDisplayModeOff": "Tắt",
+      "outlineDisplayModeOffDescription": "Bảng dàn ý vẫn bị ẩn cho đến khi bạn bật lại.",
       "folderTreeDisplayMode": "Bảng điều khiển Explorer",
       "folderTreeDisplayModeDescription": "Chọn cách hiển thị bảng điều khiển explorer (cây thư mục).",
       "folderTreeDisplayModePersistent": "Luôn hiển thị",
@@ -572,29 +574,29 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Giảm bộ nhớ cho slide nhiều hình ảnh",
-        "description": "Hình ảnh trong slide Marp giờ được tải trực tiếp từ ổ đĩa thay vì nhúng vào bản xem trước, giúp giảm đáng kể mức sử dụng bộ nhớ cho các bản trình bày có nhiều hình hoặc hình lớn. Mọi thứ vẫn hoạt động hoàn toàn ngoại tuyến."
+      "outlineOff": {
+        "title": "Ẩn dàn ý",
+        "description": "Bảng dàn ý nay có tùy chọn «Tắt» trong Cài đặt, và có thể ẩn bằng nút trên thanh công cụ hoặc Ctrl+Shift+O. Lựa chọn của bạn được ghi nhớ ở lần mở ứng dụng tiếp theo."
       },
-      "outlineJumpPreview": {
-        "title": "Nhảy theo dàn ý trong chế độ xem trước",
-        "description": "Nhấp vào một tiêu đề trong dàn ý giờ sẽ cuộn bản xem trước đến tiêu đề đó, ngay cả trong chế độ chỉ xem trước."
+      "raspberryPiBuild": {
+        "title": "Bản dựng Raspberry Pi (arm64)",
+        "description": "Đã thêm bản dựng Linux arm64 gốc chạy trên Raspberry Pi, bao gồm cách khắc phục hiển thị bị lỗi trên GPU của nó."
       },
-      "rinEscapePriority": {
-        "title": "Phím Escape trong chế độ tập trung",
-        "description": "Trong chế độ tập trung Rin, nhấn Escape giờ sẽ đóng hộp thoại đang mở hoặc bảng tìm kiếm trước, thay vì thoát ngay khỏi chế độ tập trung."
+      "viewModePersistence": {
+        "title": "Ghi nhớ chế độ xem",
+        "description": "Ứng dụng nay mở lại ở chế độ xem bạn đã để lại — chỉnh sửa, xem trước hoặc chia đôi — thay vì luôn khởi động ở chế độ chia đôi."
       },
-      "htmlExportCodeBlock": {
-        "title": "Sửa khối mã khi xuất HTML",
-        "description": "Đã sửa lỗi khối mã hiển thị nền sai hoặc bị nhân đôi trong HTML đã xuất."
+      "cjkEmphasis": {
+        "title": "Đậm & nghiêng cạnh chữ tiếng Nhật",
+        "description": "Đã sửa lỗi chữ đậm và nghiêng không hiển thị khi dấu nằm sát ký tự tiếng Nhật hoặc CJK khác, chẳng hạn quanh dấu ngoặc 「」. Dấu sao không còn hiện ra như văn bản thường."
       },
-      "rinButtonPlacement": {
-        "title": "Vị trí nút chế độ tập trung",
-        "description": "Đã chuyển các nút điều khiển chế độ tập trung và chú giải của chúng sang bên trái để không tràn ra ngoài mép cửa sổ."
+      "externalImages": {
+        "title": "Khôi phục ảnh bên ngoài",
+        "description": "Đã sửa lỗi ảnh bên ngoài (https) không còn tải được trong khung xem trước."
       },
       "dependencyUpdates": {
-        "title": "Cập nhật phụ thuộc và bảo mật",
-        "description": "Đã cập nhật các thư viện đi kèm và xử lý một số cảnh báo bảo mật liên quan đến phụ thuộc."
+        "title": "Cập nhật phụ thuộc",
+        "description": "Đã cập nhật các thư viện đi kèm lên phiên bản mới nhất."
       }
     }
   },

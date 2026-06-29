@@ -63,6 +63,7 @@ const createDefaultProps = () => ({
   isSettingsLoaded: true,
   scrollSyncMode: 'editor-to-preview' as const,
   outlineDisplayMode: 'persistent' as const,
+  outlineEnabled: false,
   outlinePanelOpen: false,
   onOutlinePanelClose: vi.fn(),
   folderTreeDisplayMode: 'off' as const,
@@ -128,15 +129,15 @@ describe('AppContent', () => {
     expect(screen.getByTestId('tab-bar')).toBeInTheDocument();
   });
 
-  // T-AC-07: outline panel shown when persistent and open
-  it('T-AC-07: renders outline panel when persistent and open', () => {
-    render(<AppContent {...createDefaultProps()} outlinePanelOpen={true} />);
+  // T-AC-07: outline panel shown when persistent and enabled
+  it('T-AC-07: renders outline panel when persistent and enabled', () => {
+    render(<AppContent {...createDefaultProps()} outlineEnabled={true} />);
     expect(screen.getByTestId('outline-panel')).toBeInTheDocument();
   });
 
-  // T-AC-08: outline panel hidden when not open
-  it('T-AC-08: hides outline panel when not open', () => {
-    render(<AppContent {...createDefaultProps()} outlinePanelOpen={false} />);
+  // T-AC-08: outline panel hidden when disabled (off)
+  it('T-AC-08: hides outline panel when disabled', () => {
+    render(<AppContent {...createDefaultProps()} outlineEnabled={false} />);
     expect(screen.queryByTestId('outline-panel')).not.toBeInTheDocument();
   });
 

@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Le panneau du plan est toujours affiché comme partie de la mise en page.",
       "outlineDisplayModeOverlay": "Superposition",
       "outlineDisplayModeOverlayDescription": "Le panneau du plan glisse depuis la droite en superposition.",
+      "outlineDisplayModeOff": "Désactivé",
+      "outlineDisplayModeOffDescription": "Le panneau du plan reste masqué jusqu'à ce que vous le réactiviez.",
       "folderTreeDisplayMode": "Panneau de l'explorateur",
       "folderTreeDisplayModeDescription": "Choisissez comment le panneau de l'explorateur (arborescence) est affiché.",
       "folderTreeDisplayModePersistent": "Toujours visible",
@@ -572,29 +574,29 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Moins de mémoire pour les diapositives riches en images",
-        "description": "Les images des diapositives Marp sont désormais chargées directement depuis le disque au lieu d'être intégrées à l'aperçu, ce qui réduit nettement l'utilisation de la mémoire pour les présentations comportant de nombreuses ou de grandes images. Tout continue de fonctionner hors ligne."
+      "outlineOff": {
+        "title": "Masquer le plan",
+        "description": "Le panneau du plan dispose désormais d'une option « Désactivé » dans les réglages et peut être masqué via le bouton de la barre d'outils ou Ctrl+Maj+O. Votre choix est conservé au prochain démarrage."
       },
-      "outlineJumpPreview": {
-        "title": "Saut depuis le plan en mode aperçu",
-        "description": "Cliquer sur un titre dans le plan fait désormais défiler l'aperçu jusqu'à ce titre, même en mode aperçu seul."
+      "raspberryPiBuild": {
+        "title": "Build Raspberry Pi (arm64)",
+        "description": "Ajout d'un build Linux natif arm64 fonctionnant sur Raspberry Pi, avec une correction de l'affichage corrompu sur son GPU."
       },
-      "rinEscapePriority": {
-        "title": "Touche Échap en mode focus",
-        "description": "En mode focus Rin, appuyer sur Échap ferme désormais d'abord une boîte de dialogue ouverte ou le panneau de recherche, au lieu de quitter immédiatement le mode focus."
+      "viewModePersistence": {
+        "title": "Mémorise votre mode d'affichage",
+        "description": "L'application rouvre désormais dans le mode que vous avez quitté — édition, aperçu ou divisé — au lieu de toujours démarrer en mode divisé."
       },
-      "htmlExportCodeBlock": {
-        "title": "Correction des blocs de code à l'export HTML",
-        "description": "Correction d'un problème où les blocs de code apparaissaient avec un arrière-plan incorrect ou dédoublé dans le HTML exporté."
+      "cjkEmphasis": {
+        "title": "Gras et italique à côté du texte japonais",
+        "description": "Correction du gras et de l'italique qui ne s'affichaient pas lorsque les marqueurs touchent des caractères japonais ou autres CJK, par exemple autour des crochets 「」. Les astérisques n'apparaissent plus comme du texte."
       },
-      "rinButtonPlacement": {
-        "title": "Placement des boutons du mode focus",
-        "description": "Les boutons de contrôle du mode focus et leurs info-bulles ont été déplacés vers la gauche afin de ne plus dépasser du bord de la fenêtre."
+      "externalImages": {
+        "title": "Images externes rétablies",
+        "description": "Correction des images externes (https) qui ne se chargeaient plus dans l'aperçu."
       },
       "dependencyUpdates": {
-        "title": "Mises à jour des dépendances et de la sécurité",
-        "description": "Mise à jour des bibliothèques intégrées et résolution de plusieurs alertes de sécurité liées aux dépendances."
+        "title": "Mises à jour des dépendances",
+        "description": "Mise à jour des bibliothèques incluses vers leurs dernières versions."
       }
     }
   },

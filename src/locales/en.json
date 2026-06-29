@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "The outline panel is always shown as part of the layout.",
       "outlineDisplayModeOverlay": "Overlay",
       "outlineDisplayModeOverlayDescription": "The outline panel slides in from the right as an overlay.",
+      "outlineDisplayModeOff": "Off",
+      "outlineDisplayModeOffDescription": "The outline panel stays hidden until you turn it on again.",
       "folderTreeDisplayMode": "Explorer Panel",
       "folderTreeDisplayModeDescription": "Choose how the explorer (folder tree) panel is displayed.",
       "folderTreeDisplayModePersistent": "Always visible",
@@ -595,29 +597,29 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Lower Memory for Image-Heavy Slides",
-        "description": "Marp slide images now load directly from disk instead of being embedded in the preview, greatly reducing memory use for decks with many or large images. Everything still works fully offline."
+      "outlineOff": {
+        "title": "Hide the Outline",
+        "description": "The outline panel now has an Off option in Settings, and the toolbar button or Ctrl+Shift+O can hide it. Your choice is remembered the next time you open the app."
       },
-      "outlineJumpPreview": {
-        "title": "Outline Jump in Preview Mode",
-        "description": "Clicking a heading in the outline now scrolls the preview to that heading, even in preview-only mode."
+      "raspberryPiBuild": {
+        "title": "Raspberry Pi (arm64) Build",
+        "description": "Added a native arm64 Linux build that runs on Raspberry Pi, including a workaround for the garbled rendering seen on its GPU."
       },
-      "rinEscapePriority": {
-        "title": "Escape Key in Focus Mode",
-        "description": "In Rin focus mode, pressing Escape now closes an open dialog or the search panel first, instead of immediately exiting focus mode."
+      "viewModePersistence": {
+        "title": "Remembers Your View Mode",
+        "description": "The app now reopens in the view you left it in — edit, preview, or split — instead of always starting in split view."
       },
-      "htmlExportCodeBlock": {
-        "title": "HTML Export Code Block Fix",
-        "description": "Fixed code block backgrounds appearing with an incorrect or doubled shade in exported HTML."
+      "cjkEmphasis": {
+        "title": "Bold & Italic Next to Japanese Text",
+        "description": "Fixed bold and italic not rendering when the markers touch Japanese or other CJK characters, such as around 「」 brackets. The asterisks no longer show up as literal text."
       },
-      "rinButtonPlacement": {
-        "title": "Focus Mode Button Placement",
-        "description": "Moved the focus-mode control buttons and their tooltips to the left so they no longer run off the edge of the window."
+      "externalImages": {
+        "title": "External Images Restored",
+        "description": "Fixed external (https) images that had stopped loading in the preview."
       },
       "dependencyUpdates": {
-        "title": "Dependency & Security Updates",
-        "description": "Updated bundled libraries and resolved several dependency security advisories."
+        "title": "Dependency Updates",
+        "description": "Updated bundled libraries to their latest versions."
       }
     }
   },

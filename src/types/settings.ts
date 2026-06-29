@@ -31,6 +31,11 @@ export interface InterfaceSettings {
   tabNewButtonPosition: 'top' | 'bottom';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
+  // Master on/off for the outline panel, persisted across restarts.
+  // When false the panel never shows at launch and the header button is dimmed
+  // (still clickable — clicking restores the panel using `outlineDisplayMode`).
+  // `outlineDisplayMode` keeps the last chosen style so off→on returns to it.
+  outlineEnabled: boolean;
   folderTreeDisplayMode: FolderTreeDisplayMode;
   folderTreeFileFilter: 'markdown' | 'all';
   scrollSyncMode: ScrollSyncMode;
@@ -109,6 +114,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   tabNewButtonPosition: 'top',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
+  outlineEnabled: true,
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',
   scrollSyncMode: 'bidirectional',

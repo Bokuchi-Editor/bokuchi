@@ -107,6 +107,7 @@ function AppDesktop() {
 
     // Outline
     outlinePanelOpen,
+    handleOutlineToggle,
 
     // Folder tree
     folderTreePanelOpen,
@@ -152,6 +153,12 @@ function AppDesktop() {
   const { exitVisible: rinExitVisible } = useRinExitButton(rinActive, exitRin);
   // 臨 editor width: false = 1000px centered, true = full width (session-only).
   const [rinFullWidth, setRinFullWidth] = useState(false);
+
+  // Whether the outline is currently showing — drives the header button's lit/dimmed
+  // state. Persistent: governed by the master switch. Overlay: also needs the drawer open.
+  const outlineActive =
+    appSettings.interface.outlineEnabled &&
+    (appSettings.interface.outlineDisplayMode === 'overlay' ? outlinePanelOpen : true);
 
   // Track whether event listeners are fully registered
   const [listenersReady, setListenersReady] = useState(false);
@@ -401,7 +408,7 @@ function AppDesktop() {
             viewMode={viewMode}
             fileMenuAnchor={fileMenuAnchor}
             activeTab={activeTab}
-            outlinePanelOpen={outlinePanelOpen}
+            outlineActive={outlineActive}
             folderTreePanelOpen={folderTreePanelOpen}
             folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}
             rinActive={rinActive}
@@ -418,7 +425,7 @@ function AppDesktop() {
             onSettingsOpen={handleSettingsOpen}
             onHelpOpen={handleHelpOpen}
             onRecentFileSelect={handleRecentFileSelect}
-            onOutlineToggle={() => setOutlinePanelOpen(prev => !prev)}
+            onOutlineToggle={handleOutlineToggle}
             onFolderTreeToggle={() => setFolderTreePanelOpen(prev => !prev)}
             t={t}
           />
@@ -454,6 +461,7 @@ function AppDesktop() {
           }}
           scrollSyncMode={appSettings.interface.scrollSyncMode}
           outlineDisplayMode={appSettings.interface.outlineDisplayMode}
+          outlineEnabled={appSettings.interface.outlineEnabled}
           outlinePanelOpen={outlinePanelOpen}
           onOutlinePanelClose={() => setOutlinePanelOpen(false)}
           folderTreeDisplayMode={appSettings.interface.folderTreeDisplayMode}

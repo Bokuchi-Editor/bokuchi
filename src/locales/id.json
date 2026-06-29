@@ -363,6 +363,8 @@
       "outlineDisplayModePersistentDescription": "Panel kerangka selalu ditampilkan sebagai bagian dari tata letak.",
       "outlineDisplayModeOverlay": "Overlay",
       "outlineDisplayModeOverlayDescription": "Panel kerangka muncul dari kanan sebagai overlay.",
+      "outlineDisplayModeOff": "Nonaktif",
+      "outlineDisplayModeOffDescription": "Panel kerangka tetap disembunyikan hingga Anda mengaktifkannya kembali.",
       "folderTreeDisplayMode": "Panel Explorer",
       "folderTreeDisplayModeDescription": "Pilih bagaimana panel explorer (pohon folder) ditampilkan.",
       "folderTreeDisplayModePersistent": "Selalu terlihat",
@@ -572,29 +574,29 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Memori Lebih Hemat untuk Slide Berisi Banyak Gambar",
-        "description": "Gambar pada slide Marp kini dimuat langsung dari disk alih-alih disematkan ke pratinjau, sehingga penggunaan memori jauh berkurang untuk presentasi dengan gambar yang banyak atau besar. Semuanya tetap bekerja sepenuhnya offline."
+      "outlineOff": {
+        "title": "Sembunyikan Kerangka",
+        "description": "Panel kerangka kini memiliki opsi «Nonaktif» di Pengaturan, dan dapat disembunyikan melalui tombol bilah alat atau Ctrl+Shift+O. Pilihan Anda diingat saat membuka aplikasi berikutnya."
       },
-      "outlineJumpPreview": {
-        "title": "Lompatan Kerangka di Mode Pratinjau",
-        "description": "Mengeklik judul pada kerangka kini menggulirkan pratinjau ke judul tersebut, bahkan dalam mode pratinjau saja."
+      "raspberryPiBuild": {
+        "title": "Build Raspberry Pi (arm64)",
+        "description": "Menambahkan build Linux arm64 native yang berjalan di Raspberry Pi, termasuk solusi untuk tampilan rusak pada GPU-nya."
       },
-      "rinEscapePriority": {
-        "title": "Tombol Escape di Mode Fokus",
-        "description": "Dalam mode fokus Rin, menekan Escape kini menutup dialog yang terbuka atau panel pencarian terlebih dahulu, alih-alih langsung keluar dari mode fokus."
+      "viewModePersistence": {
+        "title": "Mengingat Mode Tampilan Anda",
+        "description": "Aplikasi kini membuka kembali pada tampilan terakhir yang Anda gunakan — edit, pratinjau, atau terbagi — alih-alih selalu mulai dalam tampilan terbagi."
       },
-      "htmlExportCodeBlock": {
-        "title": "Perbaikan Blok Kode pada Ekspor HTML",
-        "description": "Memperbaiki blok kode yang tampil dengan latar belakang salah atau ganda pada HTML yang diekspor."
+      "cjkEmphasis": {
+        "title": "Tebal & Miring di Samping Teks Jepang",
+        "description": "Memperbaiki teks tebal dan miring yang tidak tampil saat penanda menyentuh karakter Jepang atau CJK lainnya, seperti di sekitar tanda kurung 「」. Tanda bintang tidak lagi muncul sebagai teks."
       },
-      "rinButtonPlacement": {
-        "title": "Penempatan Tombol Mode Fokus",
-        "description": "Tombol kontrol mode fokus dan tooltip-nya dipindahkan ke kiri agar tidak melewati tepi jendela."
+      "externalImages": {
+        "title": "Gambar Eksternal Dipulihkan",
+        "description": "Memperbaiki gambar eksternal (https) yang berhenti dimuat di pratinjau."
       },
       "dependencyUpdates": {
-        "title": "Pembaruan Dependensi dan Keamanan",
-        "description": "Memperbarui pustaka bawaan dan menangani beberapa peringatan keamanan dependensi."
+        "title": "Pembaruan Dependensi",
+        "description": "Memperbarui pustaka bawaan ke versi terbaru."
       }
     }
   },
