@@ -105,7 +105,9 @@ jobs:
             librsvg2-dev
 
       - name: Build application (deb only)
-        run: npm run tauri:build -- --target aarch64-unknown-linux-gnu --bundles deb
+        # No auto-update for the arm64 Raspberry Pi build: disable updater artifact
+        # creation so the bundler does not require TAURI_SIGNING_PRIVATE_KEY.
+        run: npm run tauri:build -- --target aarch64-unknown-linux-gnu --bundles deb --config '{"bundle":{"createUpdaterArtifacts":false}}'
 
       - name: Get version
         id: version
