@@ -5,7 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.3...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.4...HEAD)
+
+## [0.9.4](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.3...v0.9.4) - 2026-06-29
+
+### Added
+
+- Outline panel now has an "Off" mode. The setting offers Always visible / Overlay / Off (backed by a new persisted `outlineEnabled` flag), and the toolbar button and `Ctrl+Shift+O` toggle between Off and the remembered style. Unlike the old transient hide, the Off state survives a restart.
+- Native arm64 Linux build for Raspberry Pi. A dedicated CI job produces a `.deb` on an `ubuntu-22.04-arm` runner (glibc 2.35, runnable on Raspberry Pi OS Bookworm), and the app now detects a Raspberry Pi at startup and disables the WebKitGTK DMABUF renderer to avoid garbled rendering on its GPU.
+
+### Changed
+
+- The editor view mode (split / editor / preview) is now persisted and restored on launch, so the app reopens in the mode it was closed in instead of always defaulting to split. First-ever launch still defaults to split.
+- Updated dependencies: `tauri` (2.11.2 → 2.11.3), `tauri-build` (2.6.2 → 2.6.3), `@tauri-apps/api` (2.11.0 → 2.11.1), and the `actions/checkout` CI action (v6 → v7).
+
+### Fixed
+
+- `**bold**` / `*italic*` no longer rendered as literal asterisks when a delimiter touched CJK text (e.g. around 「」 brackets in Japanese prose). Invisible Word Joiner markers are now inserted at CJK↔delimiter boundaries before Markdown parsing (and stripped from the output) on both the live preview and HTML export paths; asterisks inside code spans and fenced blocks are left untouched ([#400](https://github.com/Bokuchi-Editor/bokuchi/issues/400)).
+- External (`https:`) images stopped loading in the preview; `https:` has been re-added to the `img-src` CSP directive so remote images render again in packaged builds.
 
 ## [0.9.3](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.2...v0.9.3) - 2026-06-21
 

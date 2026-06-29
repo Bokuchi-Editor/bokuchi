@@ -597,29 +597,29 @@
       "improvement": "改善"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "画像の多いスライドのメモリ削減",
-        "description": "Marpスライドの画像をプレビューに埋め込まず、ディスクから直接読み込むようにしました。画像の多い・大きいスライドでのメモリ使用量を大幅に削減します。引き続き完全オフラインで動作します。"
+      "outlineOff": {
+        "title": "アウトラインを非表示にできます",
+        "description": "アウトラインパネルに設定の「オフ」を追加しました。ツールバーのボタンや Ctrl+Shift+O で非表示にでき、選んだ状態は次回起動時にも保持されます。"
       },
-      "outlineJumpPreview": {
-        "title": "プレビューモードでのアウトラインジャンプ",
-        "description": "アウトラインの見出しをクリックすると、プレビュー専用モードでもその見出しまでスクロールするようになりました。"
+      "raspberryPiBuild": {
+        "title": "Raspberry Pi（arm64）ビルド",
+        "description": "Raspberry Pi で動作する arm64 版 Linux ビルドを追加しました。GPU で表示が乱れる問題への対処も含みます。"
       },
-      "rinEscapePriority": {
-        "title": "臨モードでのEscキー",
-        "description": "臨（集中）モードでEscキーを押したとき、すぐにモードを抜けるのではなく、開いているダイアログや検索パネルを先に閉じるようにしました。"
+      "viewModePersistence": {
+        "title": "表示モードを記憶",
+        "description": "常に分割表示で起動するのではなく、前回終了時の表示（編集・プレビュー・分割）で再び開くようになりました。"
       },
-      "htmlExportCodeBlock": {
-        "title": "HTMLエクスポートのコードブロック修正",
-        "description": "エクスポートしたHTMLで、コードブロックの背景色が誤った色や二重に表示される問題を修正しました。"
+      "cjkEmphasis": {
+        "title": "日本語に隣接した太字・斜体",
+        "description": "「」などの記号や日本語などのCJK文字に強調記号が接していると太字・斜体が反映されない問題を修正しました。アスタリスクが文字として残らなくなります。"
       },
-      "rinButtonPlacement": {
-        "title": "臨モードのボタン配置",
-        "description": "臨モードの操作ボタンとツールチップを左側に移動し、画面端からはみ出さないようにしました。"
+      "externalImages": {
+        "title": "外部画像の表示を修正",
+        "description": "プレビューで外部（https）画像が読み込まれなくなっていた問題を修正しました。"
       },
       "dependencyUpdates": {
-        "title": "依存関係とセキュリティの更新",
-        "description": "同梱ライブラリを更新し、依存関係のセキュリティ勧告に対応しました。"
+        "title": "依存関係の更新",
+        "description": "同梱ライブラリを最新バージョンに更新しました。"
       }
     }
   },
