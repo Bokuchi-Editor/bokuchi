@@ -473,6 +473,111 @@ export function buildContinuousStyleContent(css: string): string {
   return `${css}\n${CONTINUOUS_WRAPPER_STYLES}`;
 }
 
+/**
+ * WebKit's *print* layout engine ignores `align-content` on block containers
+ * (the screen engine supports it). marp-core v4 themes vertically center slide
+ * content with exactly that pattern — `section { display: block;
+ * place-content: … }` — so a natively-printed PDF comes out top-aligned while
+ * the preview (screen layout) is centered.
+ *
+ * This script, run inside the print document before the native print fires,
+ * converts only the affected sections to the equivalent flex layout: themes
+ * keep a legacy `flex-flow: column nowrap` on section, under which
+ * `justify-content` reproduces the block-axis alignment `align-content` asked
+ * for. Sections that don't use block-axis alignment (and non-block layouts
+ * like grid or themes that are flex already) are left untouched.
+ *
+ * Chromium (Windows/WebView2) prints block `align-content` correctly — same
+ * engine as Marp CLI — so the fix is gated to WebKit via navigator.vendor
+ * (Apple on both macOS WKWebView and Linux webkit2gtk).
+ */
+const MARP_PRINT_CENTERING_FIX = `
+(function () {
+  if (navigator.vendor !== 'Apple Computer, Inc.') return;
+  var sections = document.querySelectorAll('div.marpit > svg > foreignObject > section');
+  for (var i = 0; i < sections.length; i++) {
+    var s = sections[i];
+    /* Marpit advanced-background layers ("background"/"pseudo") are section
+       elements too, but they lay out bg figures, not slide content — forcing
+       flex on them breaks split backgrounds. Only touch content layers. */
+    var bgLayer = s.getAttribute('data-marpit-advanced-background');
+    if (bgLayer === 'background' || bgLayer === 'pseudo') continue;
+    var cs = getComputedStyle(s);
+    var ac = cs.alignContent;
+    if (cs.display !== 'block' || !ac || ac === 'normal' || ac === 'start' || ac === 'flex-start') continue;
+    s.style.display = 'flex';
+    s.style.flexFlow = 'column nowrap';
+    /* Drop overflow-safety keywords: 'safe center' centers via justify-content
+       in the flex fallback, matching what place-content resolves to. */
+    s.style.justifyContent = ac.replace(/\\b(?:safe|unsafe)\\s+/g, '');
+  }
+})();
+`;
+
+/**
+ * Build a print-ready document for PDF export of Marp slides: one slide per
+ * page. The page box is sized to the slide's own pixel dimensions (read from
+ * the first slide's viewBox, default 1280×720 for 16:9) so each slide fills its
+ * page with the correct aspect ratio and no surrounding margin.
+ */
+export function buildMarpPrintDocument(html: string, css: string): string {
+  const vb = html.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/);
+  const slideWidth = vb ? vb[1] : '1280';
+  const slideHeight = vb ? vb[2] : '720';
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+${css}
+
+html, body { margin: 0; padding: 0; background: #fff; }
+div.marpit { padding: 0; }
+/* Render each slide SVG at its intrinsic pixel size (matching the page), so the
+   scale factor is exactly 1. Scaling the SVG (width:100%) made WebKit reflow the
+   slide's <foreignObject> contents during printing, which broke the vertical
+   centering and image sizing. At scale 1 the slide prints exactly as previewed. */
+div.marpit > svg[data-marpit-svg] {
+  display: block;
+  width: ${slideWidth}px;
+  height: ${slideHeight}px;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  break-after: page;
+}
+div.marpit > svg[data-marpit-svg]:last-child { break-after: auto; }
+
+/* Marpit's own print CSS puts page-break-before on every section (meant for
+   its non-SVG output). Pagination here comes from the svg's break-after
+   above, and in WebKit the section-level break rule corrupts print painting
+   once sections are flex (the centering fix below): background figures of
+   *later* slides with an explicit background-size silently disappear from
+   the printed pages. Neutralize the section-level breaks. */
+@media print {
+  div.marpit > svg > foreignObject > section {
+    page-break-before: auto !important;
+    break-before: auto !important;
+  }
+}
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram { display: flex; justify-content: center; margin: 0.5em 0; max-width: 100%; }
+.mermaid-diagram svg { max-width: 100%; max-height: 100%; height: auto; }
+.mermaid-error { margin: 0.5em 0; }
+
+@media print {
+  @page { size: ${slideWidth}px ${slideHeight}px; margin: 0; }
+  html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>${html}
+<script>${MARP_PRINT_CENTERING_FIX}</script>
+</body>
+</html>`;
+}
+
 export function buildAllSlidesDocument(html: string, css: string): string {
   return `<!DOCTYPE html>
 <html>

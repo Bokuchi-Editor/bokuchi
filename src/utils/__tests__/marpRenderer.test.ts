@@ -33,6 +33,7 @@ import {
   buildAllSlidesDocument,
   buildThumbnailDocument,
   buildContinuousStyleContent,
+  buildMarpPrintDocument,
   LINK_INTERCEPTOR_SCRIPT,
 } from '../marpRenderer';
 
@@ -332,5 +333,44 @@ describe('link interceptor injection', () => {
     expect(buildSlideDocument('html', 'css', 0)).not.toContain('<base');
     expect(buildAllSlidesDocument('html', 'css')).not.toContain('<base');
     expect(buildThumbnailDocument('html', 'css', 0)).not.toContain('<base');
+  });
+});
+
+describe('buildMarpPrintDocument', () => {
+  const html = '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject><section>Slide</section></foreignObject></svg></div>';
+
+  it('sizes the page and slides from the first slide viewBox', () => {
+    const doc = buildMarpPrintDocument(html, '.marpit {}');
+    expect(doc).toContain('@page { size: 1280px 720px; margin: 0; }');
+    expect(doc).toContain('width: 1280px;');
+    expect(doc).toContain('height: 720px;');
+  });
+
+  it('falls back to 1280x720 when no viewBox is present', () => {
+    const doc = buildMarpPrintDocument('<div class="marpit"></div>', '');
+    expect(doc).toContain('@page { size: 1280px 720px; margin: 0; }');
+  });
+
+  // WebKit's print layout ignores align-content on block containers, which
+  // marp-core v4 themes use for vertical centering — slides printed
+  // top-aligned while the preview was centered. The injected script converts
+  // affected sections to the flex fallback (WebKit engines only).
+  it('T-MR-07: injects the WebKit print centering fix script', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    expect(doc).toContain("navigator.vendor !== 'Apple Computer, Inc.'");
+    expect(doc).toContain("s.style.display = 'flex'");
+    // Advanced-background layers must be left alone (their figures vanish
+    // from print when forced to flex).
+    expect(doc).toContain('data-marpit-advanced-background');
+  });
+
+  // Marpit's own print CSS adds page-break-before to sections; combined with
+  // flex sections it corrupts WebKit print painting (background figures of
+  // later slides disappear). Pagination comes from the svg break-after rule.
+  it('T-MR-08: neutralizes Marpit section-level print breaks', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    expect(doc).toContain('page-break-before: auto !important');
+    expect(doc).toContain('break-before: auto !important');
+    expect(doc).toContain('break-after: page;');
   });
 });

@@ -625,6 +625,9 @@
   },
   "preview": {
     "presentation": "Presentation",
+    "export": "Export",
+    "exportAsHtml": "Export as HTML",
+    "exportAsPdf": "Export as PDF",
     "previousSlide": "Previous Slide",
     "nextSlide": "Next Slide",
     "reloadThemes": "Reload themes",

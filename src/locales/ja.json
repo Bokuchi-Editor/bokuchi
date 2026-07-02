@@ -625,6 +625,9 @@
   },
   "preview": {
     "presentation": "プレゼンテーション",
+    "export": "エクスポート",
+    "exportAsHtml": "HTMLでエクスポート",
+    "exportAsPdf": "PDFでエクスポート",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
     "reloadThemes": "テーマを再読み込み",
