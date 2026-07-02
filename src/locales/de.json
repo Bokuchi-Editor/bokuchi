@@ -574,29 +574,29 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "marpImageMemory": {
-        "title": "Weniger Speicher bei bildreichen Folien",
-        "description": "Bilder in Marp-Folien werden jetzt direkt von der Festplatte geladen, statt in die Vorschau eingebettet zu werden. Das senkt den Speicherbedarf bei Folien mit vielen oder großen Bildern deutlich – und funktioniert weiterhin vollständig offline."
+      "outlineOff": {
+        "title": "Gliederung ausblenden",
+        "description": "Das Gliederungspanel hat jetzt eine Option „Aus“ in den Einstellungen und lässt sich über die Symbolleisten-Schaltfläche oder Strg+Umschalt+O ausblenden. Ihre Wahl bleibt beim nächsten Start erhalten."
       },
-      "outlineJumpPreview": {
-        "title": "Gliederungssprung im Vorschaumodus",
-        "description": "Ein Klick auf eine Überschrift in der Gliederung scrollt die Vorschau jetzt auch im reinen Vorschaumodus zu dieser Überschrift."
+      "raspberryPiBuild": {
+        "title": "Raspberry-Pi-Build (arm64)",
+        "description": "Ein nativer arm64-Linux-Build für den Raspberry Pi wurde hinzugefügt, einschließlich einer Lösung für die verzerrte Darstellung auf dessen GPU."
       },
-      "rinEscapePriority": {
-        "title": "Escape-Taste im Fokusmodus",
-        "description": "Im Rin-Fokusmodus schließt Escape jetzt zuerst einen offenen Dialog oder das Suchfeld, anstatt den Fokusmodus sofort zu verlassen."
+      "viewModePersistence": {
+        "title": "Merkt sich den Ansichtsmodus",
+        "description": "Die App öffnet sich nun wieder in der zuletzt verwendeten Ansicht – Bearbeiten, Vorschau oder geteilt – statt immer geteilt zu starten."
       },
-      "htmlExportCodeBlock": {
-        "title": "Korrektur von Codeblöcken beim HTML-Export",
-        "description": "Behoben, dass Codeblöcke im exportierten HTML einen falschen oder doppelten Hintergrund hatten."
+      "cjkEmphasis": {
+        "title": "Fett & Kursiv neben japanischem Text",
+        "description": "Behoben, dass Fett und Kursiv nicht dargestellt wurden, wenn die Markierungen japanische oder andere CJK-Zeichen berühren, etwa um 「」-Klammern. Die Sternchen erscheinen nicht mehr als Text."
       },
-      "rinButtonPlacement": {
-        "title": "Platzierung der Fokusmodus-Schaltflächen",
-        "description": "Die Steuerschaltflächen des Fokusmodus und ihre Tooltips wurden nach links verschoben, damit sie nicht mehr über den Fensterrand hinausragen."
+      "externalImages": {
+        "title": "Externe Bilder wiederhergestellt",
+        "description": "Behoben, dass externe (https-)Bilder in der Vorschau nicht mehr geladen wurden."
       },
       "dependencyUpdates": {
-        "title": "Abhängigkeits- und Sicherheitsupdates",
-        "description": "Mitgelieferte Bibliotheken aktualisiert und mehrere Sicherheitshinweise zu Abhängigkeiten behoben."
+        "title": "Abhängigkeits-Updates",
+        "description": "Die mitgelieferten Bibliotheken wurden auf die neuesten Versionen aktualisiert."
       }
     }
   },
