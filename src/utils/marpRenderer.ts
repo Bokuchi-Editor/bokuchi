@@ -34,12 +34,32 @@ async function getMarp(): Promise<Marp> {
   //  - emoji as native Unicode (system font) instead of fetching Twemoji images.
   //  - katexFontPath false drops the CDN @font-face URLs; renderMarp() appends the
   //    locally-bundled, data-URL KaTeX CSS instead when a slide contains math.
-  return new MarpClass({
+  const marp = new MarpClass({
     script: { source: 'inline' },
     emoji: { shortcode: true, unicode: false },
     math: { katexFontPath: false },
   });
+  // The built-in gaia theme additionally @imports its Lato / Roboto Mono
+  // webfonts from the fonts.bunny.net CDN. Re-register it with the external
+  // @import stripped (theme-name imports like `@import "gaia"` are untouched,
+  // so custom themes extending gaia inherit the stripped copy); renderMarp()
+  // appends the same faces from the local bundle instead.
+  const gaia = marp.themeSet.get('gaia');
+  if (gaia) {
+    marp.themeSet.add(gaia.css.replace(EXTERNAL_CSS_IMPORT_RE, ''));
+  }
+  return marp;
 }
+
+// Matches `@import "https://…";` / `@import url("https://…");` — external
+// stylesheet imports only. Marpit theme-name imports (`@import "gaia";`) must
+// not match.
+const EXTERNAL_CSS_IMPORT_RE = /@import\s+(?:url\()?["']https?:\/\/[^"']+["']\)?\s*;?/g;
+
+// Font families of the gaia webfonts stripped above. Any rendered CSS that
+// references them (gaia, a custom theme extending it, or a theme using the
+// same families) gets the locally-bundled faces appended.
+const GAIA_FONT_FAMILY_RE = /font-family:[^;{}]*(?:\bLato\b|Roboto Mono)/;
 
 // YAML front-matter is delimited by `---` lines and must sit at the very start
 // of the document. Anchoring the opening fence to position 0 prevents matches
@@ -94,6 +114,13 @@ export async function renderMarp(
   if (html.includes('katex')) {
     const { KATEX_EXPORT_CSS } = await import('./katexExportCss');
     finalCss = `${css}\n${KATEX_EXPORT_CSS}`;
+  }
+  // Same deal for the gaia webfonts stripped in getMarp(): supply Lato /
+  // Roboto Mono from the local bundle, only when this deck's CSS actually
+  // references them (~220 kB of data-URL fonts otherwise skipped).
+  if (GAIA_FONT_FAMILY_RE.test(css)) {
+    const { GAIA_FONTS_CSS } = await import('./gaiaThemeFonts');
+    finalCss = `${finalCss}\n${GAIA_FONTS_CSS}`;
   }
   const slideCount = countSlides(html);
   return { html, css: finalCss, slideCount };

@@ -10,7 +10,7 @@ import { describe, it, expect, vi } from 'vitest';
 // assert renderMarp still resolves a real constructor and renders.
 
 class FakeMarp {
-  themeSet = { add: vi.fn() };
+  themeSet = { add: vi.fn(), get: () => undefined };
   render() {
     return { html: '<div class="marpit"><svg data-marpit-svg></svg></div>', css: '/* css */' };
   }
