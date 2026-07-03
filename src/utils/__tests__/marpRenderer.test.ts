@@ -14,6 +14,9 @@ vi.mock('@marp-team/marp-core', () => {
         if (!/@theme\s+\S+/.test(css)) throw new Error('Marpit theme CSS requires @theme meta.');
         themeAddSpy(css);
       },
+      // No built-in themes in the mock — getMarp()'s gaia @import strip is a
+      // no-op here (covered with the real marp-core in marpRendererOffline).
+      get: () => undefined,
     };
     render() {
       return {
