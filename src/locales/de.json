@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Erscheinungsbild",
       "theme": "Theme",
-      "themeDescription": "Wählen Sie das visuelle Theme für die Anwendungsoberfläche.",
+      "themeDescription": "Klicken Sie auf eine Karte, um ein Theme anzuwenden. Duplizieren Sie ein beliebiges Theme, um eigene Farben anzupassen.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Voreinstellungen",
+      "customSection": "Eigene Themes",
+      "customEmptyGuide": "Duplizieren Sie ein beliebiges Theme, um Ihre eigene Farbpalette zu erstellen.",
+      "newTheme": "Neues Theme",
+      "basePickerTitle": "Basis-Theme auswählen",
+      "duplicate": "Duplizieren",
+      "editTheme": "Bearbeiten",
+      "deleteTheme": "Löschen",
+      "deleteConfirmTitle": "Eigenes Theme löschen",
+      "deleteConfirmMessage": "„{{name}}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+      "deleteConfirmActiveNote": "Dieses Theme ist derzeit aktiv. Nach dem Löschen wird das Default-Theme angewendet.",
+      "copyName": "{{name}} Kopie",
+      "themeName": "Theme-Name",
+      "editorModeLight": "Hell",
+      "editorModeDark": "Dunkel",
+      "editorModeDescription": "Der Editorbereich verwendet das integrierte Hell/Dunkel-Design von Monaco – die obigen Farben haben darauf keinen Einfluss.",
+      "resetToBase": "Farben auf Basis ({{name}}) zurücksetzen",
+      "backToDefault": "Auf Default-Theme zurücksetzen",
+      "doneEditing": "Fertig",
+      "contrastWarning": "Geringer Kontrast zwischen Text und Hintergrund – der Text könnte schwer lesbar sein.",
+      "applied": "Angewendet",
+      "colors": {
+        "backgroundDefault": "Hintergrund",
+        "backgroundPaper": "Oberfläche",
+        "textPrimary": "Text",
+        "textSecondary": "Sekundärtext",
+        "primaryMain": "Primär",
+        "secondaryMain": "Sekundär",
+        "divider": "Trennlinie"
       }
     },
     "globalVariables": {

@@ -1,6 +1,21 @@
 import { createTheme, Theme } from '@mui/material/styles';
+import {
+  CustomTheme,
+  CustomThemeColors,
+  buildMuiThemeFromCustom,
+  createCustomThemeId,
+  deriveCssVariablesFromCustom,
+  isCustomThemeId,
+} from './customTheme';
 
 export type ThemeName = 'default' | 'dark' | 'pastel' | 'vivid' | 'dawn' | 'twilight' | 'silk' | 'ink' | 'darcula' | 'as400';
+
+/**
+ * Identifier accepted wherever a theme is referenced: either a preset
+ * ThemeName or a custom theme id (`custom:<uuid>`). Kept as `string` because
+ * custom ids are open-ended; helpers below resolve both kinds.
+ */
+export type ThemeId = string;
 
 export interface ThemeConfig {
   name: ThemeName;
@@ -552,24 +567,155 @@ export const getVisibleThemes = (unlockedSecretThemes: ThemeName[] = []): ThemeC
   return themes.filter(t => !t.hidden || unlockedSecretThemes.includes(t.name));
 };
 
-export const getThemeByName = (name: ThemeName): Theme => {
+// ---------------------------------------------------------------------------
+// Custom theme registry
+//
+// User-created themes are loaded from the store at startup and re-registered
+// on every change (useSettings owns the React state; this module-level mirror
+// lets the existing helpers — getThemeByName / isDarkTheme / exportStyles —
+// resolve custom ids without threading the list through every call site).
+// ---------------------------------------------------------------------------
+
+let registeredCustomThemes: CustomTheme[] = [];
+// Built MUI themes are cached per id + content so repeated renders don't
+// re-run createTheme; edits change the cache key and rebuild lazily.
+const customMuiThemeCache = new Map<string, { key: string; theme: Theme }>();
+
+export const registerCustomThemes = (customs: CustomTheme[]): void => {
+  registeredCustomThemes = customs;
+  const ids = new Set(customs.map(c => c.id));
+  for (const cachedId of customMuiThemeCache.keys()) {
+    if (!ids.has(cachedId)) customMuiThemeCache.delete(cachedId);
+  }
+};
+
+export const getRegisteredCustomThemes = (): CustomTheme[] => registeredCustomThemes;
+
+export const getCustomThemeById = (id: ThemeId): CustomTheme | undefined =>
+  registeredCustomThemes.find(c => c.id === id);
+
+const getCustomMuiTheme = (custom: CustomTheme): Theme => {
+  const key = JSON.stringify([custom.mode, custom.colors]);
+  const cached = customMuiThemeCache.get(custom.id);
+  if (cached && cached.key === key) return cached.theme;
+  const theme = buildMuiThemeFromCustom(custom);
+  customMuiThemeCache.set(custom.id, { key, theme });
+  return theme;
+};
+
+/**
+ * Extract the 7 customizable tokens from any theme's MUI palette.
+ * Used to seed duplicated themes and to render palette strips for presets.
+ */
+export const getThemeColorTokens = (id: ThemeId): CustomThemeColors => {
+  const palette = getThemeByName(id).palette;
+  return {
+    backgroundDefault: palette.background.default,
+    backgroundPaper: palette.background.paper,
+    textPrimary: palette.text.primary,
+    textSecondary: palette.text.secondary,
+    primaryMain: palette.primary.main,
+    secondaryMain: palette.secondary.main,
+    divider: palette.divider,
+  };
+};
+
+/**
+ * Create a new custom theme by duplicating an existing theme (preset or
+ * custom). The 7 tokens are read from the source's MUI palette so the copy
+ * starts pixel-identical; `baseTheme` records the underlying preset for
+ * "reset colors to base".
+ */
+export const createCustomThemeFrom = (sourceId: ThemeId, name: string): CustomTheme => {
+  const sourceCustom = getCustomThemeById(sourceId);
+  return {
+    id: createCustomThemeId(),
+    name,
+    baseTheme: sourceCustom ? sourceCustom.baseTheme : sourceId,
+    mode: sourceCustom ? sourceCustom.mode : getThemeByName(sourceId).palette.mode,
+    colors: sourceCustom ? { ...sourceCustom.colors } : getThemeColorTokens(sourceId),
+  };
+};
+
+export const getThemeByName = (name: ThemeId): Theme => {
+  if (isCustomThemeId(name)) {
+    const custom = getCustomThemeById(name);
+    if (custom) return getCustomMuiTheme(custom);
+    return defaultTheme;
+  }
   const themeConfig = themes.find(t => t.name === name);
   return themeConfig ? themeConfig.theme : defaultTheme;
 };
 
-export const getThemeDisplayName = (name: ThemeName): string => {
+export const getThemeDisplayName = (name: ThemeId): string => {
+  if (isCustomThemeId(name)) {
+    const custom = getCustomThemeById(name);
+    return custom ? custom.name : 'Default';
+  }
   const themeConfig = themes.find(t => t.name === name);
   return themeConfig ? themeConfig.displayName : 'Default';
 };
 
-export const isDarkTheme = (name: ThemeName): boolean => {
+export const isDarkTheme = (name: ThemeId): boolean => {
+  if (isCustomThemeId(name)) {
+    const custom = getCustomThemeById(name);
+    return custom ? custom.mode === 'dark' : false;
+  }
   const themeConfig = themes.find(t => t.name === name);
   return themeConfig ? themeConfig.theme.palette.mode === 'dark' : false;
 };
 
-// Set the data-theme attribute on the HTML element
-export const applyThemeToDocument = (themeName: ThemeName): void => {
-  if (typeof document !== 'undefined') {
-    document.documentElement.setAttribute('data-theme', themeName);
+// Every CSS variable a custom theme injects; also the clear-list when
+// switching back to a preset. Sourced from the derivation so the two can't
+// drift apart.
+const CUSTOM_THEME_CSS_VARIABLE_NAMES = Object.keys(
+  deriveCssVariablesFromCustom({
+    id: 'custom:template',
+    name: 'template',
+    baseTheme: 'default',
+    mode: 'light',
+    colors: {
+      backgroundDefault: '#ffffff',
+      backgroundPaper: '#ffffff',
+      textPrimary: '#000000',
+      textSecondary: '#666666',
+      primaryMain: '#1976d2',
+      secondaryMain: '#dc004e',
+      divider: '#e0e0e0',
+    },
+  }),
+);
+
+/**
+ * Apply a theme to the document.
+ *
+ * Presets keep the historical behavior: `data-theme="<name>"` selects the
+ * matching block in variables.css. Custom themes get a mode-generic attribute
+ * (`custom-dark` / `custom-light`, referenced by the dark-only rules in
+ * markdown.css / syntax.css) and their variables injected as inline properties
+ * on <html>, which override the `:root` defaults without a stylesheet block.
+ */
+export const applyThemeToDocument = (themeName: ThemeId): void => {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+
+  if (isCustomThemeId(themeName)) {
+    const custom = getCustomThemeById(themeName);
+    if (!custom) {
+      // Unknown custom id (e.g. deleted theme still referenced) → safe default.
+      applyThemeToDocument('default');
+      return;
+    }
+    root.setAttribute('data-theme', custom.mode === 'dark' ? 'custom-dark' : 'custom-light');
+    const variables = deriveCssVariablesFromCustom(custom);
+    for (const [key, value] of Object.entries(variables)) {
+      root.style.setProperty(key, value);
+    }
+    return;
+  }
+
+  root.setAttribute('data-theme', themeName);
+  for (const key of CUSTOM_THEME_CSS_VARIABLE_NAMES) {
+    root.style.removeProperty(key);
   }
 };

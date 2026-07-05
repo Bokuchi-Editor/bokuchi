@@ -84,12 +84,15 @@
 }
 
 /* Dark theme specific overrides */
-[data-theme="dark"] .hljs-dark pre {
+/* custom-dark = user-created dark custom themes (see applyThemeToDocument) */
+[data-theme="dark"] .hljs-dark pre,
+[data-theme="custom-dark"] .hljs-dark pre {
   background-color: #2d2d2d !important;
   color: #f8f8f2 !important;
 }
 
-[data-theme="dark"] .hljs-dark pre code {
+[data-theme="dark"] .hljs-dark pre code,
+[data-theme="custom-dark"] .hljs-dark pre code {
   background-color: transparent !important;
   color: #f8f8f2 !important;
 }

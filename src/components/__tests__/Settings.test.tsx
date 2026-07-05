@@ -54,6 +54,8 @@ describe('Settings', () => {
     onClose: asMock<() => void>(onClose),
     settings: { ...DEFAULT_APP_SETTINGS },
     onSettingsChange: asMock<(settings: AppSettings) => void>(onSettingsChange),
+    customThemes: [],
+    onCustomThemesChange: vi.fn(),
   });
 
   // T-SET-01: renders when open

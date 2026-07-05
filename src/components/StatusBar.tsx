@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography, Menu, MenuItem, IconButton, Tooltip } from '@mui/material';
+import { Box, Typography, Menu, MenuItem, IconButton, Tooltip, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ZoomIn, ZoomOut, RestartAlt, WrapText, Save } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { ThemeName, getVisibleThemes } from '../themes';
+import { ThemeId, getVisibleThemes } from '../themes';
+import { CustomTheme, isCustomThemeId } from '../themes/customTheme';
 
 interface StatusBarProps {
   line: number;
@@ -18,7 +19,8 @@ interface StatusBarProps {
   onToggleAutoSave?: () => void;
   darkMode?: boolean;
   theme?: string;
-  onThemeChange?: (theme: ThemeName) => void;
+  customThemes?: CustomTheme[];
+  onThemeChange?: (theme: ThemeId) => void;
   zoomPercentage: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
@@ -42,6 +44,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
   autoSave,
   onToggleAutoSave,
   theme,
+  customThemes = [],
   onThemeChange,
   zoomPercentage,
   onZoomIn,
@@ -67,12 +70,20 @@ const StatusBar: React.FC<StatusBarProps> = ({
     setThemeMenuAnchor(null);
   };
 
-  const handleThemeSelect = (selectedTheme: ThemeName) => {
+  const handleThemeSelect = (selectedTheme: ThemeId) => {
     if (onThemeChange) {
       onThemeChange(selectedTheme);
     }
     handleThemeMenuClose();
   };
+
+  // Custom theme ids are not translation keys — resolve their display name
+  // from the custom theme list instead.
+  const currentThemeLabel = theme
+    ? isCustomThemeId(theme)
+      ? customThemes.find((c) => c.id === theme)?.name || 'Default'
+      : t(`settings.appearance.themes.${theme}`, visibleThemes.find(tc => tc.name === theme)?.displayName || 'Default')
+    : 'Default';
   return (
     <Box
       className="status-bar"
@@ -253,7 +264,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
           }}
         >
           <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
-            {theme ? t(`settings.appearance.themes.${theme}`, visibleThemes.find(tc => tc.name === theme)?.displayName || 'Default') : 'Default'}
+            {currentThemeLabel}
           </Typography>
         </IconButton>
 
@@ -299,6 +310,31 @@ const StatusBar: React.FC<StatusBarProps> = ({
               selected={theme === themeOption.name}
             >
               {t(`settings.appearance.themes.${themeOption.name}`, themeOption.displayName)}
+            </MenuItem>
+          ))}
+          {customThemes.length > 0 && <Divider />}
+          {customThemes.map((customOption) => (
+            <MenuItem
+              key={customOption.id}
+              onClick={() => handleThemeSelect(customOption.id)}
+              sx={{
+                color: palette.text.primary,
+                fontSize: '12px',
+                padding: '4px 12px',
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                },
+                '&.Mui-selected': {
+                  backgroundColor: palette.primary.main,
+                  color: palette.primary.contrastText,
+                  '&:hover': {
+                    backgroundColor: palette.primary.dark,
+                  }
+                }
+              }}
+              selected={theme === customOption.id}
+            >
+              {customOption.name}
             </MenuItem>
           ))}
         </Menu>

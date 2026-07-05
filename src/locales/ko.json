@@ -255,7 +255,7 @@
     "appearance": {
       "title": "외관",
       "theme": "테마",
-      "themeDescription": "애플리케이션 인터페이스의 시각적 테마를 선택하세요.",
+      "themeDescription": "카드를 클릭하면 테마가 적용됩니다. 테마를 복제하여 나만의 색상으로 커스터마이즈할 수 있습니다.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "프리셋",
+      "customSection": "커스텀 테마",
+      "customEmptyGuide": "테마를 복제하여 나만의 색상 세트를 만들 수 있습니다.",
+      "newTheme": "새 테마",
+      "basePickerTitle": "베이스 테마 선택",
+      "duplicate": "복제",
+      "editTheme": "편집",
+      "deleteTheme": "삭제",
+      "deleteConfirmTitle": "커스텀 테마 삭제",
+      "deleteConfirmMessage": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+      "deleteConfirmActiveNote": "이 테마는 현재 적용 중입니다. 삭제 후에는 Default 테마가 적용됩니다.",
+      "copyName": "{{name}} 사본",
+      "themeName": "테마 이름",
+      "editorModeLight": "라이트",
+      "editorModeDark": "다크",
+      "editorModeDescription": "에디터 영역은 Monaco에 내장된 라이트/다크 스킨을 사용하며, 위의 색상 설정은 영향을 주지 않습니다.",
+      "resetToBase": "베이스({{name}}) 색상으로 재설정",
+      "backToDefault": "Default 테마로 재설정",
+      "doneEditing": "완료",
+      "contrastWarning": "텍스트와 배경의 대비가 낮아 글자가 읽기 어려울 수 있습니다.",
+      "applied": "적용됨",
+      "colors": {
+        "backgroundDefault": "배경",
+        "backgroundPaper": "표면",
+        "textPrimary": "텍스트",
+        "textSecondary": "보조 텍스트",
+        "primaryMain": "프라이머리",
+        "secondaryMain": "세컨더리",
+        "divider": "구분선"
       }
     },
     "globalVariables": {
