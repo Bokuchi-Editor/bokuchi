@@ -22,6 +22,8 @@ function AppDesktop() {
   const {
     // State
     theme,
+    customThemes,
+    handleCustomThemesChange,
     settingsOpen,
     settingsFocusTarget,
     helpOpen,
@@ -589,6 +591,8 @@ function AppDesktop() {
           onUpdate={handleCheckForUpdate}
           onDismissUpdate={handleDismissUpdate}
           as400Unlocked={as400Unlocked}
+          customThemes={customThemes}
+          onCustomThemesChange={handleCustomThemesChange}
           t={t}
         />
 
@@ -627,6 +631,7 @@ function AppDesktop() {
           })}
           darkMode={isDarkTheme(theme)}
           theme={theme}
+          customThemes={customThemes}
           onThemeChange={handleThemeChange}
           zoomPercentage={zoomPercentage}
           onZoomIn={zoomIn}

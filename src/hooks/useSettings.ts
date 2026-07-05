@@ -1,9 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ThemeName, getThemeByName, applyThemeToDocument } from '../themes';
+import { ThemeId, getThemeByName, applyThemeToDocument, registerCustomThemes } from '../themes';
+import { CustomTheme, isCustomThemeId } from '../themes/customTheme';
 import { storeApi } from '../api/storeApi';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { ZOOM_CONFIG } from '../constants/zoom';
+
+/**
+ * Debounce for persisting custom themes: dragging a color picker fires a
+ * state update per tick, and each store save writes the whole JSON to disk.
+ * The registry/UI update instantly; only the disk write is deferred.
+ */
+const CUSTOM_THEME_SAVE_DEBOUNCE_MS = 500;
 
 interface UseSettingsParams {
   isInitialized: boolean;
@@ -24,15 +32,23 @@ export const useSettings = ({
 }: UseSettingsParams) => {
   const { i18n } = useTranslation();
 
-  const [theme, setTheme] = useState<ThemeName>('default');
+  const [theme, setTheme] = useState<ThemeId>('default');
   const [language, setLanguage] = useState('en');
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [tabSidebarPinned, setTabSidebarPinned] = useState(true);
   const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
+  const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [appSettings, setAppSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
+  const customThemeSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentTheme = getThemeByName(theme);
+  // Resolve through the customThemes state (not only the module registry) so
+  // that editing an applied custom theme — same id, new colors — recomputes
+  // the MUI theme and re-renders the app.
+  const currentTheme = useMemo(() => {
+    const custom = customThemes.find((c) => c.id === theme);
+    return getThemeByName(custom ? custom.id : theme);
+  }, [theme, customThemes]);
 
   // Update settings when zoom level changes
   useEffect(() => {
@@ -53,13 +69,28 @@ export const useSettings = ({
     const loadSettings = async () => {
       try {
         const settings = await storeApi.loadAppSettings();
-        setAppSettings(settings);
 
         setLanguage(settings.interface.language);
         i18n.changeLanguage(settings.interface.language);
 
-        setTheme(settings.appearance.theme as ThemeName);
-        applyThemeToDocument(settings.appearance.theme as ThemeName);
+        // Custom themes must be registered before the saved theme is resolved.
+        // If the saved theme is a custom id whose definition is gone (corrupt
+        // store, partial import), fall back to Default instead of rendering
+        // with a missing palette.
+        const loadedCustomThemes = await storeApi.loadCustomThemes();
+        registerCustomThemes(loadedCustomThemes);
+        setCustomThemes(loadedCustomThemes);
+
+        let themeToApply = settings.appearance.theme;
+        if (isCustomThemeId(themeToApply) && !loadedCustomThemes.some((c) => c.id === themeToApply)) {
+          themeToApply = 'default';
+        }
+        setAppSettings({
+          ...settings,
+          appearance: { ...settings.appearance, theme: themeToApply },
+        });
+        setTheme(themeToApply);
+        applyThemeToDocument(themeToApply);
 
         setGlobalVariables(settings.globalVariables);
         setTabLayout(settings.interface.tabLayout);
@@ -163,7 +194,7 @@ export const useSettings = ({
     i18n.changeLanguage(newLanguage);
   };
 
-  const handleThemeChange = (newTheme: ThemeName) => {
+  const handleThemeChange = (newTheme: ThemeId) => {
     setTheme(newTheme);
     applyThemeToDocument(newTheme);
     setAppSettings((prev) => {
@@ -178,14 +209,44 @@ export const useSettings = ({
     });
   };
 
+  /**
+   * Replace the custom theme list (create / edit / delete). Registers the new
+   * list synchronously so the theme resolvers see it before the next render,
+   * re-applies the document variables when the active theme was edited, and
+   * persists with a debounce (color-picker drags fire many updates).
+   * When the active custom theme was deleted, falls back to Default.
+   */
+  const handleCustomThemesChange = useCallback((nextCustomThemes: CustomTheme[]) => {
+    registerCustomThemes(nextCustomThemes);
+    setCustomThemes(nextCustomThemes);
+
+    if (isCustomThemeId(theme)) {
+      if (nextCustomThemes.some((c) => c.id === theme)) {
+        applyThemeToDocument(theme);
+      } else {
+        handleThemeChange('default');
+      }
+    }
+
+    if (customThemeSaveTimer.current !== null) {
+      clearTimeout(customThemeSaveTimer.current);
+    }
+    customThemeSaveTimer.current = setTimeout(() => {
+      customThemeSaveTimer.current = null;
+      storeApi.saveCustomThemes(nextCustomThemes).catch((err) =>
+        console.error('Failed to save custom themes:', err)
+      );
+    }, CUSTOM_THEME_SAVE_DEBOUNCE_MS);
+  }, [theme]);
+
   const handleAppSettingsChange = useCallback(async (newSettings: AppSettings) => {
     setAppSettings(newSettings);
 
     setLanguage(newSettings.interface.language);
     i18n.changeLanguage(newSettings.interface.language);
 
-    setTheme(newSettings.appearance.theme as ThemeName);
-    applyThemeToDocument(newSettings.appearance.theme as ThemeName);
+    setTheme(newSettings.appearance.theme);
+    applyThemeToDocument(newSettings.appearance.theme);
 
     setGlobalVariables(newSettings.globalVariables);
     setTabLayout(newSettings.interface.tabLayout);
@@ -237,6 +298,8 @@ export const useSettings = ({
     toggleTabSidebarPinned,
     globalVariables,
     setGlobalVariables,
+    customThemes,
+    handleCustomThemesChange,
     appSettings,
     setAppSettings,
     isSettingsLoaded,

@@ -12,6 +12,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('../../themes', () => ({
   getThemeByName: vi.fn().mockReturnValue({ palette: { mode: 'light' } }),
   applyThemeToDocument: vi.fn(),
+  registerCustomThemes: vi.fn(),
 }));
 
 vi.mock('../../api/storeApi', () => ({
@@ -32,12 +33,14 @@ vi.mock('../../api/storeApi', () => ({
     saveViewMode: vi.fn().mockResolvedValue(undefined),
     loadViewMode: vi.fn().mockResolvedValue('split'),
     saveAppSettings: vi.fn().mockResolvedValue(undefined),
+    saveCustomThemes: vi.fn().mockResolvedValue(undefined),
+    loadCustomThemes: vi.fn().mockResolvedValue([]),
   },
 }));
 
 import { useSettings } from '../useSettings';
 import { storeApi } from '../../api/storeApi';
-import { applyThemeToDocument } from '../../themes';
+import { applyThemeToDocument, registerCustomThemes } from '../../themes';
 import { asMock } from '../../test-utils';
 
 describe('useSettings', () => {
@@ -179,5 +182,122 @@ describe('useSettings', () => {
 
     expect(storeApi.loadViewMode).toHaveBeenCalled();
     expect(setViewMode).toHaveBeenCalledWith('preview');
+  });
+
+  // --- Custom themes ---------------------------------------------------------
+
+  const sampleCustomTheme = () => ({
+    id: 'custom:abc-123',
+    name: 'My Theme',
+    baseTheme: 'dawn',
+    mode: 'light' as const,
+    colors: {
+      backgroundDefault: '#faf6f4',
+      backgroundPaper: '#f4edea',
+      textPrimary: '#39312d',
+      textSecondary: '#796b64',
+      primaryMain: '#785e4f',
+      secondaryMain: '#977e71',
+      divider: '#e6dad2',
+    },
+  });
+
+  // T-SETT-09: a saved custom theme id whose definition is gone must not brick
+  // the UI — the app falls back to the Default theme.
+  it('T-SETT-09: falls back to default when saved custom theme is missing', async () => {
+    vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce({
+      ...(await storeApi.loadAppSettings()),
+      appearance: { theme: 'custom:gone', showLineNumbers: true },
+    });
+    vi.mocked(storeApi.loadCustomThemes).mockResolvedValueOnce([]);
+
+    const { result } = renderHook(() => useSettings(defaultParams()));
+
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+
+    expect(result.current.theme).toBe('default');
+    expect(result.current.appSettings.appearance.theme).toBe('default');
+    expect(applyThemeToDocument).toHaveBeenCalledWith('default');
+  });
+
+  // T-SETT-10: a saved custom theme that exists is restored as-is
+  it('T-SETT-10: restores a saved custom theme when its definition exists', async () => {
+    const custom = sampleCustomTheme();
+    vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce({
+      ...(await storeApi.loadAppSettings()),
+      appearance: { theme: custom.id, showLineNumbers: true },
+    });
+    vi.mocked(storeApi.loadCustomThemes).mockResolvedValueOnce([custom]);
+
+    const { result } = renderHook(() => useSettings(defaultParams()));
+
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+
+    expect(result.current.theme).toBe(custom.id);
+    expect(result.current.customThemes).toEqual([custom]);
+    expect(registerCustomThemes).toHaveBeenCalledWith([custom]);
+    expect(applyThemeToDocument).toHaveBeenCalledWith(custom.id);
+  });
+
+  // T-SETT-11: editing the applied custom theme re-applies it to the document
+  // (live recolor) and persists after the debounce.
+  it('T-SETT-11: handleCustomThemesChange re-applies edited active theme and saves', async () => {
+    vi.useFakeTimers();
+    try {
+      const custom = sampleCustomTheme();
+      vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce({
+        ...(await storeApi.loadAppSettings()),
+        appearance: { theme: custom.id, showLineNumbers: true },
+      });
+      vi.mocked(storeApi.loadCustomThemes).mockResolvedValueOnce([custom]);
+
+      const { result } = renderHook(() => useSettings(defaultParams()));
+      await vi.waitFor(() => {
+        expect(result.current.isSettingsLoaded).toBe(true);
+      });
+
+      const edited = { ...custom, colors: { ...custom.colors, primaryMain: '#ff0000' } };
+      vi.mocked(applyThemeToDocument).mockClear();
+      act(() => {
+        result.current.handleCustomThemesChange([edited]);
+      });
+
+      expect(registerCustomThemes).toHaveBeenCalledWith([edited]);
+      expect(applyThemeToDocument).toHaveBeenCalledWith(custom.id);
+      // Persistence is debounced — nothing saved yet, then one save after the delay
+      expect(storeApi.saveCustomThemes).not.toHaveBeenCalled();
+      act(() => {
+        vi.advanceTimersByTime(600);
+      });
+      expect(storeApi.saveCustomThemes).toHaveBeenCalledWith([edited]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // T-SETT-12: deleting the applied custom theme falls back to Default
+  it('T-SETT-12: deleting the active custom theme falls back to default', async () => {
+    const custom = sampleCustomTheme();
+    vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce({
+      ...(await storeApi.loadAppSettings()),
+      appearance: { theme: custom.id, showLineNumbers: true },
+    });
+    vi.mocked(storeApi.loadCustomThemes).mockResolvedValueOnce([custom]);
+
+    const { result } = renderHook(() => useSettings(defaultParams()));
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+
+    act(() => {
+      result.current.handleCustomThemesChange([]);
+    });
+
+    expect(result.current.theme).toBe('default');
+    expect(applyThemeToDocument).toHaveBeenCalledWith('default');
   });
 });

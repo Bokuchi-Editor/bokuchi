@@ -255,7 +255,7 @@
     "appearance": {
       "title": "外观",
       "theme": "主题",
-      "themeDescription": "选择应用程序界面的视觉主题。",
+      "themeDescription": "点击卡片即可应用主题。复制任意主题即可自定义自己的配色。",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "预设",
+      "customSection": "自定义主题",
+      "customEmptyGuide": "复制任意主题即可创建自己的配色方案。",
+      "newTheme": "新建主题",
+      "basePickerTitle": "选择基础主题",
+      "duplicate": "复制",
+      "editTheme": "编辑",
+      "deleteTheme": "删除",
+      "deleteConfirmTitle": "删除自定义主题",
+      "deleteConfirmMessage": "确定删除“{{name}}”吗？此操作无法撤销。",
+      "deleteConfirmActiveNote": "该主题当前正在使用。删除后将应用 Default 主题。",
+      "copyName": "{{name}} 副本",
+      "themeName": "主题名称",
+      "editorModeLight": "浅色",
+      "editorModeDark": "深色",
+      "editorModeDescription": "编辑器区域使用 Monaco 内置的浅色/深色皮肤，上述颜色设置不会影响它。",
+      "resetToBase": "将颜色重置为基础主题（{{name}}）",
+      "backToDefault": "重置为 Default 主题",
+      "doneEditing": "完成",
+      "contrastWarning": "文本与背景的对比度较低，文字可能难以阅读。",
+      "applied": "已应用",
+      "colors": {
+        "backgroundDefault": "背景",
+        "backgroundPaper": "表面",
+        "textPrimary": "文本",
+        "textSecondary": "次要文本",
+        "primaryMain": "主色",
+        "secondaryMain": "辅色",
+        "divider": "分隔线"
       }
     },
     "globalVariables": {

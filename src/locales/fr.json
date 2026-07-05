@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Apparence",
       "theme": "Thème",
-      "themeDescription": "Choisissez le thème visuel pour l'interface de l'application.",
+      "themeDescription": "Cliquez sur une carte pour appliquer un thème. Dupliquez n'importe quel thème pour personnaliser vos propres couleurs.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Prédéfinis",
+      "customSection": "Thèmes personnalisés",
+      "customEmptyGuide": "Dupliquez n'importe quel thème pour créer votre propre palette de couleurs.",
+      "newTheme": "Nouveau thème",
+      "basePickerTitle": "Choisissez un thème de base",
+      "duplicate": "Dupliquer",
+      "editTheme": "Modifier",
+      "deleteTheme": "Supprimer",
+      "deleteConfirmTitle": "Supprimer le thème personnalisé",
+      "deleteConfirmMessage": "Supprimer « {{name}} » ? Cette action est irréversible.",
+      "deleteConfirmActiveNote": "Ce thème est actuellement appliqué. Après la suppression, le thème Default sera appliqué.",
+      "copyName": "Copie de {{name}}",
+      "themeName": "Nom du thème",
+      "editorModeLight": "Clair",
+      "editorModeDark": "Sombre",
+      "editorModeDescription": "Le panneau de l'éditeur utilise le style clair/sombre intégré de Monaco — les couleurs ci-dessus ne l'affectent pas.",
+      "resetToBase": "Réinitialiser les couleurs à la base ({{name}})",
+      "backToDefault": "Rétablir le thème Default",
+      "doneEditing": "Terminé",
+      "contrastWarning": "Faible contraste entre le texte et l'arrière-plan — le texte peut être difficile à lire.",
+      "applied": "Appliqué",
+      "colors": {
+        "backgroundDefault": "Arrière-plan",
+        "backgroundPaper": "Surface",
+        "textPrimary": "Texte",
+        "textSecondary": "Texte secondaire",
+        "primaryMain": "Primaire",
+        "secondaryMain": "Secondaire",
+        "divider": "Séparateur"
       }
     },
     "globalVariables": {
