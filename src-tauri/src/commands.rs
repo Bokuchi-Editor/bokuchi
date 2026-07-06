@@ -171,6 +171,91 @@ pub async fn save_file(path: String, content: String) -> Result<(), String> {
         .map_err(|e| format!("Failed to save file: {} ({:?})", e, e.kind()))
 }
 
+// Tauri command: Save raw image bytes into a document-relative asset folder.
+// Used when pasting a bitmap from the clipboard, where no source file exists.
+// Mirrors `save_file`'s std::fs approach so images can be written next to
+// documents anywhere on disk (bypassing the fs plugin's static scope). Returns
+// the written file's path relative to `dest_dir`, forward-slashed for use in a
+// Markdown link (e.g. "images/foo.png").
+#[tauri::command]
+pub async fn save_image_bytes(
+    dest_dir: String,
+    subdir: String,
+    filename: String,
+    bytes: Vec<u8>,
+) -> Result<String, String> {
+    let dir = Path::new(&dest_dir).join(&subdir);
+    fs::create_dir_all(&dir)
+        .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
+    let name = write_image_dedup(&dir, &filename, &bytes)?;
+    Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
+}
+
+// Tauri command: Copy an existing image file into a document-relative asset
+// folder, preserving its file name. Used when an image dragged into the editor
+// lives outside the document's own folder. Reads the source server-side so
+// paths outside the fs plugin scope are reachable. Returns the copied file's
+// path relative to `dest_dir`, forward-slashed.
+#[tauri::command]
+pub async fn copy_image_asset(
+    src_path: String,
+    dest_dir: String,
+    subdir: String,
+) -> Result<String, String> {
+    let bytes = fs::read(&src_path)
+        .map_err(|e| format!("Failed to read image: {} ({:?})", e, e.kind()))?;
+    let filename = Path::new(&src_path)
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .ok_or_else(|| "Invalid source image path".to_string())?;
+    let dir = Path::new(&dest_dir).join(&subdir);
+    fs::create_dir_all(&dir)
+        .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
+    let name = write_image_dedup(&dir, &filename, &bytes)?;
+    Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
+}
+
+// Write `bytes` into `dir` under `filename`, avoiding collisions. Only the file
+// name component of `filename` is used (guards against path traversal). If a
+// file with the same name already holds identical bytes it is reused with no
+// write (dedup); otherwise a numeric suffix (`name-1.ext`, `name-2.ext`, …) is
+// tried until a free / matching name is found. Returns the final file name.
+pub(crate) fn write_image_dedup(dir: &Path, filename: &str, bytes: &[u8]) -> Result<String, String> {
+    let base = Path::new(filename)
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_else(|| "image".to_string());
+    let stem = Path::new(&base)
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_else(|| "image".to_string());
+    let ext = Path::new(&base)
+        .extension()
+        .map(|e| format!(".{}", e.to_string_lossy()))
+        .unwrap_or_default();
+
+    for i in 0..1000 {
+        let candidate = if i == 0 {
+            format!("{}{}", stem, ext)
+        } else {
+            format!("{}-{}{}", stem, i, ext)
+        };
+        let target = dir.join(&candidate);
+        if !target.exists() {
+            fs::write(&target, bytes)
+                .map_err(|e| format!("Failed to write image: {} ({:?})", e, e.kind()))?;
+            return Ok(candidate);
+        }
+        // Reuse an identical existing file instead of piling up duplicates.
+        if let Ok(existing) = fs::read(&target) {
+            if existing == bytes {
+                return Ok(candidate);
+            }
+        }
+    }
+    Err("Too many image name collisions".to_string())
+}
+
 // Tauri command: Get file hash
 #[tauri::command]
 pub async fn get_file_hash(path: String) -> Result<FileHashInfo, String> {

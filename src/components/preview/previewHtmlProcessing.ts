@@ -1,5 +1,5 @@
 import { readFile } from '@tauri-apps/plugin-fs';
-import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath } from '../../utils/imagePathResolver';
+import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc } from '../../utils/imagePathResolver';
 
 /**
  * Convert easter-egg fence blocks (`:::shake … :::`) into animated `<div>`s.
@@ -65,10 +65,13 @@ export async function resolveImagePaths(
   while ((imgMatch = imgRegex.exec(html)) !== null) {
     const src = imgMatch[1];
     if (!isAbsoluteUrl(src)) {
-      const absolutePath = resolveRelativePath(baseDir, src);
+      // marked percent-encodes spaces / non-ASCII in the src; decode before
+      // touching the filesystem so files like "my photo.png" resolve.
+      const decodedSrc = decodeImageSrc(src);
+      const absolutePath = resolveRelativePath(baseDir, decodedSrc);
       imgPromises.push(
         readFile(absolutePath).then(data => {
-          const blob = new Blob([data], { type: mimeTypeFromPath(src) });
+          const blob = new Blob([data], { type: mimeTypeFromPath(decodedSrc) });
           const blobUrl = URL.createObjectURL(blob);
           replacements.set(src, blobUrl);
         }).catch(err => {

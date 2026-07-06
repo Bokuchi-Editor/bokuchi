@@ -487,4 +487,30 @@ export const desktopApi = {
       return [];
     }
   },
+
+  // Save raw image bytes into `<destDir>/<subdir>/<filename>` (via Rust command,
+  // which creates the folder, dedups identical content and suffixes collisions).
+  // Returns the written file's path relative to `destDir` (e.g. "images/foo.png").
+  // Used when pasting a bitmap from the clipboard.
+  async saveImageBytes(
+    destDir: string,
+    subdir: string,
+    filename: string,
+    bytes: Uint8Array,
+  ): Promise<string> {
+    return invoke<string>('save_image_bytes', {
+      destDir,
+      subdir,
+      filename,
+      bytes: Array.from(bytes),
+    });
+  },
+
+  // Copy an existing image file into `<destDir>/<subdir>/`, preserving its name
+  // (via Rust command, same dedup/collision handling as saveImageBytes). Returns
+  // the copied file's path relative to `destDir`. Used when an image dragged into
+  // the editor lives outside the document's own folder.
+  async copyImageAsset(srcPath: string, destDir: string, subdir: string): Promise<string> {
+    return invoke<string>('copy_image_asset', { srcPath, destDir, subdir });
+  },
 };

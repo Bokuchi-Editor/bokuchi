@@ -15,6 +15,13 @@ vi.mock('react-i18next', () => ({
 vi.mock('@tauri-apps/api/window');
 vi.mock('@tauri-apps/plugin-clipboard-manager');
 
+// The editor registers a drag-drop listener for image insertion on mount.
+vi.mock('@tauri-apps/api/webview', () => ({
+  getCurrentWebview: () => ({
+    onDragDropEvent: vi.fn().mockResolvedValue(() => {}),
+  }),
+}));
+
 // Mock SearchReplacePanel – we test its integration, not its internals
 vi.mock('../SearchReplacePanel', () => ({
   default: (props: {

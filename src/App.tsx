@@ -12,6 +12,7 @@ import RenameDialog from './components/RenameDialog';
 import { useAppState } from './hooks/useAppState';
 import { useRinExitButton } from './hooks/useRinExitButton';
 import { isDarkTheme } from './themes';
+import { isImageFilePath } from './utils/imageInsertion';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -297,11 +298,16 @@ function AppDesktop() {
           handlersRef.current.setIsDragOver(false);
           const supportedPaths = event.payload.paths.filter(isSupportedFile);
           if (supportedPaths.length === 0) {
-            handlersRef.current.setSnackbar({
-              open: true,
-              message: handlersRef.current.t('fileOperations.noMarkdownFiles'),
-              severity: 'error',
-            });
+            // Image drops are handled by the editor's own drag-drop listener
+            // (inserted as Markdown links), so don't treat them as an error here.
+            const hasImage = event.payload.paths.some(isImageFilePath);
+            if (!hasImage) {
+              handlersRef.current.setSnackbar({
+                open: true,
+                message: handlersRef.current.t('fileOperations.noMarkdownFiles'),
+                severity: 'error',
+              });
+            }
             return;
           }
 

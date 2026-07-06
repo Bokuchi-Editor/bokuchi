@@ -12,13 +12,27 @@ import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
 import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
 import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
+import { handleListEnter, handleListIndent } from '../utils/listEditorActions';
+import { parseListItem } from '../utils/listFormatter';
 import { countWords } from '../utils/wordCount';
+import { desktopApi } from '../api/desktopApi';
+import {
+  IMAGE_SUBDIR,
+  isImageFilePath,
+  imageExtFromMime,
+  generatePastedImageName,
+  relativeImagePath,
+  documentDir,
+  buildImageMarkdown,
+} from '../utils/imageInsertion';
 
 interface EditorProps {
   content: string;
   onChange: (content: string) => void;
   darkMode: boolean;
   theme?: string;
+  /** Absolute path of the active document; used to resolve image links on paste/drop. */
+  filePath?: string;
   fileNotFound?: {
     filePath: string;
     onClose: () => void;
@@ -53,10 +67,26 @@ interface EditorProps {
   onTabSwitch?: (tabId: string) => void;
 }
 
+/** Extract the first image file from clipboard data, or null if there is none. */
+function getClipboardImageFile(dt: DataTransfer | null): File | null {
+  if (!dt) return null;
+  for (const f of dt.files ? Array.from(dt.files) : []) {
+    if (f.type.startsWith('image/')) return f;
+  }
+  for (const item of dt.items ? Array.from(dt.items) : []) {
+    if (item.kind === 'file' && item.type.startsWith('image/')) {
+      const f = item.getAsFile();
+      if (f) return f;
+    }
+  }
+  return null;
+}
+
 const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
   darkMode,
+  filePath,
   fileNotFound,
   onStatusChange,
   zoomLevel = 1.0,
@@ -202,6 +232,99 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     }
   }, []);
 
+  // Latest values reachable from listeners that are registered once (drag-drop).
+  const filePathRef = useRef(filePath);
+  filePathRef.current = filePath;
+  const onSnackbarRef = useRef(onSnackbar);
+  onSnackbarRef.current = onSnackbar;
+  const tRef = useRef(t);
+  tRef.current = t;
+
+  // Insert text at an explicit editor position (or the current selection/caret
+  // when omitted). Used by image paste/drop, which need to place the link where
+  // the user dropped rather than always at the caret.
+  const insertTextAt = useCallback((text: string, position?: { lineNumber: number; column: number }) => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    let range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number };
+    if (position) {
+      range = {
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column,
+      };
+    } else {
+      const sel = ed.getSelection();
+      const pos = ed.getPosition();
+      if (sel) {
+        range = sel;
+      } else if (pos) {
+        range = { startLineNumber: pos.lineNumber, startColumn: pos.column, endLineNumber: pos.lineNumber, endColumn: pos.column };
+      } else {
+        return;
+      }
+    }
+    ed.executeEdits('image-insert', [{ range, text, forceMoveMarkers: true }]);
+    ed.focus();
+  }, []);
+
+  // Paste path: write a clipboard bitmap (no source file) into the document's
+  // images/ folder with a timestamped name, then insert the Markdown link.
+  const insertImageFromClipboard = useCallback(async (file: File) => {
+    const docPath = filePathRef.current;
+    if (!docPath) {
+      onSnackbarRef.current?.(tRef.current('imageInsert.saveFirst'), 'warning');
+      return;
+    }
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const ext = imageExtFromMime(file.type || 'image/png');
+      const name = generatePastedImageName(new Date(), ext);
+      const rel = await desktopApi.saveImageBytes(documentDir(docPath), IMAGE_SUBDIR, name, bytes);
+      insertTextAt(buildImageMarkdown(rel));
+      onSnackbarRef.current?.(tRef.current('imageInsert.inserted'), 'success');
+    } catch (error) {
+      console.error('Failed to insert pasted image:', error);
+      onSnackbarRef.current?.(tRef.current('imageInsert.failed'), 'error');
+    }
+  }, [insertTextAt]);
+
+  // Drop path: reference images already inside the document folder in place;
+  // copy images from outside into images/. Insert all links at the drop point.
+  const insertImagesFromPaths = useCallback(async (paths: string[], position?: { x: number; y: number }) => {
+    const docPath = filePathRef.current;
+    if (!docPath) {
+      onSnackbarRef.current?.(tRef.current('imageInsert.saveFirst'), 'warning');
+      return;
+    }
+    const dir = documentDir(docPath);
+    try {
+      const links: string[] = [];
+      for (const p of paths) {
+        const rel = relativeImagePath(dir, p) ?? (await desktopApi.copyImageAsset(p, dir, IMAGE_SUBDIR));
+        links.push(buildImageMarkdown(rel));
+      }
+      // Map the physical drop coordinates to an editor position (fallback: caret).
+      let pos: { lineNumber: number; column: number } | undefined;
+      const ed = editorRef.current;
+      if (ed && position) {
+        const dpr = window.devicePixelRatio || 1;
+        const target = ed.getTargetAtClientPoint(position.x / dpr, position.y / dpr);
+        pos = target?.position ?? undefined;
+      }
+      insertTextAt(links.join('\n'), pos);
+      const message =
+        links.length > 1
+          ? tRef.current('imageInsert.insertedMultiple', { count: links.length })
+          : tRef.current('imageInsert.inserted');
+      onSnackbarRef.current?.(message, 'success');
+    } catch (error) {
+      console.error('Failed to insert dropped image(s):', error);
+      onSnackbarRef.current?.(tRef.current('imageInsert.failed'), 'error');
+    }
+  }, [insertTextAt]);
+
   const handlePasteWithData = useCallback(async (htmlData: string, plainText: string) => {
 
     try {
@@ -318,6 +441,16 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           return;
         }
 
+        // Image paste: a screenshot / copied bitmap arrives as a file item on the
+        // clipboard. Save it beside the document and insert a Markdown link.
+        const imageFile = getClipboardImageFile(e.clipboardData);
+        if (imageFile) {
+          e.preventDefault();
+          e.stopPropagation();
+          await insertImageFromClipboard(imageFile);
+          return;
+        }
+
         // Normal paste processing
         // Prevent default paste processing
         e.preventDefault();
@@ -343,8 +476,33 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       document.removeEventListener('paste', handleGlobalPaste, true);
       document.removeEventListener('keydown', handleKeyDown, true);
       document.removeEventListener('keyup', handleKeyUp, true);
+      // (drag-drop listener is torn down in its own effect below)
     };
-  }, [tableConversion, handlePasteWithData, insertPlainText, onSnackbar]);
+  }, [tableConversion, handlePasteWithData, insertPlainText, insertImageFromClipboard, onSnackbar]);
+
+  // Drag & drop image insertion. Registered once (reads the latest doc path via
+  // filePathRef). Only image files are handled here; App.tsx's window-level
+  // listener still opens dropped .md/.txt documents, so the two coexist by
+  // acting on disjoint file types.
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    let disposed = false;
+    (async () => {
+      const { getCurrentWebview } = await import('@tauri-apps/api/webview');
+      if (disposed) return;
+      unlisten = await getCurrentWebview().onDragDropEvent(async (event) => {
+        if (event.payload.type !== 'drop') return;
+        if (!editorRef.current) return;
+        const imagePaths = event.payload.paths.filter(isImageFilePath);
+        if (imagePaths.length === 0) return; // documents are handled elsewhere
+        await insertImagesFromPaths(imagePaths, event.payload.position);
+      });
+    })();
+    return () => {
+      disposed = true;
+      if (unlisten) unlisten();
+    };
+  }, [insertImagesFromPaths]);
 
   // Robust focus function with Tauri window focus + retry
   const focusEditor = useCallback(async (editorInstance?: editor.IStandaloneCodeEditor) => {
@@ -478,39 +636,49 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         // IME composition is active so Japanese conversion (Enter to confirm)
         // and default Tab are never hijacked.
         const inTableRowKey = editor.createContextKey<boolean>('bokuchiInTableRow', false);
+        const inListItemKey = editor.createContextKey<boolean>('bokuchiInListItem', false);
         let isComposing = false;
 
-        const updateTableContext = () => {
+        const clearEditingContext = () => {
+          inTableRowKey.set(false);
+          inListItemKey.set(false);
+        };
+
+        const updateEditingContext = () => {
           if (isComposing) {
-            inTableRowKey.set(false);
+            clearEditingContext();
             return;
           }
           const model = editor.getModel();
           const pos = editor.getPosition();
           if (!model || !pos) {
-            inTableRowKey.set(false);
+            clearEditingContext();
             return;
           }
+          const lineContent = model.getLineContent(pos.lineNumber);
           const block = findTableBlock(model.getLinesContent(), pos.lineNumber);
-          const inRow = !!block && !isTableSeparatorLine(model.getLineContent(pos.lineNumber));
+          const inRow = !!block && !isTableSeparatorLine(lineContent);
           inTableRowKey.set(inRow);
+          // A table row is never treated as a list item (mutually exclusive
+          // preconditions so Enter/Tab dispatch to a single handler).
+          inListItemKey.set(!inRow && parseListItem(lineContent) !== null);
         };
 
         disposablesRef.current.push(
           editor.onDidCompositionStart(() => {
             isComposing = true;
-            inTableRowKey.set(false);
+            clearEditingContext();
           }),
         );
         disposablesRef.current.push(
           editor.onDidCompositionEnd(() => {
             isComposing = false;
-            updateTableContext();
+            updateEditingContext();
           }),
         );
-        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateTableContext));
-        disposablesRef.current.push(editor.onDidChangeModelContent(updateTableContext));
-        updateTableContext();
+        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateEditingContext));
+        disposablesRef.current.push(editor.onDidChangeModelContent(updateEditingContext));
+        updateEditingContext();
 
         // #6: Enter adds a new row / exits the table when on an empty row.
         // If the handler declines (e.g. an active selection), fall back to a
@@ -550,6 +718,50 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           run: (ed) => {
             const e = ed as editor.IStandaloneCodeEditor;
             if (!handleTableTab(e, true)) {
+              e.trigger('keyboard', 'outdent', null);
+            }
+          },
+        });
+
+        // --- Smart Markdown list editing (Enter continuation, Tab indent) ---
+
+        // Enter continues the list (or ends it on an empty item). Fall back to a
+        // normal newline when the handler declines (e.g. active selection).
+        editor.addAction({
+          id: 'list-enter-continue',
+          label: 'List: Continue Item',
+          keybindings: [monaco.KeyCode.Enter],
+          precondition: 'bokuchiInListItem',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleListEnter(e)) {
+              e.trigger('keyboard', 'type', { text: '\n' });
+            }
+          },
+        });
+
+        // Tab / Shift+Tab indent or outdent the list item; fall back to the
+        // default indent/outdent when the handler declines.
+        editor.addAction({
+          id: 'list-indent',
+          label: 'List: Indent Item',
+          keybindings: [monaco.KeyCode.Tab],
+          precondition: 'bokuchiInListItem',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleListIndent(e, false)) {
+              e.trigger('keyboard', 'tab', null);
+            }
+          },
+        });
+        editor.addAction({
+          id: 'list-outdent',
+          label: 'List: Outdent Item',
+          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
+          precondition: 'bokuchiInListItem',
+          run: (ed) => {
+            const e = ed as editor.IStandaloneCodeEditor;
+            if (!handleListIndent(e, true)) {
               e.trigger('keyboard', 'outdent', null);
             }
           },

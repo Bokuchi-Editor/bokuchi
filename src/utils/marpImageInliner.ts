@@ -1,5 +1,5 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
-import { dirnameOf, isAbsoluteUrl, resolveRelativePath } from './imagePathResolver';
+import { dirnameOf, isAbsoluteUrl, resolveRelativePath, decodeImageSrc } from './imagePathResolver';
 
 /**
  * Rewrite relative image references in Marp HTML to Tauri asset-protocol URLs
@@ -30,7 +30,9 @@ export function rewriteMarpRelativeImages(html: string, filePath: string): strin
 
   function collectSrc(src: string) {
     if (isAbsoluteUrl(src) || replacements.has(src)) return;
-    const absolutePath = resolveRelativePath(baseDir, src);
+    // Decode percent-encoding (spaces / non-ASCII) so files resolve on disk;
+    // the map key stays the raw src for the literal string replacement below.
+    const absolutePath = resolveRelativePath(baseDir, decodeImageSrc(src));
     replacements.set(src, convertFileSrc(absolutePath));
   }
 
