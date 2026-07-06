@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Thả tệp Markdown vào đây",
     "noActiveTab": "Không có tab hoạt động để lưu. Vui lòng mở tệp trước."
   },
+  "imageInsert": {
+    "saveFirst": "Hãy lưu tài liệu trước để chèn hình ảnh bằng đường dẫn tương đối",
+    "inserted": "Đã chèn hình ảnh",
+    "insertedMultiple": "Đã chèn {{count}} hình ảnh",
+    "failed": "Không thể chèn hình ảnh",
+    "dropHere": "Thả hình ảnh vào đây"
+  },
   "dialogs": {
     "saveChanges": "Lưu thay đổi trước khi đóng?",
     "saveChangesMessage": "<bold>{{fileName}}</bold> có thay đổi chưa được lưu. Bạn có muốn lưu không?",

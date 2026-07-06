@@ -477,6 +477,13 @@
     "dropMarkdownFile": "أفلت ملف Markdown هنا",
     "noActiveTab": "لا يوجد تبويب نشط للحفظ. يرجى فتح ملف أولاً."
   },
+  "imageInsert": {
+    "saveFirst": "احفظ المستند أولاً لإدراج الصور بمسارات نسبية",
+    "inserted": "تم إدراج الصورة",
+    "insertedMultiple": "تم إدراج {{count}} صورة",
+    "failed": "فشل إدراج الصورة",
+    "dropHere": "أفلت الصورة هنا"
+  },
   "dialogs": {
     "saveChanges": "حفظ التغييرات قبل الإغلاق؟",
     "saveChangesMessage": "<bold>{{fileName}}</bold> يحتوي على تغييرات غير محفوظة. هل تريد حفظها؟",

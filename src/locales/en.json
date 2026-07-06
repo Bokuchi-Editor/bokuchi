@@ -481,7 +481,8 @@
     "saveFirst": "Save the document first to insert images with relative paths",
     "inserted": "Image inserted",
     "insertedMultiple": "{{count}} images inserted",
-    "failed": "Failed to insert image"
+    "failed": "Failed to insert image",
+    "dropHere": "Drop image here"
   },
   "dialogs": {
     "saveChanges": "Save changes before closing?",

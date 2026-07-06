@@ -113,6 +113,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
   const [showReplaceDefault, setShowReplaceDefault] = useState(false);
   const [searchPanelHeight, setSearchPanelHeight] = useState(0);
+  const [isImageDragOver, setIsImageDragOver] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -491,11 +492,23 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       const { getCurrentWebview } = await import('@tauri-apps/api/webview');
       if (disposed) return;
       unlisten = await getCurrentWebview().onDragDropEvent(async (event) => {
-        if (event.payload.type !== 'drop') return;
-        if (!editorRef.current) return;
-        const imagePaths = event.payload.paths.filter(isImageFilePath);
-        if (imagePaths.length === 0) return; // documents are handled elsewhere
-        await insertImagesFromPaths(imagePaths, event.payload.position);
+        const payload = event.payload;
+        if (payload.type === 'enter') {
+          // Show a drop hint while an image is being dragged in.
+          setIsImageDragOver(payload.paths.some(isImageFilePath));
+          return;
+        }
+        if (payload.type === 'leave') {
+          setIsImageDragOver(false);
+          return;
+        }
+        if (payload.type === 'drop') {
+          setIsImageDragOver(false);
+          if (!editorRef.current) return;
+          const imagePaths = payload.paths.filter(isImageFilePath);
+          if (imagePaths.length === 0) return; // documents are handled elsewhere
+          await insertImagesFromPaths(imagePaths, payload.position);
+        }
       });
     })();
     return () => {
@@ -911,6 +924,27 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           showReplaceDefault={showReplaceDefault}
           onHeightChange={setSearchPanelHeight}
         />
+        {isImageDragOver && (
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 20,
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px dashed',
+              borderColor: 'primary.main',
+              backgroundColor: 'action.hover',
+              boxSizing: 'border-box',
+            }}
+          >
+            <Typography variant="h6" color="primary" sx={{ pointerEvents: 'none' }}>
+              {t('imageInsert.dropHere')}
+            </Typography>
+          </Box>
+        )}
         {fileNotFound ? (
           <Box
             sx={{

@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Déposez le fichier Markdown ici",
     "noActiveTab": "Aucun onglet actif à enregistrer. Veuillez ouvrir un fichier d'abord."
   },
+  "imageInsert": {
+    "saveFirst": "Enregistrez d'abord le document pour insérer des images avec des chemins relatifs",
+    "inserted": "Image insérée",
+    "insertedMultiple": "{{count}} images insérées",
+    "failed": "Échec de l'insertion de l'image",
+    "dropHere": "Déposez l'image ici"
+  },
   "dialogs": {
     "saveChanges": "Enregistrer les modifications avant de fermer ?",
     "saveChangesMessage": "<bold>{{fileName}}</bold> contient des modifications non enregistrées. Voulez-vous les enregistrer ?",
