@@ -60,6 +60,13 @@ export function handleListEnter(ed: IEditor): boolean {
     return true;
   }
 
+  // Defer when the caret sits left of the item's content (inside the
+  // indentation, the marker or the checkbox). Splitting there would prepend a
+  // second marker to the pushed-down text (e.g. "- abc" -> "- - abc"); Monaco's
+  // default plain newline is the right behavior instead.
+  const contentStartColumn = line.length - info.content.length + 1;
+  if (pos.column < contentStartColumn) return false;
+
   // Continue the list: split at the cursor and prefix the new line with the
   // continued marker. Text after the cursor moves down after the prefix.
   const prefix = buildContinuationPrefix(info);

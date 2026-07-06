@@ -42,11 +42,11 @@ vi.mock('marked', () => {
   function simpleMarked(src: string): string {
     const lines = src.split('\n');
     const items = lines.map((line) => {
-      const unchecked = line.match(/^- \[ \] (.+)$/);
+      const unchecked = line.match(/^\s*[-*] \[ \] (.+)$/);
       if (unchecked) {
         return `<li><input disabled="" type="checkbox"> ${unchecked[1]}</li>`;
       }
-      const checked = line.match(/^- \[x\] (.+)$/);
+      const checked = line.match(/^\s*[-*] \[x\] (.+)$/);
       if (checked) {
         return `<li><input checked="" disabled="" type="checkbox"> ${checked[1]}</li>`;
       }
@@ -265,6 +265,39 @@ describe('MarkdownPreview – checkbox toggle', () => {
       '- [ ]NoSpaceTask\n- [x] RealTask',
     );
   });
+
+  // T-PV-03c: nested (indented) and asterisk-marker task lines must map to the
+  // correct source line, preserving indentation and the original list marker.
+  it('T-PV-03c: toggles nested and asterisk checkboxes preserving indent and marker', async () => {
+    const markdown = '- [ ] Parent\n  - [ ] Child 1\n  * [x] Child 2';
+
+    const { container } = await renderPreview({
+      content: markdown,
+      darkMode: false,
+      onContentChange,
+    });
+
+    const checkboxes = container.querySelectorAll('input.markdown-checkbox');
+    expect(checkboxes.length).toBe(3);
+
+    // Check the nested dash item (index 1)
+    const child1 = checkboxes[1] as HTMLInputElement;
+    child1.checked = true;
+    fireEvent.change(child1);
+
+    expect(onContentChange).toHaveBeenLastCalledWith(
+      '- [ ] Parent\n  - [x] Child 1\n  * [x] Child 2',
+    );
+
+    // Uncheck the asterisk item (index 2)
+    const child2 = checkboxes[2] as HTMLInputElement;
+    child2.checked = false;
+    fireEvent.change(child2);
+
+    expect(onContentChange).toHaveBeenLastCalledWith(
+      '- [ ] Parent\n  - [ ] Child 1\n  * [ ] Child 2',
+    );
+  });
 });
 
 // =========================================================================
@@ -433,18 +466,6 @@ describe('MarkdownPreview – themes', () => {
 
     const preview = container.querySelector('.markdown-preview');
     expect(preview?.classList.contains('hljs-light')).toBe(true);
-  });
-
-  // T-PV-12: darcula passed with darkMode=true uses hljs-dark
-  it('T-PV-12: darcula theme uses hljs-dark class', async () => {
-    const { container } = await renderPreviewContent({
-      content: 'Darcula content',
-      darkMode: true,
-      theme: 'darcula',
-    });
-
-    const preview = container.querySelector('.markdown-preview');
-    expect(preview?.classList.contains('hljs-dark')).toBe(true);
   });
 
   // T-PV-13: as400 theme applies monospace font
@@ -644,7 +665,7 @@ describe('MarkdownPreview – link clicks', () => {
     expect(openUrl).toHaveBeenCalledWith('https://google.com');
   });
 
-  // T-PV-17 / T-PV-18 (regression): both the link-click and checkbox-change
+  // T-PV-24 / T-PV-25 (regression): both the link-click and checkbox-change
   // listeners must attach even after the component first mounts as a Marp
   // preview (which returns <MarpPreview/> early and leaves previewRef null)
   // and then switches to a non-Marp tab. Before the fix, both listeners'
@@ -656,7 +677,7 @@ describe('MarkdownPreview – link clicks', () => {
   // These tests are paired: if the early-return-for-Marp pattern at
   // Preview.tsx:358 is preserved AND either useEffect's deps drift back to
   // `[]`, one of these tests will fail.
-  it('T-PV-17: link listener attaches after switching from Marp to non-Marp content', async () => {
+  it('T-PV-24: link listener attaches after switching from Marp to non-Marp content', async () => {
     // Start as Marp: contentIsMarp -> true, so MarpPreview branch is taken
     // and the markdown <div ref={previewRef}> never mounts on first render.
     vi.mocked(contentIsMarp).mockReturnValue(true);
@@ -691,7 +712,7 @@ describe('MarkdownPreview – link clicks', () => {
     expect(openUrl).toHaveBeenCalledWith('https://google.com');
   });
 
-  it('T-PV-18: checkbox listener attaches after switching from Marp to non-Marp content', async () => {
+  it('T-PV-25: checkbox listener attaches after switching from Marp to non-Marp content', async () => {
     const onContentChange = vi.fn<(newContent: string) => void>();
 
     vi.mocked(contentIsMarp).mockReturnValue(true);

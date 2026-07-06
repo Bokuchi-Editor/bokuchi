@@ -42,6 +42,67 @@ describe('computeSlideLineRanges', () => {
     expect(ranges[1].startLine).toBe(2);
     expect(ranges[2].startLine).toBe(4);
   });
+
+  // Marp does not treat `---` inside a fenced code block as a slide break.
+  // Counting it produced an extra phantom slide, shifting every later slide
+  // index and drifting the editor<->preview scroll sync.
+  it('does not split on --- inside a ``` fenced code block', () => {
+    const content = [
+      '# A',        // 0
+      '```md',      // 1
+      '---',        // 2 — literal text, not a ruler
+      '```',        // 3
+      '---',        // 4 — real break
+      '# B',        // 5
+    ].join('\n');
+    const ranges = computeSlideLineRanges(content);
+    expect(ranges.length).toBe(2);
+    expect(ranges[0].startLine).toBe(0);
+    expect(ranges[1].startLine).toBe(5);
+  });
+
+  it('does not split on --- inside a ~~~ fenced code block', () => {
+    const content = [
+      '# A',
+      '~~~yaml',
+      '---',
+      'key: value',
+      '---',
+      '~~~',
+      '---',
+      '# B',
+    ].join('\n');
+    const ranges = computeSlideLineRanges(content);
+    expect(ranges.length).toBe(2);
+    expect(ranges[1].startLine).toBe(7);
+  });
+
+  it('treats everything after an unclosed fence as code (CommonMark: fence runs to EOF)', () => {
+    const content = [
+      '# A',
+      '```',
+      '---',
+      '# looks like a slide but is code',
+      '---',
+    ].join('\n');
+    const ranges = computeSlideLineRanges(content);
+    expect(ranges).toEqual([{ startLine: 0, endLine: 4 }]);
+  });
+
+  it('requires the closing fence to match marker and length', () => {
+    const content = [
+      '# A',      // 0
+      '````',     // 1 — 4-backtick fence
+      '```',      // 2 — too short, does NOT close
+      '---',      // 3 — still inside the fence
+      '````',     // 4 — closes
+      '---',      // 5 — real break
+      '# B',      // 6
+    ].join('\n');
+    const ranges = computeSlideLineRanges(content);
+    expect(ranges.length).toBe(2);
+    expect(ranges[1].startLine).toBe(6);
+  });
 });
 
 describe('scrollFractionToSlidePosition', () => {

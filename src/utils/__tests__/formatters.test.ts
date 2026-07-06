@@ -96,11 +96,6 @@ describe('formatFileSize', () => {
     expect(formatFileSize(1048576)).toBe('1.0 MB');
   });
 
-  // T-FMT-12: large megabytes
-  it('T-FMT-12: formats large files', () => {
-    expect(formatFileSize(5 * 1024 * 1024)).toBe('5.0 MB');
-  });
-
   // T-FMT-16: GB-scale falls through to MB display
   it('T-FMT-16: formats GB-scale files as MB', () => {
     expect(formatFileSize(2 * 1024 * 1024 * 1024)).toBe('2048.0 MB');

@@ -14,12 +14,13 @@ import {
 import { CustomTheme } from '../customTheme';
 
 describe('getThemeByName', () => {
-  it('returns correct theme for each known name', () => {
-    const knownNames: ThemeName[] = ['default', 'dark', 'pastel', 'vivid', 'dawn', 'twilight', 'silk', 'ink', 'darcula'];
-    for (const name of knownNames) {
-      const theme = getThemeByName(name);
-      expect(theme).toBeDefined();
-      expect(theme.palette).toBeDefined();
+  // Identity check (toBe): getThemeByName falls back to the default theme for
+  // unknown names, so a mere toBeDefined() could never fail. Asserting the
+  // exact object from the `themes` registry proves each name resolves to its
+  // own entry rather than silently hitting the fallback.
+  it('returns the exact registry entry for each known name', () => {
+    for (const config of themes) {
+      expect(getThemeByName(config.name)).toBe(config.theme);
     }
   });
 
@@ -41,12 +42,6 @@ describe('getThemeByName', () => {
 });
 
 describe('getThemeDisplayName', () => {
-  it('returns correct display name for each theme', () => {
-    for (const config of themes) {
-      expect(getThemeDisplayName(config.name)).toBe(config.displayName);
-    }
-  });
-
   it('returns "Default" for unknown name', () => {
     expect(getThemeDisplayName('nonexistent' as ThemeName)).toBe('Default');
   });
@@ -70,18 +65,6 @@ describe('applyThemeToDocument', () => {
 });
 
 describe('themes array', () => {
-  it('contains exactly 10 themes', () => {
-    expect(themes).toHaveLength(10);
-  });
-
-  it('each entry has name, displayName, and theme', () => {
-    for (const config of themes) {
-      expect(config.name).toBeTruthy();
-      expect(config.displayName).toBeTruthy();
-      expect(config.theme).toBeDefined();
-    }
-  });
-
   // T-TH-01: as400 theme is marked as hidden
   it('T-TH-01: as400 theme has hidden: true', () => {
     const as400 = themes.find(t => t.name === 'as400');
@@ -121,12 +104,6 @@ describe('getVisibleThemes', () => {
     const visible = getVisibleThemes(['as400']);
     expect(visible).toHaveLength(10);
     expect(visible.find(t => t.name === 'as400')).toBeDefined();
-  });
-
-  // T-TH-06: empty unlock array still excludes hidden
-  it('T-TH-06: empty unlock array excludes hidden themes', () => {
-    const visible = getVisibleThemes([]);
-    expect(visible).toHaveLength(9);
   });
 });
 

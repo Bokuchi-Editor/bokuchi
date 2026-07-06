@@ -16,6 +16,34 @@ export interface SlidePosition {
 
 const FRONTMATTER_DELIMITER = '---';
 
+// CommonMark fenced code blocks: an opening fence is 3+ backticks or tildes
+// with up to 3 spaces of indentation (4+ would be an indented code block).
+// A backtick fence's info string must not contain a backtick; tilde fences
+// allow anything. The trailing `\r?` keeps CRLF sources working (lines are
+// split on '\n' only).
+const FENCE_OPEN_RE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+const FENCE_CLOSE_RE = /^ {0,3}(`{3,}|~{3,})[ \t]*\r?$/;
+
+interface FenceState {
+  marker: '`' | '~';
+  length: number;
+}
+
+function parseFenceOpen(line: string): FenceState | null {
+  const m = FENCE_OPEN_RE.exec(line);
+  if (!m) return null;
+  const marker = m[1][0] as '`' | '~';
+  // Info strings of backtick fences cannot contain backticks (CommonMark) —
+  // that would be an inline code span, not a fence.
+  if (marker === '`' && m[2].includes('`')) return null;
+  return { marker, length: m[1].length };
+}
+
+function isFenceClose(line: string, fence: FenceState): boolean {
+  const m = FENCE_CLOSE_RE.exec(line);
+  return m !== null && m[1][0] === fence.marker && m[1].length >= fence.length;
+}
+
 /**
  * Compute the line ranges for each Marp slide from the source content.
  * Returns an array of { startLine, endLine } (0-based, inclusive).
@@ -36,10 +64,22 @@ export function computeSlideLineRanges(content: string): SlideLineRange[] {
     }
   }
 
-  // Find slide break positions (--- on its own line, after frontmatter)
+  // Find slide break positions (--- on its own line, after frontmatter).
+  // `---` inside a fenced code block is literal text, not a ruler — Marp does
+  // not split there, so counting it would shift every later slide index and
+  // make the editor<->preview scroll sync drift. An unclosed fence runs to the
+  // end of the document (CommonMark), suppressing all remaining breaks.
   const slideStarts: number[] = [contentStart];
+  let fence: FenceState | null = null;
   for (let i = contentStart; i < totalLines; i++) {
-    if (lines[i]?.trim() === FRONTMATTER_DELIMITER) {
+    const line = lines[i] ?? '';
+    if (fence) {
+      if (isFenceClose(line, fence)) fence = null;
+      continue;
+    }
+    fence = parseFenceOpen(line);
+    if (fence) continue;
+    if (line.trim() === FRONTMATTER_DELIMITER) {
       slideStarts.push(i + 1);
     }
   }

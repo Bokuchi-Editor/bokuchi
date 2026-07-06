@@ -99,15 +99,4 @@ describe('HelpDialog', () => {
     fireEvent.click(closeButton);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
-
-  // T-HD-09: all sidebar navigation items are visible
-  it('T-HD-09: renders all sidebar navigation items', () => {
-    render(<HelpDialog open={true} onClose={asMock<() => void>(onClose)} />);
-    // Some titles appear both in sidebar and content; use getAllByText
-    expect(screen.getAllByText('help.gettingStarted.title').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('help.features.title').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('help.variables.title').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('help.keyboardShortcuts.title').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('help.tutorials.title').length).toBeGreaterThanOrEqual(1);
-  });
 });

@@ -91,4 +91,25 @@ describe('MarkdownToolbar', () => {
     fireEvent.click(buttons[1]);
     // No error means pass
   });
+
+  // T-MT-06: unordered list button routes through the line-prefix path
+  it('T-MT-06: unordered list button inserts a "- " line prefix', () => {
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
+    // Tooltip title becomes the button's accessible name
+    fireEvent.click(screen.getByLabelText('toolbar.unorderedList'));
+    expect(mockEditor.executeEdits).toHaveBeenCalledTimes(1);
+    const [source, edits] = mockEditor.executeEdits.mock.calls[0];
+    expect(source).toBe('toolbar');
+    expect(edits[0].text).toContain('- ');
+  });
+
+  // T-MT-07: code block button routes through the block-insert path
+  it('T-MT-07: code block button inserts a fenced code block', () => {
+    render(<MarkdownToolbar editorRef={editorRef as React.RefObject<editor.IStandaloneCodeEditor | null>} />);
+    fireEvent.click(screen.getByLabelText('toolbar.codeBlock'));
+    expect(mockEditor.executeEdits).toHaveBeenCalledTimes(1);
+    const [source, edits] = mockEditor.executeEdits.mock.calls[0];
+    expect(source).toBe('toolbar');
+    expect(edits[0].text).toContain('```');
+  });
 });

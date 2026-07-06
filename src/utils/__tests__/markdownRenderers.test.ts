@@ -193,6 +193,22 @@ describe('processKatex', () => {
     expect(html).toContain('<span class="katex katex-display">b</span>');
   });
 
+  it('escapes HTML in the katex-error branch (XSS bypasses DOMPurify otherwise)', async () => {
+    // When katex.renderToString throws, the raw tex is echoed back inside
+    // <span class="katex-error">. restore() splices this HTML in AFTER the
+    // DOMPurify pass (see processKatex docstring), so an unescaped tex string
+    // would be a sanitization bypass. Same invariant as the mermaid-error test.
+    const katexMod = await import('katex');
+    vi.mocked(katexMod.default.renderToString).mockImplementationOnce(() => {
+      throw new Error('KaTeX parse error');
+    });
+
+    const { html } = await render('$<img src=x onerror=alert(1)>$');
+    expect(html).toContain('katex-error');
+    expect(html).not.toContain('<img');
+    expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
   it('strips newlines from KaTeX output to prevent table parsing issues', async () => {
     const katexMod = await import('katex');
     const mockRenderToString = vi.mocked(katexMod.default.renderToString);
@@ -246,6 +262,19 @@ describe('processMermaidBlocks', () => {
     const result = await processMermaidBlocks(html);
     expect(result).not.toContain('<img src=x onerror');
     expect(result).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
+  it('processes mermaid blocks inside Marp <pre is="marp-pre"> output', async () => {
+    // Marp emits <pre is="marp-pre" data-auto-scaling="..."> around code
+    // blocks; the detection regex deliberately allows attributes on <pre> so
+    // mermaid diagrams render inside slides too (see mermaidHtmlRe comment).
+    mockRender.mockResolvedValue({ svg: '<svg>slide-diagram</svg>', diagramType: 'flowchart' });
+    const html =
+      '<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-mermaid">graph TD\nA--&gt;B</code></pre>';
+    const result = await processMermaidBlocks(html);
+    expect(result).toContain('<div class="mermaid-diagram"><svg>slide-diagram</svg></div>');
+    expect(result).not.toContain('marp-pre');
+    expect(mockRender).toHaveBeenCalledWith(expect.any(String), 'graph TD\nA-->B');
   });
 
   it('returns html unchanged when no mermaid blocks', async () => {

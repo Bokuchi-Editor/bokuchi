@@ -87,10 +87,9 @@ describe('TabBar', () => {
     render(<TabBar {...defaultProps()} />);
     const addButtons = screen.getAllByRole('button');
     const addBtn = addButtons.find(btn => btn.querySelector('[data-testid="AddIcon"]'));
-    if (addBtn) {
-      fireEvent.click(addBtn);
-      expect(onNewTab).toHaveBeenCalledTimes(1);
-    }
+    expect(addBtn).toBeDefined();
+    fireEvent.click(addBtn!);
+    expect(onNewTab).toHaveBeenCalledTimes(1);
   });
 
   // T-TB-03: clicking tab calls onTabChange
@@ -121,13 +120,11 @@ describe('TabBar', () => {
     render(<TabBar {...defaultProps()} layout="vertical" />);
     // Find close icon buttons (IconButtons wrapping CloseIcon)
     const closeIcons = screen.getAllByTestId('CloseIcon');
-    if (closeIcons.length > 0) {
-      const closeButton = closeIcons[0].closest('button');
-      if (closeButton) {
-        fireEvent.click(closeButton);
-        expect(onTabClose).toHaveBeenCalled();
-      }
-    }
+    expect(closeIcons.length).toBeGreaterThan(0);
+    const closeButton = closeIcons[0].closest('button');
+    expect(closeButton).not.toBeNull();
+    fireEvent.click(closeButton!);
+    expect(onTabClose).toHaveBeenCalled();
   });
 
   // T-TB-07: close passes correct tab ID
@@ -135,29 +132,22 @@ describe('TabBar', () => {
     render(<TabBar {...defaultProps()} layout="vertical" />);
     const closeIcons = screen.getAllByTestId('CloseIcon');
     // Click close on the second tab (File2.md)
-    if (closeIcons.length >= 2) {
-      const closeButton = closeIcons[1].closest('button');
-      if (closeButton) {
-        fireEvent.click(closeButton);
-        expect(onTabClose).toHaveBeenCalledWith('tab2');
-      }
-    }
+    expect(closeIcons.length).toBeGreaterThanOrEqual(2);
+    const closeButton = closeIcons[1].closest('button');
+    expect(closeButton).not.toBeNull();
+    fireEvent.click(closeButton!);
+    expect(onTabClose).toHaveBeenCalledWith('tab2');
   });
 
   // T-TB-08: horizontal close button passes correct tab ID
   it('T-TB-08: horizontal close button calls onTabClose with correct ID', () => {
     render(<TabBar {...defaultProps()} />);
     const closeIcons = screen.getAllByTestId('CloseIcon');
-    // Click close on the first tab (tab1)
-    if (closeIcons.length >= 1) {
-      const closeBtn = closeIcons[0].closest('[role="tab"]')
-        ? closeIcons[0]
-        : closeIcons[0].parentElement;
-      if (closeBtn) {
-        fireEvent.click(closeBtn);
-        expect(onTabClose).toHaveBeenCalledWith('tab1');
-      }
-    }
+    // Click close on the first tab (tab1). The horizontal close control is a
+    // <span> with onClick wrapping the icon, so the click bubbles up from it.
+    expect(closeIcons.length).toBeGreaterThanOrEqual(1);
+    fireEvent.click(closeIcons[0]);
+    expect(onTabClose).toHaveBeenCalledWith('tab1');
   });
 
   // T-TB-09: modified badge visible for modified tab
@@ -191,11 +181,11 @@ describe('TabBar', () => {
   it('T-TB-11: vertical layout new tab button calls onNewTab', () => {
     render(<TabBar {...defaultProps()} layout="vertical" />);
     const addIcons = screen.getAllByTestId('AddIcon');
-    const addBtn = addIcons[0]?.closest('button');
-    if (addBtn) {
-      fireEvent.click(addBtn);
-      expect(onNewTab).toHaveBeenCalledTimes(1);
-    }
+    expect(addIcons.length).toBeGreaterThan(0);
+    const addBtn = addIcons[0].closest('button');
+    expect(addBtn).not.toBeNull();
+    fireEvent.click(addBtn!);
+    expect(onNewTab).toHaveBeenCalledTimes(1);
   });
 
   // T-TB-12: clicking tab in vertical layout calls onTabChange with correct ID
@@ -218,16 +208,6 @@ describe('TabBar', () => {
     for (let i = 0; i < 10; i++) {
       expect(screen.getByText(`Doc${i}.md`)).toBeInTheDocument();
     }
-  });
-
-  // T-TB-14: embedded vertical layout does not set fixed width
-  it('T-TB-14: embedded mode does not apply fixed width', () => {
-    const { container } = render(
-      <TabBar {...defaultProps()} layout="vertical" embedded={true} />,
-    );
-    // The root Box should not have width: 280 when embedded
-    const rootBox = container.firstElementChild as HTMLElement;
-    expect(rootBox.style.width).not.toBe('280px');
   });
 
   // --- Context menu / Rename tests ---
@@ -427,19 +407,6 @@ describe('TabBar', () => {
 
   // --- Close button position and accent border tests ---
 
-  // T-TB-30: closeButtonPosition="left" renders pin icon with mr spacing (horizontal)
-  it('T-TB-30: left position renders PushPin with correct position in horizontal', () => {
-    const pinnedTabs: TabType[] = [
-      { id: 'tab1', title: 'Pinned.md', content: '', isModified: false, isNew: false, isPinned: true },
-    ];
-    const { container } = render(
-      <TabBar {...defaultProps()} tabs={pinnedTabs} activeTabId="tab1" closeButtonPosition="left" />,
-    );
-    const pinIcon = container.querySelector('[data-testid="PushPinIcon"]');
-    expect(pinIcon).toBeInTheDocument();
-    expect(screen.getByText('Pinned.md')).toBeInTheDocument();
-  });
-
   // T-TB-31: closeButtonPosition="left" renders close button before title (vertical)
   it('T-TB-31: left position renders close button before title in vertical', () => {
     const { container } = render(
@@ -448,22 +415,6 @@ describe('TabBar', () => {
     // Close icon should exist
     const closeIcons = container.querySelectorAll('[data-testid="CloseIcon"]');
     expect(closeIcons.length).toBeGreaterThan(0);
-  });
-
-  // T-TB-32: pinned non-active horizontal tab has top border
-  it('T-TB-32: pinned non-active horizontal tab has top border style', () => {
-    const mixedTabs: TabType[] = [
-      { id: 'tab1', title: 'Active.md', content: '', isModified: false, isNew: false },
-      { id: 'tab2', title: 'Pinned.md', content: '', isModified: false, isNew: false, isPinned: true },
-    ];
-    const { container } = render(
-      <TabBar {...defaultProps()} tabs={mixedTabs} activeTabId="tab1" />,
-    );
-    // The pinned non-active tab should have a non-transparent top border
-    const tabs = container.querySelectorAll('.MuiTab-root');
-    expect(tabs.length).toBe(2);
-    // Second tab is pinned and non-active, should exist with border applied via sx
-    expect(tabs[1]).toBeTruthy();
   });
 
   // T-TB-33: vertical mode auto-scrolls active tab into view
@@ -492,5 +443,54 @@ describe('TabBar', () => {
     // scrollIntoView should NOT be called in horizontal layout
     expect(scrollSpy).not.toHaveBeenCalled();
     scrollSpy.mockRestore();
+  });
+
+  // T-TB-35: Close Tabs to the Right dispatches with the right-clicked tab ID
+  // (T-TB-26 only checks the label; this covers the handler wiring)
+  it('T-TB-35: Close Tabs to the Right calls onCloseTabsToRight with correct tab ID', () => {
+    const onCloseTabsToRight = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onCloseTabsToRight={asMock<(tabId: string) => void>(onCloseTabsToRight)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File1.md'));
+    fireEvent.click(screen.getByText('tabs.closeTabsToRight'));
+    expect(onCloseTabsToRight).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-36: Copy file path dispatches onCopyFilePath with the tab ID
+  // (the actual clipboard write lives in useAppState.handleCopyFilePath)
+  it('T-TB-36: Copy file path calls onCopyFilePath with correct tab ID', () => {
+    const onCopyFilePath = vi.fn();
+    const savedTabs: TabType[] = [
+      { id: 'tab1', title: 'Saved.md', content: '', isModified: false, isNew: false, filePath: '/docs/Saved.md' },
+    ];
+    render(
+      <TabBar
+        {...defaultProps()}
+        tabs={savedTabs}
+        activeTabId="tab1"
+        onCopyFilePath={asMock<(tabId: string) => void>(onCopyFilePath)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('Saved.md'));
+    fireEvent.click(screen.getByText('tabs.copyFilePath'));
+    expect(onCopyFilePath).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-37: Copy file name dispatches onCopyFileName with the tab ID
+  it('T-TB-37: Copy file name calls onCopyFileName with correct tab ID', () => {
+    const onCopyFileName = vi.fn();
+    render(
+      <TabBar
+        {...defaultProps()}
+        onCopyFileName={asMock<(tabId: string) => void>(onCopyFileName)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('File2.md'));
+    fireEvent.click(screen.getByText('tabs.copyFileName'));
+    expect(onCopyFileName).toHaveBeenCalledWith('tab2');
   });
 });

@@ -249,4 +249,22 @@ describe('getTabDisplayTitle', () => {
     const tab = makeTab({ content: '12345678901234567890' }); // exactly 20 chars
     expect(getTabDisplayTitle(tab)).toBe('12345678901234567890');
   });
+
+  // T-PU-34: truncation counts code points, so an emoji (surrogate pair) is
+  // never cut in half. A UTF-16 slice(0, 20) would end the title on a lone
+  // high surrogate (a broken glyph) before the ellipsis.
+  it('T-PU-34: does not split surrogate pairs when truncating', () => {
+    const tab = makeTab({ content: 'a' + '😀'.repeat(25) }); // 26 code points
+    const result = getTabDisplayTitle(tab);
+    expect(result).toBe('a' + '😀'.repeat(19) + '…'); // 20 code points + ellipsis
+    // No unpaired high surrogate anywhere in the title.
+    expect(result).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/);
+  });
+
+  // T-PU-35: CJK titles truncate at 20 characters like Latin ones (CJK chars
+  // are single code units, so behavior is unchanged by the code-point fix)
+  it('T-PU-35: truncates long CJK first lines to 20 characters', () => {
+    const tab = makeTab({ content: 'あ'.repeat(25) });
+    expect(getTabDisplayTitle(tab)).toBe('あ'.repeat(20) + '…');
+  });
 });

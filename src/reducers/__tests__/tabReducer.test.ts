@@ -65,6 +65,20 @@ describe('tabReducer', () => {
     expect(result.activeTabId).toBe('t1');
   });
 
+  // T-TR-23: closing the *last* (rightmost) active tab exercises the
+  // Math.min(currentIndex, remainingTabs.length - 1) clamp — without it the
+  // index would point past the end and no tab would become active.
+  it('T-TR-23: REMOVE_TAB on last active tab activates the previous tab', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+    const tab3 = createTab({ id: 't3' });
+    const state: TabState = { tabs: [tab1, tab2, tab3], activeTabId: 't3' };
+
+    const result = tabReducer(state, { type: 'REMOVE_TAB', payload: { id: 't3' } });
+    expect(result.tabs).toHaveLength(2);
+    expect(result.activeTabId).toBe('t2');
+  });
+
   // T-TR-05
   it('SET_ACTIVE_TAB with valid ID', () => {
     const tab1 = createTab({ id: 't1' });
@@ -324,6 +338,20 @@ describe('tabReducer', () => {
     const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: ['t1', 't2'] } });
     expect(result.tabs).toHaveLength(0);
     expect(result.activeTabId).toBeNull();
+  });
+
+  // T-TR-24: same clamp branch as T-TR-23 but for the bulk-close path —
+  // removing a trailing block that includes the active tab must fall back to
+  // the last remaining tab instead of indexing past the end.
+  it('T-TR-24: REMOVE_TABS including last active tab activates previous tab', () => {
+    const tab1 = createTab({ id: 't1' });
+    const tab2 = createTab({ id: 't2' });
+    const tab3 = createTab({ id: 't3' });
+    const state: TabState = { tabs: [tab1, tab2, tab3], activeTabId: 't3' };
+
+    const result = tabReducer(state, { type: 'REMOVE_TABS', payload: { ids: ['t2', 't3'] } });
+    expect(result.tabs).toHaveLength(1);
+    expect(result.activeTabId).toBe('t1');
   });
 
   // T-TR-16

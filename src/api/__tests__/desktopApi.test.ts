@@ -469,3 +469,89 @@ describe('desktopApi.readDirectory', () => {
     expect(result).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// exportPdfFile
+// ---------------------------------------------------------------------------
+describe('desktopApi.exportPdfFile', () => {
+  const page = { widthInch: 8.27, heightInch: 11.69, marginInch: 0.6 };
+
+  // T-DA-03: the Rust `export_pdf` command renders the HTML in a hidden
+  // webview and needs the page geometry to size the PDF; a missing/renamed
+  // argument would silently produce a broken export, so pin the exact shape.
+  it('T-DA-03: invokes export_pdf with html, output path and page geometry', async () => {
+    vi.mocked(save).mockResolvedValue('/doc.pdf');
+    vi.mocked(invoke).mockResolvedValue(undefined);
+
+    const result = await desktopApi.exportPdfFile('<html></html>', page, 'doc.pdf');
+    expect(result).toEqual({ success: true, filePath: '/doc.pdf' });
+    expect(save).toHaveBeenCalledWith(expect.objectContaining({ defaultPath: 'doc.pdf' }));
+    expect(invoke).toHaveBeenCalledWith('export_pdf', {
+      html: '<html></html>',
+      outputPath: '/doc.pdf',
+      page,
+    });
+  });
+
+  it('returns error when save dialog is cancelled without invoking export', async () => {
+    vi.mocked(save).mockResolvedValue(null);
+    const result = await desktopApi.exportPdfFile('<html></html>', page);
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Save cancelled by user');
+    expect(invoke).not.toHaveBeenCalled();
+  });
+
+  it('returns error message when export_pdf fails', async () => {
+    vi.mocked(save).mockResolvedValue('/doc.pdf');
+    vi.mocked(invoke).mockRejectedValue(new Error('render failed'));
+    const result = await desktopApi.exportPdfFile('<html></html>', page);
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('render failed');
+  });
+
+  it('returns generic error for non-Error exception', async () => {
+    vi.mocked(save).mockResolvedValue('/doc.pdf');
+    vi.mocked(invoke).mockRejectedValue('raw failure');
+    const result = await desktopApi.exportPdfFile('<html></html>', page);
+    expect(result.error).toBe('Failed to export PDF file');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// saveImageBytes / copyImageAsset
+// ---------------------------------------------------------------------------
+describe('desktopApi.saveImageBytes', () => {
+  // T-DA-04: Uint8Array is not serializable across the Tauri IPC boundary as
+  // a plain JSON array, so the API converts it via Array.from before invoke.
+  // Regressing to passing the Uint8Array directly would corrupt the payload.
+  it('T-DA-04: converts Uint8Array to a plain array for invoke', async () => {
+    vi.mocked(invoke).mockResolvedValue('images/pasted.png');
+    const bytes = new Uint8Array([137, 80, 78, 71]);
+
+    const result = await desktopApi.saveImageBytes('/docs', 'images', 'pasted.png', bytes);
+    expect(result).toBe('images/pasted.png');
+    expect(invoke).toHaveBeenCalledWith('save_image_bytes', {
+      destDir: '/docs',
+      subdir: 'images',
+      filename: 'pasted.png',
+      bytes: [137, 80, 78, 71],
+    });
+    // Must be a plain array, not the original Uint8Array
+    const passedBytes = vi.mocked(invoke).mock.calls[0][1] as { bytes: unknown };
+    expect(Array.isArray(passedBytes.bytes)).toBe(true);
+    expect(passedBytes.bytes).not.toBeInstanceOf(Uint8Array);
+  });
+});
+
+describe('desktopApi.copyImageAsset', () => {
+  it('invokes copy_image_asset and returns the relative path', async () => {
+    vi.mocked(invoke).mockResolvedValue('images/photo.png');
+    const result = await desktopApi.copyImageAsset('/pictures/photo.png', '/docs', 'images');
+    expect(result).toBe('images/photo.png');
+    expect(invoke).toHaveBeenCalledWith('copy_image_asset', {
+      srcPath: '/pictures/photo.png',
+      destDir: '/docs',
+      subdir: 'images',
+    });
+  });
+});

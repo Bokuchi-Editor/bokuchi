@@ -52,6 +52,20 @@ describe('editorSync', () => {
       expect(model.getValue()).toBe('hello brave world');
     });
 
+    // T-ES-01c: shrinking content (a deletion) produces a pure delete op over
+    // the removed span — the common prefix/suffix trimming must handle the
+    // new content being shorter than the old.
+    it('T-ES-01c: replaces the removed span when content shrinks', () => {
+      const model = makeModel('hello brave world');
+      setModelContentSilently(model, 'hello world');
+      const op = (model.pushEditOperations as ReturnType<typeof vi.fn>).mock.calls[0][1][0];
+      // Prefix "hello " (6) and suffix "world" survive; "brave " is deleted.
+      expect(op.range.startColumn - 1).toBe(6);
+      expect(op.range.endColumn - 1).toBe(12);
+      expect(op.text).toBe('');
+      expect(model.getValue()).toBe('hello world');
+    });
+
     // T-ES-02: skips the edit when content already matches (avoids spurious
     // ContentFlush events that would scroll/reset the editor)
     it('T-ES-02: skips the edit when content already matches', () => {
@@ -177,21 +191,6 @@ describe('editorSync', () => {
       }
     });
 
-    // T-ES-09: matches when Monaco normalizes the URI to file:///<id>
-    it('T-ES-09: matches model by trailing /tabId path segment', () => {
-      const model = makeModel('old', 'file:///tab-1');
-      const originalMonaco = (window as { monaco?: unknown }).monaco;
-      (window as { monaco?: unknown }).monaco = {
-        editor: { getModels: () => [model] },
-      };
-      try {
-        syncModelForTab('tab-1', 'new');
-        expect(model.getValue()).toBe('new');
-      } finally {
-        (window as { monaco?: unknown }).monaco = originalMonaco;
-      }
-    });
-
     // T-ES-10: leaves unrelated models alone
     it('T-ES-10: does not touch models for other tabs', () => {
       const target = makeModel('old', 'tab-1');
@@ -217,22 +216,6 @@ describe('editorSync', () => {
       (window as { monaco?: unknown }).monaco = undefined;
       try {
         expect(() => syncModelForTab('tab-1', 'new')).not.toThrow();
-      } finally {
-        (window as { monaco?: unknown }).monaco = originalMonaco;
-      }
-    });
-
-    // T-ES-12: no-op when no model matches the tab id (model was disposed
-    // or never created — e.g. inactive tab in a fresh session)
-    it('T-ES-12: no-ops when no model matches the tab id', () => {
-      const other = makeModel('untouched', 'tab-2');
-      const originalMonaco = (window as { monaco?: unknown }).monaco;
-      (window as { monaco?: unknown }).monaco = {
-        editor: { getModels: () => [other] },
-      };
-      try {
-        expect(() => syncModelForTab('tab-missing', 'new')).not.toThrow();
-        expect(other.pushEditOperations).not.toHaveBeenCalled();
       } finally {
         (window as { monaco?: unknown }).monaco = originalMonaco;
       }

@@ -116,7 +116,10 @@ describe('useSettings', () => {
     expect(result.current.language).toBe('en');
   });
 
-  // T-SETT-06: handleAppSettingsChange persists settings
+  // T-SETT-06: handleAppSettingsChange persists settings.
+  // Note (Issue #225): handleAppSettingsChange must only update local state and
+  // persist to the store — panel visibility (outline/folder tree) is controlled
+  // solely by user actions, never as a side effect of a settings change.
   it('T-SETT-06: handleAppSettingsChange saves to store', async () => {
     const { result } = renderHook(() => useSettings(defaultParams()));
 
@@ -134,38 +137,6 @@ describe('useSettings', () => {
     });
 
     expect(storeApi.saveAppSettings).toHaveBeenCalledWith(newSettings);
-  });
-
-  // T-SETT-07: Regression test - handleAppSettingsChange never touches panel open state (Issue #225)
-  // Settings changes must not affect panel visibility. Panels are controlled only by user actions
-  // (icon clicks, keyboard shortcuts), not by settings changes.
-  it('T-SETT-07: handleAppSettingsChange does not control panel open state', async () => {
-    const { result } = renderHook(() => useSettings(defaultParams()));
-
-    await waitFor(() => {
-      expect(result.current.isSettingsLoaded).toBe(true);
-    });
-
-    // Verify handleAppSettingsChange does not expose or call setOutlinePanelOpen/setFolderTreePanelOpen
-    // by checking that settings change only persists to store and updates local state
-    const newSettings = {
-      ...result.current.appSettings,
-      interface: {
-        ...result.current.appSettings.interface,
-        tabLayout: 'vertical' as const,
-        outlineDisplayMode: 'persistent' as const,
-        folderTreeDisplayMode: 'persistent' as const,
-      },
-    };
-
-    await act(async () => {
-      await result.current.handleAppSettingsChange(newSettings);
-    });
-
-    // Only saveAppSettings should be called, no panel state side effects
-    expect(storeApi.saveAppSettings).toHaveBeenCalledWith(newSettings);
-    expect(result.current.appSettings.interface.outlineDisplayMode).toBe('persistent');
-    expect(result.current.appSettings.interface.folderTreeDisplayMode).toBe('persistent');
   });
 
   // T-SETT-08: restores the persisted view mode on initialization so the app
@@ -299,5 +270,62 @@ describe('useSettings', () => {
 
     expect(result.current.theme).toBe('default');
     expect(applyThemeToDocument).toHaveBeenCalledWith('default');
+  });
+
+  // T-SETT-13: a failing settings load must not leave the app stuck waiting.
+  // Everything downstream (save effects, initial render gating) is keyed on
+  // isSettingsLoaded, so it has to flip to true even when loadAppSettings
+  // rejects (corrupt store, first launch on a broken disk, ...).
+  it('T-SETT-13: isSettingsLoaded becomes true even when loadAppSettings rejects', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      vi.mocked(storeApi.loadAppSettings).mockRejectedValueOnce(new Error('store corrupted'));
+
+      const { result } = renderHook(() => useSettings(defaultParams()));
+
+      await waitFor(() => {
+        expect(result.current.isSettingsLoaded).toBe(true);
+      });
+
+      // Defaults remain in place instead of half-applied settings
+      expect(result.current.theme).toBe('default');
+      expect(result.current.language).toBe('en');
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
+  // T-SETT-14: the in-app pin button (toggleTabSidebarPinned) must keep
+  // appSettings in sync and persist, so the Settings dialog shows the same
+  // value and the choice survives a restart.
+  it('T-SETT-14: toggleTabSidebarPinned syncs appSettings and persists', async () => {
+    const { result } = renderHook(() => useSettings(defaultParams()));
+
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+
+    // Loaded settings have tabSidebarPinned: true
+    expect(result.current.tabSidebarPinned).toBe(true);
+    vi.mocked(storeApi.saveAppSettings).mockClear();
+
+    act(() => {
+      result.current.toggleTabSidebarPinned();
+    });
+
+    expect(result.current.tabSidebarPinned).toBe(false);
+    expect(result.current.appSettings.interface.tabSidebarPinned).toBe(false);
+    expect(storeApi.saveAppSettings).toHaveBeenCalledWith(
+      expect.objectContaining({
+        interface: expect.objectContaining({ tabSidebarPinned: false }),
+      })
+    );
+
+    // Toggling back restores both states
+    act(() => {
+      result.current.toggleTabSidebarPinned();
+    });
+    expect(result.current.tabSidebarPinned).toBe(true);
+    expect(result.current.appSettings.interface.tabSidebarPinned).toBe(true);
   });
 });

@@ -112,7 +112,6 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             set_global_variable,
             get_global_variables,
             load_variables_from_yaml,

@@ -16,6 +16,10 @@ describe('isAbsoluteUrl', () => {
     expect(isAbsoluteUrl('blob:http://localhost/x')).toBe(true);
   });
 
+  it('returns true for asset protocol URLs (already-rewritten srcs must not be re-resolved)', () => {
+    expect(isAbsoluteUrl('asset://localhost/%2FUsers%2Fme%2Fpic.png')).toBe(true);
+  });
+
   it('returns false for relative paths', () => {
     expect(isAbsoluteUrl('./img.png')).toBe(false);
     expect(isAbsoluteUrl('../images/x.png')).toBe(false);

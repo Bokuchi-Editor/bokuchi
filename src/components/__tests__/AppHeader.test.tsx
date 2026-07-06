@@ -14,15 +14,17 @@ vi.mock('../../utils/platform', () => ({
 
 import AppHeader from '../AppHeader';
 import { storeApi } from '../../api/storeApi';
+import type { Tab } from '../../types/tab';
+import type { FolderTreeDisplayMode } from '../../types/folderTree';
 
 describe('AppHeader', () => {
   const createDefaultProps = () => ({
     viewMode: 'split' as const,
     fileMenuAnchor: null as HTMLElement | null,
-    activeTab: { id: '1', title: 'test.md', content: '', isModified: false, isNew: false },
+    activeTab: { id: '1', title: 'test.md', content: '', isModified: false, isNew: false } as Tab | null,
     outlineActive: false,
     folderTreePanelOpen: false,
-    folderTreeDisplayMode: 'persistent' as const,
+    folderTreeDisplayMode: 'persistent' as FolderTreeDisplayMode,
     rinActive: false,
     onViewModeChange: vi.fn(),
     onRinToggle: vi.fn(),
@@ -133,14 +135,63 @@ describe('AppHeader', () => {
   // T-AH-07: outline toggle button calls onOutlineToggle
   it('T-AH-07: calls onOutlineToggle when outline button clicked', () => {
     render(<AppHeader {...props} />);
-    const buttons = screen.getAllByRole('button');
-    // Find outline button (FormatListBulleted)
-    const outlineBtn = buttons.find(btn =>
-      btn.querySelector('[data-testid="FormatListBulletedIcon"]'),
-    );
-    if (outlineBtn) {
-      fireEvent.click(outlineBtn);
-      expect(props.onOutlineToggle).toHaveBeenCalledTimes(1);
-    }
+    // Locate the outline button via its icon's test id (no aria-label on the button)
+    const outlineBtn = screen.getByTestId('FormatListBulletedIcon').closest('button');
+    expect(outlineBtn).not.toBeNull();
+    fireEvent.click(outlineBtn!);
+    expect(props.onOutlineToggle).toHaveBeenCalledTimes(1);
+  });
+
+  // T-AH-08: save-related menu items are disabled when there is no active tab
+  it('T-AH-08: disables Save / Save As / Save with Variables when activeTab is null', async () => {
+    const anchor = document.createElement('button');
+    document.body.appendChild(anchor);
+    props.fileMenuAnchor = anchor;
+    props.activeTab = null;
+
+    render(<AppHeader {...props} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('buttons.save')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('buttons.save').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText('buttons.saveAs').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText('buttons.saveWithVariables').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    // Non-save items remain enabled
+    expect(screen.getByText('buttons.newFile').closest('li')).not.toHaveAttribute('aria-disabled');
+
+    document.body.removeChild(anchor);
+  });
+
+  // T-AH-09: view mode toggle button fires onViewModeChange with the new mode
+  it('T-AH-09: calls onViewModeChange with the selected mode on toggle click', () => {
+    render(<AppHeader {...props} />);
+    fireEvent.click(screen.getByLabelText('buttons.editorOnly'));
+    expect(props.onViewModeChange).toHaveBeenCalledWith('editor');
+
+    fireEvent.click(screen.getByLabelText('buttons.previewOnly'));
+    expect(props.onViewModeChange).toHaveBeenCalledWith('preview');
+  });
+
+  // T-AH-10: folder tree button toggles the panel when display mode is not 'off'
+  it("T-AH-10: calls onFolderTreeToggle when folderTreeDisplayMode is not 'off'", () => {
+    render(<AppHeader {...props} />);
+    const folderBtn = screen.getByTestId('AccountTreeIcon').closest('button');
+    expect(folderBtn).not.toBeNull();
+    fireEvent.click(folderBtn!);
+    expect(props.onFolderTreeToggle).toHaveBeenCalledTimes(1);
+    expect(props.onOpenFolder).not.toHaveBeenCalled();
+  });
+
+  // T-AH-11: folder tree button opens a folder when display mode is 'off'
+  it("T-AH-11: calls onOpenFolder when folderTreeDisplayMode is 'off'", () => {
+    props.folderTreeDisplayMode = 'off';
+    render(<AppHeader {...props} />);
+    const folderBtn = screen.getByTestId('AccountTreeIcon').closest('button');
+    expect(folderBtn).not.toBeNull();
+    fireEvent.click(folderBtn!);
+    expect(props.onOpenFolder).toHaveBeenCalledTimes(1);
+    expect(props.onFolderTreeToggle).not.toHaveBeenCalled();
   });
 });

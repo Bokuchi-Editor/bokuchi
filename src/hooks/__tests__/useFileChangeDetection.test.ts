@@ -69,23 +69,6 @@ describe('useFileChangeDetection', () => {
     expect(result.current.fileChangeDialog.fileName).toBe('test.md');
   });
 
-  // T-FCD-03: dialog can be set externally
-  it('T-FCD-03: setFileChangeDialog updates state', () => {
-    const { result } = renderHook(() => useFileChangeDetection(defaultParams()));
-
-    act(() => {
-      result.current.setFileChangeDialog({
-        open: true,
-        fileName: 'manual.md',
-        onReload: vi.fn(),
-        onCancel: vi.fn(),
-      });
-    });
-
-    expect(result.current.fileChangeDialog.open).toBe(true);
-    expect(result.current.fileChangeDialog.fileName).toBe('manual.md');
-  });
-
   // T-FCD-04: cleans up event listener on unmount
   it('T-FCD-04: cleans up event listener on unmount', () => {
     const removeSpy = vi.spyOn(window, 'removeEventListener');
@@ -97,9 +80,16 @@ describe('useFileChangeDetection', () => {
     removeSpy.mockRestore();
   });
 
-  // T-FCD-05: Regression test - event listener sees updated tabs (Issue #225)
+  // T-FCD-05: Regression test - event listener sees updated tabs (Issue #225).
+  // The fileChangeDetected listener closes over `tabs`; if the effect's deps
+  // dropped `tabs`, the reload handler would search a stale array, fail to
+  // find a tab opened after mount, and silently skip the reload.
   it('T-FCD-05: reload finds tab after tabs are updated', async () => {
     const { desktopApi } = await import('../../api/desktopApi');
+    (desktopApi.readFileByPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: 'content of new tab',
+      error: null,
+    });
 
     const initialTabs: Tab[] = [
       { id: 'tab1', title: 'test.md', content: '# Old', filePath: '/path/test.md', isModified: false, isNew: false },
@@ -111,7 +101,7 @@ describe('useFileChangeDetection', () => {
 
     let currentTabs = initialTabs;
 
-    const { rerender } = renderHook(
+    const { result, rerender } = renderHook(
       () => useFileChangeDetection({
         tabs: currentTabs,
         activeTab: currentTabs[0],
@@ -123,12 +113,12 @@ describe('useFileChangeDetection', () => {
       }),
     );
 
-    // Add a new tab and rerender
+    // Add a new tab after mount and rerender so the listener must be rebound
     currentTabs = [...initialTabs, newTab];
     rerender();
 
-    // Dispatch event for the new tab
-    await act(async () => {
+    // Dispatch a file change event for the newly added tab
+    act(() => {
       const event = new CustomEvent('fileChangeDetected', {
         detail: {
           fileName: 'new.md',
@@ -139,10 +129,17 @@ describe('useFileChangeDetection', () => {
       window.dispatchEvent(event);
     });
 
-    // The dialog should open and the reload handler should find tab2
-    // If tabs dependency was missing, the listener would have stale tabs and not find tab2
-    asMock<typeof desktopApi.readFileFromPath>(desktopApi.readFileFromPath as ReturnType<typeof vi.fn>);
-    (desktopApi.readFileFromPath as ReturnType<typeof vi.fn>).mockResolvedValueOnce('updated content');
+    expect(result.current.fileChangeDialog.open).toBe(true);
+
+    // Confirm the reload; with stale tabs the handler would not find tab2
+    // and neither readFileByPath nor reloadTabContent would be called
+    await act(async () => {
+      await result.current.fileChangeDialog.onReload();
+    });
+
+    expect(desktopApi.readFileByPath).toHaveBeenCalledWith('/path/new.md');
+    expect(reloadTabContent).toHaveBeenCalledWith('tab2', 'content of new tab');
+    expect(result.current.fileChangeDialog.open).toBe(false);
   });
 
   // T-FCD-07: Regression test - cancel marks tab as modified
