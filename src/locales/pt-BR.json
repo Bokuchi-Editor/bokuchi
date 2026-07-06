@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Arraste o arquivo Markdown aqui",
     "noActiveTab": "Nenhuma aba ativa para salvar. Por favor, abra um arquivo primeiro."
   },
+  "imageInsert": {
+    "saveFirst": "Salve o documento primeiro para inserir imagens com caminhos relativos",
+    "inserted": "Imagem inserida",
+    "insertedMultiple": "{{count}} imagens inseridas",
+    "failed": "Falha ao inserir a imagem",
+    "dropHere": "Solte a imagem aqui"
+  },
   "dialogs": {
     "saveChanges": "Salvar alterações antes de fechar?",
     "saveChangesMessage": "<bold>{{fileName}}</bold> tem alterações não salvas. Deseja salvá-las?",

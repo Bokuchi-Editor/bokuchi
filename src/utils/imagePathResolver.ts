@@ -35,6 +35,22 @@ export function mimeTypeFromPath(src: string): string {
   return IMAGE_MIME_MAP[ext] || DEFAULT_MIME;
 }
 
+/**
+ * Decode a URL-encoded `<img src>` for filesystem lookup. The Markdown renderer
+ * (marked) percent-encodes spaces and non-ASCII characters in image URLs (e.g.
+ * `my photo.png` becomes `my%20photo.png`), but the file on disk has the literal
+ * characters — so the raw src must be decoded before it is turned into a path or
+ * fetched. Falls back to the raw string when the input is not valid percent-
+ * encoding (e.g. a stray `%`).
+ */
+export function decodeImageSrc(src: string): string {
+  try {
+    return decodeURIComponent(src);
+  } catch {
+    return src;
+  }
+}
+
 /** Resolve a relative path against a base directory path, collapsing . and .. segments. */
 export function resolveRelativePath(baseDirPath: string, relativePath: string): string {
   const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);

@@ -477,6 +477,13 @@
     "dropMarkdownFile": "将 Markdown 文件拖放到此处",
     "noActiveTab": "没有活动标签页可保存。请先打开文件。"
   },
+  "imageInsert": {
+    "saveFirst": "请先保存文档，以便使用相对路径插入图片",
+    "inserted": "已插入图片",
+    "insertedMultiple": "已插入 {{count}} 张图片",
+    "failed": "插入图片失败",
+    "dropHere": "将图片拖放到此处"
+  },
   "dialogs": {
     "saveChanges": "关闭前是否保存更改？",
     "saveChangesMessage": "<bold>{{fileName}}</bold> 有未保存的更改。是否保存？",

@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Markdown-Datei hier ablegen",
     "noActiveTab": "Kein aktiver Tab zum Speichern. Bitte öffnen Sie zuerst eine Datei."
   },
+  "imageInsert": {
+    "saveFirst": "Speichern Sie das Dokument zuerst, um Bilder mit relativen Pfaden einzufügen",
+    "inserted": "Bild eingefügt",
+    "insertedMultiple": "{{count}} Bilder eingefügt",
+    "failed": "Bild konnte nicht eingefügt werden",
+    "dropHere": "Bild hier ablegen"
+  },
   "dialogs": {
     "saveChanges": "Änderungen vor dem Schließen speichern?",
     "saveChangesMessage": "<bold>{{fileName}}</bold> hat ungespeicherte Änderungen. Möchten Sie sie speichern?",

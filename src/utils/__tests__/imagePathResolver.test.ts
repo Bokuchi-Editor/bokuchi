@@ -5,6 +5,7 @@ import {
   mimeTypeFromPath,
   resolveRelativePath,
   dirnameOf,
+  decodeImageSrc,
 } from '../imagePathResolver';
 
 describe('isAbsoluteUrl', () => {
@@ -66,5 +67,24 @@ describe('dirnameOf', () => {
 
   it('returns empty string for a path without slashes', () => {
     expect(dirnameOf('file.md')).toBe('');
+  });
+});
+
+describe('decodeImageSrc', () => {
+  it('decodes percent-encoded spaces (marked output for "my photo.png")', () => {
+    expect(decodeImageSrc('images/my%20photo.png')).toBe('images/my photo.png');
+  });
+
+  it('decodes percent-encoded non-ASCII (e.g. Japanese screenshot names)', () => {
+    const encoded = 'images/' + encodeURIComponent('スクリーンショット 2026-07-06.png');
+    expect(decodeImageSrc(encoded)).toBe('images/スクリーンショット 2026-07-06.png');
+  });
+
+  it('leaves already-decoded paths unchanged', () => {
+    expect(decodeImageSrc('images/test.png')).toBe('images/test.png');
+  });
+
+  it('falls back to the raw string on malformed encoding', () => {
+    expect(decodeImageSrc('images/50%off.png')).toBe('images/50%off.png');
   });
 });

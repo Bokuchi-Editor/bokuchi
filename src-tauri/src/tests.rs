@@ -884,3 +884,40 @@ fn test_pending_paths_buffer() {
     let result2 = get_pending_file_paths();
     assert!(result2.is_empty());
 }
+
+#[test]
+fn test_write_image_dedup_new_dedup_and_collision() {
+    use std::fs;
+    use std::path::PathBuf;
+
+    let mut dir: PathBuf = std::env::temp_dir();
+    dir.push(format!("bokuchi_img_dedup_{}", std::process::id()));
+    let _ = fs::remove_dir_all(&dir);
+    fs::create_dir_all(&dir).unwrap();
+
+    // Fresh write keeps the requested name.
+    let n1 = crate::commands::write_image_dedup(&dir, "a.png", b"hello").unwrap();
+    assert_eq!(n1, "a.png");
+    assert_eq!(fs::read(dir.join("a.png")).unwrap(), b"hello");
+
+    // Identical content reuses the existing file (dedup, same name).
+    let n2 = crate::commands::write_image_dedup(&dir, "a.png", b"hello").unwrap();
+    assert_eq!(n2, "a.png");
+
+    // Same name, different content gets a numeric suffix.
+    let n3 = crate::commands::write_image_dedup(&dir, "a.png", b"world").unwrap();
+    assert_eq!(n3, "a-1.png");
+    assert_eq!(fs::read(dir.join("a-1.png")).unwrap(), b"world");
+
+    // A name without an extension still works.
+    let n4 = crate::commands::write_image_dedup(&dir, "noext", b"x").unwrap();
+    assert_eq!(n4, "noext");
+
+    // Path traversal in the name is reduced to its file component.
+    let n5 = crate::commands::write_image_dedup(&dir, "../evil.png", b"z").unwrap();
+    assert_eq!(n5, "evil.png");
+    assert!(dir.join("evil.png").exists());
+    assert!(!dir.parent().unwrap().join("evil.png").exists());
+
+    let _ = fs::remove_dir_all(&dir);
+}

@@ -477,6 +477,13 @@
     "dropMarkdownFile": "將 Markdown 檔案拖放到此處",
     "noActiveTab": "沒有活動標籤頁可儲存。請先開啟檔案。"
   },
+  "imageInsert": {
+    "saveFirst": "請先儲存文件，以便使用相對路徑插入圖片",
+    "inserted": "已插入圖片",
+    "insertedMultiple": "已插入 {{count}} 張圖片",
+    "failed": "插入圖片失敗",
+    "dropHere": "將圖片拖放到此處"
+  },
   "dialogs": {
     "saveChanges": "關閉前是否儲存變更？",
     "saveChangesMessage": "<bold>{{fileName}}</bold> 有未儲存的變更。是否儲存？",

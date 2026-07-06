@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Markdownファイルをここにドロップ",
     "noActiveTab": "保存するアクティブなタブがありません。まずファイルを開いてください。"
   },
+  "imageInsert": {
+    "saveFirst": "画像を相対パスで挿入するには、先にドキュメントを保存してください",
+    "inserted": "画像を挿入しました",
+    "insertedMultiple": "{{count}} 個の画像を挿入しました",
+    "failed": "画像の挿入に失敗しました",
+    "dropHere": "画像をここにドロップ"
+  },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
     "saveChangesMessage": "<bold>{{fileName}}</bold> に未保存の変更があります。保存しますか？",

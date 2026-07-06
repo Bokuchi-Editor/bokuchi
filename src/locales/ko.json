@@ -477,6 +477,13 @@
     "dropMarkdownFile": "Markdown 파일을 여기에 드롭하세요",
     "noActiveTab": "저장할 활성 탭이 없습니다. 먼저 파일을 여세요."
   },
+  "imageInsert": {
+    "saveFirst": "상대 경로로 이미지를 삽입하려면 먼저 문서를 저장하세요",
+    "inserted": "이미지를 삽입했습니다",
+    "insertedMultiple": "이미지 {{count}}개를 삽입했습니다",
+    "failed": "이미지 삽입에 실패했습니다",
+    "dropHere": "여기에 이미지를 놓으세요"
+  },
   "dialogs": {
     "saveChanges": "닫기 전에 변경사항을 저장하시겠습니까?",
     "saveChangesMessage": "<bold>{{fileName}}</bold>에 저장되지 않은 변경사항이 있습니다. 저장하시겠습니까?",
