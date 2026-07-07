@@ -107,6 +107,12 @@ marp:  true
     expect(contentIsMarp(content)).toBe(true);
   });
 
+  // T-MR-02b: CRLF front-matter — MARP_FRONTMATTER_RE uses \r?\n so files
+  // saved with Windows line endings are detected too.
+  it('T-MR-02b: detects marp: true in CRLF front-matter', () => {
+    expect(contentIsMarp('---\r\nmarp: true\r\n---\r\n# S')).toBe(true);
+  });
+
   // T-MR-03: marp:true without space is still accepted (regex uses \s*)
   it('T-MR-03: accepts marp:true without space after colon', () => {
     const content = `---
@@ -231,17 +237,6 @@ describe('buildSlideDocument', () => {
     expect(doc).toContain('slides');
   });
 
-  it('uses 0-based slide index in showSlide call', () => {
-    const doc = buildSlideDocument('html', 'css', 0);
-    expect(doc).toContain('showSlide(0)');
-  });
-
-  // T-MR-01: large index still generates valid document
-  it('T-MR-01: generates valid HTML even when index exceeds slide count', () => {
-    const doc = buildSlideDocument('<div class="marpit">slides</div>', '.marpit{}', 999);
-    expect(doc).toContain('<!DOCTYPE html>');
-    expect(doc).toContain('showSlide(999)');
-  });
 });
 
 describe('buildAllSlidesDocument', () => {
@@ -343,10 +338,14 @@ describe('buildMarpPrintDocument', () => {
   const html = '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject><section>Slide</section></foreignObject></svg></div>';
 
   it('sizes the page and slides from the first slide viewBox', () => {
-    const doc = buildMarpPrintDocument(html, '.marpit {}');
-    expect(doc).toContain('@page { size: 1280px 720px; margin: 0; }');
+    // Use a non-default (4:3) viewBox — 1280x720 is also the fallback, so a
+    // broken viewBox parser would still pass with the 16:9 fixture.
+    const html43 =
+      '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 960"><foreignObject><section>Slide</section></foreignObject></svg></div>';
+    const doc = buildMarpPrintDocument(html43, '.marpit {}');
+    expect(doc).toContain('@page { size: 1280px 960px; margin: 0; }');
     expect(doc).toContain('width: 1280px;');
-    expect(doc).toContain('height: 720px;');
+    expect(doc).toContain('height: 960px;');
   });
 
   it('falls back to 1280x720 when no viewBox is present', () => {

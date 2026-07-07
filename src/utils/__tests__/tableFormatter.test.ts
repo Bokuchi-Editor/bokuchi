@@ -146,6 +146,17 @@ describe('tableFormatter', () => {
       expect(table.rows[0]).toEqual(['1', '', '']);
     });
 
+    // T-TF-14b: the column count is the max over ALL rows, so a body row
+    // wider than the header pads the header (and alignments) instead of
+    // dropping the extra cells.
+    it('T-TF-14b: pads the header when a body row has more columns', () => {
+      const block = ['| a |', '| --- |', '| 1 | 2 |'];
+      const table = parseTableBlock(block);
+      expect(table.header).toEqual(['a', '']);
+      expect(table.alignments).toEqual(['none', 'none']);
+      expect(table.rows[0]).toEqual(['1', '2']);
+    });
+
     // T-TF-15: serialize is idempotent
     it('T-TF-15: serialize(parse(serialize(x))) === serialize(x)', () => {
       const block = ['| Name | 値 |', '| --- | ---: |', '| Alice | 30 |', '| 太郎 | 7 |'];
@@ -181,6 +192,17 @@ describe('tableFormatter', () => {
       // "| abc | de |": 'a' is at column 3, 'd' at column 9
       expect(getCellIndexAtColumn(line, 3)).toBe(0);
       expect(getCellIndexAtColumn(line, 9)).toBe(1);
+    });
+
+    // T-TF-18b: columns outside the cell span clamp to the edge cells
+    it('T-TF-18b: clamps out-of-range columns to the first/last cell', () => {
+      // Column 1 sits on the leading pipe, before any cell -> first cell.
+      expect(getCellIndexAtColumn(line, 1)).toBe(0);
+      // Past the trailing pipe (line is 12 chars wide) -> last cell.
+      expect(getCellIndexAtColumn(line, 13)).toBe(1);
+      expect(getCellIndexAtColumn(line, 99)).toBe(1);
+      // No cells at all -> -1.
+      expect(getCellIndexAtColumn('no pipes', 1)).toBe(-1);
     });
 
     // T-TF-19: returns the trimmed content span of a cell

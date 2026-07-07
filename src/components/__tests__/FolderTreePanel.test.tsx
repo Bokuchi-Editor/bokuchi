@@ -127,10 +127,9 @@ describe('FolderTreePanel', () => {
     const closeBtn = closeButtons.find((btn) =>
       btn.querySelector('[data-testid="CloseIcon"]'),
     );
-    if (closeBtn) {
-      fireEvent.click(closeBtn);
-      expect(onClose).toHaveBeenCalledTimes(1);
-    }
+    expect(closeBtn).toBeDefined();
+    fireEvent.click(closeBtn!);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   // T-FTP-09: displays root folder name in header

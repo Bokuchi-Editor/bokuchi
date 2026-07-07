@@ -14,9 +14,17 @@ function sizeEl(el: HTMLElement) {
 // container, which is conditionally rendered. When `show` is false the container
 // is replaced by a different element type (as Marp mode swaps in <MarpPreview>),
 // forcing React to unmount it and mount a brand-new node on return.
-function Host({ show, onScrollChange }: { show: boolean; onScrollChange: (f: number) => void }) {
+function Host({
+  show,
+  scrollFraction,
+  onScrollChange,
+}: {
+  show: boolean;
+  scrollFraction?: number;
+  onScrollChange: (f: number) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const setScrollContainer = usePreviewScrollSync(ref, undefined, onScrollChange);
+  const setScrollContainer = usePreviewScrollSync(ref, scrollFraction, onScrollChange);
   return show ? <div data-testid="sc" ref={setScrollContainer} /> : <p data-testid="marp">marp</p>;
 }
 
@@ -45,5 +53,60 @@ describe('usePreviewScrollSync', () => {
 
     act(() => { sc.scrollTop = 600; sc.dispatchEvent(new Event('scroll')); });
     expect(onScrollChange).toHaveBeenCalledWith(0.75); // 600 / (1000-200)
+  });
+
+  // editor→preview direction: an incoming scrollFraction from the editor is
+  // applied to the container as fraction * (scrollHeight - clientHeight).
+  it('applies an incoming scrollFraction to the container', () => {
+    const onScrollChange = vi.fn();
+    const { rerender, getByTestId } = render(
+      <Host show={true} onScrollChange={onScrollChange} />,
+    );
+    const sc = getByTestId('sc');
+    sizeEl(sc);
+
+    rerender(<Host show={true} scrollFraction={0.5} onScrollChange={onScrollChange} />);
+
+    expect(sc.scrollTop).toBe(400); // 0.5 * (1000-200)
+  });
+
+  // Feedback-loop guard: the programmatic scroll above makes the browser fire
+  // a scroll event on the container. That event must NOT be reported back
+  // through onScrollChange, otherwise editor→preview sync would echo into
+  // preview→editor sync and the two panes would fight each other. The guard is
+  // released on the next animation frame so real user scrolls still report.
+  it('does not report the scroll event caused by a programmatic scroll', () => {
+    const rafCallbacks: Array<(time: number) => void> = [];
+    const rafSpy = vi
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb: (time: number) => void) => {
+        rafCallbacks.push(cb);
+        return rafCallbacks.length;
+      });
+    try {
+      const onScrollChange = vi.fn();
+      const { rerender, getByTestId } = render(
+        <Host show={true} onScrollChange={onScrollChange} />,
+      );
+      const sc = getByTestId('sc');
+      sizeEl(sc);
+
+      // Editor drives the preview to 0.5 (programmatic scroll)
+      rerender(<Host show={true} scrollFraction={0.5} onScrollChange={onScrollChange} />);
+      expect(sc.scrollTop).toBe(400);
+
+      // The scroll event produced by our own scrollTop assignment fires before
+      // the next animation frame — it must be swallowed by the guard.
+      act(() => { sc.dispatchEvent(new Event('scroll')); });
+      expect(onScrollChange).not.toHaveBeenCalled();
+
+      // After the animation frame the guard is released: a genuine user scroll
+      // is reported again.
+      act(() => { rafCallbacks.forEach((cb) => cb(0)); });
+      act(() => { sc.scrollTop = 600; sc.dispatchEvent(new Event('scroll')); });
+      expect(onScrollChange).toHaveBeenCalledWith(0.75);
+    } finally {
+      rafSpy.mockRestore();
+    }
   });
 });

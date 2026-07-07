@@ -172,4 +172,120 @@ describe('useFileOperations', () => {
     expect(result.current.saveBeforeCloseDialog.open).toBe(false);
   });
 
+  // --- Close queue (bulk close of multiple modified tabs) ---------------------
+  // Closing several modified tabs at once (close-all, close-others, quit) walks
+  // a queue: the SaveBeforeClose dialog is shown for one tab at a time and each
+  // user choice decides that tab only, then the queue advances. Cancel skips
+  // the current tab (keeps it open) and moves on — it does not abort the rest
+  // of the queue.
+
+  const modifiedTabs: Tab[] = [
+    { id: 'm1', title: 'one.md', content: 'a', isModified: true, isNew: false },
+    { id: 'm2', title: 'two.md', content: 'b', isModified: true, isNew: false },
+    { id: 'm3', title: 'three.md', content: 'c', isModified: true, isNew: false },
+  ];
+
+  const queueParams = (): UseFileOperationsParams => ({
+    ...defaultParams(),
+    activeTab: modifiedTabs[0],
+    tabs: modifiedTabs,
+  });
+
+  // T-FO-09: the queue shows one dialog per tab, in order, and each choice
+  // (cancel / don't save / save) applies only to the tab it was made for.
+  it('T-FO-09: startCloseQueue walks modified tabs one dialog at a time', async () => {
+    const { result } = renderHook(() => useFileOperations(queueParams()));
+
+    act(() => {
+      result.current.startCloseQueue(['m1', 'm2', 'm3']);
+    });
+    expect(result.current.saveBeforeCloseDialog.open).toBe(true);
+    expect(result.current.saveBeforeCloseDialog.fileName).toBe('one.md');
+
+    // Cancel: m1 stays open, queue moves on to m2
+    act(() => {
+      result.current.handleCancelBeforeClose();
+    });
+    expect(removeTab).not.toHaveBeenCalled();
+    expect(result.current.saveBeforeCloseDialog.open).toBe(true);
+    expect(result.current.saveBeforeCloseDialog.fileName).toBe('two.md');
+
+    // Don't save: m2 is closed without saving, queue moves on to m3
+    act(() => {
+      result.current.handleDontSaveBeforeClose();
+    });
+    expect(removeTab).toHaveBeenCalledWith('m2');
+    expect(saveTab).not.toHaveBeenCalled();
+    expect(result.current.saveBeforeCloseDialog.fileName).toBe('three.md');
+
+    // Save: m3 is saved and closed, queue is exhausted, dialog closes
+    await act(async () => {
+      await result.current.handleSaveBeforeClose();
+    });
+    expect(saveTab).toHaveBeenCalledWith('m3');
+    expect(removeTab).toHaveBeenCalledWith('m3');
+    expect(result.current.saveBeforeCloseDialog.open).toBe(false);
+    expect(result.current.saveBeforeCloseDialog.queue).toEqual([]);
+  });
+
+  // T-FO-10: successful save-before-close removes the tab and reports "saved"
+  it('T-FO-10: handleSaveBeforeClose saves, removes tab and shows save status', async () => {
+    const { result } = renderHook(() => useFileOperations(defaultParams()));
+
+    act(() => {
+      result.current.handleTabClose('tab2');
+    });
+
+    await act(async () => {
+      await result.current.handleSaveBeforeClose();
+    });
+
+    expect(saveTab).toHaveBeenCalledWith('tab2');
+    expect(removeTab).toHaveBeenCalledWith('tab2');
+    expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
+  });
+
+  // T-FO-11: when saveTab resolves false (e.g. the user cancelled the native
+  // Save dialog for a new tab) the tab must NOT be closed — closing would
+  // discard the unsaved edits — but the queue still advances to the next tab.
+  it('T-FO-11: handleSaveBeforeClose keeps the tab when save returns false but advances the queue', async () => {
+    saveTab.mockResolvedValue(false);
+    const { result } = renderHook(() => useFileOperations(queueParams()));
+
+    act(() => {
+      result.current.startCloseQueue(['m1', 'm2']);
+    });
+
+    await act(async () => {
+      await result.current.handleSaveBeforeClose();
+    });
+
+    expect(saveTab).toHaveBeenCalledWith('m1');
+    expect(removeTab).not.toHaveBeenCalled();
+    expect(showSaveStatus).not.toHaveBeenCalled();
+    // The queue continues with the next tab instead of stalling
+    expect(result.current.saveBeforeCloseDialog.open).toBe(true);
+    expect(result.current.saveBeforeCloseDialog.fileName).toBe('two.md');
+  });
+
+  // T-FO-12: "Save with variables" expands {{variables}} before writing, so
+  // the exported file contains resolved values, not the template syntax.
+  it('T-FO-12: handleSaveWithVariables saves the variable-expanded content', async () => {
+    const { desktopApi } = await import('../../api/desktopApi');
+    const { variableApi } = await import('../../api/variableApi');
+    const globalVariables = { author: 'Alice' };
+
+    const { result } = renderHook(() =>
+      useFileOperations({ ...defaultParams(), globalVariables })
+    );
+
+    await act(async () => {
+      await result.current.handleSaveWithVariables();
+    });
+
+    expect(variableApi.getExpandedMarkdown).toHaveBeenCalledWith(activeTab.content, globalVariables);
+    // The expanded content — not the raw tab content — goes to the save dialog
+    expect(desktopApi.saveFileAs).toHaveBeenCalledWith('expanded content');
+    expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
+  });
 });

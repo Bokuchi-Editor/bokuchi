@@ -121,4 +121,18 @@ describe('UpdateDialog', () => {
     });
     expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
+
+  // T-UD-11: Escape dismisses the dialog during the notify phase
+  it('T-UD-11: calls onDismiss on Escape during notify phase', () => {
+    renderDialog('notify');
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
+  // T-UD-12: Escape does nothing while downloading (onClose is undefined)
+  it('T-UD-12: does not call onDismiss on Escape during downloading phase', () => {
+    renderDialog('downloading');
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
 });

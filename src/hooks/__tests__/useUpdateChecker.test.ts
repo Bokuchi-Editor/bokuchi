@@ -273,4 +273,83 @@ describe('useUpdateChecker', () => {
 
     expect(vi.mocked(updaterApi.checkForUpdate).mock.calls.length).toBe(callsBefore);
   });
+
+  // Helper for the download tests: get the hook into the "update available,
+  // dialog open" state so handleCheckForUpdate has a pending update to install.
+  const renderWithAvailableUpdate = async () => {
+    const mockUpdate = { version: '2.0.0' };
+    vi.mocked(updaterApi.checkForUpdate).mockResolvedValue({
+      info: { available: true, version: '2.0.0', body: '' } as UpdateInfo,
+      update: mockUpdate as import('@tauri-apps/plugin-updater').Update,
+    });
+
+    const utils = renderHook(() => useUpdateChecker(defaultParams()));
+    await waitFor(() => {
+      expect(utils.result.current.updateDialogOpen).toBe(true);
+    });
+    return utils;
+  };
+
+  // T-UC-14: starting the download switches the dialog to the 'downloading'
+  // phase and streams progress into updateDownloadProgress so the UI can show
+  // a progress bar instead of a frozen dialog.
+  it('T-UC-14: handleCheckForUpdate enters downloading phase and reports progress', async () => {
+    const { result } = await renderWithAvailableUpdate();
+
+    let capturedOnProgress: ((p: { contentLength?: number; downloaded: number }) => void) | undefined;
+    let resolveDownload!: () => void;
+    vi.mocked(updaterApi.downloadAndInstall).mockImplementation((_update, onProgress) => {
+      capturedOnProgress = onProgress;
+      return new Promise<void>((resolve) => {
+        resolveDownload = resolve;
+      });
+    });
+
+    // Kick off the download without awaiting completion
+    let downloadPromise: Promise<void>;
+    act(() => {
+      downloadPromise = result.current.handleCheckForUpdate();
+    });
+
+    // Phase flips to 'downloading' immediately, before any bytes arrive
+    expect(result.current.updateDialogPhase).toBe('downloading');
+    expect(result.current.updateDownloadProgress).toBeNull();
+
+    // Progress events are reflected into state
+    act(() => {
+      capturedOnProgress!({ contentLength: 100, downloaded: 42 });
+    });
+    expect(result.current.updateDownloadProgress).toEqual({ contentLength: 100, downloaded: 42 });
+
+    await act(async () => {
+      resolveDownload();
+      await downloadPromise!;
+    });
+    // Success path: no error snackbar (the app relaunches after install)
+    expect(setSnackbar).not.toHaveBeenCalled();
+  });
+
+  // T-UC-15: a failed download must not leave the user stuck on a dead
+  // 'downloading' dialog — the dialog closes and an error snackbar is shown.
+  it('T-UC-15: download failure closes the dialog and shows an error snackbar', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const { result } = await renderWithAvailableUpdate();
+
+      vi.mocked(updaterApi.downloadAndInstall).mockRejectedValue(new Error('download interrupted'));
+
+      await act(async () => {
+        await result.current.handleCheckForUpdate();
+      });
+
+      expect(result.current.updateDialogOpen).toBe(false);
+      expect(setSnackbar).toHaveBeenCalledWith({
+        open: true,
+        message: 'dialogs.update.checkFailed',
+        severity: 'error',
+      });
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+  });
 });

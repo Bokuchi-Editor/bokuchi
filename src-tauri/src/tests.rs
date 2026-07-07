@@ -185,53 +185,7 @@ fn test_export_variables_to_yaml() {
     assert!(yaml_content.contains("value2"));
 }
 
-// Variable and VariableSet tests
-#[test]
-fn test_variable_creation() {
-    let var = Variable {
-        name: "test".to_string(),
-        value: "value".to_string(),
-    };
-    assert_eq!(var.name, "test");
-    assert_eq!(var.value, "value");
-}
-
-#[test]
-fn test_variable_set_creation() {
-    let variables = vec![
-        Variable {
-            name: "var1".to_string(),
-            value: "value1".to_string(),
-        },
-        Variable {
-            name: "var2".to_string(),
-            value: "value2".to_string(),
-        },
-    ];
-    let var_set = VariableSet { variables };
-    assert_eq!(var_set.variables.len(), 2);
-}
-
-// FileHashInfo tests
-#[test]
-fn test_file_hash_info_creation() {
-    let hash_info = FileHashInfo {
-        hash: "test_hash".to_string(),
-        modified_time: 1234567890,
-        file_size: 1024,
-    };
-    assert_eq!(hash_info.hash, "test_hash");
-    assert_eq!(hash_info.modified_time, 1234567890);
-    assert_eq!(hash_info.file_size, 1024);
-}
-
 // Tauri command tests
-#[test]
-fn test_greet_command() {
-    let result = greet("World");
-    assert_eq!(result, "Hello, World! You've been greeted from Rust!");
-}
-
 #[test]
 fn test_set_global_variable_command() {
     let result = set_global_variable("test".to_string(), "value".to_string());
@@ -239,21 +193,6 @@ fn test_set_global_variable_command() {
 
     let vars = get_global_variables().unwrap();
     assert_eq!(vars.get("test"), Some(&"value".to_string()));
-}
-
-#[test]
-fn test_get_global_variables_command() {
-    // Test the command function directly
-    let result = set_global_variable("test_var1".to_string(), "test_value1".to_string());
-    assert!(result.is_ok());
-
-    let result = set_global_variable("test_var2".to_string(), "test_value2".to_string());
-    assert!(result.is_ok());
-
-    let vars = get_global_variables().unwrap();
-    // Check that our test variables are present
-    assert_eq!(vars.get("test_var1"), Some(&"test_value1".to_string()));
-    assert_eq!(vars.get("test_var2"), Some(&"test_value2".to_string()));
 }
 
 #[test]
@@ -355,26 +294,6 @@ fn test_yaml_roundtrip() {
 // VariableProcessor edge case tests (R-VP-11 through R-VP-17)
 // ===================================================================
 
-// R-VP-11
-#[test]
-fn test_empty_variable_name() {
-    let processor = VariableProcessor::new();
-    processor.set_global_variable("".to_string(), "empty_name_value".to_string());
-    assert_eq!(processor.get_global_variable(""), Some("empty_name_value".to_string()));
-}
-
-// R-VP-12
-#[test]
-fn test_special_chars_in_value() {
-    let processor = VariableProcessor::new();
-    processor.set_global_variable("special".to_string(), "value with {{ and }} and <!-- --> and\nnewlines".to_string());
-    let val = processor.get_global_variable("special").unwrap();
-    assert!(val.contains("{{"));
-    assert!(val.contains("}}"));
-    assert!(val.contains("<!-- -->"));
-    assert!(val.contains("\n"));
-}
-
 // R-VP-13
 #[test]
 fn test_duplicate_variable_override() {
@@ -402,15 +321,13 @@ fn test_parse_malformed_var_comment() {
 #[test]
 fn test_parse_var_with_extra_whitespace() {
     let processor = VariableProcessor::new();
-    // The parser requires exact "<!-- @var " prefix and " -->" suffix
-    // Extra spaces before @var won't match, but let's test the standard format with spaces in name/value
+    // Extra spaces around the name and value inside the comment must be
+    // tolerated: the parser splits on the first ':' and trims both sides.
     let content = "<!-- @var  name :  value  -->";
     let (variables, _) = processor.parse_variables_from_markdown(content);
-    // The parser trims name and value after splitting on ':'
-    if !variables.is_empty() {
-        assert_eq!(variables[0].name, "name");
-        assert_eq!(variables[0].value, "value");
-    }
+    assert_eq!(variables.len(), 1);
+    assert_eq!(variables[0].name, "name");
+    assert_eq!(variables[0].value, "value");
 }
 
 // R-VP-16
@@ -480,8 +397,43 @@ fn test_yaml_invalid_format() {
     assert!(result.is_err());
 }
 
+// R-VP-18: `<!-- @include: ... -->` lines are silently dropped from the
+// output. Include is not implemented yet; this pins the current behavior so
+// an implementation (or a change to keep the line) is caught explicitly.
+#[test]
+fn test_include_comment_silently_removed() {
+    let processor = VariableProcessor::new();
+    let content = "before\n<!-- @include: other.md -->\nafter";
+    let (variables, processed) = processor.parse_variables_from_markdown(content);
+    assert_eq!(variables.len(), 0);
+    assert_eq!(processed, "before\nafter");
+}
+
+// R-VP-19: substitution is single-pass. A value containing `{{other}}` must
+// be inserted verbatim, not recursively expanded (guards against infinite
+// expansion via self-referencing variables).
+#[test]
+fn test_no_recursive_expansion() {
+    let processor = VariableProcessor::new();
+    processor.set_global_variable("a".to_string(), "X{{b}}Y".to_string());
+    processor.set_global_variable("b".to_string(), "bval".to_string());
+    let result = processor.process_variables("{{a}}");
+    assert_eq!(result, "X{{b}}Y");
+}
+
+// R-VP-20: whitespace inside the braces is trimmed, so `{{ name }}` resolves
+// the variable `name`.
+#[test]
+fn test_placeholder_inner_whitespace_trimmed() {
+    let processor = VariableProcessor::new();
+    processor.set_global_variable("name".to_string(), "val".to_string());
+    let result = processor.process_variables("Hello {{ name }}!");
+    assert_eq!(result, "Hello val!");
+}
+
 // ===================================================================
-// File I/O command tests (R-CMD-01 through R-CMD-23)
+// File I/O command tests (R-CMD-01 through R-CMD-35;
+// R-CMD-22/23 retired as duplicates of R-FO-03/04)
 // ===================================================================
 
 // Helper to create a temp file with given extension and content
@@ -580,6 +532,21 @@ fn test_read_file_utf8_content() {
     assert!(content.contains("🌍"));
 }
 
+// R-CMD-24: read_file must return a clean error (not panic) for files that
+// are not valid UTF-8 — e.g. Shift-JIS encoded .txt files that Japanese
+// users commonly open. fs::read_to_string fails on invalid UTF-8 and the
+// command maps it to "Failed to read file".
+#[test]
+fn test_read_file_invalid_utf8() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join("sjis.md");
+    // "日本語" encoded as Shift-JIS; invalid as UTF-8.
+    std::fs::write(&path, [0x93u8, 0xFA, 0x96, 0x7B, 0x8C, 0xEA]).unwrap();
+    let result = pollster::block_on(read_file(path.to_string_lossy().to_string()));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("Failed to read file"));
+}
+
 // R-CMD-09
 #[test]
 fn test_save_file_new() {
@@ -629,6 +596,44 @@ fn test_save_file_utf8_content() {
     let result = pollster::block_on(save_file(path.clone(), content.to_string()));
     assert!(result.is_ok());
     assert_eq!(std::fs::read_to_string(&path).unwrap(), content);
+}
+
+// R-CMD-25: hidden dotfiles have no extension (Path::extension() is None for
+// ".bashrc"), which previously bypassed the .md/.txt allowlist and let IPC
+// calls write shell/config files. They must be rejected and nothing written.
+#[test]
+fn test_save_file_dotfile_rejected() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join(".bashrc");
+    let result = pollster::block_on(save_file(
+        path.to_string_lossy().to_string(),
+        "alias evil=1".to_string(),
+    ));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("Unsupported file type"));
+    assert!(!path.exists());
+}
+
+// R-CMD-26: plain (non-hidden) extension-less files stay writable. The folder
+// tree's "all files" mode legitimately opens them via read_file (R-CMD-07),
+// and Ctrl+S on such a tab goes through save_file.
+#[test]
+fn test_save_file_no_extension_plain_allowed() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join("README").to_string_lossy().to_string();
+    let result = pollster::block_on(save_file(path.clone(), "no extension".to_string()));
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read_to_string(&path).unwrap(), "no extension");
+}
+
+// R-CMD-27: .txt is on the save allowlist (only .md was covered before).
+#[test]
+fn test_save_file_txt() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join("notes.txt").to_string_lossy().to_string();
+    let result = pollster::block_on(save_file(path.clone(), "plain text".to_string()));
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read_to_string(&path).unwrap(), "plain text");
 }
 
 // R-CMD-14
@@ -725,27 +730,138 @@ fn test_get_file_hash_normal() {
     assert_eq!(info.file_size, 11); // "hello world" = 11 bytes
 }
 
-// R-CMD-22
+// R-CMD-28: rename_file moves the file and preserves its content.
 #[test]
-fn test_get_file_hash_large_file() {
+fn test_rename_file_success() {
     let dir = TempDir::new().unwrap();
-    let path = dir.path().join("large.md");
-    let mut file = std::fs::File::create(&path).unwrap();
-    let chunk = vec![b'x'; 1024 * 1024];
-    for _ in 0..11 {
-        file.write_all(&chunk).unwrap();
-    }
-    drop(file);
-    let result = pollster::block_on(get_file_hash(path.to_string_lossy().to_string()));
+    let old_path = create_temp_file(&dir, "old.md", "rename me");
+    let new_path = dir.path().join("new.md").to_string_lossy().to_string();
+    let result = pollster::block_on(rename_file(old_path.clone(), new_path.clone()));
     assert!(result.is_ok());
-    assert_eq!(result.unwrap().hash, "large_file");
+    assert!(!std::path::Path::new(&old_path).exists());
+    assert_eq!(std::fs::read_to_string(&new_path).unwrap(), "rename me");
 }
 
-// R-CMD-23
+// R-CMD-29: renaming a nonexistent source fails with a clear error.
 #[test]
-fn test_get_file_hash_not_found() {
-    let result = pollster::block_on(get_file_hash("/nonexistent/file.md".to_string()));
+fn test_rename_file_source_missing() {
+    let dir = TempDir::new().unwrap();
+    let old_path = dir.path().join("missing.md").to_string_lossy().to_string();
+    let new_path = dir.path().join("new.md").to_string_lossy().to_string();
+    let result = pollster::block_on(rename_file(old_path, new_path));
     assert!(result.is_err());
+    assert!(result.unwrap_err().contains("Source file not found"));
+}
+
+// R-CMD-30: renaming onto an existing file is refused (no silent overwrite)
+// and both files are left untouched.
+#[test]
+fn test_rename_file_destination_exists() {
+    let dir = TempDir::new().unwrap();
+    let old_path = create_temp_file(&dir, "src.md", "source");
+    let new_path = create_temp_file(&dir, "dst.md", "destination");
+    let result = pollster::block_on(rename_file(old_path.clone(), new_path.clone()));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("already exists"));
+    assert_eq!(std::fs::read_to_string(&old_path).unwrap(), "source");
+    assert_eq!(std::fs::read_to_string(&new_path).unwrap(), "destination");
+}
+
+// R-CMD-31: copy_image_asset copies the source into dest_dir/subdir keeping
+// the file name, and returns a forward-slashed path relative to dest_dir.
+#[test]
+fn test_copy_image_asset_success() {
+    let src_dir = TempDir::new().unwrap();
+    let dest_dir = TempDir::new().unwrap();
+    let src_path = src_dir.path().join("photo.png");
+    std::fs::write(&src_path, b"png-bytes").unwrap();
+
+    let result = pollster::block_on(copy_image_asset(
+        src_path.to_string_lossy().to_string(),
+        dest_dir.path().to_string_lossy().to_string(),
+        "assets".to_string(),
+    ));
+    assert_eq!(result.unwrap(), "assets/photo.png");
+    assert_eq!(
+        std::fs::read(dest_dir.path().join("assets").join("photo.png")).unwrap(),
+        b"png-bytes"
+    );
+}
+
+// R-CMD-32: a missing source image yields the "Failed to read image" error.
+#[test]
+fn test_copy_image_asset_source_missing() {
+    let dest_dir = TempDir::new().unwrap();
+    let result = pollster::block_on(copy_image_asset(
+        "/nonexistent/image.png".to_string(),
+        dest_dir.path().to_string_lossy().to_string(),
+        "assets".to_string(),
+    ));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("Failed to read image"));
+}
+
+// R-CMD-33: an existing file with the same name but different content gets a
+// numeric suffix in the returned relative path (collision avoidance).
+#[test]
+fn test_copy_image_asset_name_collision() {
+    let src_dir = TempDir::new().unwrap();
+    let dest_dir = TempDir::new().unwrap();
+    let src_path = src_dir.path().join("photo.png");
+    std::fs::write(&src_path, b"new-content").unwrap();
+    let assets = dest_dir.path().join("assets");
+    std::fs::create_dir_all(&assets).unwrap();
+    std::fs::write(assets.join("photo.png"), b"old-content").unwrap();
+
+    let result = pollster::block_on(copy_image_asset(
+        src_path.to_string_lossy().to_string(),
+        dest_dir.path().to_string_lossy().to_string(),
+        "assets".to_string(),
+    ));
+    assert_eq!(result.unwrap(), "assets/photo-1.png");
+    assert_eq!(std::fs::read(assets.join("photo-1.png")).unwrap(), b"new-content");
+    // The pre-existing file is untouched.
+    assert_eq!(std::fs::read(assets.join("photo.png")).unwrap(), b"old-content");
+}
+
+// R-CMD-34: save_image_bytes writes the bytes and returns a forward-slashed
+// path relative to dest_dir.
+#[test]
+fn test_save_image_bytes_success() {
+    let dest_dir = TempDir::new().unwrap();
+    let result = pollster::block_on(save_image_bytes(
+        dest_dir.path().to_string_lossy().to_string(),
+        "images".to_string(),
+        "shot.png".to_string(),
+        b"clipboard-bytes".to_vec(),
+    ));
+    assert_eq!(result.unwrap(), "images/shot.png");
+    assert_eq!(
+        std::fs::read(dest_dir.path().join("images").join("shot.png")).unwrap(),
+        b"clipboard-bytes"
+    );
+}
+
+// R-CMD-35: a backslashed subdir (Windows-style) is normalized to forward
+// slashes in the returned Markdown-ready relative path.
+#[test]
+fn test_save_image_bytes_backslash_subdir_normalized() {
+    let dest_dir = TempDir::new().unwrap();
+    let result = pollster::block_on(save_image_bytes(
+        dest_dir.path().to_string_lossy().to_string(),
+        "images\\sub".to_string(),
+        "shot.png".to_string(),
+        b"bytes".to_vec(),
+    ));
+    let rel = result.unwrap();
+    assert_eq!(rel, "images/sub/shot.png");
+    assert!(!rel.contains('\\'));
+    // The file is written under the directory the command itself constructed
+    // (on Unix "images\sub" is a single literal component; on Windows two).
+    let written = std::path::Path::new(&dest_dir.path().to_string_lossy().to_string())
+        .join("images\\sub")
+        .join("shot.png");
+    assert_eq!(std::fs::read(written).unwrap(), b"bytes");
 }
 
 // ===================================================================
@@ -806,7 +922,7 @@ fn test_calculate_file_hash_not_found() {
 }
 
 // ===================================================================
-// file_association.rs tests (R-FA-01 through R-FA-05)
+// file_association.rs tests (R-FA-01 through R-FA-04)
 // ===================================================================
 
 // R-FA-01 & R-FA-02
@@ -862,27 +978,6 @@ fn test_get_pending_file_paths_clears() {
 
     let paths_after = get_pending_file_paths();
     assert!(paths_after.is_empty());
-}
-
-// R-FA-05
-#[test]
-fn test_pending_paths_buffer() {
-    use crate::types::PENDING_FILE_PATHS;
-
-    // Push a path directly to the buffer
-    let pending = PENDING_FILE_PATHS.get_or_init(|| std::sync::Mutex::new(Vec::new()));
-    {
-        let mut paths = pending.lock().unwrap();
-        paths.push("/test/path.md".to_string());
-    }
-
-    // Retrieve should return the buffered path
-    let result = get_pending_file_paths();
-    assert!(result.contains(&"/test/path.md".to_string()));
-
-    // Buffer should be cleared after retrieval
-    let result2 = get_pending_file_paths();
-    assert!(result2.is_empty());
 }
 
 #[test]

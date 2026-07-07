@@ -190,4 +190,19 @@ describe('useZoom', () => {
 
     expect(result.current.currentZoom).toBeCloseTo(1.1);
   });
+
+  // T-UZ-15: a persisted zoom outside [minZoom, maxZoom] (corrupt store, or a
+  // config whose limits shrank in an update) must be ignored — applying it
+  // would render the app unusably large/small with no visible way back.
+  it('T-UZ-15: ignores an out-of-range saved zoom level and keeps the default', async () => {
+    vi.mocked(storeApi.loadZoomLevel).mockResolvedValue(5.0); // above maxZoom 2.0
+
+    const { result } = renderHook(() => useZoom(defaultConfig));
+
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+
+    expect(result.current.currentZoom).toBe(defaultConfig.defaultZoom);
+  });
 });

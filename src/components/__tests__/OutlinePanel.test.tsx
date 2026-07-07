@@ -83,18 +83,4 @@ describe('OutlinePanel', () => {
     );
     expect(screen.getByText('outline.title')).toBeInTheDocument();
   });
-
-  // T-OP-07: respects custom width (MUI uses CSS classes, so check computed style or class)
-  it('T-OP-07: applies custom width via MUI Box', () => {
-    const { container } = render(
-      <OutlinePanel
-        headings={sampleHeadings}
-        onHeadingClick={asMock<(lineNumber: number, index: number) => void>(onHeadingClick)}
-        width={300}
-      />,
-    );
-    const panel = container.firstChild as HTMLElement;
-    // MUI Box applies width via CSS classes; verify the element exists
-    expect(panel).toBeInTheDocument();
-  });
 });

@@ -36,4 +36,18 @@ describe('countWords', () => {
   it('T-WC-07: counts halfwidth katakana per character', () => {
     expect(countWords('ｶﾀｶﾅ')).toBe(4);
   });
+
+  // Regression: CJK punctuation must be a separator, not a word — otherwise the
+  // status bar word count is inflated by one per 。、「」 etc.
+  it('T-WC-08: does not count CJK punctuation as words', () => {
+    expect(countWords('これはペンです。')).toBe(7); // 7 chars + 。 excluded
+    expect(countWords('「引用」')).toBe(2); // brackets excluded
+    expect(countWords('こんにちは、世界！')).toBe(7); // 、and ！ excluded
+    expect(countWords('カタカナ・リスト')).toBe(7); // middle dot excluded
+  });
+
+  it('T-WC-09: treats fullwidth/halfwidth symbol forms as separators', () => {
+    expect(countWords('ＡＢＣ！ＤＥＦ')).toBe(2); // fullwidth ！ splits tokens
+    expect(countWords('ﾃｽﾄ｡')).toBe(3); // halfwidth ideographic full stop excluded
+  });
 });

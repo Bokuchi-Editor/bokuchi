@@ -97,15 +97,6 @@ describe('MarpPreview - slide mode (preview)', () => {
     });
   });
 
-  it('has a fullscreen button', async () => {
-    const { getByText, container } = render(<MarpPreview {...slideProps} />);
-    await waitFor(() => {
-      expect(getByText('1 / 3')).toBeTruthy();
-    });
-    // Fullscreen button should exist (Fullscreen icon)
-    const svgIcons = container.querySelectorAll('svg[data-testid="FullscreenIcon"]');
-    expect(svgIcons.length).toBeGreaterThanOrEqual(0); // Icon may or may not have testid
-  });
 });
 
 describe('MarpPreview - continuous mode (split)', () => {

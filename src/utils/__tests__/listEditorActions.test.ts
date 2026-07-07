@@ -140,6 +140,37 @@ describe('listEditorActions', () => {
       const h = makeEditor(['- a'], { lineNumber: 1, column: 4 }, { selectionEmpty: false });
       expect(handleListEnter(h.ed)).toBe(false);
     });
+
+    // Regression: continuing from inside/before the marker duplicated it
+    // ("- abc" at column 1 became "- - abc"). Left of the content start the
+    // handler must defer to Monaco's plain newline (line pushed down).
+    it('T-LE-15: defers at column 1 of a list line', () => {
+      const h = makeEditor(['- abc'], { lineNumber: 1, column: 1 });
+      expect(handleListEnter(h.ed)).toBe(false);
+      expect(h.executeEdits).not.toHaveBeenCalled();
+    });
+
+    it('T-LE-16: defers with the caret inside the marker', () => {
+      // Column 2 is between "-" and the space, still left of the content.
+      const h = makeEditor(['- abc'], { lineNumber: 1, column: 2 });
+      expect(handleListEnter(h.ed)).toBe(false);
+      // Checkbox items: content starts after "[ ] ", so inside the box defers.
+      const c = makeEditor(['- [ ] task'], { lineNumber: 1, column: 5 });
+      expect(handleListEnter(c.ed)).toBe(false);
+      expect(c.executeEdits).not.toHaveBeenCalled();
+    });
+
+    it('T-LE-17: defers with the caret inside the indentation', () => {
+      const h = makeEditor(['    - nested'], { lineNumber: 1, column: 3 });
+      expect(handleListEnter(h.ed)).toBe(false);
+      expect(h.executeEdits).not.toHaveBeenCalled();
+    });
+
+    it('T-LE-17b: still continues with the caret exactly at the content start', () => {
+      const h = makeEditor(['- abc'], { lineNumber: 1, column: 3 }); // on "a"
+      expect(handleListEnter(h.ed)).toBe(true);
+      expect(h.lines).toEqual(['- ', '- abc']);
+    });
   });
 
   describe('handleListIndent', () => {
@@ -171,6 +202,21 @@ describe('listEditorActions', () => {
       const sel: Sel = { startLineNumber: 1, startColumn: 1, endLineNumber: 2, endColumn: 2 };
       const h = makeEditor(['- a', '- b'], { lineNumber: 1, column: 3 }, { selection: sel });
       expect(handleListIndent(h.ed, false)).toBe(false);
+    });
+
+    // Tab-character indentation: outdent expands tabs to spaces (one tab =
+    // tabSize spaces) before removing a single tab stop.
+    it('T-LE-18: outdent removes a single leading tab entirely', () => {
+      const h = makeEditor(['\t- a'], { lineNumber: 1, column: 4 }, { tabSize: 2 });
+      expect(handleListIndent(h.ed, true)).toBe(true);
+      expect(h.lines).toEqual(['- a']);
+    });
+
+    it('T-LE-18b: outdent converts remaining tabs to spaces', () => {
+      // Two tabs expand to 4 spaces; removing one tab stop leaves 2 spaces.
+      const h = makeEditor(['\t\t- a'], { lineNumber: 1, column: 5 }, { tabSize: 2 });
+      expect(handleListIndent(h.ed, true)).toBe(true);
+      expect(h.lines).toEqual(['  - a']);
     });
   });
 });
