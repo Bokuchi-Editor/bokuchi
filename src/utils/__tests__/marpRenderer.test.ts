@@ -366,6 +366,22 @@ describe('buildMarpPrintDocument', () => {
     expect(doc).toContain('data-marpit-advanced-background');
   });
 
+  // T-MR-07b: overflow guard. Flex conversion stops the section's child
+  // margins from collapsing, so a content-heavy slide (e.g. one with a table)
+  // that fits when block-laid-out can overflow the fixed slide height once
+  // flex — and centering then clips its middle rows. The fix must revert to
+  // block layout whenever the flex layout overflows, so nothing is clipped.
+  it('T-MR-07b: reverts the flex conversion when it would overflow (clip guard)', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    // Children are pinned (flex-shrink:0) so overflow is real & measurable —
+    // otherwise flex items shrink and hide the overflow from scrollHeight.
+    expect(doc).toContain("style.flexShrink = '0'");
+    expect(doc).toContain('s.scrollHeight > s.clientHeight');
+    // Revert restores the original block layout (empty inline styles).
+    expect(doc).toContain("s.style.display = ''");
+    expect(doc).toContain("s.style.justifyContent = ''");
+  });
+
   // Marpit's own print CSS adds page-break-before to sections; combined with
   // flex sections it corrupts WebKit print painting (background figures of
   // later slides disappear). Pagination comes from the svg break-after rule.
