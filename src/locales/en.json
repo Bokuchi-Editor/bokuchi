@@ -634,30 +634,41 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Hide the Outline",
-        "description": "The outline panel now has an Off option in Settings, and the toolbar button or Ctrl+Shift+O can hide it. Your choice is remembered the next time you open the app."
+      "pdfExport": {
+        "title": "PDF Export",
+        "description": "You can now export your document straight to PDF. It works for both regular Markdown and Marp slides, with the layout and positioning fine-tuned for clean output."
       },
-      "raspberryPiBuild": {
-        "title": "Raspberry Pi (arm64) Build",
-        "description": "Added a native arm64 Linux build that runs on Raspberry Pi, including a workaround for the garbled rendering seen on its GPU."
+      "customThemes": {
+        "title": "Custom Themes",
+        "description": "Create and edit your own themes. Pick a base theme, adjust the colors to your liking, and your custom themes are saved for reuse."
       },
-      "viewModePersistence": {
-        "title": "Remembers Your View Mode",
-        "description": "The app now reopens in the view you left it in — edit, preview, or split — instead of always starting in split view."
+      "dragDropImages": {
+        "title": "Drag & Drop Image Insertion",
+        "description": "Drop an image file into the editor to insert it instantly. A \"Drop image here\" overlay appears while you drag so you know where it will land."
       },
-      "cjkEmphasis": {
-        "title": "Bold & Italic Next to Japanese Text",
-        "description": "Fixed bold and italic not rendering when the markers touch Japanese or other CJK characters, such as around 「」 brackets. The asterisks no longer show up as literal text."
+      "listContinuation": {
+        "title": "Continuous List & Checkbox Input",
+        "description": "Pressing Enter inside a list or checkbox now starts the next item automatically, so you can keep typing without retyping the marker."
       },
-      "externalImages": {
-        "title": "External Images Restored",
-        "description": "Fixed external (https) images that had stopped loading in the preview."
+      "marpOfflineFonts": {
+        "title": "Offline Fonts for Marp",
+        "description": "Marp slide fonts are now bundled with the app, so slides render with the correct fonts even without an internet connection."
       },
       "dependencyUpdates": {
         "title": "Dependency Updates",
         "description": "Updated bundled libraries to their latest versions."
       }
+    }
+  },
+  "milestone": {
+    "close": "Thank you",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 is here",
+      "body1": "Thank you so much for always using Bokuchi.",
+      "body2": "Thanks to everyone's downloads, issues, and pull requests, Bokuchi has grown this far.",
+      "body3": "We'll keep improving it, so your continued support means a great deal to us.",
+      "body4": "We'd be delighted if you recommended Bokuchi to your colleagues and friends.",
+      "body5": "Thank you, and we look forward to your continued support."
     }
   },
   "preview": {

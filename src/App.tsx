@@ -59,6 +59,10 @@ function AppDesktop() {
     appSettings,
     saveStatusMessage,
 
+    // Milestone greeting state
+    milestoneOpen,
+    handleMilestoneClose,
+
     // What's New state
     whatsNewOpen,
 
@@ -369,6 +373,8 @@ function AppDesktop() {
           helpOpen={helpOpen}
           fileChangeDialog={fileChangeDialog}
           saveBeforeCloseDialog={saveBeforeCloseDialog}
+          milestoneOpen={milestoneOpen}
+          onMilestoneClose={handleMilestoneClose}
           whatsNewOpen={whatsNewOpen}
           onWhatsNewClose={handleWhatsNewClose}
           updateDialogOpen={updateDialogOpen}

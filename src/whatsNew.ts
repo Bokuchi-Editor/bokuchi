@@ -25,32 +25,32 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '0.9.4',
+  version: '1.0.0',
   changes: [
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.outlineOff.title',
-      descriptionKey: 'whatsNew.changes.outlineOff.description',
+      titleKey: 'whatsNew.changes.pdfExport.title',
+      descriptionKey: 'whatsNew.changes.pdfExport.description',
     },
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.raspberryPiBuild.title',
-      descriptionKey: 'whatsNew.changes.raspberryPiBuild.description',
+      titleKey: 'whatsNew.changes.customThemes.title',
+      descriptionKey: 'whatsNew.changes.customThemes.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.dragDropImages.title',
+      descriptionKey: 'whatsNew.changes.dragDropImages.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.listContinuation.title',
+      descriptionKey: 'whatsNew.changes.listContinuation.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.viewModePersistence.title',
-      descriptionKey: 'whatsNew.changes.viewModePersistence.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.cjkEmphasis.title',
-      descriptionKey: 'whatsNew.changes.cjkEmphasis.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.externalImages.title',
-      descriptionKey: 'whatsNew.changes.externalImages.description',
+      titleKey: 'whatsNew.changes.marpOfflineFonts.title',
+      descriptionKey: 'whatsNew.changes.marpOfflineFonts.description',
     },
     {
       type: 'improvement',

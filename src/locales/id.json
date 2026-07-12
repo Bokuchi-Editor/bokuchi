@@ -611,30 +611,41 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Sembunyikan Kerangka",
-        "description": "Panel kerangka kini memiliki opsi «Nonaktif» di Pengaturan, dan dapat disembunyikan melalui tombol bilah alat atau Ctrl+Shift+O. Pilihan Anda diingat saat membuka aplikasi berikutnya."
+      "pdfExport": {
+        "title": "Ekspor PDF",
+        "description": "Kini Anda dapat mengekspor dokumen langsung ke PDF. Fitur ini berfungsi baik untuk Markdown biasa maupun slide Marp, dengan tata letak dan penempatan yang disempurnakan untuk hasil yang rapi."
       },
-      "raspberryPiBuild": {
-        "title": "Build Raspberry Pi (arm64)",
-        "description": "Menambahkan build Linux arm64 native yang berjalan di Raspberry Pi, termasuk solusi untuk tampilan rusak pada GPU-nya."
+      "customThemes": {
+        "title": "Tema Kustom",
+        "description": "Buat dan sunting tema Anda sendiri. Pilih tema dasar, sesuaikan warna sesuai selera Anda, dan tema kustom Anda akan disimpan untuk digunakan kembali."
       },
-      "viewModePersistence": {
-        "title": "Mengingat Mode Tampilan Anda",
-        "description": "Aplikasi kini membuka kembali pada tampilan terakhir yang Anda gunakan — edit, pratinjau, atau terbagi — alih-alih selalu mulai dalam tampilan terbagi."
+      "dragDropImages": {
+        "title": "Penyisipan Gambar Seret & Lepas",
+        "description": "Lepaskan berkas gambar ke dalam editor untuk menyisipkannya secara instan. Lapisan «Lepaskan gambar di sini» muncul saat Anda menyeret sehingga Anda tahu di mana gambar akan ditempatkan."
       },
-      "cjkEmphasis": {
-        "title": "Tebal & Miring di Samping Teks Jepang",
-        "description": "Memperbaiki teks tebal dan miring yang tidak tampil saat penanda menyentuh karakter Jepang atau CJK lainnya, seperti di sekitar tanda kurung 「」. Tanda bintang tidak lagi muncul sebagai teks."
+      "listContinuation": {
+        "title": "Input Daftar & Kotak Centang Berkelanjutan",
+        "description": "Menekan Enter di dalam daftar atau kotak centang kini secara otomatis memulai item berikutnya, sehingga Anda dapat terus mengetik tanpa mengetik ulang penanda."
       },
-      "externalImages": {
-        "title": "Gambar Eksternal Dipulihkan",
-        "description": "Memperbaiki gambar eksternal (https) yang berhenti dimuat di pratinjau."
+      "marpOfflineFonts": {
+        "title": "Font Offline untuk Marp",
+        "description": "Font slide Marp kini disertakan dalam aplikasi, sehingga slide ditampilkan dengan font yang benar bahkan tanpa koneksi internet."
       },
       "dependencyUpdates": {
         "title": "Pembaruan Dependensi",
         "description": "Memperbarui pustaka bawaan ke versi terbaru."
       }
+    }
+  },
+  "milestone": {
+    "close": "Terima kasih",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 telah hadir",
+      "body1": "Terima kasih banyak telah selalu menggunakan Bokuchi.",
+      "body2": "Berkat unduhan, isu, dan pull request dari semua orang, Bokuchi bisa tumbuh sejauh ini.",
+      "body3": "Kami akan terus menyempurnakannya, jadi dukungan Anda yang berkelanjutan sangat berarti bagi kami.",
+      "body4": "Kami akan sangat senang jika Anda merekomendasikan Bokuchi kepada rekan dan teman Anda.",
+      "body5": "Terima kasih, dan kami menantikan dukungan Anda selanjutnya."
     }
   },
   "preview": {

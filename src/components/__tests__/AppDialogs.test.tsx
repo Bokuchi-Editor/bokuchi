@@ -49,6 +49,11 @@ vi.mock('../WhatsNewDialog', () => ({
     open ? <div data-testid="whats-new-dialog"><button onClick={onClose}>close-whats-new</button></div> : null,
 }));
 
+vi.mock('../MilestoneDialog', () => ({
+  default: ({ open, onClose }: { open: boolean; onClose: () => void }) =>
+    open ? <div data-testid="milestone-dialog"><button onClick={onClose}>close-milestone</button></div> : null,
+}));
+
 vi.mock('../UpdateDialog', () => ({
   default: ({
     open,
@@ -91,6 +96,8 @@ describe('AppDialogs', () => {
       fileName: '',
       tabId: null,
     },
+    milestoneOpen: false,
+    onMilestoneClose: asMock<() => void>(vi.fn()),
     whatsNewOpen: false,
     onWhatsNewClose: asMock<() => void>(vi.fn()),
     updateDialogOpen: false,

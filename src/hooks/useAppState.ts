@@ -18,6 +18,7 @@ import { useUpdateChecker } from './useUpdateChecker';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 import { useEasterEggs } from './useEasterEggs';
 import { useWhatsNew } from './useWhatsNew';
+import { useMilestone } from './useMilestone';
 
 /** How long the transient "Saved" status message stays visible in the status bar. */
 const SAVE_STATUS_DISPLAY_MS = 3000;
@@ -223,12 +224,19 @@ export const useAppState = () => {
     t,
   });
 
-  // What's New dialog
+  // Milestone / thank-you greeting (shown once before What's New)
+  const {
+    milestoneOpen,
+    milestonePending,
+    handleMilestoneClose,
+  } = useMilestone(isInitialized, isSettingsLoaded);
+
+  // What's New dialog (waits behind a pending milestone greeting)
   const {
     whatsNewOpen,
     handleWhatsNewOpen,
     handleWhatsNewClose,
-  } = useWhatsNew(isInitialized, isSettingsLoaded);
+  } = useWhatsNew(isInitialized, isSettingsLoaded, milestonePending);
 
   // Simple handlers
   const handleContentChange = (content: string) => {
@@ -567,6 +575,10 @@ export const useAppState = () => {
     as400Unlocked,
     showUnlockAnimation,
     isLateNight,
+
+    // Milestone greeting state
+    milestoneOpen,
+    handleMilestoneClose,
 
     // What's New state
     whatsNewOpen,

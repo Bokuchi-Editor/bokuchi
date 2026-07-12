@@ -611,30 +611,41 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Ẩn dàn ý",
-        "description": "Bảng dàn ý nay có tùy chọn «Tắt» trong Cài đặt, và có thể ẩn bằng nút trên thanh công cụ hoặc Ctrl+Shift+O. Lựa chọn của bạn được ghi nhớ ở lần mở ứng dụng tiếp theo."
+      "pdfExport": {
+        "title": "Xuất PDF",
+        "description": "Nay bạn có thể xuất tài liệu trực tiếp sang PDF. Tính năng hoạt động với cả Markdown thông thường lẫn slide Marp, với bố cục và vị trí được tinh chỉnh để cho ra bản in gọn gàng."
       },
-      "raspberryPiBuild": {
-        "title": "Bản dựng Raspberry Pi (arm64)",
-        "description": "Đã thêm bản dựng Linux arm64 gốc chạy trên Raspberry Pi, bao gồm cách khắc phục hiển thị bị lỗi trên GPU của nó."
+      "customThemes": {
+        "title": "Giao diện tùy chỉnh",
+        "description": "Tạo và chỉnh sửa giao diện của riêng bạn. Chọn một giao diện nền, điều chỉnh màu sắc theo ý thích, và các giao diện tùy chỉnh của bạn được lưu lại để dùng lần sau."
       },
-      "viewModePersistence": {
-        "title": "Ghi nhớ chế độ xem",
-        "description": "Ứng dụng nay mở lại ở chế độ xem bạn đã để lại — chỉnh sửa, xem trước hoặc chia đôi — thay vì luôn khởi động ở chế độ chia đôi."
+      "dragDropImages": {
+        "title": "Chèn ảnh bằng kéo & thả",
+        "description": "Kéo thả một tập tin ảnh vào trình soạn thảo để chèn ngay lập tức. Lớp phủ «Thả ảnh vào đây» xuất hiện khi bạn kéo để bạn biết ảnh sẽ được đặt ở đâu."
       },
-      "cjkEmphasis": {
-        "title": "Đậm & nghiêng cạnh chữ tiếng Nhật",
-        "description": "Đã sửa lỗi chữ đậm và nghiêng không hiển thị khi dấu nằm sát ký tự tiếng Nhật hoặc CJK khác, chẳng hạn quanh dấu ngoặc 「」. Dấu sao không còn hiện ra như văn bản thường."
+      "listContinuation": {
+        "title": "Nhập danh sách & ô đánh dấu liên tục",
+        "description": "Nhấn Enter trong một danh sách hoặc ô đánh dấu nay tự động bắt đầu mục tiếp theo, nên bạn có thể tiếp tục gõ mà không cần nhập lại dấu đầu dòng."
       },
-      "externalImages": {
-        "title": "Khôi phục ảnh bên ngoài",
-        "description": "Đã sửa lỗi ảnh bên ngoài (https) không còn tải được trong khung xem trước."
+      "marpOfflineFonts": {
+        "title": "Phông chữ ngoại tuyến cho Marp",
+        "description": "Phông chữ slide Marp nay được đóng gói kèm ứng dụng, nên slide hiển thị đúng phông chữ ngay cả khi không có kết nối internet."
       },
       "dependencyUpdates": {
         "title": "Cập nhật phụ thuộc",
         "description": "Đã cập nhật các thư viện đi kèm lên phiên bản mới nhất."
       }
+    }
+  },
+  "milestone": {
+    "close": "Cảm ơn bạn",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 đã ra mắt",
+      "body1": "Cảm ơn bạn rất nhiều vì đã luôn sử dụng Bokuchi.",
+      "body2": "Nhờ những lượt tải xuống, các báo cáo lỗi và pull request của mọi người, Bokuchi đã phát triển được đến ngày hôm nay.",
+      "body3": "Chúng tôi sẽ tiếp tục cải thiện, và sự ủng hộ bền bỉ của bạn có ý nghĩa vô cùng lớn đối với chúng tôi.",
+      "body4": "Chúng tôi sẽ rất vui nếu bạn giới thiệu Bokuchi đến đồng nghiệp và bạn bè của mình.",
+      "body5": "Xin chân thành cảm ơn và rất mong tiếp tục nhận được sự ủng hộ của bạn."
     }
   },
   "preview": {

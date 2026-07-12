@@ -522,6 +522,30 @@ export const storeApi = {
     }
   },
 
+  // Save the list of milestone ids whose one-time greeting has been shown
+  async saveSeenMilestones(ids: string[]): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('seenMilestones', ids);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save seen milestones:', error);
+      throw error;
+    }
+  },
+
+  // Load the list of milestone ids whose one-time greeting has been shown
+  async loadSeenMilestones(): Promise<string[]> {
+    try {
+      const storeInstance = await getStore();
+      const ids = await storeInstance.get('seenMilestones') as string[] | null;
+      return Array.isArray(ids) ? ids : [];
+    } catch (error) {
+      console.error('Failed to load seen milestones:', error);
+      return [];
+    }
+  },
+
   // Save last update check timestamp (epoch ms)
   async saveLastUpdateCheckAt(timestamp: number): Promise<void> {
     try {

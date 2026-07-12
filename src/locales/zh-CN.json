@@ -611,30 +611,41 @@
       "improvement": "改进"
     },
     "changes": {
-      "outlineOff": {
-        "title": "隐藏大纲",
-        "description": "大纲面板现在在设置中提供「关闭」选项，可通过工具栏按钮或 Ctrl+Shift+O 隐藏。下次打开应用时会记住你的选择。"
+      "pdfExport": {
+        "title": "PDF 导出",
+        "description": "现在可以将文档直接导出为 PDF。普通 Markdown 和 Marp 幻灯片均受支持，并对布局和定位进行了微调，以获得整洁的输出效果。"
       },
-      "raspberryPiBuild": {
-        "title": "树莓派（arm64）版本",
-        "description": "新增可在树莓派上运行的原生 arm64 Linux 版本，并修复了其 GPU 上画面错乱的问题。"
+      "customThemes": {
+        "title": "自定义主题",
+        "description": "创建并编辑属于你自己的主题。选择一个基础主题，按喜好调整颜色，你的自定义主题会被保存以便重复使用。"
       },
-      "viewModePersistence": {
-        "title": "记住视图模式",
-        "description": "应用现在会以你上次退出时的视图（编辑、预览或分屏）重新打开，而不再总是以分屏启动。"
+      "dragDropImages": {
+        "title": "拖放插入图片",
+        "description": "将图片文件拖入编辑器即可立即插入。拖动时会显示「将图片拖放到此处」的提示，让你清楚图片将落在哪里。"
       },
-      "cjkEmphasis": {
-        "title": "日文旁的粗体与斜体",
-        "description": "修复了当标记紧贴日文或其他 CJK 字符（如 「」 括号周围）时粗体和斜体无法显示的问题。星号不再显示为普通文字。"
+      "listContinuation": {
+        "title": "列表与复选框连续输入",
+        "description": "现在在列表或复选框中按下回车键会自动开始下一项，无需重新输入标记即可继续键入。"
       },
-      "externalImages": {
-        "title": "恢复外部图片",
-        "description": "修复了预览中外部（https）图片无法加载的问题。"
+      "marpOfflineFonts": {
+        "title": "Marp 离线字体",
+        "description": "Marp 幻灯片字体现已随应用一同打包，因此即使没有网络连接，幻灯片也能以正确的字体渲染。"
       },
       "dependencyUpdates": {
         "title": "依赖更新",
         "description": "已将内置库更新至最新版本。"
       }
+    }
+  },
+  "milestone": {
+    "close": "谢谢",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 正式发布",
+      "body1": "非常感谢您一直以来使用 Bokuchi。",
+      "body2": "多亏了大家的下载、提交的问题和 Pull Request，Bokuchi 才能成长至今。",
+      "body3": "今后我们也会持续改进，恳请您一如既往地给予支持。",
+      "body4": "如果您能将 Bokuchi 推荐给您的同事和朋友，我们将不胜荣幸。",
+      "body5": "衷心感谢，期待今后能继续得到您的支持与厚爱。"
     }
   },
   "preview": {

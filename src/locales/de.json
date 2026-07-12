@@ -611,30 +611,41 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Gliederung ausblenden",
-        "description": "Das Gliederungspanel hat jetzt eine Option „Aus“ in den Einstellungen und lässt sich über die Symbolleisten-Schaltfläche oder Strg+Umschalt+O ausblenden. Ihre Wahl bleibt beim nächsten Start erhalten."
+      "pdfExport": {
+        "title": "PDF-Export",
+        "description": "Sie können Ihr Dokument nun direkt als PDF exportieren. Das funktioniert sowohl für normales Markdown als auch für Marp-Folien, wobei Layout und Positionierung für eine saubere Ausgabe feinabgestimmt sind."
       },
-      "raspberryPiBuild": {
-        "title": "Raspberry-Pi-Build (arm64)",
-        "description": "Ein nativer arm64-Linux-Build für den Raspberry Pi wurde hinzugefügt, einschließlich einer Lösung für die verzerrte Darstellung auf dessen GPU."
+      "customThemes": {
+        "title": "Eigene Themes",
+        "description": "Erstellen und bearbeiten Sie Ihre eigenen Themes. Wählen Sie ein Basis-Theme, passen Sie die Farben nach Ihrem Geschmack an, und Ihre eigenen Themes werden zur Wiederverwendung gespeichert."
       },
-      "viewModePersistence": {
-        "title": "Merkt sich den Ansichtsmodus",
-        "description": "Die App öffnet sich nun wieder in der zuletzt verwendeten Ansicht – Bearbeiten, Vorschau oder geteilt – statt immer geteilt zu starten."
+      "dragDropImages": {
+        "title": "Bilder per Drag & Drop einfügen",
+        "description": "Ziehen Sie eine Bilddatei in den Editor, um sie sofort einzufügen. Während des Ziehens erscheint ein Overlay „Bild hier ablegen“, damit Sie wissen, wo es landet."
       },
-      "cjkEmphasis": {
-        "title": "Fett & Kursiv neben japanischem Text",
-        "description": "Behoben, dass Fett und Kursiv nicht dargestellt wurden, wenn die Markierungen japanische oder andere CJK-Zeichen berühren, etwa um 「」-Klammern. Die Sternchen erscheinen nicht mehr als Text."
+      "listContinuation": {
+        "title": "Fortlaufende Listen- & Checkbox-Eingabe",
+        "description": "Wenn Sie in einer Liste oder Checkbox die Eingabetaste drücken, beginnt jetzt automatisch der nächste Eintrag, sodass Sie weiterschreiben können, ohne die Markierung erneut einzugeben."
       },
-      "externalImages": {
-        "title": "Externe Bilder wiederhergestellt",
-        "description": "Behoben, dass externe (https-)Bilder in der Vorschau nicht mehr geladen wurden."
+      "marpOfflineFonts": {
+        "title": "Offline-Schriftarten für Marp",
+        "description": "Die Schriftarten für Marp-Folien sind jetzt in der App enthalten, sodass Folien auch ohne Internetverbindung mit den richtigen Schriftarten dargestellt werden."
       },
       "dependencyUpdates": {
         "title": "Abhängigkeits-Updates",
         "description": "Die mitgelieferten Bibliotheken wurden auf die neuesten Versionen aktualisiert."
       }
+    }
+  },
+  "milestone": {
+    "close": "Danke",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 ist da",
+      "body1": "Vielen herzlichen Dank, dass Sie Bokuchi immer wieder verwenden.",
+      "body2": "Dank der vielen Downloads, gemeldeten Probleme und Pull Requests von allen ist Bokuchi bis hierher gewachsen.",
+      "body3": "Wir werden Bokuchi weiter verbessern, und Ihre anhaltende Unterstützung bedeutet uns sehr viel.",
+      "body4": "Wir würden uns sehr freuen, wenn Sie Bokuchi Ihren Kolleginnen, Kollegen und Freunden weiterempfehlen.",
+      "body5": "Vielen Dank, und wir freuen uns auf Ihre weitere Unterstützung."
     }
   },
   "preview": {

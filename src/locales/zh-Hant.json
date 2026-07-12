@@ -611,30 +611,41 @@
       "improvement": "改進"
     },
     "changes": {
-      "outlineOff": {
-        "title": "隱藏大綱",
-        "description": "大綱面板現在於設定中提供「關閉」選項，可透過工具列按鈕或 Ctrl+Shift+O 隱藏。下次開啟應用程式時會記住你的選擇。"
+      "pdfExport": {
+        "title": "PDF 匯出",
+        "description": "現在可以將文件直接匯出為 PDF。無論是一般 Markdown 還是 Marp 投影片皆可使用，並已針對版面與定位進行微調，以獲得乾淨的輸出結果。"
       },
-      "raspberryPiBuild": {
-        "title": "樹莓派（arm64）版本",
-        "description": "新增可在樹莓派上執行的原生 arm64 Linux 版本，並修正其 GPU 上畫面錯亂的問題。"
+      "customThemes": {
+        "title": "自訂佈景主題",
+        "description": "建立並編輯屬於你自己的佈景主題。選擇一個基礎主題，依喜好調整色彩，你的自訂主題會被儲存以供再次使用。"
       },
-      "viewModePersistence": {
-        "title": "記住檢視模式",
-        "description": "應用程式現在會以你上次結束時的檢視（編輯、預覽或分割）重新開啟，而不再總是以分割模式啟動。"
+      "dragDropImages": {
+        "title": "拖放插入圖片",
+        "description": "將圖片檔案拖放到編輯器中即可立即插入。拖曳時會出現「將圖片拖放到此處」的提示覆蓋層，讓你清楚知道圖片會插入的位置。"
       },
-      "cjkEmphasis": {
-        "title": "日文旁的粗體與斜體",
-        "description": "修正了當標記緊貼日文或其他 CJK 字元（如 「」 括號周圍）時粗體與斜體無法顯示的問題。星號不再顯示為一般文字。"
+      "listContinuation": {
+        "title": "清單與核取方塊連續輸入",
+        "description": "在清單或核取方塊中按下 Enter 現在會自動開始下一個項目，讓你無需重新輸入標記即可持續輸入。"
       },
-      "externalImages": {
-        "title": "恢復外部圖片",
-        "description": "修正了預覽中外部（https）圖片無法載入的問題。"
+      "marpOfflineFonts": {
+        "title": "Marp 離線字型",
+        "description": "Marp 投影片字型現在已隨應用程式一併打包，因此即使沒有網際網路連線，投影片也能以正確的字型呈現。"
       },
       "dependencyUpdates": {
         "title": "相依套件更新",
         "description": "已將內建函式庫更新至最新版本。"
       }
+    }
+  },
+  "milestone": {
+    "close": "謝謝",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 正式推出",
+      "body1": "非常感謝您一直以來使用 Bokuchi。",
+      "body2": "多虧了大家的下載、提交的問題與 Pull Request，Bokuchi 才能成長至今。",
+      "body3": "今後我們也會持續改進，懇請您一如既往地給予支持。",
+      "body4": "若您願意將 Bokuchi 推薦給您的同事與朋友，我們將深感榮幸。",
+      "body5": "衷心感謝，期待今後能繼續得到您的支持與愛護。"
     }
   },
   "preview": {

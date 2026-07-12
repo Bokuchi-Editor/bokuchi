@@ -5,7 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.4...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.0...HEAD)
+
+## [1.0.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.4...v1.0.0) - 2026-07-12
+
+### Added
+
+- PDF export. Documents can now be exported directly to PDF for both regular Markdown and Marp slide decks, rendered natively on the Rust/Tauri side (`pdf_export.rs`). The page layout and content positioning were tuned so the output stays clean.
+- Custom themes. A new theme editor lets you pick a base theme and adjust its colors, with your custom themes persisted for reuse. Adds a base-theme picker, per-theme cards with a live mini-preview, and color utilities.
+- Drag-and-drop image insertion. Dropping an image file onto the editor inserts it at the cursor, with a "Drop image here" overlay shown while dragging so the drop target is clear.
+- Continuous list and checkbox input. Pressing Enter inside a list item or checkbox now automatically starts the next item, keeping the marker without retyping.
+
+### Changed
+
+- Marp slide fonts (Lato, Roboto Mono for the Gaia theme) are now bundled with the app and served offline, so slides render with the correct fonts without an internet connection.
+- Updated bundled dependencies, including `tauri` (2.11.3 → 2.11.5), `mermaid` (11.15.0 → 11.16.0), `@tauri-apps/cli`, the `vite` group, the `typescript-eslint` group, `eslint`, `anyhow`, and CI actions.
+- Internal refactoring of the editor, search/replace panel, and desktop event handling, plus an expanded unit-test suite.
+
+### Fixed
+
+- Corrected a PDF export bug affecting Marp slide rendering.
 
 ## [0.9.4](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.3...v0.9.4) - 2026-06-29
 

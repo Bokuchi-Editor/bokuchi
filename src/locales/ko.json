@@ -611,30 +611,41 @@
       "improvement": "개선"
     },
     "changes": {
-      "outlineOff": {
-        "title": "개요 숨기기",
-        "description": "개요 패널에 설정의 '끄기' 옵션이 추가되었으며, 도구 모음 버튼이나 Ctrl+Shift+O로 숨길 수 있습니다. 선택한 상태는 다음에 앱을 열 때도 유지됩니다."
+      "pdfExport": {
+        "title": "PDF 내보내기",
+        "description": "이제 문서를 바로 PDF로 내보낼 수 있습니다. 일반 Markdown과 Marp 슬라이드 모두에서 동작하며, 깔끔한 출력을 위해 레이아웃과 배치를 세밀하게 조정했습니다."
       },
-      "raspberryPiBuild": {
-        "title": "라즈베리 파이(arm64) 빌드",
-        "description": "라즈베리 파이에서 동작하는 네이티브 arm64 Linux 빌드를 추가했습니다. GPU에서 화면이 깨지는 문제에 대한 대응도 포함됩니다."
+      "customThemes": {
+        "title": "사용자 지정 테마",
+        "description": "나만의 테마를 만들고 편집할 수 있습니다. 기본 테마를 고르고 원하는 대로 색상을 조정하면, 사용자 지정 테마가 저장되어 다시 사용할 수 있습니다."
       },
-      "viewModePersistence": {
-        "title": "보기 모드 기억",
-        "description": "항상 분할 보기로 시작하는 대신, 마지막으로 종료한 보기(편집·미리 보기·분할)로 다시 열립니다."
+      "dragDropImages": {
+        "title": "드래그 앤 드롭 이미지 삽입",
+        "description": "이미지 파일을 편집기에 끌어다 놓으면 바로 삽입됩니다. 드래그하는 동안 '여기에 이미지를 놓으세요' 오버레이가 표시되어 어디에 삽입될지 알 수 있습니다."
       },
-      "cjkEmphasis": {
-        "title": "일본어 옆의 굵게·기울임",
-        "description": "「」 같은 기호나 일본어 등 CJK 문자에 강조 기호가 닿으면 굵게·기울임이 적용되지 않던 문제를 수정했습니다. 별표가 문자 그대로 표시되지 않습니다."
+      "listContinuation": {
+        "title": "목록·체크박스 연속 입력",
+        "description": "이제 목록이나 체크박스 안에서 Enter를 누르면 다음 항목이 자동으로 시작되므로, 기호를 다시 입력하지 않고 계속 작성할 수 있습니다."
       },
-      "externalImages": {
-        "title": "외부 이미지 복원",
-        "description": "미리 보기에서 외부(https) 이미지가 더 이상 로드되지 않던 문제를 수정했습니다."
+      "marpOfflineFonts": {
+        "title": "Marp 오프라인 글꼴",
+        "description": "이제 Marp 슬라이드 글꼴이 앱에 포함되어, 인터넷 연결이 없어도 슬라이드가 올바른 글꼴로 표시됩니다."
       },
       "dependencyUpdates": {
         "title": "의존성 업데이트",
         "description": "포함된 라이브러리를 최신 버전으로 업데이트했습니다."
       }
+    }
+  },
+  "milestone": {
+    "close": "감사합니다",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 출시",
+      "body1": "언제나 Bokuchi를 사용해 주셔서 진심으로 감사합니다.",
+      "body2": "여러분의 다운로드와 이슈, 풀 리퀘스트 덕분에 Bokuchi가 여기까지 성장할 수 있었습니다.",
+      "body3": "앞으로도 계속 개선해 나갈 예정이니, 여러분의 변함없는 응원이 저희에게 큰 힘이 됩니다.",
+      "body4": "동료와 친구분들께 Bokuchi를 추천해 주신다면 정말 기쁘겠습니다.",
+      "body5": "감사합니다. 앞으로도 많은 관심과 성원 부탁드립니다."
     }
   },
   "preview": {

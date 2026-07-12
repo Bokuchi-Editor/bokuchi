@@ -6,6 +6,7 @@ import FileChangeDialog from './FileChangeDialog';
 import SaveBeforeCloseDialog from './SaveBeforeCloseDialog';
 import UpdateDialog, { UpdateDialogPhase } from './UpdateDialog';
 import WhatsNewDialog from './WhatsNewDialog';
+import MilestoneDialog from './MilestoneDialog';
 import { AppSettings } from '../types/settings';
 import { SettingsFocusTarget } from '../types/settingsFocus';
 import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
@@ -49,6 +50,8 @@ export interface AppDialogsProps {
   };
 
   // What's New dialog state
+  milestoneOpen: boolean;
+  onMilestoneClose: () => void;
   whatsNewOpen: boolean;
   onWhatsNewClose: () => void;
 
@@ -91,6 +94,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   helpOpen,
   fileChangeDialog,
   saveBeforeCloseDialog,
+  milestoneOpen,
+  onMilestoneClose,
   whatsNewOpen,
   onWhatsNewClose,
   updateDialogOpen,
@@ -171,6 +176,12 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onSave={onSaveBeforeClose}
         onDontSave={onDontSaveBeforeClose}
         onCancel={onCancelBeforeClose}
+      />
+
+      {/* Milestone / thank-you greeting (shown once, before What's New) */}
+      <MilestoneDialog
+        open={milestoneOpen}
+        onClose={onMilestoneClose}
       />
 
       {/* What's New dialog */}

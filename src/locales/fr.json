@@ -611,30 +611,41 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Masquer le plan",
-        "description": "Le panneau du plan dispose désormais d'une option « Désactivé » dans les réglages et peut être masqué via le bouton de la barre d'outils ou Ctrl+Maj+O. Votre choix est conservé au prochain démarrage."
+      "pdfExport": {
+        "title": "Export PDF",
+        "description": "Vous pouvez désormais exporter votre document directement en PDF. Cela fonctionne aussi bien pour le Markdown classique que pour les diapositives Marp, avec une mise en page et un positionnement peaufinés pour un rendu net."
       },
-      "raspberryPiBuild": {
-        "title": "Build Raspberry Pi (arm64)",
-        "description": "Ajout d'un build Linux natif arm64 fonctionnant sur Raspberry Pi, avec une correction de l'affichage corrompu sur son GPU."
+      "customThemes": {
+        "title": "Thèmes personnalisés",
+        "description": "Créez et modifiez vos propres thèmes. Choisissez un thème de base, ajustez les couleurs à votre goût, et vos thèmes personnalisés sont enregistrés pour être réutilisés."
       },
-      "viewModePersistence": {
-        "title": "Mémorise votre mode d'affichage",
-        "description": "L'application rouvre désormais dans le mode que vous avez quitté — édition, aperçu ou divisé — au lieu de toujours démarrer en mode divisé."
+      "dragDropImages": {
+        "title": "Insertion d'images par glisser-déposer",
+        "description": "Déposez un fichier image dans l'éditeur pour l'insérer instantanément. Une superposition « Déposez l'image ici » apparaît pendant que vous faites glisser, pour que vous sachiez où elle atterrira."
       },
-      "cjkEmphasis": {
-        "title": "Gras et italique à côté du texte japonais",
-        "description": "Correction du gras et de l'italique qui ne s'affichaient pas lorsque les marqueurs touchent des caractères japonais ou autres CJK, par exemple autour des crochets 「」. Les astérisques n'apparaissent plus comme du texte."
+      "listContinuation": {
+        "title": "Saisie continue des listes et des cases à cocher",
+        "description": "Appuyer sur Entrée dans une liste ou une case à cocher démarre désormais automatiquement l'élément suivant, pour que vous puissiez continuer à taper sans ressaisir le marqueur."
       },
-      "externalImages": {
-        "title": "Images externes rétablies",
-        "description": "Correction des images externes (https) qui ne se chargeaient plus dans l'aperçu."
+      "marpOfflineFonts": {
+        "title": "Polices hors ligne pour Marp",
+        "description": "Les polices des diapositives Marp sont désormais intégrées à l'application, de sorte que les diapositives s'affichent avec les bonnes polices même sans connexion Internet."
       },
       "dependencyUpdates": {
         "title": "Mises à jour des dépendances",
         "description": "Mise à jour des bibliothèques incluses vers leurs dernières versions."
       }
+    }
+  },
+  "milestone": {
+    "close": "Merci",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 est arrivé",
+      "body1": "Merci infiniment d'utiliser Bokuchi au quotidien.",
+      "body2": "Grâce à vos téléchargements, à vos signalements et à vos pull requests, Bokuchi a pu grandir jusqu'ici.",
+      "body3": "Nous continuerons à l'améliorer, et votre soutien fidèle compte énormément pour nous.",
+      "body4": "Nous serions ravis que vous recommandiez Bokuchi à vos collègues et à vos amis.",
+      "body5": "Merci, et au plaisir de continuer à vous accompagner."
     }
   },
   "preview": {

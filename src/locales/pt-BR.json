@@ -611,30 +611,41 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "outlineOff": {
-        "title": "Ocultar o sumário",
-        "description": "O painel de sumário agora tem uma opção «Desativado» nas configurações e pode ser ocultado pelo botão da barra de ferramentas ou Ctrl+Shift+O. Sua escolha é lembrada na próxima vez que você abrir o aplicativo."
+      "pdfExport": {
+        "title": "Exportação para PDF",
+        "description": "Agora você pode exportar seu documento diretamente para PDF. Funciona tanto para Markdown comum quanto para slides do Marp, com o layout e o posicionamento ajustados para uma saída limpa."
       },
-      "raspberryPiBuild": {
-        "title": "Build para Raspberry Pi (arm64)",
-        "description": "Adicionado um build nativo de Linux arm64 que roda no Raspberry Pi, incluindo uma solução para a renderização distorcida em sua GPU."
+      "customThemes": {
+        "title": "Temas personalizados",
+        "description": "Crie e edite seus próprios temas. Escolha um tema base, ajuste as cores ao seu gosto, e seus temas personalizados são salvos para reutilização."
       },
-      "viewModePersistence": {
-        "title": "Lembra o seu modo de exibição",
-        "description": "O aplicativo agora reabre na exibição em que você o deixou — edição, visualização ou dividida — em vez de sempre iniciar na exibição dividida."
+      "dragDropImages": {
+        "title": "Inserção de imagens por arrastar e soltar",
+        "description": "Solte um arquivo de imagem no editor para inseri-lo instantaneamente. Uma sobreposição «Solte a imagem aqui» aparece enquanto você arrasta, para que você saiba onde ela será colocada."
       },
-      "cjkEmphasis": {
-        "title": "Negrito e itálico ao lado de texto japonês",
-        "description": "Corrigido o negrito e o itálico que não eram exibidos quando os marcadores tocavam caracteres japoneses ou outros CJK, como ao redor dos colchetes 「」. Os asteriscos não aparecem mais como texto literal."
+      "listContinuation": {
+        "title": "Continuação de listas e caixas de seleção",
+        "description": "Pressionar Enter dentro de uma lista ou caixa de seleção agora inicia o próximo item automaticamente, então você pode continuar digitando sem redigitar o marcador."
       },
-      "externalImages": {
-        "title": "Imagens externas restauradas",
-        "description": "Corrigidas as imagens externas (https) que haviam parado de carregar na visualização."
+      "marpOfflineFonts": {
+        "title": "Fontes offline para o Marp",
+        "description": "As fontes dos slides do Marp agora vêm incluídas no aplicativo, então os slides são renderizados com as fontes corretas mesmo sem conexão com a internet."
       },
       "dependencyUpdates": {
         "title": "Atualizações de dependências",
         "description": "Bibliotecas incluídas atualizadas para suas versões mais recentes."
       }
+    }
+  },
+  "milestone": {
+    "close": "Obrigado",
+    "thankYou": {
+      "title": "O Bokuchi 1.0.0 chegou",
+      "body1": "Muito obrigado por sempre usar o Bokuchi.",
+      "body2": "Graças aos downloads, issues e pull requests de todos, o Bokuchi cresceu até aqui.",
+      "body3": "Vamos continuar aprimorando-o, então o seu apoio contínuo significa muito para nós.",
+      "body4": "Ficaríamos muito felizes se você recomendasse o Bokuchi aos seus colegas e amigos.",
+      "body5": "Obrigado, e contamos com o seu apoio contínuo."
     }
   },
   "preview": {

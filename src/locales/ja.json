@@ -634,30 +634,41 @@
       "improvement": "改善"
     },
     "changes": {
-      "outlineOff": {
-        "title": "アウトラインを非表示にできます",
-        "description": "アウトラインパネルに設定の「オフ」を追加しました。ツールバーのボタンや Ctrl+Shift+O で非表示にでき、選んだ状態は次回起動時にも保持されます。"
+      "pdfExport": {
+        "title": "PDF エクスポート",
+        "description": "ドキュメントをそのまま PDF に書き出せるようになりました。通常の Markdown でも Marp スライドでも利用でき、きれいに出力されるようレイアウトや配置を調整しています。"
       },
-      "raspberryPiBuild": {
-        "title": "Raspberry Pi（arm64）ビルド",
-        "description": "Raspberry Pi で動作する arm64 版 Linux ビルドを追加しました。GPU で表示が乱れる問題への対処も含みます。"
+      "customThemes": {
+        "title": "カスタムテーマ",
+        "description": "自分だけのテーマを作成・編集できます。ベースとなるテーマを選び、好みに合わせて色を調整すれば、作成したカスタムテーマは保存されて再利用できます。"
       },
-      "viewModePersistence": {
-        "title": "表示モードを記憶",
-        "description": "常に分割表示で起動するのではなく、前回終了時の表示（編集・プレビュー・分割）で再び開くようになりました。"
+      "dragDropImages": {
+        "title": "ドラッグ＆ドロップで画像挿入",
+        "description": "画像ファイルをエディタにドロップするだけですぐに挿入できます。ドラッグ中は「ここに画像をドロップ」というオーバーレイが表示され、挿入先がひと目でわかります。"
       },
-      "cjkEmphasis": {
-        "title": "日本語に隣接した太字・斜体",
-        "description": "「」などの記号や日本語などのCJK文字に強調記号が接していると太字・斜体が反映されない問題を修正しました。アスタリスクが文字として残らなくなります。"
+      "listContinuation": {
+        "title": "リスト・チェックボックスの連続入力",
+        "description": "リストやチェックボックスの中で Enter を押すと、自動的に次の項目が始まるようになりました。記号を入力し直さずに続けて書けます。"
       },
-      "externalImages": {
-        "title": "外部画像の表示を修正",
-        "description": "プレビューで外部（https）画像が読み込まれなくなっていた問題を修正しました。"
+      "marpOfflineFonts": {
+        "title": "Marp のオフラインフォント",
+        "description": "Marp スライド用のフォントをアプリに同梱しました。インターネットに接続していなくても、正しいフォントでスライドが表示されます。"
       },
       "dependencyUpdates": {
         "title": "依存関係の更新",
         "description": "同梱ライブラリを最新バージョンに更新しました。"
       }
+    }
+  },
+  "milestone": {
+    "close": "ありがとう",
+    "thankYou": {
+      "title": "Bokuchi 1.0.0 をリリースしました",
+      "body1": "いつもBokuchiをご利用いただきまして、誠にありがとうございます。",
+      "body2": "みなさんのダウンロード、Issue、PRのご協力により、Bokuchiはここまで進化をすることが出来ました。",
+      "body3": "これからも改善をしていきますのでご協力をお願い致します。",
+      "body4": "周りの仲間・ご友人にもぜひBokuchiを勧めていただけると幸せです。",
+      "body5": "今後ともよろしくお願い致します"
     }
   },
   "preview": {
