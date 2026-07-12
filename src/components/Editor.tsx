@@ -6,15 +6,12 @@ import { Search } from '@mui/icons-material';
 import SearchReplacePanel from './SearchReplacePanel';
 import { useTranslation } from 'react-i18next';
 import { TableConversionDialog } from './TableConversionDialog';
-import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
-import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
-import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
-import { handleListEnter, handleListIndent } from '../utils/listEditorActions';
-import { parseListItem } from '../utils/listFormatter';
-import { countWords } from '../utils/wordCount';
+import { registerEditorActions } from '../utils/registerEditorActions';
+import { classifyPaste } from '../utils/pasteClassifier';
+import { computeEditorStatus } from '../utils/editorStatus';
 import { desktopApi } from '../api/desktopApi';
 import {
   IMAGE_SUBDIR,
@@ -335,27 +332,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         return;
       }
 
-      let markdownTable = '';
-
-      // Step 1: Search and convert HTML tables
-      if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
-        markdownTable = htmlTableToMarkdown(htmlData);
-      }
-      // Step 2: Search and convert TSV/CSV in plain text
-      else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-        markdownTable = convertTsvCsvToMarkdown(plainText);
-      }
-      else {
+      const classification = classifyPaste(htmlData, plainText);
+      if (classification.kind === 'plain') {
         insertPlainText(plainText);
         return;
       }
-
-      // Validate conversion result
-      if (!validateMarkdownTable(markdownTable)) {
-        insertPlainText(plainText);
-        return;
-      }
-
+      const { markdownTable } = classification;
 
       // Process according to settings
       if (tableConversion === 'auto') {
@@ -363,16 +345,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         insertMarkdownTable(markdownTable);
         onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
       } else if (tableConversion === 'confirm') {
-        // Show confirmation dialog
-        // Save clipboard data immediately (save data, not object)
-        const savedData = {
-          plainText: plainText,
-          htmlData: htmlData
-        };
+        // Show confirmation dialog. Save the clipboard data (a copy, not the
+        // event object) so it survives until the user decides.
         setTableConversionDialog({
           open: true,
           markdownTable,
-          clipboardData: savedData,
+          clipboardData: { plainText, htmlData },
         });
       }
     } catch (error) {
@@ -591,7 +569,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     disposablesRef.current.forEach(d => d.dispose());
     disposablesRef.current = [];
 
-    // Set up search and replace keyboard shortcuts
+    // Register search shortcuts and smart table/list editing actions.
     try {
       // Prefer the monaco namespace from @monaco-editor/react's onMount
       // argument; it is always provided at runtime, which avoids the
@@ -600,185 +578,25 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       // invoke onMount without the argument (e.g. the test harness).
       const monaco = monacoNs || (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
-          setSearchAllTabsDefault(false);
-          setShowReplaceDefault(false);
-          setSearchOpen(true);
-        });
-
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
-          setSearchAllTabsDefault(false);
-          setShowReplaceDefault(true);
-          setSearchOpen(true);
-        });
-
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
-          setSearchAllTabsDefault(true);
-          setShowReplaceDefault(false);
-          setSearchOpen(true);
-        });
-
-        // Completely disable default behavior of Shift + Cmd/Ctrl + V
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV, () => {
-          // Do nothing (completely disable default "Paste as Plain Text")
-        });
-
-        // Disable with a more powerful method
-        editor.addAction({
-          id: 'disable-shift-v',
-          label: 'Disable Shift+V',
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV],
-          run: () => {
-            // Do nothing
-          }
-        });
-
-        // --- Markdown table editing (#5 format, #6 Enter, #7 Tab) ---
-
-        // #5: Format the table block at the cursor.
-        editor.addAction({
-          id: 'format-markdown-table',
-          label: 'Format Markdown Table',
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyL],
-          run: (ed) => {
-            formatTableInEditor(ed as editor.IStandaloneCodeEditor);
-          },
-        });
-
-        // Context key gating Enter/Tab overrides. It is set to false while an
-        // IME composition is active so Japanese conversion (Enter to confirm)
-        // and default Tab are never hijacked.
-        const inTableRowKey = editor.createContextKey<boolean>('bokuchiInTableRow', false);
-        const inListItemKey = editor.createContextKey<boolean>('bokuchiInListItem', false);
-        let isComposing = false;
-
-        const clearEditingContext = () => {
-          inTableRowKey.set(false);
-          inListItemKey.set(false);
-        };
-
-        const updateEditingContext = () => {
-          if (isComposing) {
-            clearEditingContext();
-            return;
-          }
-          const model = editor.getModel();
-          const pos = editor.getPosition();
-          if (!model || !pos) {
-            clearEditingContext();
-            return;
-          }
-          const lineContent = model.getLineContent(pos.lineNumber);
-          const block = findTableBlock(model.getLinesContent(), pos.lineNumber);
-          const inRow = !!block && !isTableSeparatorLine(lineContent);
-          inTableRowKey.set(inRow);
-          // A table row is never treated as a list item (mutually exclusive
-          // preconditions so Enter/Tab dispatch to a single handler).
-          inListItemKey.set(!inRow && parseListItem(lineContent) !== null);
-        };
-
         disposablesRef.current.push(
-          editor.onDidCompositionStart(() => {
-            isComposing = true;
-            clearEditingContext();
+          ...registerEditorActions(editor, monaco, {
+            openSearch: () => {
+              setSearchAllTabsDefault(false);
+              setShowReplaceDefault(false);
+              setSearchOpen(true);
+            },
+            openReplace: () => {
+              setSearchAllTabsDefault(false);
+              setShowReplaceDefault(true);
+              setSearchOpen(true);
+            },
+            openSearchAllTabs: () => {
+              setSearchAllTabsDefault(true);
+              setShowReplaceDefault(false);
+              setSearchOpen(true);
+            },
           }),
         );
-        disposablesRef.current.push(
-          editor.onDidCompositionEnd(() => {
-            isComposing = false;
-            updateEditingContext();
-          }),
-        );
-        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateEditingContext));
-        disposablesRef.current.push(editor.onDidChangeModelContent(updateEditingContext));
-        updateEditingContext();
-
-        // #6: Enter adds a new row / exits the table when on an empty row.
-        // If the handler declines (e.g. an active selection), fall back to a
-        // normal newline so the key is never swallowed.
-        editor.addAction({
-          id: 'table-enter-new-row',
-          label: 'Table: New Row',
-          keybindings: [monaco.KeyCode.Enter],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableEnter(e)) {
-              e.trigger('keyboard', 'type', { text: '\n' });
-            }
-          },
-        });
-
-        // #7: Tab / Shift+Tab move between cells; fall back to default
-        // indent/outdent when the handler declines.
-        editor.addAction({
-          id: 'table-next-cell',
-          label: 'Table: Next Cell',
-          keybindings: [monaco.KeyCode.Tab],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableTab(e, false)) {
-              e.trigger('keyboard', 'tab', null);
-            }
-          },
-        });
-        editor.addAction({
-          id: 'table-prev-cell',
-          label: 'Table: Previous Cell',
-          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableTab(e, true)) {
-              e.trigger('keyboard', 'outdent', null);
-            }
-          },
-        });
-
-        // --- Smart Markdown list editing (Enter continuation, Tab indent) ---
-
-        // Enter continues the list (or ends it on an empty item). Fall back to a
-        // normal newline when the handler declines (e.g. active selection).
-        editor.addAction({
-          id: 'list-enter-continue',
-          label: 'List: Continue Item',
-          keybindings: [monaco.KeyCode.Enter],
-          precondition: 'bokuchiInListItem',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleListEnter(e)) {
-              e.trigger('keyboard', 'type', { text: '\n' });
-            }
-          },
-        });
-
-        // Tab / Shift+Tab indent or outdent the list item; fall back to the
-        // default indent/outdent when the handler declines.
-        editor.addAction({
-          id: 'list-indent',
-          label: 'List: Indent Item',
-          keybindings: [monaco.KeyCode.Tab],
-          precondition: 'bokuchiInListItem',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleListIndent(e, false)) {
-              e.trigger('keyboard', 'tab', null);
-            }
-          },
-        });
-        editor.addAction({
-          id: 'list-outdent',
-          label: 'List: Outdent Item',
-          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
-          precondition: 'bokuchiInListItem',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleListIndent(e, true)) {
-              e.trigger('keyboard', 'outdent', null);
-            }
-          },
-        });
       }
     } catch (error) {
       console.warn('Failed to set keyboard shortcuts:', error);
@@ -792,26 +610,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         const model = editor.getModel();
 
         if (position && model) {
-          const fullText = model.getValue();
-          const totalCharacters = fullText.length;
-          const totalWords = countWords(fullText);
-          let selectedCharacters = 0;
-          let selectedWords = 0;
-
-          if (selection) {
-            const selectedText = model.getValueInRange(selection);
-            selectedCharacters = selectedText.length;
-            selectedWords = countWords(selectedText);
-          }
-
-          onStatusChange({
-            line: position.lineNumber,
-            column: position.column,
-            totalCharacters,
-            selectedCharacters,
-            totalWords,
-            selectedWords
-          });
+          const selectedText = selection ? model.getValueInRange(selection) : '';
+          onStatusChange(computeEditorStatus(model.getValue(), selectedText, position));
         }
       };
 
