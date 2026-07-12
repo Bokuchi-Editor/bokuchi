@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Box, Typography, IconButton, Tooltip } from '@mui/material';
-import { Close, Fullscreen, FullscreenExit } from '@mui/icons-material';
+import { CssBaseline, Box, Typography } from '@mui/material';
 
 import AppHeader from './components/AppHeader';
 import AppContent from './components/AppContent';
@@ -9,10 +8,12 @@ import AppDialogs from './components/AppDialogs';
 import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
 import RenameDialog from './components/RenameDialog';
+import RinControls from './components/RinControls';
+import KonamiUnlockOverlay from './components/KonamiUnlockOverlay';
 import { useAppState } from './hooks/useAppState';
 import { useRinExitButton } from './hooks/useRinExitButton';
+import { useDesktopEventListeners } from './hooks/useDesktopEventListeners';
 import { isDarkTheme } from './themes';
-import { isImageFilePath } from './utils/imageInsertion';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -163,190 +164,12 @@ function AppDesktop() {
     appSettings.interface.outlineEnabled &&
     (appSettings.interface.outlineDisplayMode === 'overlay' ? outlinePanelOpen : true);
 
-  // Track whether event listeners are fully registered
-  const [listenersReady, setListenersReady] = useState(false);
-
-  // Ref to always hold the latest handlers, avoiding stale closures in event listeners
-  const handlersRef = useRef({
+  // Register menu / file-association / drag-drop listeners once and learn when
+  // they are ready. Handlers are read via a live ref inside the hook.
+  const listenersReady = useDesktopEventListeners({
     handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
     handleHelpOpen, openFile, requestEditorFocus, setIsDragOver, setSnackbar, t,
   });
-  useEffect(() => {
-    handlersRef.current = {
-      handleNewTab, handleSaveFile, handleSaveFileAs, handleSaveWithVariables,
-      handleHelpOpen, openFile, requestEditorFocus, setIsDragOver, setSnackbar, t,
-    };
-  });
-
-  // Set up menu event listeners
-  useEffect(() => {
-    let cancelled = false;
-
-    let unlistenMenu: (() => void) | undefined;
-    let unlistenNewFile: (() => void) | undefined;
-    let unlistenOpenFile: (() => void) | undefined;
-    let unlistenSaveAs: (() => void) | undefined;
-    let unlistenSaveWithVariables: (() => void) | undefined;
-    let unlistenHelp: (() => void) | undefined;
-    let unlistenFileOpen: (() => void) | undefined;
-    let unlistenDragDrop: (() => void) | undefined;
-
-    const setupMenuListeners = async () => {
-      const { listen } = await import('@tauri-apps/api/event');
-
-      // If effect was cleaned up during the async import, don't register listeners
-      if (cancelled) return;
-
-      const MENU_DEBOUNCE_MS = 100;
-      const FILE_OPEN_DEBOUNCE_MS = 2000;
-
-      // Shared debounce state for menu events (attached to window to survive re-renders)
-      const globalDebounce = (window as unknown as {
-        lastMenuEventTime?: number;
-      });
-
-      if (!globalDebounce.lastMenuEventTime) {
-        globalDebounce.lastMenuEventTime = 0;
-      }
-
-      // Returns true if the event should be suppressed (within debounce window)
-      const isMenuDebounced = (): boolean => {
-        const now = Date.now();
-        if (now - globalDebounce.lastMenuEventTime! < MENU_DEBOUNCE_MS) {
-          return true;
-        }
-        globalDebounce.lastMenuEventTime = now;
-        return false;
-      };
-
-      unlistenMenu = await listen('menu-save', () => {
-        if (!isMenuDebounced()) handlersRef.current.handleSaveFile();
-      });
-
-      unlistenNewFile = await listen('menu-new-file', () => {
-        if (!isMenuDebounced()) handlersRef.current.handleNewTab();
-      });
-
-      unlistenOpenFile = await listen('menu-open-file', async () => {
-        if (isMenuDebounced()) return;
-        try {
-          await handlersRef.current.openFile();
-        } catch (error) {
-          console.error('Failed to open file from menu:', error);
-        }
-      });
-
-      unlistenSaveAs = await listen('menu-save-as', () => {
-        if (!isMenuDebounced()) handlersRef.current.handleSaveFileAs();
-      });
-
-      unlistenSaveWithVariables = await listen('menu-save-with-variables', () => {
-        if (!isMenuDebounced()) handlersRef.current.handleSaveWithVariables();
-      });
-
-      unlistenHelp = await listen('menu-help', () => {
-        if (!isMenuDebounced()) handlersRef.current.handleHelpOpen();
-      });
-
-      // File association event listener with debounce
-      const fileOpenDebounce = (window as unknown as {
-        lastFileOpenTime?: number;
-        lastFilePath?: string;
-      });
-
-      if (!fileOpenDebounce.lastFileOpenTime) {
-        fileOpenDebounce.lastFileOpenTime = 0;
-      }
-      if (!fileOpenDebounce.lastFilePath) {
-        fileOpenDebounce.lastFilePath = '';
-      }
-
-      unlistenFileOpen = await listen('open-file', async (event: { payload: { file_path: string } }) => {
-        const now = Date.now();
-        const timeDiff = now - fileOpenDebounce.lastFileOpenTime!;
-        const currentFilePath = event.payload.file_path;
-        const isSameFile = currentFilePath === fileOpenDebounce.lastFilePath;
-
-        // Debounce: same file within time limit
-        if (isSameFile && timeDiff < FILE_OPEN_DEBOUNCE_MS) {
-          return;
-        }
-        fileOpenDebounce.lastFileOpenTime = now;
-        fileOpenDebounce.lastFilePath = currentFilePath;
-        await handlersRef.current.openFile(currentFilePath);
-        handlersRef.current.requestEditorFocus();
-      });
-
-      // Drag and drop event listener (uses Tauri API to get file paths)
-      const { getCurrentWebview } = await import('@tauri-apps/api/webview');
-      if (cancelled) return;
-
-      const isSupportedFile = (path: string) => {
-        const lower = path.toLowerCase();
-        return lower.endsWith('.md') || lower.endsWith('.markdown') || lower.endsWith('.txt');
-      };
-
-      unlistenDragDrop = await getCurrentWebview().onDragDropEvent(async (event) => {
-        if (event.payload.type === 'enter') {
-          const hasSupported = event.payload.paths.some(isSupportedFile);
-          if (hasSupported) {
-            handlersRef.current.setIsDragOver(true);
-          }
-        } else if (event.payload.type === 'leave') {
-          handlersRef.current.setIsDragOver(false);
-        } else if (event.payload.type === 'drop') {
-          handlersRef.current.setIsDragOver(false);
-          const supportedPaths = event.payload.paths.filter(isSupportedFile);
-          if (supportedPaths.length === 0) {
-            // Image drops are handled by the editor's own drag-drop listener
-            // (inserted as Markdown links), so don't treat them as an error here.
-            const hasImage = event.payload.paths.some(isImageFilePath);
-            if (!hasImage) {
-              handlersRef.current.setSnackbar({
-                open: true,
-                message: handlersRef.current.t('fileOperations.noMarkdownFiles'),
-                severity: 'error',
-              });
-            }
-            return;
-          }
-
-          // Mark in fileOpenDebounce so the subsequent RunEvent::Opened
-          // (which macOS also fires for dropped files) is suppressed
-          fileOpenDebounce.lastFileOpenTime = Date.now();
-          fileOpenDebounce.lastFilePath = supportedPaths[0];
-
-          try {
-            await handlersRef.current.openFile(supportedPaths[0]);
-            handlersRef.current.requestEditorFocus();
-          } catch {
-            handlersRef.current.setSnackbar({
-              open: true,
-              message: handlersRef.current.t('fileOperations.fileLoadFailed'),
-              severity: 'error',
-            });
-          }
-        }
-      });
-
-      // Signal that all listeners are registered
-      setListenersReady(true);
-    };
-
-    setupMenuListeners();
-
-    return () => {
-      cancelled = true;
-      if (unlistenMenu) unlistenMenu();
-      if (unlistenNewFile) unlistenNewFile();
-      if (unlistenOpenFile) unlistenOpenFile();
-      if (unlistenSaveAs) unlistenSaveAs();
-      if (unlistenSaveWithVariables) unlistenSaveWithVariables();
-      if (unlistenHelp) unlistenHelp();
-      if (unlistenFileOpen) unlistenFileOpen();
-      if (unlistenDragDrop) unlistenDragDrop();
-    };
-  }, []); // Empty dependency array to run only once
 
   // Notify Rust that frontend is ready AFTER both conditions are met:
   // 1. State restoration is complete (isInitialized) — prevents LOAD_STATE from overwriting file association tabs
@@ -517,49 +340,14 @@ function AppDesktop() {
           t={t}
         />
 
-        {/* 臨 (Rin) focus-mode controls: shown on mouse-move, fade over 3s while typing.
-            Stacked top-right (exit on top, width toggle below). */}
         {rinActive && (
-          <>
-            <Tooltip title={t('rin.exit')} placement="left">
-              <IconButton
-                onClick={exitRin}
-                aria-label={t('rin.exit')}
-                sx={{
-                  position: 'fixed',
-                  top: 12,
-                  right: 12,
-                  zIndex: 1300,
-                  bgcolor: 'action.selected',
-                  opacity: rinExitVisible ? 1 : 0,
-                  pointerEvents: rinExitVisible ? 'auto' : 'none',
-                  transition: rinExitVisible ? 'opacity 0.15s ease' : 'opacity 3s ease',
-                  '&:hover': { bgcolor: 'action.focus' },
-                }}
-              >
-                <Close />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={t('rin.toggleWidth')} placement="left">
-              <IconButton
-                onClick={() => setRinFullWidth((v) => !v)}
-                aria-label={t('rin.toggleWidth')}
-                sx={{
-                  position: 'fixed',
-                  top: 56,
-                  right: 12,
-                  zIndex: 1300,
-                  bgcolor: 'action.selected',
-                  opacity: rinExitVisible ? 1 : 0,
-                  pointerEvents: rinExitVisible ? 'auto' : 'none',
-                  transition: rinExitVisible ? 'opacity 0.15s ease' : 'opacity 3s ease',
-                  '&:hover': { bgcolor: 'action.focus' },
-                }}
-              >
-                {rinFullWidth ? <FullscreenExit /> : <Fullscreen />}
-              </IconButton>
-            </Tooltip>
-          </>
+          <RinControls
+            visible={rinExitVisible}
+            fullWidth={rinFullWidth}
+            onExit={exitRin}
+            onToggleWidth={() => setRinFullWidth((v) => !v)}
+            t={t}
+          />
         )}
 
         {(!isInitialized || !isSettingsLoaded) && (
@@ -651,83 +439,7 @@ function AppDesktop() {
         />
       )}
       {/* Konami Code unlock animation */}
-      {showUnlockAnimation && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            pointerEvents: 'none',
-            zIndex: 9999,
-            animation: 'konamiUnlock 2.5s ease-out forwards',
-            '@keyframes konamiUnlock': {
-              '0%': {
-                backgroundColor: 'rgba(0, 255, 0, 0)',
-                boxShadow: 'inset 0 0 0px rgba(0, 255, 0, 0)',
-              },
-              '15%': {
-                backgroundColor: 'rgba(0, 255, 0, 0.15)',
-                boxShadow: 'inset 0 0 60px rgba(0, 255, 0, 0.4)',
-              },
-              '30%': {
-                backgroundColor: 'rgba(0, 255, 0, 0.05)',
-                boxShadow: 'inset 0 0 30px rgba(0, 255, 0, 0.2)',
-              },
-              '45%': {
-                backgroundColor: 'rgba(0, 255, 0, 0.1)',
-                boxShadow: 'inset 0 0 40px rgba(0, 255, 0, 0.3)',
-              },
-              '100%': {
-                backgroundColor: 'rgba(0, 255, 0, 0)',
-                boxShadow: 'inset 0 0 0px rgba(0, 255, 0, 0)',
-              },
-            },
-          }}
-        >
-          {/* Scanline effect */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 1px, transparent 1px, transparent 3px)',
-              animation: 'scanlineScroll 0.1s linear infinite',
-              '@keyframes scanlineScroll': {
-                '0%': { backgroundPosition: '0 0' },
-                '100%': { backgroundPosition: '0 3px' },
-              },
-            }}
-          />
-          {/* Theme unlocked text */}
-          <Typography
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              color: '#00FF00',
-              fontFamily: '"IBM Plex Mono", "Courier New", Courier, monospace',
-              fontSize: '24px',
-              fontWeight: 'bold',
-              textShadow: '0 0 10px rgba(0,255,0,0.8), 0 0 20px rgba(0,255,0,0.4)',
-              animation: 'unlockTextFade 2.5s ease-out forwards',
-              whiteSpace: 'nowrap',
-              '@keyframes unlockTextFade': {
-                '0%': { opacity: 0 },
-                '20%': { opacity: 1 },
-                '70%': { opacity: 1 },
-                '100%': { opacity: 0 },
-              },
-            }}
-          >
-            {'> AS/400 THEME UNLOCKED_'}
-          </Typography>
-        </Box>
-      )}
+      {showUnlockAnimation && <KonamiUnlockOverlay />}
       </Box>
     </ThemeProvider>
   );

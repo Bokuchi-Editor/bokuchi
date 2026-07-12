@@ -345,8 +345,8 @@ fn print_platform_webview(
         let uri = url::Url::from_file_path(output_path)
             .map_err(|_| "invalid output path".to_string())?
             .to_string();
-        settings.set("output-uri", &uri);
-        settings.set("output-file-format", "pdf");
+        settings.set("output-uri", Some(uri.as_str()));
+        settings.set("output-file-format", Some("pdf"));
         print_op.set_print_settings(&settings);
 
         let done_finished = done.clone();
