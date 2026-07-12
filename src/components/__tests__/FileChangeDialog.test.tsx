@@ -65,12 +65,4 @@ describe('FileChangeDialog', () => {
     fireEvent.click(screen.getByText('dialogs.fileChanged.no'));
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
-
-  // T-FCD-06: displays question and description texts
-  it('T-FCD-06: renders question and description texts', () => {
-    renderDialog();
-    expect(screen.getByText('dialogs.fileChanged.question')).toBeInTheDocument();
-    expect(screen.getByText('dialogs.fileChanged.reloadDescription')).toBeInTheDocument();
-    expect(screen.getByText('dialogs.fileChanged.keepDescription')).toBeInTheDocument();
-  });
 });

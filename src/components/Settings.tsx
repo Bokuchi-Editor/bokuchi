@@ -31,6 +31,7 @@ import {
   SETTINGS_FOCUS_TAB_INDEX,
   SETTINGS_FOCUS_ELEMENT_ID,
 } from '../types/settingsFocus';
+import { CustomTheme } from '../themes/customTheme';
 import AppearanceTab from './settings/AppearanceTab';
 import EditorTab from './settings/EditorTab';
 import InterfaceTab from './settings/InterfaceTab';
@@ -48,6 +49,8 @@ interface SettingsProps {
   onSettingsChange: (settings: AppSettings) => void;
   as400Unlocked?: boolean;
   focusTarget?: SettingsFocusTarget | null;
+  customThemes: CustomTheme[];
+  onCustomThemesChange: (customThemes: CustomTheme[]) => void;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -66,6 +69,8 @@ const Settings: React.FC<SettingsProps> = ({
   onSettingsChange,
   as400Unlocked,
   focusTarget,
+  customThemes,
+  onCustomThemesChange,
 }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = React.useState(0);
@@ -175,6 +180,8 @@ const Settings: React.FC<SettingsProps> = ({
                 settings={settings}
                 onSettingChange={handleSettingChange}
                 as400Unlocked={as400Unlocked}
+                customThemes={customThemes}
+                onCustomThemesChange={onCustomThemesChange}
               />
             )}
             {activeTab === 1 && (

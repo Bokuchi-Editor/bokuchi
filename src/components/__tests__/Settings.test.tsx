@@ -54,6 +54,8 @@ describe('Settings', () => {
     onClose: asMock<() => void>(onClose),
     settings: { ...DEFAULT_APP_SETTINGS },
     onSettingsChange: asMock<(settings: AppSettings) => void>(onSettingsChange),
+    customThemes: [],
+    onCustomThemesChange: vi.fn(),
   });
 
   // T-SET-01: renders when open
@@ -106,10 +108,9 @@ describe('Settings', () => {
   it('T-SET-08: close button calls onClose', () => {
     render(<Settings {...defaultProps()} />);
     const closeButton = screen.getByTestId('CloseIcon').closest('button');
-    if (closeButton) {
-      fireEvent.click(closeButton);
-      expect(onClose).toHaveBeenCalledTimes(1);
-    }
+    expect(closeButton).not.toBeNull();
+    fireEvent.click(closeButton!);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   // T-SET-09: add variable validation - empty name
@@ -270,5 +271,16 @@ describe('Settings', () => {
     await vi.waitFor(() => {
       expect(desktopApi.importSettingsFile).toHaveBeenCalled();
     });
+  });
+
+  // T-SET-23: focusTarget deep-link switches to the mapped tab automatically
+  it('T-SET-23: opens on the advanced tab when focusTarget is a rendering setting', () => {
+    // jsdom does not implement scrollIntoView; stub it so the focus effect is harmless
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    render(<Settings {...defaultProps()} focusTarget="rendering.enableMermaid" />);
+    // Advanced tab content is shown without clicking the tab
+    expect(screen.getByText('settings.advanced.enableMermaid')).toBeInTheDocument();
+    // Default (appearance) tab content is not shown
+    expect(screen.queryByText('settings.appearance.themeDescription')).not.toBeInTheDocument();
   });
 });

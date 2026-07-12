@@ -25,7 +25,6 @@
 //!
 //! ### Utility
 //! - `log_from_frontend`: Log messages from frontend to Rust console
-//! - `greet`: Simple test command
 //!
 //! ## Error Handling
 //! All commands return `Result<T, String>` for proper error handling and user feedback.
@@ -71,14 +70,18 @@ pub fn export_variables_to_yaml() -> Result<String, String> {
         .map_err(|e| e.to_string())
 }
 
-// Tauri command: Process Markdown (variable expansion)
+// Shared implementation for `process_markdown` and `get_expanded_markdown`.
+// Both commands expand variables identically; they remain separate IPC entry
+// points because the frontend calls them in different contexts (live preview
+// vs. "save with variables applied"). `command_name` is only used in the
+// panic error/log messages.
 //
 // Wrapped in catch_unwind because this is invoked on every keystroke in the
 // editor — a panic here previously killed the whole Tauri main process. We
 // would rather surface the panic as a command error and keep the editor alive
 // than have the app exit in the middle of someone's edit.
-#[tauri::command]
-pub fn process_markdown(
+fn expand_markdown_guarded(
+    command_name: &str,
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
@@ -90,9 +93,18 @@ pub fn process_markdown(
     }))
     .map_err(|panic_payload| {
         let msg = panic_message(&panic_payload);
-        eprintln!("[process_markdown] panic caught: {}", msg);
-        format!("process_markdown panicked: {}", msg)
+        eprintln!("[{}] panic caught: {}", command_name, msg);
+        format!("{} panicked: {}", command_name, msg)
     })
+}
+
+// Tauri command: Process Markdown (variable expansion)
+#[tauri::command]
+pub fn process_markdown(
+    content: String,
+    global_variables: HashMap<String, String>,
+) -> Result<String, String> {
+    expand_markdown_guarded("process_markdown", content, global_variables)
 }
 
 // Tauri command: Get expanded Markdown content
@@ -101,17 +113,7 @@ pub fn get_expanded_markdown(
     content: String,
     global_variables: HashMap<String, String>,
 ) -> Result<String, String> {
-    catch_unwind(AssertUnwindSafe(|| {
-        for (name, value) in global_variables {
-            VARIABLE_PROCESSOR.set_global_variable(name, value);
-        }
-        VARIABLE_PROCESSOR.process_variables(&content)
-    }))
-    .map_err(|panic_payload| {
-        let msg = panic_message(&panic_payload);
-        eprintln!("[get_expanded_markdown] panic caught: {}", msg);
-        format!("get_expanded_markdown panicked: {}", msg)
-    })
+    expand_markdown_guarded("get_expanded_markdown", content, global_variables)
 }
 
 // Extract a printable message from a panic payload. Panics carry their payload
@@ -151,11 +153,33 @@ pub async fn read_file(path: String) -> Result<String, String> {
 // Tauri command: Save file
 #[tauri::command]
 pub async fn save_file(path: String, content: String) -> Result<(), String> {
-    // File extension check
-    if let Some(ext) = Path::new(&path).extension() {
-        let ext_str = ext.to_string_lossy().to_lowercase();
-        if ext_str != "md" && ext_str != "txt" {
-            return Err("Unsupported file type. Only .md and .txt files are supported".to_string());
+    // File extension check. Files with an extension must be .md/.txt.
+    // Extension-less files are a legitimate case — the folder tree's
+    // "all files" mode opens them via `read_file` (which deliberately allows
+    // a missing extension, see R-CMD-07), and Ctrl+S on such a tab calls this
+    // command — so they stay writable. Hidden dotfiles are the exception:
+    // `Path::extension()` returns None for names like ".bashrc", which
+    // previously bypassed the allowlist and let IPC calls write shell/config
+    // files. Those are rejected. (`read_directory` never lists hidden files,
+    // so no in-app flow opens them.)
+    let path_ref = Path::new(&path);
+    match path_ref.extension() {
+        Some(ext) => {
+            let ext_str = ext.to_string_lossy().to_lowercase();
+            if ext_str != "md" && ext_str != "txt" {
+                return Err(
+                    "Unsupported file type. Only .md and .txt files are supported".to_string(),
+                );
+            }
+        }
+        None => {
+            let is_hidden = path_ref
+                .file_name()
+                .map(|n| n.to_string_lossy().starts_with('.'))
+                .unwrap_or(true);
+            if is_hidden {
+                return Err("Unsupported file type. Hidden files cannot be saved".to_string());
+            }
         }
     }
 
@@ -169,6 +193,91 @@ pub async fn save_file(path: String, content: String) -> Result<(), String> {
     // cloud drive, etc.) rather than a generic "Failed to save file".
     fs::write(&path, content)
         .map_err(|e| format!("Failed to save file: {} ({:?})", e, e.kind()))
+}
+
+// Tauri command: Save raw image bytes into a document-relative asset folder.
+// Used when pasting a bitmap from the clipboard, where no source file exists.
+// Mirrors `save_file`'s std::fs approach so images can be written next to
+// documents anywhere on disk (bypassing the fs plugin's static scope). Returns
+// the written file's path relative to `dest_dir`, forward-slashed for use in a
+// Markdown link (e.g. "images/foo.png").
+#[tauri::command]
+pub async fn save_image_bytes(
+    dest_dir: String,
+    subdir: String,
+    filename: String,
+    bytes: Vec<u8>,
+) -> Result<String, String> {
+    let dir = Path::new(&dest_dir).join(&subdir);
+    fs::create_dir_all(&dir)
+        .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
+    let name = write_image_dedup(&dir, &filename, &bytes)?;
+    Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
+}
+
+// Tauri command: Copy an existing image file into a document-relative asset
+// folder, preserving its file name. Used when an image dragged into the editor
+// lives outside the document's own folder. Reads the source server-side so
+// paths outside the fs plugin scope are reachable. Returns the copied file's
+// path relative to `dest_dir`, forward-slashed.
+#[tauri::command]
+pub async fn copy_image_asset(
+    src_path: String,
+    dest_dir: String,
+    subdir: String,
+) -> Result<String, String> {
+    let bytes = fs::read(&src_path)
+        .map_err(|e| format!("Failed to read image: {} ({:?})", e, e.kind()))?;
+    let filename = Path::new(&src_path)
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .ok_or_else(|| "Invalid source image path".to_string())?;
+    let dir = Path::new(&dest_dir).join(&subdir);
+    fs::create_dir_all(&dir)
+        .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
+    let name = write_image_dedup(&dir, &filename, &bytes)?;
+    Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
+}
+
+// Write `bytes` into `dir` under `filename`, avoiding collisions. Only the file
+// name component of `filename` is used (guards against path traversal). If a
+// file with the same name already holds identical bytes it is reused with no
+// write (dedup); otherwise a numeric suffix (`name-1.ext`, `name-2.ext`, …) is
+// tried until a free / matching name is found. Returns the final file name.
+pub(crate) fn write_image_dedup(dir: &Path, filename: &str, bytes: &[u8]) -> Result<String, String> {
+    let base = Path::new(filename)
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_else(|| "image".to_string());
+    let stem = Path::new(&base)
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_else(|| "image".to_string());
+    let ext = Path::new(&base)
+        .extension()
+        .map(|e| format!(".{}", e.to_string_lossy()))
+        .unwrap_or_default();
+
+    for i in 0..1000 {
+        let candidate = if i == 0 {
+            format!("{}{}", stem, ext)
+        } else {
+            format!("{}-{}{}", stem, i, ext)
+        };
+        let target = dir.join(&candidate);
+        if !target.exists() {
+            fs::write(&target, bytes)
+                .map_err(|e| format!("Failed to write image: {} ({:?})", e, e.kind()))?;
+            return Ok(candidate);
+        }
+        // Reuse an identical existing file instead of piling up duplicates.
+        if let Ok(existing) = fs::read(&target) {
+            if existing == bytes {
+                return Ok(candidate);
+            }
+        }
+    }
+    Err("Too many image name collisions".to_string())
 }
 
 // Tauri command: Get file hash
@@ -285,10 +394,4 @@ pub async fn rename_file(old_path: String, new_path: String) -> Result<(), Strin
     }
 
     fs::rename(old, new).map_err(|e| format!("Failed to rename file: {}", e))
-}
-
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-pub fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
 }

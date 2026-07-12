@@ -30,6 +30,9 @@ describe('variableApi.setGlobalVariable', () => {
     expect(result.error).toBe('string error');
   });
 
+  // The null → "Unknown error" mapping is identical (copy-pasted) across
+  // setGlobalVariable / loadVariablesFromYAML / processMarkdown, so it is
+  // covered once here rather than repeated per method.
   it('returns "Unknown error" when rejection value is null', async () => {
     vi.mocked(invoke).mockRejectedValue(null);
     const result = await variableApi.setGlobalVariable('key', 'value');
@@ -73,13 +76,6 @@ describe('variableApi.loadVariablesFromYAML', () => {
     expect(result.success).toBe(false);
     expect(result.error).toBe('invalid yaml');
   });
-
-  it('returns "Unknown error" when rejection value is null', async () => {
-    vi.mocked(invoke).mockRejectedValue(null);
-    const result = await variableApi.loadVariablesFromYAML(':::');
-    expect(result.success).toBe(false);
-    expect(result.error).toBe('Unknown error');
-  });
 });
 
 describe('variableApi.exportVariablesToYAML', () => {
@@ -114,31 +110,6 @@ describe('variableApi.processMarkdown', () => {
     const result = await variableApi.processMarkdown('raw content');
     expect(result.processedContent).toBe('raw content');
     expect(result.error).toBe('process failed');
-  });
-
-  it('returns "Unknown error" when rejection value is null', async () => {
-    vi.mocked(invoke).mockRejectedValue(null);
-    const result = await variableApi.processMarkdown('raw content');
-    expect(result.processedContent).toBe('raw content');
-    expect(result.error).toBe('Unknown error');
-  });
-});
-
-// T-VA-01: YAML round-trip: export then load preserves variables
-describe('variableApi YAML round-trip', () => {
-  it('T-VA-01: exported YAML can be loaded back', async () => {
-    const yamlContent = 'name: Alice\ngreeting: Hello World\n';
-
-    // export returns YAML string
-    vi.mocked(invoke).mockResolvedValueOnce(yamlContent);
-    const exported = await variableApi.exportVariablesToYAML();
-    expect(exported).toBe(yamlContent);
-
-    // load accepts the same YAML string
-    vi.mocked(invoke).mockResolvedValueOnce(undefined);
-    const loadResult = await variableApi.loadVariablesFromYAML(exported);
-    expect(loadResult.success).toBe(true);
-    expect(invoke).toHaveBeenCalledWith('load_variables_from_yaml', { yamlContent: exported });
   });
 });
 

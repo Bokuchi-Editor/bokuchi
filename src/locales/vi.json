@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Giao diện",
       "theme": "Chủ đề",
-      "themeDescription": "Chọn chủ đề trực quan cho giao diện ứng dụng.",
+      "themeDescription": "Nhấp vào thẻ để áp dụng chủ đề. Nhân bản bất kỳ chủ đề nào để tùy chỉnh màu sắc của riêng bạn.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Cài sẵn",
+      "customSection": "Chủ đề tùy chỉnh",
+      "customEmptyGuide": "Nhân bản bất kỳ chủ đề nào để tạo bộ màu của riêng bạn.",
+      "newTheme": "Chủ đề mới",
+      "basePickerTitle": "Chọn chủ đề cơ sở",
+      "duplicate": "Nhân bản",
+      "editTheme": "Chỉnh sửa",
+      "deleteTheme": "Xóa",
+      "deleteConfirmTitle": "Xóa chủ đề tùy chỉnh",
+      "deleteConfirmMessage": "Xóa \"{{name}}\"? Thao tác này không thể hoàn tác.",
+      "deleteConfirmActiveNote": "Chủ đề này hiện đang được áp dụng. Sau khi xóa, chủ đề Default sẽ được áp dụng.",
+      "copyName": "Bản sao của {{name}}",
+      "themeName": "Tên chủ đề",
+      "editorModeLight": "Sáng",
+      "editorModeDark": "Tối",
+      "editorModeDescription": "Khung soạn thảo sử dụng giao diện Sáng/Tối tích hợp của Monaco — các màu ở trên không ảnh hưởng đến nó.",
+      "resetToBase": "Đặt lại màu về chủ đề cơ sở ({{name}})",
+      "backToDefault": "Đặt lại về chủ đề Default",
+      "doneEditing": "Xong",
+      "contrastWarning": "Độ tương phản giữa chữ và nền thấp — chữ có thể khó đọc.",
+      "applied": "Đang áp dụng",
+      "colors": {
+        "backgroundDefault": "Nền",
+        "backgroundPaper": "Bề mặt",
+        "textPrimary": "Chữ",
+        "textSecondary": "Chữ phụ",
+        "primaryMain": "Màu chính",
+        "secondaryMain": "Màu phụ",
+        "divider": "Đường phân cách"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "Vui lòng thả tệp Markdown (.md hoặc .markdown)",
     "dropMarkdownFile": "Thả tệp Markdown vào đây",
     "noActiveTab": "Không có tab hoạt động để lưu. Vui lòng mở tệp trước."
+  },
+  "imageInsert": {
+    "saveFirst": "Hãy lưu tài liệu trước để chèn hình ảnh bằng đường dẫn tương đối",
+    "inserted": "Đã chèn hình ảnh",
+    "insertedMultiple": "Đã chèn {{count}} hình ảnh",
+    "failed": "Không thể chèn hình ảnh",
+    "dropHere": "Thả hình ảnh vào đây"
   },
   "dialogs": {
     "saveChanges": "Lưu thay đổi trước khi đóng?",

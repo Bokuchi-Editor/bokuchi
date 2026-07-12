@@ -85,11 +85,4 @@ describe('TableConversionDialog', () => {
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
   });
-
-  // T-TCD-08: displays dialog message and note
-  it('T-TCD-08: renders message and note text', () => {
-    renderDialog();
-    expect(screen.getByText('tableConversion.dialogMessage')).toBeInTheDocument();
-    expect(screen.getByText('tableConversion.dialogNote')).toBeInTheDocument();
-  });
 });

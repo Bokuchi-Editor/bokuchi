@@ -165,6 +165,61 @@ describe('storeApi.loadTheme', () => {
 });
 
 // ---------------------------------------------------------------------------
+// saveCustomThemes / loadCustomThemes
+//
+// loadCustomThemes is the defensive line against a corrupted store: a bad
+// value must never crash startup, and corrupt entries must be dropped while
+// valid ones survive (validateCustomTheme filtering).
+// ---------------------------------------------------------------------------
+const validCustomTheme = (id: string, name: string) => ({
+  id,
+  name,
+  baseTheme: 'default',
+  mode: 'dark' as const,
+  colors: {
+    backgroundDefault: '#101018',
+    backgroundPaper: '#181820',
+    textPrimary: '#e0e0e8',
+    textSecondary: '#9090a0',
+    primaryMain: '#8888ff',
+    secondaryMain: '#666688',
+    divider: '#303040',
+  },
+});
+
+describe('storeApi.saveCustomThemes', () => {
+  it('stores custom themes and persists to disk', async () => {
+    const themes = [validCustomTheme('custom:a', 'A')];
+    await storeApi.saveCustomThemes(themes);
+    expect(mockStore.set).toHaveBeenCalledWith('customThemes', themes);
+    expect(mockStore.save).toHaveBeenCalled();
+  });
+});
+
+describe('storeApi.loadCustomThemes', () => {
+  it('drops corrupt entries and keeps valid ones', async () => {
+    const good1 = validCustomTheme('custom:a', 'Theme A');
+    const good2 = validCustomTheme('custom:b', 'Theme B');
+    // Corrupt: missing the colors object entirely
+    const corrupt = { id: 'custom:c', name: 'Broken', mode: 'dark' };
+    mockStore.get.mockResolvedValue([good1, corrupt, good2]);
+
+    const result = await storeApi.loadCustomThemes();
+    expect(result.map(t => t.id)).toEqual(['custom:a', 'custom:b']);
+  });
+
+  it('returns empty array when stored value is not an array', async () => {
+    mockStore.get.mockResolvedValue({ id: 'custom:a' });
+    expect(await storeApi.loadCustomThemes()).toEqual([]);
+  });
+
+  it('returns empty array on load error', async () => {
+    mockStore.get.mockRejectedValue(new Error('fail'));
+    expect(await storeApi.loadCustomThemes()).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // saveDarkMode / loadDarkMode
 // ---------------------------------------------------------------------------
 describe('storeApi.saveDarkMode', () => {
@@ -432,6 +487,35 @@ describe('storeApi.addRecentFile', () => {
     const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string }>;
     expect(savedFiles.length).toBeLessThanOrEqual(maxFiles);
   });
+
+  // Eviction direction: the length check above cannot tell whether the new
+  // file or the oldest one was dropped. The list is sorted by lastOpened
+  // descending before truncation, so the new file must survive at the head
+  // and the least-recently-opened entry must be the one evicted.
+  it('evicts the oldest entry, keeping the newly added file', async () => {
+    const maxFiles = DEFAULT_APP_SETTINGS.recentFiles.maxRecentFiles;
+    const existing = Array.from({ length: maxFiles }, (_, i) => ({
+      id: `r${i}`,
+      filePath: `/file${i}.md`,
+      fileName: `file${i}.md`,
+      lastOpened: 1000 - i, // file0 is newest, file(max-1) is oldest
+      openCount: 1,
+      preview: '',
+    }));
+
+    mockStore.get
+      .mockResolvedValueOnce(existing)
+      .mockResolvedValueOnce(DEFAULT_APP_SETTINGS);
+
+    await storeApi.addRecentFile('/new.md', 'new.md', 'content');
+
+    const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string }>;
+    expect(savedFiles).toHaveLength(maxFiles);
+    // New file sorts first (Date.now() > all fixture timestamps)
+    expect(savedFiles[0].filePath).toBe('/new.md');
+    // The oldest existing entry fell off the end
+    expect(savedFiles.map(f => f.filePath)).not.toContain(`/file${maxFiles - 1}.md`);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -450,6 +534,24 @@ describe('storeApi.removeRecentFile', () => {
     const savedFiles = mockStore.set.mock.calls.find((c: unknown[]) => c[0] === 'recentFiles')?.[1] as Array<{ filePath: string }>;
     expect(savedFiles).toHaveLength(1);
     expect(savedFiles[0].filePath).toBe('/b.md');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// loadTypingGameHighScore
+// ---------------------------------------------------------------------------
+describe('storeApi.loadTypingGameHighScore', () => {
+  // Unlike the other load helpers (which use `value || default` and would
+  // coerce 0 to the default), this one uses a typeof-number guard, so a
+  // stored score of 0 must round-trip as 0.
+  it('returns a stored score of 0 as-is (not the default)', async () => {
+    mockStore.get.mockResolvedValue(0);
+    expect(await storeApi.loadTypingGameHighScore()).toBe(0);
+  });
+
+  it('returns 0 when a non-number is stored', async () => {
+    mockStore.get.mockResolvedValue('9999');
+    expect(await storeApi.loadTypingGameHighScore()).toBe(0);
   });
 });
 

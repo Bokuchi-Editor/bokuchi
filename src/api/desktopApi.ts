@@ -289,6 +289,37 @@ export const desktopApi = {
     }
   },
 
+  // Export the document as PDF. The renderer builds a fully self-contained HTML
+  // string; the Rust side renders it in a hidden webview and prints it to PDF
+  // natively (no bundled Chromium, no window.print() — which is a no-op in
+  // macOS WKWebView). `page` is the PDF page geometry in inches.
+  async exportPdfFile(
+    html: string,
+    page: { widthInch: number; heightInch: number; marginInch: number },
+    defaultName: string = 'markdown-export.pdf',
+  ): Promise<SaveResponse> {
+    try {
+      const selected = await save({
+        defaultPath: defaultName,
+        filters: [
+          { name: 'PDF Files', extensions: ['pdf'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+
+      if (!selected) {
+        return { success: false, error: 'Save cancelled by user' };
+      }
+
+      await invoke('export_pdf', { html, outputPath: selected, page });
+      return { success: true, filePath: selected };
+    } catch (error: unknown) {
+      console.error('Error exporting PDF file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to export PDF file';
+      return { success: false, error: errorMessage };
+    }
+  },
+
   // Export settings file
   async exportSettingsFile(settingsJson: string): Promise<SaveResponse> {
     try {
@@ -455,5 +486,31 @@ export const desktopApi = {
       console.error('Error reading directory:', error);
       return [];
     }
+  },
+
+  // Save raw image bytes into `<destDir>/<subdir>/<filename>` (via Rust command,
+  // which creates the folder, dedups identical content and suffixes collisions).
+  // Returns the written file's path relative to `destDir` (e.g. "images/foo.png").
+  // Used when pasting a bitmap from the clipboard.
+  async saveImageBytes(
+    destDir: string,
+    subdir: string,
+    filename: string,
+    bytes: Uint8Array,
+  ): Promise<string> {
+    return invoke<string>('save_image_bytes', {
+      destDir,
+      subdir,
+      filename,
+      bytes: Array.from(bytes),
+    });
+  },
+
+  // Copy an existing image file into `<destDir>/<subdir>/`, preserving its name
+  // (via Rust command, same dedup/collision handling as saveImageBytes). Returns
+  // the copied file's path relative to `destDir`. Used when an image dragged into
+  // the editor lives outside the document's own folder.
+  async copyImageAsset(srcPath: string, destDir: string, subdir: string): Promise<string> {
+    return invoke<string>('copy_image_asset', { srcPath, destDir, subdir });
   },
 };

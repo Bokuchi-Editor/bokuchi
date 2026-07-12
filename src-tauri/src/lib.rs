@@ -33,6 +33,7 @@ mod variable_processor;
 mod file_operations;
 mod file_association;
 mod commands;
+mod pdf_export;
 
 // Re-export types
 pub use types::*;
@@ -111,7 +112,6 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             set_global_variable,
             get_global_variables,
             load_variables_from_yaml,
@@ -120,12 +120,15 @@ pub fn run() {
             get_expanded_markdown,
             read_file,
             save_file,
+            save_image_bytes,
+            copy_image_asset,
             get_file_hash,
             get_pending_file_paths_command,
             log_from_frontend,
             set_frontend_ready_command,
             read_directory,
-            rename_file
+            rename_file,
+            pdf_export::export_pdf
         ])
         .setup(|app| {
             // Get command line arguments

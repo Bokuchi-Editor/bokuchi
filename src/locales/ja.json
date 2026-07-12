@@ -255,7 +255,7 @@
     "appearance": {
       "title": "外観",
       "theme": "テーマ",
-      "themeDescription": "アプリケーションの視覚テーマが選択できます。",
+      "themeDescription": "カードをクリックするとテーマが適用されます。テーマを複製して自分好みの配色にカスタマイズできます。",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "絹",
         "ink": "墨",
         "darcula": "Darcula"
+      },
+      "presetSection": "プリセット",
+      "customSection": "カスタムテーマ",
+      "customEmptyGuide": "テーマを複製して、自分だけの配色を作成できます。",
+      "newTheme": "新しいテーマ",
+      "basePickerTitle": "ベースにするテーマを選択",
+      "duplicate": "複製",
+      "editTheme": "編集",
+      "deleteTheme": "削除",
+      "deleteConfirmTitle": "カスタムテーマの削除",
+      "deleteConfirmMessage": "「{{name}}」を削除しますか？この操作は取り消せません。",
+      "deleteConfirmActiveNote": "このテーマは現在適用中です。削除後は Default テーマが適用されます。",
+      "copyName": "{{name}} のコピー",
+      "themeName": "テーマ名",
+      "editorModeLight": "ライト",
+      "editorModeDark": "ダーク",
+      "editorModeDescription": "エディタ本体は Monaco 内蔵のライト/ダークスキンを使用します（上記の色設定はエディタ本体には影響しません）。",
+      "resetToBase": "ベース（{{name}}）の色に戻す",
+      "backToDefault": "Default テーマに戻す",
+      "doneEditing": "完了",
+      "contrastWarning": "テキストと背景のコントラストが低く、文字が読みにくくなる可能性があります。",
+      "applied": "適用中",
+      "colors": {
+        "backgroundDefault": "背景",
+        "backgroundPaper": "サーフェス",
+        "textPrimary": "テキスト",
+        "textSecondary": "サブテキスト",
+        "primaryMain": "プライマリ",
+        "secondaryMain": "セカンダリ",
+        "divider": "境界線"
       }
     },
     "globalVariables": {
@@ -447,6 +477,13 @@
     "dropMarkdownFile": "Markdownファイルをここにドロップ",
     "noActiveTab": "保存するアクティブなタブがありません。まずファイルを開いてください。"
   },
+  "imageInsert": {
+    "saveFirst": "画像を相対パスで挿入するには、先にドキュメントを保存してください",
+    "inserted": "画像を挿入しました",
+    "insertedMultiple": "{{count}} 個の画像を挿入しました",
+    "failed": "画像の挿入に失敗しました",
+    "dropHere": "画像をここにドロップ"
+  },
   "dialogs": {
     "saveChanges": "閉じる前に変更を保存しますか？",
     "saveChangesMessage": "<bold>{{fileName}}</bold> に未保存の変更があります。保存しますか？",
@@ -625,6 +662,9 @@
   },
   "preview": {
     "presentation": "プレゼンテーション",
+    "export": "エクスポート",
+    "exportAsHtml": "HTMLでエクスポート",
+    "exportAsPdf": "PDFでエクスポート",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
     "reloadThemes": "テーマを再読み込み",

@@ -22,7 +22,8 @@ vi.mock('../../themes', () => {
 
 import StatusBar from '../StatusBar';
 import { asMock } from '../../test-utils';
-import type { ThemeName } from '../../themes';
+import type { ThemeId } from '../../themes';
+import type { CustomTheme } from '../../themes/customTheme';
 
 describe('StatusBar', () => {
   let onZoomIn: ReturnType<typeof vi.fn>;
@@ -44,7 +45,7 @@ describe('StatusBar', () => {
     selectedCharacters: 0,
     darkMode: false,
     theme: 'default' as const,
-    onThemeChange: asMock<(theme: ThemeName) => void>(onThemeChange),
+    onThemeChange: asMock<(theme: ThemeId) => void>(onThemeChange),
     zoomPercentage: 100,
     onZoomIn: asMock<() => void>(onZoomIn),
     onZoomOut: asMock<() => void>(onZoomOut),
@@ -179,5 +180,33 @@ describe('StatusBar', () => {
     renderStatusBar();
     // Only the 3 zoom buttons + theme button (no word-wrap/auto-save toggles).
     expect(screen.getAllByRole('button')).toHaveLength(4);
+  });
+
+  const sampleCustomTheme: CustomTheme = {
+    id: 'custom:abc-123',
+    name: 'My Custom',
+    baseTheme: 'default',
+    mode: 'light',
+    colors: {
+      backgroundDefault: '#ffffff',
+      backgroundPaper: '#ffffff',
+      textPrimary: '#000000',
+      textSecondary: '#666666',
+      primaryMain: '#1976d2',
+      secondaryMain: '#9c27b0',
+      divider: '#e0e0e0',
+    },
+  };
+
+  // T-SB-17: custom theme id resolves its label from the customThemes list
+  it('T-SB-17: displays custom theme name for a custom: theme id', () => {
+    renderStatusBar({ theme: 'custom:abc-123', customThemes: [sampleCustomTheme] });
+    expect(screen.getByText('My Custom')).toBeInTheDocument();
+  });
+
+  // T-SB-18: unknown custom theme id falls back to 'Default'
+  it("T-SB-18: falls back to 'Default' when the custom theme id is not found", () => {
+    renderStatusBar({ theme: 'custom:missing', customThemes: [sampleCustomTheme] });
+    expect(screen.getByText('Default')).toBeInTheDocument();
   });
 });

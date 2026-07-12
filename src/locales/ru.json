@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Внешний вид",
       "theme": "Тема",
-      "themeDescription": "Выберите визуальную тему для интерфейса приложения.",
+      "themeDescription": "Нажмите на карточку, чтобы применить тему. Продублируйте любую тему, чтобы настроить собственные цвета.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Предустановки",
+      "customSection": "Пользовательские темы",
+      "customEmptyGuide": "Продублируйте любую тему, чтобы создать собственный набор цветов.",
+      "newTheme": "Новая тема",
+      "basePickerTitle": "Выберите базовую тему",
+      "duplicate": "Дублировать",
+      "editTheme": "Редактировать",
+      "deleteTheme": "Удалить",
+      "deleteConfirmTitle": "Удалить пользовательскую тему",
+      "deleteConfirmMessage": "Удалить «{{name}}»? Это действие нельзя отменить.",
+      "deleteConfirmActiveNote": "Эта тема сейчас применена. После удаления будет применена тема Default.",
+      "copyName": "Копия {{name}}",
+      "themeName": "Название темы",
+      "editorModeLight": "Светлая",
+      "editorModeDark": "Тёмная",
+      "editorModeDescription": "Панель редактора использует встроенную светлую/тёмную схему Monaco — цвета выше на неё не влияют.",
+      "resetToBase": "Сбросить цвета к базовой теме ({{name}})",
+      "backToDefault": "Вернуть тему Default",
+      "doneEditing": "Готово",
+      "contrastWarning": "Низкий контраст между текстом и фоном — текст может быть трудно читать.",
+      "applied": "Применена",
+      "colors": {
+        "backgroundDefault": "Фон",
+        "backgroundPaper": "Поверхность",
+        "textPrimary": "Текст",
+        "textSecondary": "Вторичный текст",
+        "primaryMain": "Основной",
+        "secondaryMain": "Вторичный",
+        "divider": "Разделитель"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "Пожалуйста, перетащите файл Markdown (.md или .markdown)",
     "dropMarkdownFile": "Перетащите файл Markdown сюда",
     "noActiveTab": "Нет активной вкладки для сохранения. Пожалуйста, сначала откройте файл."
+  },
+  "imageInsert": {
+    "saveFirst": "Сначала сохраните документ, чтобы вставлять изображения с относительными путями",
+    "inserted": "Изображение вставлено",
+    "insertedMultiple": "Вставлено изображений: {{count}}",
+    "failed": "Не удалось вставить изображение",
+    "dropHere": "Перетащите изображение сюда"
   },
   "dialogs": {
     "saveChanges": "Сохранить изменения перед закрытием?",

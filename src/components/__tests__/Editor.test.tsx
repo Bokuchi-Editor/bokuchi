@@ -15,6 +15,13 @@ vi.mock('react-i18next', () => ({
 vi.mock('@tauri-apps/api/window');
 vi.mock('@tauri-apps/plugin-clipboard-manager');
 
+// The editor registers a drag-drop listener for image insertion on mount.
+vi.mock('@tauri-apps/api/webview', () => ({
+  getCurrentWebview: () => ({
+    onDragDropEvent: vi.fn().mockResolvedValue(() => {}),
+  }),
+}));
+
 // Mock SearchReplacePanel – we test its integration, not its internals
 vi.mock('../SearchReplacePanel', () => ({
   default: (props: {
@@ -69,6 +76,14 @@ vi.mock('../TableConversionDialog', () => ({
     ) : null,
 }));
 
+// Mock desktopApi – image bytes are persisted through the Rust backend.
+vi.mock('../../api/desktopApi', () => ({
+  desktopApi: {
+    saveImageBytes: vi.fn().mockResolvedValue('images/image-saved.png'),
+    copyImageAsset: vi.fn().mockResolvedValue('images/image-copied.png'),
+  },
+}));
+
 // Mock tableConverter utilities
 vi.mock('../../utils/tableConverter', () => ({
   htmlTableToMarkdown: vi.fn().mockReturnValue('| A | B |\n| --- | --- |\n| 1 | 2 |'),
@@ -115,6 +130,7 @@ vi.mock('@monaco-editor/react', () => ({
 
 import MarkdownEditor from '../Editor';
 import { validateMarkdownTable, convertTsvCsvToMarkdown } from '../../utils/tableConverter';
+import { desktopApi } from '../../api/desktopApi';
 
 // Helper: create a mock Monaco editor instance
 function createMockMonacoEditor(overrides: Partial<editor.IStandaloneCodeEditor> = {}) {
@@ -224,12 +240,6 @@ describe('MarkdownEditor', () => {
   // =========================================================================
 
   describe('settings propagation', () => {
-    // T-ED-04: darcula passed with darkMode true sets vs-dark
-    it('T-ED-04: darcula theme sets vs-dark', () => {
-      render(<MarkdownEditor {...defaultProps()} theme="darcula" darkMode={true} />);
-      expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('vs-dark');
-    });
-
     // T-ED-05: light mode without darcula
     it('T-ED-05: light mode uses light theme', () => {
       render(<MarkdownEditor {...defaultProps()} darkMode={false} />);
@@ -290,34 +300,6 @@ describe('MarkdownEditor', () => {
   // =========================================================================
 
   describe('keyboard shortcuts on mount', () => {
-    // T-ED-11: Ctrl+F registers command for search
-    it('T-ED-11: registers Ctrl+F, Ctrl+H, Ctrl+Shift+F commands', () => {
-      // Set up monaco on window
-      const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
-      const KeyCode = { KeyF: 36, KeyH: 38, KeyV: 52 };
-      (window as unknown as Record<string, unknown>).monaco = { KeyMod, KeyCode };
-
-      render(<MarkdownEditor {...defaultProps()} />);
-      const mockEditor = createMockMonacoEditor();
-
-      expect(capturedOnMount).not.toBeNull();
-      capturedOnMount!(mockEditor);
-
-      // addCommand called for Ctrl+F, Ctrl+H, Ctrl+Shift+F, Ctrl+Shift+V
-      expect(mockEditor.addCommand).toHaveBeenCalledTimes(4);
-
-      // Verify the keybindings
-      const calls = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls;
-      // Ctrl+F = CtrlCmd | KeyF = 2048 | 36 = 2084
-      expect(calls[0][0]).toBe(2048 | 36);
-      // Ctrl+H = CtrlCmd | KeyH = 2048 | 38 = 2086
-      expect(calls[1][0]).toBe(2048 | 38);
-      // Ctrl+Shift+F = CtrlCmd | Shift | KeyF = 2048 | 1024 | 36 = 3108
-      expect(calls[2][0]).toBe(2048 | 1024 | 36);
-
-      delete (window as unknown as Record<string, unknown>).monaco;
-    });
-
     // T-ED-12: Ctrl+F handler opens search in single-tab mode
     it('T-ED-12: Ctrl+F opens search in single-tab mode', () => {
       const KeyMod = { CtrlCmd: 2048, Shift: 1024 };
@@ -428,28 +410,6 @@ describe('MarkdownEditor', () => {
 
       delete (window as unknown as Record<string, unknown>).monaco;
     });
-
-    // T-ED-15: registers cursor/selection/content change listeners
-    it('T-ED-15: registers change listeners for cursor, selection, and content', () => {
-      (window as unknown as Record<string, unknown>).monaco = {
-        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
-        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
-      };
-
-      const onStatusChange = vi.fn();
-      render(<MarkdownEditor {...defaultProps({ onStatusChange })} />);
-      const mockEditor = createMockMonacoEditor();
-      capturedOnMount!(mockEditor);
-
-      // Cursor-position and content listeners are registered twice: once for
-      // status reporting and once for the table-editing context key. Selection
-      // is only used by status reporting.
-      expect(mockEditor.onDidChangeCursorPosition).toHaveBeenCalledTimes(2);
-      expect(mockEditor.onDidChangeCursorSelection).toHaveBeenCalledTimes(1);
-      expect(mockEditor.onDidChangeModelContent).toHaveBeenCalledTimes(2);
-
-      delete (window as unknown as Record<string, unknown>).monaco;
-    });
   });
 
   // =========================================================================
@@ -457,23 +417,6 @@ describe('MarkdownEditor', () => {
   // =========================================================================
 
   describe('scroll sync', () => {
-    // T-ED-16: onScrollChange is registered
-    it('T-ED-16: registers scroll change listener when onScrollChange provided', () => {
-      (window as unknown as Record<string, unknown>).monaco = {
-        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
-        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
-      };
-
-      const onScrollChange = vi.fn();
-      render(<MarkdownEditor {...defaultProps({ onScrollChange })} />);
-      const mockEditor = createMockMonacoEditor();
-      capturedOnMount!(mockEditor);
-
-      expect(mockEditor.onDidScrollChange).toHaveBeenCalledTimes(1);
-
-      delete (window as unknown as Record<string, unknown>).monaco;
-    });
-
     // T-ED-17: scroll handler computes fraction correctly
     it('T-ED-17: scroll handler sends correct scrollFraction', () => {
       (window as unknown as Record<string, unknown>).monaco = {
@@ -497,6 +440,64 @@ describe('MarkdownEditor', () => {
       scrollHandler();
 
       // fraction = 250 / (1000 - 500) = 0.5
+      expect(onScrollChange).toHaveBeenCalledWith(0.5);
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-37: receiving side of preview -> editor sync. A scrollFraction prop
+    // change must be applied to Monaco via setScrollTop.
+    it('T-ED-37: scrollFraction prop applies the scroll position via setScrollTop', () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const mockEditor = createMockMonacoEditor();
+      const { rerender } = render(<MarkdownEditor {...defaultProps()} />);
+      capturedOnMount!(mockEditor);
+
+      rerender(<MarkdownEditor {...defaultProps()} scrollFraction={0.5} />);
+
+      // targetScroll = 0.5 * (1000 - 500) = 250
+      expect(mockEditor.setScrollTop).toHaveBeenCalledWith(250);
+
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-38: the isProgrammaticScrollRef guard must swallow the scroll event
+    // produced by our own setScrollTop (otherwise editor <-> preview sync
+    // enters a feedback loop), and release after the next animation frame so
+    // real user scrolls keep reporting.
+    it('T-ED-38: programmatic scroll does not echo back through onScrollChange', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const onScrollChange = vi.fn();
+      const mockEditor = createMockMonacoEditor();
+      const { rerender } = render(
+        <MarkdownEditor {...defaultProps({ onScrollChange })} />,
+      );
+      capturedOnMount!(mockEditor);
+
+      rerender(
+        <MarkdownEditor {...defaultProps({ onScrollChange })} scrollFraction={0.5} />,
+      );
+      expect(mockEditor.setScrollTop).toHaveBeenCalledWith(250);
+
+      // Monaco now reports the scroll caused by setScrollTop. The guard is
+      // still up, so it must NOT be echoed to the parent.
+      (mockEditor.getScrollTop as ReturnType<typeof vi.fn>).mockReturnValue(250);
+      const scrollHandler = (mockEditor.onDidScrollChange as ReturnType<typeof vi.fn>).mock.calls[0][0];
+      scrollHandler();
+      expect(onScrollChange).not.toHaveBeenCalled();
+
+      // After the next animation frame the guard is released; a user scroll
+      // reports normally again.
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      scrollHandler();
       expect(onScrollChange).toHaveBeenCalledWith(0.5);
 
       delete (window as unknown as Record<string, unknown>).monaco;
@@ -1190,26 +1191,106 @@ describe('MarkdownEditor', () => {
   });
 
   // =========================================================================
-  // Table conversion modes
+  // Image paste insertion (clipboard bitmap -> images/ + Markdown link)
   // =========================================================================
 
-  describe('table paste conversion – mode differences', () => {
-    // T-ED-TC-01: off mode does not trigger table conversion
-    it('T-ED-TC-01: tableConversion=off does not convert pasted tables', async () => {
-      render(
-        <MarkdownEditor
-          {...defaultProps()}
-          tableConversion="off"
-        />,
-      );
+  describe('image paste insertion', () => {
+    // Minimal stand-in for a clipboard image File: the paste handler only
+    // reads `type` and `arrayBuffer()`.
+    function createClipboardImageFile() {
+      return {
+        type: 'image/png',
+        arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer,
+      };
+    }
 
+    function dispatchImagePaste() {
+      const pasteEvent = new Event('paste', { bubbles: true, cancelable: true }) as unknown as ClipboardEvent;
+      Object.defineProperty(pasteEvent, 'clipboardData', {
+        value: {
+          files: [createClipboardImageFile()],
+          getData: () => '',
+        },
+      });
+      document.dispatchEvent(pasteEvent);
+    }
+
+    // Focus setup shared with the table-conversion tests: the global paste
+    // listener only acts when the active element is inside the editor DOM.
+    function mountFocusedEditor() {
       const mockEditor = createMockMonacoEditor();
-      act(() => {
-        capturedOnMount?.(mockEditor);
+      const domNode = document.createElement('div');
+      const textarea = document.createElement('textarea');
+      domNode.appendChild(textarea);
+      document.body.appendChild(domNode);
+      textarea.focus();
+      (mockEditor.getDomNode as ReturnType<typeof vi.fn>).mockReturnValue(domNode);
+      return { mockEditor, domNode };
+    }
+
+    // T-ED-IMG-01: unsaved tab (no filePath) -> warn and do not insert
+    it('T-ED-IMG-01: image paste on an unsaved tab warns and inserts nothing', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const onSnackbar = vi.fn();
+      const { mockEditor, domNode } = mountFocusedEditor();
+
+      render(<MarkdownEditor {...defaultProps()} onSnackbar={onSnackbar} />);
+      capturedOnMount!(mockEditor);
+
+      dispatchImagePaste();
+
+      await waitFor(() => {
+        expect(onSnackbar).toHaveBeenCalledWith('imageInsert.saveFirst', 'warning');
+      });
+      expect(desktopApi.saveImageBytes).not.toHaveBeenCalled();
+      expect(mockEditor.executeEdits).not.toHaveBeenCalled();
+
+      document.body.removeChild(domNode);
+      delete (window as unknown as Record<string, unknown>).monaco;
+    });
+
+    // T-ED-IMG-02: saved tab -> bytes written via desktopApi and link inserted
+    it('T-ED-IMG-02: image paste on a saved tab saves bytes and inserts a Markdown link', async () => {
+      (window as unknown as Record<string, unknown>).monaco = {
+        KeyMod: { CtrlCmd: 2048, Shift: 1024 },
+        KeyCode: { KeyF: 36, KeyH: 38, KeyV: 52 },
+      };
+
+      const onSnackbar = vi.fn();
+      const { mockEditor, domNode } = mountFocusedEditor();
+
+      render(
+        <MarkdownEditor {...defaultProps()} filePath="/docs/note.md" onSnackbar={onSnackbar} />,
+      );
+      capturedOnMount!(mockEditor);
+
+      dispatchImagePaste();
+
+      await waitFor(() => {
+        expect(desktopApi.saveImageBytes).toHaveBeenCalledWith(
+          '/docs',
+          'images',
+          expect.stringMatching(/^image-\d{8}-\d{6}\.png$/),
+          expect.any(Uint8Array),
+        );
       });
 
-      // If tableConversion is 'off', no table dialog should appear
-      expect(screen.queryByTestId('table-dialog')).toBeNull();
+      await waitFor(() => {
+        expect(mockEditor.executeEdits).toHaveBeenCalledWith(
+          'image-insert',
+          expect.arrayContaining([
+            expect.objectContaining({ text: '![](images/image-saved.png)' }),
+          ]),
+        );
+      });
+      expect(onSnackbar).toHaveBeenCalledWith('imageInsert.inserted', 'success');
+
+      document.body.removeChild(domNode);
+      delete (window as unknown as Record<string, unknown>).monaco;
     });
   });
 

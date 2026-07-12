@@ -118,6 +118,8 @@ export const useAppState = () => {
     toggleTabSidebarPinned,
     globalVariables,
     setGlobalVariables,
+    customThemes,
+    handleCustomThemesChange,
     appSettings,
     isSettingsLoaded,
     currentTheme,
@@ -511,6 +513,8 @@ export const useAppState = () => {
   return {
     // State
     theme,
+    customThemes,
+    handleCustomThemesChange,
     settingsOpen,
     settingsFocusTarget,
     helpOpen,

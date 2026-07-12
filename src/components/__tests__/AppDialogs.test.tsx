@@ -106,6 +106,8 @@ describe('AppDialogs', () => {
     onCancelBeforeClose: asMock<() => void>(vi.fn()),
     onUpdate: asMock<() => void>(vi.fn()),
     onDismissUpdate: asMock<() => void>(vi.fn()),
+    customThemes: [],
+    onCustomThemesChange: asMock<() => void>(vi.fn()),
     t: (key: string) => key,
   });
 

@@ -10,26 +10,23 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab } from '../types/tab';
+import SearchMatchRow from './search/SearchMatchRow';
+import {
+  buildSearchRegex,
+  iterateMatches,
+  searchAcrossTabs,
+  pickNearestMatchIndex,
+  snippetParts,
+  type MatchInfo,
+  type CrossTabMatchInfo,
+} from '../utils/searchMatches';
 
-interface MatchInfo {
-  range: {
-    startLineNumber: number;
-    startColumn: number;
-    endLineNumber: number;
-    endColumn: number;
-  };
-  text: string;
-  lineContent: string;
-}
-
-interface CrossTabMatchInfo {
-  tabId: string;
-  tabTitle: string;
-  lineNumber: number;
-  column: number;
-  text: string;
-  lineContent: string;
-}
+/** Delay before focusing the search input so it wins over Monaco's focus. */
+const FOCUS_DELAY_MS = 50;
+/** Wait for the editor to remount after switching tabs before revealing a match. */
+const TAB_SWITCH_REVEAL_DELAY_MS = 200;
+/** Debounce applied to search-as-you-type. */
+const SEARCH_DEBOUNCE_MS = 150;
 
 interface SearchReplacePanelProps {
   editorRef: React.RefObject<editor.IStandaloneCodeEditor | null>;
@@ -108,7 +105,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   // Focus search input when panel opens
   useEffect(() => {
     if (open && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
+      setTimeout(() => searchInputRef.current?.focus(), FOCUS_DELAY_MS);
     }
     if (!open) {
       clearDecorations();
@@ -155,71 +152,33 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
     const model = ed.getModel();
     if (!model) return;
 
-    let searchRegex: RegExp;
-    try {
-      if (regex) {
-        searchRegex = new RegExp(searchText, caseSensitive ? 'g' : 'gi');
-      } else {
-        const escaped = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const pattern = wholeWord ? `\\b${escaped}\\b` : escaped;
-        searchRegex = new RegExp(pattern, caseSensitive ? 'g' : 'gi');
-      }
-    } catch {
-      // Invalid regex
+    const searchRegex = buildSearchRegex(searchText, { caseSensitive, wholeWord, regex });
+    if (!searchRegex) {
       clearDecorations();
       setMatches([]);
       setCurrentMatchIndex(-1);
       return;
     }
 
-    const text = model.getValue();
-    const foundMatches: MatchInfo[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = searchRegex.exec(text)) !== null) {
-      if (match[0].length === 0) {
-        searchRegex.lastIndex++;
-        continue;
-      }
-      const startPos = model.getPositionAt(match.index);
-      const endPos = model.getPositionAt(match.index + match[0].length);
-      const lineContent = model.getLineContent(startPos.lineNumber);
-
-      foundMatches.push({
-        range: {
-          startLineNumber: startPos.lineNumber,
-          startColumn: startPos.column,
-          endLineNumber: endPos.lineNumber,
-          endColumn: endPos.column,
-        },
-        text: match[0],
-        lineContent,
-      });
-    }
+    const foundMatches: MatchInfo[] = iterateMatches(model.getValue(), searchRegex).map(
+      ({ index, text }) => {
+        const startPos = model.getPositionAt(index);
+        const endPos = model.getPositionAt(index + text.length);
+        return {
+          range: {
+            startLineNumber: startPos.lineNumber,
+            startColumn: startPos.column,
+            endLineNumber: endPos.lineNumber,
+            endColumn: endPos.column,
+          },
+          text,
+          lineContent: model.getLineContent(startPos.lineNumber),
+        };
+      },
+    );
 
     setMatches(foundMatches);
-
-    // Try to keep current match near cursor position
-    if (foundMatches.length > 0) {
-      const cursorPos = ed.getPosition();
-      let bestIndex = 0;
-      if (cursorPos) {
-        for (let i = 0; i < foundMatches.length; i++) {
-          const r = foundMatches[i].range;
-          if (
-            r.startLineNumber > cursorPos.lineNumber ||
-            (r.startLineNumber === cursorPos.lineNumber && r.startColumn >= cursorPos.column)
-          ) {
-            bestIndex = i;
-            break;
-          }
-          bestIndex = i;
-        }
-      }
-      setCurrentMatchIndex(bestIndex);
-    } else {
-      setCurrentMatchIndex(-1);
-    }
+    setCurrentMatchIndex(pickNearestMatchIndex(foundMatches, ed.getPosition()));
   }, [editorRef, searchText, caseSensitive, wholeWord, regex, clearDecorations]);
 
   // Cross-tab search
@@ -230,53 +189,14 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
       return;
     }
 
-    let searchRegex: RegExp;
-    try {
-      if (regex) {
-        searchRegex = new RegExp(searchText, caseSensitive ? 'g' : 'gi');
-      } else {
-        const escaped = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const pattern = wholeWord ? `\\b${escaped}\\b` : escaped;
-        searchRegex = new RegExp(pattern, caseSensitive ? 'g' : 'gi');
-      }
-    } catch {
+    const searchRegex = buildSearchRegex(searchText, { caseSensitive, wholeWord, regex });
+    if (!searchRegex) {
       setCrossTabMatches([]);
       setCurrentCrossTabIndex(-1);
       return;
     }
 
-    const allMatches: CrossTabMatchInfo[] = [];
-
-    for (const tab of tabs) {
-      const lines = tab.content.split(/\r?\n/);
-      // Reset regex for each tab
-      searchRegex.lastIndex = 0;
-
-      let match: RegExpExecArray | null;
-      const tabContent = tab.content;
-      searchRegex.lastIndex = 0;
-
-      while ((match = searchRegex.exec(tabContent)) !== null) {
-        if (match[0].length === 0) {
-          searchRegex.lastIndex++;
-          continue;
-        }
-        // Calculate line number and column
-        const beforeMatch = tabContent.substring(0, match.index);
-        const lineNumber = beforeMatch.split(/\r?\n/).length;
-        const lastNewline = beforeMatch.lastIndexOf('\n');
-        const column = match.index - lastNewline;
-
-        allMatches.push({
-          tabId: tab.id,
-          tabTitle: tab.title,
-          lineNumber,
-          column,
-          text: match[0],
-          lineContent: lines[lineNumber - 1] || '',
-        });
-      }
-    }
+    const allMatches: CrossTabMatchInfo[] = searchAcrossTabs(tabs, searchRegex);
 
     setCrossTabMatches(allMatches);
     if (allMatches.length > 0) {
@@ -324,7 +244,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
         setCrossTabMatches([]);
         setCurrentCrossTabIndex(-1);
       }
-    }, 150);
+    }, SEARCH_DEBOUNCE_MS);
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -392,7 +312,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
           ed.setPosition({ lineNumber: m.lineNumber, column: m.column });
           ed.focus();
         }
-      }, 200);
+      }, TAB_SWITCH_REVEAL_DELAY_MS);
     } else {
       // Same tab - jump directly
       const ed = editorRef.current;
@@ -755,76 +675,15 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
             overflowY: 'auto',
           }}
         >
-          {matches.map((m, i) => {
-            const col = m.range.startColumn - 1;
-            const matchLen = m.text.length;
-            const before = m.lineContent.substring(Math.max(0, col - 30), col);
-            const matched = m.lineContent.substring(col, col + matchLen);
-            const after = m.lineContent.substring(col + matchLen, col + matchLen + 40);
-
-            return (
-              <Box
-                key={`${m.range.startLineNumber}-${m.range.startColumn}-${i}`}
-                onClick={() => goToMatch(i)}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  px: 1,
-                  py: 0.25,
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  fontFamily: "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace",
-                  backgroundColor:
-                    i === currentMatchIndex
-                      ? 'rgba(var(--color-primary-rgb, 3, 102, 214), 0.1)'
-                      : 'transparent',
-                  '&:hover': {
-                    backgroundColor: 'rgba(128, 128, 128, 0.1)',
-                  },
-                  borderBottom: '1px solid var(--color-border-light)',
-                  overflow: 'hidden',
-                }}
-              >
-                <Typography
-                  component="span"
-                  sx={{
-                    color: 'var(--color-text-secondary)',
-                    fontSize: '11px',
-                    minWidth: 40,
-                    textAlign: 'right',
-                    mr: 1,
-                    flexShrink: 0,
-                    userSelect: 'none',
-                  }}
-                >
-                  L{m.range.startLineNumber}
-                </Typography>
-                <Typography
-                  component="span"
-                  sx={{
-                    fontSize: '12px',
-                    color: 'var(--color-text)',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {before}
-                  <span
-                    style={{
-                      backgroundColor: 'var(--color-search-highlight)',
-                      color: 'var(--color-search-highlight-text)',
-                      borderRadius: '2px',
-                      padding: '0 1px',
-                    }}
-                  >
-                    {matched}
-                  </span>
-                  {after}
-                </Typography>
-              </Box>
-            );
-          })}
+          {matches.map((m, i) => (
+            <SearchMatchRow
+              key={`${m.range.startLineNumber}-${m.range.startColumn}-${i}`}
+              lineNumber={m.range.startLineNumber}
+              snippet={snippetParts(m.lineContent, m.range.startColumn - 1, m.text.length)}
+              active={i === currentMatchIndex}
+              onClick={() => goToMatch(i)}
+            />
+          ))}
         </Box>
       )}
 
@@ -886,77 +745,16 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
                   </Typography>
                 </Box>
                 {/* Matches in this tab */}
-                {group.matches.map(({ match: m, globalIndex }) => {
-                  const col = m.column - 1;
-                  const matchLen = m.text.length;
-                  const before = m.lineContent.substring(Math.max(0, col - 30), col);
-                  const matched = m.lineContent.substring(col, col + matchLen);
-                  const after = m.lineContent.substring(col + matchLen, col + matchLen + 40);
-
-                  return (
-                    <Box
-                      key={`${m.tabId}-${m.lineNumber}-${m.column}-${globalIndex}`}
-                      onClick={() => goToCrossTabMatch(globalIndex)}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        px: 1,
-                        pl: 2,
-                        py: 0.25,
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        fontFamily: "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace",
-                        backgroundColor:
-                          globalIndex === currentCrossTabIndex
-                            ? 'rgba(var(--color-primary-rgb, 3, 102, 214), 0.1)'
-                            : 'transparent',
-                        '&:hover': {
-                          backgroundColor: 'rgba(128, 128, 128, 0.1)',
-                        },
-                        borderBottom: '1px solid var(--color-border-light)',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <Typography
-                        component="span"
-                        sx={{
-                          color: 'var(--color-text-secondary)',
-                          fontSize: '11px',
-                          minWidth: 40,
-                          textAlign: 'right',
-                          mr: 1,
-                          flexShrink: 0,
-                          userSelect: 'none',
-                        }}
-                      >
-                        L{m.lineNumber}
-                      </Typography>
-                      <Typography
-                        component="span"
-                        sx={{
-                          fontSize: '12px',
-                          color: 'var(--color-text)',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {before}
-                        <span
-                          style={{
-                            backgroundColor: 'var(--color-search-highlight)',
-                            color: 'var(--color-search-highlight-text)',
-                            borderRadius: '2px',
-                            padding: '0 1px',
-                          }}
-                        >
-                          {matched}
-                        </span>
-                        {after}
-                      </Typography>
-                    </Box>
-                  );
-                })}
+                {group.matches.map(({ match: m, globalIndex }) => (
+                  <SearchMatchRow
+                    key={`${m.tabId}-${m.lineNumber}-${m.column}-${globalIndex}`}
+                    lineNumber={m.lineNumber}
+                    snippet={snippetParts(m.lineContent, m.column - 1, m.text.length)}
+                    active={globalIndex === currentCrossTabIndex}
+                    indented
+                    onClick={() => goToCrossTabMatch(globalIndex)}
+                  />
+                ))}
               </Box>
             ));
           })()}

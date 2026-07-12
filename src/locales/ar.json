@@ -255,7 +255,7 @@
     "appearance": {
       "title": "المظهر",
       "theme": "السمة",
-      "themeDescription": "اختر السمة البصرية لواجهة التطبيق.",
+      "themeDescription": "انقر على بطاقة لتطبيق سمة. كرِّر أي سمة لتخصيص ألوانك الخاصة.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "السمات الجاهزة",
+      "customSection": "السمات المخصصة",
+      "customEmptyGuide": "كرِّر أي سمة لإنشاء مجموعة ألوانك الخاصة.",
+      "newTheme": "سمة جديدة",
+      "basePickerTitle": "اختر سمة أساسية",
+      "duplicate": "تكرار",
+      "editTheme": "تعديل",
+      "deleteTheme": "حذف",
+      "deleteConfirmTitle": "حذف السمة المخصصة",
+      "deleteConfirmMessage": "هل تريد حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteConfirmActiveNote": "هذه السمة مطبقة حاليًا. بعد الحذف سيتم تطبيق سمة Default.",
+      "copyName": "نسخة {{name}}",
+      "themeName": "اسم السمة",
+      "editorModeLight": "فاتح",
+      "editorModeDark": "داكن",
+      "editorModeDescription": "يستخدم جزء المحرر مظهر Monaco المدمج (فاتح/داكن) — الألوان أعلاه لا تؤثر عليه.",
+      "resetToBase": "إعادة تعيين الألوان إلى الأساس ({{name}})",
+      "backToDefault": "إعادة التعيين إلى سمة Default",
+      "doneEditing": "تم",
+      "contrastWarning": "التباين بين النص والخلفية منخفض — قد يصعب قراءة النص.",
+      "applied": "مطبَّقة",
+      "colors": {
+        "backgroundDefault": "الخلفية",
+        "backgroundPaper": "السطح",
+        "textPrimary": "النص",
+        "textSecondary": "النص الثانوي",
+        "primaryMain": "الأساسي",
+        "secondaryMain": "الثانوي",
+        "divider": "الفاصل"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "يرجى إسقاط ملف Markdown (.md أو .markdown)",
     "dropMarkdownFile": "أفلت ملف Markdown هنا",
     "noActiveTab": "لا يوجد تبويب نشط للحفظ. يرجى فتح ملف أولاً."
+  },
+  "imageInsert": {
+    "saveFirst": "احفظ المستند أولاً لإدراج الصور بمسارات نسبية",
+    "inserted": "تم إدراج الصورة",
+    "insertedMultiple": "تم إدراج {{count}} صورة",
+    "failed": "فشل إدراج الصورة",
+    "dropHere": "أفلت الصورة هنا"
   },
   "dialogs": {
     "saveChanges": "حفظ التغييرات قبل الإغلاق؟",

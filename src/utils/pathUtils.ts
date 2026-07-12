@@ -77,8 +77,12 @@ export const getTabDisplayTitle = (tab: Tab): string => {
     return 'Untitled';
   }
 
-  if (firstLine.length > UNTITLED_TAB_TITLE_MAX_LENGTH) {
-    return firstLine.slice(0, UNTITLED_TAB_TITLE_MAX_LENGTH) + '…';
+  // Truncate by code points, not UTF-16 units: String#slice can cut an
+  // emoji's surrogate pair in half and leave a broken glyph before the
+  // ellipsis.
+  const chars = Array.from(firstLine);
+  if (chars.length > UNTITLED_TAB_TITLE_MAX_LENGTH) {
+    return chars.slice(0, UNTITLED_TAB_TITLE_MAX_LENGTH).join('') + '…';
   }
 
   return firstLine;

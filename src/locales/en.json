@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Appearance",
       "theme": "Theme",
-      "themeDescription": "Choose the visual theme for the application interface.",
+      "themeDescription": "Click a card to apply a theme. Duplicate any theme to customize your own colors.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Presets",
+      "customSection": "Custom Themes",
+      "customEmptyGuide": "Duplicate any theme to create your own color set.",
+      "newTheme": "New Theme",
+      "basePickerTitle": "Choose a base theme",
+      "duplicate": "Duplicate",
+      "editTheme": "Edit",
+      "deleteTheme": "Delete",
+      "deleteConfirmTitle": "Delete Custom Theme",
+      "deleteConfirmMessage": "Delete \"{{name}}\"? This cannot be undone.",
+      "deleteConfirmActiveNote": "This theme is currently applied. The Default theme will be applied after deletion.",
+      "copyName": "{{name}} Copy",
+      "themeName": "Theme Name",
+      "editorModeLight": "Light",
+      "editorModeDark": "Dark",
+      "editorModeDescription": "The editor pane uses Monaco's built-in Light/Dark skin — the colors above don't affect it.",
+      "resetToBase": "Reset colors to base ({{name}})",
+      "backToDefault": "Reset to Default theme",
+      "doneEditing": "Done",
+      "contrastWarning": "Low contrast between text and background — text may be hard to read.",
+      "applied": "Applied",
+      "colors": {
+        "backgroundDefault": "Background",
+        "backgroundPaper": "Surface",
+        "textPrimary": "Text",
+        "textSecondary": "Secondary Text",
+        "primaryMain": "Primary",
+        "secondaryMain": "Secondary",
+        "divider": "Divider"
       }
     },
     "globalVariables": {
@@ -447,6 +477,13 @@
     "dropMarkdownFile": "Drop Markdown file here",
     "noActiveTab": "No active tab to save. Please open a file first."
   },
+  "imageInsert": {
+    "saveFirst": "Save the document first to insert images with relative paths",
+    "inserted": "Image inserted",
+    "insertedMultiple": "{{count}} images inserted",
+    "failed": "Failed to insert image",
+    "dropHere": "Drop image here"
+  },
   "dialogs": {
     "saveChanges": "Save changes before closing?",
     "saveChangesMessage": "<bold>{{fileName}}</bold> has unsaved changes. Do you want to save them?",
@@ -625,6 +662,9 @@
   },
   "preview": {
     "presentation": "Presentation",
+    "export": "Export",
+    "exportAsHtml": "Export as HTML",
+    "exportAsPdf": "Export as PDF",
     "previousSlide": "Previous Slide",
     "nextSlide": "Next Slide",
     "reloadThemes": "Reload themes",

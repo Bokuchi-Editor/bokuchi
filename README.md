@@ -103,26 +103,6 @@ Author: {{author}}
 
 Set global variables through the Variables settings panel. These are available across all files.
 
-## Roadmap
-
-- [x] Frontend tests (Vitest + Testing Library)
-- [x] KaTeX math rendering
-- [x] Mermaid diagrams
-- [x] Cross-tab search
-- [x] Standalone HTML export (inline CSS)
-- [x] Tab pinning
-- [x] File rename from tab
-- [ ] PDF export
-- [ ] Command palette
-- [ ] PlantUML diagrams
-- [ ] Split editor (two files side by side)
-- [ ] Image paste / drop management
-- [ ] Reading time estimate
-- [ ] Undo / redo history persistence
-- [ ] Markdown snippets / templates
-
----
-
 ## Development
 
 ### Prerequisites

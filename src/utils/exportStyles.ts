@@ -250,18 +250,61 @@ ${tableCSS}
             height: auto;
         }
 
-        /* The code element only ever appears as <pre><code class="hljs">. Keep it
-           transparent so the single translucent background lives on <pre> alone.
-           Painting codeBackground here too would stack a second translucent layer
-           and make the inner code lighter than its frame (and it also overrides
-           highlight.js's own opaque .hljs background, e.g. github-dark #0d1117). */
+        /* The code element only ever appears as <pre><code class="hljs">, and the
+           enclosing <pre> already paints the code background. Keep <code> itself
+           transparent so the single translucent background lives on <pre> alone:
+           codeBackground is semi-transparent, so painting it here too would stack
+           a second translucent layer and make the inner box render differently
+           from its frame (visible in PDF export). It also overrides highlight.js's
+           own opaque .hljs background, e.g. github-dark #0d1117. */
         .hljs {
             background: transparent !important;
         }`;
 }
 
 /**
+ * Print-media CSS for PDF export. The layout engine flows the document across
+ * pages on its own — we only define the page box and add fragmentation hints so
+ * blocks that shouldn't be split mid-page (code, tables, images, equations,
+ * Mermaid diagrams) stay intact, and keep headings attached to their content.
+ *
+ * `.page-break` is the rendered form of a `<!-- pagebreak -->` marker, letting
+ * the author force a page break wherever they want.
+ *
+ * print-color-adjust: exact keeps theme/syntax-highlight backgrounds in the PDF
+ * so the output matches the on-screen preview.
+ */
+/**
+ * Print-media CSS for PDF export. PDF is always exported with the Default
+ * (white background, black text) theme regardless of the on-screen theme, so a
+ * plain @page margin is enough — the white margin band blends with the white
+ * page, with no visible boundary to fill.
+ */
+const PRINT_CSS = `
+        @media print {
+            /* Page size comes from the native print settings; WebKit takes the
+               margin from the CSS @page box (native margin is kept at 0). */
+            @page { margin: 20mm; }
+            html, body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { max-width: none; margin: 0; padding: 0; }
+            pre, blockquote, table, figure, img,
+            .mermaid-diagram, .katex-display {
+                break-inside: avoid;
+            }
+            tr, td, th { break-inside: avoid; }
+            h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+            .page-break { break-before: page; height: 0; }
+        }`;
+
+/**
  * Build a complete standalone HTML document for export.
+ *
+ * When `forPrint` is set the document also carries print-media CSS and any
+ * `<!-- pagebreak -->` markers in the body are turned into forced page breaks —
+ * used by the PDF export path (print → "Save as PDF").
  */
 export function buildExportHTML(
   bodyHtml: string,
@@ -269,14 +312,29 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
   katexCss?: string,
+  options: { forPrint?: boolean } = {},
 ): string {
-  const colors = getExportThemeColors(theme);
+  // PDF export always uses the Default theme (white background, black text),
+  // regardless of the on-screen theme — code/Mermaid colors follow suit. This
+  // keeps printed output readable and avoids colored page margins. Marp slides
+  // are exported WYSIWYG and never go through this path.
+  const effectiveTheme = options.forPrint ? 'default' : theme;
+  const effectiveDarkMode = options.forPrint ? false : darkMode;
+
+  const colors = getExportThemeColors(effectiveTheme);
   const css = generateExportCSS(colors, tableLayout);
-  const highlightStyle = getHighlightStyleDataUri(darkMode);
+  const highlightStyle = getHighlightStyleDataUri(effectiveDarkMode);
   // Inject KaTeX's stylesheet (with fonts inlined) only when the document has
   // math — without it the exported render breaks (see katexExportCss.ts). The
   // caller passes it lazily so font-free exports stay small.
   const katexStyle = katexCss ? `\n    <style>${katexCss}</style>` : '';
+
+  const printStyle = options.forPrint ? `\n    <style>${PRINT_CSS}</style>` : '';
+  // Turn the explicit page-break marker into a styleable element. Scoped to the
+  // print path so plain HTML export keeps a clean body.
+  const body = options.forPrint
+    ? bodyHtml.replace(/<!--\s*pagebreak\s*-->/gi, '<div class="page-break"></div>')
+    : bodyHtml;
 
   return `
 <!DOCTYPE html>
@@ -286,11 +344,11 @@ export function buildExportHTML(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Export</title>
     <style>${css}
-    </style>${katexStyle}
+    </style>${katexStyle}${printStyle}
     <link rel="stylesheet" href="${highlightStyle}">
 </head>
 <body>
-    ${bodyHtml}
+    ${body}
     <script>
       // Embed highlight.js core functionality (no CDN)
       (function(){

@@ -107,8 +107,33 @@ describe('htmlTableToMarkdown', () => {
       </table>
     `;
     const result = htmlTableToMarkdown(html);
-    // DOMParser reads each <td> as one cell regardless of colspan
-    expect(result).toContain('Spanning');
+    // Known limitation: colspan is ignored, so the body row has fewer cells
+    // than the header (1 vs 2) and the resulting Markdown is ragged.
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('| A | B |');
+    expect(lines[2]).toBe('| Spanning |');
+    expect(lines[2].split('|').length - 2).toBe(1); // 1 body cell vs 2 header cells
+  });
+
+  // T-TC-20: <thead>/<tbody>-wrapped tables — the shape real browser
+  // clipboards produce (e.g. copying from a rendered HTML table).
+  it('T-TC-20: converts a table with thead/tbody sections', () => {
+    const html = `
+      <table>
+        <thead><tr><th>Name</th><th>Age</th></tr></thead>
+        <tbody>
+          <tr><td>Alice</td><td>30</td></tr>
+          <tr><td>Bob</td><td>25</td></tr>
+        </tbody>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(4);
+    expect(lines[0]).toBe('| Name | Age |');
+    expect(lines[1]).toContain('---');
+    expect(lines[2]).toBe('| Alice | 30 |');
+    expect(lines[3]).toBe('| Bob | 25 |');
   });
 
   // T-TC-06
@@ -223,6 +248,19 @@ describe('convertTsvCsvToMarkdown', () => {
   // T-TC-15
   it('throws when no delimiter found', () => {
     expect(() => convertTsvCsvToMarkdown('single column')).toThrow('No delimiter found');
+  });
+
+  // T-TC-21: Known limitation — the CSV path is a naive split(','), with no
+  // RFC 4180 quote handling. A quoted field containing the delimiter is split
+  // at the embedded comma and the quotes leak into the cells. This test
+  // documents the current behavior; fixing it would need a real CSV parser.
+  it('T-TC-21: splits quoted CSV fields at embedded commas (documents limitation)', () => {
+    const csv = '"a,b",c\nx,y';
+    const result = convertTsvCsvToMarkdown(csv);
+    const lines = result.split('\n');
+    // "a,b" is broken into two cells ("a / b") instead of one (a,b).
+    expect(lines[0]).toBe('| "a | b" | c |');
+    expect(lines[2]).toBe('| x | y |');
   });
 
   // T-TC-16: Regression test for CRLF line endings (Issue #225)

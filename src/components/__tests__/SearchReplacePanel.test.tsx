@@ -18,7 +18,9 @@ function getOffset(content: string, lineNumber: number, column: number): number 
 
 function createMockEditor(content: string) {
   let currentContent = content;
-  // listeners reserved for future event simulation
+  // Content-change listeners: fired after executeEdits applies, mirroring
+  // Monaco's onDidChangeModelContent so the panel re-searches after a replace.
+  const contentListeners: (() => void)[] = [];
 
   const model = {
     getValue: () => currentContent,
@@ -59,8 +61,17 @@ function createMockEditor(content: string) {
           currentContent.substring(0, startOffset) + edit.text + currentContent.substring(endOffset);
       }
       model.getValue = () => currentContent;
+      for (const cb of [...contentListeners]) cb();
     }),
-    onDidChangeModelContent: vi.fn().mockReturnValue({ dispose: vi.fn() }),
+    onDidChangeModelContent: vi.fn().mockImplementation((cb: () => void) => {
+      contentListeners.push(cb);
+      return {
+        dispose: () => {
+          const i = contentListeners.indexOf(cb);
+          if (i >= 0) contentListeners.splice(i, 1);
+        },
+      };
+    }),
   };
 }
 
@@ -188,6 +199,176 @@ describe('SearchReplacePanel', () => {
 
     // Verify onChange was called with the replaced content
     expect(onChange).toHaveBeenCalledWith('qux bar qux baz qux');
+  });
+
+  // T-SR-13: single Replace replaces only the current match, then the
+  // re-search (via onDidChangeModelContent) makes the next occurrence current.
+  it('T-SR-13: single Replace replaces only the current match and advances', () => {
+    const editor = createMockEditor('foo bar foo baz foo');
+    const editorRef = { current: editor } as React.RefObject<never>;
+    const onChange = vi.fn();
+
+    render(
+      <SearchReplacePanel
+        editorRef={editorRef}
+        open={true}
+        onClose={vi.fn()}
+        onChange={onChange}
+        showReplaceDefault={true}
+      />,
+    );
+
+    const searchInput = screen.getByPlaceholderText('Search');
+    fireEvent.change(searchInput, { target: { value: 'foo' } });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(screen.getByText('1 of 3')).toBeInTheDocument();
+
+    const replaceInput = screen.getByPlaceholderText('Replace');
+    fireEvent.change(replaceInput, { target: { value: 'qux' } });
+
+    // Click "Replace" (single) — only the current (first) match is replaced
+    fireEvent.click(screen.getByText('Replace'));
+
+    expect(editor.executeEdits).toHaveBeenCalledTimes(1);
+    const [source, edits] = (editor.executeEdits as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(source).toBe('search-replace');
+    expect(edits).toHaveLength(1);
+
+    expect(onChange).toHaveBeenCalledWith('qux bar foo baz foo');
+    // Re-search found the 2 remaining matches; the next one is now current.
+    expect(screen.getByText('1 of 2')).toBeInTheDocument();
+  });
+
+  // T-SR-14: an invalid regex input must not crash; it yields zero matches
+  it('T-SR-14: invalid regex input shows no results instead of crashing', () => {
+    const editor = createMockEditor('hello (world)');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel editorRef={editorRef} open={true} onClose={vi.fn()} onChange={vi.fn()} />,
+    );
+
+    // Enable regex mode, then type an unclosed group
+    fireEvent.click(screen.getByText('.*'));
+    const searchInput = screen.getByPlaceholderText('Search');
+    fireEvent.change(searchInput, { target: { value: '(' } });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(screen.getByText('No results')).toBeInTheDocument();
+  });
+
+  // T-SR-15: whole-word toggle excludes substring matches
+  it('T-SR-15: whole word toggle excludes substring matches', () => {
+    const editor = createMockEditor('cat catalog\nmy cat');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel editorRef={editorRef} open={true} onClose={vi.fn()} onChange={vi.fn()} />,
+    );
+
+    const searchInput = screen.getByPlaceholderText('Search');
+    fireEvent.change(searchInput, { target: { value: 'cat' } });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    // Substring matching: "cat", "cat" in catalog, and "cat" on line 2
+    expect(screen.getByText('1 of 3')).toBeInTheDocument();
+
+    // Enable whole-word mode via the "ab" button
+    fireEvent.click(screen.getByText('ab'));
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    // "catalog" no longer matches
+    expect(screen.getByText('1 of 2')).toBeInTheDocument();
+  });
+
+  // T-SR-16: Enter advances through matches and wraps around to the first
+  it('T-SR-16: Enter moves to the next match and wraps around', () => {
+    const editor = createMockEditor('hello world\nhello again\nhello end');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel editorRef={editorRef} open={true} onClose={vi.fn()} onChange={vi.fn()} />,
+    );
+
+    const searchInput = screen.getByPlaceholderText('Search');
+    fireEvent.change(searchInput, { target: { value: 'hello' } });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(screen.getByText('1 of 3')).toBeInTheDocument();
+
+    fireEvent.keyDown(searchInput, { key: 'Enter' });
+    expect(screen.getByText('2 of 3')).toBeInTheDocument();
+    expect(editor.setSelection).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startLineNumber: 2 }),
+    );
+    expect(editor.revealLineInCenter).toHaveBeenLastCalledWith(2);
+
+    fireEvent.keyDown(searchInput, { key: 'Enter' });
+    expect(screen.getByText('3 of 3')).toBeInTheDocument();
+
+    // Wrap around from the last match back to the first
+    fireEvent.keyDown(searchInput, { key: 'Enter' });
+    expect(screen.getByText('1 of 3')).toBeInTheDocument();
+    expect(editor.setSelection).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startLineNumber: 1 }),
+    );
+  });
+
+  // T-SR-17: Shift+Enter moves backwards and wraps to the last match
+  it('T-SR-17: Shift+Enter moves to the previous match with wrap-around', () => {
+    const editor = createMockEditor('hello world\nhello again\nhello end');
+    const editorRef = { current: editor } as React.RefObject<never>;
+
+    render(
+      <SearchReplacePanel editorRef={editorRef} open={true} onClose={vi.fn()} onChange={vi.fn()} />,
+    );
+
+    const searchInput = screen.getByPlaceholderText('Search');
+    fireEvent.change(searchInput, { target: { value: 'hello' } });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(screen.getByText('1 of 3')).toBeInTheDocument();
+
+    // Backwards from the first match wraps to the last
+    fireEvent.keyDown(searchInput, { key: 'Enter', shiftKey: true });
+    expect(screen.getByText('3 of 3')).toBeInTheDocument();
+    expect(editor.setSelection).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startLineNumber: 3 }),
+    );
+  });
+
+  // T-SR-18: Escape closes the panel (document-level capture listener)
+  it('T-SR-18: Escape key closes the panel', () => {
+    const editor = createMockEditor('hello world');
+    const editorRef = { current: editor } as React.RefObject<never>;
+    const onClose = vi.fn();
+
+    render(
+      <SearchReplacePanel editorRef={editorRef} open={true} onClose={onClose} onChange={vi.fn()} />,
+    );
+
+    // The listener is on document (capture), so focus location does not matter
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   // -------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import { Box, Typography, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
+import React, { useRef, useState, useEffect } from 'react';
+import { Box, Typography, IconButton, Tooltip, Snackbar, Alert, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { Download, GridOn } from '@mui/icons-material';
+import { Download, GridOn, Description, PictureAsPdf } from '@mui/icons-material';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
 import { RenderingSettings, DEFAULT_RENDERING_SETTINGS, PreviewSettings, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
@@ -93,7 +93,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     isMarp,
   });
 
-  const { exportError, clearExportError, handleExportHTML } = useHtmlExport({
+  const { exportError, clearExportError, handleExportHTML, handleExportPDF } = useHtmlExport({
     processedContent,
     katexRestoreRef,
     renderingSettings,
@@ -101,6 +101,10 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     theme,
     tableLayout: previewSettings.tableLayout,
   });
+
+  // Anchor for the export-format menu (HTML / PDF).
+  const [exportMenuAnchor, setExportMenuAnchor] = useState<HTMLElement | null>(null);
+  const closeExportMenu = () => setExportMenuAnchor(null);
 
   // Outline jump in preview-only mode: scroll to the clicked heading. The
   // outline's Nth item maps to the Nth rendered heading element (#376). Deps are
@@ -128,11 +132,25 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         <Typography variant="subtitle2" color="text.secondary">
           Preview
         </Typography>
-        <Tooltip title="Export as HTML">
-          <IconButton size="small" onClick={handleExportHTML}>
+        <Tooltip title={t('preview.export', 'Export')}>
+          <IconButton size="small" onClick={(e) => setExportMenuAnchor(e.currentTarget)}>
             <Download />
           </IconButton>
         </Tooltip>
+        <Menu
+          anchorEl={exportMenuAnchor}
+          open={!!exportMenuAnchor}
+          onClose={closeExportMenu}
+        >
+          <MenuItem onClick={() => { closeExportMenu(); handleExportHTML(); }}>
+            <ListItemIcon><Description fontSize="small" /></ListItemIcon>
+            <ListItemText>{t('preview.exportAsHtml', 'Export as HTML')}</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => { closeExportMenu(); handleExportPDF(); }}>
+            <ListItemIcon><PictureAsPdf fontSize="small" /></ListItemIcon>
+            <ListItemText>{t('preview.exportAsPdf', 'Export as PDF')}</ListItemText>
+          </MenuItem>
+        </Menu>
       </Box>
       <RenderingFeatureNotice
         content={content}

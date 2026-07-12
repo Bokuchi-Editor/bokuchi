@@ -156,4 +156,34 @@ describe('useAutoSave', () => {
     await vi.advanceTimersByTimeAsync(3000);
     expect(showSaveStatus).not.toHaveBeenCalled();
   });
+
+  // T-AS-11: unmount cancels the pending timer. Without the effect cleanup an
+  // auto-save could fire after the tab/app context is gone and write through a
+  // stale saveTab closure.
+  it('T-AS-11: does not save after unmount', async () => {
+    const { unmount } = renderHook(() => useAutoSave(defaultParams()));
+
+    // Timer armed but not yet fired
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(saveTab).not.toHaveBeenCalled();
+
+    unmount();
+
+    // Well past the debounce — the cancelled timer must not fire
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(saveTab).not.toHaveBeenCalled();
+  });
+
+  // T-AS-12: saveTab resolving false (save declined/cancelled, e.g. conflict
+  // dialog flow) must not flash "saved" in the status bar — that would tell
+  // the user their edits are on disk when they are not. T-AS-10 covers the
+  // reject path; this covers the resolved-false path.
+  it('T-AS-12: does not show save status when saveTab resolves false', async () => {
+    saveTab.mockResolvedValue(false);
+    renderHook(() => useAutoSave(defaultParams()));
+
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(saveTab).toHaveBeenCalledWith('tab1');
+    expect(showSaveStatus).not.toHaveBeenCalled();
+  });
 });

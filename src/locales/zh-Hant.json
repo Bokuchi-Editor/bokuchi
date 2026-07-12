@@ -255,7 +255,7 @@
     "appearance": {
       "title": "外觀",
       "theme": "主題",
-      "themeDescription": "選擇應用程式介面的視覺主題。",
+      "themeDescription": "點擊卡片即可套用主題。複製任意主題即可自訂自己的配色。",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "預設集",
+      "customSection": "自訂主題",
+      "customEmptyGuide": "複製任意主題即可建立自己的配色組合。",
+      "newTheme": "新增主題",
+      "basePickerTitle": "選擇基礎主題",
+      "duplicate": "複製",
+      "editTheme": "編輯",
+      "deleteTheme": "刪除",
+      "deleteConfirmTitle": "刪除自訂主題",
+      "deleteConfirmMessage": "確定刪除「{{name}}」嗎？此操作無法復原。",
+      "deleteConfirmActiveNote": "此主題目前正在使用。刪除後將套用 Default 主題。",
+      "copyName": "{{name}} 副本",
+      "themeName": "主題名稱",
+      "editorModeLight": "淺色",
+      "editorModeDark": "深色",
+      "editorModeDescription": "編輯器區域使用 Monaco 內建的淺色/深色外觀，上述顏色設定不會影響它。",
+      "resetToBase": "將顏色重設為基礎主題（{{name}}）",
+      "backToDefault": "重設為 Default 主題",
+      "doneEditing": "完成",
+      "contrastWarning": "文字與背景的對比度較低，文字可能難以閱讀。",
+      "applied": "已套用",
+      "colors": {
+        "backgroundDefault": "背景",
+        "backgroundPaper": "表面",
+        "textPrimary": "文字",
+        "textSecondary": "次要文字",
+        "primaryMain": "主色",
+        "secondaryMain": "輔色",
+        "divider": "分隔線"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "請拖放 Markdown 檔案（.md 或 .markdown）",
     "dropMarkdownFile": "將 Markdown 檔案拖放到此處",
     "noActiveTab": "沒有活動標籤頁可儲存。請先開啟檔案。"
+  },
+  "imageInsert": {
+    "saveFirst": "請先儲存文件，以便使用相對路徑插入圖片",
+    "inserted": "已插入圖片",
+    "insertedMultiple": "已插入 {{count}} 張圖片",
+    "failed": "插入圖片失敗",
+    "dropHere": "將圖片拖放到此處"
   },
   "dialogs": {
     "saveChanges": "關閉前是否儲存變更？",

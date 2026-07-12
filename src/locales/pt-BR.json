@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Aparência",
       "theme": "Tema",
-      "themeDescription": "Escolha o tema visual para a interface da aplicação.",
+      "themeDescription": "Clique em um cartão para aplicar um tema. Duplique qualquer tema para personalizar suas próprias cores.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Predefinições",
+      "customSection": "Temas personalizados",
+      "customEmptyGuide": "Duplique qualquer tema para criar seu próprio conjunto de cores.",
+      "newTheme": "Novo tema",
+      "basePickerTitle": "Escolha um tema base",
+      "duplicate": "Duplicar",
+      "editTheme": "Editar",
+      "deleteTheme": "Excluir",
+      "deleteConfirmTitle": "Excluir tema personalizado",
+      "deleteConfirmMessage": "Excluir \"{{name}}\"? Esta ação não pode ser desfeita.",
+      "deleteConfirmActiveNote": "Este tema está aplicado no momento. Após a exclusão, o tema Default será aplicado.",
+      "copyName": "Cópia de {{name}}",
+      "themeName": "Nome do tema",
+      "editorModeLight": "Claro",
+      "editorModeDark": "Escuro",
+      "editorModeDescription": "O painel do editor usa o estilo claro/escuro integrado do Monaco — as cores acima não o afetam.",
+      "resetToBase": "Redefinir cores para a base ({{name}})",
+      "backToDefault": "Redefinir para o tema Default",
+      "doneEditing": "Concluído",
+      "contrastWarning": "Baixo contraste entre o texto e o fundo — o texto pode ficar difícil de ler.",
+      "applied": "Aplicado",
+      "colors": {
+        "backgroundDefault": "Fundo",
+        "backgroundPaper": "Superfície",
+        "textPrimary": "Texto",
+        "textSecondary": "Texto secundário",
+        "primaryMain": "Primária",
+        "secondaryMain": "Secundária",
+        "divider": "Divisor"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "Por favor, arraste um arquivo Markdown (.md ou .markdown)",
     "dropMarkdownFile": "Arraste o arquivo Markdown aqui",
     "noActiveTab": "Nenhuma aba ativa para salvar. Por favor, abra um arquivo primeiro."
+  },
+  "imageInsert": {
+    "saveFirst": "Salve o documento primeiro para inserir imagens com caminhos relativos",
+    "inserted": "Imagem inserida",
+    "insertedMultiple": "{{count}} imagens inseridas",
+    "failed": "Falha ao inserir a imagem",
+    "dropHere": "Solte a imagem aqui"
   },
   "dialogs": {
     "saveChanges": "Salvar alterações antes de fechar?",

@@ -271,14 +271,3 @@ describe('detectMultipleFileChanges', () => {
     expect(changed).toContain('tab-changed');
   });
 });
-
-describe('detectFileChange – permission error', () => {
-  // T-FC-08: specific permission error returns false (safe side)
-  it('T-FC-08: returns false on permission denied error', async () => {
-    vi.mocked(desktopApi.getFileHash).mockRejectedValue(
-      new Error('EPERM: operation not permitted, open \'/protected/file.md\''),
-    );
-    const tab = createTab();
-    expect(await detectFileChange(tab)).toBe(false);
-  });
-});

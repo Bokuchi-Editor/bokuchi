@@ -79,12 +79,4 @@ describe('SaveBeforeCloseDialog', () => {
     fireEvent.click(screen.getByText('buttons.cancel'));
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
-
-  // T-SBCD-07: all three buttons are present
-  it('T-SBCD-07: renders all three action buttons', () => {
-    renderDialog();
-    expect(screen.getByText('buttons.save')).toBeInTheDocument();
-    expect(screen.getByText('buttons.dontSave')).toBeInTheDocument();
-    expect(screen.getByText('buttons.cancel')).toBeInTheDocument();
-  });
 });

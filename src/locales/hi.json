@@ -255,7 +255,7 @@
     "appearance": {
       "title": "उपस्थिति",
       "theme": "थीम",
-      "themeDescription": "एप्लिकेशन इंटरफेस के लिए दृश्य थीम चुनें।",
+      "themeDescription": "थीम लागू करने के लिए कार्ड पर क्लिक करें। अपने रंग कस्टमाइज़ करने के लिए किसी भी थीम की प्रतिलिपि बनाएँ।",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "प्रीसेट",
+      "customSection": "कस्टम थीम",
+      "customEmptyGuide": "अपना रंग सेट बनाने के लिए किसी भी थीम की प्रतिलिपि बनाएँ।",
+      "newTheme": "नई थीम",
+      "basePickerTitle": "आधार थीम चुनें",
+      "duplicate": "प्रतिलिपि बनाएँ",
+      "editTheme": "संपादित करें",
+      "deleteTheme": "हटाएँ",
+      "deleteConfirmTitle": "कस्टम थीम हटाएँ",
+      "deleteConfirmMessage": "\"{{name}}\" को हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
+      "deleteConfirmActiveNote": "यह थीम वर्तमान में लागू है। हटाने के बाद Default थीम लागू हो जाएगी।",
+      "copyName": "{{name}} की प्रतिलिपि",
+      "themeName": "थीम का नाम",
+      "editorModeLight": "लाइट",
+      "editorModeDark": "डार्क",
+      "editorModeDescription": "एडिटर पैन Monaco की अंतर्निहित लाइट/डार्क स्किन का उपयोग करता है — ऊपर के रंग इस पर लागू नहीं होते।",
+      "resetToBase": "रंगों को आधार ({{name}}) पर रीसेट करें",
+      "backToDefault": "Default थीम पर रीसेट करें",
+      "doneEditing": "पूर्ण",
+      "contrastWarning": "टेक्स्ट और पृष्ठभूमि के बीच कंट्रास्ट कम है — टेक्स्ट पढ़ने में कठिनाई हो सकती है।",
+      "applied": "लागू",
+      "colors": {
+        "backgroundDefault": "पृष्ठभूमि",
+        "backgroundPaper": "सतह",
+        "textPrimary": "टेक्स्ट",
+        "textSecondary": "द्वितीयक टेक्स्ट",
+        "primaryMain": "प्राथमिक",
+        "secondaryMain": "द्वितीयक",
+        "divider": "विभाजक"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "कृपया एक Markdown फ़ाइल (.md या .markdown) ड्रॉप करें",
     "dropMarkdownFile": "Markdown फ़ाइल यहाँ ड्रॉप करें",
     "noActiveTab": "सहेजने के लिए कोई सक्रिय टैब नहीं। कृपया पहले एक फ़ाइल खोलें।"
+  },
+  "imageInsert": {
+    "saveFirst": "सापेक्ष पथ के साथ छवियाँ सम्मिलित करने के लिए पहले दस्तावेज़ सहेजें",
+    "inserted": "छवि सम्मिलित की गई",
+    "insertedMultiple": "{{count}} छवियाँ सम्मिलित की गईं",
+    "failed": "छवि सम्मिलित करने में विफल",
+    "dropHere": "छवि यहाँ छोड़ें"
   },
   "dialogs": {
     "saveChanges": "बंद करने से पहले परिवर्तन सहेजें?",

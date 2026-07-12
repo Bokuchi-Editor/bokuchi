@@ -1,6 +1,7 @@
 import { load, Store } from '@tauri-apps/plugin-store';
 import { AppState } from '../types/tab';
-import { ThemeName } from '../themes';
+import { ThemeId } from '../themes';
+import { CustomTheme, validateCustomTheme } from '../themes/customTheme';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { RecentFile } from '../types/recentFiles';
 
@@ -138,8 +139,8 @@ export const storeApi = {
     }
   },
 
-  // Save theme setting
-  async saveTheme(theme: ThemeName): Promise<void> {
+  // Save theme setting (preset ThemeName or custom theme id)
+  async saveTheme(theme: ThemeId): Promise<void> {
     try {
       const storeInstance = await getStore();
       await storeInstance.set('theme', theme);
@@ -150,15 +151,43 @@ export const storeApi = {
     }
   },
 
-  // Load theme setting
-  async loadTheme(): Promise<ThemeName> {
+  // Load theme setting (preset ThemeName or custom theme id)
+  async loadTheme(): Promise<ThemeId> {
     try {
       const storeInstance = await getStore();
-      const theme = await storeInstance.get('theme') as ThemeName;
+      const theme = await storeInstance.get('theme') as ThemeId;
       return theme || 'default';
     } catch (error) {
       console.error('Failed to load theme:', error);
       return 'default';
+    }
+  },
+
+  // Save user-created custom themes
+  async saveCustomThemes(customThemes: CustomTheme[]): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('customThemes', customThemes);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save custom themes:', error);
+      throw error;
+    }
+  },
+
+  // Load user-created custom themes. Corrupt entries are dropped (never
+  // crash startup on a bad store value); missing key yields an empty list.
+  async loadCustomThemes(): Promise<CustomTheme[]> {
+    try {
+      const storeInstance = await getStore();
+      const raw = await storeInstance.get('customThemes');
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .map((entry) => validateCustomTheme(entry))
+        .filter((entry): entry is CustomTheme => entry !== null);
+    } catch (error) {
+      console.error('Failed to load custom themes:', error);
+      return [];
     }
   },
 

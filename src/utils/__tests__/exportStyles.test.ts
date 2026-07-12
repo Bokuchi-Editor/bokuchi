@@ -22,22 +22,13 @@ describe('getExportThemeColors', () => {
     expect(colors.linkColor).toBe('#90caf9');
   });
 
-  it('returns darcula theme palette', () => {
-    const colors = getExportThemeColors('darcula');
-    expect(colors.backgroundColor).toBe('#2B2B2B');
-    expect(colors.linkColor).toBe('#CC7832');
-  });
-
-  it('returns dawn theme palette (new theme)', () => {
-    const colors = getExportThemeColors('dawn');
-    expect(colors.backgroundColor).toBe('#faf6f4');
-    expect(colors.linkColor).toBe('#785e4f');
-  });
-
-  it('returns ink theme palette (new theme)', () => {
-    const colors = getExportThemeColors('ink');
-    expect(colors.backgroundColor).toBe('#1f1f26');
-    expect(colors.linkColor).toBe('#a3a3ae');
+  it('resolves each non-default theme to its own palette (no exact hex pins — free to tune design)', () => {
+    const defaults = getExportThemeColors();
+    for (const theme of ['darcula', 'dawn', 'ink'] as const) {
+      const colors = getExportThemeColors(theme);
+      expect(colors.backgroundColor, theme).not.toBe(defaults.backgroundColor);
+      expect(colors.linkColor, theme).not.toBe(defaults.linkColor);
+    }
   });
 });
 
@@ -170,18 +161,6 @@ describe('buildExportHTML', () => {
     expect(html).toContain('#ffffff');
   });
 
-  it('uses darcula theme palette colors', () => {
-    const html = buildExportHTML('<p>Darcula</p>', true, 'darcula');
-    expect(html).toContain('#2B2B2B');
-    expect(html).toContain('#CC7832');
-  });
-
-  it('uses ink theme palette colors (new theme)', () => {
-    const html = buildExportHTML('<p>Ink</p>', true, 'ink');
-    expect(html).toContain('#1f1f26');
-    expect(html).toContain('#a3a3ae');
-  });
-
   it('honors an explicit tableLayout argument', () => {
     const equal = buildExportHTML('<p>x</p>', false, undefined, 'equal');
     expect(equal).toContain('table-layout: fixed');
@@ -189,5 +168,51 @@ describe('buildExportHTML', () => {
     const scroll = buildExportHTML('<p>x</p>', false, undefined, 'auto-scroll');
     expect(scroll).toContain('display: block');
     expect(scroll).toContain('overflow-x: auto');
+  });
+
+  // forPrint drives the PDF export path (print -> "Save as PDF"), which was
+  // previously untested end to end at this level.
+  describe('forPrint option (PDF export path)', () => {
+    const forPrint = (body: string) =>
+      buildExportHTML(body, false, undefined, undefined, undefined, { forPrint: true });
+
+    it('injects the print-media CSS (@page box and fragmentation hints)', () => {
+      const html = forPrint('<p>x</p>');
+      expect(html).toContain('@media print');
+      expect(html).toContain('@page { margin: 20mm; }');
+      expect(html).toContain('break-inside: avoid');
+      expect(html).toContain('.page-break { break-before: page; height: 0; }');
+      // Plain HTML export must stay free of print CSS.
+      expect(buildExportHTML('<p>x</p>', false)).not.toContain('@page');
+    });
+
+    it('turns <!-- pagebreak --> markers into .page-break divs (case/whitespace tolerant)', () => {
+      const html = forPrint(
+        '<p>a</p><!-- pagebreak --><p>b</p><!--PAGEBREAK--><p>c</p><!--  PageBreak  --><p>d</p>',
+      );
+      expect(html.match(/<div class="page-break"><\/div>/g)?.length).toBe(3);
+      expect(html).not.toContain('pagebreak');
+      expect(html).not.toContain('PAGEBREAK');
+      // Without forPrint the marker passes through untouched (clean HTML export).
+      const plain = buildExportHTML('<p>a</p><!-- pagebreak --><p>b</p>', false);
+      expect(plain).toContain('<!-- pagebreak -->');
+      expect(plain).not.toContain('page-break');
+    });
+
+    it('forces the Default theme and light mode regardless of the on-screen theme', () => {
+      // Documented in the buildExportHTML docstring: PDF is always exported
+      // with the Default (white bg, black text) theme so printed pages stay
+      // readable and margins stay white.
+      const html = buildExportHTML('<p>x</p>', true, 'dark', undefined, undefined, {
+        forPrint: true,
+      });
+      const defaults = getExportThemeColors();
+      const dark = getExportThemeColors('dark');
+      expect(html).toContain(defaults.backgroundColor);
+      expect(html).not.toContain(dark.backgroundColor);
+      // Highlight.js CSS is the light variant even though darkMode=true was passed.
+      expect(html).toContain(getHighlightStyleDataUri(false));
+      expect(html).not.toContain(getHighlightStyleDataUri(true));
+    });
   });
 });

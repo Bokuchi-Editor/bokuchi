@@ -255,7 +255,7 @@
     "appearance": {
       "title": "Penampilan",
       "theme": "Tema",
-      "themeDescription": "Pilih tema visual untuk antarmuka aplikasi.",
+      "themeDescription": "Klik kartu untuk menerapkan tema. Duplikasi tema mana pun untuk menyesuaikan warna Anda sendiri.",
       "themes": {
         "default": "Default",
         "dark": "Dark",
@@ -266,6 +266,36 @@
         "silk": "Silk",
         "ink": "Ink",
         "darcula": "Darcula"
+      },
+      "presetSection": "Prasetel",
+      "customSection": "Tema Kustom",
+      "customEmptyGuide": "Duplikasi tema mana pun untuk membuat set warna Anda sendiri.",
+      "newTheme": "Tema Baru",
+      "basePickerTitle": "Pilih tema dasar",
+      "duplicate": "Duplikasi",
+      "editTheme": "Edit",
+      "deleteTheme": "Hapus",
+      "deleteConfirmTitle": "Hapus Tema Kustom",
+      "deleteConfirmMessage": "Hapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+      "deleteConfirmActiveNote": "Tema ini sedang diterapkan. Setelah dihapus, tema Default akan diterapkan.",
+      "copyName": "Salinan {{name}}",
+      "themeName": "Nama Tema",
+      "editorModeLight": "Terang",
+      "editorModeDark": "Gelap",
+      "editorModeDescription": "Panel editor menggunakan skin Terang/Gelap bawaan Monaco — warna di atas tidak memengaruhinya.",
+      "resetToBase": "Atur ulang warna ke dasar ({{name}})",
+      "backToDefault": "Atur ulang ke tema Default",
+      "doneEditing": "Selesai",
+      "contrastWarning": "Kontras antara teks dan latar belakang rendah — teks mungkin sulit dibaca.",
+      "applied": "Diterapkan",
+      "colors": {
+        "backgroundDefault": "Latar Belakang",
+        "backgroundPaper": "Permukaan",
+        "textPrimary": "Teks",
+        "textSecondary": "Teks Sekunder",
+        "primaryMain": "Primer",
+        "secondaryMain": "Sekunder",
+        "divider": "Pembatas"
       }
     },
     "globalVariables": {
@@ -446,6 +476,13 @@
     "noMarkdownFiles": "Silakan letakkan file Markdown (.md atau .markdown)",
     "dropMarkdownFile": "Letakkan file Markdown di sini",
     "noActiveTab": "Tidak ada tab aktif untuk disimpan. Silakan buka file terlebih dahulu."
+  },
+  "imageInsert": {
+    "saveFirst": "Simpan dokumen terlebih dahulu untuk menyisipkan gambar dengan jalur relatif",
+    "inserted": "Gambar disisipkan",
+    "insertedMultiple": "{{count}} gambar disisipkan",
+    "failed": "Gagal menyisipkan gambar",
+    "dropHere": "Letakkan gambar di sini"
   },
   "dialogs": {
     "saveChanges": "Simpan perubahan sebelum menutup?",

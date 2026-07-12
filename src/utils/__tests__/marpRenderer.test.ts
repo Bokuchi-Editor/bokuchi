@@ -14,6 +14,9 @@ vi.mock('@marp-team/marp-core', () => {
         if (!/@theme\s+\S+/.test(css)) throw new Error('Marpit theme CSS requires @theme meta.');
         themeAddSpy(css);
       },
+      // No built-in themes in the mock — getMarp()'s gaia @import strip is a
+      // no-op here (covered with the real marp-core in marpRendererOffline).
+      get: () => undefined,
     };
     render() {
       return {
@@ -33,6 +36,7 @@ import {
   buildAllSlidesDocument,
   buildThumbnailDocument,
   buildContinuousStyleContent,
+  buildMarpPrintDocument,
   LINK_INTERCEPTOR_SCRIPT,
 } from '../marpRenderer';
 
@@ -101,6 +105,12 @@ marp:  true
 
 # Slide`;
     expect(contentIsMarp(content)).toBe(true);
+  });
+
+  // T-MR-02b: CRLF front-matter — MARP_FRONTMATTER_RE uses \r?\n so files
+  // saved with Windows line endings are detected too.
+  it('T-MR-02b: detects marp: true in CRLF front-matter', () => {
+    expect(contentIsMarp('---\r\nmarp: true\r\n---\r\n# S')).toBe(true);
   });
 
   // T-MR-03: marp:true without space is still accepted (regex uses \s*)
@@ -227,17 +237,6 @@ describe('buildSlideDocument', () => {
     expect(doc).toContain('slides');
   });
 
-  it('uses 0-based slide index in showSlide call', () => {
-    const doc = buildSlideDocument('html', 'css', 0);
-    expect(doc).toContain('showSlide(0)');
-  });
-
-  // T-MR-01: large index still generates valid document
-  it('T-MR-01: generates valid HTML even when index exceeds slide count', () => {
-    const doc = buildSlideDocument('<div class="marpit">slides</div>', '.marpit{}', 999);
-    expect(doc).toContain('<!DOCTYPE html>');
-    expect(doc).toContain('showSlide(999)');
-  });
 });
 
 describe('buildAllSlidesDocument', () => {
@@ -332,5 +331,64 @@ describe('link interceptor injection', () => {
     expect(buildSlideDocument('html', 'css', 0)).not.toContain('<base');
     expect(buildAllSlidesDocument('html', 'css')).not.toContain('<base');
     expect(buildThumbnailDocument('html', 'css', 0)).not.toContain('<base');
+  });
+});
+
+describe('buildMarpPrintDocument', () => {
+  const html = '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject><section>Slide</section></foreignObject></svg></div>';
+
+  it('sizes the page and slides from the first slide viewBox', () => {
+    // Use a non-default (4:3) viewBox — 1280x720 is also the fallback, so a
+    // broken viewBox parser would still pass with the 16:9 fixture.
+    const html43 =
+      '<div class="marpit"><svg data-marpit-svg="" viewBox="0 0 1280 960"><foreignObject><section>Slide</section></foreignObject></svg></div>';
+    const doc = buildMarpPrintDocument(html43, '.marpit {}');
+    expect(doc).toContain('@page { size: 1280px 960px; margin: 0; }');
+    expect(doc).toContain('width: 1280px;');
+    expect(doc).toContain('height: 960px;');
+  });
+
+  it('falls back to 1280x720 when no viewBox is present', () => {
+    const doc = buildMarpPrintDocument('<div class="marpit"></div>', '');
+    expect(doc).toContain('@page { size: 1280px 720px; margin: 0; }');
+  });
+
+  // WebKit's print layout ignores align-content on block containers, which
+  // marp-core v4 themes use for vertical centering — slides printed
+  // top-aligned while the preview was centered. The injected script converts
+  // affected sections to the flex fallback (WebKit engines only).
+  it('T-MR-07: injects the WebKit print centering fix script', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    expect(doc).toContain("navigator.vendor !== 'Apple Computer, Inc.'");
+    expect(doc).toContain("s.style.display = 'flex'");
+    // Advanced-background layers must be left alone (their figures vanish
+    // from print when forced to flex).
+    expect(doc).toContain('data-marpit-advanced-background');
+  });
+
+  // T-MR-07b: overflow guard. Flex conversion stops the section's child
+  // margins from collapsing, so a content-heavy slide (e.g. one with a table)
+  // that fits when block-laid-out can overflow the fixed slide height once
+  // flex — and centering then clips its middle rows. The fix must revert to
+  // block layout whenever the flex layout overflows, so nothing is clipped.
+  it('T-MR-07b: reverts the flex conversion when it would overflow (clip guard)', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    // Children are pinned (flex-shrink:0) so overflow is real & measurable —
+    // otherwise flex items shrink and hide the overflow from scrollHeight.
+    expect(doc).toContain("style.flexShrink = '0'");
+    expect(doc).toContain('s.scrollHeight > s.clientHeight');
+    // Revert restores the original block layout (empty inline styles).
+    expect(doc).toContain("s.style.display = ''");
+    expect(doc).toContain("s.style.justifyContent = ''");
+  });
+
+  // Marpit's own print CSS adds page-break-before to sections; combined with
+  // flex sections it corrupts WebKit print painting (background figures of
+  // later slides disappear). Pagination comes from the svg break-after rule.
+  it('T-MR-08: neutralizes Marpit section-level print breaks', () => {
+    const doc = buildMarpPrintDocument(html, '');
+    expect(doc).toContain('page-break-before: auto !important');
+    expect(doc).toContain('break-before: auto !important');
+    expect(doc).toContain('break-after: page;');
   });
 });

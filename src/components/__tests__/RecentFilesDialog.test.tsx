@@ -16,6 +16,7 @@ vi.mock('../../api/desktopApi', () => ({
 
 import RecentFilesDialog from '../RecentFilesDialog';
 import { storeApi } from '../../api/storeApi';
+import { desktopApi } from '../../api/desktopApi';
 import { asMock } from '../../test-utils';
 
 const sampleFiles = [
@@ -45,7 +46,9 @@ describe('RecentFilesDialog', () => {
   beforeEach(() => {
     onClose = vi.fn();
     onFileSelect = vi.fn();
-    vi.mocked(storeApi.loadRecentFiles).mockResolvedValue(sampleFiles);
+    vi.mocked(storeApi.loadRecentFiles).mockClear().mockResolvedValue(sampleFiles);
+    vi.mocked(storeApi.removeRecentFile).mockClear();
+    vi.mocked(desktopApi.readFileByPath).mockResolvedValue({ content: 'hello' });
   });
 
   const renderDialog = (open = true) =>
@@ -137,5 +140,43 @@ describe('RecentFilesDialog', () => {
     await waitFor(() => {
       expect(screen.getByText('3')).toBeInTheDocument(); // openCount for readme.md
     });
+  });
+
+  // T-RFD-09: clicking a file item opens it and closes the dialog
+  it('T-RFD-09: calls onFileSelect and onClose when a readable file is clicked', async () => {
+    renderDialog();
+    await waitFor(() => {
+      expect(screen.getByText('readme.md')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('readme.md'));
+
+    await waitFor(() => {
+      expect(onFileSelect).toHaveBeenCalledWith('/docs/readme.md');
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
+    expect(vi.mocked(desktopApi.readFileByPath)).toHaveBeenCalledWith('/docs/readme.md');
+  });
+
+  // T-RFD-10: unreadable file shows an error, is removed from recents, and list is reloaded
+  it('T-RFD-10: shows fileNotFound and removes entry when file cannot be read', async () => {
+    vi.mocked(desktopApi.readFileByPath).mockResolvedValue({ content: '', error: 'File not found' });
+    renderDialog();
+    await waitFor(() => {
+      expect(screen.getByText('readme.md')).toBeInTheDocument();
+    });
+    // Dialog-open effect already triggered one load
+    expect(vi.mocked(storeApi.loadRecentFiles)).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByText('readme.md'));
+
+    await waitFor(() => {
+      expect(screen.getByText('recentFiles.fileNotFound')).toBeInTheDocument();
+    });
+    expect(vi.mocked(storeApi.removeRecentFile)).toHaveBeenCalledWith('/docs/readme.md');
+    // List is reloaded after removal
+    expect(vi.mocked(storeApi.loadRecentFiles)).toHaveBeenCalledTimes(2);
+    expect(onFileSelect).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
   });
 });

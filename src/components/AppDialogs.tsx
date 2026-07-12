@@ -9,6 +9,7 @@ import WhatsNewDialog from './WhatsNewDialog';
 import { AppSettings } from '../types/settings';
 import { SettingsFocusTarget } from '../types/settingsFocus';
 import { UpdateInfo, DownloadProgress } from '../api/updaterApi';
+import { CustomTheme } from '../themes/customTheme';
 
 export interface AppDialogsProps {
   // Snackbar state
@@ -71,6 +72,10 @@ export interface AppDialogsProps {
   // Easter eggs
   as400Unlocked?: boolean;
 
+  // Custom themes
+  customThemes: CustomTheme[];
+  onCustomThemesChange: (customThemes: CustomTheme[]) => void;
+
   // Translation
   t: (key: string, options?: Record<string, string | number>) => string;
 }
@@ -102,6 +107,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
   onUpdate,
   onDismissUpdate,
   as400Unlocked,
+  customThemes,
+  onCustomThemesChange,
   t,
 }) => {
   return (
@@ -139,6 +146,8 @@ const AppDialogs: React.FC<AppDialogsProps> = ({
         onSettingsChange={onSettingsChange}
         as400Unlocked={as400Unlocked}
         focusTarget={settingsFocusTarget ?? null}
+        customThemes={customThemes}
+        onCustomThemesChange={onCustomThemesChange}
       />
 
       {/* Help dialog */}

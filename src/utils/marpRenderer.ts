@@ -34,12 +34,32 @@ async function getMarp(): Promise<Marp> {
   //  - emoji as native Unicode (system font) instead of fetching Twemoji images.
   //  - katexFontPath false drops the CDN @font-face URLs; renderMarp() appends the
   //    locally-bundled, data-URL KaTeX CSS instead when a slide contains math.
-  return new MarpClass({
+  const marp = new MarpClass({
     script: { source: 'inline' },
     emoji: { shortcode: true, unicode: false },
     math: { katexFontPath: false },
   });
+  // The built-in gaia theme additionally @imports its Lato / Roboto Mono
+  // webfonts from the fonts.bunny.net CDN. Re-register it with the external
+  // @import stripped (theme-name imports like `@import "gaia"` are untouched,
+  // so custom themes extending gaia inherit the stripped copy); renderMarp()
+  // appends the same faces from the local bundle instead.
+  const gaia = marp.themeSet.get('gaia');
+  if (gaia) {
+    marp.themeSet.add(gaia.css.replace(EXTERNAL_CSS_IMPORT_RE, ''));
+  }
+  return marp;
 }
+
+// Matches `@import "https://…";` / `@import url("https://…");` — external
+// stylesheet imports only. Marpit theme-name imports (`@import "gaia";`) must
+// not match.
+const EXTERNAL_CSS_IMPORT_RE = /@import\s+(?:url\()?["']https?:\/\/[^"']+["']\)?\s*;?/g;
+
+// Font families of the gaia webfonts stripped above. Any rendered CSS that
+// references them (gaia, a custom theme extending it, or a theme using the
+// same families) gets the locally-bundled faces appended.
+const GAIA_FONT_FAMILY_RE = /font-family:[^;{}]*(?:\bLato\b|Roboto Mono)/;
 
 // YAML front-matter is delimited by `---` lines and must sit at the very start
 // of the document. Anchoring the opening fence to position 0 prevents matches
@@ -94,6 +114,13 @@ export async function renderMarp(
   if (html.includes('katex')) {
     const { KATEX_EXPORT_CSS } = await import('./katexExportCss');
     finalCss = `${css}\n${KATEX_EXPORT_CSS}`;
+  }
+  // Same deal for the gaia webfonts stripped in getMarp(): supply Lato /
+  // Roboto Mono from the local bundle, only when this deck's CSS actually
+  // references them (~220 kB of data-URL fonts otherwise skipped).
+  if (GAIA_FONT_FAMILY_RE.test(css)) {
+    const { GAIA_FONTS_CSS } = await import('./gaiaThemeFonts');
+    finalCss = `${finalCss}\n${GAIA_FONTS_CSS}`;
   }
   const slideCount = countSlides(html);
   return { html, css: finalCss, slideCount };
@@ -471,6 +498,138 @@ div.marpit {
  */
 export function buildContinuousStyleContent(css: string): string {
   return `${css}\n${CONTINUOUS_WRAPPER_STYLES}`;
+}
+
+/**
+ * WebKit's *print* layout engine ignores `align-content` on block containers
+ * (the screen engine supports it). marp-core v4 themes vertically center slide
+ * content with exactly that pattern — `section { display: block;
+ * place-content: … }` — so a natively-printed PDF comes out top-aligned while
+ * the preview (screen layout) is centered.
+ *
+ * This script, run inside the print document before the native print fires,
+ * converts only the affected sections to the equivalent flex layout: themes
+ * keep a legacy `flex-flow: column nowrap` on section, under which
+ * `justify-content` reproduces the block-axis alignment `align-content` asked
+ * for. Sections that don't use block-axis alignment (and non-block layouts
+ * like grid or themes that are flex already) are left untouched.
+ *
+ * Overflow guard: a `section` is a fixed-height box with `overflow: hidden`.
+ * Switching it from block to flex stops vertical margins between its children
+ * from collapsing, so a slide that just fits when block-laid-out can grow past
+ * the slide height once it is flex — and `justify-content: center` then splits
+ * the overflow so it clips *inside* the content (e.g. a table's lower rows are
+ * cut off while the heading and trailing text survive). We therefore keep the
+ * flex conversion only when it does not introduce overflow; otherwise the
+ * section reverts to its original block layout (top-aligned, nothing clipped),
+ * which is strictly better than a mid-content clip. Sparse slides
+ * (title/chapter/…) still fit and stay centered.
+ *
+ * Chromium (Windows/WebView2) prints block `align-content` correctly — same
+ * engine as Marp CLI — so the fix is gated to WebKit via navigator.vendor
+ * (Apple on both macOS WKWebView and Linux webkit2gtk).
+ */
+const MARP_PRINT_CENTERING_FIX = `
+(function () {
+  if (navigator.vendor !== 'Apple Computer, Inc.') return;
+  var sections = document.querySelectorAll('div.marpit > svg > foreignObject > section');
+  for (var i = 0; i < sections.length; i++) {
+    var s = sections[i];
+    /* Marpit advanced-background layers ("background"/"pseudo") are section
+       elements too, but they lay out bg figures, not slide content — forcing
+       flex on them breaks split backgrounds. Only touch content layers. */
+    var bgLayer = s.getAttribute('data-marpit-advanced-background');
+    if (bgLayer === 'background' || bgLayer === 'pseudo') continue;
+    var cs = getComputedStyle(s);
+    var ac = cs.alignContent;
+    if (cs.display !== 'block' || !ac || ac === 'normal' || ac === 'start' || ac === 'flex-start') continue;
+    s.style.display = 'flex';
+    s.style.flexFlow = 'column nowrap';
+    /* Drop overflow-safety keywords: 'safe center' centers via justify-content
+       in the flex fallback, matching what place-content resolves to. */
+    s.style.justifyContent = ac.replace(/\\b(?:safe|unsafe)\\s+/g, '');
+    /* Pin children at their natural size. Flex items default to flex-shrink:1,
+       so an overflowing column *shrinks* them to fit the fixed-height section —
+       the section's scrollHeight then equals its clientHeight (no overflow
+       reported) even though the children's own content is clipped (a table's
+       lower rows vanish). Pinning shrink to 0 makes the overflow real and
+       measurable, so the guard below can detect it. */
+    var kids = s.children;
+    for (var k = 0; k < kids.length; k++) kids[k].style.flexShrink = '0';
+    /* Revert if the flex layout overflows — a mid-content clip is worse than a
+       top-aligned slide (see "Overflow guard" above). */
+    if (s.scrollHeight > s.clientHeight + 1) {
+      s.style.display = '';
+      s.style.flexFlow = '';
+      s.style.justifyContent = '';
+      for (var r = 0; r < kids.length; r++) kids[r].style.flexShrink = '';
+    }
+  }
+})();
+`;
+
+/**
+ * Build a print-ready document for PDF export of Marp slides: one slide per
+ * page. The page box is sized to the slide's own pixel dimensions (read from
+ * the first slide's viewBox, default 1280×720 for 16:9) so each slide fills its
+ * page with the correct aspect ratio and no surrounding margin.
+ */
+export function buildMarpPrintDocument(html: string, css: string): string {
+  const vb = html.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/);
+  const slideWidth = vb ? vb[1] : '1280';
+  const slideHeight = vb ? vb[2] : '720';
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+${css}
+
+html, body { margin: 0; padding: 0; background: #fff; }
+div.marpit { padding: 0; }
+/* Render each slide SVG at its intrinsic pixel size (matching the page), so the
+   scale factor is exactly 1. Scaling the SVG (width:100%) made WebKit reflow the
+   slide's <foreignObject> contents during printing, which broke the vertical
+   centering and image sizing. At scale 1 the slide prints exactly as previewed. */
+div.marpit > svg[data-marpit-svg] {
+  display: block;
+  width: ${slideWidth}px;
+  height: ${slideHeight}px;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  break-after: page;
+}
+div.marpit > svg[data-marpit-svg]:last-child { break-after: auto; }
+
+/* Marpit's own print CSS puts page-break-before on every section (meant for
+   its non-SVG output). Pagination here comes from the svg's break-after
+   above, and in WebKit the section-level break rule corrupts print painting
+   once sections are flex (the centering fix below): background figures of
+   *later* slides with an explicit background-size silently disappear from
+   the printed pages. Neutralize the section-level breaks. */
+@media print {
+  div.marpit > svg > foreignObject > section {
+    page-break-before: auto !important;
+    break-before: auto !important;
+  }
+}
+
+/* Mermaid diagrams rendered inside slides */
+.mermaid-diagram { display: flex; justify-content: center; margin: 0.5em 0; max-width: 100%; }
+.mermaid-diagram svg { max-width: 100%; max-height: 100%; height: auto; }
+.mermaid-error { margin: 0.5em 0; }
+
+@media print {
+  @page { size: ${slideWidth}px ${slideHeight}px; margin: 0; }
+  html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>${html}
+<script>${MARP_PRINT_CENTERING_FIX}</script>
+</body>
+</html>`;
 }
 
 export function buildAllSlidesDocument(html: string, css: string): string {

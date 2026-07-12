@@ -6,19 +6,30 @@ import { Search } from '@mui/icons-material';
 import SearchReplacePanel from './SearchReplacePanel';
 import { useTranslation } from 'react-i18next';
 import { TableConversionDialog } from './TableConversionDialog';
-import { htmlTableToMarkdown, validateMarkdownTable, convertTsvCsvToMarkdown } from '../utils/tableConverter';
 import MarkdownToolbar from './MarkdownToolbar';
 import { Tab } from '../types/tab';
 import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
-import { findTableBlock, isTableSeparatorLine } from '../utils/tableFormatter';
-import { formatTableInEditor, handleTableEnter, handleTableTab } from '../utils/tableEditorActions';
-import { countWords } from '../utils/wordCount';
+import { registerEditorActions } from '../utils/registerEditorActions';
+import { classifyPaste } from '../utils/pasteClassifier';
+import { computeEditorStatus } from '../utils/editorStatus';
+import { desktopApi } from '../api/desktopApi';
+import {
+  IMAGE_SUBDIR,
+  isImageFilePath,
+  imageExtFromMime,
+  generatePastedImageName,
+  relativeImagePath,
+  documentDir,
+  buildImageMarkdown,
+} from '../utils/imageInsertion';
 
 interface EditorProps {
   content: string;
   onChange: (content: string) => void;
   darkMode: boolean;
   theme?: string;
+  /** Absolute path of the active document; used to resolve image links on paste/drop. */
+  filePath?: string;
   fileNotFound?: {
     filePath: string;
     onClose: () => void;
@@ -53,10 +64,26 @@ interface EditorProps {
   onTabSwitch?: (tabId: string) => void;
 }
 
+/** Extract the first image file from clipboard data, or null if there is none. */
+function getClipboardImageFile(dt: DataTransfer | null): File | null {
+  if (!dt) return null;
+  for (const f of dt.files ? Array.from(dt.files) : []) {
+    if (f.type.startsWith('image/')) return f;
+  }
+  for (const item of dt.items ? Array.from(dt.items) : []) {
+    if (item.kind === 'file' && item.type.startsWith('image/')) {
+      const f = item.getAsFile();
+      if (f) return f;
+    }
+  }
+  return null;
+}
+
 const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
   darkMode,
+  filePath,
   fileNotFound,
   onStatusChange,
   zoomLevel = 1.0,
@@ -83,6 +110,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
   const [showReplaceDefault, setShowReplaceDefault] = useState(false);
   const [searchPanelHeight, setSearchPanelHeight] = useState(0);
+  const [isImageDragOver, setIsImageDragOver] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
     open: boolean;
     markdownTable: string;
@@ -202,6 +230,99 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     }
   }, []);
 
+  // Latest values reachable from listeners that are registered once (drag-drop).
+  const filePathRef = useRef(filePath);
+  filePathRef.current = filePath;
+  const onSnackbarRef = useRef(onSnackbar);
+  onSnackbarRef.current = onSnackbar;
+  const tRef = useRef(t);
+  tRef.current = t;
+
+  // Insert text at an explicit editor position (or the current selection/caret
+  // when omitted). Used by image paste/drop, which need to place the link where
+  // the user dropped rather than always at the caret.
+  const insertTextAt = useCallback((text: string, position?: { lineNumber: number; column: number }) => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    let range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number };
+    if (position) {
+      range = {
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column,
+      };
+    } else {
+      const sel = ed.getSelection();
+      const pos = ed.getPosition();
+      if (sel) {
+        range = sel;
+      } else if (pos) {
+        range = { startLineNumber: pos.lineNumber, startColumn: pos.column, endLineNumber: pos.lineNumber, endColumn: pos.column };
+      } else {
+        return;
+      }
+    }
+    ed.executeEdits('image-insert', [{ range, text, forceMoveMarkers: true }]);
+    ed.focus();
+  }, []);
+
+  // Paste path: write a clipboard bitmap (no source file) into the document's
+  // images/ folder with a timestamped name, then insert the Markdown link.
+  const insertImageFromClipboard = useCallback(async (file: File) => {
+    const docPath = filePathRef.current;
+    if (!docPath) {
+      onSnackbarRef.current?.(tRef.current('imageInsert.saveFirst'), 'warning');
+      return;
+    }
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const ext = imageExtFromMime(file.type || 'image/png');
+      const name = generatePastedImageName(new Date(), ext);
+      const rel = await desktopApi.saveImageBytes(documentDir(docPath), IMAGE_SUBDIR, name, bytes);
+      insertTextAt(buildImageMarkdown(rel));
+      onSnackbarRef.current?.(tRef.current('imageInsert.inserted'), 'success');
+    } catch (error) {
+      console.error('Failed to insert pasted image:', error);
+      onSnackbarRef.current?.(tRef.current('imageInsert.failed'), 'error');
+    }
+  }, [insertTextAt]);
+
+  // Drop path: reference images already inside the document folder in place;
+  // copy images from outside into images/. Insert all links at the drop point.
+  const insertImagesFromPaths = useCallback(async (paths: string[], position?: { x: number; y: number }) => {
+    const docPath = filePathRef.current;
+    if (!docPath) {
+      onSnackbarRef.current?.(tRef.current('imageInsert.saveFirst'), 'warning');
+      return;
+    }
+    const dir = documentDir(docPath);
+    try {
+      const links: string[] = [];
+      for (const p of paths) {
+        const rel = relativeImagePath(dir, p) ?? (await desktopApi.copyImageAsset(p, dir, IMAGE_SUBDIR));
+        links.push(buildImageMarkdown(rel));
+      }
+      // Map the physical drop coordinates to an editor position (fallback: caret).
+      let pos: { lineNumber: number; column: number } | undefined;
+      const ed = editorRef.current;
+      if (ed && position) {
+        const dpr = window.devicePixelRatio || 1;
+        const target = ed.getTargetAtClientPoint(position.x / dpr, position.y / dpr);
+        pos = target?.position ?? undefined;
+      }
+      insertTextAt(links.join('\n'), pos);
+      const message =
+        links.length > 1
+          ? tRef.current('imageInsert.insertedMultiple', { count: links.length })
+          : tRef.current('imageInsert.inserted');
+      onSnackbarRef.current?.(message, 'success');
+    } catch (error) {
+      console.error('Failed to insert dropped image(s):', error);
+      onSnackbarRef.current?.(tRef.current('imageInsert.failed'), 'error');
+    }
+  }, [insertTextAt]);
+
   const handlePasteWithData = useCallback(async (htmlData: string, plainText: string) => {
 
     try {
@@ -211,27 +332,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         return;
       }
 
-      let markdownTable = '';
-
-      // Step 1: Search and convert HTML tables
-      if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
-        markdownTable = htmlTableToMarkdown(htmlData);
-      }
-      // Step 2: Search and convert TSV/CSV in plain text
-      else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-        markdownTable = convertTsvCsvToMarkdown(plainText);
-      }
-      else {
+      const classification = classifyPaste(htmlData, plainText);
+      if (classification.kind === 'plain') {
         insertPlainText(plainText);
         return;
       }
-
-      // Validate conversion result
-      if (!validateMarkdownTable(markdownTable)) {
-        insertPlainText(plainText);
-        return;
-      }
-
+      const { markdownTable } = classification;
 
       // Process according to settings
       if (tableConversion === 'auto') {
@@ -239,16 +345,12 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         insertMarkdownTable(markdownTable);
         onSnackbar?.(t('tableConversion.conversionSuccess'), 'success');
       } else if (tableConversion === 'confirm') {
-        // Show confirmation dialog
-        // Save clipboard data immediately (save data, not object)
-        const savedData = {
-          plainText: plainText,
-          htmlData: htmlData
-        };
+        // Show confirmation dialog. Save the clipboard data (a copy, not the
+        // event object) so it survives until the user decides.
         setTableConversionDialog({
           open: true,
           markdownTable,
-          clipboardData: savedData,
+          clipboardData: { plainText, htmlData },
         });
       }
     } catch (error) {
@@ -318,6 +420,16 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           return;
         }
 
+        // Image paste: a screenshot / copied bitmap arrives as a file item on the
+        // clipboard. Save it beside the document and insert a Markdown link.
+        const imageFile = getClipboardImageFile(e.clipboardData);
+        if (imageFile) {
+          e.preventDefault();
+          e.stopPropagation();
+          await insertImageFromClipboard(imageFile);
+          return;
+        }
+
         // Normal paste processing
         // Prevent default paste processing
         e.preventDefault();
@@ -343,8 +455,45 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       document.removeEventListener('paste', handleGlobalPaste, true);
       document.removeEventListener('keydown', handleKeyDown, true);
       document.removeEventListener('keyup', handleKeyUp, true);
+      // (drag-drop listener is torn down in its own effect below)
     };
-  }, [tableConversion, handlePasteWithData, insertPlainText, onSnackbar]);
+  }, [tableConversion, handlePasteWithData, insertPlainText, insertImageFromClipboard, onSnackbar]);
+
+  // Drag & drop image insertion. Registered once (reads the latest doc path via
+  // filePathRef). Only image files are handled here; App.tsx's window-level
+  // listener still opens dropped .md/.txt documents, so the two coexist by
+  // acting on disjoint file types.
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    let disposed = false;
+    (async () => {
+      const { getCurrentWebview } = await import('@tauri-apps/api/webview');
+      if (disposed) return;
+      unlisten = await getCurrentWebview().onDragDropEvent(async (event) => {
+        const payload = event.payload;
+        if (payload.type === 'enter') {
+          // Show a drop hint while an image is being dragged in.
+          setIsImageDragOver(payload.paths.some(isImageFilePath));
+          return;
+        }
+        if (payload.type === 'leave') {
+          setIsImageDragOver(false);
+          return;
+        }
+        if (payload.type === 'drop') {
+          setIsImageDragOver(false);
+          if (!editorRef.current) return;
+          const imagePaths = payload.paths.filter(isImageFilePath);
+          if (imagePaths.length === 0) return; // documents are handled elsewhere
+          await insertImagesFromPaths(imagePaths, payload.position);
+        }
+      });
+    })();
+    return () => {
+      disposed = true;
+      if (unlisten) unlisten();
+    };
+  }, [insertImagesFromPaths]);
 
   // Robust focus function with Tauri window focus + retry
   const focusEditor = useCallback(async (editorInstance?: editor.IStandaloneCodeEditor) => {
@@ -420,7 +569,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     disposablesRef.current.forEach(d => d.dispose());
     disposablesRef.current = [];
 
-    // Set up search and replace keyboard shortcuts
+    // Register search shortcuts and smart table/list editing actions.
     try {
       // Prefer the monaco namespace from @monaco-editor/react's onMount
       // argument; it is always provided at runtime, which avoids the
@@ -429,131 +578,25 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       // invoke onMount without the argument (e.g. the test harness).
       const monaco = monacoNs || (window as { monaco?: typeof import('monaco-editor') }).monaco;
       if (monaco) {
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
-          setSearchAllTabsDefault(false);
-          setShowReplaceDefault(false);
-          setSearchOpen(true);
-        });
-
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyH, () => {
-          setSearchAllTabsDefault(false);
-          setShowReplaceDefault(true);
-          setSearchOpen(true);
-        });
-
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
-          setSearchAllTabsDefault(true);
-          setShowReplaceDefault(false);
-          setSearchOpen(true);
-        });
-
-        // Completely disable default behavior of Shift + Cmd/Ctrl + V
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV, () => {
-          // Do nothing (completely disable default "Paste as Plain Text")
-        });
-
-        // Disable with a more powerful method
-        editor.addAction({
-          id: 'disable-shift-v',
-          label: 'Disable Shift+V',
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyV],
-          run: () => {
-            // Do nothing
-          }
-        });
-
-        // --- Markdown table editing (#5 format, #6 Enter, #7 Tab) ---
-
-        // #5: Format the table block at the cursor.
-        editor.addAction({
-          id: 'format-markdown-table',
-          label: 'Format Markdown Table',
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyL],
-          run: (ed) => {
-            formatTableInEditor(ed as editor.IStandaloneCodeEditor);
-          },
-        });
-
-        // Context key gating Enter/Tab overrides. It is set to false while an
-        // IME composition is active so Japanese conversion (Enter to confirm)
-        // and default Tab are never hijacked.
-        const inTableRowKey = editor.createContextKey<boolean>('bokuchiInTableRow', false);
-        let isComposing = false;
-
-        const updateTableContext = () => {
-          if (isComposing) {
-            inTableRowKey.set(false);
-            return;
-          }
-          const model = editor.getModel();
-          const pos = editor.getPosition();
-          if (!model || !pos) {
-            inTableRowKey.set(false);
-            return;
-          }
-          const block = findTableBlock(model.getLinesContent(), pos.lineNumber);
-          const inRow = !!block && !isTableSeparatorLine(model.getLineContent(pos.lineNumber));
-          inTableRowKey.set(inRow);
-        };
-
         disposablesRef.current.push(
-          editor.onDidCompositionStart(() => {
-            isComposing = true;
-            inTableRowKey.set(false);
+          ...registerEditorActions(editor, monaco, {
+            openSearch: () => {
+              setSearchAllTabsDefault(false);
+              setShowReplaceDefault(false);
+              setSearchOpen(true);
+            },
+            openReplace: () => {
+              setSearchAllTabsDefault(false);
+              setShowReplaceDefault(true);
+              setSearchOpen(true);
+            },
+            openSearchAllTabs: () => {
+              setSearchAllTabsDefault(true);
+              setShowReplaceDefault(false);
+              setSearchOpen(true);
+            },
           }),
         );
-        disposablesRef.current.push(
-          editor.onDidCompositionEnd(() => {
-            isComposing = false;
-            updateTableContext();
-          }),
-        );
-        disposablesRef.current.push(editor.onDidChangeCursorPosition(updateTableContext));
-        disposablesRef.current.push(editor.onDidChangeModelContent(updateTableContext));
-        updateTableContext();
-
-        // #6: Enter adds a new row / exits the table when on an empty row.
-        // If the handler declines (e.g. an active selection), fall back to a
-        // normal newline so the key is never swallowed.
-        editor.addAction({
-          id: 'table-enter-new-row',
-          label: 'Table: New Row',
-          keybindings: [monaco.KeyCode.Enter],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableEnter(e)) {
-              e.trigger('keyboard', 'type', { text: '\n' });
-            }
-          },
-        });
-
-        // #7: Tab / Shift+Tab move between cells; fall back to default
-        // indent/outdent when the handler declines.
-        editor.addAction({
-          id: 'table-next-cell',
-          label: 'Table: Next Cell',
-          keybindings: [monaco.KeyCode.Tab],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableTab(e, false)) {
-              e.trigger('keyboard', 'tab', null);
-            }
-          },
-        });
-        editor.addAction({
-          id: 'table-prev-cell',
-          label: 'Table: Previous Cell',
-          keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Tab],
-          precondition: 'bokuchiInTableRow',
-          run: (ed) => {
-            const e = ed as editor.IStandaloneCodeEditor;
-            if (!handleTableTab(e, true)) {
-              e.trigger('keyboard', 'outdent', null);
-            }
-          },
-        });
       }
     } catch (error) {
       console.warn('Failed to set keyboard shortcuts:', error);
@@ -567,26 +610,8 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         const model = editor.getModel();
 
         if (position && model) {
-          const fullText = model.getValue();
-          const totalCharacters = fullText.length;
-          const totalWords = countWords(fullText);
-          let selectedCharacters = 0;
-          let selectedWords = 0;
-
-          if (selection) {
-            const selectedText = model.getValueInRange(selection);
-            selectedCharacters = selectedText.length;
-            selectedWords = countWords(selectedText);
-          }
-
-          onStatusChange({
-            line: position.lineNumber,
-            column: position.column,
-            totalCharacters,
-            selectedCharacters,
-            totalWords,
-            selectedWords
-          });
+          const selectedText = selection ? model.getValueInRange(selection) : '';
+          onStatusChange(computeEditorStatus(model.getValue(), selectedText, position));
         }
       };
 
@@ -699,6 +724,27 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           showReplaceDefault={showReplaceDefault}
           onHeightChange={setSearchPanelHeight}
         />
+        {isImageDragOver && (
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 20,
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px dashed',
+              borderColor: 'primary.main',
+              backgroundColor: 'action.hover',
+              boxSizing: 'border-box',
+            }}
+          >
+            <Typography variant="h6" color="primary" sx={{ pointerEvents: 'none' }}>
+              {t('imageInsert.dropHere')}
+            </Typography>
+          </Box>
+        )}
         {fileNotFound ? (
           <Box
             sx={{
