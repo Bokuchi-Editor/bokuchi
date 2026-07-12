@@ -514,6 +514,17 @@ export function buildContinuousStyleContent(css: string): string {
  * for. Sections that don't use block-axis alignment (and non-block layouts
  * like grid or themes that are flex already) are left untouched.
  *
+ * Overflow guard: a `section` is a fixed-height box with `overflow: hidden`.
+ * Switching it from block to flex stops vertical margins between its children
+ * from collapsing, so a slide that just fits when block-laid-out can grow past
+ * the slide height once it is flex — and `justify-content: center` then splits
+ * the overflow so it clips *inside* the content (e.g. a table's lower rows are
+ * cut off while the heading and trailing text survive). We therefore keep the
+ * flex conversion only when it does not introduce overflow; otherwise the
+ * section reverts to its original block layout (top-aligned, nothing clipped),
+ * which is strictly better than a mid-content clip. Sparse slides
+ * (title/chapter/…) still fit and stay centered.
+ *
  * Chromium (Windows/WebView2) prints block `align-content` correctly — same
  * engine as Marp CLI — so the fix is gated to WebKit via navigator.vendor
  * (Apple on both macOS WKWebView and Linux webkit2gtk).
@@ -537,6 +548,22 @@ const MARP_PRINT_CENTERING_FIX = `
     /* Drop overflow-safety keywords: 'safe center' centers via justify-content
        in the flex fallback, matching what place-content resolves to. */
     s.style.justifyContent = ac.replace(/\\b(?:safe|unsafe)\\s+/g, '');
+    /* Pin children at their natural size. Flex items default to flex-shrink:1,
+       so an overflowing column *shrinks* them to fit the fixed-height section —
+       the section's scrollHeight then equals its clientHeight (no overflow
+       reported) even though the children's own content is clipped (a table's
+       lower rows vanish). Pinning shrink to 0 makes the overflow real and
+       measurable, so the guard below can detect it. */
+    var kids = s.children;
+    for (var k = 0; k < kids.length; k++) kids[k].style.flexShrink = '0';
+    /* Revert if the flex layout overflows — a mid-content clip is worse than a
+       top-aligned slide (see "Overflow guard" above). */
+    if (s.scrollHeight > s.clientHeight + 1) {
+      s.style.display = '';
+      s.style.flexFlow = '';
+      s.style.justifyContent = '';
+      for (var r = 0; r < kids.length; r++) kids[r].style.flexShrink = '';
+    }
   }
 })();
 `;
