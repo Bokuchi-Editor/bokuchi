@@ -1,0 +1,53 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement for Bokuchi
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an improvement!
+        **Security issues must be reported via [Security Advisory](https://github.com/Bokuchi-Editor/bokuchi/security/advisories/new), not here.**
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: A brief overview of your proposal.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Behavior
+      description: How does Bokuchi currently behave in this area?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why is this needed?
+      description: What problem does this solve? Why is it valuable?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: Describe concretely how it should work. UI mockups and use cases are welcome.
+    validations:
+      required: true
+  - type: checkboxes
+    id: uiux
+    attributes:
+      label: UI/UX
+      options:
+        - label: This request involves UI/UX (visual design, layout, usability)
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or workarounds you've considered.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context about the request.

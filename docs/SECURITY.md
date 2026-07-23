@@ -37,21 +37,25 @@ The following libraries are unmaintained but cannot be directly controlled due t
 
 ### npm Side
 
-#### dompurify XSS Vulnerability (GHSA-v2wj-7wpq-c8vv)
+#### Resolved: dompurify `CUSTOM_ELEMENT_HANDLING` Bypass (GHSA-c2j3-45gr-mqc4)
 
-**Issue**: dompurify XSS vulnerability (transitive dependency via monaco-editor)
-**Current Status**: No upstream fix available yet — allowlisted in CI until dompurify > 3.3.1 is released
-**Risk Assessment**: Low risk (Monaco editor sanitizes inputs internally)
+Resolved as of dompurify 3.4.12 (2026-07-24). The fix is applied through the **direct `dompurify` dependency + the `overrides` entry** in `package.json`, which forces the patched version into monaco-editor and mermaid.
+
+**Pitfall — do NOT run `npm audit fix --force` for dompurify advisories**: monaco-editor pins an exact older dompurify version, and `npm audit fix` computes fixes **without considering `overrides`**. It therefore proposes downgrading monaco-editor to 0.53.0 (a breaking downgrade) even though bumping the direct `dompurify` dependency is sufficient. The correct fix is `npm update dompurify` (or bumping the direct dependency).
+
+#### Resolved: dompurify XSS Vulnerability (GHSA-v2wj-7wpq-c8vv)
+
+Resolved as of dompurify 3.4.11 (> 3.3.1). The CI allowlist entry has been removed.
 
 ## Current Dependency Versions
 
 | Dependency | Version | Notes |
 |---|---|---|
-| Tauri | 2.10.3 | Core framework |
-| wry | 0.54.1 | WebView engine (depends on GTK3 on Linux) |
+| Tauri | 2.11.5 | Core framework |
+| wry | 0.55.1 | WebView engine (depends on GTK3 on Linux) |
 | glib | 0.18.5 | Cannot update due to Tauri constraints |
 | gtk | 0.18.2 | GTK3 bindings (unmaintained) |
-| dompurify | via monaco-editor | Transitive dependency |
+| dompurify | 3.4.12 (direct + `overrides`) | Forced into monaco-editor / mermaid via `overrides` |
 
 ## CI Workflows
 
@@ -60,7 +64,7 @@ The following libraries are unmaintained but cannot be directly controlled due t
 - **Schedule**: Every Monday at 9:00 AM JST
 - **Triggers**: Weekly schedule, pull requests to main, manual dispatch
 - **Actions**:
-  - npm audit via `audit-ci` (allowlists GHSA-v2wj-7wpq-c8vv)
+  - npm audit via `audit-ci --moderate` (no allowlist; low-severity advisories are below the threshold. Currently 0 known vulnerabilities)
   - `cargo audit` (explicitly ignores RUSTSEC-2024-0429, other warnings are non-blocking)
   - Rust tests
   - Outdated package checks for both npm and Cargo
@@ -69,10 +73,12 @@ The following libraries are unmaintained but cannot be directly controlled due t
 
 - **Schedule**: Every Monday at 9:00 AM JST
 - **Ecosystems**: npm, Cargo, GitHub Actions
+- **Supply-chain hardening**: 3-day cooldown on all ecosystems (only updates to releases at least 3 days old, to avoid pulling a malicious release that gets yanked shortly after publication)
 - **Ignore Rules**:
   - Major version updates for all packages (manual review required)
   - Major version updates for Tauri and Tauri plugins (cautious updates)
   - All updates for glib (blocked by Tauri constraints)
+  - Minor/major updates for KaTeX (pinned to 0.16.x — 0.17.0 crashes with accent commands × `\mathbf`, see issue #354)
 
 ### 3. Dependabot Test (`dependabot-test.yml`)
 
@@ -104,7 +110,7 @@ The following libraries are unmaintained but cannot be directly controlled due t
 
 - Consider response when Tauri updates these dependencies in new versions
 - Consider response if Tauri migrates to GTK4 or other UI libraries in the future
-- Monitor dompurify fix upstream and remove allowlist once resolved
+- Remove the `dompurify` override once monaco-editor and mermaid declare patched dompurify ranges themselves
 
 ## Technical Details
 
@@ -119,8 +125,10 @@ Other warnings (GTK3, fxhash, proc-macro-error) are tolerated as non-blocking in
 ### npm Audit Command (CI)
 
 ```bash
-npx audit-ci --moderate --allowlist GHSA-v2wj-7wpq-c8vv
+npx audit-ci --moderate
 ```
+
+Low-severity advisories are below the `--moderate` threshold and do not block CI.
 
 ### Dependabot Ignore Configuration (glib)
 
@@ -146,8 +154,10 @@ These warnings are related to **unmaintained** or **unsoundness** issues and do 
 - 2026-03-06: Updated to reflect current CI configuration and dependency versions
 - 2026-03-06: Added npm dompurify vulnerability (GHSA-v2wj-7wpq-c8vv)
 - 2026-03-06: Added CI workflow details and auto-merge Dependabot documentation
+- 2026-07-23: Marked GHSA-v2wj-7wpq-c8vv as resolved (dompurify 3.4.11, CI allowlist removed); added GHSA-c2j3-45gr-mqc4 (low, non-blocking); updated dependency versions (Tauri 2.11.5, wry 0.55.1); documented Dependabot cooldown and KaTeX pin
+- 2026-07-24: Resolved GHSA-c2j3-45gr-mqc4 by updating dompurify to 3.4.12; documented the `npm audit fix --force` pitfall (proposes a breaking monaco-editor downgrade because audit ignores `overrides`)
 
 ---
 
-**Last Updated**: March 6, 2026
-**Version**: 2.0
+**Last Updated**: July 24, 2026
+**Version**: 2.2
