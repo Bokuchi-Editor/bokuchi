@@ -37,21 +37,25 @@
 
 ### npm 側
 
-#### dompurify XSS 脆弱性 (GHSA-v2wj-7wpq-c8vv)
+#### 解決済み: dompurify `CUSTOM_ELEMENT_HANDLING` バイパス (GHSA-c2j3-45gr-mqc4)
 
-**問題**: dompurify の XSS 脆弱性（monaco-editor 経由の推移的依存関係）
-**現在の状況**: 上流の修正がまだ利用不可 — dompurify > 3.3.1 がリリースされるまでCIで許可リストに登録
-**リスク評価**: 低リスク（Monaco editor は内部で入力をサニタイズ）
+dompurify 3.4.12 で解決済み（2026-07-24）。修正は **`package.json` の直接依存 `dompurify` + `overrides` エントリ**を通じて適用され、monaco-editor / mermaid にも修正版が強制される。
+
+**落とし穴 — dompurify の advisory に `npm audit fix --force` を使わないこと**: monaco-editor は古い dompurify を完全固定で宣言しており、`npm audit fix` は **`overrides` を考慮せずに**修正を計算する。そのため直接依存の `dompurify` を上げれば十分な場合でも、monaco-editor を 0.53.0 へダウングレードする（破壊的変更）解を提案してくる。正しい修正は `npm update dompurify`（または直接依存のバージョンアップ）。
+
+#### 解決済み: dompurify XSS 脆弱性 (GHSA-v2wj-7wpq-c8vv)
+
+dompurify 3.4.11（> 3.3.1）で解決済み。CI の許可リスト登録は削除済み。
 
 ## 現在の依存関係バージョン
 
 | 依存関係 | バージョン | 備考 |
 |---|---|---|
-| Tauri | 2.10.3 | コアフレームワーク |
-| wry | 0.54.1 | WebViewエンジン（LinuxではGTK3に依存） |
+| Tauri | 2.11.5 | コアフレームワーク |
+| wry | 0.55.1 | WebViewエンジン（LinuxではGTK3に依存） |
 | glib | 0.18.5 | Tauriの制約により更新不可 |
 | gtk | 0.18.2 | GTK3バインディング（非メンテナンス） |
-| dompurify | monaco-editor 経由 | 推移的依存関係 |
+| dompurify | 3.4.12（直接依存 + `overrides`） | `overrides` により monaco-editor / mermaid にも強制適用 |
 
 ## CIワークフロー
 
@@ -60,7 +64,7 @@
 - **スケジュール**: 毎週月曜日 9:00 (JST)
 - **トリガー**: 週次スケジュール、mainへのプルリクエスト、手動実行
 - **内容**:
-  - `audit-ci` による npm audit（GHSA-v2wj-7wpq-c8vv を許可リストに登録）
+  - `audit-ci --moderate` による npm audit（許可リストなし。low 深刻度は閾値未満。現在既知の脆弱性は 0 件）
   - `cargo audit`（RUSTSEC-2024-0429 を明示的に無視、他の警告はブロッキングしない）
   - Rust テスト
   - npm と Cargo の両方で古いパッケージのチェック
@@ -69,10 +73,12 @@
 
 - **スケジュール**: 毎週月曜日 9:00 (JST)
 - **対象エコシステム**: npm、Cargo、GitHub Actions
+- **サプライチェーン対策**: 全エコシステムに 3 日間のクールダウン（公開から 3 日以上経過したリリースのみ更新対象とし、公開直後に取り下げられる悪意あるリリースの取り込みを回避）
 - **無視ルール**:
   - 全パッケージのメジャーバージョンアップ（手動確認が必要）
   - Tauri および Tauri プラグインのメジャーバージョンアップ（慎重に更新）
   - glib の全更新（Tauriの制約によりブロック）
+  - KaTeX のマイナー/メジャー更新（0.16 系に固定 — 0.17.0 でアクセントコマンド × `\mathbf` がクラッシュ、issue #354 参照）
 
 ### 3. Dependabot テスト (`dependabot-test.yml`)
 
@@ -104,7 +110,7 @@
 
 - Tauriが新しいバージョンでこれらの依存関係を更新した場合、対応を検討
 - 将来的にTauriがGTK4や他のUIライブラリに移行した場合、対応を検討
-- dompurify の上流修正を監視し、修正されたら許可リストから削除
+- monaco-editor / mermaid が自ら修正済み dompurify の範囲を宣言したら、`dompurify` の override を削除
 
 ## 技術的詳細
 
@@ -119,8 +125,10 @@ cargo audit --ignore RUSTSEC-2024-0429
 ### npm audit コマンド（CI）
 
 ```bash
-npx audit-ci --moderate --allowlist GHSA-v2wj-7wpq-c8vv
+npx audit-ci --moderate
 ```
+
+low 深刻度の advisory は `--moderate` の閾値未満のため、CIをブロックしません。
 
 ### Dependabot 無視設定（glib）
 
@@ -141,8 +149,10 @@ npx audit-ci --moderate --allowlist GHSA-v2wj-7wpq-c8vv
 - 2026-03-06: 現在のCI設定と依存関係バージョンに合わせて更新
 - 2026-03-06: npm の dompurify 脆弱性 (GHSA-v2wj-7wpq-c8vv) を追加
 - 2026-03-06: CIワークフロー詳細と Dependabot 自動マージの説明を追加
+- 2026-07-23: GHSA-v2wj-7wpq-c8vv を解決済みに変更（dompurify 3.4.11、CI許可リスト削除）、GHSA-c2j3-45gr-mqc4（low、非ブロッキング）を追加、依存関係バージョンを更新（Tauri 2.11.5、wry 0.55.1）、Dependabot のクールダウンと KaTeX 固定を記載
+- 2026-07-24: dompurify 3.4.12 への更新で GHSA-c2j3-45gr-mqc4 を解決。`npm audit fix --force` の落とし穴（audit が `overrides` を無視するため monaco-editor の破壊的ダウングレードを提案する）を記載
 
 ---
 
-**最終更新日**: 2026年3月6日
-**バージョン**: 2.0
+**最終更新日**: 2026年7月24日
+**バージョン**: 2.2
