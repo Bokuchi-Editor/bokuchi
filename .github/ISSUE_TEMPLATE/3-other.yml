@@ -1,0 +1,20 @@
+name: 📝 Other
+description: Questions, discussions, or anything that doesn't fit the other templates
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out!
+        **Security issues must be reported via [Security Advisory](https://github.com/Bokuchi-Editor/bokuchi/security/advisories/new), not here.**
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe your question or topic.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Any background or additional information.
