@@ -5,6 +5,7 @@ import { CustomTheme, isCustomThemeId } from '../themes/customTheme';
 import { storeApi } from '../api/storeApi';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { ZOOM_CONFIG } from '../constants/zoom';
+import { clampSidebarWidth } from '../constants/layout';
 
 /**
  * Debounce for persisting custom themes: dragging a color picker fires a
@@ -12,6 +13,12 @@ import { ZOOM_CONFIG } from '../constants/zoom';
  * The registry/UI update instantly; only the disk write is deferred.
  */
 const CUSTOM_THEME_SAVE_DEBOUNCE_MS = 500;
+
+/**
+ * Debounce for persisting the sidebar width: an edge drag fires a state
+ * update per mousemove; only the settled value is written to disk.
+ */
+const SIDEBAR_WIDTH_SAVE_DEBOUNCE_MS = 500;
 
 interface UseSettingsParams {
   isInitialized: boolean;
@@ -36,6 +43,7 @@ export const useSettings = ({
   const [language, setLanguage] = useState('en');
   const [tabLayout, setTabLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [tabSidebarPinned, setTabSidebarPinned] = useState(true);
+  const [tabSidebarWidth, setTabSidebarWidth] = useState(DEFAULT_APP_SETTINGS.interface.tabSidebarWidth);
   const [globalVariables, setGlobalVariables] = useState<Record<string, string>>({});
   const [customThemes, setCustomThemes] = useState<CustomTheme[]>([]);
   const [appSettings, setAppSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
@@ -95,6 +103,7 @@ export const useSettings = ({
         setGlobalVariables(settings.globalVariables);
         setTabLayout(settings.interface.tabLayout);
         setTabSidebarPinned(settings.interface.tabSidebarPinned);
+        setTabSidebarWidth(clampSidebarWidth(settings.interface.tabSidebarWidth));
 
         // Restore the view mode used at the previous session's exit. Defaults to
         // 'split' on first launch (see storeApi.loadViewMode). Must run before
@@ -176,6 +185,26 @@ export const useSettings = ({
     );
   }, [tabSidebarPinned, isSettingsLoaded]);
 
+  // Save tab sidebar width (debounced: dragging updates the state per mousemove).
+  // Persisted inside appSettings so the value survives restarts and export/import.
+  useEffect(() => {
+    if (!isSettingsLoaded) return;
+    const timer = setTimeout(() => {
+      setAppSettings((s) => {
+        if (s.interface.tabSidebarWidth === tabSidebarWidth) return s;
+        const merged: AppSettings = {
+          ...s,
+          interface: { ...s.interface, tabSidebarWidth },
+        };
+        storeApi.saveAppSettings(merged).catch((err) =>
+          console.error('Failed to save tab sidebar width:', err)
+        );
+        return merged;
+      });
+    }, SIDEBAR_WIDTH_SAVE_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [tabSidebarWidth, isSettingsLoaded]);
+
   // Save view mode setting
   useEffect(() => {
     if (!isSettingsLoaded) return;
@@ -251,6 +280,7 @@ export const useSettings = ({
     setGlobalVariables(newSettings.globalVariables);
     setTabLayout(newSettings.interface.tabLayout);
     setTabSidebarPinned(newSettings.interface.tabSidebarPinned);
+    setTabSidebarWidth(clampSidebarWidth(newSettings.interface.tabSidebarWidth));
 
     // If zoom level changed, also update useZoom state
     if (newSettings.interface.zoomLevel !== currentZoom) {
@@ -296,6 +326,8 @@ export const useSettings = ({
     tabSidebarPinned,
     setTabSidebarPinned,
     toggleTabSidebarPinned,
+    tabSidebarWidth,
+    setTabSidebarWidth,
     globalVariables,
     setGlobalVariables,
     customThemes,

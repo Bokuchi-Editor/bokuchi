@@ -12,8 +12,8 @@ import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
 import { RenderingSettings, PreviewSettings, ScrollSyncMode } from '../types/settings';
 import type { SettingsFocusTarget } from '../types/settingsFocus';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
-import { useResizableSidebar } from '../hooks/useResizableSidebar';
-import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX, SIDEBAR_WIDTH_PX } from '../constants/layout';
+import { useResizableSidebar, useSidebarWidthDrag } from '../hooks/useResizableSidebar';
+import { DRAWER_WIDTH_PX, LAYOUT_SETTLE_DELAY_MS, SIDEBAR_DIVIDER_HEIGHT_PX } from '../constants/layout';
 import { isDarkTheme, ThemeName } from '../themes';
 
 interface AppContentProps {
@@ -23,6 +23,9 @@ interface AppContentProps {
   // Vertical-tab sidebar pinned (fixed) vs hover/auto-hide.
   tabSidebarPinned: boolean;
   onToggleSidebarPinned: () => void;
+  // Vertical-tab sidebar width (px), user-resizable by dragging the right edge.
+  tabSidebarWidth: number;
+  onTabSidebarWidthChange: (width: number) => void;
   // 臨 (Rin) focus mode active — hides all chrome.
   rinActive: boolean;
   // 臨 editor width: false = 1000px centered, true = full width (minus the button gutter).
@@ -110,6 +113,8 @@ const AppContent: React.FC<AppContentProps> = ({
   viewMode,
   tabSidebarPinned,
   onToggleSidebarPinned,
+  tabSidebarWidth,
+  onTabSidebarWidthChange,
   rinActive,
   rinFullWidth,
   tabs,
@@ -259,6 +264,35 @@ const AppContent: React.FC<AppContentProps> = ({
     handleDividerMouseDown,
   } = useResizableSidebar();
 
+  // Arc-style width drag on the pinned sidebar's right edge: free resize within
+  // bounds, unpin (collapse to hover mode) when dragged below the threshold.
+  const { isResizingWidth, handleWidthResizeMouseDown } = useSidebarWidthDrag({
+    width: tabSidebarWidth,
+    onWidthChange: onTabSidebarWidthChange,
+    onCollapse: onToggleSidebarPinned,
+  });
+
+  // Right-edge drag handle overlaid on the pinned sidebar (not shown in the
+  // hover overlay: an auto-hidden sidebar has no persistent edge to grab).
+  const widthResizeHandle = (
+    <Box
+      data-testid="sidebar-width-resize-handle"
+      onMouseDown={handleWidthResizeMouseDown}
+      sx={{
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        width: 5,
+        cursor: 'col-resize',
+        zIndex: 10,
+        bgcolor: isResizingWidth ? 'primary.main' : 'transparent',
+        '&:hover': { bgcolor: 'primary.main' },
+        transition: 'background-color 0.15s',
+      }}
+    />
+  );
+
   // Force Monaco Editor to recalculate layout when persistent panels toggle
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -341,7 +375,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onClose={onFolderTreePanelClose}
             onHeaderClick={handleExplorerHeaderClick}
             collapsed={explorerCollapsed}
-            width={SIDEBAR_WIDTH_PX}
+            width={tabSidebarWidth}
             onRenameRequest={onRenameRequest}
           />
         </Box>
@@ -356,8 +390,9 @@ const AppContent: React.FC<AppContentProps> = ({
         <Box
           ref={sidebarRef}
           sx={{
-            width: SIDEBAR_WIDTH_PX,
-            minWidth: SIDEBAR_WIDTH_PX,
+            position: 'relative',
+            width: tabSidebarWidth,
+            minWidth: tabSidebarWidth,
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
@@ -368,31 +403,36 @@ const AppContent: React.FC<AppContentProps> = ({
           }}
         >
           {renderVerticalSidebarBody(false)}
+          {widthResizeHandle}
         </Box>
       )}
 
       {/* Standalone vertical tab bar (pinned/fixed) */}
       {showStandaloneVerticalTabs && (
-        <TabBar
-          tabs={tabs}
-          activeTabId={activeTabId}
-          onTabChange={onTabChange}
-          onTabClose={onTabClose}
-          onNewTab={onNewTab}
-          onTabReorder={onTabReorder}
-          onTabRename={onTabRename}
-          onToggleTabPinned={onToggleTabPinned}
-          onCopyFilePath={onCopyFilePath}
-          onCopyFileName={onCopyFileName}
-          onCloseOtherTabs={onCloseOtherTabs}
-          onCloseTabsToRight={onCloseTabsToRight}
-          onCloseAllTabs={onCloseAllTabs}
-          closeButtonPosition={tabCloseButtonPosition}
-          newButtonPosition={tabNewButtonPosition}
-          layout={tabLayout}
-          tabSidebarPinned={tabSidebarPinned}
-          onToggleSidebarPinned={onToggleSidebarPinned}
-        />
+        <Box sx={{ position: 'relative', display: 'flex', flexShrink: 0 }}>
+          <TabBar
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onTabChange={onTabChange}
+            onTabClose={onTabClose}
+            onNewTab={onNewTab}
+            onTabReorder={onTabReorder}
+            onTabRename={onTabRename}
+            onToggleTabPinned={onToggleTabPinned}
+            onCopyFilePath={onCopyFilePath}
+            onCopyFileName={onCopyFileName}
+            onCloseOtherTabs={onCloseOtherTabs}
+            onCloseTabsToRight={onCloseTabsToRight}
+            onCloseAllTabs={onCloseAllTabs}
+            closeButtonPosition={tabCloseButtonPosition}
+            newButtonPosition={tabNewButtonPosition}
+            layout={tabLayout}
+            tabSidebarPinned={tabSidebarPinned}
+            onToggleSidebarPinned={onToggleSidebarPinned}
+            width={tabSidebarWidth}
+          />
+          {widthResizeHandle}
+        </Box>
       )}
 
       {/* Auto-hide (hover) vertical tab sidebar: left-edge zone + nub + sliding overlay */}
@@ -431,7 +471,7 @@ const AppContent: React.FC<AppContentProps> = ({
               left: 0,
               top: 0,
               bottom: 0,
-              width: SIDEBAR_WIDTH_PX,
+              width: tabSidebarWidth,
               zIndex: 1101,
               bgcolor: 'background.paper',
               borderRight: 1,
