@@ -7,6 +7,7 @@ import {
   isMarkdownFile,
   getTabDisplayTitle,
   formatFilePathForDisplay,
+  deriveExportFileName,
 } from '../pathUtils';
 import * as platform from '../platform';
 import type { Tab } from '../../types/tab';
@@ -266,5 +267,56 @@ describe('getTabDisplayTitle', () => {
   it('T-PU-35: truncates long CJK first lines to 20 characters', () => {
     const tab = makeTab({ content: 'あ'.repeat(25) });
     expect(getTabDisplayTitle(tab)).toBe('あ'.repeat(20) + '…');
+  });
+});
+
+// #442: export dialogs default to the source document's name.
+describe('deriveExportFileName', () => {
+  // T-PU-36
+  it('T-PU-36: replaces .md with the target extension', () => {
+    expect(deriveExportFileName('/home/user/notes.md', 'pdf')).toBe('notes.pdf');
+    expect(deriveExportFileName('/home/user/notes.md', 'html')).toBe('notes.html');
+  });
+
+  // T-PU-37
+  it('T-PU-37: replaces .markdown with the target extension', () => {
+    expect(deriveExportFileName('/docs/guide.markdown', 'pdf')).toBe('guide.pdf');
+    expect(deriveExportFileName('/docs/guide.markdown', 'html')).toBe('guide.html');
+  });
+
+  // T-PU-38: only the trailing markdown extension is swapped; inner dots
+  // are part of the document name and must survive.
+  it('T-PU-38: keeps inner dots and swaps only the trailing extension', () => {
+    expect(deriveExportFileName('/docs/release.notes.v2.md', 'pdf')).toBe('release.notes.v2.pdf');
+  });
+
+  // T-PU-39
+  it('T-PU-39: preserves non-ASCII file names', () => {
+    expect(deriveExportFileName('/docs/議事録メモ.md', 'pdf')).toBe('議事録メモ.pdf');
+    expect(deriveExportFileName('/docs/議事録メモ.md', 'html')).toBe('議事録メモ.html');
+  });
+
+  // T-PU-40: unsaved documents keep the legacy fixed name.
+  it('T-PU-40: falls back to the fixed name when there is no file path', () => {
+    expect(deriveExportFileName(undefined, 'pdf')).toBe('markdown-export.pdf');
+    expect(deriveExportFileName(undefined, 'html')).toBe('markdown-export.html');
+  });
+
+  // T-PU-41: markdown extensions match case-insensitively (Windows/macOS
+  // file systems are case-insensitive, so README.MD is a markdown file).
+  it('T-PU-41: matches the markdown extension case-insensitively', () => {
+    expect(deriveExportFileName('/docs/README.MD', 'pdf')).toBe('README.pdf');
+    expect(deriveExportFileName('/docs/Guide.Markdown', 'html')).toBe('Guide.html');
+  });
+
+  // T-PU-42: a non-markdown extension is not swallowed — appending keeps
+  // the source name intact instead of guessing at its extension.
+  it('T-PU-42: appends the target extension to non-markdown file names', () => {
+    expect(deriveExportFileName('/docs/notes.txt', 'pdf')).toBe('notes.txt.pdf');
+  });
+
+  // T-PU-43
+  it('T-PU-43: handles Windows-style paths', () => {
+    expect(deriveExportFileName('C:\\Users\\docs\\notes.md', 'pdf')).toBe('notes.pdf');
   });
 });

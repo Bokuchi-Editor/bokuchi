@@ -312,6 +312,23 @@ describe('desktopApi.saveHtmlFile', () => {
     expect(result).toEqual({ success: true, filePath: '/export.html' });
   });
 
+  it('defaults the save dialog to markdown-export.html', async () => {
+    vi.mocked(save).mockResolvedValue('/export.html');
+    vi.mocked(writeTextFile).mockResolvedValue(undefined);
+    await desktopApi.saveHtmlFile('<html></html>');
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ defaultPath: 'markdown-export.html' }),
+    );
+  });
+
+  // #442: the export dialog is pre-filled with the source document's name.
+  it('passes a custom default name to the save dialog', async () => {
+    vi.mocked(save).mockResolvedValue('/notes.html');
+    vi.mocked(writeTextFile).mockResolvedValue(undefined);
+    await desktopApi.saveHtmlFile('<html></html>', 'notes.html');
+    expect(save).toHaveBeenCalledWith(expect.objectContaining({ defaultPath: 'notes.html' }));
+  });
+
   it('returns error when cancelled', async () => {
     vi.mocked(save).mockResolvedValue(null);
     const result = await desktopApi.saveHtmlFile('<html></html>');
