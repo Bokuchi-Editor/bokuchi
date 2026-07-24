@@ -100,6 +100,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     darkMode,
     theme,
     tableLayout: previewSettings.tableLayout,
+    filePath,
   });
 
   // Anchor for the export-format menu (HTML / PDF).
