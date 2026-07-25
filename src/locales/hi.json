@@ -653,6 +653,8 @@
     "previousSlide": "पिछली स्लाइड",
     "nextSlide": "अगली स्लाइड",
     "reloadThemes": "थीम पुनः लोड करें",
+    "copyCode": "कोड कॉपी करें",
+    "codeCopied": "कॉपी हो गया!",
     "slideCounter": "स्लाइड {{current}} / {{total}}"
   },
   "rin": {

@@ -653,6 +653,8 @@
     "previousSlide": "Slide trước",
     "nextSlide": "Slide tiếp theo",
     "reloadThemes": "Tải lại giao diện",
+    "copyCode": "Sao chép mã",
+    "codeCopied": "Đã sao chép!",
     "slideCounter": "Slide {{current}} / {{total}}"
   },
   "rin": {

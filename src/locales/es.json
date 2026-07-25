@@ -653,6 +653,8 @@
     "previousSlide": "Diapositiva anterior",
     "nextSlide": "Diapositiva siguiente",
     "reloadThemes": "Recargar temas",
+    "copyCode": "Copiar código",
+    "codeCopied": "¡Copiado!",
     "slideCounter": "Diapositiva {{current}} de {{total}}"
   },
   "rin": {
