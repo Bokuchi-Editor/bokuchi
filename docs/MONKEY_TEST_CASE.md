@@ -149,6 +149,8 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | M-80 | Paste HTML table (off mode)        | Set table conversion to "off", copy a table from a spreadsheet, paste     | The table is pasted as plain text without conversion                 |
 | M-81 | Paste as plain text                | Copy formatted text, paste with `Ctrl+Shift+V`                           | Content is pasted as plain text regardless of table conversion setting |
 | M-82 | Paste TSV/CSV data                 | Copy tab-separated or comma-separated data, paste into editor             | The data is detected and converted to a Markdown table               |
+| M-202 | Copy button on preview code blocks | Hover a fenced code block in the preview, click the copy button at its top-right, paste into another app | The button appears on hover, briefly turns into a check mark after clicking, and the pasted text is exactly the code block's content (no backticks, no extra markup). Works with and without a language tag |
+| M-203 | Copy button exclusions             | Preview a document with a Mermaid diagram; export a document with code blocks as HTML | The Mermaid diagram shows no copy button; the exported HTML file contains no copy buttons |
 
 ## 13. Edge Cases & Stability
 

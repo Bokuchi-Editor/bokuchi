@@ -11,7 +11,7 @@ import {
   contentHasMermaid,
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
-import { processEasterEggBlocks, transformCheckboxes, resolveImagePaths } from './previewHtmlProcessing';
+import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
 
@@ -142,6 +142,10 @@ export function useProcessedMarkdown({
 
         // Make checkboxes clickable and index them for source mapping.
         processedHtml = transformCheckboxes(processedHtml);
+
+        // Add a copy button to each highlighted code block (preview only —
+        // the export path builds its HTML separately and stays button-free).
+        processedHtml = injectCodeCopyButtons(processedHtml);
 
         // Resolve relative image paths to blob URLs
         if (filePath) {

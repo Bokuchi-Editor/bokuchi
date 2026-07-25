@@ -653,6 +653,8 @@
     "previousSlide": "上一張投影片",
     "nextSlide": "下一張投影片",
     "reloadThemes": "重新載入佈景主題",
+    "copyCode": "複製程式碼",
+    "codeCopied": "已複製！",
     "slideCounter": "投影片 {{current}} / {{total}}"
   },
   "rin": {

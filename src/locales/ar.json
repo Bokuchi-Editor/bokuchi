@@ -653,6 +653,8 @@
     "previousSlide": "الشريحة السابقة",
     "nextSlide": "الشريحة التالية",
     "reloadThemes": "إعادة تحميل السمات",
+    "copyCode": "نسخ الكود",
+    "codeCopied": "تم النسخ!",
     "slideCounter": "شريحة {{current}} من {{total}}"
   },
   "rin": {

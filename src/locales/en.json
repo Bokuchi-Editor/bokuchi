@@ -680,6 +680,8 @@
     "nextSlide": "Next Slide",
     "reloadThemes": "Reload themes",
     "slideCounter": "Slide {{current}} of {{total}}",
+    "copyCode": "Copy code",
+    "codeCopied": "Copied!",
     "featureNotice": {
       "message": "This file uses {{features}}. Enable it in Settings to see it rendered.",
       "openSettings": "Open Settings",

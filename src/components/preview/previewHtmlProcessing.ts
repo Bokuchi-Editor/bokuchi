@@ -46,6 +46,33 @@ export function transformCheckboxes(html: string): string {
   });
 }
 
+// Feather icons (MIT): "copy" and "check". Inlined SVG so the button needs no
+// image assets; aria-hidden because the <button> itself carries the label.
+const COPY_BUTTON_HTML =
+  '<button type="button" class="code-copy-button" aria-label="Copy code">' +
+  '<svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
+  '<svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
+  '</button>';
+
+// The <pre><code class="hljs …"> blocks emitted by renderCode. Escaped code
+// content can never contain a literal `</code>`, so the lazy match is safe.
+// Mermaid blocks carry `language-mermaid` without `hljs` and never match.
+const HLJS_CODE_BLOCK_RE = /<pre><code class="hljs[^"]*">[\s\S]*?<\/code><\/pre>/g;
+
+/**
+ * Wrap each syntax-highlighted code block in a positioning container with a
+ * copy button. Runs on sanitized HTML — the injected markup is trusted and
+ * static. Preview-only: the HTML/PDF export path builds its body separately
+ * and never calls this, so exports stay button-free. Click handling and label
+ * localization live in `usePreviewCodeCopy`.
+ */
+export function injectCodeCopyButtons(html: string): string {
+  return html.replace(
+    HLJS_CODE_BLOCK_RE,
+    (block) => `<div class="code-block-wrapper">${COPY_BUTTON_HTML}${block}</div>`,
+  );
+}
+
 /**
  * Resolve relative `<img src>` paths (relative to the document's directory) to
  * blob URLs by reading the files through the Tauri FS plugin. Absolute URLs are

@@ -653,6 +653,8 @@
     "previousSlide": "上一张幻灯片",
     "nextSlide": "下一张幻灯片",
     "reloadThemes": "重新加载主题",
+    "copyCode": "复制代码",
+    "codeCopied": "已复制！",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
   },
   "rin": {

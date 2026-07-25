@@ -653,6 +653,8 @@
     "previousSlide": "Slide sebelumnya",
     "nextSlide": "Slide berikutnya",
     "reloadThemes": "Muat ulang tema",
+    "copyCode": "Salin kode",
+    "codeCopied": "Tersalin!",
     "slideCounter": "Slide {{current}} dari {{total}}"
   },
   "rin": {

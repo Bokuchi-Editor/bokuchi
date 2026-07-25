@@ -653,6 +653,8 @@
     "previousSlide": "Предыдущий слайд",
     "nextSlide": "Следующий слайд",
     "reloadThemes": "Перезагрузить темы",
+    "copyCode": "Копировать код",
+    "codeCopied": "Скопировано!",
     "slideCounter": "Слайд {{current}} из {{total}}"
   },
   "rin": {
