@@ -9,6 +9,7 @@ This directory contains documentation for the Bokuchi project.
 
 ## Documentation Files
 
+- [Development Guide](./DEVELOPMENT.md)
 - [Testing Guide](./TESTING.md)
 - [Monkey Test Cases](./MONKEY_TEST_CASE.md)
 - [Cross Compile Troubleshooting](./CROSS_COMPILE_TROUBLESHOOTING.md)

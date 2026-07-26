@@ -1,94 +1,49 @@
 ![Bokuchi](https://raw.githubusercontent.com/shinya/image-storage/refs/heads/master/bokuchi/hero.png)
 
-Built with Tauri, React, and Rust.
+![Downloads](https://img.shields.io/github/downloads/Bokuchi-Editor/bokuchi/total) ![Stars](https://img.shields.io/github/stars/Bokuchi-Editor/bokuchi) ![License](https://img.shields.io/github/license/Bokuchi-Editor/bokuchi) ![Release](https://img.shields.io/github/v/release/Bokuchi-Editor/bokuchi)
 
-- Official Site
-  - https://bokuchi.com
-- User Guide:
-  - https://doc.bokuchi.com/
+**Bokuchi** is a lightweight, open-source Markdown editor for Windows, macOS, and Linux. Built with Tauri, React, and Rust.
 
-## Screen Shot
+[Official Site](https://bokuchi.com) · [User Guide](https://doc.bokuchi.com/) · [Download](https://github.com/Bokuchi-Editor/bokuchi/releases/latest)
 
 ![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss2.png)
 
+## Download
 
+Get the latest version from the [Releases page](https://github.com/Bokuchi-Editor/bokuchi/releases/latest):
+
+| OS                | File                          |
+| ----------------- | ----------------------------- |
+| Windows           | `Bokuchi_x.y.z_x64-setup.exe` |
+| macOS (Universal) | `Bokuchi_x.y.z_universal-apple.dmg` |
+| Linux             | `.AppImage` / `.deb` / `.rpm` |
+
+Bokuchi keeps itself up to date with a built-in updater.
+
+## Why another Markdown editor?
+
+There are plenty of Markdown editors out there. Bokuchi exists because:
+
+- **Free and open source, actively developed.** Typora is now paid, and MarkText is no longer actively maintained.
+- **No vault, no lock-in.** Bokuchi opens plain `.md` / `.txt` files directly, like a text editor — not a knowledge base.
+- **Private by design.** Works completely offline. No account, no telemetry.
 
 ## Features
 
-### Core Functionality
+- **Live preview** with synchronized scrolling, interactive checkboxes, and a Markdown toolbar
+- **Variable system**: define `{{variables}}` per file or globally and reuse them across documents
+- **Marp presentations**: preview slide decks with `marp: true` front-matter, including custom themes
+- **Math & diagrams**: KaTeX expressions and Mermaid diagrams out of the box
+- **Lightweight**: minimal memory footprint and fast startup, thanks to Tauri
+- **Tabs** with session restore and external file-change detection
+- **9 built-in themes** (light and dark) — or create your own custom theme
+- **14 UI languages**: English, 日本語, 中文 (简体/繁體), Español, हिन्दी, Русский, 한국어, Português (Brasil), العربية, Français, Deutsch, Bahasa Indonesia, Tiếng Việt — translation PRs welcome!
 
-- **Cross-platform**: Runs on Windows, macOS, and Linux
-- **Lightweight**: Built with Tauri for minimal resource usage
-- **Real-time preview**: Live Markdown preview with syntax highlighting
-- **Standalone**: No external dependencies or server required
-
-### Editor Features
-
-- **Tab management**: Multiple files editing with tabs
-- **Search and replace**: Floating search panel with match highlighting, navigation, and replace
-- **Zoom functionality**: Adjustable zoom levels for editor and preview
-- **Interactive checkboxes**: GitHub-style Markdown checkboxes with clickable preview
-- **Synchronized scrolling**: Editor and preview scroll positions are linked
-- **Markdown toolbar**: Quick-access toolbar for headings, bold, italic, lists, links, tables, and more
-- **Auto-save**: Automatic saving with debounce
-- **State persistence**: Automatically saves and restores application state
-- **Word count**: Live word count in the status bar (CJK-aware)
-
-### Advanced Rendering
-
-- **Math expressions**: KaTeX rendering with `$...$` (inline) and `$$...$$` (display) syntax
-- **Diagrams**: Mermaid flowcharts, sequence diagrams, and more from fenced code blocks
-- **Presentations**: Marp slide preview for documents with `marp: true` front-matter, including custom theme folders and external CSS
-
-### File Operations
-
-- **Native file operations**: Full file system access with native dialogs (Open, Save, Save As)
-- **File change detection**: Automatically detects external file changes
-- **File not found handling**: Graceful handling of restored tabs when files are missing
-- **HTML export**: Export preview as HTML files
-- **Table conversion**: Paste HTML tables or TSV/CSV data as Markdown tables
-
-### Customization & Themes
-
-- **Multiple themes**: Default, Dark, Pastel, Vivid, Dawn, Twilight, Silk, Ink, and Darcula themes
-- **Variable system**: Support for custom variables in Markdown (local and global)
-- **Internationalization**: Multi-language support (14 languages)
-- **Responsive design**: Optimized for different screen sizes
-
-### System Integration
-
-- **Single instance**: Prevents multiple application instances
-- **System integration**: Native OS integration and file associations
-- **Offline functionality**: Works completely offline without internet connection
-
-## Supported Languages
-
-Bokuchi supports 14 languages for the user interface:
-
-| Language              | Code      | Native Name        |
-| --------------------- | --------- | ------------------ |
-| English               | `en`      | English            |
-| Japanese              | `ja`      | 日本語             |
-| Chinese (Simplified)  | `zh-CN`   | 中文 (简体)        |
-| Chinese (Traditional) | `zh-Hant` | 中文 (繁體)        |
-| Spanish               | `es`      | Español            |
-| Hindi                 | `hi`      | हिन्दी             |
-| Russian               | `ru`      | Русский            |
-| Korean                | `ko`      | 한국어             |
-| Portuguese (Brazil)   | `pt-BR`   | Português (Brasil) |
-| Arabic                | `ar`      | العربية            |
-| French                | `fr`      | Français           |
-| German                | `de`      | Deutsch            |
-| Indonesian            | `id`      | Bahasa Indonesia   |
-| Vietnamese            | `vi`      | Tiếng Việt         |
-
-You can change the language in Settings > Language.
-
-**Please submit a pull request if you find any translation errors.**
+The full feature list is in the [User Guide](https://doc.bokuchi.com/).
 
 ## Variable System
 
-### File-local Variables
+Define variables in a file and reuse them anywhere in the document:
 
 ```markdown
 <!-- @var title: My Document -->
@@ -99,91 +54,19 @@ You can change the language in Settings > Language.
 Author: {{author}}
 ```
 
-### Global Variables
-
-Set global variables through the Variables settings panel. These are available across all files.
+Global variables can be set in the Variables settings panel and are available across all files.
 
 ## Development
 
-### Prerequisites
-
-- Node.js 18+
-- Rust (for Tauri)
-- Platform-specific build tools:
-  - **macOS**: Xcode Command Line Tools
-  - **Windows**: Microsoft Visual Studio C++ Build Tools
-  - **Linux**: Build essentials (gcc, make, etc.)
-
-### Setup
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start development server:
-   ```bash
-   npm run tauri:dev
-   ```
-
-### Commands
+Prerequisites: Node.js 18+ and Rust.
 
 ```bash
-# Development
-npm run tauri:dev      # Start desktop app (with lint + type-check)
-npm run dev            # Vite dev server only
-
-# Quality checks
-npm run check          # Run both ESLint and TypeScript checks
-npm run lint           # Run ESLint only
-npm run type-check     # Run TypeScript type checking only
-
-# Build
-npm run build          # TypeScript + Vite build
-npm run tauri:build    # Production native app build
+npm install
+npm run tauri:dev
 ```
 
-### Testing
+See the [Development Guide](docs/DEVELOPMENT.md) for commands, testing, and production builds.
 
-```bash
-npm run test:all           # Run all tests (Rust + TypeScript)
-npm run test:unit          # Run TypeScript unit tests (Vitest)
-npm run test:rust          # Run Rust unit tests
-npm run test:unit:coverage # Run TypeScript tests with coverage report
-```
+## License
 
-For details on test tiers, file locations, and CI configuration, see [docs/TESTING.md](docs/TESTING.md).
-
-### Building for Production
-
-```bash
-# macOS (Universal - Apple Silicon + Intel)
-npm run tauri:build -- --target universal-apple-darwin
-
-# macOS (Native only)
-npm run tauri:build
-
-# Windows
-npm run tauri:build -- --target x86_64-pc-windows-gnu
-
-# Linux
-npm run tauri:build -- --target x86_64-unknown-linux-gnu
-```
-
-Build output locations:
-
-- **macOS**: `src-tauri/target/universal-apple-darwin/release/bundle/dmg/`
-- **Windows**: `src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/`
-- **Linux**: `src-tauri/target/release/bundle/appimage/`
-
-### Documentation
-
-Developer documentation is available in the [`docs/`](docs/) directory:
-
-- [Testing Guide](docs/TESTING.md) — Test architecture, running tests, CI
-- [Menu System Guide](docs/MENU_SYSTEM_GUIDE.md) — Menu architecture and customization
-- [Security](docs/SECURITY.md) — Security policy and reporting
-- [Cross Compile Troubleshooting](docs/CROSS_COMPILE_TROUBLESHOOTING.md)
-- [macOS Notarization Guide](docs/MACOS_NOTARIZATION_GUIDE.md)
-- [Version Update Checklist](docs/VERSION_UPDATE_CHECKLIST.md)
-- [Monkey Test Case](docs/MONKEY_TEST_CASE.md) — Manual UI integration test cases
+[MIT](LICENSE)
