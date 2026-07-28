@@ -27,6 +27,7 @@ There are plenty of Markdown editors out there. Bokuchi exists because:
 - **Free and open source, actively developed.** Typora is now paid, and MarkText is no longer actively maintained.
 - **No vault, no lock-in.** Bokuchi opens plain `.md` / `.txt` files directly, like a text editor — not a knowledge base.
 - **Private by design.** Works completely offline. No account, no telemetry.
+- **Web-faithful preview.** Bokuchi renders Markdown with the same web technologies used by GitHub and your browser — genuine KaTeX, Mermaid, and Marp, not reimplementations. If it renders on the web, it renders in Bokuchi.
 
 ## Features
 
@@ -34,7 +35,7 @@ There are plenty of Markdown editors out there. Bokuchi exists because:
 - **Variable system**: define `{{variables}}` per file or globally and reuse them across documents
 - **Marp presentations**: preview slide decks with `marp: true` front-matter, including custom themes
 - **Math & diagrams**: KaTeX expressions and Mermaid diagrams out of the box
-- **Lightweight**: minimal memory footprint and fast startup, thanks to Tauri
+- **Lightweight**: small download size and instant startup — no bundled browser engine, thanks to Tauri
 - **Tabs** with session restore and external file-change detection
 - **9 built-in themes** (light and dark) — or create your own custom theme
 - **14 UI languages**: English, 日本語, 中文 (简体/繁體), Español, हिन्दी, Русский, 한국어, Português (Brasil), العربية, Français, Deutsch, Bahasa Indonesia, Tiếng Việt — translation PRs welcome!
