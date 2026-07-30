@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...HEAD)
+
+## [1.0.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.0...v1.0.1) - 2026-07-31
+
+### Added
+
+- Copy button on code blocks. Code blocks in the preview now show a copy button, so a snippet can be copied to the clipboard with a single click.
+- Adjustable vertical tab width. The vertical tab bar can now be resized by dragging its edge, and the chosen width is persisted; dragging below the collapse threshold unpins the bar back to auto-hide.
+
+### Changed
+
+- HTML and PDF exports now derive the default filename from the source document's name (swapping the markdown extension for the target one) instead of the fixed `markdown-export` name. Unsaved documents keep the previous fallback. (#442)
+- Updated dependencies, including `serde`, `serde_json`, `serde_with`, `anyhow`, `regex`, `webview2-com`, the Tauri plugins (`dialog`, `store`, `single-instance`), `dompurify`, `linkify-it`, `@marp-team/marp-core`, the `vite` / `vitest` / `typescript-eslint` / `eslint` dev groups, and CI actions (`actions/github-script`, `actions/setup-node`).
 
 ## [1.0.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v0.9.4...v1.0.0) - 2026-07-12
 

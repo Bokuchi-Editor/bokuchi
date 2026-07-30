@@ -611,25 +611,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "pdfExport": {
-        "title": "PDF 匯出",
-        "description": "現在可以將文件直接匯出為 PDF。無論是一般 Markdown 還是 Marp 投影片皆可使用，並已針對版面與定位進行微調，以獲得乾淨的輸出結果。"
+      "codeCopyButton": {
+        "title": "程式碼區塊複製按鈕",
+        "description": "預覽中的程式碼區塊現在附有複製按鈕，按一下即可複製程式碼片段。"
       },
-      "customThemes": {
-        "title": "自訂佈景主題",
-        "description": "建立並編輯屬於你自己的佈景主題。選擇一個基礎主題，依喜好調整色彩，你的自訂主題會被儲存以供再次使用。"
+      "verticalTabWidth": {
+        "title": "垂直標籤頁寬度可調整",
+        "description": "現在可以拖曳垂直標籤頁的邊緣來調整寬度，調整後的寬度會被記住。"
       },
-      "dragDropImages": {
-        "title": "拖放插入圖片",
-        "description": "將圖片檔案拖放到編輯器中即可立即插入。拖曳時會出現「將圖片拖放到此處」的提示覆蓋層，讓你清楚知道圖片會插入的位置。"
-      },
-      "listContinuation": {
-        "title": "清單與核取方塊連續輸入",
-        "description": "在清單或核取方塊中按下 Enter 現在會自動開始下一個項目，讓你無需重新輸入標記即可持續輸入。"
-      },
-      "marpOfflineFonts": {
-        "title": "Marp 離線字型",
-        "description": "Marp 投影片字型現在已隨應用程式一併打包，因此即使沒有網際網路連線，投影片也能以正確的字型呈現。"
+      "exportFilename": {
+        "title": "匯出使用原始檔案名稱",
+        "description": "HTML 與 PDF 匯出現在預設使用正在編輯的檔案名稱，而非固定的檔案名稱。"
       },
       "dependencyUpdates": {
         "title": "相依套件更新",
