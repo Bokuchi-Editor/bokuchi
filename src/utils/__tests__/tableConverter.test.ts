@@ -264,6 +264,21 @@ describe('convertTsvCsvToMarkdown', () => {
     expect(lines).toHaveLength(4);
   });
 
+  // T-TC-23: Regression companion to T-TC-22. An empty leading line is
+  // currently swallowed by the top-level `text.trim()` before the row loop
+  // ever sees it, so `i === 0` still lands on the real header row — but that
+  // safety is incidental to `trim()`, not to the (now index-independent)
+  // separator logic. Pin the observable behavior so a future change to the
+  // trimming (or the loop) can't silently drop the separator row again.
+  it('T-TC-23: an empty leading line must not swallow the header separator', () => {
+    const tsv = '\nA\tB\n1\t2';
+    const result = convertTsvCsvToMarkdown(tsv);
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('| A | B |');
+    expect(lines[1]).toContain('---');
+    expect(lines[2]).toBe('| 1 | 2 |');
+  });
+
   // T-TC-15
   it('throws when no delimiter found', () => {
     expect(() => convertTsvCsvToMarkdown('single column')).toThrow('No delimiter found');
