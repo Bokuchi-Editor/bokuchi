@@ -136,6 +136,27 @@ describe('htmlTableToMarkdown', () => {
     expect(lines[3]).toBe('| Bob | 25 |');
   });
 
+  // T-TC-22: BUG — when the first <tr> has no td/th cells (a spacer row, a
+  // hidden accessibility row, etc.), the loop skips it via `continue` but the
+  // separator-row insertion is still keyed to the raw loop index (`i === 0`)
+  // instead of "is this the first row we actually emitted". The header row
+  // ends up written at i === 1, so the `i === 0` check never fires and the
+  // separator row is never inserted at all.
+  it('T-TC-22: an empty leading row must not swallow the header separator', () => {
+    const html = `
+      <table>
+        <tr></tr>
+        <tr><th>A</th><th>B</th></tr>
+        <tr><td>1</td><td>2</td></tr>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('| A | B |');
+    expect(lines[1]).toContain('---'); // currently fails: lines[1] is '| 1 | 2 |'
+    expect(lines[2]).toBe('| 1 | 2 |');
+  });
+
   // T-TC-06
   it('handles cells with whitespace and newlines', () => {
     const html = `
