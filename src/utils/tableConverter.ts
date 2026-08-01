@@ -60,10 +60,12 @@ export function htmlTableToMarkdown(html: string): string {
 
       // Create Markdown row
       const markdownRow = '| ' + cellContents.join(' | ') + ' |';
+      const isFirstEmittedRow = markdownRows.length === 0;
       markdownRows.push(markdownRow);
 
-      // Add header separator row after the first row
-      if (i === 0) {
+      // Add header separator row after the first *emitted* row (rows skipped
+      // above for having no cells must not count as "the first row").
+      if (isFirstEmittedRow) {
         const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
         markdownRows.push(separator);
       }
@@ -188,10 +190,12 @@ export function convertTsvCsvToMarkdown(text: string): string {
 
       // Create Markdown row
       const markdownRow = '| ' + cellContents.join(' | ') + ' |';
+      const isFirstEmittedRow = markdownRows.length === 0;
       markdownRows.push(markdownRow);
 
-      // Add header separator row after the first row
-      if (i === 0) {
+      // Add header separator row after the first *emitted* row (rows skipped
+      // above for having no cells must not count as "the first row").
+      if (isFirstEmittedRow) {
         const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
         markdownRows.push(separator);
       }
