@@ -820,7 +820,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
                 enabled: false
               },
               hover: {
-                enabled: true
+                enabled: 'on'
               },
               links: true,
               colorDecorators: true,

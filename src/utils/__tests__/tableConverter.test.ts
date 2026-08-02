@@ -136,6 +136,25 @@ describe('htmlTableToMarkdown', () => {
     expect(lines[3]).toBe('| Bob | 25 |');
   });
 
+  // T-TC-22: Regression — when the first <tr> has no td/th cells (a spacer row,
+  // hidden accessibility row, etc.), it is skipped, but the header separator
+  // must still be emitted after the first non-empty row.
+  // This test ensures empty leading rows do not swallow the separator row.
+  it('T-TC-22: an empty leading row must not swallow the header separator', () => {
+    const html = `
+      <table>
+        <tr></tr>
+        <tr><th>A</th><th>B</th></tr>
+        <tr><td>1</td><td>2</td></tr>
+      </table>
+    `;
+    const result = htmlTableToMarkdown(html);
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('| A | B |');
+    expect(lines[1]).toContain('---'); // currently fails: lines[1] is '| 1 | 2 |'
+    expect(lines[2]).toBe('| 1 | 2 |');
+  });
+
   // T-TC-06
   it('handles cells with whitespace and newlines', () => {
     const html = `
@@ -243,6 +262,21 @@ describe('convertTsvCsvToMarkdown', () => {
     const lines = result.split('\n');
     // header + separator + 2 data rows (empty lines skipped)
     expect(lines).toHaveLength(4);
+  });
+
+  // T-TC-23: Regression companion to T-TC-22. An empty leading line is
+  // currently swallowed by the top-level `text.trim()` before the row loop
+  // ever sees it, so `i === 0` still lands on the real header row — but that
+  // safety is incidental to `trim()`, not to the (now index-independent)
+  // separator logic. Pin the observable behavior so a future change to the
+  // trimming (or the loop) can't silently drop the separator row again.
+  it('T-TC-23: an empty leading line must not swallow the header separator', () => {
+    const tsv = '\nA\tB\n1\t2';
+    const result = convertTsvCsvToMarkdown(tsv);
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('| A | B |');
+    expect(lines[1]).toContain('---');
+    expect(lines[2]).toBe('| 1 | 2 |');
   });
 
   // T-TC-15

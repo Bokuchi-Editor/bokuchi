@@ -16,7 +16,7 @@ import { loader } from '@monaco-editor/react';
 // Vite bundles this worker locally (no CDN). Markdown / plain-text editing only
 // needs the base editor worker — we intentionally don't ship the ts/json/css/html
 // language workers.
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import EditorWorker from 'monaco-editor/editor/editor.worker.js?worker';
 
 (self as unknown as { MonacoEnvironment: monaco.Environment }).MonacoEnvironment = {
   getWorker: () => new EditorWorker(),
