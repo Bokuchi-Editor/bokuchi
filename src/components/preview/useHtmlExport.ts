@@ -6,6 +6,7 @@ import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
+import { deriveExportFileName } from '../../utils/pathUtils';
 
 // A4 page geometry in inches (210×297mm). Margins are applied via the CSS
 // @page box (WebKit honours those for the page margin), so the native margin
@@ -20,6 +21,8 @@ interface UseHtmlExportParams {
   darkMode: boolean;
   theme?: string;
   tableLayout: TableLayoutMode;
+  /** Source document path; names the export after it in the save dialog (#442). */
+  filePath?: string;
 }
 
 interface UseHtmlExport {
@@ -37,6 +40,7 @@ export function useHtmlExport({
   darkMode,
   theme,
   tableLayout,
+  filePath,
 }: UseHtmlExportParams): UseHtmlExport {
   const [exportError, setExportError] = useState<string | null>(null);
 
@@ -89,7 +93,7 @@ export function useHtmlExport({
       const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss);
 
       // Select save location via file dialog
-      const result = await desktopApi.saveHtmlFile(fullHTML);
+      const result = await desktopApi.saveHtmlFile(fullHTML, deriveExportFileName(filePath, 'html'));
 
       if (!result.success) {
         setExportError(result.error || 'Failed to save HTML file');
@@ -110,7 +114,7 @@ export function useHtmlExport({
       });
       // Render + print to PDF natively (Rust side); the page is saved to the
       // location chosen in the file dialog.
-      const result = await desktopApi.exportPdfFile(fullHTML, A4_PAGE);
+      const result = await desktopApi.exportPdfFile(fullHTML, A4_PAGE, deriveExportFileName(filePath, 'pdf'));
       if (!result.success && result.error !== 'Save cancelled by user') {
         setExportError(result.error || 'Failed to export PDF file');
       }

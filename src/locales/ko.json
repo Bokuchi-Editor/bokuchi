@@ -611,25 +611,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "pdfExport": {
-        "title": "PDF 내보내기",
-        "description": "이제 문서를 바로 PDF로 내보낼 수 있습니다. 일반 Markdown과 Marp 슬라이드 모두에서 동작하며, 깔끔한 출력을 위해 레이아웃과 배치를 세밀하게 조정했습니다."
+      "codeCopyButton": {
+        "title": "코드 블록 복사 버튼",
+        "description": "미리보기의 코드 블록에 복사 버튼이 추가되어 클릭 한 번으로 코드를 복사할 수 있습니다."
       },
-      "customThemes": {
-        "title": "사용자 지정 테마",
-        "description": "나만의 테마를 만들고 편집할 수 있습니다. 기본 테마를 고르고 원하는 대로 색상을 조정하면, 사용자 지정 테마가 저장되어 다시 사용할 수 있습니다."
+      "verticalTabWidth": {
+        "title": "수직 탭 너비 조절",
+        "description": "수직 탭 바의 가장자리를 드래그하여 너비를 조절할 수 있으며, 조절한 너비는 기억됩니다."
       },
-      "dragDropImages": {
-        "title": "드래그 앤 드롭 이미지 삽입",
-        "description": "이미지 파일을 편집기에 끌어다 놓으면 바로 삽입됩니다. 드래그하는 동안 '여기에 이미지를 놓으세요' 오버레이가 표시되어 어디에 삽입될지 알 수 있습니다."
-      },
-      "listContinuation": {
-        "title": "목록·체크박스 연속 입력",
-        "description": "이제 목록이나 체크박스 안에서 Enter를 누르면 다음 항목이 자동으로 시작되므로, 기호를 다시 입력하지 않고 계속 작성할 수 있습니다."
-      },
-      "marpOfflineFonts": {
-        "title": "Marp 오프라인 글꼴",
-        "description": "이제 Marp 슬라이드 글꼴이 앱에 포함되어, 인터넷 연결이 없어도 슬라이드가 올바른 글꼴로 표시됩니다."
+      "exportFilename": {
+        "title": "내보내기 파일 이름 개선",
+        "description": "HTML 및 PDF 내보내기 시 고정된 이름 대신 편집 중인 파일의 이름이 기본값으로 사용됩니다."
       },
       "dependencyUpdates": {
         "title": "의존성 업데이트",
@@ -653,6 +645,8 @@
     "previousSlide": "이전 슬라이드",
     "nextSlide": "다음 슬라이드",
     "reloadThemes": "테마 새로고침",
+    "copyCode": "코드 복사",
+    "codeCopied": "복사됨!",
     "slideCounter": "슬라이드 {{current}} / {{total}}"
   },
   "rin": {

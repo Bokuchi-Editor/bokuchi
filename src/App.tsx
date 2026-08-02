@@ -36,6 +36,8 @@ function AppDesktop() {
     tabLayout,
     tabSidebarPinned,
     toggleTabSidebarPinned,
+    tabSidebarWidth,
+    setTabSidebarWidth,
     viewMode,
     rinActive,
     toggleRin,
@@ -271,6 +273,8 @@ function AppDesktop() {
           viewMode={viewMode}
           tabSidebarPinned={tabSidebarPinned}
           onToggleSidebarPinned={toggleTabSidebarPinned}
+          tabSidebarWidth={tabSidebarWidth}
+          onTabSidebarWidthChange={setTabSidebarWidth}
           rinActive={rinActive}
           rinFullWidth={rinFullWidth}
           tabs={tabs}
