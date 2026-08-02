@@ -122,6 +122,58 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               white-space: pre-wrap;
             }
 
+            /* Code-block copy button (injected by injectCodeCopyButtons) */
+            .markdown-preview .code-block-wrapper {
+              position: relative;
+            }
+
+            .markdown-preview .code-copy-button {
+              position: absolute;
+              top: 8px;
+              right: 8px;
+              z-index: 1;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 4px;
+              border: 1px solid ${palette.divider};
+              border-radius: 4px;
+              background-color: ${palette.background.paper};
+              color: ${palette.text.secondary};
+              cursor: pointer;
+              opacity: 0;
+              transition: opacity 0.15s ease, color 0.15s ease;
+              user-select: none;
+            }
+
+            .markdown-preview .code-block-wrapper:hover .code-copy-button,
+            .markdown-preview .code-copy-button:focus-visible,
+            .markdown-preview .code-copy-button.copied {
+              opacity: 1;
+            }
+
+            .markdown-preview .code-copy-button:hover {
+              color: ${palette.text.primary};
+              background-color: ${alpha(palette.text.primary, 0.08)};
+            }
+
+            .markdown-preview .code-copy-button svg {
+              display: block;
+            }
+
+            .markdown-preview .code-copy-button .check-icon {
+              display: none;
+            }
+
+            .markdown-preview .code-copy-button.copied .copy-icon {
+              display: none;
+            }
+
+            .markdown-preview .code-copy-button.copied .check-icon {
+              display: block;
+              color: ${palette.success.main};
+            }
+
             ${generateTableLayoutCSS(
               tableLayout,
               '.markdown-preview ',

@@ -611,25 +611,17 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "pdfExport": {
-        "title": "Exportação para PDF",
-        "description": "Agora você pode exportar seu documento diretamente para PDF. Funciona tanto para Markdown comum quanto para slides do Marp, com o layout e o posicionamento ajustados para uma saída limpa."
+      "codeCopyButton": {
+        "title": "Botão de copiar nos blocos de código",
+        "description": "Os blocos de código na pré-visualização agora têm um botão de copiar: basta um clique para copiar o trecho."
       },
-      "customThemes": {
-        "title": "Temas personalizados",
-        "description": "Crie e edite seus próprios temas. Escolha um tema base, ajuste as cores ao seu gosto, e seus temas personalizados são salvos para reutilização."
+      "verticalTabWidth": {
+        "title": "Largura ajustável das abas verticais",
+        "description": "Agora você pode arrastar a borda da barra de abas verticais para ajustar a largura, e a largura escolhida é lembrada."
       },
-      "dragDropImages": {
-        "title": "Inserção de imagens por arrastar e soltar",
-        "description": "Solte um arquivo de imagem no editor para inseri-lo instantaneamente. Uma sobreposição «Solte a imagem aqui» aparece enquanto você arrasta, para que você saiba onde ela será colocada."
-      },
-      "listContinuation": {
-        "title": "Continuação de listas e caixas de seleção",
-        "description": "Pressionar Enter dentro de uma lista ou caixa de seleção agora inicia o próximo item automaticamente, então você pode continuar digitando sem redigitar o marcador."
-      },
-      "marpOfflineFonts": {
-        "title": "Fontes offline para o Marp",
-        "description": "As fontes dos slides do Marp agora vêm incluídas no aplicativo, então os slides são renderizados com as fontes corretas mesmo sem conexão com a internet."
+      "exportFilename": {
+        "title": "Exportação com o nome do arquivo original",
+        "description": "As exportações em HTML e PDF agora usam por padrão o nome do arquivo em edição em vez de um nome fixo."
       },
       "dependencyUpdates": {
         "title": "Atualizações de dependências",
@@ -653,6 +645,8 @@
     "previousSlide": "Slide anterior",
     "nextSlide": "Próximo slide",
     "reloadThemes": "Recarregar temas",
+    "copyCode": "Copiar código",
+    "codeCopied": "Copiado!",
     "slideCounter": "Slide {{current}} de {{total}}"
   },
   "rin": {

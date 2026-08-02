@@ -1,5 +1,6 @@
 import { OutlineDisplayMode } from './outline';
 import { FolderTreeDisplayMode } from './folderTree';
+import { SIDEBAR_WIDTH_PX } from '../constants/layout';
 
 export type ScrollSyncMode = 'editor-to-preview' | 'bidirectional' | 'off';
 
@@ -42,6 +43,9 @@ export interface InterfaceSettings {
   // Vertical-tab sidebar: pinned/fixed (true, always shown) vs hover/auto-hide (false).
   // Distinct from per-tab `tab.isPinned`.
   tabSidebarPinned: boolean;
+  // Vertical-tab sidebar width in px, user-adjustable by dragging the right edge.
+  // Clamped to [SIDEBAR_WIDTH_MIN_PX, SIDEBAR_WIDTH_MAX_PX] on load and while dragging.
+  tabSidebarWidth: number;
 }
 
 // Rendering settings type definition
@@ -119,6 +123,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   folderTreeFileFilter: 'markdown',
   scrollSyncMode: 'bidirectional',
   tabSidebarPinned: true,
+  tabSidebarWidth: SIDEBAR_WIDTH_PX,
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {

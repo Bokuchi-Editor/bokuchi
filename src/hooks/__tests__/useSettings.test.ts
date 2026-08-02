@@ -328,4 +328,54 @@ describe('useSettings', () => {
     expect(result.current.tabSidebarPinned).toBe(true);
     expect(result.current.appSettings.interface.tabSidebarPinned).toBe(true);
   });
+
+  // T-SETT-15: a persisted sidebar width is restored on load; an out-of-range
+  // value (corrupt store, older bounds) is clamped instead of rendering a
+  // broken sidebar. A missing value falls back to the default (280).
+  it('T-SETT-15: restores and clamps persisted tab sidebar width', async () => {
+    const loaded = await storeApi.loadAppSettings();
+    vi.mocked(storeApi.loadAppSettings).mockResolvedValueOnce({
+      ...loaded,
+      interface: { ...loaded.interface, tabSidebarWidth: 9999 },
+    });
+    const { result } = renderHook(() => useSettings(defaultParams()));
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+    // 9999 is clamped to the max (480)
+    expect(result.current.tabSidebarWidth).toBe(480);
+
+    // Default mock has no tabSidebarWidth → falls back to the default width
+    const { result: result2 } = renderHook(() => useSettings(defaultParams()));
+    await waitFor(() => {
+      expect(result2.current.isSettingsLoaded).toBe(true);
+    });
+    expect(result2.current.tabSidebarWidth).toBe(280);
+  });
+
+  // T-SETT-16: a width change (edge drag) persists into appSettings after the
+  // debounce so the value survives a restart and export/import.
+  it('T-SETT-16: setTabSidebarWidth persists into appSettings (debounced)', async () => {
+    const { result } = renderHook(() => useSettings(defaultParams()));
+    await waitFor(() => {
+      expect(result.current.isSettingsLoaded).toBe(true);
+    });
+    vi.mocked(storeApi.saveAppSettings).mockClear();
+
+    act(() => {
+      result.current.setTabSidebarWidth(400);
+    });
+    expect(result.current.tabSidebarWidth).toBe(400);
+    // Not saved synchronously (debounced)
+    expect(storeApi.saveAppSettings).not.toHaveBeenCalled();
+
+    await waitFor(() => {
+      expect(storeApi.saveAppSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          interface: expect.objectContaining({ tabSidebarWidth: 400 }),
+        })
+      );
+    });
+    expect(result.current.appSettings.interface.tabSidebarWidth).toBe(400);
+  });
 });

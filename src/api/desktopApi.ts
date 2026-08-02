@@ -259,11 +259,14 @@ export const desktopApi = {
   },
 
   // Save HTML file
-  async saveHtmlFile(htmlContent: string): Promise<SaveResponse> {
+  async saveHtmlFile(
+    htmlContent: string,
+    defaultName: string = 'markdown-export.html',
+  ): Promise<SaveResponse> {
     try {
 
       const selected = await save({
-        defaultPath: 'markdown-export.html',
+        defaultPath: defaultName,
         filters: [
           {
             name: 'HTML Files',

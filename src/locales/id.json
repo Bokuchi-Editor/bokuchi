@@ -611,25 +611,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "pdfExport": {
-        "title": "Ekspor PDF",
-        "description": "Kini Anda dapat mengekspor dokumen langsung ke PDF. Fitur ini berfungsi baik untuk Markdown biasa maupun slide Marp, dengan tata letak dan penempatan yang disempurnakan untuk hasil yang rapi."
+      "codeCopyButton": {
+        "title": "Tombol Salin pada Blok Kode",
+        "description": "Blok kode di pratinjau kini memiliki tombol salin, sehingga Anda dapat menyalin kode dengan sekali klik."
       },
-      "customThemes": {
-        "title": "Tema Kustom",
-        "description": "Buat dan sunting tema Anda sendiri. Pilih tema dasar, sesuaikan warna sesuai selera Anda, dan tema kustom Anda akan disimpan untuk digunakan kembali."
+      "verticalTabWidth": {
+        "title": "Lebar Tab Vertikal yang Dapat Disesuaikan",
+        "description": "Kini Anda dapat menyeret tepi bilah tab vertikal untuk menyesuaikan lebarnya, dan lebar pilihan Anda akan diingat."
       },
-      "dragDropImages": {
-        "title": "Penyisipan Gambar Seret & Lepas",
-        "description": "Lepaskan berkas gambar ke dalam editor untuk menyisipkannya secara instan. Lapisan «Lepaskan gambar di sini» muncul saat Anda menyeret sehingga Anda tahu di mana gambar akan ditempatkan."
-      },
-      "listContinuation": {
-        "title": "Input Daftar & Kotak Centang Berkelanjutan",
-        "description": "Menekan Enter di dalam daftar atau kotak centang kini secara otomatis memulai item berikutnya, sehingga Anda dapat terus mengetik tanpa mengetik ulang penanda."
-      },
-      "marpOfflineFonts": {
-        "title": "Font Offline untuk Marp",
-        "description": "Font slide Marp kini disertakan dalam aplikasi, sehingga slide ditampilkan dengan font yang benar bahkan tanpa koneksi internet."
+      "exportFilename": {
+        "title": "Ekspor Menggunakan Nama File Asli",
+        "description": "Ekspor HTML dan PDF kini menggunakan nama file yang sedang diedit sebagai nama default, bukan nama tetap."
       },
       "dependencyUpdates": {
         "title": "Pembaruan Dependensi",
@@ -653,6 +645,8 @@
     "previousSlide": "Slide sebelumnya",
     "nextSlide": "Slide berikutnya",
     "reloadThemes": "Muat ulang tema",
+    "copyCode": "Salin kode",
+    "codeCopied": "Tersalin!",
     "slideCounter": "Slide {{current}} dari {{total}}"
   },
   "rin": {
