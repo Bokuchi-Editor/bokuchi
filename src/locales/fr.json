@@ -619,6 +619,10 @@
         "title": "Largeur ajustable des onglets verticaux",
         "description": "Vous pouvez désormais faire glisser le bord de la barre d'onglets verticaux pour en ajuster la largeur, qui est ensuite mémorisée."
       },
+      "tablePasteEmptyRow": {
+        "title": "Correction du collage de tableaux",
+        "description": "Les tableaux commençant par une ligne vide (par exemple copiés depuis une page web) sont désormais correctement convertis en tableaux Markdown lors du collage, au lieu d'être insérés comme texte brut."
+      },
       "exportFilename": {
         "title": "Export avec le nom du fichier d'origine",
         "description": "Les exports HTML et PDF utilisent désormais par défaut le nom du fichier en cours d'édition plutôt qu'un nom fixe."

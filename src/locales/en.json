@@ -642,6 +642,10 @@
         "title": "Adjustable Vertical Tab Width",
         "description": "You can now drag the edge of the vertical tab bar to adjust its width, and your preferred width is remembered."
       },
+      "tablePasteEmptyRow": {
+        "title": "Table Paste Fix",
+        "description": "Tables that begin with an empty row (e.g. copied from a web page) are now correctly converted to Markdown tables on paste, instead of being inserted as plain text."
+      },
       "exportFilename": {
         "title": "Export Uses the Original Filename",
         "description": "HTML and PDF exports now default to the name of the file you are editing instead of a fixed filename."

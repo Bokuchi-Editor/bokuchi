@@ -619,6 +619,10 @@
         "title": "Largura ajustável das abas verticais",
         "description": "Agora você pode arrastar a borda da barra de abas verticais para ajustar a largura, e a largura escolhida é lembrada."
       },
+      "tablePasteEmptyRow": {
+        "title": "Correção ao colar tabelas",
+        "description": "Tabelas que começam com uma linha vazia (por exemplo, copiadas de uma página da web) agora são convertidas corretamente em tabelas Markdown ao colar, em vez de serem inseridas como texto simples."
+      },
       "exportFilename": {
         "title": "Exportação com o nome do arquivo original",
         "description": "As exportações em HTML e PDF agora usam por padrão o nome do arquivo em edição em vez de um nome fixo."

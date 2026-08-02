@@ -619,6 +619,10 @@
         "title": "Điều chỉnh độ rộng tab dọc",
         "description": "Giờ đây bạn có thể kéo mép thanh tab dọc để điều chỉnh độ rộng, và độ rộng đã chọn sẽ được ghi nhớ."
       },
+      "tablePasteEmptyRow": {
+        "title": "Sửa lỗi dán bảng",
+        "description": "Đã sửa lỗi bảng bắt đầu bằng một hàng trống (ví dụ: sao chép từ trang web) không được chuyển thành bảng Markdown khi dán mà bị chèn dưới dạng văn bản thuần."
+      },
       "exportFilename": {
         "title": "Xuất tệp với tên tệp gốc",
         "description": "Xuất HTML và PDF giờ đây mặc định dùng tên tệp đang chỉnh sửa thay vì một tên cố định."

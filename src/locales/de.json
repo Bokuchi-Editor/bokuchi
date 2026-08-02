@@ -619,6 +619,10 @@
         "title": "Anpassbare Breite der vertikalen Tabs",
         "description": "Die Breite der vertikalen Tab-Leiste lässt sich jetzt per Ziehen anpassen; die gewählte Breite wird gespeichert."
       },
+      "tablePasteEmptyRow": {
+        "title": "Korrektur beim Einfügen von Tabellen",
+        "description": "Tabellen, die mit einer leeren Zeile beginnen (z. B. aus einer Webseite kopiert), werden beim Einfügen jetzt korrekt in Markdown-Tabellen umgewandelt, statt als reiner Text eingefügt zu werden."
+      },
       "exportFilename": {
         "title": "Export mit ursprünglichem Dateinamen",
         "description": "HTML- und PDF-Exporte verwenden jetzt standardmäßig den Namen der bearbeiteten Datei statt eines festen Dateinamens."

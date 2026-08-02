@@ -619,6 +619,10 @@
         "title": "垂直標籤頁寬度可調整",
         "description": "現在可以拖曳垂直標籤頁的邊緣來調整寬度，調整後的寬度會被記住。"
       },
+      "tablePasteEmptyRow": {
+        "title": "表格貼上修正",
+        "description": "修正了以空列開頭的表格（例如從網頁複製）貼上時未被轉換為 Markdown 表格、而是以純文字插入的問題。"
+      },
       "exportFilename": {
         "title": "匯出使用原始檔案名稱",
         "description": "HTML 與 PDF 匯出現在預設使用正在編輯的檔案名稱，而非固定的檔案名稱。"

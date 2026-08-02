@@ -619,6 +619,10 @@
         "title": "Lebar Tab Vertikal yang Dapat Disesuaikan",
         "description": "Kini Anda dapat menyeret tepi bilah tab vertikal untuk menyesuaikan lebarnya, dan lebar pilihan Anda akan diingat."
       },
+      "tablePasteEmptyRow": {
+        "title": "Perbaikan Tempel Tabel",
+        "description": "Memperbaiki masalah saat tabel yang diawali baris kosong (misalnya disalin dari halaman web) tidak dikonversi menjadi tabel Markdown saat ditempel, melainkan disisipkan sebagai teks biasa."
+      },
       "exportFilename": {
         "title": "Ekspor Menggunakan Nama File Asli",
         "description": "Ekspor HTML dan PDF kini menggunakan nama file yang sedang diedit sebagai nama default, bukan nama tetap."
