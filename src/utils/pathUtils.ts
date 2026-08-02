@@ -60,6 +60,29 @@ export const isMarkdownFile = (fileName: string): boolean => {
   return lowerName.endsWith('.md') || lowerName.endsWith('.markdown');
 };
 
+const MARKDOWN_EXTENSION_PATTERN = /\.(md|markdown)$/i;
+
+/**
+ * Derive the default export file name from the source document's path (#442).
+ * A trailing markdown extension is swapped for the target one; any other
+ * extension is kept and the target extension appended, so the export still
+ * carries the source name. Unsaved documents fall back to the legacy fixed
+ * name so the dialog behaves exactly as before.
+ */
+export const deriveExportFileName = (
+  filePath: string | undefined,
+  targetExtension: 'html' | 'pdf',
+): string => {
+  if (!filePath) {
+    return `markdown-export.${targetExtension}`;
+  }
+  const fileName = extractFileNameFromPath(filePath);
+  if (MARKDOWN_EXTENSION_PATTERN.test(fileName)) {
+    return fileName.replace(MARKDOWN_EXTENSION_PATTERN, `.${targetExtension}`);
+  }
+  return `${fileName}.${targetExtension}`;
+};
+
 const UNTITLED_TAB_TITLE_MAX_LENGTH = 20;
 
 /**

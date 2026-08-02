@@ -6,6 +6,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('@tauri-apps/api/core');
 vi.mock('@tauri-apps/plugin-opener');
 vi.mock('@tauri-apps/plugin-fs');
+vi.mock('@tauri-apps/plugin-clipboard-manager');
 
 vi.mock('../../api/variableApi', () => ({
   variableApi: {
@@ -40,6 +41,16 @@ vi.mock('marked', () => {
   }
 
   function simpleMarked(src: string): string {
+    // Whole-document fenced code block — mirrors renderCode's output shape
+    // (hljs class for highlighted blocks, bare language class for mermaid).
+    const fence = src.match(/^```(\w*)\n([\s\S]*?)\n?```\s*$/);
+    if (fence) {
+      const lang = fence[1];
+      if (lang === 'mermaid') {
+        return `<pre><code class="language-mermaid">${fence[2]}</code></pre>\n`;
+      }
+      return `<pre><code class="hljs${lang ? ` language-${lang}` : ''}">${fence[2]}</code></pre>\n`;
+    }
     const lines = src.split('\n');
     const items = lines.map((line) => {
       const unchecked = line.match(/^\s*[-*] \[ \] (.+)$/);
@@ -113,6 +124,7 @@ vi.mock('../../utils/marpRenderer', () => ({
 import MarkdownPreview from '../Preview';
 import { variableApi } from '../../api/variableApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid } from '../../utils/markdownRenderers';
 import { contentIsMarp } from '../../utils/marpRenderer';
 import { DEFAULT_RENDERING_SETTINGS } from '../../types/settings';
@@ -568,6 +580,52 @@ describe('MarkdownPreview – Easter egg blocks', () => {
     const eeBlock = container.querySelector('.ee-block.ee-rainbow');
     expect(eeBlock).not.toBeNull();
     expect(eeBlock?.getAttribute('data-effect')).toBe('rainbow');
+  });
+});
+
+// =========================================================================
+// Code-block copy button
+// =========================================================================
+
+describe('MarkdownPreview – code copy button', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(contentIsMarp).mockReturnValue(false);
+  });
+
+  // T-PV-26: clicking the injected copy button copies exactly the code text
+  // through the Tauri clipboard plugin and shows the "copied" feedback state.
+  it('T-PV-26: copies the code block text via the clipboard plugin', async () => {
+    const { container } = await renderPreviewContent({
+      content: '```js\nconst a = 1;\nconsole.log(a);\n```',
+    });
+
+    const button = await waitFor(() => {
+      const b = container.querySelector('.code-block-wrapper .code-copy-button');
+      expect(b).not.toBeNull();
+      return b as HTMLButtonElement;
+    });
+
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith('const a = 1;\nconsole.log(a);');
+    });
+    await waitFor(() => {
+      expect(button.classList.contains('copied')).toBe(true);
+    });
+  });
+
+  // T-PV-27: mermaid blocks are post-processed into diagrams and must never
+  // carry a copy button (their <pre><code> has no hljs class).
+  it('T-PV-27: mermaid blocks get no copy button', async () => {
+    const { container } = await renderPreviewContent({
+      content: '```mermaid\ngraph TD\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false },
+    });
+
+    expect(container.querySelector('pre code.language-mermaid')).not.toBeNull();
+    expect(container.querySelector('.code-copy-button')).toBeNull();
   });
 });
 

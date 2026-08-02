@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
 
 // Capture onScrollChange from Editor so tests can simulate scroll events
@@ -49,6 +49,8 @@ const createDefaultProps = () => ({
   viewMode: 'split' as const,
   tabSidebarPinned: true,
   onToggleSidebarPinned: vi.fn(),
+  tabSidebarWidth: 280,
+  onTabSidebarWidthChange: vi.fn(),
   rinActive: false,
   rinFullWidth: false,
   tabs: [
@@ -212,5 +214,44 @@ describe('AppContent', () => {
     );
     // tab2 should restore to 0.3
     expect(screen.getByTestId('preview').getAttribute('data-scroll-fraction')).toBe('0.3');
+  });
+
+  // T-AC-13: dragging the sidebar's right edge resizes within [180, 480]
+  it('T-AC-13: sidebar width drag resizes within min/max bounds', () => {
+    const props = createDefaultProps();
+    render(<AppContent {...props} tabLayout="vertical" />);
+    const handle = screen.getByTestId('sidebar-width-resize-handle');
+
+    fireEvent.mouseDown(handle, { clientX: 280 });
+    fireEvent.mouseMove(document, { clientX: 400 });
+    expect(props.onTabSidebarWidthChange).toHaveBeenLastCalledWith(400);
+    // Past the max: clamps to 480
+    fireEvent.mouseMove(document, { clientX: 700 });
+    expect(props.onTabSidebarWidthChange).toHaveBeenLastCalledWith(480);
+    // Below the min but above the collapse threshold: clamps to 180
+    fireEvent.mouseMove(document, { clientX: 150 });
+    expect(props.onTabSidebarWidthChange).toHaveBeenLastCalledWith(180);
+    fireEvent.mouseUp(document);
+    expect(props.onToggleSidebarPinned).not.toHaveBeenCalled();
+  });
+
+  // T-AC-14: dragging below the collapse threshold unpins (auto-hide) and ends the drag
+  it('T-AC-14: dragging below the collapse threshold unpins the sidebar', () => {
+    const props = createDefaultProps();
+    render(<AppContent {...props} tabLayout="vertical" />);
+    const handle = screen.getByTestId('sidebar-width-resize-handle');
+
+    fireEvent.mouseDown(handle, { clientX: 280 });
+    fireEvent.mouseMove(document, { clientX: 100 });
+    expect(props.onToggleSidebarPinned).toHaveBeenCalledTimes(1);
+    // The drag ended on collapse: further moves change nothing
+    fireEvent.mouseMove(document, { clientX: 300 });
+    expect(props.onTabSidebarWidthChange).not.toHaveBeenCalled();
+  });
+
+  // T-AC-15: the hover/auto-hide sidebar has no persistent edge to grab
+  it('T-AC-15: hover mode has no width resize handle', () => {
+    render(<AppContent {...createDefaultProps()} tabLayout="vertical" tabSidebarPinned={false} />);
+    expect(screen.queryByTestId('sidebar-width-resize-handle')).toBeNull();
   });
 });
