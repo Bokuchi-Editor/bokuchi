@@ -25,32 +25,27 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.0.0',
+  version: '1.0.1',
   changes: [
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.pdfExport.title',
-      descriptionKey: 'whatsNew.changes.pdfExport.description',
+      titleKey: 'whatsNew.changes.codeCopyButton.title',
+      descriptionKey: 'whatsNew.changes.codeCopyButton.description',
     },
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.customThemes.title',
-      descriptionKey: 'whatsNew.changes.customThemes.description',
+      titleKey: 'whatsNew.changes.verticalTabWidth.title',
+      descriptionKey: 'whatsNew.changes.verticalTabWidth.description',
     },
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.dragDropImages.title',
-      descriptionKey: 'whatsNew.changes.dragDropImages.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.listContinuation.title',
-      descriptionKey: 'whatsNew.changes.listContinuation.description',
+      type: 'fix',
+      titleKey: 'whatsNew.changes.tablePasteEmptyRow.title',
+      descriptionKey: 'whatsNew.changes.tablePasteEmptyRow.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.marpOfflineFonts.title',
-      descriptionKey: 'whatsNew.changes.marpOfflineFonts.description',
+      titleKey: 'whatsNew.changes.exportFilename.title',
+      descriptionKey: 'whatsNew.changes.exportFilename.description',
     },
     {
       type: 'improvement',

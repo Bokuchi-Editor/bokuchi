@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { clampSidebarWidth, SIDEBAR_COLLAPSE_THRESHOLD_PX } from '../constants/layout';
 
 /**
  * Layout constraints for the merged "open editors + explorer" sidebar.
@@ -97,4 +98,64 @@ export function useResizableSidebar(): UseResizableSidebarResult {
     toggleBottomCollapsed,
     handleDividerMouseDown,
   };
+}
+
+interface UseSidebarWidthDragParams {
+  /** Current sidebar width (px); the drag computes deltas from this value. */
+  width: number;
+  /** Live width updates during the drag, already clamped to [MIN, MAX]. */
+  onWidthChange: (width: number) => void;
+  /**
+   * Fired once when the drag crosses SIDEBAR_COLLAPSE_THRESHOLD_PX: the drag
+   * ends and the caller is expected to unpin the sidebar (hover/auto-hide).
+   * The width state keeps its last valid (>= MIN) value so re-pinning restores it.
+   */
+  onCollapse: () => void;
+}
+
+interface UseSidebarWidthDragResult {
+  isResizingWidth: boolean;
+  handleWidthResizeMouseDown: (event: React.MouseEvent) => void;
+}
+
+/**
+ * Horizontal drag on the vertical-tab sidebar's right edge (Arc-style):
+ * free resize between the min/max bounds, collapse (unpin) below the threshold.
+ */
+export function useSidebarWidthDrag({ width, onWidthChange, onCollapse }: UseSidebarWidthDragParams): UseSidebarWidthDragResult {
+  const [isResizingWidth, setIsResizingWidth] = useState(false);
+
+  const handleWidthResizeMouseDown = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = width;
+    setIsResizingWidth(true);
+
+    const cleanup = () => {
+      setIsResizingWidth(false);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    const onMouseMove = (ev: MouseEvent) => {
+      const rawWidth = startWidth + (ev.clientX - startX);
+      if (rawWidth < SIDEBAR_COLLAPSE_THRESHOLD_PX) {
+        cleanup();
+        onCollapse();
+        return;
+      }
+      onWidthChange(clampSidebarWidth(rawWidth));
+    };
+
+    const onMouseUp = () => cleanup();
+
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, [width, onWidthChange, onCollapse]);
+
+  return { isResizingWidth, handleWidthResizeMouseDown };
 }

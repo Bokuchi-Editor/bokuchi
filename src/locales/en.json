@@ -634,25 +634,21 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "pdfExport": {
-        "title": "PDF Export",
-        "description": "You can now export your document straight to PDF. It works for both regular Markdown and Marp slides, with the layout and positioning fine-tuned for clean output."
+      "codeCopyButton": {
+        "title": "Copy Button on Code Blocks",
+        "description": "Code blocks in the preview now have a copy button, so you can copy a snippet with a single click."
       },
-      "customThemes": {
-        "title": "Custom Themes",
-        "description": "Create and edit your own themes. Pick a base theme, adjust the colors to your liking, and your custom themes are saved for reuse."
+      "verticalTabWidth": {
+        "title": "Adjustable Vertical Tab Width",
+        "description": "You can now drag the edge of the vertical tab bar to adjust its width, and your preferred width is remembered."
       },
-      "dragDropImages": {
-        "title": "Drag & Drop Image Insertion",
-        "description": "Drop an image file into the editor to insert it instantly. A \"Drop image here\" overlay appears while you drag so you know where it will land."
+      "tablePasteEmptyRow": {
+        "title": "Table Paste Fix",
+        "description": "Tables that begin with an empty row (e.g. copied from a web page) are now correctly converted to Markdown tables on paste, instead of being inserted as plain text."
       },
-      "listContinuation": {
-        "title": "Continuous List & Checkbox Input",
-        "description": "Pressing Enter inside a list or checkbox now starts the next item automatically, so you can keep typing without retyping the marker."
-      },
-      "marpOfflineFonts": {
-        "title": "Offline Fonts for Marp",
-        "description": "Marp slide fonts are now bundled with the app, so slides render with the correct fonts even without an internet connection."
+      "exportFilename": {
+        "title": "Export Uses the Original Filename",
+        "description": "HTML and PDF exports now default to the name of the file you are editing instead of a fixed filename."
       },
       "dependencyUpdates": {
         "title": "Dependency Updates",
@@ -680,6 +676,8 @@
     "nextSlide": "Next Slide",
     "reloadThemes": "Reload themes",
     "slideCounter": "Slide {{current}} of {{total}}",
+    "copyCode": "Copy code",
+    "codeCopied": "Copied!",
     "featureNotice": {
       "message": "This file uses {{features}}. Enable it in Settings to see it rendered.",
       "openSettings": "Open Settings",

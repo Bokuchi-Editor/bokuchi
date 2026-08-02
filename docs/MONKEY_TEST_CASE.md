@@ -149,6 +149,8 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | M-80 | Paste HTML table (off mode)        | Set table conversion to "off", copy a table from a spreadsheet, paste     | The table is pasted as plain text without conversion                 |
 | M-81 | Paste as plain text                | Copy formatted text, paste with `Ctrl+Shift+V`                           | Content is pasted as plain text regardless of table conversion setting |
 | M-82 | Paste TSV/CSV data                 | Copy tab-separated or comma-separated data, paste into editor             | The data is detected and converted to a Markdown table               |
+| M-202 | Copy button on preview code blocks | Hover a fenced code block in the preview, click the copy button at its top-right, paste into another app | The button appears on hover, briefly turns into a check mark after clicking, and the pasted text is exactly the code block's content (no backticks, no extra markup). Works with and without a language tag |
+| M-203 | Copy button exclusions             | Preview a document with a Mermaid diagram; export a document with code blocks as HTML | The Mermaid diagram shows no copy button; the exported HTML file contains no copy buttons |
 
 ## 13. Edge Cases & Stability
 
@@ -186,6 +188,7 @@ Tests for the Marp slide rendering feature (Settings > Advanced > enableMarp). T
 | M-178 | gaia theme fonts render offline | **With networking disabled** (Wi-Fi off), open a Marp document with `theme: gaia` in preview, then export it to HTML and PDF | Headings/body render in Lato (geometric sans, distinctive flat-topped `a`) and code blocks in Roboto Mono — NOT the system fallback (Avenir Next / Courier-like serif mono on macOS). The exported HTML opened in a browser and the exported PDF show the same fonts. Guards the bundled data-URI fonts replacing gaia's `fonts.bunny.net` CSS `@import` |
 | M-194 | Fenced `---` does not break editor↔preview slide sync *(regression, verify in app)* | Open a Marp deck where a fenced code block (``` … ```) contains a `---` line (e.g. a slide teaching Marp syntax); scroll through the deck in split view | Slide boundaries ignore the `---` inside the fence: the slide count matches what Marp renders and editor↔preview scroll sync stays aligned after the fence (no drift) |
 | M-195 | Marp PDF export does not clip content-heavy (table) slides *(regression, verify in app)* | Export a Marp deck to PDF where one slide has a table (or other tall content) that nearly fills the slide, and another slide is sparse (a centered title slide) | The table slide prints with every row intact — no row cut off by a hard horizontal edge — while the sparse title slide stays vertically centered |
+| M-201 | Marp PDF export names the file after the source document *(#442, verify in app)* | Open a saved Marp file (e.g. `deck.md`) and click Export as PDF; also try from an unsaved (new) Marp tab | The save dialog defaults to `deck.pdf` for the saved file; the unsaved tab keeps the legacy `slides-export.pdf` fallback |
 
 ## 15. Link Handling in Preview
 
@@ -307,6 +310,9 @@ This area has regressed at least three times. The chain has multiple independent
 | M-153 | Rin editor width toggle                         | While in Rin, click the width-toggle button below the exit button → in full width, check the editor's right edge          | Toggles between "1000px fixed (centered)" and "full width". In full width the editor stops left of the button column so text never sits under the buttons |
 | M-154 | Hover stays consistent with the folder tree     | Turn the folder tree ON (merged with vertical tabs) → unpin → move the mouse to the left edge                              | Pin/hover behavior does not change with the folder tree present; hovering reveals the overlay sidebar containing both tabs and the folder tree |
 | M-168 | Rin button tooltips appear on the left, not over the button below | While in Rin, hover the top-right exit button, then the width-toggle button below it | Each tooltip ("Exit Rin mode" / width-toggle label) renders to the **left** of its button and never overlaps the button beneath it, so the lower button stays clickable |
+| M-199 | Sidebar width drag within bounds *(verify in app)* | With vertical tabs pinned, drag the sidebar's right edge left and right (also with the folder tree merged in) | The sidebar resizes freely between ~180px and ~480px and stops at both bounds. Tabs and the folder tree follow the width; the editor/preview relayouts live |
+| M-200 | Drag past the minimum hides the sidebar (Arc-style) *(verify in app)* | Drag the right edge far left, well past the minimum width | Below the minimum the width first clamps; dragging clearly further (past ~120px) unpins the sidebar into hover/auto-hide mode (left-edge nub). Re-pinning from the hover overlay restores the last valid width — never a sliver |
+| M-201 | Sidebar width persists and applies everywhere *(verify in app)* | Resize the sidebar, restart the app; also unpin and hover the left edge | After restart the sidebar opens at the adjusted width. The hover overlay and the merged (tabs + folder tree) sidebar use the same width |
 
 ## 26. In-editor Markdown Table Editing
 

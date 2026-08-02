@@ -611,25 +611,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "pdfExport": {
-        "title": "Xuất PDF",
-        "description": "Nay bạn có thể xuất tài liệu trực tiếp sang PDF. Tính năng hoạt động với cả Markdown thông thường lẫn slide Marp, với bố cục và vị trí được tinh chỉnh để cho ra bản in gọn gàng."
+      "codeCopyButton": {
+        "title": "Nút sao chép trên khối mã",
+        "description": "Các khối mã trong bản xem trước giờ đây có nút sao chép, chỉ cần một cú nhấp để sao chép đoạn mã."
       },
-      "customThemes": {
-        "title": "Giao diện tùy chỉnh",
-        "description": "Tạo và chỉnh sửa giao diện của riêng bạn. Chọn một giao diện nền, điều chỉnh màu sắc theo ý thích, và các giao diện tùy chỉnh của bạn được lưu lại để dùng lần sau."
+      "verticalTabWidth": {
+        "title": "Điều chỉnh độ rộng tab dọc",
+        "description": "Giờ đây bạn có thể kéo mép thanh tab dọc để điều chỉnh độ rộng, và độ rộng đã chọn sẽ được ghi nhớ."
       },
-      "dragDropImages": {
-        "title": "Chèn ảnh bằng kéo & thả",
-        "description": "Kéo thả một tập tin ảnh vào trình soạn thảo để chèn ngay lập tức. Lớp phủ «Thả ảnh vào đây» xuất hiện khi bạn kéo để bạn biết ảnh sẽ được đặt ở đâu."
+      "tablePasteEmptyRow": {
+        "title": "Sửa lỗi dán bảng",
+        "description": "Đã sửa lỗi bảng bắt đầu bằng một hàng trống (ví dụ: sao chép từ trang web) không được chuyển thành bảng Markdown khi dán mà bị chèn dưới dạng văn bản thuần."
       },
-      "listContinuation": {
-        "title": "Nhập danh sách & ô đánh dấu liên tục",
-        "description": "Nhấn Enter trong một danh sách hoặc ô đánh dấu nay tự động bắt đầu mục tiếp theo, nên bạn có thể tiếp tục gõ mà không cần nhập lại dấu đầu dòng."
-      },
-      "marpOfflineFonts": {
-        "title": "Phông chữ ngoại tuyến cho Marp",
-        "description": "Phông chữ slide Marp nay được đóng gói kèm ứng dụng, nên slide hiển thị đúng phông chữ ngay cả khi không có kết nối internet."
+      "exportFilename": {
+        "title": "Xuất tệp với tên tệp gốc",
+        "description": "Xuất HTML và PDF giờ đây mặc định dùng tên tệp đang chỉnh sửa thay vì một tên cố định."
       },
       "dependencyUpdates": {
         "title": "Cập nhật phụ thuộc",
@@ -653,6 +649,8 @@
     "previousSlide": "Slide trước",
     "nextSlide": "Slide tiếp theo",
     "reloadThemes": "Tải lại giao diện",
+    "copyCode": "Sao chép mã",
+    "codeCopied": "Đã sao chép!",
     "slideCounter": "Slide {{current}} / {{total}}"
   },
   "rin": {

@@ -78,6 +78,8 @@ interface TabBarProps {
   // is provided, the pin button is shown in the vertical sidebar header.
   tabSidebarPinned?: boolean;
   onToggleSidebarPinned?: () => void;
+  // Vertical (non-embedded) sidebar width in px. Defaults to SIDEBAR_WIDTH_PX.
+  width?: number;
 }
 
 // Custom pointer sensor with drag start threshold
@@ -357,6 +359,7 @@ const TabBar: React.FC<TabBarProps> = ({
   embedded = false,
   tabSidebarPinned,
   onToggleSidebarPinned,
+  width = SIDEBAR_WIDTH_PX,
 }) => {
   const { t } = useTranslation();
   const sensors = useSensors(
@@ -486,7 +489,7 @@ const TabBar: React.FC<TabBarProps> = ({
       <Box
         sx={{
           ...(!embedded && {
-            width: SIDEBAR_WIDTH_PX,
+            width,
             borderRight: 1,
             borderColor: 'divider',
           }),
