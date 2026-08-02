@@ -611,25 +611,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "pdfExport": {
-        "title": "PDF 导出",
-        "description": "现在可以将文档直接导出为 PDF。普通 Markdown 和 Marp 幻灯片均受支持，并对布局和定位进行了微调，以获得整洁的输出效果。"
+      "codeCopyButton": {
+        "title": "代码块复制按钮",
+        "description": "预览中的代码块现在带有复制按钮，单击即可复制代码片段。"
       },
-      "customThemes": {
-        "title": "自定义主题",
-        "description": "创建并编辑属于你自己的主题。选择一个基础主题，按喜好调整颜色，你的自定义主题会被保存以便重复使用。"
+      "verticalTabWidth": {
+        "title": "垂直标签页宽度可调",
+        "description": "现在可以拖动垂直标签页的边缘来调整宽度，调整后的宽度会被记住。"
       },
-      "dragDropImages": {
-        "title": "拖放插入图片",
-        "description": "将图片文件拖入编辑器即可立即插入。拖动时会显示「将图片拖放到此处」的提示，让你清楚图片将落在哪里。"
-      },
-      "listContinuation": {
-        "title": "列表与复选框连续输入",
-        "description": "现在在列表或复选框中按下回车键会自动开始下一项，无需重新输入标记即可继续键入。"
-      },
-      "marpOfflineFonts": {
-        "title": "Marp 离线字体",
-        "description": "Marp 幻灯片字体现已随应用一同打包，因此即使没有网络连接，幻灯片也能以正确的字体渲染。"
+      "exportFilename": {
+        "title": "导出使用原文件名",
+        "description": "HTML 和 PDF 导出现在默认使用正在编辑的文件名，而不是固定的文件名。"
       },
       "dependencyUpdates": {
         "title": "依赖更新",

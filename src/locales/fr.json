@@ -611,25 +611,17 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "pdfExport": {
-        "title": "Export PDF",
-        "description": "Vous pouvez désormais exporter votre document directement en PDF. Cela fonctionne aussi bien pour le Markdown classique que pour les diapositives Marp, avec une mise en page et un positionnement peaufinés pour un rendu net."
+      "codeCopyButton": {
+        "title": "Bouton de copie sur les blocs de code",
+        "description": "Les blocs de code de l'aperçu disposent désormais d'un bouton de copie : un clic suffit pour copier l'extrait."
       },
-      "customThemes": {
-        "title": "Thèmes personnalisés",
-        "description": "Créez et modifiez vos propres thèmes. Choisissez un thème de base, ajustez les couleurs à votre goût, et vos thèmes personnalisés sont enregistrés pour être réutilisés."
+      "verticalTabWidth": {
+        "title": "Largeur ajustable des onglets verticaux",
+        "description": "Vous pouvez désormais faire glisser le bord de la barre d'onglets verticaux pour en ajuster la largeur, qui est ensuite mémorisée."
       },
-      "dragDropImages": {
-        "title": "Insertion d'images par glisser-déposer",
-        "description": "Déposez un fichier image dans l'éditeur pour l'insérer instantanément. Une superposition « Déposez l'image ici » apparaît pendant que vous faites glisser, pour que vous sachiez où elle atterrira."
-      },
-      "listContinuation": {
-        "title": "Saisie continue des listes et des cases à cocher",
-        "description": "Appuyer sur Entrée dans une liste ou une case à cocher démarre désormais automatiquement l'élément suivant, pour que vous puissiez continuer à taper sans ressaisir le marqueur."
-      },
-      "marpOfflineFonts": {
-        "title": "Polices hors ligne pour Marp",
-        "description": "Les polices des diapositives Marp sont désormais intégrées à l'application, de sorte que les diapositives s'affichent avec les bonnes polices même sans connexion Internet."
+      "exportFilename": {
+        "title": "Export avec le nom du fichier d'origine",
+        "description": "Les exports HTML et PDF utilisent désormais par défaut le nom du fichier en cours d'édition plutôt qu'un nom fixe."
       },
       "dependencyUpdates": {
         "title": "Mises à jour des dépendances",
