@@ -619,6 +619,10 @@
         "title": "垂直标签页宽度可调",
         "description": "现在可以拖动垂直标签页的边缘来调整宽度，调整后的宽度会被记住。"
       },
+      "tablePasteEmptyRow": {
+        "title": "表格粘贴修复",
+        "description": "修复了以空行开头的表格（例如从网页复制）粘贴时未被转换为 Markdown 表格、而是以纯文本插入的问题。"
+      },
       "exportFilename": {
         "title": "导出使用原文件名",
         "description": "HTML 和 PDF 导出现在默认使用正在编辑的文件名，而不是固定的文件名。"

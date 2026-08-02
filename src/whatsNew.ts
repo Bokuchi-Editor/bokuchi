@@ -38,6 +38,11 @@ export const whatsNewContent: WhatsNewContent = {
       descriptionKey: 'whatsNew.changes.verticalTabWidth.description',
     },
     {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.tablePasteEmptyRow.title',
+      descriptionKey: 'whatsNew.changes.tablePasteEmptyRow.description',
+    },
+    {
       type: 'improvement',
       titleKey: 'whatsNew.changes.exportFilename.title',
       descriptionKey: 'whatsNew.changes.exportFilename.description',
