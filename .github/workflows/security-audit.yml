@@ -5,7 +5,7 @@ on:
     # 毎週月曜日の午前9時（JST）に実行
     - cron: "0 0 * * 1"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
