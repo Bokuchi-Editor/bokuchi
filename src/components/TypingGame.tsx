@@ -91,6 +91,7 @@ const TypingGame: React.FC<Props> = ({ mode }) => {
     correctChars: 0,
     wordsCleared: 0,
     highScore: 0,
+    highScoreLoaded: false,
   });
 
   // Latest phase for the global key handler (set on every render)
@@ -104,7 +105,8 @@ const TypingGame: React.FC<Props> = ({ mode }) => {
     storeApi
       .loadTypingGameHighScore()
       .then(v => { g.current.highScore = v; })
-      .catch(() => { /* ignore */ });
+      .catch(() => { /* ignore */ })
+      .finally(() => { g.current.highScoreLoaded = true; });
   }, []);
 
   // --------------------------------------------------------------------------
@@ -362,6 +364,7 @@ const TypingGame: React.FC<Props> = ({ mode }) => {
     };
 
     const startGame = () => {
+      if (!g.current.highScoreLoaded) return;
       reset();
       const now = performance.now();
       g.current.startedAt = now;
@@ -381,6 +384,7 @@ const TypingGame: React.FC<Props> = ({ mode }) => {
     // Key handler — branches on the current phase
     const onKeyDown = (e: KeyboardEvent) => {
       // Let global shortcuts (Cmd+N etc.) pass through
+      if (e.repeat) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const ph = phaseRef.current;
