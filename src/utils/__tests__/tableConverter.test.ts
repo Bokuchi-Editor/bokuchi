@@ -311,8 +311,22 @@ describe('convertTsvCsvToMarkdown', () => {
     expect(result.split('\n')[2]).toBe('| Alice | line1 line2 |');
   });
 
+  it('preserves intentional multiple spaces inside CSV cells', () => {
+    const csv = 'Name,Note\nAlice,"keep   spacing"';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | keep   spacing |');
+  });
+
   it('throws for ragged CSV rows instead of producing a malformed table', () => {
     expect(() => convertTsvCsvToMarkdown('a,b,c\nx,y')).toThrow('Inconsistent column count');
+  });
+
+  it('preserves delimiter-only CSV rows as empty cells', () => {
+    const csv = 'A,B,C\n1,2,3\n,,';
+    const result = convertTsvCsvToMarkdown(csv);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(4);
+    expect(lines[3]).toBe('|   |   |   |');
   });
 
   // T-TC-16: Regression test for CRLF line endings (Issue #225)

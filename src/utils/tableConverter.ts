@@ -143,18 +143,8 @@ export function validateMarkdownTable(markdown: string): boolean {
  */
 export function convertTsvCsvToMarkdown(text: string): string {
 
-  // Determine delimiter (tab or comma)
-  const tabRows = tryParseDelimitedRows(text, '\t');
-  const commaRows = tryParseDelimitedRows(text, ',');
-  const hasTabs = tabRows !== null && tabRows.some((row) => row.length > 1);
-  const hasCommas = commaRows !== null && commaRows.some((row) => row.length > 1);
-
-  let rows: string[][];
-  if (hasTabs) {
-    rows = tabRows;
-  } else if (hasCommas) {
-    rows = commaRows;
-  } else {
+  const rows = parseRowsWithDetectedDelimiter(text);
+  if (rows === null) {
     throw new Error('No delimiter found (tab or comma)');
   }
 
@@ -176,7 +166,7 @@ export function convertTsvCsvToMarkdown(text: string): string {
   for (const cells of rows) {
     // Process cell contents
     const cellContents = cells.map((cell) => {
-      let content = cell.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+      let content = cell.replace(/\r?\n/g, ' ').trim();
 
 
       // Escape pipe characters
@@ -202,6 +192,20 @@ export function convertTsvCsvToMarkdown(text: string): string {
   const result = markdownRows.join('\n');
 
   return result;
+}
+
+function parseRowsWithDetectedDelimiter(text: string): string[][] | null {
+  const tabRows = tryParseDelimitedRows(text, '\t');
+  if (tabRows !== null && tabRows.some((row) => row.length > 1)) {
+    return tabRows;
+  }
+
+  const commaRows = tryParseDelimitedRows(text, ',');
+  if (commaRows !== null && commaRows.some((row) => row.length > 1)) {
+    return commaRows;
+  }
+
+  return null;
 }
 
 function tryParseDelimitedRows(text: string, delimiter: string): string[][] | null {
@@ -259,7 +263,7 @@ function parseDelimitedRows(text: string, delimiter: string): string[][] {
         i++;
       }
       row.push(cell);
-      if (row.some((value) => value.trim() !== '')) {
+      if (row.length > 1 || row.some((value) => value.trim() !== '')) {
         rows.push(row);
       }
       row = [];
@@ -284,7 +288,7 @@ function parseDelimitedRows(text: string, delimiter: string): string[][] {
   }
 
   row.push(cell);
-  if (row.some((value) => value.trim() !== '')) {
+  if (row.length > 1 || row.some((value) => value.trim() !== '')) {
     rows.push(row);
   }
 
