@@ -33,4 +33,16 @@ describe('classifyPaste', () => {
     const result = classifyPaste(html, 'ignored\ttext');
     expect(result.kind).toBe('table');
   });
+
+  it('preserves quoted CSV fields with embedded commas', () => {
+    const result = classifyPaste('', '"a,b",c\nx,y');
+    expect(result).toEqual({
+      kind: 'table',
+      markdownTable: '| a,b | c |\n| --- | --- |\n| x | y |',
+    });
+  });
+
+  it('falls back to plain for ragged CSV rows', () => {
+    expect(classifyPaste('', 'a,b,c\nx,y')).toEqual({ kind: 'plain' });
+  });
 });
