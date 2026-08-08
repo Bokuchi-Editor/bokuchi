@@ -299,6 +299,12 @@ describe('convertTsvCsvToMarkdown', () => {
     expect(result.split('\n')[2]).toBe('| Alice | hello "world" |');
   });
 
+  it('treats quotes inside unquoted CSV fields as literal text', () => {
+    const csv = 'Name,Note,Action\nAlice,she said "hello",then left';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | she said "hello" | then left |');
+  });
+
   it('collapses newlines inside quoted CSV fields for Markdown table cells', () => {
     const csv = 'Name,Note\nAlice,"line1\nline2"';
     const result = convertTsvCsvToMarkdown(csv);

@@ -144,19 +144,20 @@ export function validateMarkdownTable(markdown: string): boolean {
 export function convertTsvCsvToMarkdown(text: string): string {
 
   // Determine delimiter (tab or comma)
-  const hasTabs = hasDelimiterOutsideQuotes(text, '\t');
-  const hasCommas = hasDelimiterOutsideQuotes(text, ',');
+  const tabRows = tryParseDelimitedRows(text, '\t');
+  const commaRows = tryParseDelimitedRows(text, ',');
+  const hasTabs = tabRows !== null && tabRows.some((row) => row.length > 1);
+  const hasCommas = commaRows !== null && commaRows.some((row) => row.length > 1);
 
-  let delimiter: string;
+  let rows: string[][];
   if (hasTabs) {
-    delimiter = '\t';
+    rows = tabRows;
   } else if (hasCommas) {
-    delimiter = ',';
+    rows = commaRows;
   } else {
     throw new Error('No delimiter found (tab or comma)');
   }
 
-  const rows = parseDelimitedRows(text, delimiter);
   if (rows.length === 0) {
     throw new Error('No lines found');
   }
@@ -203,23 +204,12 @@ export function convertTsvCsvToMarkdown(text: string): string {
   return result;
 }
 
-function hasDelimiterOutsideQuotes(text: string, delimiter: string): boolean {
-  let inQuotes = false;
-
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    if (char === '"') {
-      if (inQuotes && text[i + 1] === '"') {
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (!inQuotes && char === delimiter) {
-      return true;
-    }
+function tryParseDelimitedRows(text: string, delimiter: string): string[][] | null {
+  try {
+    return parseDelimitedRows(text, delimiter);
+  } catch {
+    return null;
   }
-
-  return false;
 }
 
 function parseDelimitedRows(text: string, delimiter: string): string[][] {
@@ -227,24 +217,40 @@ function parseDelimitedRows(text: string, delimiter: string): string[][] {
   let row: string[] = [];
   let cell = '';
   let inQuotes = false;
+  let atFieldStart = true;
+  let afterClosingQuote = false;
   const source = text.trim();
 
   for (let i = 0; i < source.length; i++) {
     const char = source[i];
 
-    if (char === '"') {
+    if (inQuotes) {
+      if (char !== '"') {
+        cell += char;
+        continue;
+      }
+
       if (inQuotes && source[i + 1] === '"') {
         cell += '"';
         i++;
       } else {
-        inQuotes = !inQuotes;
+        inQuotes = false;
+        afterClosingQuote = true;
       }
+      continue;
+    }
+
+    if (atFieldStart && char === '"') {
+      inQuotes = true;
+      atFieldStart = false;
       continue;
     }
 
     if (!inQuotes && char === delimiter) {
       row.push(cell);
       cell = '';
+      atFieldStart = true;
+      afterClosingQuote = false;
       continue;
     }
 
@@ -258,9 +264,18 @@ function parseDelimitedRows(text: string, delimiter: string): string[][] {
       }
       row = [];
       cell = '';
+      atFieldStart = true;
+      afterClosingQuote = false;
       continue;
     }
 
+    if (afterClosingQuote && char.trim() !== '') {
+      throw new Error('Unexpected character after closing quote');
+    }
+
+    if (!afterClosingQuote) {
+      atFieldStart = false;
+    }
     cell += char;
   }
 
