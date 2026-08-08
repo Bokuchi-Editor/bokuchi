@@ -33,4 +33,25 @@ describe('classifyPaste', () => {
     const result = classifyPaste(html, 'ignored\ttext');
     expect(result.kind).toBe('table');
   });
+
+  it('falls back to plain-text table conversion when HTML table conversion fails', () => {
+    const brokenHtml = '<table></table>';
+    const result = classifyPaste(brokenHtml, 'a,b\n1,2');
+    expect(result).toEqual({
+      kind: 'table',
+      markdownTable: '| a | b |\n| --- | --- |\n| 1 | 2 |',
+    });
+  });
+
+  it('preserves quoted CSV fields with embedded commas', () => {
+    const result = classifyPaste('', '"a,b",c\nx,y');
+    expect(result).toEqual({
+      kind: 'table',
+      markdownTable: '| a,b | c |\n| --- | --- |\n| x | y |',
+    });
+  });
+
+  it('falls back to plain for ragged CSV rows', () => {
+    expect(classifyPaste('', 'a,b,c\nx,y')).toEqual({ kind: 'plain' });
+  });
 });
