@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...HEAD)
 
+### Fixed
+
+- `$(...)` and other `$` text inside code blocks is no longer misrendered as KaTeX math when the document contains unbalanced ``` fences (e.g. a bare ``` in prose, a fence shown inside another code block). Code-block detection for the KaTeX and CJK-emphasis pre-processors is now delegated to marked's own lexer, so internal `%%CODEBLOCK_n%%` placeholders can no longer leak into the preview. (#468)
+
 ## [1.0.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.0...v1.0.1) - 2026-07-31
 
 ### Added
