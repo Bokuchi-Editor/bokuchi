@@ -143,69 +143,135 @@ export function validateMarkdownTable(markdown: string): boolean {
  */
 export function convertTsvCsvToMarkdown(text: string): string {
 
-  try {
-    const lines = text.trim().split(/\r?\n/);
+  // Determine delimiter (tab or comma)
+  const hasTabs = hasDelimiterOutsideQuotes(text, '\t');
+  const hasCommas = hasDelimiterOutsideQuotes(text, ',');
 
-    if (lines.length === 0) {
-      throw new Error('No lines found');
-    }
-
-    // Determine delimiter (tab or comma)
-    const firstLine = lines[0];
-    const hasTabs = firstLine.includes('\t');
-    const hasCommas = firstLine.includes(',');
-
-    let delimiter = '\t';
-    if (hasTabs) {
-      delimiter = '\t';
-    } else if (hasCommas) {
-      delimiter = ',';
-    } else {
-      throw new Error('No delimiter found (tab or comma)');
-    }
-
-    const markdownRows: string[] = [];
-
-    // Process each row
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue; // Skip empty lines
-
-      // Split by delimiter
-      const cells = line.split(delimiter);
-
-      if (cells.length === 0) continue;
-
-      // Process cell contents
-      const cellContents = cells.map((cell) => {
-        let content = cell.trim();
-
-
-        // Escape pipe characters
-        content = content.replace(/\|/g, '\\|');
-
-        // Empty cells become a single space
-        return content || ' ';
-      });
-
-      // Create Markdown row
-      const markdownRow = '| ' + cellContents.join(' | ') + ' |';
-      const isFirstEmittedRow = markdownRows.length === 0;
-      markdownRows.push(markdownRow);
-
-      // Add header separator row after the first *emitted* row (rows skipped
-      // above for having no cells must not count as "the first row").
-      if (isFirstEmittedRow) {
-        const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
-        markdownRows.push(separator);
-      }
-    }
-
-    const result = markdownRows.join('\n');
-
-    return result;
-  } catch (error) {
-    console.error('Failed to convert TSV/CSV to Markdown:', error);
-    throw error;
+  let delimiter: string;
+  if (hasTabs) {
+    delimiter = '\t';
+  } else if (hasCommas) {
+    delimiter = ',';
+  } else {
+    throw new Error('No delimiter found (tab or comma)');
   }
+
+  const rows = parseDelimitedRows(text, delimiter);
+  if (rows.length === 0) {
+    throw new Error('No lines found');
+  }
+
+  const columnCount = rows[0].length;
+  if (columnCount < 2) {
+    throw new Error('No delimiter found (tab or comma)');
+  }
+  if (rows.some((row) => row.length !== columnCount)) {
+    throw new Error('Inconsistent column count');
+  }
+
+  const markdownRows: string[] = [];
+
+  // Process each row
+  for (const cells of rows) {
+    // Process cell contents
+    const cellContents = cells.map((cell) => {
+      let content = cell.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+
+
+      // Escape pipe characters
+      content = content.replace(/\|/g, '\\|');
+
+      // Empty cells become a single space
+      return content || ' ';
+    });
+
+    // Create Markdown row
+    const markdownRow = '| ' + cellContents.join(' | ') + ' |';
+    const isFirstEmittedRow = markdownRows.length === 0;
+    markdownRows.push(markdownRow);
+
+    // Add header separator row after the first *emitted* row (rows skipped
+    // above for having no cells must not count as "the first row").
+    if (isFirstEmittedRow) {
+      const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
+      markdownRows.push(separator);
+    }
+  }
+
+  const result = markdownRows.join('\n');
+
+  return result;
+}
+
+function hasDelimiterOutsideQuotes(text: string, delimiter: string): boolean {
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"') {
+      if (inQuotes && text[i + 1] === '"') {
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (!inQuotes && char === delimiter) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function parseDelimitedRows(text: string, delimiter: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = '';
+  let inQuotes = false;
+  const source = text.trim();
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+
+    if (char === '"') {
+      if (inQuotes && source[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (!inQuotes && char === delimiter) {
+      row.push(cell);
+      cell = '';
+      continue;
+    }
+
+    if (!inQuotes && (char === '\n' || char === '\r')) {
+      if (char === '\r' && source[i + 1] === '\n') {
+        i++;
+      }
+      row.push(cell);
+      if (row.some((value) => value.trim() !== '')) {
+        rows.push(row);
+      }
+      row = [];
+      cell = '';
+      continue;
+    }
+
+    cell += char;
+  }
+
+  if (inQuotes) {
+    throw new Error('Unclosed quoted field');
+  }
+
+  row.push(cell);
+  if (row.some((value) => value.trim() !== '')) {
+    rows.push(row);
+  }
+
+  return rows;
 }

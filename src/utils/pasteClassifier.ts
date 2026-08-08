@@ -16,11 +16,15 @@ export type PasteClassification =
 export function classifyPaste(htmlData: string, plainText: string): PasteClassification {
   let markdownTable: string;
 
-  if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
-    markdownTable = htmlTableToMarkdown(htmlData);
-  } else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-    markdownTable = convertTsvCsvToMarkdown(plainText);
-  } else {
+  try {
+    if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
+      markdownTable = htmlTableToMarkdown(htmlData);
+    } else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
+      markdownTable = convertTsvCsvToMarkdown(plainText);
+    } else {
+      return { kind: 'plain' };
+    }
+  } catch {
     return { kind: 'plain' };
   }
 
