@@ -51,6 +51,13 @@ pub struct DirEntry {
     pub is_directory: bool,
 }
 
+// Installed font family (for the editor/preview font settings dropdowns)
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FontFamilyInfo {
+    pub name: String,
+    pub monospaced: bool,
+}
+
 // Global state for buffering file paths received before frontend is ready
 pub static PENDING_FILE_PATHS: OnceLock<Mutex<Vec<String>>> = OnceLock::new();
 

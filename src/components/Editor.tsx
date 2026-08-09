@@ -12,6 +12,7 @@ import { findModelForTab, isModelSilentlyEditing } from '../utils/editorSync';
 import { registerEditorActions } from '../utils/registerEditorActions';
 import { classifyPaste } from '../utils/pasteClassifier';
 import { computeEditorStatus } from '../utils/editorStatus';
+import { buildFontFamilyCss, EDITOR_FONT_FALLBACK_STACK } from '../utils/fontFamily';
 import { desktopApi } from '../api/desktopApi';
 import {
   IMAGE_SUBDIR,
@@ -47,6 +48,8 @@ interface EditorProps {
   revealLineRequest?: { lineNumber: number; requestId: number };
   // New editor settings
   fontSize?: number;
+  /** User-chosen font family name; '' or undefined = Monaco's platform default. */
+  fontFamily?: string;
   showLineNumbers?: boolean;
   tabSize?: number;
   wordWrap?: boolean;
@@ -90,6 +93,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   focusRequestId = 0,
   revealLineRequest,
   fontSize = 14,
+  fontFamily = '',
   showLineNumbers = true,
   tabSize = 2,
   wordWrap = true,
@@ -798,6 +802,11 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             options={{
               minimap: { enabled: minimap },
               fontSize: Math.round(fontSize * zoomLevel),
+              // undefined keeps Monaco's platform default; a chosen font gets
+              // the default stack appended so missing glyphs fall back sanely.
+              fontFamily: fontFamily
+                ? buildFontFamilyCss(fontFamily, EDITOR_FONT_FALLBACK_STACK)
+                : undefined,
               wordWrap: wordWrap ? 'on' : 'off',
               lineNumbers: showLineNumbers ? 'on' : 'off',
               tabSize: tabSize,

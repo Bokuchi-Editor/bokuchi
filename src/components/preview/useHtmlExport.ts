@@ -21,6 +21,8 @@ interface UseHtmlExportParams {
   darkMode: boolean;
   theme?: string;
   tableLayout: TableLayoutMode;
+  /** User-chosen preview font; applied to the export body too ('' = default). */
+  fontFamily?: string;
   /** Source document path; names the export after it in the save dialog (#442). */
   filePath?: string;
 }
@@ -40,6 +42,7 @@ export function useHtmlExport({
   darkMode,
   theme,
   tableLayout,
+  fontFamily,
   filePath,
 }: UseHtmlExportParams): UseHtmlExport {
   const [exportError, setExportError] = useState<string | null>(null);
@@ -90,7 +93,9 @@ export function useHtmlExport({
   const handleExportHTML = async () => {
     try {
       const { html, katexCss } = await buildBody(darkMode);
-      const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss);
+      const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss, {
+        fontFamily,
+      });
 
       // Select save location via file dialog
       const result = await desktopApi.saveHtmlFile(fullHTML, deriveExportFileName(filePath, 'html'));
@@ -111,6 +116,7 @@ export function useHtmlExport({
       const { html, katexCss } = await buildBody(false);
       const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss, {
         forPrint: true,
+        fontFamily,
       });
       // Render + print to PDF natively (Rust side); the page is saved to the
       // location chosen in the file dialog.
