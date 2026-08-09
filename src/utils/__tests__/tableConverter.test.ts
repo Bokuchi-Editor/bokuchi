@@ -311,6 +311,12 @@ describe('convertTsvCsvToMarkdown', () => {
     expect(result.split('\n')[2]).toBe('| Alice | line1 line2 |');
   });
 
+  it('collapses lone CR inside quoted CSV fields for Markdown table cells', () => {
+    const csv = 'Name,Note\nAlice,"line1\rline2"';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | line1 line2 |');
+  });
+
   it('preserves intentional multiple spaces inside CSV cells', () => {
     const csv = 'Name,Note\nAlice,"keep   spacing"';
     const result = convertTsvCsvToMarkdown(csv);

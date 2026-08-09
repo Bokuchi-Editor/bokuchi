@@ -611,7 +611,6 @@
     "convert": "変換",
     "convertWithoutAsking": "これ以降確認せず変換する",
     "conversionSuccess": "テーブルがMarkdownに正常に変換されました",
-    "conversionFailed": "テーブルの変換に失敗しました。プレーンテキストとして貼り付けました。",
     "noTableDetected": "クリップボードデータにテーブルが検出されませんでした"
   },
   "search": {

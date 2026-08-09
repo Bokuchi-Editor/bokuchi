@@ -54,7 +54,8 @@ function tryConvertDelimitedText(plainText: string): string | null {
   let markdownTable: string;
   try {
     markdownTable = convertTsvCsvToMarkdown(plainText);
-  } catch {
+  } catch (error) {
+    console.error('Failed to convert TSV/CSV to Markdown:', error);
     return null;
   }
 

@@ -588,7 +588,6 @@
     "convert": "Converter",
     "convertWithoutAsking": "Converter sem perguntar no futuro",
     "conversionSuccess": "Tabela convertida para Markdown com sucesso",
-    "conversionFailed": "Falha na conversão da tabela. Colado como texto simples.",
     "noTableDetected": "Nenhuma tabela detectada nos dados da área de transferência"
   },
   "search": {

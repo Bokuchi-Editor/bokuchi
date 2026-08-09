@@ -361,7 +361,6 @@ const MarkdownEditor: React.FC<EditorProps> = ({
       console.error('Table conversion failed:', error);
       // Fallback: paste as plain text
       insertPlainText(plainText);
-      onSnackbar?.(t('tableConversion.conversionFailed'), 'warning');
     }
   }, [tableConversion, insertPlainText, insertMarkdownTable, onSnackbar, t]);
 

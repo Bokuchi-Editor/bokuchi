@@ -588,7 +588,6 @@
     "convert": "Konvertieren",
     "convertWithoutAsking": "In Zukunft ohne Nachfrage konvertieren",
     "conversionSuccess": "Tabelle erfolgreich in Markdown konvertiert",
-    "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
     "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
   },
   "search": {

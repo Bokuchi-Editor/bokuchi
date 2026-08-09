@@ -166,7 +166,7 @@ export function convertTsvCsvToMarkdown(text: string): string {
   for (const cells of rows) {
     // Process cell contents
     const cellContents = cells.map((cell) => {
-      let content = cell.replace(/\r?\n/g, ' ').trim();
+      let content = cell.replace(/\r\n?|\n/g, ' ').trim();
 
 
       // Escape pipe characters

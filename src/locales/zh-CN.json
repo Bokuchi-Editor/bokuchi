@@ -588,7 +588,6 @@
     "convert": "转换",
     "convertWithoutAsking": "以后不再询问直接转换",
     "conversionSuccess": "表格已成功转换为 Markdown",
-    "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
     "noTableDetected": "在剪贴板数据中未检测到表格"
   },
   "search": {

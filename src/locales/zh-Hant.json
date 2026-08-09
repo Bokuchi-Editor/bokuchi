@@ -588,7 +588,6 @@
     "convert": "轉換",
     "convertWithoutAsking": "以後不再詢問直接轉換",
     "conversionSuccess": "表格已成功轉換為 Markdown",
-    "conversionFailed": "表格轉換失敗。已作為純文字貼上。",
     "noTableDetected": "在剪貼簿資料中未偵測到表格"
   },
   "search": {
