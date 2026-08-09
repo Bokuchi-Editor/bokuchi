@@ -383,8 +383,9 @@ const TypingGame: React.FC<Props> = ({ mode }) => {
 
     // Key handler — branches on the current phase
     const onKeyDown = (e: KeyboardEvent) => {
-      // Let global shortcuts (Cmd+N etc.) pass through
+      // Ignore OS key-repeat events from held keys
       if (e.repeat) return;
+      // Let global shortcuts (Cmd+N etc.) pass through
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const ph = phaseRef.current;
