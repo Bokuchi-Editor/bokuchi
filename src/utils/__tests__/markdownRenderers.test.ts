@@ -193,6 +193,27 @@ describe('processKatex', () => {
     expect(html).toContain('<span class="katex katex-display">b</span>');
   });
 
+  it('does not treat $ in code blocks as math when prose contains a bare ``` (issue #468)', async () => {
+    // A bare ``` in prose broke the old fence-pairing regex: the code content
+    // was exposed, `$(date)"…echo "$` was rendered as inline math, and internal
+    // %%CODEBLOCK_n%% placeholders leaked into the preview.
+    const input =
+      'コードブロックを開くには ``` を入力します。\n\n' +
+      '```bash\necho "$(date)"\n```\n\n```bash\necho "$HOME"\n```\n';
+    const { markdown, html } = await render(input);
+    expect(markdown).toBe(input);
+    expect(html).toBe(input);
+    expect(contentHasKatex(input)).toBe(false);
+  });
+
+  it('still renders math outside code when the document also has unbalanced fences', async () => {
+    const input = 'Fence char: ```\n\n```bash\necho "$HOME"\n```\n\nMath: $x^2$';
+    const { html } = await render(input);
+    expect(html).toContain('<span class="katex">x^2</span>');
+    expect(html).toContain('echo "$HOME"');
+    expect(html).not.toContain('CODEBLOCK');
+  });
+
   it('escapes HTML in the katex-error branch (XSS bypasses DOMPurify otherwise)', async () => {
     // When katex.renderToString throws, the raw tex is echoed back inside
     // <span class="katex-error">. restore() splices this HTML in AFTER the

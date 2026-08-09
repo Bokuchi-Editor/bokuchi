@@ -1,5 +1,6 @@
 import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
+import { maskCodeRegions, stripCodeRegions } from './codeRegions';
 
 /** Languages handled by post-processors — skip syntax highlighting */
 const POST_PROCESSED_LANGS = new Set(['mermaid']);
@@ -138,13 +139,12 @@ const INLINE_MATH_DETECT_RE = /(?<!\$)\$(?!\$)((?:[^$\\]|\\.)+)\$(?!\$)/;
 const MERMAID_BLOCK_DETECT_RE = /```mermaid\s*\n([\s\S]*?)```/;
 
 // Processing patterns (with 'g' flag for replace/exec loops)
-const CODE_BLOCK_RE = /```[\s\S]*?```|`[^`\n]+`/g;
 const DISPLAY_MATH_RE = /\$\$([\s\S]*?)\$\$/g;
 const INLINE_MATH_RE = /(?<!\$)\$(?!\$)((?:[^$\\]|\\.)+)\$(?!\$)/g;
 
 /** Check whether content contains KaTeX syntax (outside code blocks) */
 export function contentHasKatex(content: string): boolean {
-  const stripped = content.replace(CODE_BLOCK_RE, '');
+  const stripped = stripCodeRegions(content);
   return DISPLAY_MATH_DETECT_RE.test(stripped) || INLINE_MATH_DETECT_RE.test(stripped);
 }
 
@@ -186,12 +186,9 @@ const makeKatexPlaceholder = (index: number) => `KaTeXmathPLACEHOLDER${index}END
 export async function processKatex(markdown: string): Promise<ProcessedKatex> {
   const katex = await getKatex();
 
-  // Protect code blocks
-  const codeBlocks: string[] = [];
-  let result = markdown.replace(CODE_BLOCK_RE, (match) => {
-    codeBlocks.push(match);
-    return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
-  });
+  // Protect code blocks and inline code spans (lexer-accurate; issue #468)
+  const { masked, restore: restoreCode } = maskCodeRegions(markdown);
+  let result = masked;
 
   const renderedMath: string[] = [];
   const renderMath = (tex: string, displayMode: boolean): string => {
@@ -213,9 +210,7 @@ export async function processKatex(markdown: string): Promise<ProcessedKatex> {
   result = result.replace(INLINE_MATH_RE, (_match, tex: string) => renderMath(tex, false));
 
   // Restore code blocks
-  result = result.replace(/%%CODEBLOCK_(\d+)%%/g, (_match, index: string) => {
-    return codeBlocks[parseInt(index)];
-  });
+  result = restoreCode(result);
 
   const restore = (html: string): string =>
     html.replace(KATEX_PLACEHOLDER_RE, (_match, index: string) => renderedMath[parseInt(index)] ?? '');
