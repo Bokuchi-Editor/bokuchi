@@ -128,6 +128,7 @@ pub fn run() {
             set_frontend_ready_command,
             read_directory,
             rename_file,
+            list_system_fonts,
             pdf_export::export_pdf
         ])
         .setup(|app| {

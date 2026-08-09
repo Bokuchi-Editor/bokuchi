@@ -63,6 +63,11 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | M-39 | Toggle minimap                   | Toggle the minimap setting in Settings > Editor                         | The minimap on the right side of the editor appears or disappears immediately       |
 | M-40 | Minimap in all view modes        | Enable minimap, then switch between editor, split, and preview modes    | The minimap is visible in every mode that includes the editor                       |
 | M-41 | Table conversion setting         | Change the table conversion setting (auto/confirm/off), restart the app | The setting is retained after restart                                               |
+| M-205 | Editor font picker *(#471)* | Open Settings > Editor > Editor Font, open the dropdown, type the first letters of an installed monospace font and press Enter | Each dropdown row renders in its own font with an "Ag あア عربى 123" sample; typing inline-completes the top prefix match; after Enter the editor text switches to the chosen font immediately. The "Monospace fonts only" checkbox is on by default — unchecking it reveals proportional fonts too |
+| M-206 | Preview font & monospace code blocks *(#471)* | Set Settings > Editor > Preview Font to a clearly different font (e.g. a serif or Arabic font) and preview a document containing fenced + inline code | The preview body text switches to the chosen font; fenced code blocks and inline code keep their monospace font |
+| M-207 | Preview font carries into exports *(#471)* | With a custom Preview Font set, export the document as HTML and as PDF | The exported HTML opened in a browser and the PDF body use the chosen font; code blocks stay monospace in both |
+| M-208 | Font "Default" & persistence *(#471)* | Set both fonts back to "Default"; then choose custom fonts for both and restart the app | "Default" restores the exact pre-#471 look (platform monospace editor, system sans preview). After restart the chosen custom fonts are still applied |
+| M-209 | AS/400 theme overrides the preview font *(#471)* | With a custom Preview Font set, switch to the hidden AS/400 theme | The preview keeps the IBM Plex Mono terminal look (user font ignored); switching back to a normal theme restores the chosen font |
 
 ## 5. Search
 

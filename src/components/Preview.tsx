@@ -13,6 +13,7 @@ import MarpPreview from './MarpPreview';
 import RenderingFeatureNotice from './RenderingFeatureNotice';
 import { SettingsFocusTarget } from '../types/settingsFocus';
 import { buildPreviewStyles } from './preview/previewStyles';
+import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from '../utils/fontFamily';
 import { useProcessedMarkdown } from './preview/useProcessedMarkdown';
 import { usePreviewScrollSync } from './preview/usePreviewScrollSync';
 import { usePreviewLinkClicks } from './preview/usePreviewLinkClicks';
@@ -102,6 +103,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     darkMode,
     theme,
     tableLayout: previewSettings.tableLayout,
+    fontFamily: previewSettings.fontFamily,
     filePath,
   });
 
@@ -192,9 +194,11 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             transform: 'scale(1)',
             fontSize: `${Math.round(BASE_PREVIEW_FONT_SIZE_PX * zoomLevel)}px`,
             lineHeight: `${Math.round(BASE_PREVIEW_LINE_HEIGHT * zoomLevel)}`,
+            // AS/400 keeps its terminal font regardless of the user setting —
+            // the easter-egg look is part of the theme (#471).
             fontFamily: theme === 'as400'
               ? '"IBM Plex Mono", "Courier New", Courier, monospace'
-              : '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              : buildFontFamilyCss(previewSettings.fontFamily, DEFAULT_PREVIEW_FONT_STACK),
             wordBreak: 'break-word',
             overflowWrap: 'break-word',
             hyphens: 'auto',

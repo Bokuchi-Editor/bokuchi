@@ -48,6 +48,7 @@ interface AppContentProps {
   // Editor settings
   editorSettings?: {
     fontSize: number;
+    fontFamily: string;
     showLineNumbers: boolean;
     tabSize: number;
     wordWrap: boolean;
@@ -561,6 +562,7 @@ const AppContent: React.FC<AppContentProps> = ({
                       focusRequestId={focusRequestId}
                       revealLineRequest={revealLineRequest.requestId > 0 ? revealLineRequest : undefined}
                       fontSize={editorSettings?.fontSize}
+                      fontFamily={editorSettings?.fontFamily}
                       showLineNumbers={editorSettings?.showLineNumbers}
                       tabSize={editorSettings?.tabSize}
                       wordWrap={editorSettings?.wordWrap}
@@ -625,6 +627,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     focusRequestId={focusRequestId}
                     revealLineRequest={revealLineRequest.requestId > 0 ? revealLineRequest : undefined}
                     fontSize={editorSettings?.fontSize}
+                    fontFamily={editorSettings?.fontFamily}
                     showLineNumbers={editorSettings?.showLineNumbers}
                     tabSize={editorSettings?.tabSize}
                     wordWrap={editorSettings?.wordWrap}

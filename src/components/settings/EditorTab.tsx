@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { AppSettings } from '../../types/settings';
+import { fontApi, type SystemFontFamily } from '../../api/fontApi';
 import {
+  FontFamilySettingCard,
   SliderSettingCard,
   SwitchSettingCard,
   type SettingChangeHandler,
@@ -16,10 +18,22 @@ interface EditorTabProps {
   onSettingChange: SettingChangeHandler;
 }
 
-/** Editor settings: font size, line numbers, tab size, wrapping, minimap, formatting bar. */
+/** Editor settings: fonts (editor + preview), font size, line numbers, tab size, wrapping, minimap, formatting bar. */
 const EditorTab: React.FC<EditorTabProps> = ({ settings, onSettingChange }) => {
   const { t } = useTranslation();
   const { editor } = settings;
+
+  // Installed fonts for the two pickers; null renders them in loading state.
+  const [fonts, setFonts] = useState<SystemFontFamily[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fontApi.listSystemFonts().then((list) => {
+      if (!cancelled) setFonts(list);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <Box>
@@ -36,6 +50,27 @@ const EditorTab: React.FC<EditorTabProps> = ({ settings, onSettingChange }) => {
         max={FONT_SIZE.max}
         step={FONT_SIZE.step}
         onChange={(value) => onSettingChange('editor', 'fontSize', value)}
+      />
+
+      <FontFamilySettingCard
+        sx={{ mb: 3 }}
+        label={t('settings.editor.fontFamily')}
+        description={t('settings.editor.fontFamilyDescription')}
+        value={editor.fontFamily}
+        onChange={(value) => onSettingChange('editor', 'fontFamily', value)}
+        fonts={fonts}
+        defaultOptionLabel={t('settings.editor.fontFamilyDefault')}
+        monospaceFilterLabel={t('settings.editor.fontFamilyMonospaceOnly')}
+      />
+
+      <FontFamilySettingCard
+        sx={{ mb: 3 }}
+        label={t('settings.editor.previewFontFamily')}
+        description={t('settings.editor.previewFontFamilyDescription')}
+        value={settings.preview?.fontFamily ?? ''}
+        onChange={(value) => onSettingChange('preview', 'fontFamily', value)}
+        fonts={fonts}
+        defaultOptionLabel={t('settings.editor.fontFamilyDefault')}
       />
 
       <SwitchSettingCard

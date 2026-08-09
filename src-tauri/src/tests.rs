@@ -1016,3 +1016,50 @@ fn test_write_image_dedup_new_dedup_and_collision() {
 
     let _ = fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn test_dedup_font_families_merges_and_sorts() {
+    let faces = vec![
+        ("Menlo".to_string(), true),
+        ("Arial".to_string(), false),
+        // Same family seen twice: a non-mono face must not clear the mono flag.
+        ("Menlo".to_string(), false),
+        ("cairo".to_string(), false),
+    ];
+    let list = crate::commands::dedup_font_families(faces.into_iter());
+
+    // Sorted case-insensitively, one entry per family.
+    let names: Vec<&str> = list.iter().map(|f| f.name.as_str()).collect();
+    assert_eq!(names, vec!["Arial", "cairo", "Menlo"]);
+
+    let menlo = list.iter().find(|f| f.name == "Menlo").unwrap();
+    assert!(menlo.monospaced);
+    let arial = list.iter().find(|f| f.name == "Arial").unwrap();
+    assert!(!arial.monospaced);
+}
+
+#[test]
+fn test_dedup_font_families_drops_hidden_and_empty_names() {
+    let faces = vec![
+        (".SF NS".to_string(), false),
+        ("".to_string(), false),
+        ("Helvetica".to_string(), false),
+    ];
+    let list = crate::commands::dedup_font_families(faces.into_iter());
+    assert_eq!(list.len(), 1);
+    assert_eq!(list[0].name, "Helvetica");
+}
+
+#[test]
+fn test_list_system_fonts_returns_usable_families() {
+    // Smoke test against the real system font database: every returned entry is
+    // non-empty, not a hidden face, and the list is deduplicated.
+    let list = pollster::block_on(crate::commands::list_system_fonts());
+    assert!(!list.is_empty(), "expected at least one system font");
+    let mut seen = std::collections::HashSet::new();
+    for f in &list {
+        assert!(!f.name.is_empty());
+        assert!(!f.name.starts_with('.'));
+        assert!(seen.insert(f.name.clone()), "duplicate family: {}", f.name);
+    }
+}

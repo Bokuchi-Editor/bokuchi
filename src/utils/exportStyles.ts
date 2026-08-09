@@ -1,6 +1,7 @@
 import { alpha } from '@mui/material/styles';
 import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { getThemeByName, ThemeName } from '../themes';
+import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
 
 /** Theme color palette for HTML export */
 export interface ExportThemeColors {
@@ -154,6 +155,7 @@ ${headerRule}`;
 export function generateExportCSS(
   colors: ExportThemeColors,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
+  fontFamily?: string,
 ): string {
   const tableCSS = generateTableLayoutCSS(
     tableLayout,
@@ -163,7 +165,7 @@ export function generateExportCSS(
   );
   return `
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: ${buildFontFamilyCss(fontFamily, DEFAULT_PREVIEW_FONT_STACK)};
             line-height: 1.6;
             max-width: 800px;
             margin: 0 auto;
@@ -312,7 +314,7 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
   katexCss?: string,
-  options: { forPrint?: boolean } = {},
+  options: { forPrint?: boolean; fontFamily?: string } = {},
 ): string {
   // PDF export always uses the Default theme (white background, black text),
   // regardless of the on-screen theme — code/Mermaid colors follow suit. This
@@ -322,7 +324,7 @@ export function buildExportHTML(
   const effectiveDarkMode = options.forPrint ? false : darkMode;
 
   const colors = getExportThemeColors(effectiveTheme);
-  const css = generateExportCSS(colors, tableLayout);
+  const css = generateExportCSS(colors, tableLayout, options.fontFamily);
   const highlightStyle = getHighlightStyleDataUri(effectiveDarkMode);
   // Inject KaTeX's stylesheet (with fonts inlined) only when the document has
   // math — without it the exported render breaks (see katexExportCss.ts). The

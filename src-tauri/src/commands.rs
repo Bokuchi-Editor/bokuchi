@@ -25,6 +25,7 @@
 //!
 //! ### Utility
 //! - `log_from_frontend`: Log messages from frontend to Rust console
+//! - `list_system_fonts`: List installed font families for the font settings dropdowns
 //!
 //! ## Error Handling
 //! All commands return `Result<T, String>` for proper error handling and user feedback.
@@ -39,7 +40,7 @@ use tauri::Emitter;
 use crate::variable_processor::VARIABLE_PROCESSOR;
 use crate::file_operations::calculate_file_hash;
 use crate::file_association::{get_pending_file_paths, set_frontend_ready};
-use crate::types::FileHashInfo;
+use crate::types::{FileHashInfo, FontFamilyInfo};
 
 // Tauri command: Set global variable
 #[tauri::command]
@@ -377,6 +378,40 @@ pub async fn read_directory(path: String, show_all_files: bool) -> Result<Vec<cr
 
     dirs.append(&mut files);
     Ok(dirs)
+}
+
+/// Collapse per-face font entries into a sorted, deduplicated family list.
+/// A family counts as monospaced when any of its faces is, so families whose
+/// italic/bold faces report differently still show up under the monospace filter.
+/// macOS system faces prefixed with '.' (e.g. ".SF NS") are not addressable from
+/// CSS font-family and are dropped.
+pub fn dedup_font_families(faces: impl Iterator<Item = (String, bool)>) -> Vec<FontFamilyInfo> {
+    let mut families: HashMap<String, bool> = HashMap::new();
+    for (name, monospaced) in faces {
+        if name.is_empty() || name.starts_with('.') {
+            continue;
+        }
+        let entry = families.entry(name).or_insert(false);
+        *entry = *entry || monospaced;
+    }
+    let mut list: Vec<FontFamilyInfo> = families
+        .into_iter()
+        .map(|(name, monospaced)| FontFamilyInfo { name, monospaced })
+        .collect();
+    list.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    list
+}
+
+// Tauri command: List installed font families (for the font settings dropdowns)
+#[tauri::command]
+pub async fn list_system_fonts() -> Vec<FontFamilyInfo> {
+    let mut db = fontdb::Database::new();
+    db.load_system_fonts();
+    dedup_font_families(db.faces().filter_map(|face| {
+        face.families
+            .first()
+            .map(|(name, _)| (name.clone(), face.monospaced))
+    }))
 }
 
 // Tauri command: Rename file
