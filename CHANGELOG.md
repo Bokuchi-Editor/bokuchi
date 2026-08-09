@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...HEAD)
 
+### Added
+
+- Font family settings for the editor and the preview. Settings > Editor now offers two searchable font pickers listing the fonts installed on the machine (each option previews itself, typing inline-completes the name, and the editor picker can filter to monospace fonts). The preview font also applies to HTML and PDF exports, while code blocks always keep a monospace font. "Default" restores the previous behavior. (#471)
+
 ### Fixed
 
 - `$(...)` and other `$` text inside code blocks is no longer misrendered as KaTeX math when the document contains unbalanced ``` fences (e.g. a bare ``` in prose, a fence shown inside another code block). Code-block detection for the KaTeX and CJK-emphasis pre-processors is now delegated to marked's own lexer, so internal `%%CODEBLOCK_n%%` placeholders can no longer leak into the preview. (#468)

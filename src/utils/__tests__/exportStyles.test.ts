@@ -72,6 +72,22 @@ describe('generateExportCSS', () => {
     expect(css).toContain('table-layout: auto');
     expect(css).not.toContain('table-layout: fixed');
   });
+
+  // #471: the user-chosen preview font carries into exports; code blocks keep
+  // their own monospace font-family rule regardless.
+  it('applies a custom body font with the default stack as fallback', () => {
+    const colors = getExportThemeColors();
+    const css = generateExportCSS(colors, 'auto-wrap', 'Cairo');
+    expect(css).toContain('font-family: "Cairo", -apple-system');
+    expect(css).toContain("font-family: 'SFMono-Regular', Consolas");
+  });
+
+  it('keeps the default sans stack when no font is chosen', () => {
+    const colors = getExportThemeColors();
+    const css = generateExportCSS(colors);
+    expect(css).not.toContain('"Cairo"');
+    expect(css).toContain('font-family: -apple-system, BlinkMacSystemFont');
+  });
 });
 
 describe('generateTableLayoutCSS', () => {
@@ -213,6 +229,29 @@ describe('buildExportHTML', () => {
       // Highlight.js CSS is the light variant even though darkMode=true was passed.
       expect(html).toContain(getHighlightStyleDataUri(false));
       expect(html).not.toContain(getHighlightStyleDataUri(true));
+    });
+  });
+
+  // #471: the preview font setting reaches both export flavors.
+  describe('fontFamily option', () => {
+    it('threads the chosen font into the HTML export body CSS', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        fontFamily: 'Amiri',
+      });
+      expect(html).toContain('"Amiri"');
+    });
+
+    it('keeps the chosen font in the PDF (forPrint) export too', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        forPrint: true,
+        fontFamily: 'Amiri',
+      });
+      expect(html).toContain('"Amiri"');
+    });
+
+    it('falls back to the default stack when omitted', () => {
+      const html = buildExportHTML('<p>x</p>', false);
+      expect(html).toContain('font-family: -apple-system, BlinkMacSystemFont');
     });
   });
 });

@@ -491,6 +491,32 @@ describe('MarkdownPreview – themes', () => {
     const preview = container.querySelector('.markdown-preview') as HTMLElement;
     expect(preview.style.fontFamily).toContain('IBM Plex Mono');
   });
+
+  // T-PV-28 (#471): user-chosen preview font applies with the default stack appended
+  it('T-PV-28: custom preview fontFamily is applied with fallback stack', async () => {
+    const { container } = await renderPreviewContent({
+      content: 'Custom font text',
+      darkMode: false,
+      previewSettings: { tableLayout: 'auto-wrap', fontFamily: 'Cairo' },
+    });
+
+    const preview = container.querySelector('.markdown-preview') as HTMLElement;
+    expect(preview.style.fontFamily).toMatch(/^"Cairo", -apple-system/);
+  });
+
+  // T-PV-29 (#471): the AS/400 easter-egg font wins over the user setting
+  it('T-PV-29: as400 theme overrides the custom preview fontFamily', async () => {
+    const { container } = await renderPreviewContent({
+      content: 'Retro text',
+      darkMode: false,
+      theme: 'as400',
+      previewSettings: { tableLayout: 'auto-wrap', fontFamily: 'Cairo' },
+    });
+
+    const preview = container.querySelector('.markdown-preview') as HTMLElement;
+    expect(preview.style.fontFamily).toContain('IBM Plex Mono');
+    expect(preview.style.fontFamily).not.toContain('Cairo');
+  });
 });
 
 // =========================================================================

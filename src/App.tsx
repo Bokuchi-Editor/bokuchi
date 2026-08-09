@@ -289,6 +289,7 @@ function AppDesktop() {
           previewSettings={appSettings.preview}
           editorSettings={{
             fontSize: appSettings.editor.fontSize,
+            fontFamily: appSettings.editor.fontFamily,
             showLineNumbers: appSettings.editor.showLineNumbers,
             tabSize: appSettings.editor.tabSize,
             wordWrap: appSettings.editor.wordWrap,

@@ -32,6 +32,7 @@ anyhow = "1.0"
 lazy_static = "1.4"
 sha2 = "0.10"
 url = "2.5"
+fontdb = "0.24.0"
 
 [dev-dependencies]
 tempfile = "3"
