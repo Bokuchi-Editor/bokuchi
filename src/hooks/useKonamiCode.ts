@@ -15,6 +15,7 @@ export const useKonamiCode = (onActivate: () => void) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return; // Ignore repeated keydown events
       const key = e.key;
       const nextIndex = sequenceRef.current.length;
 
