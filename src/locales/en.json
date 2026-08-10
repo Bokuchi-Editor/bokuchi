@@ -611,7 +611,6 @@
     "convert": "Convert",
     "convertWithoutAsking": "Convert without asking in the future",
     "conversionSuccess": "Table converted to Markdown successfully",
-    "conversionFailed": "Failed to convert table. Pasted as plain text.",
     "noTableDetected": "No table detected in clipboard data"
   },
   "search": {

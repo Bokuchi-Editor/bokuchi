@@ -588,7 +588,6 @@
     "convert": "Konversi",
     "convertWithoutAsking": "Konversi tanpa bertanya di masa depan",
     "conversionSuccess": "Tabel berhasil dikonversi ke Markdown",
-    "conversionFailed": "Konversi tabel gagal. Ditempel sebagai teks biasa.",
     "noTableDetected": "Tidak ada tabel yang terdeteksi dalam data clipboard"
   },
   "search": {

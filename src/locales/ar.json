@@ -588,7 +588,6 @@
     "convert": "تحويل",
     "convertWithoutAsking": "تحويل دون سؤال في المستقبل",
     "conversionSuccess": "تم تحويل الجدول إلى Markdown بنجاح",
-    "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
     "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
   },
   "search": {

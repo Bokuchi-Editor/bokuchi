@@ -588,7 +588,6 @@
     "convert": "Convertir",
     "convertWithoutAsking": "Convertir sin preguntar en el futuro",
     "conversionSuccess": "Tabla convertida a Markdown exitosamente",
-    "conversionFailed": "Error al convertir la tabla. Pegado como texto plano.",
     "noTableDetected": "No se detectó ninguna tabla en los datos del portapapeles"
   },
   "search": {

@@ -588,7 +588,6 @@
     "convert": "Convertir",
     "convertWithoutAsking": "Convertir sans demander à l'avenir",
     "conversionSuccess": "Tableau converti en Markdown avec succès",
-    "conversionFailed": "Échec de la conversion du tableau. Collé en texte brut.",
     "noTableDetected": "Aucun tableau détecté dans les données du presse-papiers"
   },
   "search": {

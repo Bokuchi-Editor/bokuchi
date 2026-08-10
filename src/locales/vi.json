@@ -588,7 +588,6 @@
     "convert": "Chuyển đổi",
     "convertWithoutAsking": "Chuyển đổi mà không hỏi trong tương lai",
     "conversionSuccess": "Bảng đã được chuyển đổi sang Markdown thành công",
-    "conversionFailed": "Chuyển đổi bảng thất bại. Đã dán dưới dạng văn bản thuần túy.",
     "noTableDetected": "Không phát hiện bảng nào trong dữ liệu clipboard"
   },
   "search": {

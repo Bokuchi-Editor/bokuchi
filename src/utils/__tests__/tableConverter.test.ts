@@ -284,17 +284,55 @@ describe('convertTsvCsvToMarkdown', () => {
     expect(() => convertTsvCsvToMarkdown('single column')).toThrow('No delimiter found');
   });
 
-  // T-TC-21: Known limitation — the CSV path is a naive split(','), with no
-  // RFC 4180 quote handling. A quoted field containing the delimiter is split
-  // at the embedded comma and the quotes leak into the cells. This test
-  // documents the current behavior; fixing it would need a real CSV parser.
-  it('T-TC-21: splits quoted CSV fields at embedded commas (documents limitation)', () => {
+  // T-TC-21: quoted CSV fields containing delimiters must stay in one cell.
+  it('T-TC-21: preserves quoted CSV fields with embedded commas', () => {
     const csv = '"a,b",c\nx,y';
     const result = convertTsvCsvToMarkdown(csv);
     const lines = result.split('\n');
-    // "a,b" is broken into two cells ("a / b") instead of one (a,b).
-    expect(lines[0]).toBe('| "a | b" | c |');
+    expect(lines[0]).toBe('| a,b | c |');
     expect(lines[2]).toBe('| x | y |');
+  });
+
+  it('preserves escaped quotes in CSV fields', () => {
+    const csv = 'Name,Quote\nAlice,"hello ""world"""';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | hello "world" |');
+  });
+
+  it('treats quotes inside unquoted CSV fields as literal text', () => {
+    const csv = 'Name,Note,Action\nAlice,she said "hello",then left';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | she said "hello" | then left |');
+  });
+
+  it('collapses newlines inside quoted CSV fields for Markdown table cells', () => {
+    const csv = 'Name,Note\nAlice,"line1\nline2"';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | line1 line2 |');
+  });
+
+  it('collapses lone CR inside quoted CSV fields for Markdown table cells', () => {
+    const csv = 'Name,Note\nAlice,"line1\rline2"';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | line1 line2 |');
+  });
+
+  it('preserves intentional multiple spaces inside CSV cells', () => {
+    const csv = 'Name,Note\nAlice,"keep   spacing"';
+    const result = convertTsvCsvToMarkdown(csv);
+    expect(result.split('\n')[2]).toBe('| Alice | keep   spacing |');
+  });
+
+  it('throws for ragged CSV rows instead of producing a malformed table', () => {
+    expect(() => convertTsvCsvToMarkdown('a,b,c\nx,y')).toThrow('Inconsistent column count');
+  });
+
+  it('preserves delimiter-only CSV rows as empty cells', () => {
+    const csv = 'A,B,C\n1,2,3\n,,';
+    const result = convertTsvCsvToMarkdown(csv);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(4);
+    expect(lines[3]).toBe('|   |   |   |');
   });
 
   // T-TC-16: Regression test for CRLF line endings (Issue #225)
