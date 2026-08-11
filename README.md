@@ -4,9 +4,12 @@
 
 **Bokuchi** is a lightweight, open-source Markdown editor for Windows, macOS, and Linux. Built with Tauri, React, and Rust.
 
-[Official Site](https://bokuchi.com) · [User Guide](https://doc.bokuchi.com/) · [Download](https://github.com/Bokuchi-Editor/bokuchi/releases/latest)
+![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/anime.gif)
 
-![Screen Shot](https://raw.githubusercontent.com/shinya/image-storage/master/bokuchi/ss2.png)
+- Not only can it be used as a Markdown editor, but you can also switch between various themes.
+- It also includes Marp editing features, allowing you to give presentations right from within the app.
+
+[Official Site](https://bokuchi.com) · [User Guide](https://doc.bokuchi.com/) · [Download](https://github.com/Bokuchi-Editor/bokuchi/releases/latest)
 
 ## Download
 
