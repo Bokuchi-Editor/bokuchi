@@ -372,6 +372,12 @@
       "title": "संपादक",
       "fontSize": "फ़ॉन्ट आकार",
       "fontSizeDescription": "संपादक के लिए फ़ॉन्ट आकार समायोजित करें।",
+      "fontFamily": "संपादक फ़ॉन्ट",
+      "fontFamilyDescription": "संपादक के लिए इंस्टॉल किया हुआ फ़ॉन्ट चुनें। \"डिफ़ॉल्ट\" मानक मोनोस्पेस फ़ॉन्ट का उपयोग करता है।",
+      "previewFontFamily": "पूर्वावलोकन फ़ॉन्ट",
+      "previewFontFamilyDescription": "पूर्वावलोकन पाठ और HTML/PDF निर्यात के लिए फ़ॉन्ट चुनें। कोड ब्लॉक हमेशा मोनोस्पेस फ़ॉन्ट में दिखते हैं।",
+      "fontFamilyDefault": "डिफ़ॉल्ट",
+      "fontFamilyMonospaceOnly": "केवल मोनोस्पेस फ़ॉन्ट",
       "showLineNumbers": "लाइन नंबर दिखाएं",
       "showLineNumbersDescription": "संपादक में लाइन नंबर प्रदर्शित करें।",
       "tabSize": "टैब आकार",
@@ -582,7 +588,6 @@
     "convert": "कन्वर्ट करें",
     "convertWithoutAsking": "भविष्य में पूछे बिना कन्वर्ट करें",
     "conversionSuccess": "टेबल सफलतापूर्वक Markdown में कन्वर्ट हो गई",
-    "conversionFailed": "टेबल कन्वर्ज़न असफल। प्लेन टेक्स्ट के रूप में पेस्ट किया गया।",
     "noTableDetected": "क्लिपबोर्ड डेटा में कोई टेबल नहीं मिली"
   },
   "search": {

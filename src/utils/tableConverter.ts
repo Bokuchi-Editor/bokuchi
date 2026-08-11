@@ -143,69 +143,154 @@ export function validateMarkdownTable(markdown: string): boolean {
  */
 export function convertTsvCsvToMarkdown(text: string): string {
 
-  try {
-    const lines = text.trim().split(/\r?\n/);
-
-    if (lines.length === 0) {
-      throw new Error('No lines found');
-    }
-
-    // Determine delimiter (tab or comma)
-    const firstLine = lines[0];
-    const hasTabs = firstLine.includes('\t');
-    const hasCommas = firstLine.includes(',');
-
-    let delimiter = '\t';
-    if (hasTabs) {
-      delimiter = '\t';
-    } else if (hasCommas) {
-      delimiter = ',';
-    } else {
-      throw new Error('No delimiter found (tab or comma)');
-    }
-
-    const markdownRows: string[] = [];
-
-    // Process each row
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue; // Skip empty lines
-
-      // Split by delimiter
-      const cells = line.split(delimiter);
-
-      if (cells.length === 0) continue;
-
-      // Process cell contents
-      const cellContents = cells.map((cell) => {
-        let content = cell.trim();
-
-
-        // Escape pipe characters
-        content = content.replace(/\|/g, '\\|');
-
-        // Empty cells become a single space
-        return content || ' ';
-      });
-
-      // Create Markdown row
-      const markdownRow = '| ' + cellContents.join(' | ') + ' |';
-      const isFirstEmittedRow = markdownRows.length === 0;
-      markdownRows.push(markdownRow);
-
-      // Add header separator row after the first *emitted* row (rows skipped
-      // above for having no cells must not count as "the first row").
-      if (isFirstEmittedRow) {
-        const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
-        markdownRows.push(separator);
-      }
-    }
-
-    const result = markdownRows.join('\n');
-
-    return result;
-  } catch (error) {
-    console.error('Failed to convert TSV/CSV to Markdown:', error);
-    throw error;
+  const rows = parseRowsWithDetectedDelimiter(text);
+  if (rows === null) {
+    throw new Error('No delimiter found (tab or comma)');
   }
+
+  if (rows.length === 0) {
+    throw new Error('No lines found');
+  }
+
+  const columnCount = rows[0].length;
+  if (columnCount < 2) {
+    throw new Error('No delimiter found (tab or comma)');
+  }
+  if (rows.some((row) => row.length !== columnCount)) {
+    throw new Error('Inconsistent column count');
+  }
+
+  const markdownRows: string[] = [];
+
+  // Process each row
+  for (const cells of rows) {
+    // Process cell contents
+    const cellContents = cells.map((cell) => {
+      let content = cell.replace(/\r\n?|\n/g, ' ').trim();
+
+
+      // Escape pipe characters
+      content = content.replace(/\|/g, '\\|');
+
+      // Empty cells become a single space
+      return content || ' ';
+    });
+
+    // Create Markdown row
+    const markdownRow = '| ' + cellContents.join(' | ') + ' |';
+    const isFirstEmittedRow = markdownRows.length === 0;
+    markdownRows.push(markdownRow);
+
+    // Add header separator row after the first *emitted* row (rows skipped
+    // above for having no cells must not count as "the first row").
+    if (isFirstEmittedRow) {
+      const separator = '|' + cellContents.map(() => ' --- ').join('|') + '|';
+      markdownRows.push(separator);
+    }
+  }
+
+  const result = markdownRows.join('\n');
+
+  return result;
+}
+
+function parseRowsWithDetectedDelimiter(text: string): string[][] | null {
+  const tabRows = tryParseDelimitedRows(text, '\t');
+  if (tabRows !== null && tabRows.some((row) => row.length > 1)) {
+    return tabRows;
+  }
+
+  const commaRows = tryParseDelimitedRows(text, ',');
+  if (commaRows !== null && commaRows.some((row) => row.length > 1)) {
+    return commaRows;
+  }
+
+  return null;
+}
+
+function tryParseDelimitedRows(text: string, delimiter: string): string[][] | null {
+  try {
+    return parseDelimitedRows(text, delimiter);
+  } catch {
+    return null;
+  }
+}
+
+function parseDelimitedRows(text: string, delimiter: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = '';
+  let inQuotes = false;
+  let atFieldStart = true;
+  let afterClosingQuote = false;
+  const source = text.trim();
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+
+    if (inQuotes) {
+      if (char !== '"') {
+        cell += char;
+        continue;
+      }
+
+      if (inQuotes && source[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else {
+        inQuotes = false;
+        afterClosingQuote = true;
+      }
+      continue;
+    }
+
+    if (atFieldStart && char === '"') {
+      inQuotes = true;
+      atFieldStart = false;
+      continue;
+    }
+
+    if (!inQuotes && char === delimiter) {
+      row.push(cell);
+      cell = '';
+      atFieldStart = true;
+      afterClosingQuote = false;
+      continue;
+    }
+
+    if (!inQuotes && (char === '\n' || char === '\r')) {
+      if (char === '\r' && source[i + 1] === '\n') {
+        i++;
+      }
+      row.push(cell);
+      if (row.length > 1 || row.some((value) => value.trim() !== '')) {
+        rows.push(row);
+      }
+      row = [];
+      cell = '';
+      atFieldStart = true;
+      afterClosingQuote = false;
+      continue;
+    }
+
+    if (afterClosingQuote && char.trim() !== '') {
+      throw new Error('Unexpected character after closing quote');
+    }
+
+    if (!afterClosingQuote) {
+      atFieldStart = false;
+    }
+    cell += char;
+  }
+
+  if (inQuotes) {
+    throw new Error('Unclosed quoted field');
+  }
+
+  row.push(cell);
+  if (row.length > 1 || row.some((value) => value.trim() !== '')) {
+    rows.push(row);
+  }
+
+  return rows;
 }

@@ -372,6 +372,12 @@
       "title": "编辑器",
       "fontSize": "字体大小",
       "fontSizeDescription": "调整编辑器的字体大小。",
+      "fontFamily": "编辑器字体",
+      "fontFamilyDescription": "从已安装的字体中选择编辑器使用的字体。“默认”使用标准等宽字体。",
+      "previewFontFamily": "预览字体",
+      "previewFontFamilyDescription": "选择预览正文和 HTML/PDF 导出使用的字体。代码块始终使用等宽字体。",
+      "fontFamilyDefault": "默认",
+      "fontFamilyMonospaceOnly": "仅显示等宽字体",
       "showLineNumbers": "显示行号",
       "showLineNumbersDescription": "在编辑器中显示行号。",
       "tabSize": "制表符大小",
@@ -582,7 +588,6 @@
     "convert": "转换",
     "convertWithoutAsking": "以后不再询问直接转换",
     "conversionSuccess": "表格已成功转换为 Markdown",
-    "conversionFailed": "表格转换失败。已作为纯文本粘贴。",
     "noTableDetected": "在剪贴板数据中未检测到表格"
   },
   "search": {

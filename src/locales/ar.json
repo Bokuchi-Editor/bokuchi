@@ -372,6 +372,12 @@
       "title": "المحرر",
       "fontSize": "حجم الخط",
       "fontSizeDescription": "تعديل حجم الخط للمحرر.",
+      "fontFamily": "خط المحرر",
+      "fontFamilyDescription": "اختر خطًا مثبتًا للمحرر. \"الافتراضي\" يستخدم الخط أحادي المسافة القياسي.",
+      "previewFontFamily": "خط المعاينة",
+      "previewFontFamilyDescription": "اختر خطًا لنص المعاينة وتصدير HTML/PDF. كتل التعليمات البرمجية تستخدم دائمًا خطًا أحادي المسافة.",
+      "fontFamilyDefault": "الافتراضي",
+      "fontFamilyMonospaceOnly": "الخطوط أحادية المسافة فقط",
       "showLineNumbers": "إظهار أرقام الأسطر",
       "showLineNumbersDescription": "عرض أرقام الأسطر في المحرر.",
       "tabSize": "حجم المسافة البادئة",
@@ -582,7 +588,6 @@
     "convert": "تحويل",
     "convertWithoutAsking": "تحويل دون سؤال في المستقبل",
     "conversionSuccess": "تم تحويل الجدول إلى Markdown بنجاح",
-    "conversionFailed": "فشل في تحويل الجدول. تم الصق كنص عادي.",
     "noTableDetected": "لم يتم اكتشاف جدول في بيانات الحافظة"
   },
   "search": {

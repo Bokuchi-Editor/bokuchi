@@ -372,6 +372,12 @@
       "title": "Editor",
       "fontSize": "Schriftgröße",
       "fontSizeDescription": "Passen Sie die Schriftgröße für den Editor an.",
+      "fontFamily": "Editor-Schriftart",
+      "fontFamilyDescription": "Wählen Sie eine installierte Schriftart für den Editor. \"Standard\" verwendet die übliche Monospace-Schriftart.",
+      "previewFontFamily": "Vorschau-Schriftart",
+      "previewFontFamilyDescription": "Wählen Sie eine Schriftart für den Vorschautext und den HTML/PDF-Export. Codeblöcke verwenden immer eine Monospace-Schriftart.",
+      "fontFamilyDefault": "Standard",
+      "fontFamilyMonospaceOnly": "Nur Monospace-Schriftarten",
       "showLineNumbers": "Zeilennummern anzeigen",
       "showLineNumbersDescription": "Zeilennummern im Editor anzeigen.",
       "tabSize": "Tab-Größe",
@@ -582,7 +588,6 @@
     "convert": "Konvertieren",
     "convertWithoutAsking": "In Zukunft ohne Nachfrage konvertieren",
     "conversionSuccess": "Tabelle erfolgreich in Markdown konvertiert",
-    "conversionFailed": "Tabellenkonvertierung fehlgeschlagen. Als Klartext eingefügt.",
     "noTableDetected": "Keine Tabelle in den Zwischenablage-Daten erkannt"
   },
   "search": {

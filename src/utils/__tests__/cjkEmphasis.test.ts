@@ -56,6 +56,18 @@ describe('fixCjkEmphasis (issue #400)', () => {
     expect(out).not.toMatch(/<strong>/);
   });
 
+  it('protects code and fixes prose even when prose contains a bare ``` (issue #468)', () => {
+    // A bare ``` in prose broke the old fence-pairing regex, swapping which
+    // regions were protected: markers leaked into code while CJK prose after
+    // it lost the flanking fix.
+    const md = 'フェンスは ``` と書く。\n\n```\n**コード**な行\n```\n\n**「重要」**な話。';
+    const fixed = fixCjkEmphasis(md);
+    expect(fixed).toContain('\n**コード**な行\n'); // code untouched, no marker
+    const out = render(md);
+    expect(out).toContain('**コード**な行');
+    expect(out).toContain('<strong>「重要」</strong>');
+  });
+
   it('strips every inserted marker from the output', () => {
     const out = render('**「重要」**な点と*強調*と通常の**bold**。');
     expect(out).not.toContain(MARKER);

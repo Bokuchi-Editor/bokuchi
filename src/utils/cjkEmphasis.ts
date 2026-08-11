@@ -22,6 +22,8 @@
  * emphasis) and `~~` are intentionally not handled here.
  */
 
+import { maskCodeRegions } from './codeRegions';
+
 /** Invisible Word Joiner (U+2060): a non-punctuation, non-whitespace character. */
 const EMPHASIS_MARKER = '⁠';
 
@@ -35,31 +37,21 @@ const CJK_RANGES =
 const CJK_BEFORE_DELIM = new RegExp(`([${CJK_RANGES}])(\\*+)`, 'g');
 const DELIM_BEFORE_CJK = new RegExp(`(\\*+)([${CJK_RANGES}])`, 'g');
 
-// Match fenced code blocks and inline code spans so we never insert markers
-// inside them. Mirrors the CODE_BLOCK_RE idiom used by processKatex.
-const CODE_BLOCK_RE = /```[\s\S]*?```|`[^`\n]+`/g;
-
 /**
  * Insert invisible Word Joiners at CJK↔`*`/`**` boundaries so CommonMark
- * emphasis renders for CJK prose. Code spans/blocks are left untouched. Pair
+ * emphasis renders for CJK prose. Code spans/blocks are left untouched
+ * (lexer-accurate detection shared with processKatex; issue #468). Pair
  * with {@link stripCjkEmphasisMarker} on marked's output.
  */
 export function fixCjkEmphasis(markdown: string): string {
   // Protect code spans/blocks from marker insertion.
-  const codeBlocks: string[] = [];
-  let result = markdown.replace(CODE_BLOCK_RE, (match) => {
-    codeBlocks.push(match);
-    return `%%CJKCODEBLOCK_${codeBlocks.length - 1}%%`;
-  });
+  const { masked, restore } = maskCodeRegions(markdown);
 
-  result = result
+  const result = masked
     .replace(CJK_BEFORE_DELIM, `$1${EMPHASIS_MARKER}$2`)
     .replace(DELIM_BEFORE_CJK, `$1${EMPHASIS_MARKER}$2`);
 
-  // Restore code spans/blocks.
-  result = result.replace(/%%CJKCODEBLOCK_(\d+)%%/g, (_match, index: string) => codeBlocks[parseInt(index)]);
-
-  return result;
+  return restore(result);
 }
 
 /** Remove the Word Joiner markers inserted by {@link fixCjkEmphasis} from HTML. */

@@ -372,6 +372,12 @@
       "title": "Éditeur",
       "fontSize": "Taille de police",
       "fontSizeDescription": "Ajuster la taille de police pour l'éditeur.",
+      "fontFamily": "Police de l'éditeur",
+      "fontFamilyDescription": "Choisissez une police installée pour l'éditeur. « Par défaut » utilise la police à chasse fixe standard.",
+      "previewFontFamily": "Police de l'aperçu",
+      "previewFontFamilyDescription": "Choisissez une police pour le texte de l'aperçu et l'export HTML/PDF. Les blocs de code utilisent toujours une police à chasse fixe.",
+      "fontFamilyDefault": "Par défaut",
+      "fontFamilyMonospaceOnly": "Polices à chasse fixe uniquement",
       "showLineNumbers": "Afficher les numéros de ligne",
       "showLineNumbersDescription": "Afficher les numéros de ligne dans l'éditeur.",
       "tabSize": "Taille de tabulation",
@@ -582,7 +588,6 @@
     "convert": "Convertir",
     "convertWithoutAsking": "Convertir sans demander à l'avenir",
     "conversionSuccess": "Tableau converti en Markdown avec succès",
-    "conversionFailed": "Échec de la conversion du tableau. Collé en texte brut.",
     "noTableDetected": "Aucun tableau détecté dans les données du presse-papiers"
   },
   "search": {

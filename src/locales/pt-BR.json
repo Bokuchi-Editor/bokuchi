@@ -372,6 +372,12 @@
       "title": "Editor",
       "fontSize": "Tamanho da fonte",
       "fontSizeDescription": "Ajuste o tamanho da fonte para o editor.",
+      "fontFamily": "Fonte do editor",
+      "fontFamilyDescription": "Escolha uma fonte instalada para o editor. \"Padrão\" usa a fonte monoespaçada padrão.",
+      "previewFontFamily": "Fonte da visualização",
+      "previewFontFamilyDescription": "Escolha uma fonte para o texto da visualização e a exportação HTML/PDF. Blocos de código sempre usam fonte monoespaçada.",
+      "fontFamilyDefault": "Padrão",
+      "fontFamilyMonospaceOnly": "Somente fontes monoespaçadas",
       "showLineNumbers": "Mostrar números de linha",
       "showLineNumbersDescription": "Exiba números de linha no editor.",
       "tabSize": "Tamanho da tabulação",
@@ -582,7 +588,6 @@
     "convert": "Converter",
     "convertWithoutAsking": "Converter sem perguntar no futuro",
     "conversionSuccess": "Tabela convertida para Markdown com sucesso",
-    "conversionFailed": "Falha na conversão da tabela. Colado como texto simples.",
     "noTableDetected": "Nenhuma tabela detectada nos dados da área de transferência"
   },
   "search": {

@@ -14,19 +14,54 @@ export type PasteClassification =
  * conversion does not yield a valid Markdown table, the paste is plain text.
  */
 export function classifyPaste(htmlData: string, plainText: string): PasteClassification {
-  let markdownTable: string;
+  const htmlTable = tryConvertHtmlTable(htmlData);
+  if (htmlTable) {
+    return { kind: 'table', markdownTable: htmlTable };
+  }
 
-  if (htmlData && htmlData.includes('<table') && htmlData.includes('</table>')) {
+  const delimitedTable = tryConvertDelimitedText(plainText);
+  if (delimitedTable) {
+    return { kind: 'table', markdownTable: delimitedTable };
+  }
+
+  return { kind: 'plain' };
+}
+
+function tryConvertHtmlTable(htmlData: string): string | null {
+  if (!htmlData || !htmlData.includes('<table') || !htmlData.includes('</table>')) {
+    return null;
+  }
+
+  let markdownTable: string;
+  try {
     markdownTable = htmlTableToMarkdown(htmlData);
-  } else if (plainText && (plainText.includes('\t') || plainText.includes(','))) {
-    markdownTable = convertTsvCsvToMarkdown(plainText);
-  } else {
-    return { kind: 'plain' };
+  } catch {
+    return null;
   }
 
   if (!validateMarkdownTable(markdownTable)) {
-    return { kind: 'plain' };
+    return null;
   }
 
-  return { kind: 'table', markdownTable };
+  return markdownTable;
+}
+
+function tryConvertDelimitedText(plainText: string): string | null {
+  if (!plainText || (!plainText.includes('\t') && !plainText.includes(','))) {
+    return null;
+  }
+
+  let markdownTable: string;
+  try {
+    markdownTable = convertTsvCsvToMarkdown(plainText);
+  } catch (error) {
+    console.error('Failed to convert TSV/CSV to Markdown:', error);
+    return null;
+  }
+
+  if (!validateMarkdownTable(markdownTable)) {
+    return null;
+  }
+
+  return markdownTable;
 }

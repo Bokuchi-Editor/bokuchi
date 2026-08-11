@@ -7,6 +7,11 @@ export type ScrollSyncMode = 'editor-to-preview' | 'bidirectional' | 'off';
 // Editor settings type definition
 export interface EditorSettings {
   fontSize: number;
+  // Font family name for the Monaco editor. '' = platform default monospace.
+  // Only installed-font names are stored (picked from the system font list);
+  // if the font is missing (settings imported from another machine) CSS
+  // fallback silently applies the default stack.
+  fontFamily: string;
   showLineNumbers: boolean;
   tabSize: number;
   wordWrap: boolean;
@@ -68,6 +73,10 @@ export type TableLayoutMode = 'equal' | 'auto-wrap' | 'auto-scroll';
 // Preview settings type definition
 export interface PreviewSettings {
   tableLayout: TableLayoutMode;
+  // Font family name for the preview body (and HTML/PDF export). '' = default
+  // sans-serif stack. Code blocks always keep their monospace font, and the
+  // AS/400 theme keeps its own font regardless of this setting.
+  fontFamily: string;
 }
 
 // Advanced settings type definition
@@ -99,6 +108,7 @@ export interface AppSettings {
 // Default settings
 export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   fontSize: 14,
+  fontFamily: '',
   showLineNumbers: true,
   tabSize: 2,
   wordWrap: true,
@@ -141,6 +151,7 @@ export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
 
 export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {
   tableLayout: 'auto-wrap',
+  fontFamily: '',
 };
 
 export const DEFAULT_RECENT_FILES_SETTINGS: RecentFilesSettings = {

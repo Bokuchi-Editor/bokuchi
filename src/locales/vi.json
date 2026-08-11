@@ -372,6 +372,12 @@
       "title": "Trình soạn thảo",
       "fontSize": "Kích thước phông chữ",
       "fontSizeDescription": "Điều chỉnh kích thước phông chữ cho trình soạn thảo.",
+      "fontFamily": "Phông chữ trình soạn thảo",
+      "fontFamilyDescription": "Chọn phông chữ đã cài đặt cho trình soạn thảo. \"Mặc định\" dùng phông chữ monospace tiêu chuẩn.",
+      "previewFontFamily": "Phông chữ xem trước",
+      "previewFontFamilyDescription": "Chọn phông chữ cho nội dung xem trước và xuất HTML/PDF. Khối mã luôn dùng phông chữ monospace.",
+      "fontFamilyDefault": "Mặc định",
+      "fontFamilyMonospaceOnly": "Chỉ phông chữ monospace",
       "showLineNumbers": "Hiển thị số dòng",
       "showLineNumbersDescription": "Hiển thị số dòng trong trình soạn thảo.",
       "tabSize": "Kích thước tab",
@@ -582,7 +588,6 @@
     "convert": "Chuyển đổi",
     "convertWithoutAsking": "Chuyển đổi mà không hỏi trong tương lai",
     "conversionSuccess": "Bảng đã được chuyển đổi sang Markdown thành công",
-    "conversionFailed": "Chuyển đổi bảng thất bại. Đã dán dưới dạng văn bản thuần túy.",
     "noTableDetected": "Không phát hiện bảng nào trong dữ liệu clipboard"
   },
   "search": {
