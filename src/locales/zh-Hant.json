@@ -616,21 +616,17 @@
       "improvement": "改進"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "程式碼區塊複製按鈕",
-        "description": "預覽中的程式碼區塊現在附有複製按鈕，按一下即可複製程式碼片段。"
+      "fontFamilySettings": {
+        "title": "編輯器與預覽字型設定",
+        "description": "現在可以從已安裝的字型中選擇編輯器和預覽使用的字型。預覽字型同樣套用於 HTML 與 PDF 匯出。"
       },
-      "verticalTabWidth": {
-        "title": "垂直標籤頁寬度可調整",
-        "description": "現在可以拖曳垂直標籤頁的邊緣來調整寬度，調整後的寬度會被記住。"
+      "codeBlockMath": {
+        "title": "程式碼區塊顯示修正",
+        "description": "修正了當文件中存在不成對的 ``` 圍欄時，程式碼區塊內含 $ 的文字可能被誤渲染為數學公式的問題。"
       },
-      "tablePasteEmptyRow": {
-        "title": "表格貼上修正",
-        "description": "修正了以空列開頭的表格（例如從網頁複製）貼上時未被轉換為 Markdown 表格、而是以純文字插入的問題。"
-      },
-      "exportFilename": {
-        "title": "匯出使用原始檔案名稱",
-        "description": "HTML 與 PDF 匯出現在預設使用正在編輯的檔案名稱，而非固定的檔案名稱。"
+      "csvTablePaste": {
+        "title": "CSV 貼上修正",
+        "description": "貼上含引號欄位（包含逗號、引號或換行）的 CSV 資料時，現在能正確轉換為 Markdown 表格。"
       },
       "dependencyUpdates": {
         "title": "相依套件更新",

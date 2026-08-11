@@ -639,21 +639,17 @@
       "improvement": "改善"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "コードブロックのコピーボタン",
-        "description": "プレビューのコードブロックにコピーボタンが付きました。ワンクリックでコードをコピーできます。"
+      "fontFamilySettings": {
+        "title": "エディターとプレビューのフォント設定",
+        "description": "設定 > エディターで、エディターとプレビューのフォントをインストール済みフォントから選べるようになりました。プレビューのフォントは HTML/PDF エクスポートにも適用されます。"
       },
-      "verticalTabWidth": {
-        "title": "垂直タブの幅調整",
-        "description": "垂直タブバーの端をドラッグして幅を調整できるようになりました。調整した幅は記憶されます。"
+      "codeBlockMath": {
+        "title": "コードブロック表示の修正",
+        "description": "対応の取れていない ``` フェンスを含むドキュメントで、コードブロック内の $ を含むテキストが数式として表示されてしまう問題を修正しました。"
       },
-      "tablePasteEmptyRow": {
-        "title": "テーブル貼り付けの修正",
-        "description": "先頭に空行のあるテーブル（Webページからのコピーなど）を貼り付けた際、Markdownテーブルに変換されずプレーンテキストのまま挿入される問題を修正しました。"
-      },
-      "exportFilename": {
-        "title": "エクスポートファイル名の改善",
-        "description": "HTML や PDF のエクスポート時、固定のファイル名ではなく編集中のファイル名が初期値になるようになりました。"
+      "csvTablePaste": {
+        "title": "CSV 貼り付けの修正",
+        "description": "引用符で囲まれたフィールド（カンマ・引用符・改行を含むセル）のある CSV データを貼り付けた際、正しく Markdown テーブルに変換されるようになりました。"
       },
       "dependencyUpdates": {
         "title": "依存関係の更新",

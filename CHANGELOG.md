@@ -5,15 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...HEAD)
+
+## [1.1.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...v1.1.0) - 2026-08-11
 
 ### Added
 
 - Font family settings for the editor and the preview. Settings > Editor now offers two searchable font pickers listing the fonts installed on the machine (each option previews itself, typing inline-completes the name, and the editor picker can filter to monospace fonts). The preview font also applies to HTML and PDF exports, while code blocks always keep a monospace font. "Default" restores the previous behavior. (#471)
 
+### Changed
+
+- Updated dependencies, including `dompurify`, `mermaid`, `js-yaml`, `vite` (8.1.5 → 8.2.1), `@vitejs/plugin-react`, the `typescript-eslint` group, `eslint`, `@testing-library/user-event`, `@types/react` / `@types/react-dom`, and `undici`.
+
 ### Fixed
 
 - `$(...)` and other `$` text inside code blocks is no longer misrendered as KaTeX math when the document contains unbalanced ``` fences (e.g. a bare ``` in prose, a fence shown inside another code block). Code-block detection for the KaTeX and CJK-emphasis pre-processors is now delegated to marked's own lexer, so internal `%%CODEBLOCK_n%%` placeholders can no longer leak into the preview. (#468)
+- Pasting CSV/TSV data with quoted fields is now handled by a quote-aware parser: fields containing commas, escaped quotes, or line breaks become a single Markdown table cell instead of breaking the table, and the delimiter is detected from the whole clipboard content rather than only the first line.
 
 ## [1.0.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.0...v1.0.1) - 2026-07-31
 

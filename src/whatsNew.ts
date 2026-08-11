@@ -25,27 +25,22 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.0.1',
+  version: '1.1.0',
   changes: [
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.codeCopyButton.title',
-      descriptionKey: 'whatsNew.changes.codeCopyButton.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.verticalTabWidth.title',
-      descriptionKey: 'whatsNew.changes.verticalTabWidth.description',
+      titleKey: 'whatsNew.changes.fontFamilySettings.title',
+      descriptionKey: 'whatsNew.changes.fontFamilySettings.description',
     },
     {
       type: 'fix',
-      titleKey: 'whatsNew.changes.tablePasteEmptyRow.title',
-      descriptionKey: 'whatsNew.changes.tablePasteEmptyRow.description',
+      titleKey: 'whatsNew.changes.codeBlockMath.title',
+      descriptionKey: 'whatsNew.changes.codeBlockMath.description',
     },
     {
-      type: 'improvement',
-      titleKey: 'whatsNew.changes.exportFilename.title',
-      descriptionKey: 'whatsNew.changes.exportFilename.description',
+      type: 'fix',
+      titleKey: 'whatsNew.changes.csvTablePaste.title',
+      descriptionKey: 'whatsNew.changes.csvTablePaste.description',
     },
     {
       type: 'improvement',

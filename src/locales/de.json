@@ -616,21 +616,17 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Kopier-Button für Codeblöcke",
-        "description": "Codeblöcke in der Vorschau haben jetzt einen Kopier-Button – ein Klick genügt, um den Code zu kopieren."
+      "fontFamilySettings": {
+        "title": "Eigene Schriftarten für Editor und Vorschau",
+        "description": "Sie können die Schriftarten für Editor und Vorschau jetzt aus den auf Ihrem Rechner installierten Schriftarten wählen. Die Vorschau-Schriftart gilt auch für den HTML- und PDF-Export."
       },
-      "verticalTabWidth": {
-        "title": "Anpassbare Breite der vertikalen Tabs",
-        "description": "Die Breite der vertikalen Tab-Leiste lässt sich jetzt per Ziehen anpassen; die gewählte Breite wird gespeichert."
+      "codeBlockMath": {
+        "title": "Korrektur der Codeblock-Darstellung",
+        "description": "Text mit $ innerhalb von Codeblöcken wird nicht mehr fälschlich als mathematische Formel dargestellt, wenn das Dokument nicht gepaarte ```-Zäune enthält."
       },
-      "tablePasteEmptyRow": {
-        "title": "Korrektur beim Einfügen von Tabellen",
-        "description": "Tabellen, die mit einer leeren Zeile beginnen (z. B. aus einer Webseite kopiert), werden beim Einfügen jetzt korrekt in Markdown-Tabellen umgewandelt, statt als reiner Text eingefügt zu werden."
-      },
-      "exportFilename": {
-        "title": "Export mit ursprünglichem Dateinamen",
-        "description": "HTML- und PDF-Exporte verwenden jetzt standardmäßig den Namen der bearbeiteten Datei statt eines festen Dateinamens."
+      "csvTablePaste": {
+        "title": "Korrektur beim Einfügen von CSV-Daten",
+        "description": "CSV-Daten mit Feldern in Anführungszeichen (mit Kommas, Anführungszeichen oder Zeilenumbrüchen) werden beim Einfügen jetzt korrekt in Markdown-Tabellen umgewandelt."
       },
       "dependencyUpdates": {
         "title": "Abhängigkeits-Updates",
