@@ -616,21 +616,17 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Nút sao chép trên khối mã",
-        "description": "Các khối mã trong bản xem trước giờ đây có nút sao chép, chỉ cần một cú nhấp để sao chép đoạn mã."
+      "fontFamilySettings": {
+        "title": "Tuỳ chỉnh phông chữ cho trình soạn thảo và xem trước",
+        "description": "Giờ đây bạn có thể chọn phông chữ cho trình soạn thảo và bản xem trước từ các phông chữ đã cài trên máy. Phông chữ xem trước cũng được áp dụng khi xuất HTML và PDF."
       },
-      "verticalTabWidth": {
-        "title": "Điều chỉnh độ rộng tab dọc",
-        "description": "Giờ đây bạn có thể kéo mép thanh tab dọc để điều chỉnh độ rộng, và độ rộng đã chọn sẽ được ghi nhớ."
+      "codeBlockMath": {
+        "title": "Sửa lỗi hiển thị khối mã",
+        "description": "Văn bản chứa $ trong khối mã không còn bị hiển thị nhầm thành công thức toán học khi tài liệu chứa các dấu ``` không khớp cặp."
       },
-      "tablePasteEmptyRow": {
-        "title": "Sửa lỗi dán bảng",
-        "description": "Đã sửa lỗi bảng bắt đầu bằng một hàng trống (ví dụ: sao chép từ trang web) không được chuyển thành bảng Markdown khi dán mà bị chèn dưới dạng văn bản thuần."
-      },
-      "exportFilename": {
-        "title": "Xuất tệp với tên tệp gốc",
-        "description": "Xuất HTML và PDF giờ đây mặc định dùng tên tệp đang chỉnh sửa thay vì một tên cố định."
+      "csvTablePaste": {
+        "title": "Sửa lỗi dán CSV",
+        "description": "Dữ liệu CSV có trường trong dấu ngoặc kép (chứa dấu phẩy, dấu ngoặc kép hoặc xuống dòng) giờ đây được chuyển đổi chính xác thành bảng Markdown khi dán."
       },
       "dependencyUpdates": {
         "title": "Cập nhật phụ thuộc",

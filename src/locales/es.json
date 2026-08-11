@@ -616,21 +616,17 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Botón de copiar en bloques de código",
-        "description": "Los bloques de código de la vista previa ahora tienen un botón de copiar: basta un clic para copiar el fragmento."
+      "fontFamilySettings": {
+        "title": "Fuentes personalizadas para el editor y la vista previa",
+        "description": "Ahora puedes elegir las fuentes del editor y de la vista previa entre las instaladas en tu equipo. La fuente de la vista previa también se aplica a las exportaciones a HTML y PDF."
       },
-      "verticalTabWidth": {
-        "title": "Ancho ajustable de las pestañas verticales",
-        "description": "Ahora puedes arrastrar el borde de la barra de pestañas verticales para ajustar su ancho, y el ancho elegido se recuerda."
+      "codeBlockMath": {
+        "title": "Corrección de la visualización de bloques de código",
+        "description": "El texto con $ dentro de los bloques de código ya no se muestra por error como una fórmula matemática cuando el documento contiene marcas ``` sin emparejar."
       },
-      "tablePasteEmptyRow": {
-        "title": "Corrección al pegar tablas",
-        "description": "Las tablas que comienzan con una fila vacía (por ejemplo, copiadas de una página web) ahora se convierten correctamente en tablas Markdown al pegarlas, en lugar de insertarse como texto sin formato."
-      },
-      "exportFilename": {
-        "title": "Exportación con el nombre del archivo original",
-        "description": "Las exportaciones a HTML y PDF ahora usan por defecto el nombre del archivo que estás editando en lugar de un nombre fijo."
+      "csvTablePaste": {
+        "title": "Corrección al pegar CSV",
+        "description": "Los datos CSV con campos entrecomillados (que contienen comas, comillas o saltos de línea) ahora se convierten correctamente en tablas Markdown al pegarlos."
       },
       "dependencyUpdates": {
         "title": "Actualizaciones de dependencias",

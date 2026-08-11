@@ -616,21 +616,17 @@
       "improvement": "改进"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "代码块复制按钮",
-        "description": "预览中的代码块现在带有复制按钮，单击即可复制代码片段。"
+      "fontFamilySettings": {
+        "title": "编辑器与预览字体设置",
+        "description": "现在可以从已安装的字体中选择编辑器和预览使用的字体。预览字体同样应用于 HTML 和 PDF 导出。"
       },
-      "verticalTabWidth": {
-        "title": "垂直标签页宽度可调",
-        "description": "现在可以拖动垂直标签页的边缘来调整宽度，调整后的宽度会被记住。"
+      "codeBlockMath": {
+        "title": "代码块显示修复",
+        "description": "修复了当文档中存在不成对的 ``` 围栏时，代码块内含 $ 的文本可能被误渲染为数学公式的问题。"
       },
-      "tablePasteEmptyRow": {
-        "title": "表格粘贴修复",
-        "description": "修复了以空行开头的表格（例如从网页复制）粘贴时未被转换为 Markdown 表格、而是以纯文本插入的问题。"
-      },
-      "exportFilename": {
-        "title": "导出使用原文件名",
-        "description": "HTML 和 PDF 导出现在默认使用正在编辑的文件名，而不是固定的文件名。"
+      "csvTablePaste": {
+        "title": "CSV 粘贴修复",
+        "description": "粘贴带引号字段（包含逗号、引号或换行）的 CSV 数据时，现在能正确转换为 Markdown 表格。"
       },
       "dependencyUpdates": {
         "title": "依赖更新",

@@ -616,21 +616,17 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Tombol Salin pada Blok Kode",
-        "description": "Blok kode di pratinjau kini memiliki tombol salin, sehingga Anda dapat menyalin kode dengan sekali klik."
+      "fontFamilySettings": {
+        "title": "Font Kustom untuk Editor dan Pratinjau",
+        "description": "Kini Anda dapat memilih font editor dan pratinjau dari font yang terpasang di komputer Anda. Font pratinjau juga berlaku untuk ekspor HTML dan PDF."
       },
-      "verticalTabWidth": {
-        "title": "Lebar Tab Vertikal yang Dapat Disesuaikan",
-        "description": "Kini Anda dapat menyeret tepi bilah tab vertikal untuk menyesuaikan lebarnya, dan lebar pilihan Anda akan diingat."
+      "codeBlockMath": {
+        "title": "Perbaikan Tampilan Blok Kode",
+        "description": "Teks yang mengandung $ di dalam blok kode tidak lagi keliru ditampilkan sebagai rumus matematika saat dokumen berisi tanda ``` yang tidak berpasangan."
       },
-      "tablePasteEmptyRow": {
-        "title": "Perbaikan Tempel Tabel",
-        "description": "Memperbaiki masalah saat tabel yang diawali baris kosong (misalnya disalin dari halaman web) tidak dikonversi menjadi tabel Markdown saat ditempel, melainkan disisipkan sebagai teks biasa."
-      },
-      "exportFilename": {
-        "title": "Ekspor Menggunakan Nama File Asli",
-        "description": "Ekspor HTML dan PDF kini menggunakan nama file yang sedang diedit sebagai nama default, bukan nama tetap."
+      "csvTablePaste": {
+        "title": "Perbaikan Tempel CSV",
+        "description": "Data CSV dengan bidang berkutip (berisi koma, tanda kutip, atau ganti baris) kini dikonversi dengan benar menjadi tabel Markdown saat ditempel."
       },
       "dependencyUpdates": {
         "title": "Pembaruan Dependensi",

@@ -639,21 +639,17 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Copy Button on Code Blocks",
-        "description": "Code blocks in the preview now have a copy button, so you can copy a snippet with a single click."
+      "fontFamilySettings": {
+        "title": "Custom Fonts for Editor and Preview",
+        "description": "You can now choose the editor and preview fonts from the fonts installed on your machine, in Settings > Editor. The preview font also applies to HTML and PDF exports."
       },
-      "verticalTabWidth": {
-        "title": "Adjustable Vertical Tab Width",
-        "description": "You can now drag the edge of the vertical tab bar to adjust its width, and your preferred width is remembered."
+      "codeBlockMath": {
+        "title": "Code Block Rendering Fix",
+        "description": "Text containing $ inside code blocks is no longer misrendered as a math formula when the document contains unmatched ``` fences."
       },
-      "tablePasteEmptyRow": {
-        "title": "Table Paste Fix",
-        "description": "Tables that begin with an empty row (e.g. copied from a web page) are now correctly converted to Markdown tables on paste, instead of being inserted as plain text."
-      },
-      "exportFilename": {
-        "title": "Export Uses the Original Filename",
-        "description": "HTML and PDF exports now default to the name of the file you are editing instead of a fixed filename."
+      "csvTablePaste": {
+        "title": "CSV Table Paste Fix",
+        "description": "Pasted CSV data with quoted fields (containing commas, quotes, or line breaks) is now correctly converted to a Markdown table."
       },
       "dependencyUpdates": {
         "title": "Dependency Updates",

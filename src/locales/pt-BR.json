@@ -616,21 +616,17 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Botão de copiar nos blocos de código",
-        "description": "Os blocos de código na pré-visualização agora têm um botão de copiar: basta um clique para copiar o trecho."
+      "fontFamilySettings": {
+        "title": "Fontes personalizadas para o editor e a visualização",
+        "description": "Agora você pode escolher as fontes do editor e da visualização entre as instaladas no seu computador. A fonte da visualização também se aplica às exportações em HTML e PDF."
       },
-      "verticalTabWidth": {
-        "title": "Largura ajustável das abas verticais",
-        "description": "Agora você pode arrastar a borda da barra de abas verticais para ajustar a largura, e a largura escolhida é lembrada."
+      "codeBlockMath": {
+        "title": "Correção na exibição de blocos de código",
+        "description": "Texto contendo $ dentro de blocos de código não é mais exibido por engano como fórmula matemática quando o documento contém marcas ``` sem par."
       },
-      "tablePasteEmptyRow": {
-        "title": "Correção ao colar tabelas",
-        "description": "Tabelas que começam com uma linha vazia (por exemplo, copiadas de uma página da web) agora são convertidas corretamente em tabelas Markdown ao colar, em vez de serem inseridas como texto simples."
-      },
-      "exportFilename": {
-        "title": "Exportação com o nome do arquivo original",
-        "description": "As exportações em HTML e PDF agora usam por padrão o nome do arquivo em edição em vez de um nome fixo."
+      "csvTablePaste": {
+        "title": "Correção ao colar CSV",
+        "description": "Dados CSV com campos entre aspas (contendo vírgulas, aspas ou quebras de linha) agora são convertidos corretamente em tabelas Markdown ao colar."
       },
       "dependencyUpdates": {
         "title": "Atualizações de dependências",

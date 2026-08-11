@@ -616,21 +616,17 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "Bouton de copie sur les blocs de code",
-        "description": "Les blocs de code de l'aperçu disposent désormais d'un bouton de copie : un clic suffit pour copier l'extrait."
+      "fontFamilySettings": {
+        "title": "Polices personnalisées pour l'éditeur et l'aperçu",
+        "description": "Vous pouvez désormais choisir les polices de l'éditeur et de l'aperçu parmi celles installées sur votre machine. La police de l'aperçu s'applique aussi aux exports HTML et PDF."
       },
-      "verticalTabWidth": {
-        "title": "Largeur ajustable des onglets verticaux",
-        "description": "Vous pouvez désormais faire glisser le bord de la barre d'onglets verticaux pour en ajuster la largeur, qui est ensuite mémorisée."
+      "codeBlockMath": {
+        "title": "Correction de l'affichage des blocs de code",
+        "description": "Le texte contenant $ dans les blocs de code n'est plus affiché à tort comme une formule mathématique lorsque le document contient des délimiteurs ``` non appariés."
       },
-      "tablePasteEmptyRow": {
-        "title": "Correction du collage de tableaux",
-        "description": "Les tableaux commençant par une ligne vide (par exemple copiés depuis une page web) sont désormais correctement convertis en tableaux Markdown lors du collage, au lieu d'être insérés comme texte brut."
-      },
-      "exportFilename": {
-        "title": "Export avec le nom du fichier d'origine",
-        "description": "Les exports HTML et PDF utilisent désormais par défaut le nom du fichier en cours d'édition plutôt qu'un nom fixe."
+      "csvTablePaste": {
+        "title": "Correction du collage de CSV",
+        "description": "Les données CSV avec des champs entre guillemets (contenant des virgules, des guillemets ou des sauts de ligne) sont désormais correctement converties en tableaux Markdown lors du collage."
       },
       "dependencyUpdates": {
         "title": "Mises à jour des dépendances",

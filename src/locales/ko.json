@@ -616,21 +616,17 @@
       "improvement": "개선"
     },
     "changes": {
-      "codeCopyButton": {
-        "title": "코드 블록 복사 버튼",
-        "description": "미리보기의 코드 블록에 복사 버튼이 추가되어 클릭 한 번으로 코드를 복사할 수 있습니다."
+      "fontFamilySettings": {
+        "title": "편집기·미리보기 글꼴 설정",
+        "description": "편집기와 미리보기의 글꼴을 설치된 글꼴 중에서 선택할 수 있게 되었습니다. 미리보기 글꼴은 HTML/PDF 내보내기에도 적용됩니다."
       },
-      "verticalTabWidth": {
-        "title": "수직 탭 너비 조절",
-        "description": "수직 탭 바의 가장자리를 드래그하여 너비를 조절할 수 있으며, 조절한 너비는 기억됩니다."
+      "codeBlockMath": {
+        "title": "코드 블록 표시 수정",
+        "description": "짝이 맞지 않는 ``` 펜스가 있는 문서에서 코드 블록 안의 $ 텍스트가 수식으로 잘못 렌더링되던 문제를 수정했습니다."
       },
-      "tablePasteEmptyRow": {
-        "title": "표 붙여넣기 수정",
-        "description": "빈 행으로 시작하는 표(예: 웹 페이지에서 복사한 표)를 붙여넣을 때 Markdown 표로 변환되지 않고 일반 텍스트로 삽입되던 문제를 수정했습니다."
-      },
-      "exportFilename": {
-        "title": "내보내기 파일 이름 개선",
-        "description": "HTML 및 PDF 내보내기 시 고정된 이름 대신 편집 중인 파일의 이름이 기본값으로 사용됩니다."
+      "csvTablePaste": {
+        "title": "CSV 붙여넣기 수정",
+        "description": "따옴표로 묶인 필드(쉼표, 따옴표, 줄바꿈 포함)가 있는 CSV 데이터를 붙여넣을 때 Markdown 표로 올바르게 변환되도록 수정했습니다."
       },
       "dependencyUpdates": {
         "title": "의존성 업데이트",
