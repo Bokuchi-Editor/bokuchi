@@ -25,6 +25,14 @@ vi.mock('../../utils/marpRenderer', () => ({
   ),
   buildAllSlidesDocument: vi.fn().mockReturnValue('<html><body>All Slides</body></html>'),
   buildThumbnailDocument: vi.fn().mockReturnValue('<html><body>Thumbnails</body></html>'),
+  buildContinuousStyleContent: vi.fn().mockReturnValue(''),
+  buildMarpPrintDocument: vi.fn().mockReturnValue('<html><body>Print</body></html>'),
+}));
+
+vi.mock('../../api/desktopApi', () => ({
+  desktopApi: {
+    exportPdfFile: vi.fn(),
+  },
 }));
 
 // Mock react-i18next
@@ -36,6 +44,7 @@ vi.mock('react-i18next', () => ({
 
 import MarpPreview from '../MarpPreview';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { desktopApi } from '../../api/desktopApi';
 
 const defaultProps = {
   content: '---\nmarp: true\n---\n# Slide 1\n---\n# Slide 2\n---\n# Slide 3',
@@ -86,6 +95,59 @@ describe('MarpPreview - slide mode (preview)', () => {
     const buttons = getAllByRole('button');
     // First button is "Previous"
     expect(buttons[0]).toBeDisabled();
+  });
+
+  // T-MP-EXP-01: the native PDF pipeline takes seconds — the user must see a
+  // progress snackbar while it runs and a success snackbar when it finishes.
+  it('T-MP-EXP-01: shows progress while exporting PDF and success afterwards', async () => {
+    let resolveExport!: (v: { success: boolean }) => void;
+    vi.mocked(desktopApi.exportPdfFile).mockImplementation((_html, _page, _name, onStarted) => {
+      onStarted?.();
+      return new Promise((res) => { resolveExport = res; });
+    });
+
+    const { getByText, getByTestId, queryByText } = render(<MarpPreview {...slideProps} />);
+    await waitFor(() => {
+      expect(getByText('1 / 3')).toBeTruthy();
+    });
+
+    const exportButton = getByTestId('PictureAsPdfIcon').closest('button')!;
+    fireEvent.click(exportButton);
+
+    await waitFor(() => {
+      expect(getByText('Generating PDF…')).toBeTruthy();
+    });
+    expect(exportButton).toBeDisabled();
+
+    await act(async () => {
+      resolveExport({ success: true });
+    });
+    await waitFor(() => {
+      expect(getByText('PDF exported')).toBeTruthy();
+      expect(queryByText('Generating PDF…')).toBeNull();
+    });
+    expect(exportButton).not.toBeDisabled();
+  });
+
+  // T-MP-EXP-02: a cancelled save dialog must not flash progress or outcome.
+  it('T-MP-EXP-02: cancelled export shows no snackbar', async () => {
+    vi.mocked(desktopApi.exportPdfFile).mockResolvedValue({
+      success: false,
+      error: 'Save cancelled by user',
+    });
+
+    const { getByText, getByTestId, queryByText } = render(<MarpPreview {...slideProps} />);
+    await waitFor(() => {
+      expect(getByText('1 / 3')).toBeTruthy();
+    });
+
+    fireEvent.click(getByTestId('PictureAsPdfIcon').closest('button')!);
+    await waitFor(() => {
+      expect(vi.mocked(desktopApi.exportPdfFile)).toHaveBeenCalled();
+    });
+    expect(queryByText('Generating PDF…')).toBeNull();
+    expect(queryByText('PDF exported')).toBeNull();
+    expect(queryByText('Failed to export PDF file')).toBeNull();
   });
 
   it('renders an iframe for the slide', async () => {

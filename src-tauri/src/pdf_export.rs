@@ -126,6 +126,24 @@ pub async fn export_pdf(
     }
     let _ = std::fs::remove_file(&tmp_path);
 
+    // The webview's print engine embeds re-rasterized images as huge Flate
+    // bitmaps (no compression knob exists in any of the native print APIs), so
+    // recompress them as JPEG now. Best-effort: the printed PDF is already
+    // valid, so a failure here keeps the original file and never fails the
+    // export. CPU-bound, hence spawn_blocking.
+    if result.is_ok() {
+        let output_for_compress = output_path.clone();
+        match tauri::async_runtime::spawn_blocking(move || {
+            crate::pdf_compress::compress_pdf_images(&output_for_compress)
+        })
+        .await
+        {
+            Ok(Ok(_saved)) => {}
+            Ok(Err(e)) => eprintln!("[pdf_export] image recompression skipped: {e}"),
+            Err(e) => eprintln!("[pdf_export] image recompression task failed: {e}"),
+        }
+    }
+
     result
 }
 

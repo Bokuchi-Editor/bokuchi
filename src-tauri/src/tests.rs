@@ -1063,3 +1063,190 @@ fn test_list_system_fonts_returns_usable_families() {
         assert!(seen.insert(f.name.clone()), "duplicate family: {}", f.name);
     }
 }
+
+// ---------------------------------------------------------------------------
+// PDF image recompression (pdf_compress.rs)
+// ---------------------------------------------------------------------------
+
+/// Deterministic photo-like RGB bitmap: gradients with mild noise, so Flate
+/// compresses poorly (like the webview's print rasterization output) while
+/// JPEG compresses well.
+fn synth_rgb_bitmap(width: u32, height: u32) -> Vec<u8> {
+    let mut raw = Vec::with_capacity((width * height * 3) as usize);
+    let mut seed: u32 = 0x1234_5678;
+    for y in 0..height {
+        for x in 0..width {
+            seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+            let n = (seed >> 24) as u8 & 0x0F;
+            raw.push((x as u8).wrapping_add(n));
+            raw.push((y as u8).wrapping_add(n));
+            raw.push(((x ^ y) as u8).wrapping_add(n));
+        }
+    }
+    raw
+}
+
+fn zlib_compress(data: &[u8]) -> Vec<u8> {
+    let mut enc = flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::default());
+    enc.write_all(data).unwrap();
+    enc.finish().unwrap()
+}
+
+/// Build a minimal single-page PDF whose page references the given image
+/// XObject, save it to `dir`, and return the file path.
+fn build_pdf_with_image(dir: &TempDir, image: lopdf::Stream) -> String {
+    use lopdf::{dictionary, Document, Object, Stream};
+
+    let mut doc = Document::with_version("1.5");
+    let image_id = doc.add_object(Object::Stream(image));
+    let content_id = doc.add_object(Object::Stream(Stream::new(dictionary! {}, b"q Q".to_vec())));
+    let pages_id = doc.new_object_id();
+    let page_id = doc.add_object(dictionary! {
+        "Type" => "Page",
+        "Parent" => Object::Reference(pages_id),
+        "MediaBox" => vec![0.into(), 0.into(), 612.into(), 792.into()],
+        "Resources" => dictionary! {
+            "XObject" => dictionary! { "Im0" => Object::Reference(image_id) },
+        },
+        "Contents" => Object::Reference(content_id),
+    });
+    doc.objects.insert(
+        pages_id,
+        Object::Dictionary(dictionary! {
+            "Type" => "Pages",
+            "Kids" => vec![Object::Reference(page_id)],
+            "Count" => 1,
+        }),
+    );
+    let catalog_id = doc.add_object(dictionary! {
+        "Type" => "Catalog",
+        "Pages" => Object::Reference(pages_id),
+    });
+    doc.trailer.set("Root", Object::Reference(catalog_id));
+
+    let path = dir.path().join("test.pdf").to_string_lossy().into_owned();
+    doc.save(&path).unwrap();
+    path
+}
+
+/// Find the (single) image XObject in a saved PDF.
+fn find_image_stream(path: &str) -> lopdf::Stream {
+    let doc = lopdf::Document::load(path).unwrap();
+    doc.objects
+        .values()
+        .find_map(|o| match o {
+            lopdf::Object::Stream(s)
+                if matches!(s.dict.get(b"Subtype"), Ok(lopdf::Object::Name(n)) if n.as_slice() == b"Image") =>
+            {
+                Some(s.clone())
+            }
+            _ => None,
+        })
+        .expect("PDF should contain an image XObject")
+}
+
+fn flate_image_stream(width: u32, height: u32, raw: &[u8]) -> lopdf::Stream {
+    use lopdf::dictionary;
+    let mut stream = lopdf::Stream::new(
+        dictionary! {
+            "Type" => "XObject",
+            "Subtype" => "Image",
+            "Width" => width as i64,
+            "Height" => height as i64,
+            "BitsPerComponent" => 8,
+            "ColorSpace" => "DeviceRGB",
+            "Filter" => "FlateDecode",
+        },
+        zlib_compress(raw),
+    );
+    // lopdf must not try to re-apply the filter on save; content is final.
+    stream.allows_compression = false;
+    stream
+}
+
+#[test]
+fn test_pdf_compress_recompresses_large_flate_rgb_as_jpeg() {
+    let dir = TempDir::new().unwrap();
+    let raw = synth_rgb_bitmap(512, 256);
+    let stream = flate_image_stream(512, 256, &raw);
+    let flate_len = stream.content.len();
+    assert!(flate_len >= 100 * 1024, "fixture must exceed the size threshold");
+    let path = build_pdf_with_image(&dir, stream);
+    let size_before = std::fs::metadata(&path).unwrap().len();
+
+    let saved = crate::pdf_compress::compress_pdf_images(&path).unwrap();
+    assert!(saved > 0);
+
+    let image = find_image_stream(&path);
+    assert!(
+        matches!(image.dict.get(b"Filter"), Ok(lopdf::Object::Name(n)) if n.as_slice() == b"DCTDecode")
+    );
+    // JPEG magic bytes, dimensions preserved, and genuinely smaller.
+    assert_eq!(&image.content[..2], &[0xFF, 0xD8]);
+    assert_eq!(image.dict.get(b"Width").unwrap().as_i64().unwrap(), 512);
+    assert!(image.content.len() < flate_len);
+    assert!(std::fs::metadata(&path).unwrap().len() < size_before);
+}
+
+#[test]
+fn test_pdf_compress_leaves_small_images_alone() {
+    let dir = TempDir::new().unwrap();
+    let raw = synth_rgb_bitmap(64, 64); // well under the 100 KB threshold
+    let path = build_pdf_with_image(&dir, flate_image_stream(64, 64, &raw));
+
+    let saved = crate::pdf_compress::compress_pdf_images(&path).unwrap();
+    assert_eq!(saved, 0);
+    let image = find_image_stream(&path);
+    assert!(
+        matches!(image.dict.get(b"Filter"), Ok(lopdf::Object::Name(n)) if n.as_slice() == b"FlateDecode")
+    );
+}
+
+#[test]
+fn test_pdf_compress_skips_predictor_encoded_streams() {
+    let dir = TempDir::new().unwrap();
+    let raw = synth_rgb_bitmap(512, 256);
+    let mut stream = flate_image_stream(512, 256, &raw);
+    stream
+        .dict
+        .set("DecodeParms", lopdf::dictionary! { "Predictor" => 15 });
+    let path = build_pdf_with_image(&dir, stream);
+
+    let saved = crate::pdf_compress::compress_pdf_images(&path).unwrap();
+    assert_eq!(saved, 0);
+}
+
+#[test]
+fn test_pdf_compress_skips_non_flate_and_component_mismatch() {
+    // Already-JPEG (DCTDecode) stream: untouched even though it is large.
+    let dir = TempDir::new().unwrap();
+    let mut jpeg_stream = flate_image_stream(512, 256, &synth_rgb_bitmap(512, 256));
+    jpeg_stream.dict.set("Filter", lopdf::Object::Name(b"DCTDecode".to_vec()));
+    let path = build_pdf_with_image(&dir, jpeg_stream);
+    assert_eq!(crate::pdf_compress::compress_pdf_images(&path).unwrap(), 0);
+
+    // CMYK-shaped data (w*h*4): component inference must refuse it.
+    let dir2 = TempDir::new().unwrap();
+    let raw4 = vec![0x55u8; 512 * 256 * 4];
+    let stream4 = flate_image_stream(512, 256, &raw4);
+    let path2 = build_pdf_with_image(&dir2, stream4);
+    assert_eq!(crate::pdf_compress::compress_pdf_images(&path2).unwrap(), 0);
+}
+
+#[test]
+fn test_pdf_compress_recompresses_grayscale() {
+    let dir = TempDir::new().unwrap();
+    // Grayscale bitmap (w*h bytes) with noise so it clears the size threshold.
+    let rgb = synth_rgb_bitmap(512, 512);
+    let gray: Vec<u8> = rgb.chunks(3).map(|c| c[0]).collect();
+    let mut stream = flate_image_stream(512, 512, &gray);
+    stream.dict.set("ColorSpace", lopdf::Object::Name(b"DeviceGray".to_vec()));
+    let path = build_pdf_with_image(&dir, stream);
+
+    let saved = crate::pdf_compress::compress_pdf_images(&path).unwrap();
+    assert!(saved > 0);
+    let image = find_image_stream(&path);
+    assert!(
+        matches!(image.dict.get(b"Filter"), Ok(lopdf::Object::Name(n)) if n.as_slice() == b"DCTDecode")
+    );
+}
