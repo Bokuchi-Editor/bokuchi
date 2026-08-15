@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Copiar caminho do arquivo",
     "copyFileName": "Copiar nome do arquivo",
+    "revealInFinder": "Revelar no Finder",
+    "revealInFileExplorer": "Revelar no Explorador de Arquivos",
+    "openContainingFolder": "Abrir pasta do arquivo",
+    "revealFailed": "Falha ao abrir o local do arquivo",
     "pinTab": "Fixar aba",
     "unpinTab": "Desafixar aba",
     "closeTab": "Fechar aba",

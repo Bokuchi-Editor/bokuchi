@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "複製檔案路徑",
     "copyFileName": "複製檔案名稱",
+    "revealInFinder": "在 Finder 中顯示",
+    "revealInFileExplorer": "在檔案總管中顯示",
+    "openContainingFolder": "開啟所在資料夾",
+    "revealFailed": "無法開啟檔案位置",
     "pinTab": "釘選分頁",
     "unpinTab": "取消釘選分頁",
     "closeTab": "關閉分頁",

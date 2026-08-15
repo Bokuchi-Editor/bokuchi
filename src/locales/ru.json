@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Копировать путь к файлу",
     "copyFileName": "Копировать имя файла",
+    "revealInFinder": "Показать в Finder",
+    "revealInFileExplorer": "Показать в проводнике",
+    "openContainingFolder": "Открыть содержащую папку",
+    "revealFailed": "Не удалось открыть расположение файла",
     "pinTab": "Закрепить вкладку",
     "unpinTab": "Открепить вкладку",
     "closeTab": "Закрыть вкладку",

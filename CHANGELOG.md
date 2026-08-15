@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- "Reveal in Finder" / "Reveal in File Explorer" / "Open Containing Folder" (per OS) in the tab context menu and the explorer sidebar's file context menu, opening the OS file manager with the file selected.
 - PDF export now shows its progress: a "Generating PDF…" snackbar while the file is being produced and a confirmation (or error) when it finishes.
 
 ### Fixed

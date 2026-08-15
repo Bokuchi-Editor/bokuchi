@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Copier le chemin du fichier",
     "copyFileName": "Copier le nom du fichier",
+    "revealInFinder": "Afficher dans le Finder",
+    "revealInFileExplorer": "Afficher dans l'Explorateur de fichiers",
+    "openContainingFolder": "Ouvrir le dossier contenant",
+    "revealFailed": "Impossible d'ouvrir l'emplacement du fichier",
     "pinTab": "Épingler l'onglet",
     "unpinTab": "Désépingler l'onglet",
     "closeTab": "Fermer l'onglet",

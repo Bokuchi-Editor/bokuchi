@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "फ़ाइल पथ कॉपी करें",
     "copyFileName": "फ़ाइल नाम कॉपी करें",
+    "revealInFinder": "Finder में दिखाएँ",
+    "revealInFileExplorer": "फ़ाइल एक्सप्लोरर में दिखाएँ",
+    "openContainingFolder": "युक्त फ़ोल्डर खोलें",
+    "revealFailed": "फ़ाइल स्थान खोलने में विफल",
     "pinTab": "टैब पिन करें",
     "unpinTab": "टैब अनपिन करें",
     "closeTab": "टैब बंद करें",

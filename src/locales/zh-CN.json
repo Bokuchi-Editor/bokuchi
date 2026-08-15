@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "复制文件路径",
     "copyFileName": "复制文件名",
+    "revealInFinder": "在 Finder 中显示",
+    "revealInFileExplorer": "在文件资源管理器中显示",
+    "openContainingFolder": "打开所在文件夹",
+    "revealFailed": "无法打开文件位置",
     "pinTab": "固定标签页",
     "unpinTab": "取消固定标签页",
     "closeTab": "关闭标签页",

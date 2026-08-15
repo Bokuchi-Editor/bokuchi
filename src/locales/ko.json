@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "파일 경로 복사",
     "copyFileName": "파일 이름 복사",
+    "revealInFinder": "Finder에 표시",
+    "revealInFileExplorer": "파일 탐색기에 표시",
+    "openContainingFolder": "포함 폴더 열기",
+    "revealFailed": "파일 위치를 열지 못했습니다",
     "pinTab": "탭 고정",
     "unpinTab": "탭 고정 해제",
     "closeTab": "탭 닫기",

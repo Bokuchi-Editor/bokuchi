@@ -9,6 +9,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+// Pin the platform-dependent label so tests don't depend on the jsdom user agent
+vi.mock('../../utils/revealInFileManager', () => ({
+  getRevealMenuLabelKey: () => 'tabs.revealInFinder',
+}));
+
 // Mock dnd-kit to avoid complex DnD setup
 vi.mock('@dnd-kit/core', () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -492,5 +497,36 @@ describe('TabBar', () => {
     fireEvent.contextMenu(screen.getByText('File2.md'));
     fireEvent.click(screen.getByText('tabs.copyFileName'));
     expect(onCopyFileName).toHaveBeenCalledWith('tab2');
+  });
+
+  // T-TB-38: Reveal in file manager dispatches onRevealInFileManager with the tab ID
+  // (the actual reveal call lives in useAppState.handleTabRevealInFileManager)
+  it('T-TB-38: Reveal menu item calls onRevealInFileManager with correct tab ID', () => {
+    const onRevealInFileManager = vi.fn();
+    const savedTabs: TabType[] = [
+      { id: 'tab1', title: 'Saved.md', content: '', isModified: false, isNew: false, filePath: '/docs/Saved.md' },
+    ];
+    render(
+      <TabBar
+        {...defaultProps()}
+        tabs={savedTabs}
+        activeTabId="tab1"
+        onRevealInFileManager={asMock<(tabId: string) => void>(onRevealInFileManager)}
+      />,
+    );
+    fireEvent.contextMenu(screen.getByText('Saved.md'));
+    fireEvent.click(screen.getByText('tabs.revealInFinder'));
+    expect(onRevealInFileManager).toHaveBeenCalledWith('tab1');
+  });
+
+  // T-TB-39: Reveal is disabled for unsaved tabs (same condition as Copy file path)
+  it('T-TB-39: Reveal menu item disabled for unsaved tab', () => {
+    const unsavedTabs: TabType[] = [
+      { id: 'tab1', title: 'Untitled', content: '', isModified: false, isNew: true },
+    ];
+    render(<TabBar {...defaultProps()} tabs={unsavedTabs} activeTabId="tab1" />);
+    fireEvent.contextMenu(screen.getByText('Untitled'));
+    const revealItem = screen.getByText('tabs.revealInFinder');
+    expect(revealItem.closest('li')).toHaveAttribute('aria-disabled', 'true');
   });
 });

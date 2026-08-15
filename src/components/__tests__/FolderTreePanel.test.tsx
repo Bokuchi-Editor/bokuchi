@@ -8,6 +8,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+// Pin the platform-dependent label so tests don't depend on the jsdom user agent
+vi.mock('../../utils/revealInFileManager', () => ({
+  getRevealMenuLabelKey: () => 'tabs.revealInFinder',
+}));
+
 import FolderTreePanel from '../FolderTreePanel';
 import { asMock } from '../../test-utils';
 
@@ -191,5 +196,15 @@ describe('FolderTreePanel', () => {
     const srcItem = screen.getByText('src').closest('[role="button"]') as HTMLElement;
     fireEvent.contextMenu(srcItem);
     expect(screen.queryByText('folderTree.rename')).not.toBeInTheDocument();
+  });
+
+  // T-FTP-17: clicking reveal menu item calls onRevealRequest with file path
+  it('T-FTP-17: reveal menu item calls onRevealRequest with file path', () => {
+    const onRevealRequest = vi.fn();
+    renderPanel({ onRevealRequest: asMock<(path: string) => void>(onRevealRequest) });
+    const readmeItem = screen.getByText('README.md').closest('[role="button"]') as HTMLElement;
+    fireEvent.contextMenu(readmeItem);
+    fireEvent.click(screen.getByText('tabs.revealInFinder'));
+    expect(onRevealRequest).toHaveBeenCalledWith('/project/README.md');
   });
 });

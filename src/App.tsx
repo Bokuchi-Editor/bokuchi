@@ -102,6 +102,8 @@ function AppDesktop() {
     handleToggleTabPinned,
     handleCopyFilePath,
     handleCopyFileName,
+    handleRevealInFileManager,
+    handleTabRevealInFileManager,
     handleCloseOtherTabs,
     handleCloseTabsToRight,
     handleCloseAllTabs,
@@ -316,10 +318,12 @@ function AppDesktop() {
           onFolderTreeRefresh={folderTreeRefreshTree}
           onFolderTreePanelClose={() => setFolderTreePanelOpen(false)}
           onRenameRequest={handleRenameRequest}
+          onRevealRequest={handleRevealInFileManager}
           onTabRename={handleTabRenameRequest}
           onToggleTabPinned={handleToggleTabPinned}
           onCopyFilePath={handleCopyFilePath}
           onCopyFileName={handleCopyFileName}
+          onRevealInFileManager={handleTabRevealInFileManager}
           onCloseOtherTabs={handleCloseOtherTabs}
           onCloseTabsToRight={handleCloseTabsToRight}
           onCloseAllTabs={handleCloseAllTabs}
