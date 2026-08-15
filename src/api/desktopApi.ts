@@ -296,10 +296,14 @@ export const desktopApi = {
   // string; the Rust side renders it in a hidden webview and prints it to PDF
   // natively (no bundled Chromium, no window.print() — which is a no-op in
   // macOS WKWebView). `page` is the PDF page geometry in inches.
+  // `onExportStarted` fires once the user confirms the save dialog, right
+  // before the (potentially slow) native render/print/recompress pipeline —
+  // callers use it to show a progress indicator that excludes dialog time.
   async exportPdfFile(
     html: string,
     page: { widthInch: number; heightInch: number; marginInch: number },
     defaultName: string = 'markdown-export.pdf',
+    onExportStarted?: () => void,
   ): Promise<SaveResponse> {
     try {
       const selected = await save({
@@ -314,6 +318,7 @@ export const desktopApi = {
         return { success: false, error: 'Save cancelled by user' };
       }
 
+      onExportStarted?.();
       await invoke('export_pdf', { html, outputPath: selected, page });
       return { success: true, filePath: selected };
     } catch (error: unknown) {

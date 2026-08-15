@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...HEAD)
 
+### Added
+
+- PDF export now shows its progress: a "Generating PDF…" snackbar while the file is being produced and a confirmation (or error) when it finishes.
+
+### Fixed
+
+- PDF exports of image-heavy documents are dramatically smaller. The system webview's print engine embeds re-rasterized images as huge uncompressed bitmaps; the exporter now recompresses them as JPEG afterwards, shrinking a reference Marp deck from 23 MB to about 3 MB with no resolution loss and transparency preserved.
+
 ## [1.1.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...v1.1.0) - 2026-08-11
 
 ### Added

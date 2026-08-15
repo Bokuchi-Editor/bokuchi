@@ -30,6 +30,11 @@ interface UseHtmlExportParams {
 interface UseHtmlExport {
   exportError: string | null;
   clearExportError: () => void;
+  /** True while the native PDF pipeline runs (after the save dialog is confirmed). */
+  isExportingPdf: boolean;
+  /** True once a PDF export finished successfully; cleared via clearExportSuccess. */
+  exportSuccess: boolean;
+  clearExportSuccess: () => void;
   handleExportHTML: () => Promise<void>;
   handleExportPDF: () => Promise<void>;
 }
@@ -46,6 +51,8 @@ export function useHtmlExport({
   filePath,
 }: UseHtmlExportParams): UseHtmlExport {
   const [exportError, setExportError] = useState<string | null>(null);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [exportSuccess, setExportSuccess] = useState(false);
 
   // Render the markdown body to HTML (syntax highlighting, KaTeX, Mermaid) and
   // resolve the KaTeX stylesheet lazily. Shared by both the HTML and PDF paths
@@ -119,20 +126,33 @@ export function useHtmlExport({
         fontFamily,
       });
       // Render + print to PDF natively (Rust side); the page is saved to the
-      // location chosen in the file dialog.
-      const result = await desktopApi.exportPdfFile(fullHTML, A4_PAGE, deriveExportFileName(filePath, 'pdf'));
-      if (!result.success && result.error !== 'Save cancelled by user') {
+      // location chosen in the file dialog. The native pipeline (render, print,
+      // image recompression) takes a few seconds, so surface its progress.
+      const result = await desktopApi.exportPdfFile(
+        fullHTML,
+        A4_PAGE,
+        deriveExportFileName(filePath, 'pdf'),
+        () => setIsExportingPdf(true),
+      );
+      if (result.success) {
+        setExportSuccess(true);
+      } else if (result.error !== 'Save cancelled by user') {
         setExportError(result.error || 'Failed to export PDF file');
       }
     } catch (error) {
       console.error('Error exporting PDF:', error);
       setExportError('Failed to export PDF file');
+    } finally {
+      setIsExportingPdf(false);
     }
   };
 
   return {
     exportError,
     clearExportError: () => setExportError(null),
+    isExportingPdf,
+    exportSuccess,
+    clearExportSuccess: () => setExportSuccess(false),
     handleExportHTML,
     handleExportPDF,
   };

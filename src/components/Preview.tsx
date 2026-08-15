@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Typography, IconButton, Tooltip, Snackbar, Alert, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip, Snackbar, Alert, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Download, GridOn, Description, PictureAsPdf } from '@mui/icons-material';
@@ -96,7 +96,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     isMarp,
   });
 
-  const { exportError, clearExportError, handleExportHTML, handleExportPDF } = useHtmlExport({
+  const { exportError, clearExportError, isExportingPdf, exportSuccess, clearExportSuccess, handleExportHTML, handleExportPDF } = useHtmlExport({
     processedContent,
     katexRestoreRef,
     renderingSettings,
@@ -265,6 +265,25 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
       >
         <Alert onClose={clearExportError} severity="error" sx={{ width: '100%' }}>
           {exportError}
+        </Alert>
+      </Snackbar>
+
+      {/* PDF export progress / completion. The native pipeline (hidden-window
+          render, print, image recompression) takes a few seconds; stays open
+          until the export resolves. */}
+      <Snackbar open={isExportingPdf} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert severity="info" icon={<CircularProgress size={18} />} sx={{ width: '100%' }}>
+          {t('preview.exportingPdf', 'Generating PDF…')}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={exportSuccess}
+        autoHideDuration={EXPORT_ERROR_AUTO_HIDE_MS}
+        onClose={clearExportSuccess}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={clearExportSuccess} severity="success" sx={{ width: '100%' }}>
+          {t('preview.pdfExported', 'PDF exported')}
         </Alert>
       </Snackbar>
     </Box>
