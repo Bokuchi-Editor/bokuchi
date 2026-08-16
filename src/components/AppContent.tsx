@@ -81,10 +81,12 @@ interface AppContentProps {
   onFolderTreeRefresh: () => void;
   onFolderTreePanelClose: () => void;
   onRenameRequest?: (filePath: string) => void;
+  onRevealRequest?: (filePath: string) => void;
   onTabRename?: (tabId: string) => void;
   onToggleTabPinned?: (tabId: string) => void;
   onCopyFilePath?: (tabId: string) => void;
   onCopyFileName?: (tabId: string) => void;
+  onRevealInFileManager?: (tabId: string) => void;
   onCloseOtherTabs?: (tabId: string) => void;
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
@@ -146,10 +148,12 @@ const AppContent: React.FC<AppContentProps> = ({
   onFolderTreeRefresh,
   onFolderTreePanelClose,
   onRenameRequest,
+  onRevealRequest,
   onTabRename,
   onToggleTabPinned,
   onCopyFilePath,
   onCopyFileName,
+  onRevealInFileManager,
   onCloseOtherTabs,
   onCloseTabsToRight,
   onCloseAllTabs,
@@ -323,6 +327,7 @@ const AppContent: React.FC<AppContentProps> = ({
         onToggleTabPinned={onToggleTabPinned}
         onCopyFilePath={onCopyFilePath}
         onCopyFileName={onCopyFileName}
+        onRevealInFileManager={onRevealInFileManager}
         onCloseOtherTabs={onCloseOtherTabs}
         onCloseTabsToRight={onCloseTabsToRight}
         onCloseAllTabs={onCloseAllTabs}
@@ -378,6 +383,7 @@ const AppContent: React.FC<AppContentProps> = ({
             collapsed={explorerCollapsed}
             width={tabSidebarWidth}
             onRenameRequest={onRenameRequest}
+            onRevealRequest={onRevealRequest}
           />
         </Box>
       </>
@@ -422,6 +428,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onToggleTabPinned={onToggleTabPinned}
             onCopyFilePath={onCopyFilePath}
             onCopyFileName={onCopyFileName}
+            onRevealInFileManager={onRevealInFileManager}
             onCloseOtherTabs={onCloseOtherTabs}
             onCloseTabsToRight={onCloseTabsToRight}
             onCloseAllTabs={onCloseAllTabs}
@@ -503,6 +510,7 @@ const AppContent: React.FC<AppContentProps> = ({
           onRefresh={onFolderTreeRefresh}
           onClose={onFolderTreePanelClose}
           onRenameRequest={onRenameRequest}
+          onRevealRequest={onRevealRequest}
         />
       )}
 
@@ -519,6 +527,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onToggleTabPinned={onToggleTabPinned}
             onCopyFilePath={onCopyFilePath}
             onCopyFileName={onCopyFileName}
+            onRevealInFileManager={onRevealInFileManager}
             onCloseOtherTabs={onCloseOtherTabs}
             onCloseTabsToRight={onCloseTabsToRight}
             onCloseAllTabs={onCloseAllTabs}
@@ -727,6 +736,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onClose={onFolderTreePanelClose}
             width={DRAWER_WIDTH_PX}
             onRenameRequest={onRenameRequest}
+            onRevealRequest={onRevealRequest}
           />
         </Drawer>
       )}

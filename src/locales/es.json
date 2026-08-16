@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Copiar ruta del archivo",
     "copyFileName": "Copiar nombre del archivo",
+    "revealInFinder": "Mostrar en Finder",
+    "revealInFileExplorer": "Mostrar en el Explorador de archivos",
+    "openContainingFolder": "Abrir carpeta contenedora",
+    "revealFailed": "Error al abrir la ubicación del archivo",
     "pinTab": "Fijar pestaña",
     "unpinTab": "Desfijar pestaña",
     "closeTab": "Cerrar pestaña",

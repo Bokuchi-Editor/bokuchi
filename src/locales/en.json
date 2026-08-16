@@ -619,6 +619,10 @@
   "tabs": {
     "copyFilePath": "Copy File Path",
     "copyFileName": "Copy File Name",
+    "revealInFinder": "Reveal in Finder",
+    "revealInFileExplorer": "Reveal in File Explorer",
+    "openContainingFolder": "Open Containing Folder",
+    "revealFailed": "Failed to open file location",
     "pinTab": "Pin Tab",
     "unpinTab": "Unpin Tab",
     "closeTab": "Close Tab",

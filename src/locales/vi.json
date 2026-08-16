@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Sao chép đường dẫn tệp",
     "copyFileName": "Sao chép tên tệp",
+    "revealInFinder": "Hiển thị trong Finder",
+    "revealInFileExplorer": "Hiển thị trong File Explorer",
+    "openContainingFolder": "Mở thư mục chứa tệp",
+    "revealFailed": "Không thể mở vị trí tệp",
     "pinTab": "Ghim tab",
     "unpinTab": "Bỏ ghim tab",
     "closeTab": "Đóng tab",

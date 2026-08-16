@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "نسخ مسار الملف",
     "copyFileName": "نسخ اسم الملف",
+    "revealInFinder": "إظهار في Finder",
+    "revealInFileExplorer": "إظهار في مستكشف الملفات",
+    "openContainingFolder": "فتح المجلد الحاوي",
+    "revealFailed": "تعذّر فتح موقع الملف",
     "pinTab": "تثبيت علامة التبويب",
     "unpinTab": "إلغاء تثبيت علامة التبويب",
     "closeTab": "إغلاق علامة التبويب",

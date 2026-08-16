@@ -619,6 +619,10 @@
   "tabs": {
     "copyFilePath": "ファイルパスをコピー",
     "copyFileName": "ファイル名をコピー",
+    "revealInFinder": "Finderで表示",
+    "revealInFileExplorer": "エクスプローラーで表示",
+    "openContainingFolder": "ファイルの場所を開く",
+    "revealFailed": "ファイルの場所を開けませんでした",
     "pinTab": "タブをピン留め",
     "unpinTab": "タブのピン留めを解除",
     "closeTab": "タブを閉じる",

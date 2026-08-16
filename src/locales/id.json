@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Salin path file",
     "copyFileName": "Salin nama file",
+    "revealInFinder": "Tampilkan di Finder",
+    "revealInFileExplorer": "Tampilkan di File Explorer",
+    "openContainingFolder": "Buka lokasi file",
+    "revealFailed": "Gagal membuka lokasi file",
     "pinTab": "Sematkan tab",
     "unpinTab": "Lepas sematan tab",
     "closeTab": "Tutup tab",

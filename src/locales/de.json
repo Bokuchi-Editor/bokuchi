@@ -596,6 +596,10 @@
   "tabs": {
     "copyFilePath": "Dateipfad kopieren",
     "copyFileName": "Dateiname kopieren",
+    "revealInFinder": "Im Finder anzeigen",
+    "revealInFileExplorer": "Im Explorer anzeigen",
+    "openContainingFolder": "Enthaltenden Ordner öffnen",
+    "revealFailed": "Dateispeicherort konnte nicht geöffnet werden",
     "pinTab": "Tab anheften",
     "unpinTab": "Tab lösen",
     "closeTab": "Tab schließen",
