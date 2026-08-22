@@ -80,7 +80,10 @@ describe('themes array', () => {
     }
   });
 
-  // T-TH-03: all 10 theme names are present in expected order
+  // T-TH-03: pins the theme *set and picker order* (the array order is what
+  // the theme selector shows). Failing here on a new theme is intentional —
+  // update the list — but an unplanned failure means a theme was dropped,
+  // renamed, or reordered by accident.
   it('T-TH-03: contains all expected theme names', () => {
     const names = themes.map(t => t.name);
     expect(names).toEqual([

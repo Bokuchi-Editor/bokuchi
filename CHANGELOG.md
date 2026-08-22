@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - PDF exports of image-heavy documents are dramatically smaller. The system webview's print engine embeds re-rasterized images as huge uncompressed bitmaps; the exporter now recompresses them as JPEG afterwards, shrinking a reference Marp deck from 23 MB to about 3 MB with no resolution loss and transparency preserved.
+- Pasting a single line of ordinary text containing a comma (e.g. `hello, world`) no longer turns into an empty two-row table when table conversion is set to "auto". Single tab-separated lines (a copied spreadsheet row) still convert.
+- The outline panel no longer shows fake headings from inside code blocks when a backtick fence contains a `~~~` line (or a longer fence contains a shorter one): fence tracking now follows CommonMark's marker/length matching.
+- Editing a table cell from the preview no longer rewrites a CRLF document's line endings to LF (which made the whole file show as changed in diffs).
+- Renaming a file to a dot-prefixed (hidden) name is now rejected, closing a bypass of the hidden-file write protection; image paste/drop asset folders are likewise validated against path traversal.
 
 ## [1.1.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...v1.1.0) - 2026-08-11
 

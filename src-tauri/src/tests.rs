@@ -645,7 +645,7 @@ fn test_read_directory_basic() {
     let result = pollster::block_on(read_directory(dir.path().to_string_lossy().to_string(), true));
     assert!(result.is_ok());
     let entries = result.unwrap();
-    assert!(entries.len() >= 2);
+    assert_eq!(entries.len(), 2);
 }
 
 // R-CMD-15
@@ -765,6 +765,34 @@ fn test_rename_file_destination_exists() {
     assert!(result.unwrap_err().contains("already exists"));
     assert_eq!(std::fs::read_to_string(&old_path).unwrap(), "source");
     assert_eq!(std::fs::read_to_string(&new_path).unwrap(), "destination");
+}
+
+// R-CMD-32: renaming onto a hidden dotfile is refused — otherwise IPC calls
+// could route user-controlled .md content into shell/config files (write
+// evil.md via save_file, then rename it to ~/.zshenv), bypassing save_file's
+// B-11 dotfile rejection.
+#[test]
+fn test_rename_file_hidden_target_rejected() {
+    let dir = TempDir::new().unwrap();
+    let old_path = create_temp_file(&dir, "src.md", "payload");
+    let new_path = dir.path().join(".zshenv").to_string_lossy().to_string();
+    let result = pollster::block_on(rename_file(old_path.clone(), new_path.clone()));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("Hidden files"));
+    assert!(std::path::Path::new(&old_path).exists());
+    assert!(!std::path::Path::new(&new_path).exists());
+}
+
+// R-CMD-33: renames are not limited to .md/.txt — the folder tree's
+// "all files" mode legitimately renames e.g. images.
+#[test]
+fn test_rename_file_non_document_extension_allowed() {
+    let dir = TempDir::new().unwrap();
+    let old_path = create_temp_file(&dir, "photo.png", "binaryish");
+    let new_path = dir.path().join("holiday.png").to_string_lossy().to_string();
+    let result = pollster::block_on(rename_file(old_path, new_path.clone()));
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read_to_string(&new_path).unwrap(), "binaryish");
 }
 
 // R-CMD-31: copy_image_asset copies the source into dest_dir/subdir keeping
@@ -980,15 +1008,40 @@ fn test_get_pending_file_paths_clears() {
     assert!(paths_after.is_empty());
 }
 
+// R-CMD-34: `subdir` is joined onto dest_dir before write_image_dedup's
+// file-name guard applies, so traversal/absolute segments must be rejected or
+// an IPC call could write images outside the document's folder.
+#[test]
+fn test_image_commands_reject_traversal_subdir() {
+    let dir = TempDir::new().unwrap();
+    let dest = dir.path().to_string_lossy().to_string();
+
+    for bad in ["../outside", "a/../../b", "/tmp/abs"] {
+        let result = pollster::block_on(crate::commands::save_image_bytes(
+            dest.clone(),
+            bad.to_string(),
+            "a.png".to_string(),
+            vec![1, 2, 3],
+        ));
+        assert!(result.is_err(), "subdir {bad:?} must be rejected");
+    }
+
+    // The legitimate fixed value used by the frontend stays accepted.
+    let ok = pollster::block_on(crate::commands::save_image_bytes(
+        dest,
+        "images".to_string(),
+        "a.png".to_string(),
+        vec![1, 2, 3],
+    ));
+    assert_eq!(ok.unwrap(), "images/a.png");
+}
+
 #[test]
 fn test_write_image_dedup_new_dedup_and_collision() {
     use std::fs;
-    use std::path::PathBuf;
 
-    let mut dir: PathBuf = std::env::temp_dir();
-    dir.push(format!("bokuchi_img_dedup_{}", std::process::id()));
-    let _ = fs::remove_dir_all(&dir);
-    fs::create_dir_all(&dir).unwrap();
+    let tmp = TempDir::new().unwrap();
+    let dir = tmp.path().to_path_buf();
 
     // Fresh write keeps the requested name.
     let n1 = crate::commands::write_image_dedup(&dir, "a.png", b"hello").unwrap();
@@ -1013,8 +1066,6 @@ fn test_write_image_dedup_new_dedup_and_collision() {
     assert_eq!(n5, "evil.png");
     assert!(dir.join("evil.png").exists());
     assert!(!dir.parent().unwrap().join("evil.png").exists());
-
-    let _ = fs::remove_dir_all(&dir);
 }
 
 #[test]
@@ -1225,12 +1276,44 @@ fn test_pdf_compress_skips_non_flate_and_component_mismatch() {
     let path = build_pdf_with_image(&dir, jpeg_stream);
     assert_eq!(crate::pdf_compress::compress_pdf_images(&path).unwrap(), 0);
 
-    // CMYK-shaped data (w*h*4): component inference must refuse it.
+    // CMYK-shaped data (w*h*4): component inference must refuse it. The data
+    // must be noisy — constant bytes compress below the 100 KB size threshold
+    // and would skip long before reaching the component-count check.
     let dir2 = TempDir::new().unwrap();
-    let raw4 = vec![0x55u8; 512 * 256 * 4];
+    let rgb = synth_rgb_bitmap(512, 256);
+    let mut raw4 = Vec::with_capacity(512 * 256 * 4);
+    for px in rgb.chunks(3) {
+        raw4.extend_from_slice(px);
+        raw4.push(px[0] ^ 0xA5);
+    }
     let stream4 = flate_image_stream(512, 256, &raw4);
+    assert!(
+        stream4.content.len() >= 100 * 1024,
+        "fixture must exceed the size threshold so the component check is reached"
+    );
     let path2 = build_pdf_with_image(&dir2, stream4);
     assert_eq!(crate::pdf_compress::compress_pdf_images(&path2).unwrap(), 0);
+}
+
+// A single-element /Filter array ([/FlateDecode]) is a common real-PDF shape
+// and must be treated the same as a bare /FlateDecode name.
+#[test]
+fn test_pdf_compress_handles_single_element_filter_array() {
+    let dir = TempDir::new().unwrap();
+    let raw = synth_rgb_bitmap(512, 256);
+    let mut stream = flate_image_stream(512, 256, &raw);
+    stream.dict.set(
+        "Filter",
+        lopdf::Object::Array(vec![lopdf::Object::Name(b"FlateDecode".to_vec())]),
+    );
+    let path = build_pdf_with_image(&dir, stream);
+
+    let saved = crate::pdf_compress::compress_pdf_images(&path).unwrap();
+    assert!(saved > 0);
+    let image = find_image_stream(&path);
+    assert!(
+        matches!(image.dict.get(b"Filter"), Ok(lopdf::Object::Name(n)) if n.as_slice() == b"DCTDecode")
+    );
 }
 
 #[test]

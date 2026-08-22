@@ -54,4 +54,26 @@ describe('classifyPaste', () => {
   it('falls back to plain for ragged CSV rows', () => {
     expect(classifyPaste('', 'a,b,c\nx,y')).toEqual({ kind: 'plain' });
   });
+
+  // Under tableConversion:'auto' this used to turn ordinary prose into a
+  // bodyless table on paste.
+  it('does not convert a single line of comma-bearing prose to a table', () => {
+    expect(classifyPaste('', 'hello, world')).toEqual({ kind: 'plain' });
+    // A trailing newline alone must not count as a second line.
+    expect(classifyPaste('', 'hello, world\n')).toEqual({ kind: 'plain' });
+  });
+
+  // A single tab-separated line (one Excel row) stays convertible — tabs
+  // don't appear in prose, so this is not prone to the comma false positive.
+  it('still converts a single tab-separated line to a table', () => {
+    const result = classifyPaste('', 'a\tb\tc');
+    expect(result.kind).toBe('table');
+  });
+
+  // Tag names are case-insensitive; clipboard HTML from older apps uses
+  // uppercase <TABLE>, which the previous lowercase-only guard rejected.
+  it('detects uppercase <TABLE> tags in clipboard HTML', () => {
+    const html = '<TABLE><TR><TD>a</TD><TD>b</TD></TR><TR><TD>1</TD><TD>2</TD></TR></TABLE>';
+    expect(classifyPaste(html, 'a b').kind).toBe('table');
+  });
 });

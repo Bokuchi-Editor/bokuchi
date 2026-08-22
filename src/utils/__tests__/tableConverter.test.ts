@@ -151,7 +151,7 @@ describe('htmlTableToMarkdown', () => {
     const result = htmlTableToMarkdown(html);
     const lines = result.split('\n');
     expect(lines[0]).toBe('| A | B |');
-    expect(lines[1]).toContain('---'); // currently fails: lines[1] is '| 1 | 2 |'
+    expect(lines[1]).toContain('---');
     expect(lines[2]).toBe('| 1 | 2 |');
   });
 

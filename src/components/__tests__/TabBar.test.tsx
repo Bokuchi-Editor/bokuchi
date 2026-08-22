@@ -104,13 +104,6 @@ describe('TabBar', () => {
     expect(onTabChange).toHaveBeenCalledWith('tab2');
   });
 
-  // T-TB-04: renders in vertical layout
-  it('T-TB-04: renders in vertical layout', () => {
-    render(<TabBar {...defaultProps()} layout="vertical" />);
-    expect(screen.getByText('File1.md')).toBeInTheDocument();
-    expect(screen.getByText('File2.md')).toBeInTheDocument();
-  });
-
   // T-TB-05: empty tabs renders only add button
   it('T-TB-05: renders with no tabs', () => {
     render(<TabBar {...defaultProps()} tabs={[]} activeTabId={null} />);
@@ -414,12 +407,21 @@ describe('TabBar', () => {
 
   // T-TB-31: closeButtonPosition="left" renders close button before title (vertical)
   it('T-TB-31: left position renders close button before title in vertical', () => {
-    const { container } = render(
+    render(
       <TabBar {...defaultProps()} layout="vertical" closeButtonPosition="left" />,
     );
-    // Close icon should exist
-    const closeIcons = container.querySelectorAll('[data-testid="CloseIcon"]');
-    expect(closeIcons.length).toBeGreaterThan(0);
+    const title = screen.getByText('File1.md');
+    const closeIcon = title
+      .closest('li, [role="tab"], .MuiListItem-root')
+      ?.querySelector('[data-testid="CloseIcon"]');
+    expect(closeIcon).toBeTruthy();
+    // DOCUMENT_POSITION_FOLLOWING = the title comes after the close icon in
+    // DOM order, which is what "left" position means. Flipping the prop to
+    // "right" (or dropping the isLeft branch) must fail this.
+    expect(
+      closeIcon!.compareDocumentPosition(title) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   // T-TB-33: vertical mode auto-scrolls active tab into view

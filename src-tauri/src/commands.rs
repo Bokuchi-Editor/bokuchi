@@ -209,6 +209,7 @@ pub async fn save_image_bytes(
     filename: String,
     bytes: Vec<u8>,
 ) -> Result<String, String> {
+    validate_asset_subdir(&subdir)?;
     let dir = Path::new(&dest_dir).join(&subdir);
     fs::create_dir_all(&dir)
         .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
@@ -227,6 +228,7 @@ pub async fn copy_image_asset(
     dest_dir: String,
     subdir: String,
 ) -> Result<String, String> {
+    validate_asset_subdir(&subdir)?;
     let bytes = fs::read(&src_path)
         .map_err(|e| format!("Failed to read image: {} ({:?})", e, e.kind()))?;
     let filename = Path::new(&src_path)
@@ -238,6 +240,26 @@ pub async fn copy_image_asset(
         .map_err(|e| format!("Failed to create image directory: {} ({:?})", e, e.kind()))?;
     let name = write_image_dedup(&dir, &filename, &bytes)?;
     Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
+}
+
+// The image commands join `subdir` onto the caller-chosen `dest_dir`.
+// `write_image_dedup` already strips path components from the file name, but
+// `subdir` would otherwise pass `..`/absolute segments straight into
+// `Path::join`, letting an IPC call escape `dest_dir`. The frontend only ever
+// sends a fixed relative folder ("images"), so anything else is rejected.
+pub(crate) fn validate_asset_subdir(subdir: &str) -> Result<(), String> {
+    let path = Path::new(subdir);
+    let escapes = path.is_absolute()
+        || path.components().any(|c| {
+            !matches!(
+                c,
+                std::path::Component::Normal(_) | std::path::Component::CurDir
+            )
+        });
+    if escapes {
+        return Err("Invalid image subdirectory".to_string());
+    }
+    Ok(())
 }
 
 // Write `bytes` into `dir` under `filename`, avoiding collisions. Only the file
@@ -419,6 +441,20 @@ pub async fn list_system_fonts() -> Vec<FontFamilyInfo> {
 pub async fn rename_file(old_path: String, new_path: String) -> Result<(), String> {
     let old = Path::new(&old_path);
     let new = Path::new(&new_path);
+
+    // Renames may target any visible file type — the folder tree's "all files"
+    // mode legitimately renames images etc. — but a hidden dotfile target is
+    // rejected, mirroring save_file's B-11 rule: read_directory never lists
+    // hidden files, so no in-app flow renames onto one, while an IPC call
+    // could otherwise route user-controlled .md content into shell/config
+    // files (save evil.md, then rename it to ~/.zshenv).
+    let hidden_target = new
+        .file_name()
+        .map(|n| n.to_string_lossy().starts_with('.'))
+        .unwrap_or(true);
+    if hidden_target {
+        return Err("Hidden files cannot be a rename target".to_string());
+    }
 
     if !old.exists() {
         return Err("Source file not found".to_string());
