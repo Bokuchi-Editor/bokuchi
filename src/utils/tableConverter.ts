@@ -93,8 +93,10 @@ export function detectHtmlTable(clipboardData: DataTransfer): string | null {
       return null;
     }
 
-    // Check if table tags are present
-    if (!htmlData.includes('<table') || !htmlData.includes('</table>')) {
+    // Check if table tags are present. HTML tag names are case-insensitive
+    // and clipboard HTML from older apps can use uppercase <TABLE>.
+    const lower = htmlData.toLowerCase();
+    if (!lower.includes('<table') || !lower.includes('</table>')) {
       return null;
     }
 

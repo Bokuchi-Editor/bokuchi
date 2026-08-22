@@ -63,9 +63,9 @@ Two jobs run in parallel:
 
 If a new push is made to the same PR, the previous CI run is automatically cancelled.
 
-## E2E Tests (Suspended)
+## E2E Tests (Removed)
 
-E2E test code exists in `tests/e2e/` and `wdio.conf.ts` but is currently **not executable**. `tauri-driver` (the WebDriver proxy for Tauri apps) only supports Linux (WebKitGTK) and has compatibility concerns with Tauri v2. The npm scripts and wdio dependencies have been removed.
+The suspended WebdriverIO E2E code (`tests/e2e/`, `wdio.conf.ts`) was removed in the 2026-08 test inventory: it had been unrunnable since the wdio dependencies and npm scripts were dropped (`tauri-driver` only supports Linux/WebKitGTK and has Tauri v2 compatibility concerns), and its assertions were smoke-level checks that would not survive a revival anyway. The files remain in git history if E2E is ever revisited.
 
-Test coverage for UI logic and component interactions is handled by Tier 1 & 2 (Vitest + RTL) instead.
+Test coverage for UI logic and component interactions is handled by Tier 1 & 2 (Vitest + RTL); release verification is covered by the monkey test procedure (`docs/MONKEY_TEST_CASE.md`).
 

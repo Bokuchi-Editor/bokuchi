@@ -35,7 +35,11 @@ export function extractThemeName(css: string): string | null {
  * Scan a folder for Marp theme CSS files and read their contents.
  * Returns one entry per `.css` file (including files missing an `@theme`
  * header, with name=null, so the settings UI can flag them). Returns an empty
- * array when the path is empty or unreadable.
+ * array when the path is empty; REJECTS when the folder itself cannot be
+ * listed (deleted/renamed after being configured) — every caller must
+ * `.catch` and decide its own fallback (both current callers fall back to
+ * "no custom themes"). Individual unreadable .css files are skipped, not
+ * fatal.
  */
 export async function scanThemeFolder(folderPath: string): Promise<LoadedTheme[]> {
   if (!folderPath) return [];

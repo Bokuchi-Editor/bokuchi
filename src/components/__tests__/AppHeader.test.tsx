@@ -194,4 +194,16 @@ describe('AppHeader', () => {
     expect(props.onOpenFolder).toHaveBeenCalledTimes(1);
     expect(props.onFolderTreeToggle).not.toHaveBeenCalled();
   });
+
+  // T-AH-12: Rin focus mode toggle button fires onRinToggle
+  it('T-AH-12: calls onRinToggle when the Rin button is clicked', () => {
+    render(<AppHeader {...props} />);
+    // The Rin IconButton carries aria-label={t('rin.label')}; with the
+    // identity t stub that surfaces as the literal key 'rin.label'
+    const rinBtn = screen.getByLabelText('rin.label');
+    fireEvent.click(rinBtn);
+    expect(props.onRinToggle).toHaveBeenCalledTimes(1);
+    // Clicking Rin must not leak into the neighboring view-mode toggles
+    expect(props.onViewModeChange).not.toHaveBeenCalled();
+  });
 });

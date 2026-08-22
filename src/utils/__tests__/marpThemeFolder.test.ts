@@ -74,6 +74,16 @@ describe('scanThemeFolder', () => {
     expect(result.find((t) => t.file === 'b.css')?.name).toBeNull();
   });
 
+  // Contract pin: an unlistable folder (deleted/renamed after being
+  // configured) REJECTS rather than resolving [] — callers own the fallback
+  // and both current ones catch to "no custom themes". If this changes to a
+  // silent [], the settings UI could no longer distinguish "folder gone"
+  // from "folder empty".
+  it('rejects when the folder itself cannot be listed', async () => {
+    readDirectoryMock.mockRejectedValue(new Error('no such directory'));
+    await expect(scanThemeFolder('/gone')).rejects.toThrow('no such directory');
+  });
+
   it('skips files that fail to read', async () => {
     readDirectoryMock.mockResolvedValue([dirEntry('ok.css'), dirEntry('bad.css')]);
     readFileMock

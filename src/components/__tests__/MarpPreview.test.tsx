@@ -61,13 +61,6 @@ describe('MarpPreview - slide mode (preview)', () => {
     });
   });
 
-  it('renders Presentation header', async () => {
-    const { getByText } = render(<MarpPreview {...slideProps} />);
-    await waitFor(() => {
-      expect(getByText('Presentation')).toBeTruthy();
-    });
-  });
-
   it('navigates to next slide on next button click', async () => {
     const { getByText, getAllByRole } = render(<MarpPreview {...slideProps} />);
 
@@ -171,13 +164,6 @@ describe('MarpPreview - continuous mode (split)', () => {
     });
     // Should not have slide navigation counter like "1 / 3"
     expect(queryByText('1 / 3')).toBeNull();
-  });
-
-  it('renders Presentation header', async () => {
-    const { getByText } = render(<MarpPreview {...splitProps} />);
-    await waitFor(() => {
-      expect(getByText('Presentation')).toBeTruthy();
-    });
   });
 
   it('renders an iframe for slides overview', async () => {

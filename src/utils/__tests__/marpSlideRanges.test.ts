@@ -121,10 +121,20 @@ describe('scrollFractionToSlidePosition', () => {
     expect(pos.slideIndex).toBe(2);
   });
 
-  it('clamps sub-fraction between 0 and 1', () => {
-    const pos = scrollFractionToSlidePosition(0.5, 6, ranges);
-    expect(pos.subFraction).toBeGreaterThanOrEqual(0);
-    expect(pos.subFraction).toBeLessThanOrEqual(1);
+  // Real computeSlideLineRanges output has a gap at each `---` separator line
+  // (it belongs to no slide). A scroll line landing in that gap computes a raw
+  // sub-fraction > 1 for the preceding slide; without the clamp the preview
+  // overshoots past the slide. With the previous gap-less fixture the clamp
+  // was never exercised (raw sub was already 0.5).
+  it('clamps sub-fraction to 1 when the scroll line falls in a separator gap', () => {
+    const gappedRanges = [
+      { startLine: 0, endLine: 1 },
+      { startLine: 3, endLine: 4 },
+    ];
+    // fraction 0.5 of 5 lines → line 2, the separator between the slides.
+    // Raw sub for slide 0 is (2 - 0) / 1 = 2 → must clamp to exactly 1.
+    const pos = scrollFractionToSlidePosition(0.5, 5, gappedRanges);
+    expect(pos).toEqual({ slideIndex: 0, subFraction: 1 });
   });
 
   it('returns zero position for empty ranges', () => {

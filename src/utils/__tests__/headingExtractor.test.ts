@@ -119,22 +119,35 @@ describe('extractHeadings', () => {
     expect(result[1].text).toBe('Also Real');
   });
 
-  // T-HE-09: mixed code block markers (backtick open, tilde close)
-  it('T-HE-09: treats backtick and tilde as independent toggles', () => {
+  // T-HE-09: a closing fence must match the opener's marker (CommonMark).
+  // The pre-fix single-toggle scanner let `~~~` close a backtick fence, so
+  // code lines after it leaked into the outline as fake headings.
+  it('T-HE-09: does not close a backtick fence with ~~~', () => {
     const content = [
       '# Before',
       '```',
       '# Inside backtick block',
-      '~~~',        // This toggles code block off (independent marker)
-      '# After tilde close',
+      '~~~',        // literal text inside the backtick fence
+      '# Still inside the fence',
+      '```',        // real close
+      '# After close',
     ].join('\n');
 
     const result = extractHeadings(content);
-    // The implementation toggles on ``` (line 2), then toggles on ~~~ (line 4)
-    // So line 5 is outside code block
-    expect(result).toHaveLength(2);
-    expect(result[0].text).toBe('Before');
-    expect(result[1].text).toBe('After tilde close');
+    expect(result.map(h => h.text)).toEqual(['Before', 'After close']);
+  });
+
+  // T-HE-09b: a closing fence must be at least as long as its opener.
+  it('T-HE-09b: does not close a 4-backtick fence with ```', () => {
+    const content = [
+      '````',
+      '```',          // too short — still inside
+      '# Inside',
+      '````',         // closes
+      '# Outside',
+    ].join('\n');
+
+    expect(extractHeadings(content).map(h => h.text)).toEqual(['Outside']);
   });
 
   // T-HE-10: headings with leading whitespace (indented headings)
