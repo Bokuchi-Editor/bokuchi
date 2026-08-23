@@ -460,6 +460,8 @@
       "resetError": "सेटिंग्स रीसेट करने में विफल",
       "enableMarp": "Marp (प्रस्तुतियाँ)",
       "enableMarpDescription": "marp: true फ्रंट-मैटर वाली Markdown स्लाइड्स को प्रस्तुति के रूप में पूर्वावलोकन करें।",
+      "enableEmoji": "इमोजी शॉर्टकोड",
+      "enableEmojiDescription": ":rocket: जैसे GitHub इमोजी शॉर्टकोड को इमोजी (🚀) में बदलता है।",
       "marpThemeFolder": "Marp थीम फ़ोल्डर",
       "marpThemeFolderDescription": "CSS फ़ाइलों के फ़ोल्डर से कस्टम Marp थीम पंजीकृत करें। /* @theme name */ हेडर वाली प्रत्येक फ़ाइल theme: डायरेक्टिव के माध्यम से स्लाइड में चयन योग्य हो जाती है।",
       "marpThemeFolderBrowse": "फ़ोल्डर चुनें…",

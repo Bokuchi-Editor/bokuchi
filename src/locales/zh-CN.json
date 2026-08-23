@@ -460,6 +460,8 @@
       "resetError": "设置重置失败",
       "enableMarp": "Marp（演示文稿）",
       "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。",
+      "enableEmoji": "表情符号简码",
+      "enableEmojiDescription": "将 :rocket: 等 GitHub 表情符号简码转换为表情符号（🚀）。",
       "marpThemeFolder": "Marp 主题文件夹",
       "marpThemeFolderDescription": "从包含 CSS 文件的文件夹注册自定义 Marp 主题。每个带有 /* @theme name */ 头部的文件都可通过 theme: 指令在幻灯片中选择。",
       "marpThemeFolderBrowse": "选择文件夹…",

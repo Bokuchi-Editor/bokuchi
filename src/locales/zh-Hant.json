@@ -460,6 +460,8 @@
       "resetError": "設定重設失敗",
       "enableMarp": "Marp（簡報）",
       "enableMarpDescription": "將帶有 marp: true front-matter 的 Markdown 投影片預覽為簡報。",
+      "enableEmoji": "表情符號簡碼",
+      "enableEmojiDescription": "將 :rocket: 等 GitHub 表情符號簡碼轉換為表情符號（🚀）。",
       "marpThemeFolder": "Marp 佈景主題資料夾",
       "marpThemeFolderDescription": "從包含 CSS 檔案的資料夾註冊自訂 Marp 佈景主題。每個帶有 /* @theme name */ 標頭的檔案都可透過 theme: 指令在投影片中選擇。",
       "marpThemeFolderBrowse": "選擇資料夾…",

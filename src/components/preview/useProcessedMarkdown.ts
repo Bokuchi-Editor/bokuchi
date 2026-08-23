@@ -13,7 +13,8 @@ import {
 } from '../../utils/markdownRenderers';
 import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
-import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
+import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
+import { contentHasEmojiShortcode, loadEmojiShortcodeMap, type EmojiShortcodeMap } from '../../utils/emojiShortcodes';
 
 interface UseProcessedMarkdownParams {
   content: string;
@@ -102,22 +103,18 @@ export function useProcessedMarkdown({
         }
         katexRestoreRef.current = restoreKatex;
 
-        // Convert Markdown to HTML. fixCjkEmphasis inserts invisible markers so
-        // CommonMark emphasis renders for CJK prose (#400); stripped right after.
-        const markedResult = marked(fixCjkEmphasis(processedMarkdown), {
-          breaks: true,
-          gfm: true,
-          renderer: renderer,
-        });
-
-        // Await if marked result is a Promise
-        let processedHtml: string;
-        if (typeof markedResult === 'string') {
-          processedHtml = markedResult;
-        } else {
-          processedHtml = await markedResult;
+        // Emoji shortcodes (:rocket: → 🚀, #488): load the gemoji map chunk
+        // lazily, and only when the document actually contains a candidate.
+        let emojiMap: EmojiShortcodeMap | null = null;
+        if ((renderingSettings.enableEmoji ?? true) && contentHasEmojiShortcode(processedMarkdown)) {
+          emojiMap = await loadEmojiShortcodeMap();
+          if (stale) return;
         }
-        processedHtml = stripCjkEmphasisMarker(processedHtml);
+
+        // Convert Markdown to HTML (GFM + GitHub Alerts + optional emoji; the
+        // CJK emphasis workaround #400 is applied inside).
+        let processedHtml = await parseMarkdownToHtml(processedMarkdown, { renderer, emojiMap });
+        if (stale) return;
 
         // Sanitize the user-authored HTML BEFORE splicing in trusted content.
         // KaTeX is still an inert placeholder token, Mermaid is still a code

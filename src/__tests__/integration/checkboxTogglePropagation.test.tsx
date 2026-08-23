@@ -114,7 +114,16 @@ vi.mock('marked', () => {
   }
   simpleMarked.Renderer = Renderer;
   simpleMarked.use = vi.fn();
-  return { marked: simpleMarked };
+  // Instance API used by parseMarkdownToHtml (extensions not exercised here).
+  class Marked {
+    use() {
+      return this;
+    }
+    parse(src: string) {
+      return simpleMarked(src);
+    }
+  }
+  return { marked: simpleMarked, Marked, Lexer: class {} };
 });
 
 vi.mock('../../utils/markdownRenderers', () => ({

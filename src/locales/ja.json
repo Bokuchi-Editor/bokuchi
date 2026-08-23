@@ -460,6 +460,8 @@
       "resetError": "設定のリセットに失敗しました",
       "enableMarp": "Marp（プレゼンテーション）",
       "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。",
+      "enableEmoji": "絵文字ショートコード",
+      "enableEmojiDescription": ":rocket: のような GitHub 絵文字ショートコードを絵文字（🚀）に変換します。",
       "marpThemeFolder": "Marp テーマフォルダ",
       "marpThemeFolderDescription": "CSSファイルを集めたフォルダからカスタムMarpテーマを登録します。/* @theme 名前 */ ヘッダーを持つファイルが、スライドの theme: ディレクティブで選択できるようになります。",
       "marpThemeFolderBrowse": "フォルダを選択…",

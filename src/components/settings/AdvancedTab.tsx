@@ -186,6 +186,15 @@ const AdvancedTab: React.FC<AdvancedTabProps> = ({
             onChange={(checked) => onSettingChange('rendering', 'enableMarp', checked)}
             label={t('settings.advanced.enableMarp')}
             description={t('settings.advanced.enableMarpDescription')}
+            sx={{ mb: 1 }}
+          />
+          <RenderingToggleRow
+            target="rendering.enableEmoji"
+            highlighted={highlightedTarget === 'rendering.enableEmoji'}
+            checked={settings.rendering?.enableEmoji ?? true}
+            onChange={(checked) => onSettingChange('rendering', 'enableEmoji', checked)}
+            label={t('settings.advanced.enableEmoji')}
+            description={t('settings.advanced.enableEmojiDescription')}
           />
         </CardContent>
       </Card>

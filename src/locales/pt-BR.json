@@ -460,6 +460,8 @@
       "resetError": "Falha ao redefinir configurações",
       "enableMarp": "Marp (Apresentações)",
       "enableMarpDescription": "Visualizar slides Markdown com marp: true como apresentação.",
+      "enableEmoji": "Códigos de emoji",
+      "enableEmojiDescription": "Converte códigos de emoji do GitHub como :rocket: em emojis (🚀).",
       "marpThemeFolder": "Pasta de temas do Marp",
       "marpThemeFolderDescription": "Registre temas personalizados do Marp a partir de uma pasta de arquivos CSS. Cada arquivo com um cabeçalho /* @theme name */ fica selecionável em um slide pela diretiva theme:.",
       "marpThemeFolderBrowse": "Escolher pasta…",

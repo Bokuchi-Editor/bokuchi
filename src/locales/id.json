@@ -460,6 +460,8 @@
       "resetError": "Gagal mereset pengaturan",
       "enableMarp": "Marp (Presentasi)",
       "enableMarpDescription": "Pratinjau slide Markdown dengan marp: true sebagai presentasi.",
+      "enableEmoji": "Kode Singkat Emoji",
+      "enableEmojiDescription": "Mengubah kode singkat emoji GitHub seperti :rocket: menjadi emoji (🚀).",
       "marpThemeFolder": "Folder Tema Marp",
       "marpThemeFolderDescription": "Daftarkan tema Marp kustom dari folder berisi file CSS. Setiap file dengan header /* @theme name */ dapat dipilih dalam slide melalui direktif theme:.",
       "marpThemeFolderBrowse": "Pilih Folder…",

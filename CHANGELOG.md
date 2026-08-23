@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- GitHub Alerts: `> [!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]` blockquotes now render as GitHub-style callout boxes with icons and accent colors, in the preview and in HTML/PDF exports. Behavior matches github.com (case-insensitive type, body required, top-level blockquotes only). (#488)
+- GitHub emoji shortcodes: `:rocket:` → 🚀 in the preview and exports, using GitHub's official gemoji list rendered as native emoji. Can be turned off under Settings > Advanced > Rendering. Shortcodes inside code are never converted. (#488)
 - "Reveal in Finder" / "Reveal in File Explorer" / "Open Containing Folder" (per OS) in the tab context menu and the explorer sidebar's file context menu, opening the OS file manager with the file selected.
 - PDF export now shows its progress: a "Generating PDF…" snackbar while the file is being produced and a confirmation (or error) when it finishes.
 

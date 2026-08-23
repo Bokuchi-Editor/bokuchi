@@ -5,7 +5,8 @@ import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
-import { fixCjkEmphasis, stripCjkEmphasisMarker } from '../../utils/cjkEmphasis';
+import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
+import { contentHasEmojiShortcode, loadEmojiShortcodeMap, type EmojiShortcodeMap } from '../../utils/emojiShortcodes';
 import { deriveExportFileName } from '../../utils/pathUtils';
 
 // A4 page geometry in inches (210×297mm). Margins are applied via the CSS
@@ -64,15 +65,15 @@ export function useHtmlExport({
     const renderer = new marked.Renderer();
     renderer.code = renderCode;
 
-    // fixCjkEmphasis matches the preview path so emphasis renders for CJK
-    // prose (#400); the invisible markers are stripped right after marked.
-    const markedResult = marked(fixCjkEmphasis(processedContent), {
-      breaks: true,
-      gfm: true,
-      renderer: renderer,
-    });
-    let html = typeof markedResult === 'string' ? markedResult : await markedResult;
-    html = stripCjkEmphasisMarker(html);
+    // Emoji shortcodes match the preview path (#488): same setting gate, same
+    // lazily-loaded gemoji map.
+    let emojiMap: EmojiShortcodeMap | null = null;
+    if ((renderingSettings.enableEmoji ?? true) && contentHasEmojiShortcode(processedContent)) {
+      emojiMap = await loadEmojiShortcodeMap();
+    }
+
+    // Same shared pipeline as the preview (GFM + Alerts + emoji + CJK #400).
+    let html = await parseMarkdownToHtml(processedContent, { renderer, emojiMap });
 
     // Sanitize the user HTML before splicing in trusted KaTeX/Mermaid output
     // (see sanitizeUserHtml / the preview path for why ordering matters).

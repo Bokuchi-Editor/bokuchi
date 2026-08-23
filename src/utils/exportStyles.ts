@@ -12,6 +12,8 @@ export interface ExportThemeColors {
   linkColor: string;
   blockquoteColor: string;
   inlineCodeBackground: string;
+  /** Whether the theme is a dark palette (picks the GitHub alert accent set). */
+  isDark: boolean;
 }
 
 /**
@@ -34,7 +36,54 @@ export function getExportThemeColors(theme?: string): ExportThemeColors {
     linkColor: palette.primary.main,
     blockquoteColor: palette.text.secondary,
     inlineCodeBackground: alpha(palette.text.primary, 0.08),
+    isDark: palette.mode === 'dark',
   };
+}
+
+// GitHub Primer accent colors for alerts (light / dark), matching github.com.
+const GITHUB_ALERT_COLORS = {
+  light: { note: '#0969da', tip: '#1a7f37', important: '#8250df', warning: '#9a6700', caution: '#cf222e' },
+  dark: { note: '#4493f8', tip: '#3fb950', important: '#ab7df8', warning: '#d29922', caution: '#f85149' },
+} as const;
+
+/**
+ * CSS for GitHub Alerts (`> [!NOTE]` …, #488). Shared by the in-app preview
+ * (`prefix` = '.markdown-preview ') and the standalone HTML/PDF export
+ * (`prefix` = ''), mirroring GitHub's own `.markdown-alert` styling. Only the
+ * five accent colors differ between light and dark themes; the body text keeps
+ * the surrounding theme color.
+ */
+export function generateGithubAlertCSS(prefix: string, darkMode: boolean): string {
+  const accents = GITHUB_ALERT_COLORS[darkMode ? 'dark' : 'light'];
+  const variantRules = (Object.keys(accents) as (keyof typeof accents)[])
+    .map(
+      (variant) => `
+        ${prefix}.markdown-alert.markdown-alert-${variant} { border-left-color: ${accents[variant]}; }
+        ${prefix}.markdown-alert-${variant} > .markdown-alert-title { color: ${accents[variant]}; }`,
+    )
+    .join('');
+  return `
+        ${prefix}.markdown-alert {
+            padding: 0.5em 1em;
+            margin: 1em 0;
+            border-left: 0.25em solid;
+        }
+
+        ${prefix}.markdown-alert > :first-child { margin-top: 0; }
+        ${prefix}.markdown-alert > :last-child { margin-bottom: 0; }
+
+        ${prefix}.markdown-alert .markdown-alert-title {
+            display: flex;
+            align-items: center;
+            line-height: 1;
+            font-weight: 500;
+        }
+
+        ${prefix}.markdown-alert .markdown-alert-title .octicon {
+            margin-right: 0.5em;
+            fill: currentColor;
+        }
+${variantRules}`;
 }
 
 const HLJS_DARK_CSS = `.hljs{display:block;overflow-x:auto;padding:0.5em;color:#e6edf3;background:#0d1117}.hljs-comment,.hljs-quote{color:#7d8590;font-style:italic}.hljs-addition,.hljs-keyword,.hljs-selector-tag{color:#ff7b72}.hljs-doctag,.hljs-literal,.hljs-meta,.hljs-number,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-name,.hljs-section,.hljs-selector-class,.hljs-selector-id,.hljs-title{color:#d2a8ff;font-weight:700}.hljs-attr,.hljs-attribute,.hljs-class .hljs-title,.hljs-template-variable,.hljs-type,.hljs-variable{color:#79c0ff}.hljs-bullet,.hljs-link,.hljs-meta .hljs-keyword,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-title.class_{color:#f2cc60}.hljs-built_in,.hljs-deletion,.hljs-formula,.hljs-function .hljs-title,.hljs-title.function_{color:#d2a8ff}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}`;
@@ -206,6 +255,7 @@ export function generateExportCSS(
             margin: 1em 0;
             color: ${colors.blockquoteColor};
         }
+${generateGithubAlertCSS('', colors.isDark)}
 
         code {
             background-color: ${colors.inlineCodeBackground};
@@ -293,7 +343,7 @@ const PRINT_CSS = `
             }
             body { max-width: none; margin: 0; padding: 0; }
             pre, blockquote, table, figure, img,
-            .mermaid-diagram, .katex-display {
+            .markdown-alert, .mermaid-diagram, .katex-display {
                 break-inside: avoid;
             }
             tr, td, th { break-inside: avoid; }
