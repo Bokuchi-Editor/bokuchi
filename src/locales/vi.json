@@ -460,6 +460,8 @@
       "resetError": "Không thể đặt lại cài đặt",
       "enableMarp": "Marp (Trình chiếu)",
       "enableMarpDescription": "Xem trước slide Markdown có marp: true dưới dạng trình chiếu.",
+      "enableEmoji": "Mã tắt biểu tượng cảm xúc",
+      "enableEmojiDescription": "Chuyển mã tắt biểu tượng cảm xúc GitHub như :rocket: thành biểu tượng cảm xúc (🚀).",
       "marpThemeFolder": "Thư mục giao diện Marp",
       "marpThemeFolderDescription": "Đăng ký giao diện Marp tùy chỉnh từ một thư mục chứa các tệp CSS. Mỗi tệp có tiêu đề /* @theme name */ sẽ có thể được chọn trong slide thông qua chỉ thị theme:.",
       "marpThemeFolderBrowse": "Chọn thư mục…",

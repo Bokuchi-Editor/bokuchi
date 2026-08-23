@@ -460,6 +460,8 @@
       "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
       "enableMarp": "Marp (Präsentationen)",
       "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen.",
+      "enableEmoji": "Emoji-Kurzcodes",
+      "enableEmojiDescription": "GitHub-Emoji-Kurzcodes wie :rocket: in Emojis (🚀) umwandeln.",
       "marpThemeFolder": "Marp-Themenordner",
       "marpThemeFolderDescription": "Registriere benutzerdefinierte Marp-Themes aus einem Ordner mit CSS-Dateien. Jede Datei mit einem /* @theme name */-Header wird in einer Folie über die theme:-Direktive auswählbar.",
       "marpThemeFolderBrowse": "Ordner auswählen…",

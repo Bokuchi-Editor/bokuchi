@@ -460,6 +460,8 @@
       "resetError": "Échec de la réinitialisation des paramètres",
       "enableMarp": "Marp (Présentations)",
       "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation.",
+      "enableEmoji": "Codes courts d'emoji",
+      "enableEmojiDescription": "Convertit les codes courts d'emoji GitHub comme :rocket: en emojis (🚀).",
       "marpThemeFolder": "Dossier de thèmes Marp",
       "marpThemeFolderDescription": "Enregistrez des thèmes Marp personnalisés à partir d'un dossier de fichiers CSS. Chaque fichier comportant un en-tête /* @theme name */ devient sélectionnable dans une diapositive via la directive theme:.",
       "marpThemeFolderBrowse": "Choisir un dossier…",

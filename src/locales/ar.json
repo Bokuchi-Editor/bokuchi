@@ -460,6 +460,8 @@
       "resetError": "فشل في إعادة تعيين الإعدادات",
       "enableMarp": "Marp (عروض تقديمية)",
       "enableMarpDescription": "معاينة شرائح Markdown مع marp: true كعرض تقديمي.",
+      "enableEmoji": "رموز الإيموجي المختصرة",
+      "enableEmojiDescription": "تحويل رموز الإيموجي المختصرة في GitHub مثل :rocket: إلى إيموجي (🚀).",
       "marpThemeFolder": "مجلد سمات Marp",
       "marpThemeFolderDescription": "سجّل سمات Marp مخصصة من مجلد يحتوي على ملفات CSS. كل ملف يحتوي على ترويسة /* @theme name */ يصبح قابلاً للاختيار في الشريحة عبر توجيه theme:.",
       "marpThemeFolderBrowse": "اختر مجلدًا…",

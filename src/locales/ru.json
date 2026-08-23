@@ -460,6 +460,8 @@
       "resetError": "Не удалось сбросить настройки",
       "enableMarp": "Marp (Презентации)",
       "enableMarpDescription": "Предпросмотр слайдов Markdown с marp: true в виде презентации.",
+      "enableEmoji": "Эмодзи-шорткоды",
+      "enableEmojiDescription": "Преобразует шорткоды эмодзи GitHub, такие как :rocket:, в эмодзи (🚀).",
       "marpThemeFolder": "Папка тем Marp",
       "marpThemeFolderDescription": "Регистрируйте пользовательские темы Marp из папки с CSS-файлами. Каждый файл с заголовком /* @theme name */ можно выбрать на слайде через директиву theme:.",
       "marpThemeFolderBrowse": "Выбрать папку…",

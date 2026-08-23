@@ -460,6 +460,8 @@
       "resetError": "Failed to reset settings",
       "enableMarp": "Marp (Presentations)",
       "enableMarpDescription": "Preview Markdown slides with marp: true front-matter as a presentation.",
+      "enableEmoji": "Emoji Shortcodes",
+      "enableEmojiDescription": "Convert GitHub emoji shortcodes like :rocket: to emoji (🚀).",
       "marpThemeFolder": "Marp Theme Folder",
       "marpThemeFolderDescription": "Register custom Marp themes from a folder of CSS files. Each file with a /* @theme name */ header becomes selectable in a slide via the theme: directive.",
       "marpThemeFolderBrowse": "Choose Folder…",

@@ -4,6 +4,7 @@ import {
   getHighlightStyleDataUri,
   generateExportCSS,
   generateTableLayoutCSS,
+  generateGithubAlertCSS,
   buildExportHTML,
 } from '../exportStyles';
 
@@ -87,6 +88,36 @@ describe('generateExportCSS', () => {
     const css = generateExportCSS(colors);
     expect(css).not.toContain('"Cairo"');
     expect(css).toContain('font-family: -apple-system, BlinkMacSystemFont');
+  });
+
+  // #488: GitHub Alerts styling ships with the export so alerts keep their
+  // accent colors in standalone HTML/PDF output.
+  it('includes GitHub alert rules matching the theme mode', () => {
+    const lightCss = generateExportCSS(getExportThemeColors());
+    expect(lightCss).toContain('.markdown-alert');
+    expect(lightCss).toContain('#0969da'); // note accent (light)
+
+    const darkCss = generateExportCSS(getExportThemeColors('dark'));
+    expect(darkCss).toContain('#4493f8'); // note accent (dark)
+  });
+});
+
+describe('generateGithubAlertCSS', () => {
+  it('emits all five variants with the mode-specific accent set', () => {
+    const light = generateGithubAlertCSS('', false);
+    for (const accent of ['#0969da', '#1a7f37', '#8250df', '#9a6700', '#cf222e']) {
+      expect(light).toContain(accent);
+    }
+    const dark = generateGithubAlertCSS('', true);
+    for (const accent of ['#4493f8', '#3fb950', '#ab7df8', '#d29922', '#f85149']) {
+      expect(dark).toContain(accent);
+    }
+  });
+
+  it('scopes selectors with the given prefix', () => {
+    const css = generateGithubAlertCSS('.markdown-preview ', false);
+    expect(css).toContain('.markdown-preview .markdown-alert');
+    expect(css).not.toMatch(/^\s*\.markdown-alert/m);
   });
 });
 

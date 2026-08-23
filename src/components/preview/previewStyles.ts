@@ -1,6 +1,6 @@
 import { alpha } from '@mui/material/styles';
 import type { Palette } from '@mui/material/styles';
-import { generateTableLayoutCSS } from '../../utils/exportStyles';
+import { generateTableLayoutCSS, generateGithubAlertCSS } from '../../utils/exportStyles';
 import type { TableLayoutMode } from '../../types/settings';
 
 /**
@@ -91,6 +91,9 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               margin: 1em 0;
               color: ${palette.text.secondary};
             }
+
+            /* GitHub Alerts (> [!NOTE] …, #488) */
+            ${generateGithubAlertCSS('.markdown-preview ', palette.mode === 'dark')}
 
             .markdown-preview code {
               background-color: ${alpha(palette.text.primary, 0.08)};
