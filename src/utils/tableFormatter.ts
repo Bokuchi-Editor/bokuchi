@@ -486,7 +486,15 @@ export function applyTableReplace(
   const serialized = serializeTable(table).split('\n');
   const before = lines.slice(0, block.start - 1);
   const after = lines.slice(block.end);
-  return [...before, ...serialized, ...after].join('\n');
+  return [...before, ...serialized, ...after].join(detectEol(content));
+}
+
+// Editing one cell must not rewrite every line ending in the document: lines
+// are split on /\r?\n/, so rejoining with a bare '\n' silently converted CRLF
+// files to LF (the whole file shows as modified in diffs). Mixed-EOL content
+// collapses to the first EOL found, which is the usual editor convention.
+function detectEol(content: string): string {
+  return content.includes('\r\n') ? '\r\n' : '\n';
 }
 
 /** Body-row count and column count of the Nth table, or null. */
@@ -565,7 +573,7 @@ export function applyCellEdit(
   const newLine = replaceCellInLine(lines[lineIdx], col, escapeCell(rawText));
   if (newLine === null) return null;
   lines[lineIdx] = newLine;
-  return lines.join('\n');
+  return lines.join(detectEol(content));
 }
 
 export type NavDir = 'right' | 'left' | 'down' | 'up';

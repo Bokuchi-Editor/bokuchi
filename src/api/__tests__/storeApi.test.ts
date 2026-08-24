@@ -556,6 +556,80 @@ describe('storeApi.loadTypingGameHighScore', () => {
 });
 
 // ---------------------------------------------------------------------------
+// loadEasterEggFlags
+// ---------------------------------------------------------------------------
+describe('storeApi.loadEasterEggFlags', () => {
+  it('returns stored flags object', async () => {
+    // The flags map must survive the round-trip unchanged: a `false` value is
+    // meaningful (egg seen but disabled) and must not be dropped or coerced
+    mockStore.get.mockResolvedValue({ typingGame: true, konami: false });
+    expect(await storeApi.loadEasterEggFlags()).toEqual({ typingGame: true, konami: false });
+  });
+
+  it('returns empty object when nothing stored', async () => {
+    // Missing key means no eggs discovered yet; `flags || {}` yields {}
+    mockStore.get.mockResolvedValue(null);
+    expect(await storeApi.loadEasterEggFlags()).toEqual({});
+  });
+
+  it('returns empty object on error', async () => {
+    // A corrupt/unreadable store must never crash startup; fall back to {}
+    mockStore.get.mockRejectedValue(new Error('fail'));
+    expect(await storeApi.loadEasterEggFlags()).toEqual({});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// loadLastSeenVersion
+// ---------------------------------------------------------------------------
+describe('storeApi.loadLastSeenVersion', () => {
+  it('returns stored version string', async () => {
+    mockStore.get.mockResolvedValue('1.2.3');
+    expect(await storeApi.loadLastSeenVersion()).toBe('1.2.3');
+  });
+
+  it('returns null when unset', async () => {
+    // null (not '' or undefined) is the documented "never seen" sentinel the
+    // What's New dialog checks; `version || null` normalizes to it
+    mockStore.get.mockResolvedValue(null);
+    expect(await storeApi.loadLastSeenVersion()).toBeNull();
+  });
+
+  it('returns null on error', async () => {
+    // Failing to read must behave like "never seen", not crash the dialog
+    mockStore.get.mockRejectedValue(new Error('fail'));
+    expect(await storeApi.loadLastSeenVersion()).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// loadSeenMilestones
+//
+// Like loadCustomThemes, this is a defensive loader: a corrupted store value
+// must degrade to "no milestones seen" (greetings may re-show) rather than
+// crash startup.
+// ---------------------------------------------------------------------------
+describe('storeApi.loadSeenMilestones', () => {
+  it('returns the stored id list', async () => {
+    // Order is preserved as stored; the caller does membership checks only
+    mockStore.get.mockResolvedValue(['m100', 'm500']);
+    expect(await storeApi.loadSeenMilestones()).toEqual(['m100', 'm500']);
+  });
+
+  it('returns empty array when stored value is not an array', async () => {
+    // Array.isArray guard: a corrupt scalar/object must not leak through as
+    // a non-array return the caller would call .includes() on
+    mockStore.get.mockResolvedValue('m100');
+    expect(await storeApi.loadSeenMilestones()).toEqual([]);
+  });
+
+  it('returns empty array on error', async () => {
+    mockStore.get.mockRejectedValue(new Error('fail'));
+    expect(await storeApi.loadSeenMilestones()).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Folder tree root
 // ---------------------------------------------------------------------------
 describe('storeApi.saveFolderTreeRoot', () => {

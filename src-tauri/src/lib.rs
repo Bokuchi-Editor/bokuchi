@@ -33,6 +33,7 @@ mod variable_processor;
 mod file_operations;
 mod file_association;
 mod commands;
+pub mod pdf_compress;
 mod pdf_export;
 
 // Re-export types

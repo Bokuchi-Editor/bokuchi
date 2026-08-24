@@ -460,6 +460,8 @@
       "resetError": "设置重置失败",
       "enableMarp": "Marp（演示文稿）",
       "enableMarpDescription": "将带有 marp: true front-matter 的 Markdown 幻灯片预览为演示文稿。",
+      "enableEmoji": "表情符号简码",
+      "enableEmojiDescription": "将 :rocket: 等 GitHub 表情符号简码转换为表情符号（🚀）。",
       "marpThemeFolder": "Marp 主题文件夹",
       "marpThemeFolderDescription": "从包含 CSS 文件的文件夹注册自定义 Marp 主题。每个带有 /* @theme name */ 头部的文件都可通过 theme: 指令在幻灯片中选择。",
       "marpThemeFolderBrowse": "选择文件夹…",
@@ -596,6 +598,10 @@
   "tabs": {
     "copyFilePath": "复制文件路径",
     "copyFileName": "复制文件名",
+    "revealInFinder": "在 Finder 中显示",
+    "revealInFileExplorer": "在文件资源管理器中显示",
+    "openContainingFolder": "打开所在文件夹",
+    "revealFailed": "无法打开文件位置",
     "pinTab": "固定标签页",
     "unpinTab": "取消固定标签页",
     "closeTab": "关闭标签页",
@@ -616,21 +622,25 @@
       "improvement": "改进"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "编辑器与预览字体设置",
-        "description": "现在可以从已安装的字体中选择编辑器和预览使用的字体。预览字体同样应用于 HTML 和 PDF 导出。"
+      "githubAlerts": {
+        "title": "GitHub 提示块",
+        "description": "> [!NOTE]、> [!WARNING] 等引用块现在会以 GitHub 风格的提示框显示在预览及 HTML/PDF 导出中。"
       },
-      "codeBlockMath": {
-        "title": "代码块显示修复",
-        "description": "修复了当文档中存在不成对的 ``` 围栏时，代码块内含 $ 的文本可能被误渲染为数学公式的问题。"
+      "emojiShortcodes": {
+        "title": "表情符号短代码",
+        "description": ":rocket: 等 GitHub 表情短代码现在会在预览和导出中转换为表情符号（🚀）。可在 设置 > 高级 中关闭。"
       },
-      "csvTablePaste": {
-        "title": "CSV 粘贴修复",
-        "description": "粘贴带引号字段（包含逗号、引号或换行）的 CSV 数据时，现在能正确转换为 Markdown 表格。"
+      "revealInFolder": {
+        "title": "在 Finder / 文件资源管理器中显示",
+        "description": "可通过标签页或文件树的右键菜单，在系统文件管理器中打开文件所在位置。"
       },
-      "dependencyUpdates": {
-        "title": "依赖更新",
-        "description": "已将内置库更新至最新版本。"
+      "pdfExport": {
+        "title": "PDF 导出改进",
+        "description": "包含大量图片的文档导出的 PDF 现在小得多，并且在生成 PDF 时会显示进度。"
+      },
+      "editingFixes": {
+        "title": "编辑相关修复",
+        "description": "修复了粘贴含逗号的文本被转换为表格、代码块中的行被误识别为大纲标题，以及从预览编辑表格时换行符被改写的问题。"
       }
     }
   },

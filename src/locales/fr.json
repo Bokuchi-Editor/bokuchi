@@ -460,6 +460,8 @@
       "resetError": "Échec de la réinitialisation des paramètres",
       "enableMarp": "Marp (Présentations)",
       "enableMarpDescription": "Prévisualiser les diapositives Markdown avec marp: true en tant que présentation.",
+      "enableEmoji": "Codes courts d'emoji",
+      "enableEmojiDescription": "Convertit les codes courts d'emoji GitHub comme :rocket: en emojis (🚀).",
       "marpThemeFolder": "Dossier de thèmes Marp",
       "marpThemeFolderDescription": "Enregistrez des thèmes Marp personnalisés à partir d'un dossier de fichiers CSS. Chaque fichier comportant un en-tête /* @theme name */ devient sélectionnable dans une diapositive via la directive theme:.",
       "marpThemeFolderBrowse": "Choisir un dossier…",
@@ -596,6 +598,10 @@
   "tabs": {
     "copyFilePath": "Copier le chemin du fichier",
     "copyFileName": "Copier le nom du fichier",
+    "revealInFinder": "Afficher dans le Finder",
+    "revealInFileExplorer": "Afficher dans l'Explorateur de fichiers",
+    "openContainingFolder": "Ouvrir le dossier contenant",
+    "revealFailed": "Impossible d'ouvrir l'emplacement du fichier",
     "pinTab": "Épingler l'onglet",
     "unpinTab": "Désépingler l'onglet",
     "closeTab": "Fermer l'onglet",
@@ -616,21 +622,25 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Polices personnalisées pour l'éditeur et l'aperçu",
-        "description": "Vous pouvez désormais choisir les polices de l'éditeur et de l'aperçu parmi celles installées sur votre machine. La police de l'aperçu s'applique aussi aux exports HTML et PDF."
+      "githubAlerts": {
+        "title": "Alertes GitHub",
+        "description": "Les citations comme > [!NOTE] ou > [!WARNING] s'affichent désormais sous forme d'encadrés de style GitHub dans l'aperçu et dans les exports HTML et PDF."
       },
-      "codeBlockMath": {
-        "title": "Correction de l'affichage des blocs de code",
-        "description": "Le texte contenant $ dans les blocs de code n'est plus affiché à tort comme une formule mathématique lorsque le document contient des délimiteurs ``` non appariés."
+      "emojiShortcodes": {
+        "title": "Raccourcis emoji",
+        "description": "Les raccourcis emoji GitHub comme :rocket: sont désormais convertis en emoji (🚀) dans l'aperçu et les exports. Désactivable dans Paramètres > Avancé."
       },
-      "csvTablePaste": {
-        "title": "Correction du collage de CSV",
-        "description": "Les données CSV avec des champs entre guillemets (contenant des virgules, des guillemets ou des sauts de ligne) sont désormais correctement converties en tableaux Markdown lors du collage."
+      "revealInFolder": {
+        "title": "Afficher dans le Finder / l'Explorateur de fichiers",
+        "description": "Ouvrez l'emplacement d'un fichier dans le gestionnaire de fichiers du système depuis le menu contextuel de l'onglet ou de l'arborescence de fichiers."
       },
-      "dependencyUpdates": {
-        "title": "Mises à jour des dépendances",
-        "description": "Mise à jour des bibliothèques incluses vers leurs dernières versions."
+      "pdfExport": {
+        "title": "Améliorations de l'export PDF",
+        "description": "Les exports PDF de documents riches en images sont désormais beaucoup plus légers, et la progression s'affiche pendant la génération du PDF."
+      },
+      "editingFixes": {
+        "title": "Corrections d'édition",
+        "description": "Corrigé : le texte contenant des virgules se transformait en tableau lors du collage, des lignes de blocs de code apparaissaient comme titres dans le plan, et la modification de tableaux depuis l'aperçu réécrivait les fins de ligne."
       }
     }
   },

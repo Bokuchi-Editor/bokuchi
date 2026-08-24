@@ -211,11 +211,15 @@ describe('tableFormatter', () => {
       expect(getCellContentRange(line, 0)).toEqual({ startColumn: 3, endColumn: 6 });
     });
 
-    // T-TF-20: empty cell yields a caret (start === end)
+    // T-TF-20: empty cell yields a caret (start === end) placed inside the
+    // cell — column 3 is just after "| " so typing lands in the right cell.
+    // Pinning the concrete column catches off-by-one drift, which the earlier
+    // start===end self-comparison alone could not.
     it('T-TF-20: returns a caret position for an empty cell', () => {
-      const r = getCellContentRange('|  | x |', 0);
-      expect(r).not.toBeNull();
-      expect(r!.startColumn).toBe(r!.endColumn);
+      expect(getCellContentRange('|  | x |', 0)).toEqual({
+        startColumn: 3,
+        endColumn: 3,
+      });
     });
   });
 
@@ -411,6 +415,30 @@ describe('tableFormatter', () => {
       expect(out).toContain('between');
       expect(getCellText(out, 1, 0, 2)).toBe('9');
       expect(applyTableReplace(content, 9, t)).toBeNull();
+    });
+
+    // T-TF-39e: editing one cell of a CRLF document must not rewrite every
+    // line ending to LF (the whole file used to show as modified in diffs
+    // after a single preview cell edit).
+    it('T-TF-39e: applyCellEdit preserves CRLF line endings', () => {
+      const src = ['# title', '| h1 | h2 |', '| --- | --- |', '| a | 1 |', 'tail'].join('\r\n');
+      const out = applyCellEdit(src, 0, 0, 1, '2')!;
+      expect(out).toBe(
+        ['# title', '| h1 | h2 |', '| --- | --- |', '| a | 2 |', 'tail'].join('\r\n'),
+      );
+      expect(out).not.toMatch(/[^\r]\n/); // no lone-LF line breaks remain
+    });
+
+    // T-TF-39f: same guarantee for the whole-table replacement path.
+    it('T-TF-39f: applyTableReplace preserves CRLF line endings', () => {
+      const src = ['before', '| h1 | h2 |', '| --- | --- |', '| a | 1 |', 'after'].join('\r\n');
+      const t = getParsedTable(src, 0)!;
+      t.rows[0][1] = '2';
+      const out = applyTableReplace(src, 0, t)!;
+      expect(getCellText(out, 0, 0, 1)).toBe('2');
+      expect(out.startsWith('before\r\n')).toBe(true);
+      expect(out.endsWith('\r\nafter')).toBe(true);
+      expect(out).not.toMatch(/[^\r]\n/);
     });
   });
 

@@ -102,6 +102,12 @@ describe('variableApi.processMarkdown', () => {
   it('returns processed content on success', async () => {
     vi.mocked(invoke).mockResolvedValue('expanded content');
     const result = await variableApi.processMarkdown('{{var}}', { var: 'expanded content' });
+    // Arg keys are the camelCase contract with the Rust command — renaming
+    // either side silently breaks variable expansion in every file.
+    expect(invoke).toHaveBeenCalledWith('process_markdown', {
+      content: '{{var}}',
+      globalVariables: { var: 'expanded content' },
+    });
     expect(result).toEqual({ processedContent: 'expanded content' });
   });
 
@@ -117,6 +123,10 @@ describe('variableApi.getExpandedMarkdown', () => {
   it('returns expanded content on success', async () => {
     vi.mocked(invoke).mockResolvedValue('fully expanded');
     const result = await variableApi.getExpandedMarkdown('{{var}}', { var: 'val' });
+    expect(invoke).toHaveBeenCalledWith('get_expanded_markdown', {
+      content: '{{var}}',
+      globalVariables: { var: 'val' },
+    });
     expect(result).toBe('fully expanded');
   });
 

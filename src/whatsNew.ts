@@ -25,27 +25,32 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.1.0',
+  version: '1.1.1',
   changes: [
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.fontFamilySettings.title',
-      descriptionKey: 'whatsNew.changes.fontFamilySettings.description',
+      titleKey: 'whatsNew.changes.githubAlerts.title',
+      descriptionKey: 'whatsNew.changes.githubAlerts.description',
     },
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.codeBlockMath.title',
-      descriptionKey: 'whatsNew.changes.codeBlockMath.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.emojiShortcodes.title',
+      descriptionKey: 'whatsNew.changes.emojiShortcodes.description',
     },
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.csvTablePaste.title',
-      descriptionKey: 'whatsNew.changes.csvTablePaste.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.revealInFolder.title',
+      descriptionKey: 'whatsNew.changes.revealInFolder.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.dependencyUpdates.title',
-      descriptionKey: 'whatsNew.changes.dependencyUpdates.description',
+      titleKey: 'whatsNew.changes.pdfExport.title',
+      descriptionKey: 'whatsNew.changes.pdfExport.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.editingFixes.title',
+      descriptionKey: 'whatsNew.changes.editingFixes.description',
     },
   ],
 };

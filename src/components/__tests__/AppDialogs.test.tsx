@@ -131,8 +131,11 @@ describe('AppDialogs', () => {
     expect(screen.getByText('File saved!')).toBeInTheDocument();
   });
 
-  // T-AD-02: snackbar hidden when closed
+  // T-AD-02: snackbar hidden when closed. The message must be non-empty —
+  // with the default empty message this test passed even if the open prop
+  // wiring was broken, because there was no text to find either way.
   it('T-AD-02: snackbar is not visible when closed', () => {
+    props.snackbar = { open: false, message: 'File saved!', severity: 'success' };
     render(<AppDialogs {...props} />);
     expect(screen.queryByText('File saved!')).not.toBeInTheDocument();
   });

@@ -87,9 +87,7 @@ describe('MarkdownToolbar', () => {
     const nullRef: React.RefObject<editor.IStandaloneCodeEditor | null> = { current: null };
     render(<MarkdownToolbar editorRef={nullRef} />);
     const buttons = screen.getAllByRole('button');
-    // Click bold - should not throw
-    fireEvent.click(buttons[1]);
-    // No error means pass
+    expect(() => fireEvent.click(buttons[1])).not.toThrow();
   });
 
   // T-MT-06: unordered list button routes through the line-prefix path

@@ -28,7 +28,10 @@ export function classifyPaste(htmlData: string, plainText: string): PasteClassif
 }
 
 function tryConvertHtmlTable(htmlData: string): string | null {
-  if (!htmlData || !htmlData.includes('<table') || !htmlData.includes('</table>')) {
+  // Tag names are case-insensitive; older apps put uppercase <TABLE> on the
+  // clipboard. Matches detectHtmlTable in tableConverter.ts.
+  const lower = htmlData.toLowerCase();
+  if (!htmlData || !lower.includes('<table') || !lower.includes('</table>')) {
     return null;
   }
 
@@ -47,8 +50,22 @@ function tryConvertHtmlTable(htmlData: string): string | null {
 }
 
 function tryConvertDelimitedText(plainText: string): string | null {
-  if (!plainText || (!plainText.includes('\t') && !plainText.includes(','))) {
+  const hasTab = plainText.includes('\t');
+  if (!plainText || (!hasTab && !plainText.includes(','))) {
     return null;
+  }
+
+  // A single comma-bearing line is far more likely to be prose ("hello,
+  // world") than a CSV table, and under tableConversion:'auto' converting it
+  // produced a bodyless two-row table out of ordinary text. Require a second
+  // line before treating comma-only text as CSV. Tab-separated text keeps
+  // single-line conversion — tabs don't occur in prose pastes, and a single
+  // Excel row is a legitimate table source.
+  if (!hasTab) {
+    const nonEmptyLines = plainText.split(/\r?\n/).filter((l) => l.trim() !== '');
+    if (nonEmptyLines.length < 2) {
+      return null;
+    }
   }
 
   let markdownTable: string;

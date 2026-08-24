@@ -23,6 +23,25 @@ How to build, run, and test Bokuchi locally.
    npm run tauri:dev
    ```
 
+## npm Configuration
+
+This repository commits a project-level `.npmrc` with supply-chain protections:
+
+- `ignore-scripts=true` — npm does not run install scripts (`postinstall`, etc.)
+  of dependencies. This protects against malicious packages. No current
+  dependency requires install scripts. If you add a dependency that fails at
+  runtime with a "bindings/binary not found" error, run its scripts explicitly:
+  ```bash
+  npm rebuild <package-name>
+  ```
+- `min-release-age=3` — `npm install` / `npm update` will not pick up package
+  versions published less than 3 days ago, to avoid freshly compromised
+  releases. Requires npm >= 11.10; older npm silently ignores it.
+- `audit=true` — runs a security audit on install.
+
+Please do not remove these settings. If a new dependency genuinely needs
+install scripts, raise it in the PR so it can be allowed deliberately.
+
 ## Commands
 
 ```bash

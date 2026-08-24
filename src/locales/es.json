@@ -460,6 +460,8 @@
       "resetError": "Error al restablecer configuración",
       "enableMarp": "Marp (Presentaciones)",
       "enableMarpDescription": "Previsualizar diapositivas Markdown con marp: true como presentación.",
+      "enableEmoji": "Códigos cortos de emoji",
+      "enableEmojiDescription": "Convierte los códigos cortos de emoji de GitHub como :rocket: en emojis (🚀).",
       "marpThemeFolder": "Carpeta de temas de Marp",
       "marpThemeFolderDescription": "Registra temas personalizados de Marp desde una carpeta de archivos CSS. Cada archivo con un encabezado /* @theme name */ se podrá seleccionar en una diapositiva mediante la directiva theme:.",
       "marpThemeFolderBrowse": "Elegir carpeta…",
@@ -596,6 +598,10 @@
   "tabs": {
     "copyFilePath": "Copiar ruta del archivo",
     "copyFileName": "Copiar nombre del archivo",
+    "revealInFinder": "Mostrar en Finder",
+    "revealInFileExplorer": "Mostrar en el Explorador de archivos",
+    "openContainingFolder": "Abrir carpeta contenedora",
+    "revealFailed": "Error al abrir la ubicación del archivo",
     "pinTab": "Fijar pestaña",
     "unpinTab": "Desfijar pestaña",
     "closeTab": "Cerrar pestaña",
@@ -616,21 +622,25 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Fuentes personalizadas para el editor y la vista previa",
-        "description": "Ahora puedes elegir las fuentes del editor y de la vista previa entre las instaladas en tu equipo. La fuente de la vista previa también se aplica a las exportaciones a HTML y PDF."
+      "githubAlerts": {
+        "title": "Alertas de GitHub",
+        "description": "Las citas como > [!NOTE] o > [!WARNING] ahora se muestran como recuadros de aviso al estilo de GitHub en la vista previa y en las exportaciones a HTML y PDF."
       },
-      "codeBlockMath": {
-        "title": "Corrección de la visualización de bloques de código",
-        "description": "El texto con $ dentro de los bloques de código ya no se muestra por error como una fórmula matemática cuando el documento contiene marcas ``` sin emparejar."
+      "emojiShortcodes": {
+        "title": "Códigos cortos de emoji",
+        "description": "Los códigos cortos de emoji de GitHub como :rocket: ahora se convierten en emoji (🚀) en la vista previa y las exportaciones. Se puede desactivar en Configuración > Avanzado."
       },
-      "csvTablePaste": {
-        "title": "Corrección al pegar CSV",
-        "description": "Los datos CSV con campos entrecomillados (que contienen comas, comillas o saltos de línea) ahora se convierten correctamente en tablas Markdown al pegarlos."
+      "revealInFolder": {
+        "title": "Mostrar en Finder / Explorador de archivos",
+        "description": "Abre la ubicación de un archivo en el administrador de archivos del sistema desde el menú contextual de la pestaña o del árbol de archivos."
       },
-      "dependencyUpdates": {
-        "title": "Actualizaciones de dependencias",
-        "description": "Se actualizaron las bibliotecas incluidas a sus últimas versiones."
+      "pdfExport": {
+        "title": "Mejoras en la exportación a PDF",
+        "description": "Las exportaciones a PDF de documentos con muchas imágenes ahora son mucho más pequeñas, y se muestra el progreso mientras se genera el PDF."
+      },
+      "editingFixes": {
+        "title": "Correcciones de edición",
+        "description": "Se corrigió que el texto con comas se convirtiera en una tabla al pegarlo, que líneas de los bloques de código aparecieran como encabezados en el esquema y que editar tablas desde la vista previa reescribiera los finales de línea."
       }
     }
   },

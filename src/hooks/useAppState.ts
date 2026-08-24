@@ -8,6 +8,7 @@ import { SettingsFocusTarget } from '../types/settingsFocus';
 import { useEditorFocus } from './useEditorFocus';
 import { useFolderTree } from './useFolderTree';
 import { rotateViewMode as rotateViewModeUtil } from '../utils/viewModeUtils';
+import { revealInFileManager } from '../utils/revealInFileManager';
 
 // Extracted sub-hooks
 import { useSettings } from './useSettings';
@@ -328,6 +329,20 @@ export const useAppState = () => {
       setSnackbar({ open: true, message: t('tabs.copyFailed'), severity: 'error' });
     }
   }, [tabs, t]);
+
+  const handleRevealInFileManager = useCallback(async (filePath: string) => {
+    try {
+      await revealInFileManager(filePath);
+    } catch {
+      setSnackbar({ open: true, message: t('tabs.revealFailed'), severity: 'error' });
+    }
+  }, [t]);
+
+  const handleTabRevealInFileManager = useCallback((tabId: string) => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (!tab?.filePath || tab.isNew) return;
+    handleRevealInFileManager(tab.filePath);
+  }, [tabs, handleRevealInFileManager]);
 
   const handleCopyFileName = useCallback(async (tabId: string) => {
     const tab = tabs.find(t => t.id === tabId);
@@ -666,6 +681,8 @@ export const useAppState = () => {
     handleToggleTabPinned,
     handleCopyFilePath,
     handleCopyFileName,
+    handleRevealInFileManager,
+    handleTabRevealInFileManager,
     handleCloseOtherTabs,
     handleCloseTabsToRight,
     handleCloseAllTabs,

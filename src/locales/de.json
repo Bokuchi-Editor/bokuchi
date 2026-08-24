@@ -460,6 +460,8 @@
       "resetError": "Zurücksetzen der Einstellungen fehlgeschlagen",
       "enableMarp": "Marp (Präsentationen)",
       "enableMarpDescription": "Markdown-Folien mit marp: true als Präsentation in der Vorschau anzeigen.",
+      "enableEmoji": "Emoji-Kurzcodes",
+      "enableEmojiDescription": "GitHub-Emoji-Kurzcodes wie :rocket: in Emojis (🚀) umwandeln.",
       "marpThemeFolder": "Marp-Themenordner",
       "marpThemeFolderDescription": "Registriere benutzerdefinierte Marp-Themes aus einem Ordner mit CSS-Dateien. Jede Datei mit einem /* @theme name */-Header wird in einer Folie über die theme:-Direktive auswählbar.",
       "marpThemeFolderBrowse": "Ordner auswählen…",
@@ -596,6 +598,10 @@
   "tabs": {
     "copyFilePath": "Dateipfad kopieren",
     "copyFileName": "Dateiname kopieren",
+    "revealInFinder": "Im Finder anzeigen",
+    "revealInFileExplorer": "Im Explorer anzeigen",
+    "openContainingFolder": "Enthaltenden Ordner öffnen",
+    "revealFailed": "Dateispeicherort konnte nicht geöffnet werden",
     "pinTab": "Tab anheften",
     "unpinTab": "Tab lösen",
     "closeTab": "Tab schließen",
@@ -616,21 +622,25 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Eigene Schriftarten für Editor und Vorschau",
-        "description": "Sie können die Schriftarten für Editor und Vorschau jetzt aus den auf Ihrem Rechner installierten Schriftarten wählen. Die Vorschau-Schriftart gilt auch für den HTML- und PDF-Export."
+      "githubAlerts": {
+        "title": "GitHub-Alerts",
+        "description": "Zitatblöcke wie > [!NOTE] oder > [!WARNING] werden jetzt in der Vorschau sowie im HTML- und PDF-Export als Hinweisboxen im GitHub-Stil dargestellt."
       },
-      "codeBlockMath": {
-        "title": "Korrektur der Codeblock-Darstellung",
-        "description": "Text mit $ innerhalb von Codeblöcken wird nicht mehr fälschlich als mathematische Formel dargestellt, wenn das Dokument nicht gepaarte ```-Zäune enthält."
+      "emojiShortcodes": {
+        "title": "Emoji-Shortcodes",
+        "description": "GitHub-Emoji-Shortcodes wie :rocket: werden jetzt in der Vorschau und in Exporten in Emoji (🚀) umgewandelt. Kann unter Einstellungen > Erweitert deaktiviert werden."
       },
-      "csvTablePaste": {
-        "title": "Korrektur beim Einfügen von CSV-Daten",
-        "description": "CSV-Daten mit Feldern in Anführungszeichen (mit Kommas, Anführungszeichen oder Zeilenumbrüchen) werden beim Einfügen jetzt korrekt in Markdown-Tabellen umgewandelt."
+      "revealInFolder": {
+        "title": "Im Finder / Datei-Explorer anzeigen",
+        "description": "Öffnen Sie den Speicherort einer Datei im Dateimanager des Systems über das Kontextmenü des Tabs oder des Dateibaums."
       },
-      "dependencyUpdates": {
-        "title": "Abhängigkeits-Updates",
-        "description": "Die mitgelieferten Bibliotheken wurden auf die neuesten Versionen aktualisiert."
+      "pdfExport": {
+        "title": "Verbesserungen beim PDF-Export",
+        "description": "PDF-Exporte bilderreicher Dokumente sind jetzt deutlich kleiner, und während der Erstellung wird der Fortschritt angezeigt."
+      },
+      "editingFixes": {
+        "title": "Korrekturen bei der Bearbeitung",
+        "description": "Behoben: Eingefügter Text mit Kommas wurde in eine Tabelle umgewandelt, Zeilen aus Codeblöcken erschienen als Überschriften in der Gliederung, und das Bearbeiten von Tabellen aus der Vorschau änderte die Zeilenenden."
       }
     }
   },

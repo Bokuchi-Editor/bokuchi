@@ -179,4 +179,80 @@ describe('RecentFilesDialog', () => {
     expect(onFileSelect).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  // Open the context menu on the readme.md list item and wait for it to appear
+  const openContextMenuOnReadme = async () => {
+    await waitFor(() => {
+      expect(screen.getByText('readme.md')).toBeInTheDocument();
+    });
+    fireEvent.contextMenu(screen.getByText('readme.md'));
+    await waitFor(() => {
+      expect(screen.getByText('recentFiles.removeFromRecent')).toBeInTheDocument();
+    });
+  };
+
+  // T-RFD-11: context menu "remove from recent" removes the right-clicked entry
+  it('T-RFD-11: removes the file and reloads the list via context menu', async () => {
+    renderDialog();
+    await openContextMenuOnReadme();
+    // Dialog-open effect already triggered exactly one load
+    expect(vi.mocked(storeApi.loadRecentFiles)).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByText('recentFiles.removeFromRecent'));
+
+    await waitFor(() => {
+      // Success snackbar proves the remove path (not the error catch) ran
+      expect(screen.getByText('recentFiles.removedFromRecent')).toBeInTheDocument();
+    });
+    // The path of the right-clicked item (not some other entry) is removed
+    expect(vi.mocked(storeApi.removeRecentFile)).toHaveBeenCalledWith('/docs/readme.md');
+    // List is reloaded after removal so the UI reflects the new store state
+    expect(vi.mocked(storeApi.loadRecentFiles)).toHaveBeenCalledTimes(2);
+    // Removing from recents must not open the file
+    expect(onFileSelect).not.toHaveBeenCalled();
+  });
+
+  // T-RFD-12: context menu "copy path" writes the file path to the clipboard
+  it('T-RFD-12: copies the file path to the clipboard via context menu', async () => {
+    // jsdom has no navigator.clipboard; install a stub the component can call
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+
+    renderDialog();
+    await openContextMenuOnReadme();
+
+    fireEvent.click(screen.getByText('recentFiles.copyPath'));
+
+    await waitFor(() => {
+      // Success snackbar proves the resolved-write branch ran
+      expect(screen.getByText('recentFiles.pathCopied')).toBeInTheDocument();
+    });
+    // The full path of the right-clicked item is what lands on the clipboard
+    expect(writeText).toHaveBeenCalledWith('/docs/readme.md');
+    // Copying a path must not touch the recent-files store
+    expect(vi.mocked(storeApi.removeRecentFile)).not.toHaveBeenCalled();
+  });
+
+  // T-RFD-13: clipboard write failure surfaces the error snackbar
+  it('T-RFD-13: shows copyFailed when the clipboard write rejects', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+
+    renderDialog();
+    await openContextMenuOnReadme();
+
+    fireEvent.click(screen.getByText('recentFiles.copyPath'));
+
+    await waitFor(() => {
+      // The catch branch must report the failure instead of claiming success
+      expect(screen.getByText('recentFiles.copyFailed')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('recentFiles.pathCopied')).not.toBeInTheDocument();
+  });
 });

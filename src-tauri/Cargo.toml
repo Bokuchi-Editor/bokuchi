@@ -1,6 +1,6 @@
 [package]
 name = "bokuchi"
-version = "1.1.0"
+version = "1.1.1"
 description = "A lightweight Markdown editor"
 authors = ["saita_shinya"]
 edition = "2024"
@@ -33,6 +33,10 @@ lazy_static = "1.4"
 sha2 = "0.10"
 url = "2.5"
 fontdb = "0.24.0"
+# PDF export post-processing: recompress the webview's Flate bitmap images as JPEG.
+lopdf = "0.36"
+flate2 = "1"
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
 
 [dev-dependencies]
 tempfile = "3"

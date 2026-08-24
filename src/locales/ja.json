@@ -460,6 +460,8 @@
       "resetError": "設定のリセットに失敗しました",
       "enableMarp": "Marp（プレゼンテーション）",
       "enableMarpDescription": "marp: true フロントマターを持つMarkdownスライドをプレゼンテーションとしてプレビューします。",
+      "enableEmoji": "絵文字ショートコード",
+      "enableEmojiDescription": ":rocket: のような GitHub 絵文字ショートコードを絵文字（🚀）に変換します。",
       "marpThemeFolder": "Marp テーマフォルダ",
       "marpThemeFolderDescription": "CSSファイルを集めたフォルダからカスタムMarpテーマを登録します。/* @theme 名前 */ ヘッダーを持つファイルが、スライドの theme: ディレクティブで選択できるようになります。",
       "marpThemeFolderBrowse": "フォルダを選択…",
@@ -619,6 +621,10 @@
   "tabs": {
     "copyFilePath": "ファイルパスをコピー",
     "copyFileName": "ファイル名をコピー",
+    "revealInFinder": "Finderで表示",
+    "revealInFileExplorer": "エクスプローラーで表示",
+    "openContainingFolder": "ファイルの場所を開く",
+    "revealFailed": "ファイルの場所を開けませんでした",
     "pinTab": "タブをピン留め",
     "unpinTab": "タブのピン留めを解除",
     "closeTab": "タブを閉じる",
@@ -639,21 +645,25 @@
       "improvement": "改善"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "エディターとプレビューのフォント設定",
-        "description": "設定 > エディターで、エディターとプレビューのフォントをインストール済みフォントから選べるようになりました。プレビューのフォントは HTML/PDF エクスポートにも適用されます。"
+      "githubAlerts": {
+        "title": "GitHub アラート",
+        "description": "> [!NOTE] や > [!WARNING] などの引用ブロックが、GitHub スタイルの注意書きボックスとしてプレビューと HTML/PDF エクスポートに表示されるようになりました。"
       },
-      "codeBlockMath": {
-        "title": "コードブロック表示の修正",
-        "description": "対応の取れていない ``` フェンスを含むドキュメントで、コードブロック内の $ を含むテキストが数式として表示されてしまう問題を修正しました。"
+      "emojiShortcodes": {
+        "title": "絵文字ショートコード",
+        "description": ":rocket: のような GitHub 絵文字ショートコードが絵文字（🚀）に変換されるようになりました。設定 > 高度な設定でオフにできます。"
       },
-      "csvTablePaste": {
-        "title": "CSV 貼り付けの修正",
-        "description": "引用符で囲まれたフィールド（カンマ・引用符・改行を含むセル）のある CSV データを貼り付けた際、正しく Markdown テーブルに変換されるようになりました。"
+      "revealInFolder": {
+        "title": "Finder／エクスプローラーで表示",
+        "description": "タブやファイルツリーのコンテキストメニューから、ファイルの場所を OS のファイルマネージャーで開けるようになりました。"
       },
-      "dependencyUpdates": {
-        "title": "依存関係の更新",
-        "description": "同梱ライブラリを最新バージョンに更新しました。"
+      "pdfExport": {
+        "title": "PDF エクスポートの改善",
+        "description": "画像を多く含む PDF のファイルサイズが大幅に小さくなり、生成中に進行状況が表示されるようになりました。"
+      },
+      "editingFixes": {
+        "title": "編集まわりの修正",
+        "description": "カンマを含むテキストの貼り付けが表に変換される問題、コードブロック内の行がアウトラインに見出しとして表示される問題、プレビューからの表編集で改行コードが書き換わる問題を修正しました。"
       }
     }
   },
@@ -673,6 +683,9 @@
     "export": "エクスポート",
     "exportAsHtml": "HTMLでエクスポート",
     "exportAsPdf": "PDFでエクスポート",
+    "exportingPdf": "PDFを生成中…",
+    "pdfExported": "PDFをエクスポートしました",
+    "pdfExportFailed": "PDFのエクスポートに失敗しました",
     "previousSlide": "前のスライド",
     "nextSlide": "次のスライド",
     "reloadThemes": "テーマを再読み込み",

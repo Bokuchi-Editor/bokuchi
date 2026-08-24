@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { useRef } from 'react';
-import { usePreviewScrollSync } from './usePreviewScrollSync';
+import { usePreviewScrollSync } from '../usePreviewScrollSync';
 
 function sizeEl(el: HTMLElement) {
   Object.defineProperty(el, 'scrollHeight', { value: 1000, configurable: true });

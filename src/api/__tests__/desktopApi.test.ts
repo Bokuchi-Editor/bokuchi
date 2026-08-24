@@ -199,9 +199,13 @@ describe('desktopApi.readFileByPath', () => {
 // readFileFromPath
 // ---------------------------------------------------------------------------
 describe('desktopApi.readFileFromPath', () => {
+  // readFileFromPath deliberately goes through the FS *plugin* (readTextFile),
+  // unlike saveFileToPath which uses the Rust save_file command — this test
+  // pins that routing choice, not the (trivial) pass-through itself.
   it('reads via readTextFile', async () => {
     vi.mocked(readTextFile).mockResolvedValue('content');
     const result = await desktopApi.readFileFromPath('/file.md');
+    expect(readTextFile).toHaveBeenCalledWith('/file.md');
     expect(result).toBe('content');
   });
 
@@ -292,6 +296,9 @@ describe('desktopApi.getFileHash', () => {
     const hashInfo = { hash: 'abc', modified_time: 1000, file_size: 512 };
     vi.mocked(invoke).mockResolvedValue(hashInfo);
     const result = await desktopApi.getFileHash('/file.md');
+    // Command name + arg key are the contract with the Rust side; without
+    // this the test was a pure mock echo.
+    expect(invoke).toHaveBeenCalledWith('get_file_hash', { path: '/file.md' });
     expect(result).toEqual(hashInfo);
   });
 
@@ -531,6 +538,29 @@ describe('desktopApi.exportPdfFile', () => {
     vi.mocked(invoke).mockRejectedValue('raw failure');
     const result = await desktopApi.exportPdfFile('<html></html>', page);
     expect(result.error).toBe('Failed to export PDF file');
+  });
+
+  // T-DA-04: progress UI must start when the slow native pipeline starts —
+  // after the dialog is confirmed, never while it is still open or cancelled.
+  it('T-DA-04: fires onExportStarted after dialog confirm, before export_pdf', async () => {
+    const order: string[] = [];
+    vi.mocked(save).mockResolvedValue('/doc.pdf');
+    vi.mocked(invoke).mockImplementation(async () => {
+      order.push('invoke');
+    });
+    const onExportStarted = vi.fn(() => order.push('started'));
+
+    const result = await desktopApi.exportPdfFile('<html></html>', page, 'doc.pdf', onExportStarted);
+    expect(result.success).toBe(true);
+    expect(onExportStarted).toHaveBeenCalledTimes(1);
+    expect(order).toEqual(['started', 'invoke']);
+  });
+
+  it('T-DA-05: does not fire onExportStarted when the dialog is cancelled', async () => {
+    vi.mocked(save).mockResolvedValue(null);
+    const onExportStarted = vi.fn();
+    await desktopApi.exportPdfFile('<html></html>', page, 'doc.pdf', onExportStarted);
+    expect(onExportStarted).not.toHaveBeenCalled();
   });
 });
 

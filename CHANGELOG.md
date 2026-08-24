@@ -5,7 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...HEAD)
+
+## [1.1.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...v1.1.1) - 2026-08-24
+
+### Added
+
+- GitHub Alerts: `> [!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]` blockquotes now render as GitHub-style callout boxes with icons and accent colors, in the preview and in HTML/PDF exports. Behavior matches github.com (case-insensitive type, body required, top-level blockquotes only). (#488)
+- GitHub emoji shortcodes: `:rocket:` → 🚀 in the preview and exports, using GitHub's official gemoji list rendered as native emoji. Can be turned off under Settings > Advanced > Rendering. Shortcodes inside code are never converted. (#488)
+- "Reveal in Finder" / "Reveal in File Explorer" / "Open Containing Folder" (per OS) in the tab context menu and the explorer sidebar's file context menu, opening the OS file manager with the file selected.
+- PDF export now shows its progress: a "Generating PDF…" snackbar while the file is being produced and a confirmation (or error) when it finishes.
+
+### Changed
+
+- Updated dependencies, including `highlight.js` (11.11.1 → 11.12.0), `eslint`, the `typescript-eslint` group, and `@testing-library/user-event`.
+
+### Fixed
+
+- PDF exports of image-heavy documents are dramatically smaller. The system webview's print engine embeds re-rasterized images as huge uncompressed bitmaps; the exporter now recompresses them as JPEG afterwards, shrinking a reference Marp deck from 23 MB to about 3 MB with no resolution loss and transparency preserved.
+- Pasting a single line of ordinary text containing a comma (e.g. `hello, world`) no longer turns into an empty two-row table when table conversion is set to "auto". Single tab-separated lines (a copied spreadsheet row) still convert.
+- The outline panel no longer shows fake headings from inside code blocks when a backtick fence contains a `~~~` line (or a longer fence contains a shorter one): fence tracking now follows CommonMark's marker/length matching.
+- Editing a table cell from the preview no longer rewrites a CRLF document's line endings to LF (which made the whole file show as changed in diffs).
+- Renaming a file to a dot-prefixed (hidden) name is now rejected, closing a bypass of the hidden-file write protection; image paste/drop asset folders are likewise validated against path traversal.
 
 ## [1.1.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...v1.1.0) - 2026-08-11
 

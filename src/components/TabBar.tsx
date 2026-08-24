@@ -19,6 +19,7 @@ import { Close, Add, PushPin } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Tab as TabType } from '../types/tab';
 import { getTabDisplayTitle, formatFilePathForDisplay } from '../utils/pathUtils';
+import { getRevealMenuLabelKey } from '../utils/revealInFileManager';
 import {
   DndContext,
   closestCenter,
@@ -65,6 +66,7 @@ interface TabBarProps {
   onToggleTabPinned?: (tabId: string) => void;
   onCopyFilePath?: (tabId: string) => void;
   onCopyFileName?: (tabId: string) => void;
+  onRevealInFileManager?: (tabId: string) => void;
   onCloseOtherTabs?: (tabId: string) => void;
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
@@ -350,6 +352,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onToggleTabPinned,
   onCopyFilePath,
   onCopyFileName,
+  onRevealInFileManager,
   onCloseOtherTabs,
   onCloseTabsToRight,
   onCloseAllTabs,
@@ -397,6 +400,11 @@ const TabBar: React.FC<TabBarProps> = ({
     if (contextMenu) onCopyFileName?.(contextMenu.tabId);
     setContextMenu(null);
   }, [contextMenu, onCopyFileName]);
+
+  const handleRevealInFileManagerClick = useCallback(() => {
+    if (contextMenu) onRevealInFileManager?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onRevealInFileManager]);
 
   const handleTogglePinClick = useCallback(() => {
     if (contextMenu) onToggleTabPinned?.(contextMenu.tabId);
@@ -693,6 +701,12 @@ const TabBar: React.FC<TabBarProps> = ({
         </MenuItem>
         <MenuItem onClick={handleCopyFileNameClick}>
           {t('tabs.copyFileName')}
+        </MenuItem>
+        <MenuItem
+          onClick={handleRevealInFileManagerClick}
+          disabled={!contextTab?.filePath || contextTab?.isNew}
+        >
+          {t(getRevealMenuLabelKey())}
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleTogglePinClick}>

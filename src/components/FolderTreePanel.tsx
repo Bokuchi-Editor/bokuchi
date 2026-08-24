@@ -27,6 +27,7 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { FolderTreeNode } from '../types/folderTree';
+import { getRevealMenuLabelKey } from '../utils/revealInFileManager';
 
 interface FolderTreePanelProps {
   rootFolderName: string | null;
@@ -43,6 +44,7 @@ interface FolderTreePanelProps {
   collapsed?: boolean;
   width?: number;
   onRenameRequest?: (filePath: string) => void;
+  onRevealRequest?: (filePath: string) => void;
 }
 
 interface TreeNodeProps {
@@ -52,6 +54,7 @@ interface TreeNodeProps {
   onFileClick: (filePath: string) => void;
   onToggleExpand: (nodePath: string) => void;
   onRenameRequest?: (filePath: string) => void;
+  onRevealRequest?: (filePath: string) => void;
 }
 
 const TreeNode: React.FC<TreeNodeProps> = ({
@@ -61,6 +64,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onFileClick,
   onToggleExpand,
   onRenameRequest,
+  onRevealRequest,
 }) => {
   const { t } = useTranslation();
   const isActive = !node.isDirectory && activeFilePath && node.path === activeFilePath;
@@ -88,6 +92,11 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const handleRename = () => {
     setContextMenu(null);
     onRenameRequest?.(node.path);
+  };
+
+  const handleReveal = () => {
+    setContextMenu(null);
+    onRevealRequest?.(node.path);
   };
 
   return (
@@ -150,6 +159,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 onFileClick={onFileClick}
                 onToggleExpand={onToggleExpand}
                 onRenameRequest={onRenameRequest}
+                onRevealRequest={onRevealRequest}
               />
             ))}
           </List>
@@ -172,6 +182,12 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             </ListItemIcon>
             <ListItemText>{t('folderTree.rename')}</ListItemText>
           </MuiMenuItem>
+          <MuiMenuItem onClick={handleReveal}>
+            <ListItemIcon>
+              <FolderOpen fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t(getRevealMenuLabelKey())}</ListItemText>
+          </MuiMenuItem>
         </Menu>
       )}
     </>
@@ -193,6 +209,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
   collapsed = false,
   width = 280,
   onRenameRequest,
+  onRevealRequest,
 }) => {
   const { t } = useTranslation();
 
@@ -296,6 +313,7 @@ const FolderTreePanel: React.FC<FolderTreePanelProps> = ({
                 onFileClick={onFileClick}
                 onToggleExpand={onToggleExpand}
                 onRenameRequest={onRenameRequest}
+                onRevealRequest={onRevealRequest}
               />
             ))}
           </List>
