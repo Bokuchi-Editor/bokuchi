@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...HEAD)
+
+## [1.1.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...v1.1.1) - 2026-08-24
 
 ### Added
 
@@ -13,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub emoji shortcodes: `:rocket:` → 🚀 in the preview and exports, using GitHub's official gemoji list rendered as native emoji. Can be turned off under Settings > Advanced > Rendering. Shortcodes inside code are never converted. (#488)
 - "Reveal in Finder" / "Reveal in File Explorer" / "Open Containing Folder" (per OS) in the tab context menu and the explorer sidebar's file context menu, opening the OS file manager with the file selected.
 - PDF export now shows its progress: a "Generating PDF…" snackbar while the file is being produced and a confirmation (or error) when it finishes.
+
+### Changed
+
+- Updated dependencies, including `highlight.js` (11.11.1 → 11.12.0), `eslint`, the `typescript-eslint` group, and `@testing-library/user-event`.
 
 ### Fixed
 

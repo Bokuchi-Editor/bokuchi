@@ -622,21 +622,25 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Font Kustom untuk Editor dan Pratinjau",
-        "description": "Kini Anda dapat memilih font editor dan pratinjau dari font yang terpasang di komputer Anda. Font pratinjau juga berlaku untuk ekspor HTML dan PDF."
+      "githubAlerts": {
+        "title": "GitHub Alerts",
+        "description": "Kutipan seperti > [!NOTE] atau > [!WARNING] kini ditampilkan sebagai kotak sorotan bergaya GitHub di pratinjau serta ekspor HTML dan PDF."
       },
-      "codeBlockMath": {
-        "title": "Perbaikan Tampilan Blok Kode",
-        "description": "Teks yang mengandung $ di dalam blok kode tidak lagi keliru ditampilkan sebagai rumus matematika saat dokumen berisi tanda ``` yang tidak berpasangan."
+      "emojiShortcodes": {
+        "title": "Shortcode Emoji",
+        "description": "Shortcode emoji GitHub seperti :rocket: kini dikonversi menjadi emoji (🚀) di pratinjau dan ekspor. Dapat dinonaktifkan di Pengaturan > Lanjutan."
       },
-      "csvTablePaste": {
-        "title": "Perbaikan Tempel CSV",
-        "description": "Data CSV dengan bidang berkutip (berisi koma, tanda kutip, atau ganti baris) kini dikonversi dengan benar menjadi tabel Markdown saat ditempel."
+      "revealInFolder": {
+        "title": "Tampilkan di Finder / File Explorer",
+        "description": "Buka lokasi berkas di pengelola berkas sistem dari menu konteks tab atau pohon berkas."
       },
-      "dependencyUpdates": {
-        "title": "Pembaruan Dependensi",
-        "description": "Memperbarui pustaka bawaan ke versi terbaru."
+      "pdfExport": {
+        "title": "Peningkatan Ekspor PDF",
+        "description": "Ekspor PDF dokumen dengan banyak gambar kini jauh lebih kecil, dan progres ditampilkan saat PDF sedang dibuat."
+      },
+      "editingFixes": {
+        "title": "Perbaikan Pengeditan",
+        "description": "Memperbaiki teks berisi koma yang berubah menjadi tabel saat ditempel, judul palsu di outline dari blok kode, dan akhiran baris yang ditulis ulang saat menyunting tabel dari pratinjau."
       }
     }
   },

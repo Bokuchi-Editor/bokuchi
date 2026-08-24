@@ -622,21 +622,25 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Tuỳ chỉnh phông chữ cho trình soạn thảo và xem trước",
-        "description": "Giờ đây bạn có thể chọn phông chữ cho trình soạn thảo và bản xem trước từ các phông chữ đã cài trên máy. Phông chữ xem trước cũng được áp dụng khi xuất HTML và PDF."
+      "githubAlerts": {
+        "title": "GitHub Alerts",
+        "description": "Các khối trích dẫn như > [!NOTE] hoặc > [!WARNING] giờ đây hiển thị dưới dạng hộp chú thích kiểu GitHub trong bản xem trước và khi xuất HTML/PDF."
       },
-      "codeBlockMath": {
-        "title": "Sửa lỗi hiển thị khối mã",
-        "description": "Văn bản chứa $ trong khối mã không còn bị hiển thị nhầm thành công thức toán học khi tài liệu chứa các dấu ``` không khớp cặp."
+      "emojiShortcodes": {
+        "title": "Mã tắt emoji",
+        "description": "Các mã tắt emoji của GitHub như :rocket: giờ đây được chuyển thành emoji (🚀) trong bản xem trước và khi xuất. Có thể tắt trong Cài đặt > Nâng cao."
       },
-      "csvTablePaste": {
-        "title": "Sửa lỗi dán CSV",
-        "description": "Dữ liệu CSV có trường trong dấu ngoặc kép (chứa dấu phẩy, dấu ngoặc kép hoặc xuống dòng) giờ đây được chuyển đổi chính xác thành bảng Markdown khi dán."
+      "revealInFolder": {
+        "title": "Hiện trong Finder / File Explorer",
+        "description": "Mở vị trí tệp trong trình quản lý tệp của hệ điều hành từ menu ngữ cảnh của thẻ hoặc cây tệp."
       },
-      "dependencyUpdates": {
-        "title": "Cập nhật phụ thuộc",
-        "description": "Đã cập nhật các thư viện đi kèm lên phiên bản mới nhất."
+      "pdfExport": {
+        "title": "Cải thiện xuất PDF",
+        "description": "Tệp PDF xuất từ tài liệu nhiều hình ảnh giờ đây nhỏ hơn nhiều, và tiến trình được hiển thị trong khi tạo PDF."
+      },
+      "editingFixes": {
+        "title": "Sửa lỗi chỉnh sửa",
+        "description": "Đã sửa lỗi văn bản chứa dấu phẩy bị chuyển thành bảng khi dán, dòng trong khối mã hiển thị thành tiêu đề trong dàn ý, và việc chỉnh sửa bảng từ bản xem trước làm thay đổi ký tự xuống dòng."
       }
     }
   },

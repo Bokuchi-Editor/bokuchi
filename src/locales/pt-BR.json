@@ -622,21 +622,25 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Fontes personalizadas para o editor e a visualização",
-        "description": "Agora você pode escolher as fontes do editor e da visualização entre as instaladas no seu computador. A fonte da visualização também se aplica às exportações em HTML e PDF."
+      "githubAlerts": {
+        "title": "Alertas do GitHub",
+        "description": "Citações como > [!NOTE] ou > [!WARNING] agora aparecem como caixas de destaque no estilo do GitHub na visualização e nas exportações em HTML e PDF."
       },
-      "codeBlockMath": {
-        "title": "Correção na exibição de blocos de código",
-        "description": "Texto contendo $ dentro de blocos de código não é mais exibido por engano como fórmula matemática quando o documento contém marcas ``` sem par."
+      "emojiShortcodes": {
+        "title": "Atalhos de emoji",
+        "description": "Atalhos de emoji do GitHub como :rocket: agora são convertidos em emoji (🚀) na visualização e nas exportações. Pode ser desativado em Configurações > Avançado."
       },
-      "csvTablePaste": {
-        "title": "Correção ao colar CSV",
-        "description": "Dados CSV com campos entre aspas (contendo vírgulas, aspas ou quebras de linha) agora são convertidos corretamente em tabelas Markdown ao colar."
+      "revealInFolder": {
+        "title": "Mostrar no Finder / Explorador de Arquivos",
+        "description": "Abra o local de um arquivo no gerenciador de arquivos do sistema pelo menu de contexto da aba ou da árvore de arquivos."
       },
-      "dependencyUpdates": {
-        "title": "Atualizações de dependências",
-        "description": "Bibliotecas incluídas atualizadas para suas versões mais recentes."
+      "pdfExport": {
+        "title": "Melhorias na exportação de PDF",
+        "description": "Exportações de PDF de documentos com muitas imagens agora são bem menores, e o progresso é exibido enquanto o PDF é gerado."
+      },
+      "editingFixes": {
+        "title": "Correções de edição",
+        "description": "Corrigido: texto com vírgulas virava tabela ao colar, linhas de blocos de código apareciam como títulos no esboço e editar tabelas pela visualização reescrevia as quebras de linha."
       }
     }
   },

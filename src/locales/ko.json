@@ -622,21 +622,25 @@
       "improvement": "개선"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "편집기·미리보기 글꼴 설정",
-        "description": "편집기와 미리보기의 글꼴을 설치된 글꼴 중에서 선택할 수 있게 되었습니다. 미리보기 글꼴은 HTML/PDF 내보내기에도 적용됩니다."
+      "githubAlerts": {
+        "title": "GitHub Alerts",
+        "description": "> [!NOTE], > [!WARNING] 같은 인용 블록이 미리보기와 HTML/PDF 내보내기에서 GitHub 스타일 알림 상자로 표시됩니다."
       },
-      "codeBlockMath": {
-        "title": "코드 블록 표시 수정",
-        "description": "짝이 맞지 않는 ``` 펜스가 있는 문서에서 코드 블록 안의 $ 텍스트가 수식으로 잘못 렌더링되던 문제를 수정했습니다."
+      "emojiShortcodes": {
+        "title": "이모지 숏코드",
+        "description": ":rocket: 같은 GitHub 이모지 숏코드가 미리보기와 내보내기에서 이모지(🚀)로 변환됩니다. 설정 > 고급에서 끌 수 있습니다."
       },
-      "csvTablePaste": {
-        "title": "CSV 붙여넣기 수정",
-        "description": "따옴표로 묶인 필드(쉼표, 따옴표, 줄바꿈 포함)가 있는 CSV 데이터를 붙여넣을 때 Markdown 표로 올바르게 변환되도록 수정했습니다."
+      "revealInFolder": {
+        "title": "Finder / 파일 탐색기에서 보기",
+        "description": "탭이나 파일 트리의 컨텍스트 메뉴에서 파일 위치를 OS 파일 관리자로 열 수 있습니다."
       },
-      "dependencyUpdates": {
-        "title": "의존성 업데이트",
-        "description": "포함된 라이브러리를 최신 버전으로 업데이트했습니다."
+      "pdfExport": {
+        "title": "PDF 내보내기 개선",
+        "description": "이미지가 많은 문서의 PDF 내보내기 크기가 크게 줄었고, PDF 생성 중 진행 상황이 표시됩니다."
+      },
+      "editingFixes": {
+        "title": "편집 관련 수정",
+        "description": "쉼표가 포함된 텍스트가 붙여넣기 시 표로 변환되던 문제, 코드 블록의 줄이 개요에 제목으로 표시되던 문제, 미리보기에서 표를 편집하면 줄 끝 문자가 바뀌던 문제를 수정했습니다."
       }
     }
   },

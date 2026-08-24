@@ -645,21 +645,25 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "fontFamilySettings": {
-        "title": "Custom Fonts for Editor and Preview",
-        "description": "You can now choose the editor and preview fonts from the fonts installed on your machine, in Settings > Editor. The preview font also applies to HTML and PDF exports."
+      "githubAlerts": {
+        "title": "GitHub Alerts",
+        "description": "Blockquotes like > [!NOTE] or > [!WARNING] now render as GitHub-style callout boxes in the preview and in HTML/PDF exports."
       },
-      "codeBlockMath": {
-        "title": "Code Block Rendering Fix",
-        "description": "Text containing $ inside code blocks is no longer misrendered as a math formula when the document contains unmatched ``` fences."
+      "emojiShortcodes": {
+        "title": "Emoji Shortcodes",
+        "description": "GitHub emoji shortcodes like :rocket: are now converted to emoji (🚀) in the preview and exports. Can be turned off in Settings > Advanced."
       },
-      "csvTablePaste": {
-        "title": "CSV Table Paste Fix",
-        "description": "Pasted CSV data with quoted fields (containing commas, quotes, or line breaks) is now correctly converted to a Markdown table."
+      "revealInFolder": {
+        "title": "Reveal in Finder / File Explorer",
+        "description": "Open a file's location in the OS file manager from the tab or file tree context menu."
       },
-      "dependencyUpdates": {
-        "title": "Dependency Updates",
-        "description": "Updated bundled libraries to their latest versions."
+      "pdfExport": {
+        "title": "PDF Export Improvements",
+        "description": "PDF exports of image-heavy documents are now much smaller, and progress is shown while the PDF is being generated."
+      },
+      "editingFixes": {
+        "title": "Editing Fixes",
+        "description": "Fixed plain text with commas turning into a table when pasted, fake outline headings from code blocks, and line endings being rewritten when editing tables from the preview."
       }
     }
   },
