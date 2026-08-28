@@ -622,6 +622,10 @@
       "improvement": "改进"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "复选框对齐",
+        "description": "预览中任务列表的复选框现在与文字对齐，并随缩放和字体大小同步缩放。"
+      },
       "githubAlerts": {
         "title": "GitHub 提示块",
         "description": "> [!NOTE]、> [!WARNING] 等引用块现在会以 GitHub 风格的提示框显示在预览及 HTML/PDF 导出中。"

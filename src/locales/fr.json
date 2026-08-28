@@ -622,6 +622,10 @@
       "improvement": "Amélioration"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Alignement des cases à cocher",
+        "description": "Les cases à cocher des listes de tâches sont désormais alignées avec le texte dans l'aperçu et s'adaptent au zoom et à la taille de police."
+      },
       "githubAlerts": {
         "title": "Alertes GitHub",
         "description": "Les citations comme > [!NOTE] ou > [!WARNING] s'affichent désormais sous forme d'encadrés de style GitHub dans l'aperçu et dans les exports HTML et PDF."

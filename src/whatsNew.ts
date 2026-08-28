@@ -52,5 +52,10 @@ export const whatsNewContent: WhatsNewContent = {
       titleKey: 'whatsNew.changes.editingFixes.title',
       descriptionKey: 'whatsNew.changes.editingFixes.description',
     },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.checkboxAlignment.title',
+      descriptionKey: 'whatsNew.changes.checkboxAlignment.description',
+    },
   ],
 };

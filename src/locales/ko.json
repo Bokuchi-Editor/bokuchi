@@ -622,6 +622,10 @@
       "improvement": "개선"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "체크박스 정렬",
+        "description": "미리보기에서 작업 목록의 체크박스가 텍스트와 정렬되고 확대/축소 및 글꼴 크기에 맞게 조정됩니다."
+      },
       "githubAlerts": {
         "title": "GitHub Alerts",
         "description": "> [!NOTE], > [!WARNING] 같은 인용 블록이 미리보기와 HTML/PDF 내보내기에서 GitHub 스타일 알림 상자로 표시됩니다."

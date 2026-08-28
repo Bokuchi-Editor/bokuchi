@@ -622,6 +622,10 @@
       "improvement": "Cải tiến"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Căn chỉnh hộp kiểm",
+        "description": "Hộp kiểm trong danh sách công việc giờ được căn thẳng với văn bản trong bản xem trước và thay đổi theo mức thu phóng cùng cỡ chữ."
+      },
       "githubAlerts": {
         "title": "GitHub Alerts",
         "description": "Các khối trích dẫn như > [!NOTE] hoặc > [!WARNING] giờ đây hiển thị dưới dạng hộp chú thích kiểu GitHub trong bản xem trước và khi xuất HTML/PDF."

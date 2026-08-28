@@ -622,6 +622,10 @@
       "improvement": "Mejora"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Alineación de casillas de verificación",
+        "description": "Las casillas de las listas de tareas ahora se alinean con el texto en la vista previa y se escalan con el zoom y el tamaño de fuente."
+      },
       "githubAlerts": {
         "title": "Alertas de GitHub",
         "description": "Las citas como > [!NOTE] o > [!WARNING] ahora se muestran como recuadros de aviso al estilo de GitHub en la vista previa y en las exportaciones a HTML y PDF."

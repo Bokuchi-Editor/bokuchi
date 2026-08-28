@@ -645,6 +645,10 @@
       "improvement": "Improvement"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Checkbox Alignment",
+        "description": "Task-list checkboxes in the preview now line up with their text and scale with zoom and font size."
+      },
       "githubAlerts": {
         "title": "GitHub Alerts",
         "description": "Blockquotes like > [!NOTE] or > [!WARNING] now render as GitHub-style callout boxes in the preview and in HTML/PDF exports."

@@ -645,6 +645,10 @@
       "improvement": "改善"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "チェックボックスの位置揃え",
+        "description": "プレビューのタスクリストのチェックボックスが文字と揃い、ズームや文字サイズに追従するようになりました。"
+      },
       "githubAlerts": {
         "title": "GitHub アラート",
         "description": "> [!NOTE] や > [!WARNING] などの引用ブロックが、GitHub スタイルの注意書きボックスとしてプレビューと HTML/PDF エクスポートに表示されるようになりました。"

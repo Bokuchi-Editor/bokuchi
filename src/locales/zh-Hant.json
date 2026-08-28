@@ -622,6 +622,10 @@
       "improvement": "改進"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "核取方塊對齊",
+        "description": "預覽中工作清單的核取方塊現在會與文字對齊，並隨縮放與字型大小同步縮放。"
+      },
       "githubAlerts": {
         "title": "GitHub 提示區塊",
         "description": "> [!NOTE]、> [!WARNING] 等引用區塊現在會以 GitHub 風格的提示框顯示在預覽及 HTML/PDF 匯出中。"

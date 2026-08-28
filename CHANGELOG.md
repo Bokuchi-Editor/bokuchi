@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The outline panel no longer shows fake headings from inside code blocks when a backtick fence contains a `~~~` line (or a longer fence contains a shorter one): fence tracking now follows CommonMark's marker/length matching.
 - Editing a table cell from the preview no longer rewrites a CRLF document's line endings to LF (which made the whole file show as changed in diffs).
 - Renaming a file to a dot-prefixed (hidden) name is now rejected, closing a bypass of the hidden-file write protection; image paste/drop asset folders are likewise validated against path traversal.
+- Task-list checkboxes in the preview now line up with their text and scale with the preview font size and zoom. They previously sat a few pixels above the first line of the label and kept their native ~13 px size regardless of zoom; the box is now sized in `em` (with `font-size: inherit` — form controls don't inherit the font size) and centered against the label's first line box.
 
 ## [1.1.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.0.1...v1.1.0) - 2026-08-11
 
