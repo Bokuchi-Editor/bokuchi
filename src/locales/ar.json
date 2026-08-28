@@ -622,6 +622,10 @@
       "improvement": "تحسين"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "محاذاة مربعات الاختيار",
+        "description": "أصبحت مربعات الاختيار في قوائم المهام محاذية للنص في المعاينة وتتغير مع التكبير وحجم الخط."
+      },
       "githubAlerts": {
         "title": "تنبيهات GitHub",
         "description": "أصبحت كتل الاقتباس مثل > [!NOTE] أو > [!WARNING] تُعرض الآن كصناديق تنبيه بأسلوب GitHub في المعاينة وفي تصدير HTML وPDF."

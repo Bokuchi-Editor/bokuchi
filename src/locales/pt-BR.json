@@ -622,6 +622,10 @@
       "improvement": "Melhoria"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Alinhamento das caixas de seleção",
+        "description": "As caixas de seleção das listas de tarefas agora ficam alinhadas com o texto na pré-visualização e acompanham o zoom e o tamanho da fonte."
+      },
       "githubAlerts": {
         "title": "Alertas do GitHub",
         "description": "Citações como > [!NOTE] ou > [!WARNING] agora aparecem como caixas de destaque no estilo do GitHub na visualização e nas exportações em HTML e PDF."

@@ -622,6 +622,10 @@
       "improvement": "Peningkatan"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Perataan Kotak Centang",
+        "description": "Kotak centang daftar tugas kini sejajar dengan teks di pratinjau dan mengikuti zoom serta ukuran font."
+      },
       "githubAlerts": {
         "title": "GitHub Alerts",
         "description": "Kutipan seperti > [!NOTE] atau > [!WARNING] kini ditampilkan sebagai kotak sorotan bergaya GitHub di pratinjau serta ekspor HTML dan PDF."

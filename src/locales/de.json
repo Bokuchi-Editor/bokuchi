@@ -622,6 +622,10 @@
       "improvement": "Verbesserung"
     },
     "changes": {
+      "checkboxAlignment": {
+        "title": "Checkbox-Ausrichtung",
+        "description": "Kontrollkästchen in Aufgabenlisten sind in der Vorschau jetzt am Text ausgerichtet und skalieren mit Zoom und Schriftgröße."
+      },
       "githubAlerts": {
         "title": "GitHub-Alerts",
         "description": "Zitatblöcke wie > [!NOTE] oder > [!WARNING] werden jetzt in der Vorschau sowie im HTML- und PDF-Export als Hinweisboxen im GitHub-Stil dargestellt."

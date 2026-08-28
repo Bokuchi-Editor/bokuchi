@@ -110,10 +110,18 @@
 }
 
 .markdown-preview .markdown-checkbox {
+  /* All lengths in em so the box tracks the preview font size (zoom changes
+     the preview font size, not CSS zoom). font-size: inherit is required:
+     form controls default to a fixed UA font-size, which would pin 1em to
+     ~13px. margin-top centers the box within the first line box of
+     .checkbox-text: (1.4em line height - 1em box) / 2. */
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
   margin-right: 0.5em;
-  margin-top: 0.1em;
+  margin-top: 0.2em;
   cursor: pointer;
-  transform: scale(1.2);
   accent-color: #1976d2;
 }
 
