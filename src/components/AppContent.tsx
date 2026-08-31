@@ -63,6 +63,8 @@ interface AppContentProps {
 
   // Outline
   outlineDisplayMode: OutlineDisplayMode;
+  // Which side the outline panel attaches to ('left' or 'right').
+  outlinePosition: 'left' | 'right';
   // Master on/off (persisted). When false the outline never renders.
   outlineEnabled: boolean;
   outlinePanelOpen: boolean;
@@ -88,6 +90,7 @@ interface AppContentProps {
   onCopyFileName?: (tabId: string) => void;
   onRevealInFileManager?: (tabId: string) => void;
   onCloseOtherTabs?: (tabId: string) => void;
+  onCloseTabsToLeft?: (tabId: string) => void;
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
   tabCloseButtonPosition?: 'left' | 'right';
@@ -133,6 +136,7 @@ const AppContent: React.FC<AppContentProps> = ({
   editorSettings,
   scrollSyncMode,
   outlineDisplayMode,
+  outlinePosition,
   outlineEnabled,
   outlinePanelOpen,
   onOutlinePanelClose,
@@ -155,6 +159,7 @@ const AppContent: React.FC<AppContentProps> = ({
   onCopyFileName,
   onRevealInFileManager,
   onCloseOtherTabs,
+  onCloseTabsToLeft,
   onCloseTabsToRight,
   onCloseAllTabs,
   tabCloseButtonPosition,
@@ -187,6 +192,38 @@ const AppContent: React.FC<AppContentProps> = ({
   const [sidebarOverlayOpen, setSidebarOverlayOpen] = useState(false);
 
   const headings = useOutlineHeadings(activeTab?.content);
+
+  // 大纲面板宽度（按 tabId 独立维护，不持久化）
+  const [outlineWidths, setOutlineWidths] = useState<Record<string, number>>({});
+  const currentOutlineWidth = (activeTabId && outlineWidths[activeTabId]) || 240;
+  const outlineResizeRef = useRef<{ startX: number; startWidth: number } | null>(null);
+
+  const handleOutlineResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    const tabId = activeTabId;
+    if (!tabId) return;
+    outlineResizeRef.current = { startX: e.clientX, startWidth: currentOutlineWidth };
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (!outlineResizeRef.current) return;
+      const delta = ev.clientX - outlineResizeRef.current.startX;
+      const newWidth = outlinePosition === 'left'
+        ? outlineResizeRef.current.startWidth + delta
+        : outlineResizeRef.current.startWidth - delta;
+      const clamped = Math.max(150, Math.min(500, newWidth));
+      setOutlineWidths(prev => ({ ...prev, [tabId]: clamped }));
+    };
+    const handleMouseUp = () => {
+      outlineResizeRef.current = null;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [activeTabId, currentOutlineWidth, outlinePosition]);
 
   // Restore scroll position when switching tabs
   useEffect(() => {
@@ -329,6 +366,7 @@ const AppContent: React.FC<AppContentProps> = ({
         onCopyFileName={onCopyFileName}
         onRevealInFileManager={onRevealInFileManager}
         onCloseOtherTabs={onCloseOtherTabs}
+        onCloseTabsToLeft={onCloseTabsToLeft}
         onCloseTabsToRight={onCloseTabsToRight}
         onCloseAllTabs={onCloseAllTabs}
         closeButtonPosition={tabCloseButtonPosition}
@@ -430,6 +468,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onCopyFileName={onCopyFileName}
             onRevealInFileManager={onRevealInFileManager}
             onCloseOtherTabs={onCloseOtherTabs}
+            onCloseTabsToLeft={onCloseTabsToLeft}
             onCloseTabsToRight={onCloseTabsToRight}
             onCloseAllTabs={onCloseAllTabs}
             closeButtonPosition={tabCloseButtonPosition}
@@ -529,6 +568,7 @@ const AppContent: React.FC<AppContentProps> = ({
             onCopyFileName={onCopyFileName}
             onRevealInFileManager={onRevealInFileManager}
             onCloseOtherTabs={onCloseOtherTabs}
+            onCloseTabsToLeft={onCloseTabsToLeft}
             onCloseTabsToRight={onCloseTabsToRight}
             onCloseAllTabs={onCloseAllTabs}
             closeButtonPosition={tabCloseButtonPosition}
@@ -557,6 +597,28 @@ const AppContent: React.FC<AppContentProps> = ({
             </Box>
           ) : (
             <>
+              {/* Persistent outline panel — left side */}
+              {showPersistentOutline && outlinePosition === 'left' && (
+                <>
+                  <OutlinePanel
+                    headings={headings}
+                    onHeadingClick={handleHeadingClick}
+                    position="left"
+                    width={currentOutlineWidth}
+                  />
+                  <Box
+                    onMouseDown={handleOutlineResizeStart}
+                    sx={{
+                      width: '4px',
+                      cursor: 'col-resize',
+                      bgcolor: 'transparent',
+                      flexShrink: 0,
+                      '&:hover': { bgcolor: 'action.hover' },
+                      zIndex: 1,
+                    }}
+                  />
+                </>
+              )}
               {viewMode === 'split' && (
                 <>
                   <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden', borderRight: 1, borderColor: 'divider', boxSizing: 'border-box' }}>
@@ -681,18 +743,33 @@ const AppContent: React.FC<AppContentProps> = ({
                 </Box>
               )}
 
-              {/* Persistent outline panel */}
-              {showPersistentOutline && (
-                <OutlinePanel
-                  headings={headings}
-                  onHeadingClick={handleHeadingClick}
-                />
+              {/* Persistent outline panel — right side */}
+              {showPersistentOutline && outlinePosition === 'right' && (
+                <>
+                  <Box
+                    onMouseDown={handleOutlineResizeStart}
+                    sx={{
+                      width: '4px',
+                      cursor: 'col-resize',
+                      bgcolor: 'transparent',
+                      flexShrink: 0,
+                      '&:hover': { bgcolor: 'action.hover' },
+                      zIndex: 1,
+                    }}
+                  />
+                  <OutlinePanel
+                    headings={headings}
+                    onHeadingClick={handleHeadingClick}
+                    position="right"
+                    width={currentOutlineWidth}
+                  />
+                </>
               )}
 
               {/* Overlay outline drawer */}
               {showOverlayOutline && (
                 <Drawer
-                  anchor="right"
+                  anchor={outlinePosition}
                   variant="temporary"
                   open={outlinePanelOpen}
                   onClose={onOutlinePanelClose}
@@ -703,6 +780,7 @@ const AppContent: React.FC<AppContentProps> = ({
                     onHeadingClick={handleHeadingClick}
                     onClose={onOutlinePanelClose}
                     width={DRAWER_WIDTH_PX}
+                    position={outlinePosition}
                   />
                 </Drawer>
               )}

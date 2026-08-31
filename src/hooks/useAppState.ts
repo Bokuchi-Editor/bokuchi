@@ -370,6 +370,20 @@ export const useAppState = () => {
     }
   }, [tabs, removeTabs, startCloseQueue]);
 
+  const handleCloseTabsToLeft = useCallback((tabId: string) => {
+    const tabIndex = tabs.findIndex(t => t.id === tabId);
+    if (tabIndex === -1) return;
+    const targets = tabs.slice(0, tabIndex).filter(tab => !tab.isPinned);
+    const cleanIds = targets.filter(tab => !tab.isModified).map(tab => tab.id);
+    const dirtyIds = targets.filter(tab => tab.isModified).map(tab => tab.id);
+    if (cleanIds.length > 0) {
+      removeTabs(cleanIds);
+    }
+    if (dirtyIds.length > 0) {
+      startCloseQueue(dirtyIds);
+    }
+  }, [tabs, removeTabs, startCloseQueue]);
+
   const handleCloseTabsToRight = useCallback((tabId: string) => {
     const tabIndex = tabs.findIndex(t => t.id === tabId);
     if (tabIndex === -1) return;
@@ -684,6 +698,7 @@ export const useAppState = () => {
     handleRevealInFileManager,
     handleTabRevealInFileManager,
     handleCloseOtherTabs,
+    handleCloseTabsToLeft,
     handleCloseTabsToRight,
     handleCloseAllTabs,
     setGlobalVariables,

@@ -91,6 +91,17 @@ export const storeApi = {
     }
   },
 
+  // 检查用户是否曾手动设置过语言（用于决定是否根据系统语言自动检测）
+  async hasLanguageSetting(): Promise<boolean> {
+    try {
+      const storeInstance = await getStore();
+      const settings = await storeInstance.get('appSettings') as AppSettings | null;
+      return settings?.interface?.language != null;
+    } catch {
+      return false;
+    }
+  },
+
   // Save zoom level
   async saveZoomLevel(zoomLevel: number): Promise<void> {
     try {
