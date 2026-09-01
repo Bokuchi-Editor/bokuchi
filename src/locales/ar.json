@@ -376,6 +376,8 @@
       "fontFamilyDescription": "اختر خطًا مثبتًا للمحرر. \"الافتراضي\" يستخدم الخط أحادي المسافة القياسي.",
       "previewFontFamily": "خط المعاينة",
       "previewFontFamilyDescription": "اختر خطًا لنص المعاينة وتصدير HTML/PDF. كتل التعليمات البرمجية تستخدم دائمًا خطًا أحادي المسافة.",
+      "previewDirection": "اتجاه نص المعاينة",
+      "previewDirectionDescription": "اتجاه النص في المعاينة وعند التصدير إلى HTML/PDF. «تلقائي» يحدد الاتجاه من المحتوى. تبقى كتل الشيفرة والجداول دائمًا من اليسار إلى اليمين.",
       "fontFamilyDefault": "الافتراضي",
       "fontFamilyMonospaceOnly": "الخطوط أحادية المسافة فقط",
       "showLineNumbers": "إظهار أرقام الأسطر",
@@ -666,6 +668,10 @@
     "reloadThemes": "إعادة تحميل السمات",
     "copyCode": "نسخ الكود",
     "codeCopied": "تم النسخ!",
+    "textDirection": "اتجاه النص",
+    "directionAuto": "تلقائي",
+    "directionLtr": "من اليسار إلى اليمين",
+    "directionRtl": "من اليمين إلى اليسار",
     "slideCounter": "شريحة {{current}} من {{total}}"
   },
   "rin": {

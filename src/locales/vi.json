@@ -376,6 +376,8 @@
       "fontFamilyDescription": "Chọn phông chữ đã cài đặt cho trình soạn thảo. \"Mặc định\" dùng phông chữ monospace tiêu chuẩn.",
       "previewFontFamily": "Phông chữ xem trước",
       "previewFontFamilyDescription": "Chọn phông chữ cho nội dung xem trước và xuất HTML/PDF. Khối mã luôn dùng phông chữ monospace.",
+      "previewDirection": "Hướng văn bản xem trước",
+      "previewDirectionDescription": "Hướng văn bản cho phần xem trước và khi xuất HTML/PDF. \"Tự động\" nhận diện hướng từ nội dung. Khối mã và bảng luôn giữ hướng từ trái sang phải.",
       "fontFamilyDefault": "Mặc định",
       "fontFamilyMonospaceOnly": "Chỉ phông chữ monospace",
       "showLineNumbers": "Hiển thị số dòng",
@@ -666,6 +668,10 @@
     "reloadThemes": "Tải lại giao diện",
     "copyCode": "Sao chép mã",
     "codeCopied": "Đã sao chép!",
+    "textDirection": "Hướng văn bản",
+    "directionAuto": "Tự động",
+    "directionLtr": "Trái sang phải",
+    "directionRtl": "Phải sang trái",
     "slideCounter": "Slide {{current}} / {{total}}"
   },
   "rin": {

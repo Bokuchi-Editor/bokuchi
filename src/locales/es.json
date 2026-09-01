@@ -376,6 +376,8 @@
       "fontFamilyDescription": "Seleccionar una fuente instalada para el editor. \"Predeterminada\" usa la fuente monoespaciada estándar.",
       "previewFontFamily": "Fuente de la vista previa",
       "previewFontFamilyDescription": "Seleccionar una fuente para el texto de la vista previa y la exportación HTML/PDF. Los bloques de código siempre usan una fuente monoespaciada.",
+      "previewDirection": "Dirección del texto de la vista previa",
+      "previewDirectionDescription": "Dirección del texto para la vista previa y la exportación a HTML/PDF. «Automática» la detecta a partir del contenido. Los bloques de código y las tablas siempre se muestran de izquierda a derecha.",
       "fontFamilyDefault": "Predeterminada",
       "fontFamilyMonospaceOnly": "Solo fuentes monoespaciadas",
       "showLineNumbers": "Mostrar números de línea",
@@ -666,6 +668,10 @@
     "reloadThemes": "Recargar temas",
     "copyCode": "Copiar código",
     "codeCopied": "¡Copiado!",
+    "textDirection": "Dirección del texto",
+    "directionAuto": "Automática",
+    "directionLtr": "De izquierda a derecha",
+    "directionRtl": "De derecha a izquierda",
     "slideCounter": "Diapositiva {{current}} de {{total}}"
   },
   "rin": {

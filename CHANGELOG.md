@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...HEAD)
 
+### Added
+
+- The preview and HTML/PDF exports can now render right-to-left for Arabic and other RTL scripts. A text-direction toggle (Auto / Left to Right / Right to Left) sits in the preview header and in Settings > Editor; Auto detects the direction from the content, and when the UI language is Arabic the preview defaults to RTL. Code blocks and tables always stay left-to-right for readability. (#499)
+
 ## [1.1.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...v1.1.1) - 2026-08-24
 
 ### Added

@@ -376,6 +376,8 @@
       "fontFamilyDescription": "Choisissez une police installée pour l'éditeur. « Par défaut » utilise la police à chasse fixe standard.",
       "previewFontFamily": "Police de l'aperçu",
       "previewFontFamilyDescription": "Choisissez une police pour le texte de l'aperçu et l'export HTML/PDF. Les blocs de code utilisent toujours une police à chasse fixe.",
+      "previewDirection": "Direction du texte de l'aperçu",
+      "previewDirectionDescription": "Direction du texte pour l'aperçu et l'export HTML/PDF. « Automatique » la détecte à partir du contenu. Les blocs de code et les tableaux restent toujours de gauche à droite.",
       "fontFamilyDefault": "Par défaut",
       "fontFamilyMonospaceOnly": "Polices à chasse fixe uniquement",
       "showLineNumbers": "Afficher les numéros de ligne",
@@ -666,6 +668,10 @@
     "reloadThemes": "Recharger les thèmes",
     "copyCode": "Copier le code",
     "codeCopied": "Copié !",
+    "textDirection": "Direction du texte",
+    "directionAuto": "Automatique",
+    "directionLtr": "De gauche à droite",
+    "directionRtl": "De droite à gauche",
     "slideCounter": "Diapositive {{current}} sur {{total}}"
   },
   "rin": {

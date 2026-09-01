@@ -376,6 +376,8 @@
       "fontFamilyDescription": "Wählen Sie eine installierte Schriftart für den Editor. \"Standard\" verwendet die übliche Monospace-Schriftart.",
       "previewFontFamily": "Vorschau-Schriftart",
       "previewFontFamilyDescription": "Wählen Sie eine Schriftart für den Vorschautext und den HTML/PDF-Export. Codeblöcke verwenden immer eine Monospace-Schriftart.",
+      "previewDirection": "Textrichtung der Vorschau",
+      "previewDirectionDescription": "Textrichtung für die Vorschau und den HTML/PDF-Export. „Automatisch“ erkennt die Richtung aus dem Inhalt. Codeblöcke und Tabellen bleiben immer von links nach rechts.",
       "fontFamilyDefault": "Standard",
       "fontFamilyMonospaceOnly": "Nur Monospace-Schriftarten",
       "showLineNumbers": "Zeilennummern anzeigen",
@@ -666,6 +668,10 @@
     "reloadThemes": "Themes neu laden",
     "copyCode": "Code kopieren",
     "codeCopied": "Kopiert!",
+    "textDirection": "Textrichtung",
+    "directionAuto": "Automatisch",
+    "directionLtr": "Links nach rechts",
+    "directionRtl": "Rechts nach links",
     "slideCounter": "Folie {{current}} von {{total}}"
   },
   "rin": {

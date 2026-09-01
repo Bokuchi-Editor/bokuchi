@@ -5,10 +5,12 @@ import type { AppSettings } from '../../types/settings';
 import { fontApi, type SystemFontFamily } from '../../api/fontApi';
 import {
   FontFamilySettingCard,
+  RadioSettingCard,
   SliderSettingCard,
   SwitchSettingCard,
   type SettingChangeHandler,
 } from './SettingControls';
+import { resolvePreviewDirection } from '../../utils/previewDirection';
 
 const FONT_SIZE = { min: 10, max: 24, step: 1 } as const;
 const TAB_SIZE = { min: 2, max: 8, step: 1 } as const;
@@ -71,6 +73,20 @@ const EditorTab: React.FC<EditorTabProps> = ({ settings, onSettingChange }) => {
         onChange={(value) => onSettingChange('preview', 'fontFamily', value)}
         fonts={fonts}
         defaultOptionLabel={t('settings.editor.fontFamilyDefault')}
+      />
+
+      <RadioSettingCard
+        sx={{ mb: 3 }}
+        title={t('settings.editor.previewDirection')}
+        titleSx={{ mb: 2 }}
+        description={t('settings.editor.previewDirectionDescription')}
+        value={resolvePreviewDirection(settings.preview?.direction, settings.interface.language)}
+        onChange={(value) => onSettingChange('preview', 'direction', value)}
+        options={[
+          { value: 'auto', label: t('preview.directionAuto') },
+          { value: 'ltr', label: t('preview.directionLtr') },
+          { value: 'rtl', label: t('preview.directionRtl') },
+        ]}
       />
 
       <SwitchSettingCard

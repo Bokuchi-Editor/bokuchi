@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material/styles';
-import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+import { TableLayoutMode, PreviewDirection, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { getThemeByName, ThemeName } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
 
@@ -126,6 +126,9 @@ export function generateTableLayoutCSS(
   if (mode === 'equal') {
     return `
         ${tableSelector} {
+            /* Tables keep LTR column order even in an RTL document (#499) —
+               requested so mixed technical content stays readable. */
+            direction: ltr;
             border-collapse: collapse;
             width: 100%;
             margin: 1em 0;
@@ -147,6 +150,7 @@ ${headerRule}`;
   if (mode === 'auto-wrap') {
     return `
         ${tableSelector} {
+            direction: ltr;
             border-collapse: collapse;
             width: 100%;
             max-width: 100%;
@@ -182,6 +186,7 @@ ${headerRule}`;
 
   return `
         ${tableSelector} {
+            direction: ltr;
             border-collapse: collapse;
             display: block;
             overflow-x: auto;
@@ -258,6 +263,9 @@ export function generateExportCSS(
 ${generateGithubAlertCSS('', colors.isDark)}
 
         code {
+            /* Code always reads LTR, isolated from a surrounding RTL paragraph (#499). */
+            direction: ltr;
+            unicode-bidi: isolate;
             background-color: ${colors.inlineCodeBackground};
             padding: 0.2em 0.4em;
             border-radius: 3px;
@@ -267,6 +275,8 @@ ${generateGithubAlertCSS('', colors.isDark)}
         }
 
         pre {
+            direction: ltr;
+            text-align: left;
             background-color: ${colors.codeBackground};
             border-radius: 3px;
             padding: 16px;
@@ -364,7 +374,7 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
   katexCss?: string,
-  options: { forPrint?: boolean; fontFamily?: string } = {},
+  options: { forPrint?: boolean; fontFamily?: string; direction?: PreviewDirection } = {},
 ): string {
   // PDF export always uses the Default theme (white background, black text),
   // regardless of the on-screen theme — code/Mermaid colors follow suit. This
@@ -390,7 +400,7 @@ export function buildExportHTML(
 
   return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="${options.direction ?? 'auto'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

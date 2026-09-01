@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Tooltip, Snackbar, Alert, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { Download, GridOn, Description, PictureAsPdf } from '@mui/icons-material';
+import { Download, GridOn, Description, PictureAsPdf, Check, FormatTextdirectionLToR, FormatTextdirectionRToL } from '@mui/icons-material';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
-import { RenderingSettings, DEFAULT_RENDERING_SETTINGS, PreviewSettings, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+import { RenderingSettings, DEFAULT_RENDERING_SETTINGS, PreviewSettings, DEFAULT_PREVIEW_SETTINGS, PreviewDirection } from '../types/settings';
 import InlineCellEditor from './InlineCellEditor';
 import TableEditModal from './TableEditModal';
 import { contentIsMarp } from '../utils/marpRenderer';
@@ -39,6 +39,13 @@ interface PreviewProps {
   filePath?: string;
   renderingSettings?: RenderingSettings;
   previewSettings?: PreviewSettings;
+  /**
+   * Resolved text direction for the rendered content (#499) — the caller has
+   * already applied the RTL-UI-language default via resolvePreviewDirection.
+   */
+  direction?: PreviewDirection;
+  /** Persists an explicit direction choice made from the header toggle (#499). */
+  onDirectionChange?: (direction: PreviewDirection) => void;
   viewMode?: 'split' | 'editor' | 'preview';
   onOpenSettings?: (target?: SettingsFocusTarget) => void;
 }
@@ -47,7 +54,7 @@ const BASE_PREVIEW_FONT_SIZE_PX = 16;
 const BASE_PREVIEW_LINE_HEIGHT = 1.6;
 const EXPORT_ERROR_AUTO_HIDE_MS = 6000;
 
-const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, revealHeadingRequest, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, viewMode = 'split', onOpenSettings }) => {
+const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, globalVariables = {}, zoomLevel = 1.0, onContentChange, scrollFraction, onScrollChange, revealHeadingRequest, filePath, renderingSettings = DEFAULT_RENDERING_SETTINGS, previewSettings = DEFAULT_PREVIEW_SETTINGS, direction = 'auto', onDirectionChange, viewMode = 'split', onOpenSettings }) => {
   const muiTheme = useTheme();
   const { palette } = muiTheme;
   const { t } = useTranslation();
@@ -104,12 +111,22 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     theme,
     tableLayout: previewSettings.tableLayout,
     fontFamily: previewSettings.fontFamily,
+    direction,
     filePath,
   });
 
   // Anchor for the export-format menu (HTML / PDF).
   const [exportMenuAnchor, setExportMenuAnchor] = useState<HTMLElement | null>(null);
   const closeExportMenu = () => setExportMenuAnchor(null);
+
+  // Anchor for the text-direction menu (Auto / LTR / RTL, #499).
+  const [directionMenuAnchor, setDirectionMenuAnchor] = useState<HTMLElement | null>(null);
+  const closeDirectionMenu = () => setDirectionMenuAnchor(null);
+  const directionOptions: { value: PreviewDirection; label: string }[] = [
+    { value: 'auto', label: t('preview.directionAuto', 'Auto') },
+    { value: 'ltr', label: t('preview.directionLtr', 'Left to Right') },
+    { value: 'rtl', label: t('preview.directionRtl', 'Right to Left') },
+  ];
 
   // Outline jump in preview-only mode: scroll to the clicked heading. The
   // outline's Nth item maps to the Nth rendered heading element (#376). Deps are
@@ -137,11 +154,34 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         <Typography variant="subtitle2" color="text.secondary">
           Preview
         </Typography>
-        <Tooltip title={t('preview.export', 'Export')}>
-          <IconButton size="small" onClick={(e) => setExportMenuAnchor(e.currentTarget)}>
-            <Download />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Tooltip title={t('preview.textDirection', 'Text Direction')}>
+            <IconButton size="small" onClick={(e) => setDirectionMenuAnchor(e.currentTarget)}>
+              {direction === 'rtl' ? <FormatTextdirectionRToL /> : <FormatTextdirectionLToR />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={t('preview.export', 'Export')}>
+            <IconButton size="small" onClick={(e) => setExportMenuAnchor(e.currentTarget)}>
+              <Download />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          anchorEl={directionMenuAnchor}
+          open={!!directionMenuAnchor}
+          onClose={closeDirectionMenu}
+        >
+          {directionOptions.map((option) => (
+            <MenuItem
+              key={option.value}
+              selected={option.value === direction}
+              onClick={() => { closeDirectionMenu(); onDirectionChange?.(option.value); }}
+            >
+              <ListItemIcon>{option.value === direction ? <Check fontSize="small" /> : null}</ListItemIcon>
+              <ListItemText>{option.label}</ListItemText>
+            </MenuItem>
+          ))}
+        </Menu>
         <Menu
           anchorEl={exportMenuAnchor}
           open={!!exportMenuAnchor}
@@ -184,6 +224,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
         <div
           ref={previewRef}
           className={`markdown-preview ${darkMode ? 'hljs-dark' : 'hljs-light'}`}
+          dir={direction}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           style={{
             // `transform` makes this div the containing block for any

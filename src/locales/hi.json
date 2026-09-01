@@ -376,6 +376,8 @@
       "fontFamilyDescription": "संपादक के लिए इंस्टॉल किया हुआ फ़ॉन्ट चुनें। \"डिफ़ॉल्ट\" मानक मोनोस्पेस फ़ॉन्ट का उपयोग करता है।",
       "previewFontFamily": "पूर्वावलोकन फ़ॉन्ट",
       "previewFontFamilyDescription": "पूर्वावलोकन पाठ और HTML/PDF निर्यात के लिए फ़ॉन्ट चुनें। कोड ब्लॉक हमेशा मोनोस्पेस फ़ॉन्ट में दिखते हैं।",
+      "previewDirection": "पूर्वावलोकन पाठ दिशा",
+      "previewDirectionDescription": "पूर्वावलोकन और HTML/PDF निर्यात के लिए पाठ की दिशा। \"स्वचालित\" सामग्री से दिशा पहचानता है। कोड ब्लॉक और तालिकाएँ हमेशा बाएँ से दाएँ ही रहती हैं।",
       "fontFamilyDefault": "डिफ़ॉल्ट",
       "fontFamilyMonospaceOnly": "केवल मोनोस्पेस फ़ॉन्ट",
       "showLineNumbers": "लाइन नंबर दिखाएं",
@@ -666,6 +668,10 @@
     "reloadThemes": "थीम पुनः लोड करें",
     "copyCode": "कोड कॉपी करें",
     "codeCopied": "कॉपी हो गया!",
+    "textDirection": "पाठ की दिशा",
+    "directionAuto": "स्वचालित",
+    "directionLtr": "बाएँ से दाएँ",
+    "directionRtl": "दाएँ से बाएँ",
     "slideCounter": "स्लाइड {{current}} / {{total}}"
   },
   "rin": {

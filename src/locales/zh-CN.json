@@ -376,6 +376,8 @@
       "fontFamilyDescription": "从已安装的字体中选择编辑器使用的字体。“默认”使用标准等宽字体。",
       "previewFontFamily": "预览字体",
       "previewFontFamilyDescription": "选择预览正文和 HTML/PDF 导出使用的字体。代码块始终使用等宽字体。",
+      "previewDirection": "预览文字方向",
+      "previewDirectionDescription": "预览及 HTML/PDF 导出的文字方向。“自动”根据内容检测方向。代码块和表格始终保持从左到右。",
       "fontFamilyDefault": "默认",
       "fontFamilyMonospaceOnly": "仅显示等宽字体",
       "showLineNumbers": "显示行号",
@@ -666,6 +668,10 @@
     "reloadThemes": "重新加载主题",
     "copyCode": "复制代码",
     "codeCopied": "已复制！",
+    "textDirection": "文字方向",
+    "directionAuto": "自动",
+    "directionLtr": "从左到右",
+    "directionRtl": "从右到左",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
   },
   "rin": {

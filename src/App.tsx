@@ -14,6 +14,7 @@ import { useAppState } from './hooks/useAppState';
 import { useRinExitButton } from './hooks/useRinExitButton';
 import { useDesktopEventListeners } from './hooks/useDesktopEventListeners';
 import { isDarkTheme } from './themes';
+import { resolvePreviewDirection } from './utils/previewDirection';
 import './i18n';
 import './styles/variables.css';
 import './styles/base.css';
@@ -289,6 +290,13 @@ function AppDesktop() {
           isSettingsLoaded={isSettingsLoaded}
           renderingSettings={appSettings.rendering}
           previewSettings={appSettings.preview}
+          previewDirection={resolvePreviewDirection(appSettings.preview?.direction, appSettings.interface.language)}
+          onPreviewDirectionChange={(direction) => {
+            handleAppSettingsChange({
+              ...appSettings,
+              preview: { ...appSettings.preview, direction },
+            });
+          }}
           editorSettings={{
             fontSize: appSettings.editor.fontSize,
             fontFamily: appSettings.editor.fontFamily,

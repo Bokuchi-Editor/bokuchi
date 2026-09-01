@@ -376,6 +376,8 @@
       "fontFamilyDescription": "Escolha uma fonte instalada para o editor. \"Padrão\" usa a fonte monoespaçada padrão.",
       "previewFontFamily": "Fonte da visualização",
       "previewFontFamilyDescription": "Escolha uma fonte para o texto da visualização e a exportação HTML/PDF. Blocos de código sempre usam fonte monoespaçada.",
+      "previewDirection": "Direção do texto da visualização",
+      "previewDirectionDescription": "Direção do texto para a visualização e a exportação em HTML/PDF. \"Automática\" detecta a direção a partir do conteúdo. Blocos de código e tabelas sempre permanecem da esquerda para a direita.",
       "fontFamilyDefault": "Padrão",
       "fontFamilyMonospaceOnly": "Somente fontes monoespaçadas",
       "showLineNumbers": "Mostrar números de linha",
@@ -666,6 +668,10 @@
     "reloadThemes": "Recarregar temas",
     "copyCode": "Copiar código",
     "codeCopied": "Copiado!",
+    "textDirection": "Direção do texto",
+    "directionAuto": "Automática",
+    "directionLtr": "Da esquerda para a direita",
+    "directionRtl": "Da direita para a esquerda",
     "slideCounter": "Slide {{current}} de {{total}}"
   },
   "rin": {

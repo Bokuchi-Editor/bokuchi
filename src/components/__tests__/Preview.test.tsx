@@ -842,3 +842,31 @@ describe('MarkdownPreview – link clicks', () => {
     expect(onContentChange).toHaveBeenCalledWith('- [x] Buy milk');
   });
 });
+
+describe('MarkdownPreview – text direction (#499)', () => {
+  // T-PV-30: the resolved direction lands as the dir attribute on the
+  // rendered-content container; default is 'auto' (LTR docs behave as before).
+  it('T-PV-30: applies dir="auto" by default and the given direction otherwise', async () => {
+    const { container, unmount } = await renderPreviewContent({ content: 'hello' });
+    expect(container.querySelector('.markdown-preview')?.getAttribute('dir')).toBe('auto');
+    unmount();
+
+    const rtl = await renderPreviewContent({ content: 'hello', direction: 'rtl' });
+    expect(rtl.container.querySelector('.markdown-preview')?.getAttribute('dir')).toBe('rtl');
+  });
+
+  // T-PV-31: the header toggle persists an explicit choice via the callback.
+  it('T-PV-31: header menu reports the chosen direction through onDirectionChange', async () => {
+    const onDirectionChange = vi.fn();
+    const { getByLabelText, getByText } = await renderPreviewContent({
+      content: 'hello',
+      direction: 'auto',
+      onDirectionChange,
+    });
+
+    fireEvent.click(getByLabelText('Text Direction'));
+    fireEvent.click(getByText('Right to Left'));
+
+    expect(onDirectionChange).toHaveBeenCalledWith('rtl');
+  });
+});

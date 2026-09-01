@@ -376,6 +376,8 @@
       "fontFamilyDescription": "從已安裝的字型中選擇編輯器使用的字型。「預設」使用標準等寬字型。",
       "previewFontFamily": "預覽字型",
       "previewFontFamilyDescription": "選擇預覽內文與 HTML/PDF 匯出使用的字型。程式碼區塊一律使用等寬字型。",
+      "previewDirection": "預覽文字方向",
+      "previewDirectionDescription": "預覽與 HTML/PDF 匯出的文字方向。「自動」會依內容判斷方向。程式碼區塊與表格永遠保持由左至右。",
       "fontFamilyDefault": "預設",
       "fontFamilyMonospaceOnly": "僅顯示等寬字型",
       "showLineNumbers": "顯示行號",
@@ -666,6 +668,10 @@
     "reloadThemes": "重新載入佈景主題",
     "copyCode": "複製程式碼",
     "codeCopied": "已複製！",
+    "textDirection": "文字方向",
+    "directionAuto": "自動",
+    "directionLtr": "由左至右",
+    "directionRtl": "由右至左",
     "slideCounter": "投影片 {{current}} / {{total}}"
   },
   "rin": {
