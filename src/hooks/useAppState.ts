@@ -370,6 +370,8 @@ export const useAppState = () => {
     }
   }, [tabs, removeTabs, startCloseQueue]);
 
+  // Close all non-pinned tabs to the left of the given tab. Clean tabs are
+  // removed immediately; dirty tabs go through the close queue.
   const handleCloseTabsToLeft = useCallback((tabId: string) => {
     const tabIndex = tabs.findIndex(t => t.id === tabId);
     if (tabIndex === -1) return;

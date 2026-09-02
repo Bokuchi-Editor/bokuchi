@@ -79,7 +79,7 @@ export const useSettings = ({
       try {
         const settings = await storeApi.loadAppSettings();
 
-        // 若用户从未手动设置过语言，则根据系统语言自动检测
+        // If the user has never manually set a language, auto-detect from the system language
         const hasLanguage = await storeApi.hasLanguageSetting();
         const effectiveLanguage = hasLanguage
           ? settings.interface.language

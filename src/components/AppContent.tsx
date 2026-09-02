@@ -193,11 +193,14 @@ const AppContent: React.FC<AppContentProps> = ({
 
   const headings = useOutlineHeadings(activeTab?.content);
 
-  // 大纲面板宽度（按 tabId 独立维护，不持久化）
+  // Outline panel width — maintained per-tab (keyed by tabId), not persisted.
   const [outlineWidths, setOutlineWidths] = useState<Record<string, number>>({});
   const currentOutlineWidth = (activeTabId && outlineWidths[activeTabId]) || 240;
   const outlineResizeRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
+  // Start dragging the outline panel divider. Updates the per-tab width on
+  // mousemove (left: drag right increases width; right: drag left increases
+  // width), clamped to 150–500px. Listeners are removed on mouseup.
   const handleOutlineResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     const tabId = activeTabId;

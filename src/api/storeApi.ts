@@ -91,7 +91,8 @@ export const storeApi = {
     }
   },
 
-  // 检查用户是否曾手动设置过语言（用于决定是否根据系统语言自动检测）
+  // Check whether the user has ever manually set a language (used to decide
+  // whether to auto-detect from the system language on startup).
   async hasLanguageSetting(): Promise<boolean> {
     try {
       const storeInstance = await getStore();
