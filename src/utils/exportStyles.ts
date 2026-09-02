@@ -106,6 +106,10 @@ export function getHighlightStyleDataUri(darkMode: boolean): string {
  * for the in-app preview where rules must not leak to the rest of the UI). The auto-scroll
  * preview also needs an override against the wildcard `.markdown-preview * { max-width: 100% }`
  * — without it the table can't grow past its container, so horizontal scroll never triggers.
+ *
+ * Tables deliberately set no `direction`: they inherit the document direction, so in an
+ * RTL document the first Markdown column sits on the right (#499 — the reporter asked for
+ * this, reversing an earlier keep-LTR request). Code blocks are the ones pinned to LTR.
  */
 export function generateTableLayoutCSS(
   mode: TableLayoutMode,
@@ -126,9 +130,6 @@ export function generateTableLayoutCSS(
   if (mode === 'equal') {
     return `
         ${tableSelector} {
-            /* Tables keep LTR column order even in an RTL document (#499) —
-               requested so mixed technical content stays readable. */
-            direction: ltr;
             border-collapse: collapse;
             width: 100%;
             margin: 1em 0;
@@ -150,7 +151,6 @@ ${headerRule}`;
   if (mode === 'auto-wrap') {
     return `
         ${tableSelector} {
-            direction: ltr;
             border-collapse: collapse;
             width: 100%;
             max-width: 100%;
@@ -186,7 +186,6 @@ ${headerRule}`;
 
   return `
         ${tableSelector} {
-            direction: ltr;
             border-collapse: collapse;
             display: block;
             overflow-x: auto;

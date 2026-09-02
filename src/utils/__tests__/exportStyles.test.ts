@@ -176,10 +176,13 @@ describe('generateTableLayoutCSS', () => {
     expect(css).toContain('.markdown-preview td');
   });
 
-  it('pins tables to LTR in every layout mode (#499)', () => {
+  it('sets no direction in any layout mode so tables follow the document direction (#499)', () => {
+    // The reporter reversed the original keep-LTR request: in an RTL document
+    // the first Markdown column must sit on the right, so tables simply
+    // inherit `dir` from the document root.
     for (const mode of ['equal', 'auto-wrap', 'auto-scroll'] as const) {
       const css = generateTableLayoutCSS(mode, '', '#ccc', '#fff');
-      expect(css, mode).toContain('direction: ltr');
+      expect(css, mode).not.toContain('direction:');
     }
   });
 });
@@ -312,11 +315,12 @@ describe('buildExportHTML', () => {
       expect(html).toContain('<html lang="en" dir="rtl">');
     });
 
-    it('keeps code blocks and tables LTR regardless of document direction', () => {
+    it('keeps code blocks LTR regardless of document direction', () => {
       const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
         direction: 'rtl',
       });
-      // pre/code rules in generateExportCSS + table rule in generateTableLayoutCSS
+      // pre/code rules in generateExportCSS; tables intentionally carry no
+      // direction of their own (they follow the document, see above).
       expect(html).toContain('direction: ltr');
       expect(html).toContain('unicode-bidi: isolate');
     });
