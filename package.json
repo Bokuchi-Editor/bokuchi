@@ -60,7 +60,7 @@
     "i18next": "^25.10.10",
     "katex": "^0.16.22",
     "marked": "^16.4.2",
-    "mermaid": "^11.17.0",
+    "mermaid": "^11.17.2",
     "monaco-editor": "^0.56.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
