@@ -622,29 +622,13 @@
       "improvement": "개선"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "체크박스 정렬",
-        "description": "미리보기에서 작업 목록의 체크박스가 텍스트와 정렬되고 확대/축소 및 글꼴 크기에 맞게 조정됩니다."
+      "tabSwitchPreview": {
+        "title": "탭 전환 시 미리보기 업데이트",
+        "description": "탭을 전환할 때 미리보기가 업데이트되지 않던 문제를 수정했습니다."
       },
-      "githubAlerts": {
-        "title": "GitHub Alerts",
-        "description": "> [!NOTE], > [!WARNING] 같은 인용 블록이 미리보기와 HTML/PDF 내보내기에서 GitHub 스타일 알림 상자로 표시됩니다."
-      },
-      "emojiShortcodes": {
-        "title": "이모지 숏코드",
-        "description": ":rocket: 같은 GitHub 이모지 숏코드가 미리보기와 내보내기에서 이모지(🚀)로 변환됩니다. 설정 > 고급에서 끌 수 있습니다."
-      },
-      "revealInFolder": {
-        "title": "Finder / 파일 탐색기에서 보기",
-        "description": "탭이나 파일 트리의 컨텍스트 메뉴에서 파일 위치를 OS 파일 관리자로 열 수 있습니다."
-      },
-      "pdfExport": {
-        "title": "PDF 내보내기 개선",
-        "description": "이미지가 많은 문서의 PDF 내보내기 크기가 크게 줄었고, PDF 생성 중 진행 상황이 표시됩니다."
-      },
-      "editingFixes": {
-        "title": "편집 관련 수정",
-        "description": "쉼표가 포함된 텍스트가 붙여넣기 시 표로 변환되던 문제, 코드 블록의 줄이 개요에 제목으로 표시되던 문제, 미리보기에서 표를 편집하면 줄 끝 문자가 바뀌던 문제를 수정했습니다."
+      "libraryUpdates": {
+        "title": "라이브러리 업데이트",
+        "description": "안정성과 보안을 위해 Mermaid 다이어그램 렌더링을 포함한 내부 라이브러리를 업데이트했습니다."
       }
     }
   },

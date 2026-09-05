@@ -622,29 +622,13 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Alignement des cases à cocher",
-        "description": "Les cases à cocher des listes de tâches sont désormais alignées avec le texte dans l'aperçu et s'adaptent au zoom et à la taille de police."
+      "tabSwitchPreview": {
+        "title": "Mise à jour de l'aperçu au changement d'onglet",
+        "description": "Correction d'un bug qui empêchait l'aperçu de se mettre à jour lors du changement d'onglet."
       },
-      "githubAlerts": {
-        "title": "Alertes GitHub",
-        "description": "Les citations comme > [!NOTE] ou > [!WARNING] s'affichent désormais sous forme d'encadrés de style GitHub dans l'aperçu et dans les exports HTML et PDF."
-      },
-      "emojiShortcodes": {
-        "title": "Raccourcis emoji",
-        "description": "Les raccourcis emoji GitHub comme :rocket: sont désormais convertis en emoji (🚀) dans l'aperçu et les exports. Désactivable dans Paramètres > Avancé."
-      },
-      "revealInFolder": {
-        "title": "Afficher dans le Finder / l'Explorateur de fichiers",
-        "description": "Ouvrez l'emplacement d'un fichier dans le gestionnaire de fichiers du système depuis le menu contextuel de l'onglet ou de l'arborescence de fichiers."
-      },
-      "pdfExport": {
-        "title": "Améliorations de l'export PDF",
-        "description": "Les exports PDF de documents riches en images sont désormais beaucoup plus légers, et la progression s'affiche pendant la génération du PDF."
-      },
-      "editingFixes": {
-        "title": "Corrections d'édition",
-        "description": "Corrigé : le texte contenant des virgules se transformait en tableau lors du collage, des lignes de blocs de code apparaissaient comme titres dans le plan, et la modification de tableaux depuis l'aperçu réécrivait les fins de ligne."
+      "libraryUpdates": {
+        "title": "Mises à jour des bibliothèques",
+        "description": "Les bibliothèques internes, dont le rendu des diagrammes Mermaid, ont été mises à jour pour plus de stabilité et de sécurité."
       }
     }
   },

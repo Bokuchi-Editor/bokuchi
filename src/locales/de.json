@@ -622,29 +622,13 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Checkbox-Ausrichtung",
-        "description": "Kontrollkästchen in Aufgabenlisten sind in der Vorschau jetzt am Text ausgerichtet und skalieren mit Zoom und Schriftgröße."
+      "tabSwitchPreview": {
+        "title": "Vorschau-Aktualisierung beim Tabwechsel",
+        "description": "Ein Fehler wurde behoben, durch den die Vorschau beim Wechseln des Tabs nicht aktualisiert wurde."
       },
-      "githubAlerts": {
-        "title": "GitHub-Alerts",
-        "description": "Zitatblöcke wie > [!NOTE] oder > [!WARNING] werden jetzt in der Vorschau sowie im HTML- und PDF-Export als Hinweisboxen im GitHub-Stil dargestellt."
-      },
-      "emojiShortcodes": {
-        "title": "Emoji-Shortcodes",
-        "description": "GitHub-Emoji-Shortcodes wie :rocket: werden jetzt in der Vorschau und in Exporten in Emoji (🚀) umgewandelt. Kann unter Einstellungen > Erweitert deaktiviert werden."
-      },
-      "revealInFolder": {
-        "title": "Im Finder / Datei-Explorer anzeigen",
-        "description": "Öffnen Sie den Speicherort einer Datei im Dateimanager des Systems über das Kontextmenü des Tabs oder des Dateibaums."
-      },
-      "pdfExport": {
-        "title": "Verbesserungen beim PDF-Export",
-        "description": "PDF-Exporte bilderreicher Dokumente sind jetzt deutlich kleiner, und während der Erstellung wird der Fortschritt angezeigt."
-      },
-      "editingFixes": {
-        "title": "Korrekturen bei der Bearbeitung",
-        "description": "Behoben: Eingefügter Text mit Kommas wurde in eine Tabelle umgewandelt, Zeilen aus Codeblöcken erschienen als Überschriften in der Gliederung, und das Bearbeiten von Tabellen aus der Vorschau änderte die Zeilenenden."
+      "libraryUpdates": {
+        "title": "Bibliotheks-Updates",
+        "description": "Interne Bibliotheken, darunter die Mermaid-Diagrammdarstellung, wurden für mehr Stabilität und Sicherheit aktualisiert."
       }
     }
   },

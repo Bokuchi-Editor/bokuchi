@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.2...HEAD)
+
+## [1.1.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...v1.1.2) - 2026-09-05
+
+### Changed
+
+- Updated dependencies, including `mermaid` (11.17.0 → 11.17.2), the Rust crates `image` (0.25.8 → 0.25.10) and `flate2` (1.1.5 → 1.1.9), `eslint`, the `typescript-eslint` group, and the `testing-library` group.
+
+### Fixed
+
+- The preview no longer stays stale when switching tabs: clearing the preview did not reset the processed-content cache, so switching to another tab could skip re-rendering. (#509, contributed by @tanahiro2010)
 
 ## [1.1.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.0...v1.1.1) - 2026-08-24
 
