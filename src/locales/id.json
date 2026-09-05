@@ -622,29 +622,13 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Perataan Kotak Centang",
-        "description": "Kotak centang daftar tugas kini sejajar dengan teks di pratinjau dan mengikuti zoom serta ukuran font."
+      "tabSwitchPreview": {
+        "title": "Pembaruan Pratinjau saat Berganti Tab",
+        "description": "Memperbaiki bug yang membuat pratinjau tidak diperbarui saat berpindah tab."
       },
-      "githubAlerts": {
-        "title": "GitHub Alerts",
-        "description": "Kutipan seperti > [!NOTE] atau > [!WARNING] kini ditampilkan sebagai kotak sorotan bergaya GitHub di pratinjau serta ekspor HTML dan PDF."
-      },
-      "emojiShortcodes": {
-        "title": "Shortcode Emoji",
-        "description": "Shortcode emoji GitHub seperti :rocket: kini dikonversi menjadi emoji (🚀) di pratinjau dan ekspor. Dapat dinonaktifkan di Pengaturan > Lanjutan."
-      },
-      "revealInFolder": {
-        "title": "Tampilkan di Finder / File Explorer",
-        "description": "Buka lokasi berkas di pengelola berkas sistem dari menu konteks tab atau pohon berkas."
-      },
-      "pdfExport": {
-        "title": "Peningkatan Ekspor PDF",
-        "description": "Ekspor PDF dokumen dengan banyak gambar kini jauh lebih kecil, dan progres ditampilkan saat PDF sedang dibuat."
-      },
-      "editingFixes": {
-        "title": "Perbaikan Pengeditan",
-        "description": "Memperbaiki teks berisi koma yang berubah menjadi tabel saat ditempel, judul palsu di outline dari blok kode, dan akhiran baris yang ditulis ulang saat menyunting tabel dari pratinjau."
+      "libraryUpdates": {
+        "title": "Pembaruan Pustaka",
+        "description": "Memperbarui pustaka internal, termasuk perenderan diagram Mermaid, demi stabilitas dan keamanan."
       }
     }
   },

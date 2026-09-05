@@ -645,29 +645,13 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Checkbox Alignment",
-        "description": "Task-list checkboxes in the preview now line up with their text and scale with zoom and font size."
+      "tabSwitchPreview": {
+        "title": "Preview Update on Tab Switch",
+        "description": "Fixed a bug where the preview did not update when switching tabs."
       },
-      "githubAlerts": {
-        "title": "GitHub Alerts",
-        "description": "Blockquotes like > [!NOTE] or > [!WARNING] now render as GitHub-style callout boxes in the preview and in HTML/PDF exports."
-      },
-      "emojiShortcodes": {
-        "title": "Emoji Shortcodes",
-        "description": "GitHub emoji shortcodes like :rocket: are now converted to emoji (🚀) in the preview and exports. Can be turned off in Settings > Advanced."
-      },
-      "revealInFolder": {
-        "title": "Reveal in Finder / File Explorer",
-        "description": "Open a file's location in the OS file manager from the tab or file tree context menu."
-      },
-      "pdfExport": {
-        "title": "PDF Export Improvements",
-        "description": "PDF exports of image-heavy documents are now much smaller, and progress is shown while the PDF is being generated."
-      },
-      "editingFixes": {
-        "title": "Editing Fixes",
-        "description": "Fixed plain text with commas turning into a table when pasted, fake outline headings from code blocks, and line endings being rewritten when editing tables from the preview."
+      "libraryUpdates": {
+        "title": "Library Updates",
+        "description": "Updated internal libraries, including Mermaid diagram rendering, for stability and security."
       }
     }
   },

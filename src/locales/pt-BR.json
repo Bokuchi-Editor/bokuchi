@@ -622,29 +622,13 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Alinhamento das caixas de seleção",
-        "description": "As caixas de seleção das listas de tarefas agora ficam alinhadas com o texto na pré-visualização e acompanham o zoom e o tamanho da fonte."
+      "tabSwitchPreview": {
+        "title": "Atualização da visualização ao trocar de aba",
+        "description": "Corrigido um erro em que a visualização não era atualizada ao trocar de aba."
       },
-      "githubAlerts": {
-        "title": "Alertas do GitHub",
-        "description": "Citações como > [!NOTE] ou > [!WARNING] agora aparecem como caixas de destaque no estilo do GitHub na visualização e nas exportações em HTML e PDF."
-      },
-      "emojiShortcodes": {
-        "title": "Atalhos de emoji",
-        "description": "Atalhos de emoji do GitHub como :rocket: agora são convertidos em emoji (🚀) na visualização e nas exportações. Pode ser desativado em Configurações > Avançado."
-      },
-      "revealInFolder": {
-        "title": "Mostrar no Finder / Explorador de Arquivos",
-        "description": "Abra o local de um arquivo no gerenciador de arquivos do sistema pelo menu de contexto da aba ou da árvore de arquivos."
-      },
-      "pdfExport": {
-        "title": "Melhorias na exportação de PDF",
-        "description": "Exportações de PDF de documentos com muitas imagens agora são bem menores, e o progresso é exibido enquanto o PDF é gerado."
-      },
-      "editingFixes": {
-        "title": "Correções de edição",
-        "description": "Corrigido: texto com vírgulas virava tabela ao colar, linhas de blocos de código apareciam como títulos no esboço e editar tabelas pela visualização reescrevia as quebras de linha."
+      "libraryUpdates": {
+        "title": "Atualizações de bibliotecas",
+        "description": "Bibliotecas internas, incluindo a renderização de diagramas Mermaid, foram atualizadas para maior estabilidade e segurança."
       }
     }
   },

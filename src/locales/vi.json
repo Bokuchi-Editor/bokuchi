@@ -622,29 +622,13 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Căn chỉnh hộp kiểm",
-        "description": "Hộp kiểm trong danh sách công việc giờ được căn thẳng với văn bản trong bản xem trước và thay đổi theo mức thu phóng cùng cỡ chữ."
+      "tabSwitchPreview": {
+        "title": "Cập nhật bản xem trước khi chuyển tab",
+        "description": "Đã sửa lỗi bản xem trước không được cập nhật khi chuyển tab."
       },
-      "githubAlerts": {
-        "title": "GitHub Alerts",
-        "description": "Các khối trích dẫn như > [!NOTE] hoặc > [!WARNING] giờ đây hiển thị dưới dạng hộp chú thích kiểu GitHub trong bản xem trước và khi xuất HTML/PDF."
-      },
-      "emojiShortcodes": {
-        "title": "Mã tắt emoji",
-        "description": "Các mã tắt emoji của GitHub như :rocket: giờ đây được chuyển thành emoji (🚀) trong bản xem trước và khi xuất. Có thể tắt trong Cài đặt > Nâng cao."
-      },
-      "revealInFolder": {
-        "title": "Hiện trong Finder / File Explorer",
-        "description": "Mở vị trí tệp trong trình quản lý tệp của hệ điều hành từ menu ngữ cảnh của thẻ hoặc cây tệp."
-      },
-      "pdfExport": {
-        "title": "Cải thiện xuất PDF",
-        "description": "Tệp PDF xuất từ tài liệu nhiều hình ảnh giờ đây nhỏ hơn nhiều, và tiến trình được hiển thị trong khi tạo PDF."
-      },
-      "editingFixes": {
-        "title": "Sửa lỗi chỉnh sửa",
-        "description": "Đã sửa lỗi văn bản chứa dấu phẩy bị chuyển thành bảng khi dán, dòng trong khối mã hiển thị thành tiêu đề trong dàn ý, và việc chỉnh sửa bảng từ bản xem trước làm thay đổi ký tự xuống dòng."
+      "libraryUpdates": {
+        "title": "Cập nhật thư viện",
+        "description": "Đã cập nhật các thư viện bên trong, bao gồm kết xuất sơ đồ Mermaid, để tăng độ ổn định và bảo mật."
       }
     }
   },
