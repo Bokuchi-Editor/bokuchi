@@ -1,0 +1,65 @@
+name: Registry Check
+
+# Guards the supply chain of committed lockfiles:
+# every dependency must resolve to the official public registry.
+# Background: a local proxy registry can silently rewrite `resolved` URLs
+# on `npm install`, which breaks `npm ci` for everyone else
+# (issue #512, KNOWLEDGE.md B-12).
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  registry-check:
+    name: Lockfile registry check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check package-lock.json resolved URLs
+        run: |
+          bad=$(grep '"resolved"' package-lock.json | grep -v '"resolved": "https://registry\.npmjs\.org/' || true)
+          if [ -n "$bad" ]; then
+            echo "::error file=package-lock.json::resolved URLs not pointing to registry.npmjs.org were found"
+            echo "$bad"
+            echo ""
+            echo "Fix: rewrite the offending URLs to https://registry.npmjs.org/ , or"
+            echo "regenerate the lockfile with: npm install --registry=https://registry.npmjs.org"
+            exit 1
+          fi
+          echo "OK: all resolved URLs point to registry.npmjs.org"
+
+      - name: Check Cargo.lock sources
+        run: |
+          bad=$(grep '^source = ' src-tauri/Cargo.lock | grep -v '^source = "registry+https://github.com/rust-lang/crates.io-index"' || true)
+          if [ -n "$bad" ]; then
+            echo "::error file=src-tauri/Cargo.lock::crate sources not pointing to crates.io were found"
+            echo "$bad" | sort -u
+            exit 1
+          fi
+          echo "OK: all crate sources point to crates.io"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Verifies registry signatures and provenance attestations of every
+      # installed package against the npm registry's public keys.
+      - name: Verify npm package signatures
+        run: npm audit signatures
