@@ -25,37 +25,17 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.1.1',
+  version: '1.1.2',
   changes: [
     {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.githubAlerts.title',
-      descriptionKey: 'whatsNew.changes.githubAlerts.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.emojiShortcodes.title',
-      descriptionKey: 'whatsNew.changes.emojiShortcodes.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.revealInFolder.title',
-      descriptionKey: 'whatsNew.changes.revealInFolder.description',
+      type: 'fix',
+      titleKey: 'whatsNew.changes.tabSwitchPreview.title',
+      descriptionKey: 'whatsNew.changes.tabSwitchPreview.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.pdfExport.title',
-      descriptionKey: 'whatsNew.changes.pdfExport.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.editingFixes.title',
-      descriptionKey: 'whatsNew.changes.editingFixes.description',
-    },
-    {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.checkboxAlignment.title',
-      descriptionKey: 'whatsNew.changes.checkboxAlignment.description',
+      titleKey: 'whatsNew.changes.libraryUpdates.title',
+      descriptionKey: 'whatsNew.changes.libraryUpdates.description',
     },
   ],
 };

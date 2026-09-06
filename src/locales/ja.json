@@ -647,29 +647,13 @@
       "improvement": "改善"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "チェックボックスの位置揃え",
-        "description": "プレビューのタスクリストのチェックボックスが文字と揃い、ズームや文字サイズに追従するようになりました。"
+      "tabSwitchPreview": {
+        "title": "タブ切り替え時のプレビュー更新",
+        "description": "タブを切り替えたときにプレビューが更新されない問題を修正しました。"
       },
-      "githubAlerts": {
-        "title": "GitHub アラート",
-        "description": "> [!NOTE] や > [!WARNING] などの引用ブロックが、GitHub スタイルの注意書きボックスとしてプレビューと HTML/PDF エクスポートに表示されるようになりました。"
-      },
-      "emojiShortcodes": {
-        "title": "絵文字ショートコード",
-        "description": ":rocket: のような GitHub 絵文字ショートコードが絵文字（🚀）に変換されるようになりました。設定 > 高度な設定でオフにできます。"
-      },
-      "revealInFolder": {
-        "title": "Finder／エクスプローラーで表示",
-        "description": "タブやファイルツリーのコンテキストメニューから、ファイルの場所を OS のファイルマネージャーで開けるようになりました。"
-      },
-      "pdfExport": {
-        "title": "PDF エクスポートの改善",
-        "description": "画像を多く含む PDF のファイルサイズが大幅に小さくなり、生成中に進行状況が表示されるようになりました。"
-      },
-      "editingFixes": {
-        "title": "編集まわりの修正",
-        "description": "カンマを含むテキストの貼り付けが表に変換される問題、コードブロック内の行がアウトラインに見出しとして表示される問題、プレビューからの表編集で改行コードが書き換わる問題を修正しました。"
+      "libraryUpdates": {
+        "title": "ライブラリの更新",
+        "description": "Mermaid 図のレンダリングを含む内部ライブラリを更新し、安定性とセキュリティを向上させました。"
       }
     }
   },

@@ -624,29 +624,13 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "Alineación de casillas de verificación",
-        "description": "Las casillas de las listas de tareas ahora se alinean con el texto en la vista previa y se escalan con el zoom y el tamaño de fuente."
+      "tabSwitchPreview": {
+        "title": "Actualización de la vista previa al cambiar de pestaña",
+        "description": "Se corrigió un error por el que la vista previa no se actualizaba al cambiar de pestaña."
       },
-      "githubAlerts": {
-        "title": "Alertas de GitHub",
-        "description": "Las citas como > [!NOTE] o > [!WARNING] ahora se muestran como recuadros de aviso al estilo de GitHub en la vista previa y en las exportaciones a HTML y PDF."
-      },
-      "emojiShortcodes": {
-        "title": "Códigos cortos de emoji",
-        "description": "Los códigos cortos de emoji de GitHub como :rocket: ahora se convierten en emoji (🚀) en la vista previa y las exportaciones. Se puede desactivar en Configuración > Avanzado."
-      },
-      "revealInFolder": {
-        "title": "Mostrar en Finder / Explorador de archivos",
-        "description": "Abre la ubicación de un archivo en el administrador de archivos del sistema desde el menú contextual de la pestaña o del árbol de archivos."
-      },
-      "pdfExport": {
-        "title": "Mejoras en la exportación a PDF",
-        "description": "Las exportaciones a PDF de documentos con muchas imágenes ahora son mucho más pequeñas, y se muestra el progreso mientras se genera el PDF."
-      },
-      "editingFixes": {
-        "title": "Correcciones de edición",
-        "description": "Se corrigió que el texto con comas se convirtiera en una tabla al pegarlo, que líneas de los bloques de código aparecieran como encabezados en el esquema y que editar tablas desde la vista previa reescribiera los finales de línea."
+      "libraryUpdates": {
+        "title": "Actualización de bibliotecas",
+        "description": "Se actualizaron bibliotecas internas, incluida la representación de diagramas Mermaid, para mejorar la estabilidad y la seguridad."
       }
     }
   },

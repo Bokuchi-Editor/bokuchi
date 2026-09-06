@@ -624,29 +624,13 @@
       "improvement": "改進"
     },
     "changes": {
-      "checkboxAlignment": {
-        "title": "核取方塊對齊",
-        "description": "預覽中工作清單的核取方塊現在會與文字對齊，並隨縮放與字型大小同步縮放。"
+      "tabSwitchPreview": {
+        "title": "切換標籤頁時的預覽更新",
+        "description": "修正了切換標籤頁時預覽未更新的問題。"
       },
-      "githubAlerts": {
-        "title": "GitHub 提示區塊",
-        "description": "> [!NOTE]、> [!WARNING] 等引用區塊現在會以 GitHub 風格的提示框顯示在預覽及 HTML/PDF 匯出中。"
-      },
-      "emojiShortcodes": {
-        "title": "表情符號短代碼",
-        "description": ":rocket: 等 GitHub 表情短代碼現在會在預覽和匯出中轉換為表情符號（🚀）。可在 設定 > 進階 中關閉。"
-      },
-      "revealInFolder": {
-        "title": "在 Finder / 檔案總管中顯示",
-        "description": "可透過分頁或檔案樹的右鍵選單，在系統檔案管理器中開啟檔案所在位置。"
-      },
-      "pdfExport": {
-        "title": "PDF 匯出改進",
-        "description": "包含大量圖片的文件匯出的 PDF 現在小得多，並且在產生 PDF 時會顯示進度。"
-      },
-      "editingFixes": {
-        "title": "編輯相關修正",
-        "description": "修正了貼上含逗號的文字被轉換為表格、程式碼區塊中的行被誤判為大綱標題，以及從預覽編輯表格時換行字元被改寫的問題。"
+      "libraryUpdates": {
+        "title": "函式庫更新",
+        "description": "更新了包括 Mermaid 圖表渲染在內的內部函式庫，以提升穩定性與安全性。"
       }
     }
   },

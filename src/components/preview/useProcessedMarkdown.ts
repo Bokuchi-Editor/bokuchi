@@ -163,6 +163,7 @@ export function useProcessedMarkdown({
       } else {
         setProcessedContent('');
         setHtmlContent('');
+        lastProcessedInputRef.current = '';
       }
     };
 
