@@ -377,7 +377,7 @@
       "previewFontFamily": "Police de l'aperçu",
       "previewFontFamilyDescription": "Choisissez une police pour le texte de l'aperçu et l'export HTML/PDF. Les blocs de code utilisent toujours une police à chasse fixe.",
       "previewDirection": "Direction du texte de l'aperçu",
-      "previewDirectionDescription": "Direction du texte pour l'aperçu et l'export HTML/PDF. « Automatique » la détecte à partir du contenu. Les blocs de code et les tableaux restent toujours de gauche à droite.",
+      "previewDirectionDescription": "Direction du texte pour l'aperçu et l'export HTML/PDF. « Automatique » la détecte à partir du contenu. Les blocs de code restent toujours de gauche à droite ; les tableaux suivent la direction du document.",
       "fontFamilyDefault": "Par défaut",
       "fontFamilyMonospaceOnly": "Polices à chasse fixe uniquement",
       "showLineNumbers": "Afficher les numéros de ligne",

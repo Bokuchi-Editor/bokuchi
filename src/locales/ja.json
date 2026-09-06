@@ -377,7 +377,7 @@
       "previewFontFamily": "プレビューのフォント",
       "previewFontFamilyDescription": "プレビュー本文と HTML/PDF エクスポートで使うフォントを選択します。コードブロックは常に等幅フォントで表示されます。",
       "previewDirection": "プレビューの文字方向",
-      "previewDirectionDescription": "プレビューと HTML/PDF エクスポートの文字方向です。「自動」は内容から判定します。コードブロックとテーブルは常に左から右で表示されます。",
+      "previewDirectionDescription": "プレビューと HTML/PDF エクスポートの文字方向です。「自動」は内容から判定します。コードブロックは常に左から右で表示され、テーブルは文書の方向に従います。",
       "fontFamilyDefault": "デフォルト",
       "fontFamilyMonospaceOnly": "等幅フォントのみ表示",
       "showLineNumbers": "行番号を表示",

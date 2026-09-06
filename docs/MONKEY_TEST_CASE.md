@@ -430,7 +430,7 @@ The preview's task-list checkbox used to sit a few pixels above its label and ke
 
 ## 36. Preview Text Direction (RTL, #499)
 
-The preview and HTML/PDF exports can render right-to-left for Arabic and other RTL scripts. A toggle in the preview header (and Settings > Editor) chooses Auto / Left to Right / Right to Left; Auto follows the content, and an Arabic UI language defaults the preview to RTL. Code blocks and tables always stay LTR.
+The preview and HTML/PDF exports can render right-to-left for Arabic and other RTL scripts. A toggle in the preview header (and Settings > Editor) chooses Auto / Left to Right / Right to Left; Auto follows the content, and an Arabic UI language defaults the preview to RTL. Code blocks always stay LTR; tables follow the document direction.
 
 | #     | Test Case                                                        | Steps                                                                                                                                   | Expected Result                                                                                                                                                  |
 | ----- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |

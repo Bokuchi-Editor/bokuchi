@@ -377,7 +377,7 @@
       "previewFontFamily": "Preview Font",
       "previewFontFamilyDescription": "Choose an installed font for the preview text and HTML/PDF export. Code blocks always use a monospace font.",
       "previewDirection": "Preview Text Direction",
-      "previewDirectionDescription": "Text direction for the preview and HTML/PDF export. Auto detects it from the content. Code blocks and tables always stay left-to-right.",
+      "previewDirectionDescription": "Text direction for the preview and HTML/PDF export. Auto detects it from the content. Code blocks always stay left-to-right; tables follow the document direction.",
       "fontFamilyDefault": "Default",
       "fontFamilyMonospaceOnly": "Monospace fonts only",
       "showLineNumbers": "Show Line Numbers",

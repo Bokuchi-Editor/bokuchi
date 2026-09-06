@@ -377,7 +377,7 @@
       "previewFontFamily": "預覽字型",
       "previewFontFamilyDescription": "選擇預覽內文與 HTML/PDF 匯出使用的字型。程式碼區塊一律使用等寬字型。",
       "previewDirection": "預覽文字方向",
-      "previewDirectionDescription": "預覽與 HTML/PDF 匯出的文字方向。「自動」會依內容判斷方向。程式碼區塊與表格永遠保持由左至右。",
+      "previewDirectionDescription": "預覽與 HTML/PDF 匯出的文字方向。「自動」會依內容判斷方向。程式碼區塊永遠保持由左至右，表格則依文件方向排列。",
       "fontFamilyDefault": "預設",
       "fontFamilyMonospaceOnly": "僅顯示等寬字型",
       "showLineNumbers": "顯示行號",

@@ -377,7 +377,7 @@
       "previewFontFamily": "Phông chữ xem trước",
       "previewFontFamilyDescription": "Chọn phông chữ cho nội dung xem trước và xuất HTML/PDF. Khối mã luôn dùng phông chữ monospace.",
       "previewDirection": "Hướng văn bản xem trước",
-      "previewDirectionDescription": "Hướng văn bản cho phần xem trước và khi xuất HTML/PDF. \"Tự động\" nhận diện hướng từ nội dung. Khối mã và bảng luôn giữ hướng từ trái sang phải.",
+      "previewDirectionDescription": "Hướng văn bản cho phần xem trước và khi xuất HTML/PDF. \"Tự động\" nhận diện hướng từ nội dung. Khối mã luôn giữ hướng từ trái sang phải; bảng theo hướng của tài liệu.",
       "fontFamilyDefault": "Mặc định",
       "fontFamilyMonospaceOnly": "Chỉ phông chữ monospace",
       "showLineNumbers": "Hiển thị số dòng",

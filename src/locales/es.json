@@ -377,7 +377,7 @@
       "previewFontFamily": "Fuente de la vista previa",
       "previewFontFamilyDescription": "Seleccionar una fuente para el texto de la vista previa y la exportación HTML/PDF. Los bloques de código siempre usan una fuente monoespaciada.",
       "previewDirection": "Dirección del texto de la vista previa",
-      "previewDirectionDescription": "Dirección del texto para la vista previa y la exportación a HTML/PDF. «Automática» la detecta a partir del contenido. Los bloques de código y las tablas siempre se muestran de izquierda a derecha.",
+      "previewDirectionDescription": "Dirección del texto para la vista previa y la exportación a HTML/PDF. «Automática» la detecta a partir del contenido. Los bloques de código siempre se muestran de izquierda a derecha; las tablas siguen la dirección del documento.",
       "fontFamilyDefault": "Predeterminada",
       "fontFamilyMonospaceOnly": "Solo fuentes monoespaciadas",
       "showLineNumbers": "Mostrar números de línea",

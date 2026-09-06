@@ -377,7 +377,7 @@
       "previewFontFamily": "미리보기 글꼴",
       "previewFontFamilyDescription": "미리보기 본문과 HTML/PDF 내보내기에 사용할 글꼴을 선택합니다. 코드 블록은 항상 고정폭 글꼴로 표시됩니다.",
       "previewDirection": "미리보기 텍스트 방향",
-      "previewDirectionDescription": "미리보기와 HTML/PDF 내보내기에 적용되는 텍스트 방향입니다. \"자동\"은 내용에서 방향을 감지합니다. 코드 블록과 표는 항상 왼쪽에서 오른쪽으로 표시됩니다.",
+      "previewDirectionDescription": "미리보기와 HTML/PDF 내보내기에 적용되는 텍스트 방향입니다. \"자동\"은 내용에서 방향을 감지합니다. 코드 블록은 항상 왼쪽에서 오른쪽으로 표시되며, 표는 문서 방향을 따릅니다.",
       "fontFamilyDefault": "기본값",
       "fontFamilyMonospaceOnly": "고정폭 글꼴만 표시",
       "showLineNumbers": "줄 번호 표시",

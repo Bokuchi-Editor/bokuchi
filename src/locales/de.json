@@ -377,7 +377,7 @@
       "previewFontFamily": "Vorschau-Schriftart",
       "previewFontFamilyDescription": "Wählen Sie eine Schriftart für den Vorschautext und den HTML/PDF-Export. Codeblöcke verwenden immer eine Monospace-Schriftart.",
       "previewDirection": "Textrichtung der Vorschau",
-      "previewDirectionDescription": "Textrichtung für die Vorschau und den HTML/PDF-Export. „Automatisch“ erkennt die Richtung aus dem Inhalt. Codeblöcke und Tabellen bleiben immer von links nach rechts.",
+      "previewDirectionDescription": "Textrichtung für die Vorschau und den HTML/PDF-Export. „Automatisch“ erkennt die Richtung aus dem Inhalt. Codeblöcke bleiben immer von links nach rechts; Tabellen folgen der Richtung des Dokuments.",
       "fontFamilyDefault": "Standard",
       "fontFamilyMonospaceOnly": "Nur Monospace-Schriftarten",
       "showLineNumbers": "Zeilennummern anzeigen",

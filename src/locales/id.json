@@ -377,7 +377,7 @@
       "previewFontFamily": "Font Pratinjau",
       "previewFontFamilyDescription": "Pilih font untuk teks pratinjau dan ekspor HTML/PDF. Blok kode selalu menggunakan font monospace.",
       "previewDirection": "Arah Teks Pratinjau",
-      "previewDirectionDescription": "Arah teks untuk pratinjau dan ekspor HTML/PDF. \"Otomatis\" mendeteksi arah dari konten. Blok kode dan tabel selalu tetap dari kiri ke kanan.",
+      "previewDirectionDescription": "Arah teks untuk pratinjau dan ekspor HTML/PDF. \"Otomatis\" mendeteksi arah dari konten. Blok kode selalu tetap dari kiri ke kanan; tabel mengikuti arah dokumen.",
       "fontFamilyDefault": "Bawaan",
       "fontFamilyMonospaceOnly": "Hanya font monospace",
       "showLineNumbers": "Tampilkan Nomor Baris",
