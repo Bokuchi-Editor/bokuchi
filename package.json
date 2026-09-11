@@ -77,7 +77,7 @@
     "@types/react-dom": "^19.2.5",
     "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.59.0",
-    "@vitejs/plugin-react": "^6.1.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^4.1.11",
     "audit-ci": "^7.0.1",
     "eslint": "^10.9.1",
