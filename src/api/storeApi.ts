@@ -91,6 +91,18 @@ export const storeApi = {
     }
   },
 
+  // Check whether the user has ever manually set a language (used to decide
+  // whether to auto-detect from the system language on startup).
+  async hasLanguageSetting(): Promise<boolean> {
+    try {
+      const storeInstance = await getStore();
+      const settings = await storeInstance.get('appSettings') as AppSettings | null;
+      return settings?.interface?.language != null;
+    } catch {
+      return false;
+    }
+  },
+
   // Save zoom level
   async saveZoomLevel(zoomLevel: number): Promise<void> {
     try {

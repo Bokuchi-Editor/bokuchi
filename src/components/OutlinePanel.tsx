@@ -9,6 +9,8 @@ interface OutlinePanelProps {
   onHeadingClick: (lineNumber: number, index: number) => void;
   onClose?: () => void;
   width?: number;
+  /** Which side the panel attaches to — controls the divider border side. */
+  position?: 'left' | 'right';
 }
 
 const OutlinePanel: React.FC<OutlinePanelProps> = ({
@@ -16,6 +18,7 @@ const OutlinePanel: React.FC<OutlinePanelProps> = ({
   onHeadingClick,
   onClose,
   width = 240,
+  position = 'right',
 }) => {
   const { t } = useTranslation();
 
@@ -27,8 +30,9 @@ const OutlinePanel: React.FC<OutlinePanelProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        borderLeft: 1,
-        borderColor: 'divider',
+        ...(position === 'right'
+          ? { borderLeft: 1, borderColor: 'divider' }
+          : { borderRight: 1, borderColor: 'divider' }),
         bgcolor: 'background.paper',
       }}
     >

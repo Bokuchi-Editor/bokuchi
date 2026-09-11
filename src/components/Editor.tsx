@@ -835,6 +835,11 @@ const MarkdownEditor: React.FC<EditorProps> = ({
               padding: {
                 top: searchOpen ? searchPanelHeight + 16 : 0,
               },
+              scrollbar: {
+                verticalScrollbarSize: 10,
+                horizontalScrollbarSize: 10,
+                useShadows: false,
+              },
             }}
           />
         )}

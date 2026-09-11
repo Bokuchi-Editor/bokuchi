@@ -34,6 +34,12 @@
   /* Status bar */
   --color-status-background: #f6f8fa;
   --color-status-text: #6a737d;
+
+  /* Scrollbar (light) */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Dark theme */
@@ -65,6 +71,12 @@
 
   --color-status-background: #161b22;
   --color-status-text: #8b949e;
+
+  /* Scrollbar (dark) */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Pastel theme */
@@ -96,6 +108,12 @@
 
   --color-status-background: #f8f9fa;
   --color-status-text: #6c757d;
+
+  /* Scrollbar (light) */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Vivid theme */
@@ -127,6 +145,12 @@
 
   --color-status-background: #f7fafc;
   --color-status-text: #4a5568;
+
+  /* Scrollbar (light) */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Darcula theme */
@@ -158,6 +182,12 @@
 
   --color-status-background: #3c3f41;
   --color-status-text: #808080;
+
+  /* Scrollbar (dark) */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Dawn theme (Akatsuki - Light with warm terracotta tint) */
@@ -191,6 +221,12 @@
 
   --color-status-background: #f4edea;
   --color-status-text: #796b64;
+
+  /* Scrollbar (light) */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Twilight theme (Tasogare - Dark with warm gold tint) */
@@ -224,6 +260,12 @@
 
   --color-status-background: #2d2a23;
   --color-status-text: #aaa590;
+
+  /* Scrollbar (dark) */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Silk theme (Kinu - Light cool monotone) */
@@ -257,6 +299,12 @@
 
   --color-status-background: #ededf2;
   --color-status-text: #6c6c71;
+
+  /* Scrollbar (light) */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* Ink theme (Sumi - Dark cool monotone) */
@@ -290,6 +338,12 @@
 
   --color-status-background: #292930;
   --color-status-text: #a0a0a7;
+
+  /* Scrollbar (dark) */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+  --scrollbar-track: transparent;
+  --scrollbar-width: 10px;
 }
 
 /* AS/400 theme (IBM Green Screen) */
@@ -321,4 +375,10 @@
 
   --color-status-background: #001a00;
   --color-status-text: #00cc00;
+
+  /* Scrollbar (AS/400 green screen) */
+  --scrollbar-thumb: rgba(0, 255, 0, 0.3);
+  --scrollbar-thumb-hover: rgba(0, 255, 0, 0.55);
+  --scrollbar-track: rgba(0, 255, 0, 0.05);
+  --scrollbar-width: 10px;
 }

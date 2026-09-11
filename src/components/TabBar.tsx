@@ -68,6 +68,7 @@ interface TabBarProps {
   onCopyFileName?: (tabId: string) => void;
   onRevealInFileManager?: (tabId: string) => void;
   onCloseOtherTabs?: (tabId: string) => void;
+  onCloseTabsToLeft?: (tabId: string) => void;
   onCloseTabsToRight?: (tabId: string) => void;
   onCloseAllTabs?: () => void;
   closeButtonPosition?: 'left' | 'right';
@@ -186,10 +187,10 @@ const SortableTab: React.FC<{
               py: 1,
               px: 2,
               '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
+                bgcolor: 'action.selected',
+                color: 'text.primary',
                 '&:hover': {
-                  bgcolor: 'primary.dark',
+                  bgcolor: 'action.selected',
                 },
               },
             }}
@@ -322,10 +323,10 @@ const SortableTab: React.FC<{
           borderTop: '3px solid',
           borderTopColor: tab.isPinned && !isActive ? 'primary.main' : 'transparent',
           ...(isActive && {
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
+            bgcolor: 'action.selected',
+            color: 'text.primary',
             '&:hover': {
-              bgcolor: 'primary.dark',
+              bgcolor: 'action.selected',
             },
           }),
           ...(!isActive && {
@@ -354,6 +355,7 @@ const TabBar: React.FC<TabBarProps> = ({
   onCopyFileName,
   onRevealInFileManager,
   onCloseOtherTabs,
+  onCloseTabsToLeft,
   onCloseTabsToRight,
   onCloseAllTabs,
   closeButtonPosition = 'right',
@@ -420,6 +422,11 @@ const TabBar: React.FC<TabBarProps> = ({
     if (contextMenu) onCloseOtherTabs?.(contextMenu.tabId);
     setContextMenu(null);
   }, [contextMenu, onCloseOtherTabs]);
+
+  const handleCloseTabsToLeftClick = useCallback(() => {
+    if (contextMenu) onCloseTabsToLeft?.(contextMenu.tabId);
+    setContextMenu(null);
+  }, [contextMenu, onCloseTabsToLeft]);
 
   const handleCloseTabsToRightClick = useCallback(() => {
     if (contextMenu) onCloseTabsToRight?.(contextMenu.tabId);
@@ -626,11 +633,13 @@ const TabBar: React.FC<TabBarProps> = ({
               scrollButtons="auto"
               sx={{
                 flex: 1,
+                minHeight: 35,
                 '& .MuiTabs-indicator': {
                   display: 'none', // Hidden to use custom styling
                 },
                 '& .MuiTab-root': {
-                  minHeight: 48,
+                  minHeight: 35,
+                  padding: '7px 12px',
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   minWidth: 120,
@@ -718,6 +727,9 @@ const TabBar: React.FC<TabBarProps> = ({
         </MenuItem>
         <MenuItem onClick={handleCloseOtherTabsClick}>
           {t('tabs.closeOtherTabs')}
+        </MenuItem>
+        <MenuItem onClick={handleCloseTabsToLeftClick}>
+          {layout === 'horizontal' ? t('tabs.closeTabsToLeft') : t('tabs.closeTabsAbove')}
         </MenuItem>
         <MenuItem onClick={handleCloseTabsToRightClick}>
           {layout === 'horizontal' ? t('tabs.closeTabsToRight') : t('tabs.closeTabsBelow')}
