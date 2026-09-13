@@ -74,7 +74,7 @@
     "@testing-library/user-event": "^14.6.6",
     "@types/katex": "^0.16.8",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5",
+    "@types/react-dom": "^19.2.7",
     "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.59.0",
     "@vitejs/plugin-react": "^6.1.0",
