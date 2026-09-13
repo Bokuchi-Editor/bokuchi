@@ -1,6 +1,6 @@
 import { alpha } from '@mui/material/styles';
 import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
-import { getThemeByName, ThemeName } from '../themes';
+import { getThemeByName, getPreviewTableHeaderStyle, ThemeName, type TableHeaderStyle } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
 
 /** Theme color palette for HTML export */
@@ -14,6 +14,20 @@ export interface ExportThemeColors {
   inlineCodeBackground: string;
   /** Whether the theme is a dark palette (picks the GitHub alert accent set). */
   isDark: boolean;
+  /** Accent `<th>` colors for themes that opt in; undefined = neutral codeBackground tint. */
+  tableHeader?: TableHeaderStyle;
+}
+
+/**
+ * Code-block / table-header background derived from the text color so it
+ * stays visible even when a theme leaves background.paper === background.default
+ * (Default / Vivid) and always keeps contrast with the text painted over it.
+ * Shared by the HTML export and the in-app preview so both render alike
+ * (the preview used to paint `th` with the theme's `pre` background, which is
+ * a dark navy in Vivid and swallowed the dark header text).
+ */
+export function deriveCodeBackground(palette: { mode: 'light' | 'dark'; text: { primary: string } }): string {
+  return alpha(palette.text.primary, palette.mode === 'dark' ? 0.10 : 0.06);
 }
 
 /**
@@ -25,9 +39,7 @@ export function getExportThemeColors(theme?: string): ExportThemeColors {
   const themeName = (theme || 'default') as ThemeName;
   const muiTheme = getThemeByName(themeName);
   const { palette } = muiTheme;
-  // Code block bg derived from text color so it stays visible even when a
-  // theme leaves background.paper === background.default (Default / Vivid).
-  const codeBackground = alpha(palette.text.primary, palette.mode === 'dark' ? 0.10 : 0.06);
+  const codeBackground = deriveCodeBackground(palette);
   return {
     backgroundColor: palette.background.default,
     textColor: palette.text.primary,
@@ -37,6 +49,7 @@ export function getExportThemeColors(theme?: string): ExportThemeColors {
     blockquoteColor: palette.text.secondary,
     inlineCodeBackground: alpha(palette.text.primary, 0.08),
     isDark: palette.mode === 'dark',
+    tableHeader: getPreviewTableHeaderStyle(themeName) ?? undefined,
   };
 }
 
@@ -112,12 +125,21 @@ export function generateTableLayoutCSS(
   prefix: string,
   borderColor: string,
   cellBackground: string,
+  header?: TableHeaderStyle | null,
 ): string {
   const tableSelector = `${prefix}table`;
   const cellSelector = `${prefix}th, ${prefix}td`;
   const headerSelector = `${prefix}th`;
 
-  const headerRule = `
+  // `background` (not background-color) so an AppBar gradient can be mirrored.
+  const headerRule = header
+    ? `
+        ${headerSelector} {
+            background: ${header.background};
+            color: ${header.color};
+            font-weight: 600;
+        }`
+    : `
         ${headerSelector} {
             background-color: ${cellBackground};
             font-weight: 600;
@@ -211,6 +233,7 @@ export function generateExportCSS(
     '',
     colors.borderColor,
     colors.codeBackground,
+    colors.tableHeader,
   );
   return `
         body {
@@ -373,7 +396,11 @@ export function buildExportHTML(
   const effectiveTheme = options.forPrint ? 'default' : theme;
   const effectiveDarkMode = options.forPrint ? false : darkMode;
 
-  const colors = getExportThemeColors(effectiveTheme);
+  const themeColors = getExportThemeColors(effectiveTheme);
+  // Print stays neutral: the forced Default theme opts into an accent (blue)
+  // table header on screen, but PDFs keep the tinted header for the same
+  // reason they drop the theme background — readable, uncolored paper.
+  const colors = options.forPrint ? { ...themeColors, tableHeader: undefined } : themeColors;
   const css = generateExportCSS(colors, tableLayout, options.fontFamily);
   const highlightStyle = getHighlightStyleDataUri(effectiveDarkMode);
   // Inject KaTeX's stylesheet (with fonts inlined) only when the document has

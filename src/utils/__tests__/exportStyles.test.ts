@@ -4,6 +4,7 @@ import {
   getHighlightStyleDataUri,
   generateExportCSS,
   generateTableLayoutCSS,
+  deriveCodeBackground,
   generateGithubAlertCSS,
   buildExportHTML,
 } from '../exportStyles';
@@ -284,5 +285,36 @@ describe('buildExportHTML', () => {
       const html = buildExportHTML('<p>x</p>', false);
       expect(html).toContain('font-family: -apple-system, BlinkMacSystemFont');
     });
+  });
+});
+
+describe('deriveCodeBackground', () => {
+  it('tints the text color at 6% for light and 10% for dark palettes', () => {
+    expect(deriveCodeBackground({ mode: 'light', text: { primary: '#2d3748' } })).toBe('rgba(45, 55, 72, 0.06)');
+    expect(deriveCodeBackground({ mode: 'dark', text: { primary: '#ffffff' } })).toBe('rgba(255, 255, 255, 0.1)');
+  });
+});
+
+describe('accent table header (previewTableHeader: appBar)', () => {
+  it('generateTableLayoutCSS paints th with the header style when given', () => {
+    const css = generateTableLayoutCSS('equal', '', '#ccc', '#fff', { background: 'linear-gradient(45deg, #a 30%, #b 90%)', color: '#ffffff' });
+    const th = css.match(/\bth \{[^}]*\}/)?.[0] ?? '';
+    expect(th).toContain('background: linear-gradient(45deg, #a 30%, #b 90%)');
+    expect(th).toContain('color: #ffffff');
+    expect(th).not.toContain('#fff;');
+  });
+
+  it('getExportThemeColors carries the header for opted-in themes only', () => {
+    expect(getExportThemeColors('vivid').tableHeader?.color).toBe('#ffffff');
+    expect(getExportThemeColors('default').tableHeader?.background).toBe('#1976d2');
+    expect(getExportThemeColors('dark').tableHeader).toBeUndefined();
+  });
+
+  it('HTML export uses the accent header, PDF (forPrint) keeps the neutral tint', () => {
+    const html = buildExportHTML('<p>x</p>', false, 'vivid', 'equal');
+    expect(html).toContain('linear-gradient(45deg, #ff6b35 30%, #f7931e 90%)');
+    const pdf = buildExportHTML('<p>x</p>', false, 'vivid', 'equal', undefined, { forPrint: true });
+    expect(pdf).not.toContain('linear-gradient(45deg');
+    expect(pdf).not.toContain('#1976d2;\n            color');
   });
 });

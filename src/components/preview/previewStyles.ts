@@ -1,7 +1,8 @@
 import { alpha } from '@mui/material/styles';
 import type { Palette } from '@mui/material/styles';
-import { generateTableLayoutCSS, generateGithubAlertCSS } from '../../utils/exportStyles';
+import { generateTableLayoutCSS, generateGithubAlertCSS, deriveCodeBackground } from '../../utils/exportStyles';
 import type { TableLayoutMode } from '../../types/settings';
+import type { TableHeaderStyle } from '../../themes';
 
 /**
  * Builds the scoped CSS injected into the in-app markdown preview. The rules
@@ -11,7 +12,11 @@ import type { TableLayoutMode } from '../../types/settings';
  * Kept out of the component body because it is a large, purely derived string
  * that only depends on the palette and the table-layout mode.
  */
-export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMode): string {
+export function buildPreviewStyles(
+  palette: Palette,
+  tableLayout: TableLayoutMode,
+  tableHeader: TableHeaderStyle | null = null,
+): string {
   return `
             .markdown-preview {
               word-break: break-word;
@@ -181,7 +186,8 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               tableLayout,
               '.markdown-preview ',
               'var(--color-border)',
-              'var(--color-pre-background)',
+              deriveCodeBackground(palette),
+              tableHeader,
             )}
 
             .markdown-preview a {

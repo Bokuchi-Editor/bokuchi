@@ -7,6 +7,7 @@ import {
   getVisibleThemes,
   applyThemeToDocument,
   isDarkTheme,
+  getPreviewTableHeaderStyle,
   registerCustomThemes,
   themes,
   ThemeName,
@@ -226,5 +227,26 @@ describe('createCustomThemeFrom / getThemeColorTokens', () => {
     // base points at the underlying preset, not the intermediate custom theme
     expect(copy.baseTheme).toBe('dawn');
     expect(copy.mode).toBe('light');
+  });
+});
+
+describe('getPreviewTableHeaderStyle', () => {
+  it('mirrors the AppBar override for the branded light presets', () => {
+    expect(getPreviewTableHeaderStyle('vivid')).toEqual({
+      background: 'linear-gradient(45deg, #ff6b35 30%, #f7931e 90%)',
+      color: '#ffffff',
+    });
+    expect(getPreviewTableHeaderStyle('pastel')).toEqual({ background: '#e8f5e8', color: '#5a5a5a' });
+  });
+
+  it('falls back to MUI AppBar defaults (primary + contrast text) when no override exists', () => {
+    expect(getPreviewTableHeaderStyle('default')).toEqual({ background: '#1976d2', color: '#fff' });
+  });
+
+  it('returns null for themes that keep the neutral header, and for custom themes', () => {
+    for (const name of ['dark', 'dawn', 'twilight', 'silk', 'ink', 'darcula', 'as400']) {
+      expect(getPreviewTableHeaderStyle(name), name).toBeNull();
+    }
+    expect(getPreviewTableHeaderStyle('custom:anything')).toBeNull();
   });
 });

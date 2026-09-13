@@ -113,16 +113,36 @@ describe('MarkdownEditor', () => {
   // =========================================================================
 
   describe('settings propagation', () => {
-    // T-ED-05: light mode without darcula
-    it('T-ED-05: light mode uses light theme', () => {
-      render(<MarkdownEditor {...defaultProps()} darkMode={false} />);
-      expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('light');
+    // T-ED-05: light theme → Monaco theme derived on a `vs` base
+    it('T-ED-05: light mode registers the app Monaco theme on a vs base', () => {
+      const defineTheme = vi.fn();
+      const setTheme = vi.fn();
+      setWindowMonaco({ editor: { defineTheme, setTheme } });
+      render(<MarkdownEditor {...defaultProps()} darkMode={false} theme="default" />);
+      expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('bokuchi');
+      expect(defineTheme).toHaveBeenCalledWith('bokuchi', expect.objectContaining({ base: 'vs' }));
+      expect(setTheme).toHaveBeenCalledWith('bokuchi');
     });
 
-    // T-ED-06: dark mode uses vs-dark
-    it('T-ED-06: dark mode uses vs-dark theme', () => {
-      render(<MarkdownEditor {...defaultProps()} darkMode={true} />);
-      expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('vs-dark');
+    // T-ED-06: dark theme → Monaco theme derived on a `vs-dark` base
+    it('T-ED-06: dark mode registers the app Monaco theme on a vs-dark base', () => {
+      const defineTheme = vi.fn();
+      setWindowMonaco({ editor: { defineTheme, setTheme: vi.fn() } });
+      render(<MarkdownEditor {...defaultProps()} darkMode={true} theme="dark" />);
+      expect(screen.getByTestId('monaco-editor').dataset.theme).toBe('bokuchi');
+      expect(defineTheme).toHaveBeenCalledWith(
+        'bokuchi',
+        expect.objectContaining({ base: 'vs-dark', colors: expect.objectContaining({ 'editor.background': '#121212' }) }),
+      );
+    });
+
+    // T-ED-06b: switching the theme prop re-defines the Monaco theme
+    it('T-ED-06b: theme change re-registers the Monaco theme', () => {
+      const defineTheme = vi.fn();
+      setWindowMonaco({ editor: { defineTheme, setTheme: vi.fn() } });
+      const { rerender } = render(<MarkdownEditor {...defaultProps()} darkMode={false} theme="default" />);
+      rerender(<MarkdownEditor {...defaultProps()} darkMode={true} theme="ink" />);
+      expect(defineTheme).toHaveBeenLastCalledWith('bokuchi', expect.objectContaining({ base: 'vs-dark' }));
     });
 
     // T-ED-07: onChange is forwarded from Monaco

@@ -13,6 +13,7 @@ import { registerEditorActions } from '../utils/registerEditorActions';
 import { classifyPaste } from '../utils/pasteClassifier';
 import { computeEditorStatus } from '../utils/editorStatus';
 import { buildFontFamilyCss, EDITOR_FONT_FALLBACK_STACK } from '../utils/fontFamily';
+import { applyMonacoTheme, MONACO_THEME_NAME, type MonacoThemeHost } from '../themes/monacoTheme';
 import { desktopApi } from '../api/desktopApi';
 import {
   IMAGE_SUBDIR,
@@ -86,6 +87,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
   darkMode,
+  theme,
   filePath,
   fileNotFound,
   onStatusChange,
@@ -559,6 +561,17 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     editor.focus();
   }, [revealLineRequest?.requestId]);
 
+  // Keep the Monaco skin in sync with the app theme (#525). The theme is
+  // registered globally under a fixed name, so this runs before the editor
+  // instance exists (window.monaco is bundled synchronously in setupMonaco)
+  // and re-runs on every theme change; Monaco refreshes the active theme when
+  // it is redefined under the same name.
+  useEffect(() => {
+    const monaco = (window as { monaco?: MonacoThemeHost }).monaco;
+    if (!monaco?.editor?.defineTheme) return;
+    applyMonacoTheme(monaco, theme ?? (darkMode ? 'dark' : 'default'));
+  }, [theme, darkMode]);
+
   const handleEditorDidMount: OnMount = (editor, monacoNs) => {
     editorRef.current = editor;
 
@@ -797,7 +810,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
             defaultValue={content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={darkMode ? 'vs-dark' : 'light'}
+            theme={MONACO_THEME_NAME}
             options={{
               minimap: { enabled: minimap },
               fontSize: Math.round(fontSize * zoomLevel),
