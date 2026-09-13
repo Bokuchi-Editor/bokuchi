@@ -73,6 +73,12 @@ export interface RenderingSettings {
 // - auto-scroll: column widths follow content; the table can grow past the pane and scroll horizontally.
 export type TableLayoutMode = 'equal' | 'auto-wrap' | 'auto-scroll';
 
+// Text direction for the preview pane and HTML/PDF export (#499).
+// - auto: the HTML engine detects direction from the content's first
+//   strongly-directional character (LTR documents behave exactly as before).
+// - ltr / rtl: forced direction.
+export type PreviewDirection = 'auto' | 'ltr' | 'rtl';
+
 // Preview settings type definition
 export interface PreviewSettings {
   tableLayout: TableLayoutMode;
@@ -80,6 +86,11 @@ export interface PreviewSettings {
   // sans-serif stack. Code blocks always keep their monospace font, and the
   // AS/400 theme keeps its own font regardless of this setting.
   fontFamily: string;
+  // Text direction for the preview and HTML/PDF export (#499). Kept optional
+  // (no entry in DEFAULT_PREVIEW_SETTINGS): "never set" must stay
+  // distinguishable from an explicit 'auto' so RTL UI languages can default to
+  // 'rtl' — see resolvePreviewDirection().
+  direction?: PreviewDirection;
 }
 
 // Advanced settings type definition

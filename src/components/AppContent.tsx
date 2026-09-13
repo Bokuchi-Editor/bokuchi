@@ -9,7 +9,7 @@ import EmptyState from './EmptyState';
 import { Tab } from '../types/tab';
 import { OutlineDisplayMode } from '../types/outline';
 import { FolderTreeDisplayMode, FolderTreeNode } from '../types/folderTree';
-import { RenderingSettings, PreviewSettings, ScrollSyncMode } from '../types/settings';
+import { RenderingSettings, PreviewSettings, PreviewDirection, ScrollSyncMode } from '../types/settings';
 import type { SettingsFocusTarget } from '../types/settingsFocus';
 import { useOutlineHeadings } from '../hooks/useOutlineHeadings';
 import { useResizableSidebar, useSidebarWidthDrag } from '../hooks/useResizableSidebar';
@@ -44,6 +44,10 @@ interface AppContentProps {
 
   // Preview settings (table layout, etc.)
   previewSettings?: PreviewSettings;
+
+  // Resolved preview text direction + persistence callback for the header toggle (#499)
+  previewDirection?: PreviewDirection;
+  onPreviewDirectionChange?: (direction: PreviewDirection) => void;
 
   // Editor settings
   editorSettings?: {
@@ -130,6 +134,8 @@ const AppContent: React.FC<AppContentProps> = ({
   isSettingsLoaded,
   renderingSettings,
   previewSettings,
+  previewDirection,
+  onPreviewDirectionChange,
   editorSettings,
   scrollSyncMode,
   outlineDisplayMode,
@@ -609,6 +615,8 @@ const AppContent: React.FC<AppContentProps> = ({
                       filePath={activeTab.filePath}
                       renderingSettings={renderingSettings}
                       previewSettings={previewSettings}
+                      direction={previewDirection}
+                      onDirectionChange={onPreviewDirectionChange}
                       viewMode="split"
                       onOpenSettings={onOpenSettings}
                     />
@@ -672,6 +680,8 @@ const AppContent: React.FC<AppContentProps> = ({
                     filePath={activeTab.filePath}
                     renderingSettings={renderingSettings}
                     previewSettings={previewSettings}
+                    direction={previewDirection}
+                    onDirectionChange={onPreviewDirectionChange}
                     scrollFraction={scrollState.source !== 'preview' ? scrollState.fraction : undefined}
                     onScrollChange={handlePreviewScrollChange}
                     revealHeadingRequest={revealLineRequest.requestId > 0 ? { index: revealLineRequest.headingIndex, requestId: revealLineRequest.requestId } : undefined}

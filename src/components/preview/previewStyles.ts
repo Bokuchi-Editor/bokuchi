@@ -101,6 +101,11 @@ export function buildPreviewStyles(
             ${generateGithubAlertCSS('.markdown-preview ', palette.mode === 'dark')}
 
             .markdown-preview code {
+              /* Code always reads LTR, isolated from a surrounding RTL
+                 paragraph (#499). Tables are NOT pinned — they follow the
+                 document direction (see generateTableLayoutCSS). */
+              direction: ltr;
+              unicode-bidi: isolate;
               background-color: ${alpha(palette.text.primary, 0.08)};
               padding: 0.2em 0.4em;
               border-radius: 3px;
@@ -110,6 +115,8 @@ export function buildPreviewStyles(
             }
 
             .markdown-preview pre {
+              direction: ltr;
+              text-align: left;
               background-color: var(--color-pre-background);
               border-radius: 3px;
               padding: 16px;

@@ -176,6 +176,16 @@ describe('generateTableLayoutCSS', () => {
     expect(css).toContain('.markdown-preview th');
     expect(css).toContain('.markdown-preview td');
   });
+
+  it('sets no direction in any layout mode so tables follow the document direction (#499)', () => {
+    // The reporter reversed the original keep-LTR request: in an RTL document
+    // the first Markdown column must sit on the right, so tables simply
+    // inherit `dir` from the document root.
+    for (const mode of ['equal', 'auto-wrap', 'auto-scroll'] as const) {
+      const css = generateTableLayoutCSS(mode, '', '#ccc', '#fff');
+      expect(css, mode).not.toContain('direction:');
+    }
+  });
 });
 
 describe('buildExportHTML', () => {
@@ -183,7 +193,9 @@ describe('buildExportHTML', () => {
     const html = buildExportHTML('<p>Hello</p>', false);
     // Document structure
     expect(html).toContain('<!DOCTYPE html>');
-    expect(html).toContain('<html lang="en">');
+    // Direction defaults to auto (#499): pure-LTR documents render as before,
+    // fully-RTL documents are detected by the HTML engine.
+    expect(html).toContain('<html lang="en" dir="auto">');
     expect(html).toContain('<head>');
     expect(html).toContain('</head>');
     expect(html).toContain('<body>');
@@ -284,6 +296,34 @@ describe('buildExportHTML', () => {
     it('falls back to the default stack when omitted', () => {
       const html = buildExportHTML('<p>x</p>', false);
       expect(html).toContain('font-family: -apple-system, BlinkMacSystemFont');
+    });
+  });
+
+  // #499: the resolved preview direction reaches both export flavors.
+  describe('direction option', () => {
+    it('emits dir="rtl" on the root element', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        direction: 'rtl',
+      });
+      expect(html).toContain('<html lang="en" dir="rtl">');
+    });
+
+    it('keeps the direction in the PDF (forPrint) export too', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        forPrint: true,
+        direction: 'rtl',
+      });
+      expect(html).toContain('<html lang="en" dir="rtl">');
+    });
+
+    it('keeps code blocks LTR regardless of document direction', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        direction: 'rtl',
+      });
+      // pre/code rules in generateExportCSS; tables intentionally carry no
+      // direction of their own (they follow the document, see above).
+      expect(html).toContain('direction: ltr');
+      expect(html).toContain('unicode-bidi: isolate');
     });
   });
 });
