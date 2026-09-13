@@ -1,7 +1,7 @@
 import { useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
 import { desktopApi } from '../../api/desktopApi';
-import type { RenderingSettings, TableLayoutMode } from '../../types/settings';
+import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
@@ -24,6 +24,8 @@ interface UseHtmlExportParams {
   tableLayout: TableLayoutMode;
   /** User-chosen preview font; applied to the export body too ('' = default). */
   fontFamily?: string;
+  /** Resolved preview text direction; the export mirrors it (#499). */
+  direction?: PreviewDirection;
   /** Source document path; names the export after it in the save dialog (#442). */
   filePath?: string;
 }
@@ -49,6 +51,7 @@ export function useHtmlExport({
   theme,
   tableLayout,
   fontFamily,
+  direction,
   filePath,
 }: UseHtmlExportParams): UseHtmlExport {
   const [exportError, setExportError] = useState<string | null>(null);
@@ -103,6 +106,7 @@ export function useHtmlExport({
       const { html, katexCss } = await buildBody(darkMode);
       const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss, {
         fontFamily,
+        direction,
       });
 
       // Select save location via file dialog
@@ -125,6 +129,7 @@ export function useHtmlExport({
       const fullHTML = buildExportHTML(html, darkMode, theme, tableLayout, katexCss, {
         forPrint: true,
         fontFamily,
+        direction,
       });
       // Render + print to PDF natively (Rust side); the page is saved to the
       // location chosen in the file dialog. The native pipeline (render, print,

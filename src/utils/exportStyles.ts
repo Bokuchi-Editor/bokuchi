@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material/styles';
-import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+import { TableLayoutMode, PreviewDirection, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { getThemeByName, ThemeName } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
 
@@ -106,6 +106,10 @@ export function getHighlightStyleDataUri(darkMode: boolean): string {
  * for the in-app preview where rules must not leak to the rest of the UI). The auto-scroll
  * preview also needs an override against the wildcard `.markdown-preview * { max-width: 100% }`
  * — without it the table can't grow past its container, so horizontal scroll never triggers.
+ *
+ * Tables deliberately set no `direction`: they inherit the document direction, so in an
+ * RTL document the first Markdown column sits on the right (#499 — the reporter asked for
+ * this, reversing an earlier keep-LTR request). Code blocks are the ones pinned to LTR.
  */
 export function generateTableLayoutCSS(
   mode: TableLayoutMode,
@@ -258,6 +262,9 @@ export function generateExportCSS(
 ${generateGithubAlertCSS('', colors.isDark)}
 
         code {
+            /* Code always reads LTR, isolated from a surrounding RTL paragraph (#499). */
+            direction: ltr;
+            unicode-bidi: isolate;
             background-color: ${colors.inlineCodeBackground};
             padding: 0.2em 0.4em;
             border-radius: 3px;
@@ -267,6 +274,8 @@ ${generateGithubAlertCSS('', colors.isDark)}
         }
 
         pre {
+            direction: ltr;
+            text-align: left;
             background-color: ${colors.codeBackground};
             border-radius: 3px;
             padding: 16px;
@@ -364,7 +373,7 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
   katexCss?: string,
-  options: { forPrint?: boolean; fontFamily?: string } = {},
+  options: { forPrint?: boolean; fontFamily?: string; direction?: PreviewDirection } = {},
 ): string {
   // PDF export always uses the Default theme (white background, black text),
   // regardless of the on-screen theme — code/Mermaid colors follow suit. This
@@ -390,7 +399,7 @@ export function buildExportHTML(
 
   return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="${options.direction ?? 'auto'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
