@@ -3,15 +3,12 @@ import { Box } from '@mui/material';
 import type { CustomThemeColors } from '../../themes/customTheme';
 
 /**
- * Monaco's built-in skins. The editor pane of the preview is deliberately
- * painted with these fixed colors — NOT the theme tokens — because the real
- * editor only switches between `vs` and `vs-dark` and ignores theme colors.
- * Seeing that in the preview is what makes the "editor mode" toggle tangible.
+ * The real editor derives its Monaco theme from the palette tokens
+ * (background / text follow the theme; see themes/monacoTheme.ts) on top of
+ * the built-in `vs` / `vs-dark` skin selected by the editor mode. The label
+ * in the corner names that base skin so the mode toggle stays tangible.
  */
-const MONACO_SKIN = {
-  light: { background: '#fffffe', text: '#000000', label: 'vs' },
-  dark: { background: '#1e1e1e', text: '#d4d4d4', label: 'vs-dark' },
-} as const;
+const MONACO_BASE_LABEL = { light: 'vs', dark: 'vs-dark' } as const;
 
 interface ThemeMiniPreviewProps {
   colors: CustomThemeColors;
@@ -24,7 +21,7 @@ interface ThemeMiniPreviewProps {
  * interaction. Used inside the hover popover of the theme gallery.
  */
 const ThemeMiniPreview: React.FC<ThemeMiniPreviewProps> = ({ colors, mode }) => {
-  const monaco = MONACO_SKIN[mode];
+  const monacoBase = MONACO_BASE_LABEL[mode];
   const border = `1px solid ${colors.divider}`;
 
   return (
@@ -108,8 +105,8 @@ const ThemeMiniPreview: React.FC<ThemeMiniPreviewProps> = ({ colors, mode }) => 
             fontFamily: 'monospace',
             fontSize: '9px',
             whiteSpace: 'pre-wrap',
-            backgroundColor: monaco.background,
-            color: monaco.text,
+            backgroundColor: colors.backgroundDefault,
+            color: colors.textPrimary,
             borderRight: border,
             position: 'relative',
           }}
@@ -125,7 +122,7 @@ const ThemeMiniPreview: React.FC<ThemeMiniPreviewProps> = ({ colors, mode }) => 
               opacity: 0.55,
             }}
           >
-            {monaco.label}
+            {monacoBase}
           </Box>
         </Box>
         <Box sx={{ flex: 1, p: 0.75, backgroundColor: colors.backgroundPaper, color: colors.textPrimary }}>

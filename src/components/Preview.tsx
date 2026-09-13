@@ -13,6 +13,7 @@ import MarpPreview from './MarpPreview';
 import RenderingFeatureNotice from './RenderingFeatureNotice';
 import { SettingsFocusTarget } from '../types/settingsFocus';
 import { buildPreviewStyles } from './preview/previewStyles';
+import { getPreviewTableHeaderStyle } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from '../utils/fontFamily';
 import { useProcessedMarkdown } from './preview/useProcessedMarkdown';
 import { usePreviewScrollSync } from './preview/usePreviewScrollSync';
@@ -247,7 +248,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
           }}
         />
         {/* Theme-aware preview styles + easter-egg animations */}
-        <style>{buildPreviewStyles(palette, previewSettings.tableLayout)}</style>
+        <style>{buildPreviewStyles(palette, previewSettings.tableLayout, getPreviewTableHeaderStyle(theme ?? 'default'))}</style>
 
         {editing && (
           <InlineCellEditor
