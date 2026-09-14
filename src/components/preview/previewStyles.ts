@@ -1,6 +1,6 @@
 import { alpha } from '@mui/material/styles';
 import type { Palette } from '@mui/material/styles';
-import { generateTableLayoutCSS, generateGithubAlertCSS, deriveCodeBackground } from '../../utils/exportStyles';
+import { generateTableLayoutCSS, generateGithubAlertCSS, generateCodeFilenameCSS, deriveCodeBackground } from '../../utils/exportStyles';
 import type { TableLayoutMode } from '../../types/settings';
 import type { TableHeaderStyle } from '../../themes';
 
@@ -137,9 +137,17 @@ export function buildPreviewStyles(
               white-space: pre-wrap;
             }
 
+            /* language:filename label inside <pre> (#534) */
+            ${generateCodeFilenameCSS('.markdown-preview ')}
+
             /* Code-block copy button (injected by injectCodeCopyButtons) */
             .markdown-preview .code-block-wrapper {
               position: relative;
+            }
+
+            /* Keep a long filename tab clear of the copy button's corner. */
+            .markdown-preview .code-block-wrapper .code-filename {
+              max-width: calc(100% - 32px);
             }
 
             .markdown-preview .code-copy-button {

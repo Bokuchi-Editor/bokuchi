@@ -61,20 +61,70 @@ export function createTableRenderer() {
   };
 }
 
+/** Language + optional filename parsed from a fenced code block's info string. */
+export interface CodeFenceInfo {
+  /** Language identifier to feed the highlighter (undefined = none given). */
+  lang?: string;
+  /** Filename label to show above the block (undefined = none given). */
+  filename?: string;
+}
+
+/**
+ * Parse a fenced code block's info string (marked hands the whole trimmed info
+ * string over as `lang`).
+ *
+ * Only the first whitespace-delimited word is significant, matching marked's
+ * default renderer and CommonMark practice (`js extra words` → `js`). Within
+ * that word, a Qiita-style `language:filename` pair is split at the FIRST
+ * colon so paths keep any later colons (`ts:src/index.ts`, `:README` for a
+ * filename-only block). An empty half is dropped (`rb:` → language only).
+ * Issue #534.
+ */
+export function parseCodeFenceInfo(info?: string): CodeFenceInfo {
+  const word = (info ?? '').trim().split(/\s+/)[0] ?? '';
+  if (!word) return {};
+  const colon = word.indexOf(':');
+  if (colon === -1) return { lang: word };
+  const lang = word.slice(0, colon);
+  const filename = word.slice(colon + 1);
+  return {
+    lang: lang || undefined,
+    filename: filename || undefined,
+  };
+}
+
+/**
+ * Filename label rendered as the first child of `<pre>` so it inherits every
+ * theme's `pre` colors (syntax.css overrides them per theme with !important)
+ * and travels with the block into HTML/PDF export unchanged. Styled by
+ * `.code-filename` in previewStyles.ts / exportStyles.ts. The text is user
+ * input, so it is HTML-escaped.
+ */
+function renderFilenameLabel(filename?: string): string {
+  return filename ? `<span class="code-filename">${escapeHtml(filename)}</span>` : '';
+}
+
 /**
  * Custom code renderer for marked that applies syntax highlighting
  * and preserves post-processed language blocks (e.g. mermaid).
+ *
+ * Supports the `language:filename` info-string syntax (#534): only the
+ * language half reaches highlight.js, and the filename is emitted as a label
+ * inside the `<pre>` (see {@link parseCodeFenceInfo}).
  */
-export function renderCode({ text, lang }: { text: string; lang?: string; escaped?: boolean }): string {
-  // Post-processed languages: output raw text with language class preserved
+export function renderCode({ text, lang: info }: { text: string; lang?: string; escaped?: boolean }): string {
+  const { lang, filename } = parseCodeFenceInfo(info);
+  // Post-processed languages: output raw text with language class preserved.
+  // A filename is dropped here — the block is replaced by a rendered diagram.
   if (lang && POST_PROCESSED_LANGS.has(lang)) {
     const escaped = escapeHtml(text);
     return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
   }
+  const label = renderFilenameLabel(filename);
   if (lang && hljs.getLanguage(lang)) {
     try {
       const highlighted = hljs.highlight(text, { language: lang }).value;
-      return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+      return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
     } catch (err) {
       console.warn('Highlight.js error:', err);
     }
@@ -84,7 +134,7 @@ export function renderCode({ text, lang }: { text: string; lang?: string; escape
   // is respected.
   const escaped = escapeHtml(text);
   const langClass = lang ? ` language-${lang}` : '';
-  return `<pre><code class="hljs${langClass}">${escaped}</code></pre>`;
+  return `<pre>${label}<code class="hljs${langClass}">${escaped}</code></pre>`;
 }
 
 // Lazy-loaded module caches

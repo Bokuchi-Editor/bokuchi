@@ -227,6 +227,38 @@ ${headerRule}`;
 /**
  * Generate the full CSS block for HTML export.
  */
+/**
+ * CSS for the `language:filename` label that renderCode emits as the first
+ * child of `<pre>` (#534). Drawn as a Qiita-style tab pinned to the block's
+ * top-left corner: the negative margins cancel the 16px `pre` padding used by
+ * both the preview and the export stylesheet. Colors are deliberately
+ * theme-neutral — the text inherits the `pre` color (so per-theme
+ * `!important` overrides in syntax.css carry over) and the background is a
+ * translucent grey that reads on any light or dark code background.
+ *
+ * `prefix` scopes the selector (`.markdown-preview ` for the preview, empty
+ * for export).
+ */
+export function generateCodeFilenameCSS(prefix: string): string {
+  return `
+        ${prefix}pre .code-filename {
+            display: block;
+            width: fit-content;
+            max-width: 100%;
+            margin: -16px 0 12px -16px;
+            padding: 4px 12px;
+            border-radius: 3px 0 3px 0;
+            background-color: rgba(128, 128, 128, 0.22);
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.8em;
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: none;
+        }`;
+}
+
 export function generateExportCSS(
   colors: ExportThemeColors,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
@@ -318,6 +350,7 @@ ${generateGithubAlertCSS('', colors.isDark)}
             white-space: pre-wrap;
             line-height: 1.4;
         }
+${generateCodeFilenameCSS('')}
 ${tableCSS}
 
         a {
