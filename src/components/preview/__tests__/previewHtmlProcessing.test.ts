@@ -41,6 +41,14 @@ describe('injectCodeCopyButtons', () => {
     expect(result).toContain('</div><p>mid</p><div class="code-block-wrapper">');
   });
 
+  it('wraps a block that carries a language:filename label (#534)', () => {
+    const html = '<pre><span class="code-filename">src/app.ts</span><code class="hljs language-typescript">x</code></pre>';
+    const result = injectCodeCopyButtons(html);
+    expect(result).toMatch(/^<div class="code-block-wrapper"><button /);
+    expect(result).toContain(html);
+    expect(result.endsWith('</pre></div>')).toBe(true);
+  });
+
   it('leaves mermaid blocks (no hljs class) untouched', () => {
     const html = '<pre><code class="language-mermaid">graph TD</code></pre>';
     expect(injectCodeCopyButtons(html)).toBe(html);

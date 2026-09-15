@@ -17,6 +17,11 @@ describe('buildPreviewStyles', () => {
     expect(headerRule).toContain('color: #ffffff');
   });
 
+  it('styles the language:filename label inside pre (#534)', () => {
+    const css = buildPreviewStyles(getThemeByName('vivid').palette, 'equal');
+    expect(css).toMatch(/\.markdown-preview pre \.code-filename \{[^}]*margin: -16px 0 12px -16px/);
+  });
+
   it('keeps the code-block background on the theme variable', () => {
     const css = buildPreviewStyles(getThemeByName('vivid').palette, 'equal');
     expect(css).toMatch(/\.markdown-preview pre \{[^}]*var\(--color-pre-background\)/);

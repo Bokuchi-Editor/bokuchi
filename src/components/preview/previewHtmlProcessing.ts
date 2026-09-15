@@ -54,10 +54,13 @@ const COPY_BUTTON_HTML =
   '<svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
   '</button>';
 
-// The <pre><code class="hljs …"> blocks emitted by renderCode. Escaped code
-// content can never contain a literal `</code>`, so the lazy match is safe.
-// Mermaid blocks carry `language-mermaid` without `hljs` and never match.
-const HLJS_CODE_BLOCK_RE = /<pre><code class="hljs[^"]*">[\s\S]*?<\/code><\/pre>/g;
+// The <pre><code class="hljs …"> blocks emitted by renderCode, optionally
+// preceded by the `language:filename` label (<span class="code-filename">,
+// #534). Escaped code content can never contain a literal `</code>`, so the
+// lazy match is safe. Mermaid blocks carry `language-mermaid` without `hljs`
+// and never match.
+const HLJS_CODE_BLOCK_RE =
+  /<pre>(?:<span class="code-filename">[^<]*<\/span>)?<code class="hljs[^"]*">[\s\S]*?<\/code><\/pre>/g;
 
 /**
  * Wrap each syntax-highlighted code block in a positioning container with a

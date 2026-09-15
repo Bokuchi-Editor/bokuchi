@@ -6,6 +6,7 @@ import {
   generateTableLayoutCSS,
   deriveCodeBackground,
   generateGithubAlertCSS,
+  generateCodeFilenameCSS,
   buildExportHTML,
 } from '../exportStyles';
 
@@ -356,5 +357,20 @@ describe('accent table header (previewTableHeader: appBar)', () => {
     const pdf = buildExportHTML('<p>x</p>', false, 'vivid', 'equal', undefined, { forPrint: true });
     expect(pdf).not.toContain('linear-gradient(45deg');
     expect(pdf).not.toContain('#1976d2;\n            color');
+  });
+});
+
+describe('generateCodeFilenameCSS (#534)', () => {
+  it('scopes the label rule with the given prefix', () => {
+    expect(generateCodeFilenameCSS('')).toMatch(/^\s*pre \.code-filename \{/);
+    expect(generateCodeFilenameCSS('.markdown-preview ')).toContain('.markdown-preview pre .code-filename {');
+  });
+
+  it('cancels the 16px pre padding so the tab sits in the block corner', () => {
+    expect(generateCodeFilenameCSS('')).toContain('margin: -16px 0 12px -16px');
+  });
+
+  it('is included in the export stylesheet', () => {
+    expect(generateExportCSS(getExportThemeColors())).toContain('pre .code-filename {');
   });
 });

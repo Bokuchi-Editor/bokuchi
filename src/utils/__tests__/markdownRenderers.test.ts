@@ -33,6 +33,7 @@ vi.mock('mermaid', () => ({
 
 import {
   renderCode,
+  parseCodeFenceInfo,
   createTableRenderer,
   contentHasKatex,
   contentHasMermaid,
@@ -46,7 +47,72 @@ import mermaid from 'mermaid';
 
 const mockRender = vi.mocked(mermaid.render);
 
+describe('parseCodeFenceInfo (language:filename, #534)', () => {
+  it('returns nothing for an empty or missing info string', () => {
+    expect(parseCodeFenceInfo(undefined)).toEqual({});
+    expect(parseCodeFenceInfo('')).toEqual({});
+    expect(parseCodeFenceInfo('   ')).toEqual({});
+  });
+
+  it('treats a plain word as the language', () => {
+    expect(parseCodeFenceInfo('ts')).toEqual({ lang: 'ts' });
+  });
+
+  it('splits language and filename at the first colon (paths keep later colons)', () => {
+    expect(parseCodeFenceInfo('rb:app.rb')).toEqual({ lang: 'rb', filename: 'app.rb' });
+    expect(parseCodeFenceInfo('ts:src/routes/index.ts')).toEqual({ lang: 'ts', filename: 'src/routes/index.ts' });
+    expect(parseCodeFenceInfo('yaml:a:b.yml')).toEqual({ lang: 'yaml', filename: 'a:b.yml' });
+  });
+
+  it('supports a filename-only block (leading colon) and drops an empty filename', () => {
+    expect(parseCodeFenceInfo(':README')).toEqual({ filename: 'README' });
+    expect(parseCodeFenceInfo('rb:')).toEqual({ lang: 'rb' });
+    expect(parseCodeFenceInfo(':')).toEqual({});
+  });
+
+  it('only reads the first whitespace-delimited word (like marked / CommonMark)', () => {
+    expect(parseCodeFenceInfo('ts filename="x.ts"')).toEqual({ lang: 'ts' });
+    expect(parseCodeFenceInfo('ts:index.ts title')).toEqual({ lang: 'ts', filename: 'index.ts' });
+  });
+});
+
 describe('renderCode', () => {
+  it('highlights a language:filename block by its language and labels it with the filename (#534)', () => {
+    const result = renderCode({ text: 'const a = 1;', lang: 'javascript:src/index.js' });
+    expect(result).toBe(
+      '<pre><span class="code-filename">src/index.js</span><code class="hljs language-javascript"><highlighted lang="javascript">const a = 1;</highlighted></code></pre>'
+    );
+  });
+
+  it('labels a filename-only block without highlighting', () => {
+    const result = renderCode({ text: 'a < b', lang: ':notes.txt' });
+    expect(result).toBe('<pre><span class="code-filename">notes.txt</span><code class="hljs">a &lt; b</code></pre>');
+  });
+
+  it('labels an unknown-language:filename block and keeps its language class', () => {
+    const result = renderCode({ text: 'x', lang: 'unknown-lang:file.foo' });
+    expect(result).toContain('<span class="code-filename">file.foo</span>');
+    expect(result).toContain('language-unknown-lang');
+    expect(result).not.toContain('language-unknown-lang:file.foo');
+  });
+
+  it('HTML-escapes the filename label', () => {
+    const result = renderCode({ text: 'x', lang: 'javascript:<b>&amp;</b>.js' });
+    expect(result).toContain('<span class="code-filename">&lt;b&gt;&amp;amp;&lt;/b&gt;.js</span>');
+    expect(result).not.toContain('<b>');
+  });
+
+  it('emits no label when no filename is given', () => {
+    expect(renderCode({ text: 'x', lang: 'javascript' })).not.toContain('code-filename');
+    expect(renderCode({ text: 'x', lang: 'javascript:' })).not.toContain('code-filename');
+    expect(renderCode({ text: 'x' })).not.toContain('code-filename');
+  });
+
+  it('drops the filename for post-processed languages (mermaid renders a diagram)', () => {
+    const result = renderCode({ text: 'graph TD', lang: 'mermaid:flow.mmd' });
+    expect(result).toBe('<pre><code class="language-mermaid">graph TD</code></pre>');
+  });
+
   it('returns escaped output for mermaid language', () => {
     const result = renderCode({ text: 'graph TD\nA-->B', lang: 'mermaid' });
     expect(result).toContain('class="language-mermaid"');
