@@ -37,6 +37,9 @@ export interface InterfaceSettings {
   tabNewButtonPosition: 'top' | 'bottom';
   zoomLevel: number;
   outlineDisplayMode: OutlineDisplayMode;
+  // Which side the outline panel attaches to: 'right' (default, legacy) or 'left'.
+  // Applies to both persistent and overlay display modes.
+  outlinePosition: 'left' | 'right';
   // Master on/off for the outline panel, persisted across restarts.
   // When false the panel never shows at launch and the header button is dimmed
   // (still clickable — clicking restores the panel using `outlineDisplayMode`).
@@ -131,6 +134,7 @@ export const DEFAULT_INTERFACE_SETTINGS: InterfaceSettings = {
   tabNewButtonPosition: 'top',
   zoomLevel: 1.0,
   outlineDisplayMode: 'persistent',
+  outlinePosition: 'right',
   outlineEnabled: true,
   folderTreeDisplayMode: 'off',
   folderTreeFileFilter: 'markdown',

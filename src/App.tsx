@@ -105,6 +105,7 @@ function AppDesktop() {
     handleRevealInFileManager,
     handleTabRevealInFileManager,
     handleCloseOtherTabs,
+    handleCloseTabsToLeft,
     handleCloseTabsToRight,
     handleCloseAllTabs,
     handleCheckForUpdate,
@@ -303,6 +304,7 @@ function AppDesktop() {
           }}
           scrollSyncMode={appSettings.interface.scrollSyncMode}
           outlineDisplayMode={appSettings.interface.outlineDisplayMode}
+          outlinePosition={appSettings.interface.outlinePosition}
           outlineEnabled={appSettings.interface.outlineEnabled}
           outlinePanelOpen={outlinePanelOpen}
           onOutlinePanelClose={() => setOutlinePanelOpen(false)}
@@ -325,6 +327,7 @@ function AppDesktop() {
           onCopyFileName={handleCopyFileName}
           onRevealInFileManager={handleTabRevealInFileManager}
           onCloseOtherTabs={handleCloseOtherTabs}
+          onCloseTabsToLeft={handleCloseTabsToLeft}
           onCloseTabsToRight={handleCloseTabsToRight}
           onCloseAllTabs={handleCloseAllTabs}
           tabCloseButtonPosition={appSettings.interface.tabCloseButtonPosition}
