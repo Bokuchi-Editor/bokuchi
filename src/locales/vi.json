@@ -624,13 +624,21 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Cập nhật bản xem trước khi chuyển tab",
-        "description": "Đã sửa lỗi bản xem trước không được cập nhật khi chuyển tab."
+      "rtlPreview": {
+        "title": "Xem trước từ phải sang trái",
+        "description": "Phần xem trước và xuất HTML/PDF nay hỗ trợ văn bản từ phải sang trái như tiếng Ả Rập. Chọn Tự động, Trái sang phải hoặc Phải sang trái ở tiêu đề phần xem trước hoặc trong Cài đặt > Trình soạn thảo."
+      },
+      "codeBlockFilename": {
+        "title": "Tên tệp trên khối mã",
+        "description": "Viết ```ts:src/index.ts để hiển thị nhãn tên tệp trên khối mã, trong phần xem trước và khi xuất HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "Màu trình soạn thảo theo chủ đề",
+        "description": "Màu nền và màu chữ của trình soạn thảo nay khớp với chủ đề đã chọn, kể cả chủ đề tùy chỉnh. Tiêu đề bảng trong phần xem trước cũng nhận màu chủ đề với Default, Pastel và Vivid."
       },
       "libraryUpdates": {
         "title": "Cập nhật thư viện",
-        "description": "Đã cập nhật các thư viện bên trong, bao gồm kết xuất sơ đồ Mermaid, để tăng độ ổn định và bảo mật."
+        "description": "Đã cập nhật các thư viện bên trong, bao gồm React, Tauri và DOMPurify, để tăng độ ổn định và bảo mật."
       }
     }
   },

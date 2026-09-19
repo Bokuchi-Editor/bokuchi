@@ -624,13 +624,21 @@
       "improvement": "改進"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "切換標籤頁時的預覽更新",
-        "description": "修正了切換標籤頁時預覽未更新的問題。"
+      "rtlPreview": {
+        "title": "由右至左預覽",
+        "description": "預覽與 HTML/PDF 匯出現已支援阿拉伯文等由右至左書寫的文字。可在預覽標題列或「設定 > 編輯器」中選擇「自動」、「由左至右」或「由右至左」。"
+      },
+      "codeBlockFilename": {
+        "title": "程式碼區塊檔名",
+        "description": "寫成 ```ts:src/index.ts，即可在預覽與 HTML/PDF 匯出中為程式碼區塊顯示檔名標籤。"
+      },
+      "editorThemeSync": {
+        "title": "編輯器配色跟隨主題",
+        "description": "編輯器的背景色與文字顏色現在會與所選主題一致，包括自訂主題。在 Default、Pastel 和 Vivid 中，預覽的表格標題也會套用主題顏色。"
       },
       "libraryUpdates": {
         "title": "函式庫更新",
-        "description": "更新了包括 Mermaid 圖表渲染在內的內部函式庫，以提升穩定性與安全性。"
+        "description": "更新了包括 React、Tauri 和 DOMPurify 在內的內部函式庫，以提升穩定性與安全性。"
       }
     }
   },

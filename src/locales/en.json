@@ -647,13 +647,21 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Preview Update on Tab Switch",
-        "description": "Fixed a bug where the preview did not update when switching tabs."
+      "rtlPreview": {
+        "title": "Right-to-Left Preview",
+        "description": "The preview and HTML/PDF exports now support right-to-left text such as Arabic. Choose Auto, Left to Right, or Right to Left from the preview header or Settings > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "File Names on Code Blocks",
+        "description": "Write ```ts:src/index.ts to show a file name label on a code block, in the preview and in HTML/PDF exports."
+      },
+      "editorThemeSync": {
+        "title": "Editor Colors Follow the Theme",
+        "description": "The editor background and text colors now match the selected theme, including custom themes. Preview table headers also pick up the theme color in Default, Pastel, and Vivid."
       },
       "libraryUpdates": {
         "title": "Library Updates",
-        "description": "Updated internal libraries, including Mermaid diagram rendering, for stability and security."
+        "description": "Updated internal libraries, including React, Tauri, and DOMPurify, for stability and security."
       }
     }
   },

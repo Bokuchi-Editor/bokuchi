@@ -624,13 +624,21 @@
       "improvement": "Amélioration"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Mise à jour de l'aperçu au changement d'onglet",
-        "description": "Correction d'un bug qui empêchait l'aperçu de se mettre à jour lors du changement d'onglet."
+      "rtlPreview": {
+        "title": "Aperçu de droite à gauche",
+        "description": "L'aperçu et l'export HTML/PDF prennent désormais en charge les textes de droite à gauche, comme l'arabe. Choisissez « Automatique », « De gauche à droite » ou « De droite à gauche » dans l'en-tête de l'aperçu ou dans Paramètres > Éditeur."
+      },
+      "codeBlockFilename": {
+        "title": "Noms de fichier sur les blocs de code",
+        "description": "Écrivez ```ts:src/index.ts pour afficher une étiquette de nom de fichier sur un bloc de code, dans l'aperçu et dans l'export HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "Les couleurs de l'éditeur suivent le thème",
+        "description": "L'arrière-plan et les couleurs du texte de l'éditeur correspondent désormais au thème sélectionné, y compris les thèmes personnalisés. Les en-têtes de tableau de l'aperçu reprennent aussi la couleur du thème avec Default, Pastel et Vivid."
       },
       "libraryUpdates": {
         "title": "Mises à jour des bibliothèques",
-        "description": "Les bibliothèques internes, dont le rendu des diagrammes Mermaid, ont été mises à jour pour plus de stabilité et de sécurité."
+        "description": "Les bibliothèques internes, dont React, Tauri et DOMPurify, ont été mises à jour pour plus de stabilité et de sécurité."
       }
     }
   },

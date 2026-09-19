@@ -624,13 +624,21 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Atualização da visualização ao trocar de aba",
-        "description": "Corrigido um erro em que a visualização não era atualizada ao trocar de aba."
+      "rtlPreview": {
+        "title": "Visualização da direita para a esquerda",
+        "description": "A visualização e a exportação em HTML/PDF agora aceitam texto da direita para a esquerda, como o árabe. Escolha Automática, Da esquerda para a direita ou Da direita para a esquerda no cabeçalho da visualização ou em Configurações > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "Nomes de arquivo em blocos de código",
+        "description": "Escreva ```ts:src/index.ts para exibir um rótulo com o nome do arquivo no bloco de código, na visualização e na exportação em HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "As cores do editor seguem o tema",
+        "description": "O fundo e as cores do texto do editor agora acompanham o tema selecionado, incluindo temas personalizados. Os cabeçalhos de tabela da visualização também adotam a cor do tema em Default, Pastel e Vivid."
       },
       "libraryUpdates": {
         "title": "Atualizações de bibliotecas",
-        "description": "Bibliotecas internas, incluindo a renderização de diagramas Mermaid, foram atualizadas para maior estabilidade e segurança."
+        "description": "Bibliotecas internas, incluindo React, Tauri e DOMPurify, foram atualizadas para maior estabilidade e segurança."
       }
     }
   },

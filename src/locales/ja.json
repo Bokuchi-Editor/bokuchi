@@ -647,13 +647,21 @@
       "improvement": "改善"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "タブ切り替え時のプレビュー更新",
-        "description": "タブを切り替えたときにプレビューが更新されない問題を修正しました。"
+      "rtlPreview": {
+        "title": "プレビューの右から左への表示",
+        "description": "プレビューと HTML/PDF エクスポートが、アラビア語などの右から左へ書く文字に対応しました。プレビューのヘッダーまたは「設定 > エディター」から「自動」「左から右」「右から左」を選べます。"
+      },
+      "codeBlockFilename": {
+        "title": "コードブロックのファイル名表示",
+        "description": "```ts:src/index.ts のように書くと、プレビューと HTML/PDF エクスポートでコードブロックにファイル名のラベルを表示します。"
+      },
+      "editorThemeSync": {
+        "title": "エディターの配色がテーマに追従",
+        "description": "エディターの背景色と文字色が、カスタムテーマを含む選択中のテーマに合うようになりました。Default・Pastel・Vivid ではプレビューのテーブルヘッダーにもテーマの色が反映されます。"
       },
       "libraryUpdates": {
         "title": "ライブラリの更新",
-        "description": "Mermaid 図のレンダリングを含む内部ライブラリを更新し、安定性とセキュリティを向上させました。"
+        "description": "React、Tauri、DOMPurify を含む内部ライブラリを更新し、安定性とセキュリティを向上させました。"
       }
     }
   },

@@ -25,12 +25,22 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.1.2',
+  version: '1.2.0',
   changes: [
     {
-      type: 'fix',
-      titleKey: 'whatsNew.changes.tabSwitchPreview.title',
-      descriptionKey: 'whatsNew.changes.tabSwitchPreview.description',
+      type: 'feature',
+      titleKey: 'whatsNew.changes.rtlPreview.title',
+      descriptionKey: 'whatsNew.changes.rtlPreview.description',
+    },
+    {
+      type: 'feature',
+      titleKey: 'whatsNew.changes.codeBlockFilename.title',
+      descriptionKey: 'whatsNew.changes.codeBlockFilename.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.editorThemeSync.title',
+      descriptionKey: 'whatsNew.changes.editorThemeSync.description',
     },
     {
       type: 'improvement',

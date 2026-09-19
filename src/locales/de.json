@@ -624,13 +624,21 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Vorschau-Aktualisierung beim Tabwechsel",
-        "description": "Ein Fehler wurde behoben, durch den die Vorschau beim Wechseln des Tabs nicht aktualisiert wurde."
+      "rtlPreview": {
+        "title": "Vorschau von rechts nach links",
+        "description": "Die Vorschau und der HTML/PDF-Export unterstützen jetzt Text von rechts nach links, etwa Arabisch. Wählen Sie „Automatisch“, „Links nach rechts“ oder „Rechts nach links“ in der Kopfzeile der Vorschau oder unter Einstellungen > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "Dateinamen an Codeblöcken",
+        "description": "Mit ```ts:src/index.ts wird in der Vorschau und im HTML/PDF-Export ein Dateiname über dem Codeblock angezeigt."
+      },
+      "editorThemeSync": {
+        "title": "Editorfarben folgen dem Design",
+        "description": "Hintergrund und Textfarben des Editors passen sich jetzt dem gewählten Design an, auch bei benutzerdefinierten Designs. Tabellenköpfe in der Vorschau übernehmen in Default, Pastel und Vivid ebenfalls die Designfarbe."
       },
       "libraryUpdates": {
         "title": "Bibliotheks-Updates",
-        "description": "Interne Bibliotheken, darunter die Mermaid-Diagrammdarstellung, wurden für mehr Stabilität und Sicherheit aktualisiert."
+        "description": "Interne Bibliotheken, darunter React, Tauri und DOMPurify, wurden für mehr Stabilität und Sicherheit aktualisiert."
       }
     }
   },

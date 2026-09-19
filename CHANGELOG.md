@@ -5,11 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.2...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.0...HEAD)
+
+## [1.2.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.2...v1.2.0) - 2026-09-18
 
 ### Added
 
 - The preview and HTML/PDF exports can now render right-to-left for Arabic and other RTL scripts. A text-direction toggle (Auto / Left to Right / Right to Left) sits in the preview header and in Settings > Editor; Auto detects the direction from the content, and when the UI language is Arabic the preview defaults to RTL. Code blocks always stay left-to-right for readability, while tables follow the document direction. (#499)
+- Code blocks can carry a file name with the Qiita-style `language:filename` fence syntax: ```` ```ts:src/index.ts ```` highlights as `ts` and shows `src/index.ts` as a label on the block, in the preview and in HTML/PDF exports. `:README` gives a label without a language. Marp slides are not covered. (#534)
+
+### Changed
+
+- The editor now follows the selected theme: background, text, gutter, cursor, line highlight, and widget colors are derived from the theme's color tokens, including custom themes. Syntax colors still come from the built-in light/dark skin. (#525)
+- Preview table headers in the Default, Pastel, and Vivid themes now use the app bar's color, in the preview and in HTML exports. Other themes use a neutral tint that always keeps the header text readable, and PDF exports keep the neutral tint. (#525)
+- Updated dependencies, including the `react` group (19.2.8 → 19.3.0), `dompurify` (3.4.14 → 3.4.15), `js-yaml` (4.3.1 → 4.3.2), the `tauri` group and Tauri plugins, the Rust crate `flate2` (1.1.9 → 1.1.10), `vite`, `eslint`, and the `typescript-eslint` group.
 
 ## [1.1.2](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.1...v1.1.2) - 2026-09-05
 

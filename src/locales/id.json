@@ -624,13 +624,21 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Pembaruan Pratinjau saat Berganti Tab",
-        "description": "Memperbaiki bug yang membuat pratinjau tidak diperbarui saat berpindah tab."
+      "rtlPreview": {
+        "title": "Pratinjau Kanan ke Kiri",
+        "description": "Pratinjau dan ekspor HTML/PDF kini mendukung teks kanan ke kiri seperti bahasa Arab. Pilih Otomatis, Kiri ke Kanan, atau Kanan ke Kiri dari header pratinjau atau Pengaturan > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "Nama File pada Blok Kode",
+        "description": "Tulis ```ts:src/index.ts untuk menampilkan label nama file pada blok kode, di pratinjau maupun ekspor HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "Warna Editor Mengikuti Tema",
+        "description": "Latar belakang dan warna teks editor kini menyesuaikan tema yang dipilih, termasuk tema kustom. Header tabel di pratinjau juga mengikuti warna tema pada Default, Pastel, dan Vivid."
       },
       "libraryUpdates": {
         "title": "Pembaruan Pustaka",
-        "description": "Memperbarui pustaka internal, termasuk perenderan diagram Mermaid, demi stabilitas dan keamanan."
+        "description": "Memperbarui pustaka internal, termasuk React, Tauri, dan DOMPurify, demi stabilitas dan keamanan."
       }
     }
   },

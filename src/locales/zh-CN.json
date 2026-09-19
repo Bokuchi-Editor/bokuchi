@@ -624,13 +624,21 @@
       "improvement": "改进"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "切换标签页时的预览更新",
-        "description": "修复了切换标签页时预览不更新的问题。"
+      "rtlPreview": {
+        "title": "从右到左预览",
+        "description": "预览及 HTML/PDF 导出现已支持阿拉伯语等从右到左书写的文字。可在预览标题栏或“设置 > 编辑器”中选择“自动”“从左到右”或“从右到左”。"
+      },
+      "codeBlockFilename": {
+        "title": "代码块文件名",
+        "description": "写成 ```ts:src/index.ts，即可在预览及 HTML/PDF 导出中为代码块显示文件名标签。"
+      },
+      "editorThemeSync": {
+        "title": "编辑器配色跟随主题",
+        "description": "编辑器的背景色和文字颜色现在会与所选主题保持一致，包括自定义主题。在 Default、Pastel 和 Vivid 中，预览的表头也会采用主题颜色。"
       },
       "libraryUpdates": {
         "title": "库更新",
-        "description": "更新了包括 Mermaid 图表渲染在内的内部库，以提升稳定性和安全性。"
+        "description": "更新了包括 React、Tauri 和 DOMPurify 在内的内部库，以提升稳定性和安全性。"
       }
     }
   },
