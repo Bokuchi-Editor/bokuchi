@@ -14,6 +14,8 @@ export interface UseFileOperationsParams {
   requestEditorFocus: () => void;
   setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' }) => void;
   showSaveStatus: (message: string) => void;
+  /** Called after every successful manual save (Save / Save As). Auto-save never calls this. */
+  onManualSave?: () => void;
   t: (key: string) => string;
 }
 
@@ -28,6 +30,7 @@ export const useFileOperations = ({
   requestEditorFocus,
   setSnackbar,
   showSaveStatus,
+  onManualSave,
   t,
 }: UseFileOperationsParams) => {
   const [saveBeforeCloseDialog, setSaveBeforeCloseDialog] = useState<{
@@ -59,6 +62,7 @@ export const useFileOperations = ({
         const success = await saveTab(activeTab.id);
         if (success) {
           showSaveStatus(t('statusBar.saved'));
+          onManualSave?.();
         } else {
           setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
@@ -74,6 +78,7 @@ export const useFileOperations = ({
         const success = await saveTabAs(activeTab.id);
         if (success) {
           showSaveStatus(t('statusBar.saved'));
+          onManualSave?.();
         } else {
           setSnackbar({ open: true, message: t('fileOperations.fileSaveFailed'), severity: 'error' });
         }
@@ -88,7 +93,7 @@ export const useFileOperations = ({
         severity: 'error'
       });
     }
-  }, [activeTab, saveTabAs, setSnackbar, showSaveStatus, t]);
+  }, [activeTab, saveTabAs, setSnackbar, showSaveStatus, onManualSave, t]);
 
   const handleSaveWithVariables = useCallback(async () => {
     if (!activeTab) {

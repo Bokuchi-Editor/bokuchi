@@ -248,7 +248,8 @@
         "tip2": "在设置 > 外观中尝试不同的主题",
         "tip3": "使用分屏视图并排查看您的 Markdown 和预览"
       }
-    }
+    },
+    "starOnGitHub": "在 GitHub 上为 Bokuchi 点星"
   },
   "settings": {
     "title": "设置",
@@ -641,6 +642,14 @@
         "description": "更新了包括 React、Tauri 和 DOMPurify 在内的内部库，以提升稳定性和安全性。"
       }
     }
+  },
+  "starPrompt": {
+    "title": "喜欢 Bokuchi 吗？",
+    "body": "Bokuchi 是开源软件。如果它对您有帮助，在 GitHub 上点一颗星可以让更多人发现它。",
+    "star": "在 GitHub 上点星",
+    "later": "稍后",
+    "never": "不再显示",
+    "close": "关闭"
   },
   "milestone": {
     "close": "谢谢",

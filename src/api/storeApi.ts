@@ -4,6 +4,7 @@ import { ThemeId } from '../themes';
 import { CustomTheme, validateCustomTheme } from '../themes/customTheme';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { RecentFile } from '../types/recentFiles';
+import { StarPromptState, normalizeStarPromptState } from '../utils/starPrompt';
 
 let store: Store | null = null;
 
@@ -543,6 +544,29 @@ export const storeApi = {
     } catch (error) {
       console.error('Failed to load seen milestones:', error);
       return [];
+    }
+  },
+
+  // Save the GitHub star prompt state (usage counters + decline backoff).
+  // Best-effort: a failed write only means a counter is slightly behind.
+  async saveStarPromptState(state: StarPromptState): Promise<void> {
+    try {
+      const storeInstance = await getStore();
+      await storeInstance.set('starPrompt', state);
+      await storeInstance.save();
+    } catch (error) {
+      console.error('Failed to save star prompt state:', error);
+    }
+  },
+
+  // Load the GitHub star prompt state
+  async loadStarPromptState(): Promise<StarPromptState> {
+    try {
+      const storeInstance = await getStore();
+      return normalizeStarPromptState(await storeInstance.get('starPrompt'));
+    } catch (error) {
+      console.error('Failed to load star prompt state:', error);
+      return normalizeStarPromptState(null);
     }
   },
 

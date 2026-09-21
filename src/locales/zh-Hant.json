@@ -248,7 +248,8 @@
         "tip2": "在設定 > 外觀中嘗試不同的主題",
         "tip3": "使用分割檢視並排查看您的 Markdown 和預覽"
       }
-    }
+    },
+    "starOnGitHub": "在 GitHub 上為 Bokuchi 給星"
   },
   "settings": {
     "title": "設定",
@@ -641,6 +642,14 @@
         "description": "更新了包括 React、Tauri 和 DOMPurify 在內的內部函式庫，以提升穩定性與安全性。"
       }
     }
+  },
+  "starPrompt": {
+    "title": "喜歡 Bokuchi 嗎？",
+    "body": "Bokuchi 是開源軟體。如果它對您有幫助，在 GitHub 上給一顆星可以讓更多人發現它。",
+    "star": "在 GitHub 上給星",
+    "later": "稍後",
+    "never": "不再顯示",
+    "close": "關閉"
   },
   "milestone": {
     "close": "謝謝",

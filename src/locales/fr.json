@@ -248,7 +248,8 @@
         "tip2": "Essayez différents thèmes dans Paramètres > Apparence",
         "tip3": "Utilisez la vue partagée pour voir votre Markdown et l'aperçu côte à côte"
       }
-    }
+    },
+    "starOnGitHub": "Ajouter une étoile à Bokuchi sur GitHub"
   },
   "settings": {
     "title": "Paramètres",
@@ -641,6 +642,14 @@
         "description": "Les bibliothèques internes, dont React, Tauri et DOMPurify, ont été mises à jour pour plus de stabilité et de sécurité."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Vous aimez Bokuchi ?",
+    "body": "Bokuchi est open source. S'il vous a été utile, une étoile sur GitHub aide d'autres personnes à le découvrir.",
+    "star": "Ajouter une étoile sur GitHub",
+    "later": "Plus tard",
+    "never": "Ne plus afficher",
+    "close": "Fermer"
   },
   "milestone": {
     "close": "Merci",

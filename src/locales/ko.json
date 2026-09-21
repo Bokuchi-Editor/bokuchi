@@ -248,7 +248,8 @@
         "tip2": "설정 > 외관에서 다른 테마 시도",
         "tip3": "Markdown과 미리보기를 나란히 보려면 분할 보기 사용"
       }
-    }
+    },
+    "starOnGitHub": "GitHub에서 Bokuchi에 스타 주기"
   },
   "settings": {
     "title": "설정",
@@ -641,6 +642,14 @@
         "description": "안정성과 보안을 위해 React, Tauri, DOMPurify를 포함한 내부 라이브러리를 업데이트했습니다."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Bokuchi가 마음에 드시나요?",
+    "body": "Bokuchi는 오픈 소스입니다. 도움이 되었다면 GitHub 스타가 다른 분들이 Bokuchi를 찾는 데 도움이 됩니다.",
+    "star": "GitHub에서 스타 주기",
+    "later": "나중에",
+    "never": "다시 표시하지 않기",
+    "close": "닫기"
   },
   "milestone": {
     "close": "감사합니다",

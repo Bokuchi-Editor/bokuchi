@@ -248,7 +248,8 @@
         "tip2": "Thử các chủ đề khác nhau trong Cài đặt > Giao diện",
         "tip3": "Sử dụng chế độ chia đôi để xem Markdown và bản xem trước của bạn cạnh nhau"
       }
-    }
+    },
+    "starOnGitHub": "Gắn sao cho Bokuchi trên GitHub"
   },
   "settings": {
     "title": "Cài đặt",
@@ -641,6 +642,14 @@
         "description": "Đã cập nhật các thư viện bên trong, bao gồm React, Tauri và DOMPurify, để tăng độ ổn định và bảo mật."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Bạn thích Bokuchi chứ?",
+    "body": "Bokuchi là mã nguồn mở. Nếu nó hữu ích với bạn, một ngôi sao trên GitHub sẽ giúp người khác tìm thấy nó.",
+    "star": "Gắn sao trên GitHub",
+    "later": "Để sau",
+    "never": "Không hiển thị lại",
+    "close": "Đóng"
   },
   "milestone": {
     "close": "Cảm ơn bạn",

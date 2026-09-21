@@ -248,7 +248,8 @@
         "tip2": "Experimente diferentes temas em Configurações > Aparência",
         "tip3": "Use a visualização dividida para ver seu Markdown e visualização lado a lado"
       }
-    }
+    },
+    "starOnGitHub": "Dar uma estrela ao Bokuchi no GitHub"
   },
   "settings": {
     "title": "Configurações",
@@ -641,6 +642,14 @@
         "description": "Bibliotecas internas, incluindo React, Tauri e DOMPurify, foram atualizadas para maior estabilidade e segurança."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Gostando do Bokuchi?",
+    "body": "O Bokuchi é de código aberto. Se ele tem sido útil, uma estrela no GitHub ajuda outras pessoas a encontrá-lo.",
+    "star": "Dar estrela no GitHub",
+    "later": "Mais tarde",
+    "never": "Não mostrar novamente",
+    "close": "Fechar"
   },
   "milestone": {
     "close": "Obrigado",

@@ -5,6 +5,7 @@ import { CssBaseline, Box, Typography } from '@mui/material';
 import AppHeader from './components/AppHeader';
 import AppContent from './components/AppContent';
 import AppDialogs from './components/AppDialogs';
+import StarPromptCard from './components/StarPromptCard';
 import StatusBar from './components/StatusBar';
 import RecentFilesDialog from './components/RecentFilesDialog';
 import RenameDialog from './components/RenameDialog';
@@ -68,6 +69,13 @@ function AppDesktop() {
 
     // What's New state
     whatsNewOpen,
+
+    // GitHub star prompt card
+    starPromptVisible,
+    starPromptShowNever,
+    handleStarPromptStar,
+    handleStarPromptLater,
+    handleStarPromptNever,
 
     // Update state
     updateDialogOpen,
@@ -461,6 +469,14 @@ function AppDesktop() {
           saveStatusMessage={saveStatusMessage}
         />
       )}
+      {/* GitHub star prompt card (kept out of 臨 focus mode, which hides all chrome) */}
+      <StarPromptCard
+        open={starPromptVisible && !rinActive}
+        showNever={starPromptShowNever}
+        onStar={handleStarPromptStar}
+        onLater={handleStarPromptLater}
+        onNever={handleStarPromptNever}
+      />
       {/* Konami Code unlock animation */}
       {showUnlockAnimation && <KonamiUnlockOverlay />}
       </Box>

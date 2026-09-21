@@ -248,7 +248,8 @@
         "tip2": "Try different themes in Settings > Appearance",
         "tip3": "Use the split view to see your Markdown and preview side by side"
       }
-    }
+    },
+    "starOnGitHub": "Star Bokuchi on GitHub"
   },
   "settings": {
     "title": "Settings",
@@ -664,6 +665,14 @@
         "description": "Updated internal libraries, including React, Tauri, and DOMPurify, for stability and security."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Enjoying Bokuchi?",
+    "body": "Bokuchi is open source. If it has been useful, a GitHub star helps other people find it.",
+    "star": "Star on GitHub",
+    "later": "Later",
+    "never": "Don't show again",
+    "close": "Close"
   },
   "milestone": {
     "close": "Thank you",
