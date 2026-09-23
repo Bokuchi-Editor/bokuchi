@@ -4,7 +4,9 @@ import {
   getHighlightStyleDataUri,
   generateExportCSS,
   generateTableLayoutCSS,
+  deriveCodeBackground,
   generateGithubAlertCSS,
+  generateCodeFilenameCSS,
   buildExportHTML,
 } from '../exportStyles';
 
@@ -175,6 +177,16 @@ describe('generateTableLayoutCSS', () => {
     expect(css).toContain('.markdown-preview th');
     expect(css).toContain('.markdown-preview td');
   });
+
+  it('sets no direction in any layout mode so tables follow the document direction (#499)', () => {
+    // The reporter reversed the original keep-LTR request: in an RTL document
+    // the first Markdown column must sit on the right, so tables simply
+    // inherit `dir` from the document root.
+    for (const mode of ['equal', 'auto-wrap', 'auto-scroll'] as const) {
+      const css = generateTableLayoutCSS(mode, '', '#ccc', '#fff');
+      expect(css, mode).not.toContain('direction:');
+    }
+  });
 });
 
 describe('buildExportHTML', () => {
@@ -182,7 +194,9 @@ describe('buildExportHTML', () => {
     const html = buildExportHTML('<p>Hello</p>', false);
     // Document structure
     expect(html).toContain('<!DOCTYPE html>');
-    expect(html).toContain('<html lang="en">');
+    // Direction defaults to auto (#499): pure-LTR documents render as before,
+    // fully-RTL documents are detected by the HTML engine.
+    expect(html).toContain('<html lang="en" dir="auto">');
     expect(html).toContain('<head>');
     expect(html).toContain('</head>');
     expect(html).toContain('<body>');
@@ -284,5 +298,79 @@ describe('buildExportHTML', () => {
       const html = buildExportHTML('<p>x</p>', false);
       expect(html).toContain('font-family: -apple-system, BlinkMacSystemFont');
     });
+  });
+
+  // #499: the resolved preview direction reaches both export flavors.
+  describe('direction option', () => {
+    it('emits dir="rtl" on the root element', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        direction: 'rtl',
+      });
+      expect(html).toContain('<html lang="en" dir="rtl">');
+    });
+
+    it('keeps the direction in the PDF (forPrint) export too', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        forPrint: true,
+        direction: 'rtl',
+      });
+      expect(html).toContain('<html lang="en" dir="rtl">');
+    });
+
+    it('keeps code blocks LTR regardless of document direction', () => {
+      const html = buildExportHTML('<p>x</p>', false, undefined, undefined, undefined, {
+        direction: 'rtl',
+      });
+      // pre/code rules in generateExportCSS; tables intentionally carry no
+      // direction of their own (they follow the document, see above).
+      expect(html).toContain('direction: ltr');
+      expect(html).toContain('unicode-bidi: isolate');
+    });
+  });
+});
+
+describe('deriveCodeBackground', () => {
+  it('tints the text color at 6% for light and 10% for dark palettes', () => {
+    expect(deriveCodeBackground({ mode: 'light', text: { primary: '#2d3748' } })).toBe('rgba(45, 55, 72, 0.06)');
+    expect(deriveCodeBackground({ mode: 'dark', text: { primary: '#ffffff' } })).toBe('rgba(255, 255, 255, 0.1)');
+  });
+});
+
+describe('accent table header (previewTableHeader: appBar)', () => {
+  it('generateTableLayoutCSS paints th with the header style when given', () => {
+    const css = generateTableLayoutCSS('equal', '', '#ccc', '#fff', { background: 'linear-gradient(45deg, #a 30%, #b 90%)', color: '#ffffff' });
+    const th = css.match(/\bth \{[^}]*\}/)?.[0] ?? '';
+    expect(th).toContain('background: linear-gradient(45deg, #a 30%, #b 90%)');
+    expect(th).toContain('color: #ffffff');
+    expect(th).not.toContain('#fff;');
+  });
+
+  it('getExportThemeColors carries the header for opted-in themes only', () => {
+    expect(getExportThemeColors('vivid').tableHeader?.color).toBe('#ffffff');
+    expect(getExportThemeColors('default').tableHeader?.background).toBe('#1976d2');
+    expect(getExportThemeColors('dark').tableHeader).toBeUndefined();
+  });
+
+  it('HTML export uses the accent header, PDF (forPrint) keeps the neutral tint', () => {
+    const html = buildExportHTML('<p>x</p>', false, 'vivid', 'equal');
+    expect(html).toContain('linear-gradient(45deg, #ff6b35 30%, #f7931e 90%)');
+    const pdf = buildExportHTML('<p>x</p>', false, 'vivid', 'equal', undefined, { forPrint: true });
+    expect(pdf).not.toContain('linear-gradient(45deg');
+    expect(pdf).not.toContain('#1976d2;\n            color');
+  });
+});
+
+describe('generateCodeFilenameCSS (#534)', () => {
+  it('scopes the label rule with the given prefix', () => {
+    expect(generateCodeFilenameCSS('')).toMatch(/^\s*pre \.code-filename \{/);
+    expect(generateCodeFilenameCSS('.markdown-preview ')).toContain('.markdown-preview pre .code-filename {');
+  });
+
+  it('cancels the 16px pre padding so the tab sits in the block corner', () => {
+    expect(generateCodeFilenameCSS('')).toContain('margin: -16px 0 12px -16px');
+  });
+
+  it('is included in the export stylesheet', () => {
+    expect(generateExportCSS(getExportThemeColors())).toContain('pre .code-filename {');
   });
 });

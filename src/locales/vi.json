@@ -248,7 +248,8 @@
         "tip2": "Thử các chủ đề khác nhau trong Cài đặt > Giao diện",
         "tip3": "Sử dụng chế độ chia đôi để xem Markdown và bản xem trước của bạn cạnh nhau"
       }
-    }
+    },
+    "starOnGitHub": "Gắn sao cho Bokuchi trên GitHub"
   },
   "settings": {
     "title": "Cài đặt",
@@ -376,6 +377,8 @@
       "fontFamilyDescription": "Chọn phông chữ đã cài đặt cho trình soạn thảo. \"Mặc định\" dùng phông chữ monospace tiêu chuẩn.",
       "previewFontFamily": "Phông chữ xem trước",
       "previewFontFamilyDescription": "Chọn phông chữ cho nội dung xem trước và xuất HTML/PDF. Khối mã luôn dùng phông chữ monospace.",
+      "previewDirection": "Hướng văn bản xem trước",
+      "previewDirectionDescription": "Hướng văn bản cho phần xem trước và khi xuất HTML/PDF. \"Tự động\" nhận diện hướng từ nội dung. Khối mã luôn giữ hướng từ trái sang phải; bảng theo hướng của tài liệu.",
       "fontFamilyDefault": "Mặc định",
       "fontFamilyMonospaceOnly": "Chỉ phông chữ monospace",
       "showLineNumbers": "Hiển thị số dòng",
@@ -622,15 +625,31 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Cập nhật bản xem trước khi chuyển tab",
-        "description": "Đã sửa lỗi bản xem trước không được cập nhật khi chuyển tab."
+      "rtlPreview": {
+        "title": "Xem trước từ phải sang trái",
+        "description": "Phần xem trước và xuất HTML/PDF nay hỗ trợ văn bản từ phải sang trái như tiếng Ả Rập. Chọn Tự động, Trái sang phải hoặc Phải sang trái ở tiêu đề phần xem trước hoặc trong Cài đặt > Trình soạn thảo."
+      },
+      "codeBlockFilename": {
+        "title": "Tên tệp trên khối mã",
+        "description": "Viết ```ts:src/index.ts để hiển thị nhãn tên tệp trên khối mã, trong phần xem trước và khi xuất HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "Màu trình soạn thảo theo chủ đề",
+        "description": "Màu nền và màu chữ của trình soạn thảo nay khớp với chủ đề đã chọn, kể cả chủ đề tùy chỉnh. Tiêu đề bảng trong phần xem trước cũng nhận màu chủ đề với Default, Pastel và Vivid."
       },
       "libraryUpdates": {
         "title": "Cập nhật thư viện",
-        "description": "Đã cập nhật các thư viện bên trong, bao gồm kết xuất sơ đồ Mermaid, để tăng độ ổn định và bảo mật."
+        "description": "Đã cập nhật các thư viện bên trong, bao gồm React, Tauri và DOMPurify, để tăng độ ổn định và bảo mật."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Bạn thích Bokuchi chứ?",
+    "body": "Bokuchi là mã nguồn mở. Nếu nó hữu ích với bạn, một ngôi sao trên GitHub sẽ giúp người khác tìm thấy nó.",
+    "star": "Gắn sao trên GitHub",
+    "later": "Để sau",
+    "never": "Không hiển thị lại",
+    "close": "Đóng"
   },
   "milestone": {
     "close": "Cảm ơn bạn",
@@ -650,6 +669,10 @@
     "reloadThemes": "Tải lại giao diện",
     "copyCode": "Sao chép mã",
     "codeCopied": "Đã sao chép!",
+    "textDirection": "Hướng văn bản",
+    "directionAuto": "Tự động",
+    "directionLtr": "Trái sang phải",
+    "directionRtl": "Phải sang trái",
     "slideCounter": "Slide {{current}} / {{total}}"
   },
   "rin": {

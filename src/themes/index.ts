@@ -22,6 +22,20 @@ export interface ThemeConfig {
   displayName: string;
   theme: Theme;
   hidden?: boolean;
+  /**
+   * Preview / HTML-export table header treatment. `'appBar'` paints `<th>`
+   * with the theme's AppBar colors so the table echoes the app chrome
+   * (chosen for the three "branded" light themes). Omitted = neutral tint
+   * derived from the text color (see deriveCodeBackground in exportStyles).
+   */
+  previewTableHeader?: 'appBar';
+}
+
+/** Resolved `<th>` colors for a theme that opts into an accent table header. */
+export interface TableHeaderStyle {
+  /** Any CSS background value (solid color or gradient). */
+  background: string;
+  color: string;
 }
 
 // Default Theme (Light)
@@ -514,6 +528,7 @@ export const themes: ThemeConfig[] = [
     name: 'default',
     displayName: 'Default',
     theme: defaultTheme,
+    previewTableHeader: 'appBar',
   },
   {
     name: 'dark',
@@ -524,11 +539,13 @@ export const themes: ThemeConfig[] = [
     name: 'pastel',
     displayName: 'Pastel',
     theme: pastelTheme,
+    previewTableHeader: 'appBar',
   },
   {
     name: 'vivid',
     displayName: 'Vivid',
     theme: vividTheme,
+    previewTableHeader: 'appBar',
   },
   {
     name: 'dawn',
@@ -617,6 +634,26 @@ export const getThemeColorTokens = (id: ThemeId): CustomThemeColors => {
     primaryMain: palette.primary.main,
     secondaryMain: palette.secondary.main,
     divider: palette.divider,
+  };
+};
+
+/**
+ * Accent table-header colors for `themeId`, or null when the theme keeps the
+ * neutral tinted header. Reads the preset's MuiAppBar style override so the
+ * header stays in lockstep with the app bar (gradient included); presets
+ * without an override fall back to MUI's AppBar default (primary + contrast
+ * text). Custom themes never opt in — they have no AppBar override to mirror.
+ */
+export const getPreviewTableHeaderStyle = (themeId: ThemeId): TableHeaderStyle | null => {
+  const config = themes.find(t => t.name === themeId);
+  if (!config?.previewTableHeader) return null;
+  const root = config.theme.components?.MuiAppBar?.styleOverrides?.root as
+    | { background?: string; backgroundColor?: string; color?: string }
+    | undefined;
+  const { palette } = config.theme;
+  return {
+    background: root?.background ?? root?.backgroundColor ?? palette.primary.main,
+    color: root?.color ?? palette.primary.contrastText,
   };
 };
 

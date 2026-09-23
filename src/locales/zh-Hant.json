@@ -248,7 +248,8 @@
         "tip2": "在設定 > 外觀中嘗試不同的主題",
         "tip3": "使用分割檢視並排查看您的 Markdown 和預覽"
       }
-    }
+    },
+    "starOnGitHub": "在 GitHub 上為 Bokuchi 給星"
   },
   "settings": {
     "title": "設定",
@@ -376,6 +377,8 @@
       "fontFamilyDescription": "從已安裝的字型中選擇編輯器使用的字型。「預設」使用標準等寬字型。",
       "previewFontFamily": "預覽字型",
       "previewFontFamilyDescription": "選擇預覽內文與 HTML/PDF 匯出使用的字型。程式碼區塊一律使用等寬字型。",
+      "previewDirection": "預覽文字方向",
+      "previewDirectionDescription": "預覽與 HTML/PDF 匯出的文字方向。「自動」會依內容判斷方向。程式碼區塊永遠保持由左至右，表格則依文件方向排列。",
       "fontFamilyDefault": "預設",
       "fontFamilyMonospaceOnly": "僅顯示等寬字型",
       "showLineNumbers": "顯示行號",
@@ -622,15 +625,31 @@
       "improvement": "改進"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "切換標籤頁時的預覽更新",
-        "description": "修正了切換標籤頁時預覽未更新的問題。"
+      "rtlPreview": {
+        "title": "由右至左預覽",
+        "description": "預覽與 HTML/PDF 匯出現已支援阿拉伯文等由右至左書寫的文字。可在預覽標題列或「設定 > 編輯器」中選擇「自動」、「由左至右」或「由右至左」。"
+      },
+      "codeBlockFilename": {
+        "title": "程式碼區塊檔名",
+        "description": "寫成 ```ts:src/index.ts，即可在預覽與 HTML/PDF 匯出中為程式碼區塊顯示檔名標籤。"
+      },
+      "editorThemeSync": {
+        "title": "編輯器配色跟隨主題",
+        "description": "編輯器的背景色與文字顏色現在會與所選主題一致，包括自訂主題。在 Default、Pastel 和 Vivid 中，預覽的表格標題也會套用主題顏色。"
       },
       "libraryUpdates": {
         "title": "函式庫更新",
-        "description": "更新了包括 Mermaid 圖表渲染在內的內部函式庫，以提升穩定性與安全性。"
+        "description": "更新了包括 React、Tauri 和 DOMPurify 在內的內部函式庫，以提升穩定性與安全性。"
       }
     }
+  },
+  "starPrompt": {
+    "title": "喜歡 Bokuchi 嗎？",
+    "body": "Bokuchi 是開源軟體。如果它對您有幫助，在 GitHub 上給一顆星可以讓更多人發現它。",
+    "star": "在 GitHub 上給星",
+    "later": "稍後",
+    "never": "不再顯示",
+    "close": "關閉"
   },
   "milestone": {
     "close": "謝謝",
@@ -650,6 +669,10 @@
     "reloadThemes": "重新載入佈景主題",
     "copyCode": "複製程式碼",
     "codeCopied": "已複製！",
+    "textDirection": "文字方向",
+    "directionAuto": "自動",
+    "directionLtr": "由左至右",
+    "directionRtl": "由右至左",
     "slideCounter": "投影片 {{current}} / {{total}}"
   },
   "rin": {

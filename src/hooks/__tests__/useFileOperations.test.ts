@@ -288,4 +288,22 @@ describe('useFileOperations', () => {
     expect(desktopApi.saveFileAs).toHaveBeenCalledWith('expanded content');
     expect(showSaveStatus).toHaveBeenCalledWith('statusBar.saved');
   });
+  it('T-FO-13: notifies onManualSave after a successful Save and Save As, but not after a failed one', async () => {
+    const onManualSave = vi.fn();
+    const { result } = renderHook(() => useFileOperations({ ...defaultParams(), onManualSave }));
+
+    await act(async () => {
+      await result.current.handleSaveFile();
+    });
+    await act(async () => {
+      await result.current.handleSaveFileAs();
+    });
+    expect(onManualSave).toHaveBeenCalledTimes(2);
+
+    saveTab.mockResolvedValue(false);
+    await act(async () => {
+      await result.current.handleSaveFile();
+    });
+    expect(onManualSave).toHaveBeenCalledTimes(2);
+  });
 });

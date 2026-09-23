@@ -20,6 +20,7 @@ import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 import { useEasterEggs } from './useEasterEggs';
 import { useWhatsNew } from './useWhatsNew';
 import { useMilestone } from './useMilestone';
+import { useStarPrompt } from './useStarPrompt';
 
 /** How long the transient "Saved" status message stays visible in the status bar. */
 const SAVE_STATUS_DISPLAY_MS = 3000;
@@ -172,6 +173,17 @@ export const useAppState = () => {
     setActiveTab,
   });
 
+  // GitHub star prompt: counts manual saves and shows a small card after one
+  // once the user has clearly been using the app (see utils/starPrompt.ts).
+  const {
+    starPromptVisible,
+    starPromptShowNever,
+    notifyManualSave,
+    handleStarPromptStar,
+    handleStarPromptLater,
+    handleStarPromptNever,
+  } = useStarPrompt({ isInitialized, isSettingsLoaded, blocked: rinActive });
+
   // File operations
   const {
     saveBeforeCloseDialog,
@@ -188,6 +200,7 @@ export const useAppState = () => {
     handleCancelBeforeClose,
     startCloseQueue,
   } = useFileOperations({
+    onManualSave: notifyManualSave,
     activeTab,
     tabs,
     globalVariables,
@@ -601,6 +614,13 @@ export const useAppState = () => {
 
     // What's New state
     whatsNewOpen,
+
+    // GitHub star prompt card
+    starPromptVisible,
+    starPromptShowNever,
+    handleStarPromptStar,
+    handleStarPromptLater,
+    handleStarPromptNever,
 
     // Update state
     updateDialogOpen,

@@ -248,7 +248,8 @@
         "tip2": "Probieren Sie verschiedene Themes in Einstellungen > Erscheinungsbild",
         "tip3": "Verwenden Sie die geteilte Ansicht, um Ihr Markdown und die Vorschau nebeneinander zu sehen"
       }
-    }
+    },
+    "starOnGitHub": "Bokuchi auf GitHub einen Stern geben"
   },
   "settings": {
     "title": "Einstellungen",
@@ -376,6 +377,8 @@
       "fontFamilyDescription": "Wählen Sie eine installierte Schriftart für den Editor. \"Standard\" verwendet die übliche Monospace-Schriftart.",
       "previewFontFamily": "Vorschau-Schriftart",
       "previewFontFamilyDescription": "Wählen Sie eine Schriftart für den Vorschautext und den HTML/PDF-Export. Codeblöcke verwenden immer eine Monospace-Schriftart.",
+      "previewDirection": "Textrichtung der Vorschau",
+      "previewDirectionDescription": "Textrichtung für die Vorschau und den HTML/PDF-Export. „Automatisch“ erkennt die Richtung aus dem Inhalt. Codeblöcke bleiben immer von links nach rechts; Tabellen folgen der Richtung des Dokuments.",
       "fontFamilyDefault": "Standard",
       "fontFamilyMonospaceOnly": "Nur Monospace-Schriftarten",
       "showLineNumbers": "Zeilennummern anzeigen",
@@ -622,15 +625,31 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Vorschau-Aktualisierung beim Tabwechsel",
-        "description": "Ein Fehler wurde behoben, durch den die Vorschau beim Wechseln des Tabs nicht aktualisiert wurde."
+      "rtlPreview": {
+        "title": "Vorschau von rechts nach links",
+        "description": "Die Vorschau und der HTML/PDF-Export unterstützen jetzt Text von rechts nach links, etwa Arabisch. Wählen Sie „Automatisch“, „Links nach rechts“ oder „Rechts nach links“ in der Kopfzeile der Vorschau oder unter Einstellungen > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "Dateinamen an Codeblöcken",
+        "description": "Mit ```ts:src/index.ts wird in der Vorschau und im HTML/PDF-Export ein Dateiname über dem Codeblock angezeigt."
+      },
+      "editorThemeSync": {
+        "title": "Editorfarben folgen dem Design",
+        "description": "Hintergrund und Textfarben des Editors passen sich jetzt dem gewählten Design an, auch bei benutzerdefinierten Designs. Tabellenköpfe in der Vorschau übernehmen in Default, Pastel und Vivid ebenfalls die Designfarbe."
       },
       "libraryUpdates": {
         "title": "Bibliotheks-Updates",
-        "description": "Interne Bibliotheken, darunter die Mermaid-Diagrammdarstellung, wurden für mehr Stabilität und Sicherheit aktualisiert."
+        "description": "Interne Bibliotheken, darunter React, Tauri und DOMPurify, wurden für mehr Stabilität und Sicherheit aktualisiert."
       }
     }
+  },
+  "starPrompt": {
+    "title": "Gefällt Ihnen Bokuchi?",
+    "body": "Bokuchi ist Open Source. Wenn es Ihnen geholfen hat, hilft ein GitHub-Stern anderen, es zu finden.",
+    "star": "Stern auf GitHub vergeben",
+    "later": "Später",
+    "never": "Nicht mehr anzeigen",
+    "close": "Schließen"
   },
   "milestone": {
     "close": "Danke",
@@ -650,6 +669,10 @@
     "reloadThemes": "Themes neu laden",
     "copyCode": "Code kopieren",
     "codeCopied": "Kopiert!",
+    "textDirection": "Textrichtung",
+    "directionAuto": "Automatisch",
+    "directionLtr": "Links nach rechts",
+    "directionRtl": "Rechts nach links",
     "slideCounter": "Folie {{current}} von {{total}}"
   },
   "rin": {

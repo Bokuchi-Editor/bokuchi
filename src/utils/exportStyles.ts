@@ -1,6 +1,6 @@
 import { alpha } from '@mui/material/styles';
-import { TableLayoutMode, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
-import { getThemeByName, ThemeName } from '../themes';
+import { TableLayoutMode, PreviewDirection, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
+import { getThemeByName, getPreviewTableHeaderStyle, ThemeName, type TableHeaderStyle } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
 
 /** Theme color palette for HTML export */
@@ -14,6 +14,20 @@ export interface ExportThemeColors {
   inlineCodeBackground: string;
   /** Whether the theme is a dark palette (picks the GitHub alert accent set). */
   isDark: boolean;
+  /** Accent `<th>` colors for themes that opt in; undefined = neutral codeBackground tint. */
+  tableHeader?: TableHeaderStyle;
+}
+
+/**
+ * Code-block / table-header background derived from the text color so it
+ * stays visible even when a theme leaves background.paper === background.default
+ * (Default / Vivid) and always keeps contrast with the text painted over it.
+ * Shared by the HTML export and the in-app preview so both render alike
+ * (the preview used to paint `th` with the theme's `pre` background, which is
+ * a dark navy in Vivid and swallowed the dark header text).
+ */
+export function deriveCodeBackground(palette: { mode: 'light' | 'dark'; text: { primary: string } }): string {
+  return alpha(palette.text.primary, palette.mode === 'dark' ? 0.10 : 0.06);
 }
 
 /**
@@ -25,9 +39,7 @@ export function getExportThemeColors(theme?: string): ExportThemeColors {
   const themeName = (theme || 'default') as ThemeName;
   const muiTheme = getThemeByName(themeName);
   const { palette } = muiTheme;
-  // Code block bg derived from text color so it stays visible even when a
-  // theme leaves background.paper === background.default (Default / Vivid).
-  const codeBackground = alpha(palette.text.primary, palette.mode === 'dark' ? 0.10 : 0.06);
+  const codeBackground = deriveCodeBackground(palette);
   return {
     backgroundColor: palette.background.default,
     textColor: palette.text.primary,
@@ -37,6 +49,7 @@ export function getExportThemeColors(theme?: string): ExportThemeColors {
     blockquoteColor: palette.text.secondary,
     inlineCodeBackground: alpha(palette.text.primary, 0.08),
     isDark: palette.mode === 'dark',
+    tableHeader: getPreviewTableHeaderStyle(themeName) ?? undefined,
   };
 }
 
@@ -106,18 +119,31 @@ export function getHighlightStyleDataUri(darkMode: boolean): string {
  * for the in-app preview where rules must not leak to the rest of the UI). The auto-scroll
  * preview also needs an override against the wildcard `.markdown-preview * { max-width: 100% }`
  * — without it the table can't grow past its container, so horizontal scroll never triggers.
+ *
+ * Tables deliberately set no `direction`: they inherit the document direction, so in an
+ * RTL document the first Markdown column sits on the right (#499 — the reporter asked for
+ * this, reversing an earlier keep-LTR request). Code blocks are the ones pinned to LTR.
  */
 export function generateTableLayoutCSS(
   mode: TableLayoutMode,
   prefix: string,
   borderColor: string,
   cellBackground: string,
+  header?: TableHeaderStyle | null,
 ): string {
   const tableSelector = `${prefix}table`;
   const cellSelector = `${prefix}th, ${prefix}td`;
   const headerSelector = `${prefix}th`;
 
-  const headerRule = `
+  // `background` (not background-color) so an AppBar gradient can be mirrored.
+  const headerRule = header
+    ? `
+        ${headerSelector} {
+            background: ${header.background};
+            color: ${header.color};
+            font-weight: 600;
+        }`
+    : `
         ${headerSelector} {
             background-color: ${cellBackground};
             font-weight: 600;
@@ -201,6 +227,38 @@ ${headerRule}`;
 /**
  * Generate the full CSS block for HTML export.
  */
+/**
+ * CSS for the `language:filename` label that renderCode emits as the first
+ * child of `<pre>` (#534). Drawn as a Qiita-style tab pinned to the block's
+ * top-left corner: the negative margins cancel the 16px `pre` padding used by
+ * both the preview and the export stylesheet. Colors are deliberately
+ * theme-neutral — the text inherits the `pre` color (so per-theme
+ * `!important` overrides in syntax.css carry over) and the background is a
+ * translucent grey that reads on any light or dark code background.
+ *
+ * `prefix` scopes the selector (`.markdown-preview ` for the preview, empty
+ * for export).
+ */
+export function generateCodeFilenameCSS(prefix: string): string {
+  return `
+        ${prefix}pre .code-filename {
+            display: block;
+            width: fit-content;
+            max-width: 100%;
+            margin: -16px 0 12px -16px;
+            padding: 4px 12px;
+            border-radius: 3px 0 3px 0;
+            background-color: rgba(128, 128, 128, 0.22);
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.8em;
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: none;
+        }`;
+}
+
 export function generateExportCSS(
   colors: ExportThemeColors,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
@@ -211,6 +269,7 @@ export function generateExportCSS(
     '',
     colors.borderColor,
     colors.codeBackground,
+    colors.tableHeader,
   );
   return `
         body {
@@ -258,6 +317,9 @@ export function generateExportCSS(
 ${generateGithubAlertCSS('', colors.isDark)}
 
         code {
+            /* Code always reads LTR, isolated from a surrounding RTL paragraph (#499). */
+            direction: ltr;
+            unicode-bidi: isolate;
             background-color: ${colors.inlineCodeBackground};
             padding: 0.2em 0.4em;
             border-radius: 3px;
@@ -267,6 +329,8 @@ ${generateGithubAlertCSS('', colors.isDark)}
         }
 
         pre {
+            direction: ltr;
+            text-align: left;
             background-color: ${colors.codeBackground};
             border-radius: 3px;
             padding: 16px;
@@ -286,6 +350,7 @@ ${generateGithubAlertCSS('', colors.isDark)}
             white-space: pre-wrap;
             line-height: 1.4;
         }
+${generateCodeFilenameCSS('')}
 ${tableCSS}
 
         a {
@@ -364,7 +429,7 @@ export function buildExportHTML(
   theme?: string,
   tableLayout: TableLayoutMode = DEFAULT_PREVIEW_SETTINGS.tableLayout,
   katexCss?: string,
-  options: { forPrint?: boolean; fontFamily?: string } = {},
+  options: { forPrint?: boolean; fontFamily?: string; direction?: PreviewDirection } = {},
 ): string {
   // PDF export always uses the Default theme (white background, black text),
   // regardless of the on-screen theme — code/Mermaid colors follow suit. This
@@ -373,7 +438,11 @@ export function buildExportHTML(
   const effectiveTheme = options.forPrint ? 'default' : theme;
   const effectiveDarkMode = options.forPrint ? false : darkMode;
 
-  const colors = getExportThemeColors(effectiveTheme);
+  const themeColors = getExportThemeColors(effectiveTheme);
+  // Print stays neutral: the forced Default theme opts into an accent (blue)
+  // table header on screen, but PDFs keep the tinted header for the same
+  // reason they drop the theme background — readable, uncolored paper.
+  const colors = options.forPrint ? { ...themeColors, tableHeader: undefined } : themeColors;
   const css = generateExportCSS(colors, tableLayout, options.fontFamily);
   const highlightStyle = getHighlightStyleDataUri(effectiveDarkMode);
   // Inject KaTeX's stylesheet (with fonts inlined) only when the document has
@@ -390,7 +459,7 @@ export function buildExportHTML(
 
   return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="${options.direction ?? 'auto'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

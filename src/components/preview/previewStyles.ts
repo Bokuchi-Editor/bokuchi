@@ -1,7 +1,8 @@
 import { alpha } from '@mui/material/styles';
 import type { Palette } from '@mui/material/styles';
-import { generateTableLayoutCSS, generateGithubAlertCSS } from '../../utils/exportStyles';
+import { generateTableLayoutCSS, generateGithubAlertCSS, generateCodeFilenameCSS, deriveCodeBackground } from '../../utils/exportStyles';
 import type { TableLayoutMode } from '../../types/settings';
+import type { TableHeaderStyle } from '../../themes';
 
 /**
  * Builds the scoped CSS injected into the in-app markdown preview. The rules
@@ -11,7 +12,11 @@ import type { TableLayoutMode } from '../../types/settings';
  * Kept out of the component body because it is a large, purely derived string
  * that only depends on the palette and the table-layout mode.
  */
-export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMode): string {
+export function buildPreviewStyles(
+  palette: Palette,
+  tableLayout: TableLayoutMode,
+  tableHeader: TableHeaderStyle | null = null,
+): string {
   return `
             .markdown-preview {
               word-break: break-word;
@@ -96,6 +101,11 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
             ${generateGithubAlertCSS('.markdown-preview ', palette.mode === 'dark')}
 
             .markdown-preview code {
+              /* Code always reads LTR, isolated from a surrounding RTL
+                 paragraph (#499). Tables are NOT pinned — they follow the
+                 document direction (see generateTableLayoutCSS). */
+              direction: ltr;
+              unicode-bidi: isolate;
               background-color: ${alpha(palette.text.primary, 0.08)};
               padding: 0.2em 0.4em;
               border-radius: 3px;
@@ -105,6 +115,8 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
             }
 
             .markdown-preview pre {
+              direction: ltr;
+              text-align: left;
               background-color: var(--color-pre-background);
               border-radius: 3px;
               padding: 16px;
@@ -125,9 +137,17 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               white-space: pre-wrap;
             }
 
+            /* language:filename label inside <pre> (#534) */
+            ${generateCodeFilenameCSS('.markdown-preview ')}
+
             /* Code-block copy button (injected by injectCodeCopyButtons) */
             .markdown-preview .code-block-wrapper {
               position: relative;
+            }
+
+            /* Keep a long filename tab clear of the copy button's corner. */
+            .markdown-preview .code-block-wrapper .code-filename {
+              max-width: calc(100% - 32px);
             }
 
             .markdown-preview .code-copy-button {
@@ -181,7 +201,8 @@ export function buildPreviewStyles(palette: Palette, tableLayout: TableLayoutMod
               tableLayout,
               '.markdown-preview ',
               'var(--color-border)',
-              'var(--color-pre-background)',
+              deriveCodeBackground(palette),
+              tableHeader,
             )}
 
             .markdown-preview a {

@@ -248,7 +248,8 @@
         "tip2": "Prueba diferentes temas en Configuración > Apariencia",
         "tip3": "Usa la vista dividida para ver tu Markdown y vista previa lado a lado"
       }
-    }
+    },
+    "starOnGitHub": "Dar una estrella a Bokuchi en GitHub"
   },
   "settings": {
     "title": "Configuración",
@@ -376,6 +377,8 @@
       "fontFamilyDescription": "Seleccionar una fuente instalada para el editor. \"Predeterminada\" usa la fuente monoespaciada estándar.",
       "previewFontFamily": "Fuente de la vista previa",
       "previewFontFamilyDescription": "Seleccionar una fuente para el texto de la vista previa y la exportación HTML/PDF. Los bloques de código siempre usan una fuente monoespaciada.",
+      "previewDirection": "Dirección del texto de la vista previa",
+      "previewDirectionDescription": "Dirección del texto para la vista previa y la exportación a HTML/PDF. «Automática» la detecta a partir del contenido. Los bloques de código siempre se muestran de izquierda a derecha; las tablas siguen la dirección del documento.",
       "fontFamilyDefault": "Predeterminada",
       "fontFamilyMonospaceOnly": "Solo fuentes monoespaciadas",
       "showLineNumbers": "Mostrar números de línea",
@@ -622,15 +625,31 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "Actualización de la vista previa al cambiar de pestaña",
-        "description": "Se corrigió un error por el que la vista previa no se actualizaba al cambiar de pestaña."
+      "rtlPreview": {
+        "title": "Vista previa de derecha a izquierda",
+        "description": "La vista previa y la exportación a HTML/PDF ahora admiten texto de derecha a izquierda, como el árabe. Elige «Automática», «De izquierda a derecha» o «De derecha a izquierda» en el encabezado de la vista previa o en Configuración > Editor."
+      },
+      "codeBlockFilename": {
+        "title": "Nombres de archivo en bloques de código",
+        "description": "Escribe ```ts:src/index.ts para mostrar una etiqueta con el nombre del archivo en el bloque de código, en la vista previa y en la exportación a HTML/PDF."
+      },
+      "editorThemeSync": {
+        "title": "Los colores del editor siguen el tema",
+        "description": "El fondo y los colores del texto del editor ahora coinciden con el tema seleccionado, incluidos los temas personalizados. Los encabezados de tabla de la vista previa también adoptan el color del tema en Default, Pastel y Vivid."
       },
       "libraryUpdates": {
         "title": "Actualización de bibliotecas",
-        "description": "Se actualizaron bibliotecas internas, incluida la representación de diagramas Mermaid, para mejorar la estabilidad y la seguridad."
+        "description": "Se actualizaron bibliotecas internas, incluidas React, Tauri y DOMPurify, para mejorar la estabilidad y la seguridad."
       }
     }
+  },
+  "starPrompt": {
+    "title": "¿Te gusta Bokuchi?",
+    "body": "Bokuchi es de código abierto. Si te ha resultado útil, una estrella en GitHub ayuda a que otras personas lo encuentren.",
+    "star": "Dar estrella en GitHub",
+    "later": "Más tarde",
+    "never": "No volver a mostrar",
+    "close": "Cerrar"
   },
   "milestone": {
     "close": "Gracias",
@@ -650,6 +669,10 @@
     "reloadThemes": "Recargar temas",
     "copyCode": "Copiar código",
     "codeCopied": "¡Copiado!",
+    "textDirection": "Dirección del texto",
+    "directionAuto": "Automática",
+    "directionLtr": "De izquierda a derecha",
+    "directionRtl": "De derecha a izquierda",
     "slideCounter": "Diapositiva {{current}} de {{total}}"
   },
   "rin": {

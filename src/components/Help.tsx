@@ -16,10 +16,12 @@ import {
   CardContent,
   Chip,
 } from '@mui/material';
-import { Close, Help, Code, Book, Keyboard, School, Extension, NewReleases, AutoAwesome, BugReport, TrendingUp } from '@mui/icons-material';
+import { Close, Help, Code, Star, OpenInNew, Book, Keyboard, School, Extension, NewReleases, AutoAwesome, BugReport, TrendingUp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { formatKeyboardShortcut, getPlatform } from '../utils/platform';
 import { whatsNewContent, WhatsNewChange } from '../whatsNew';
+import { openUrl } from '@tauri-apps/plugin-opener';
+import { STAR_PROMPT_REPO_URL } from '../utils/starPrompt';
 
 interface HelpProps {
   open: boolean;
@@ -999,8 +1001,8 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ p: 0, display: 'flex' }}>
-        <Box sx={{ width: 280, borderRight: 1, borderColor: 'divider' }}>
-          <List>
+        <Box sx={{ width: 280, borderRight: 1, borderColor: 'divider', display: 'flex', flexDirection: 'column' }}>
+          <List sx={{ flex: 1, overflow: 'auto' }}>
             {helpPages.map((page, index) => (
               <React.Fragment key={page.id}>
                 <ListItem disablePadding>
@@ -1018,6 +1020,20 @@ const HelpDialog: React.FC<HelpProps> = ({ open, onClose }) => {
               </React.Fragment>
             ))}
           </List>
+          {/* Permanent home for the GitHub star ask, for anyone who dismissed the prompt card. */}
+          <Divider />
+          <ListItemButton
+            onClick={() => {
+              openUrl(STAR_PROMPT_REPO_URL).catch((error) => {
+                console.error('Failed to open the GitHub repository:', error);
+              });
+            }}
+            sx={{ flex: 'none', color: 'text.secondary' }}
+          >
+            <Star sx={{ mr: 1, fontSize: 20, color: '#f5a623' }} />
+            <ListItemText primary={t('help.starOnGitHub')} primaryTypographyProps={{ variant: 'body2' }} />
+            <OpenInNew sx={{ fontSize: 16 }} />
+          </ListItemButton>
         </Box>
         <Box ref={dialogContentRef} sx={{ flex: 1, p: 3, overflow: 'auto' }}>
           {renderContent()}

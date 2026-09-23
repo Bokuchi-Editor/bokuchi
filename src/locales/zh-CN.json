@@ -248,7 +248,8 @@
         "tip2": "在设置 > 外观中尝试不同的主题",
         "tip3": "使用分屏视图并排查看您的 Markdown 和预览"
       }
-    }
+    },
+    "starOnGitHub": "在 GitHub 上为 Bokuchi 点星"
   },
   "settings": {
     "title": "设置",
@@ -376,6 +377,8 @@
       "fontFamilyDescription": "从已安装的字体中选择编辑器使用的字体。“默认”使用标准等宽字体。",
       "previewFontFamily": "预览字体",
       "previewFontFamilyDescription": "选择预览正文和 HTML/PDF 导出使用的字体。代码块始终使用等宽字体。",
+      "previewDirection": "预览文字方向",
+      "previewDirectionDescription": "预览及 HTML/PDF 导出的文字方向。“自动”根据内容检测方向。代码块始终保持从左到右，表格则跟随文档方向。",
       "fontFamilyDefault": "默认",
       "fontFamilyMonospaceOnly": "仅显示等宽字体",
       "showLineNumbers": "显示行号",
@@ -622,15 +625,31 @@
       "improvement": "改进"
     },
     "changes": {
-      "tabSwitchPreview": {
-        "title": "切换标签页时的预览更新",
-        "description": "修复了切换标签页时预览不更新的问题。"
+      "rtlPreview": {
+        "title": "从右到左预览",
+        "description": "预览及 HTML/PDF 导出现已支持阿拉伯语等从右到左书写的文字。可在预览标题栏或“设置 > 编辑器”中选择“自动”“从左到右”或“从右到左”。"
+      },
+      "codeBlockFilename": {
+        "title": "代码块文件名",
+        "description": "写成 ```ts:src/index.ts，即可在预览及 HTML/PDF 导出中为代码块显示文件名标签。"
+      },
+      "editorThemeSync": {
+        "title": "编辑器配色跟随主题",
+        "description": "编辑器的背景色和文字颜色现在会与所选主题保持一致，包括自定义主题。在 Default、Pastel 和 Vivid 中，预览的表头也会采用主题颜色。"
       },
       "libraryUpdates": {
         "title": "库更新",
-        "description": "更新了包括 Mermaid 图表渲染在内的内部库，以提升稳定性和安全性。"
+        "description": "更新了包括 React、Tauri 和 DOMPurify 在内的内部库，以提升稳定性和安全性。"
       }
     }
+  },
+  "starPrompt": {
+    "title": "喜欢 Bokuchi 吗？",
+    "body": "Bokuchi 是开源软件。如果它对您有帮助，在 GitHub 上点一颗星可以让更多人发现它。",
+    "star": "在 GitHub 上点星",
+    "later": "稍后",
+    "never": "不再显示",
+    "close": "关闭"
   },
   "milestone": {
     "close": "谢谢",
@@ -650,6 +669,10 @@
     "reloadThemes": "重新加载主题",
     "copyCode": "复制代码",
     "codeCopied": "已复制！",
+    "textDirection": "文字方向",
+    "directionAuto": "自动",
+    "directionLtr": "从左到右",
+    "directionRtl": "从右到左",
     "slideCounter": "幻灯片 {{current}} / {{total}}"
   },
   "rin": {
