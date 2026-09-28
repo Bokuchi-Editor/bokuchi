@@ -61,7 +61,7 @@
     "katex": "^0.16.22",
     "marked": "^16.4.2",
     "mermaid": "^11.17.2",
-    "monaco-editor": "^0.56.0",
+    "monaco-editor": "^0.57.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-i18next": "^15.7.4"
