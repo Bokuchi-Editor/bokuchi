@@ -6,6 +6,7 @@ import { storeApi } from '../api/storeApi';
 import { AppSettings, DEFAULT_APP_SETTINGS } from '../types/settings';
 import { ZOOM_CONFIG } from '../constants/zoom';
 import { clampSidebarWidth } from '../constants/layout';
+import { detectSystemLanguage } from '../utils/languageDetect';
 
 /**
  * Debounce for persisting custom themes: dragging a color picker fires a
@@ -78,8 +79,13 @@ export const useSettings = ({
       try {
         const settings = await storeApi.loadAppSettings();
 
-        setLanguage(settings.interface.language);
-        i18n.changeLanguage(settings.interface.language);
+        // If the user has never manually set a language, auto-detect from the system language
+        const hasLanguage = await storeApi.hasLanguageSetting();
+        const effectiveLanguage = hasLanguage
+          ? settings.interface.language
+          : detectSystemLanguage();
+        setLanguage(effectiveLanguage);
+        i18n.changeLanguage(effectiveLanguage);
 
         // Custom themes must be registered before the saved theme is resolved.
         // If the saved theme is a custom id whose definition is gone (corrupt

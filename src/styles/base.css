@@ -46,3 +46,36 @@ body {
   font-size: 11px;
   line-height: 1.4;
 }
+
+/* Theme-aware scrollbars.
+   Colors come from --scrollbar-* CSS variables defined per theme in
+   variables.css (and derived for custom themes in customTheme.ts), so every
+   native scrollbar follows the active light/dark theme automatically. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: calc(var(--scrollbar-width) / 2);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
