@@ -548,7 +548,7 @@ describe('MarkdownPreview – KaTeX', () => {
   it('T-PV-17: calls processKatex when enableKatex is true and content has math', async () => {
     await renderPreviewContent({
       content: 'Math: $E=mc^2$',
-      renderingSettings: { enableKatex: true, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: true, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(contentHasKatex).toHaveBeenCalled();
@@ -559,7 +559,7 @@ describe('MarkdownPreview – KaTeX', () => {
   it('T-PV-18: does not call processKatex when enableKatex is false', async () => {
     await renderPreviewContent({
       content: 'Math: $E=mc^2$',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(processKatex).not.toHaveBeenCalled();
@@ -580,7 +580,7 @@ describe('MarkdownPreview – Mermaid', () => {
   it('T-PV-19: calls processMermaidBlocks when enableMermaid is true and content has mermaid', async () => {
     await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: true, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: true, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(contentHasMermaid).toHaveBeenCalled();
@@ -591,7 +591,7 @@ describe('MarkdownPreview – Mermaid', () => {
   it('T-PV-20: does not call processMermaidBlocks when enableMermaid is false', async () => {
     await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(processMermaidBlocks).not.toHaveBeenCalled();
@@ -658,7 +658,7 @@ describe('MarkdownPreview – code copy button', () => {
   it('T-PV-27: mermaid blocks get no copy button', async () => {
     const { container } = await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(container.querySelector('pre code.language-mermaid')).not.toBeNull();
@@ -683,7 +683,7 @@ describe('MarkdownPreview – Marp detection', () => {
       <MarkdownPreview
         content="---\nmarp: true\n---\n# Slide"
         darkMode={false}
-        renderingSettings={{ enableKatex: false, enableMermaid: false, enableMarp: true, enableEmoji: false }}
+        renderingSettings={{ enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: true, enableEmoji: false }}
       />,
     );
 
@@ -696,7 +696,7 @@ describe('MarkdownPreview – Marp detection', () => {
 
     const { container, queryByTestId } = await renderPreviewContent({
       content: '---\nmarp: true\n---\n# Slide',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(queryByTestId('marp-preview')).toBeNull();

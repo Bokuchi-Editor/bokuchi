@@ -57,6 +57,8 @@ export interface InterfaceSettings {
 export interface RenderingSettings {
   enableKatex: boolean;
   enableMermaid: boolean;
+  // PlantUML via the TeaVM-compiled engine (@plantuml/core); offline, no Java (#539).
+  enablePlantUml: boolean;
   enableMarp: boolean;
   // GitHub emoji shortcodes (:rocket: → 🚀, #488). GitHub Alerts have no
   // toggle — they are always on, like the rest of the GFM syntax.
@@ -159,6 +161,7 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
 export const DEFAULT_RENDERING_SETTINGS: RenderingSettings = {
   enableKatex: true,
   enableMermaid: false,
+  enablePlantUml: false,
   enableMarp: false,
   enableEmoji: true,
   marpThemeFolder: '',

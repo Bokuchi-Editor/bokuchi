@@ -450,6 +450,8 @@
       "enableKatexDescription": "$...$（インライン）および $$...$$（ディスプレイ）構文で数式をレンダリングします。",
       "enableMermaid": "Mermaid（図表）",
       "enableMermaidDescription": "```mermaid フェンスドコードブロックから図表（フローチャート、シーケンス図など）をレンダリングします。",
+      "enablePlantUml": "PlantUML（図表）",
+      "enablePlantUmlDescription": "```plantuml・```puml・```uml フェンスドコードブロックから図表をレンダリングします。Java 不要でオフライン動作します。",
       "importExport": "設定のインポート/エクスポート",
       "exportSettings": "設定をエクスポート",
       "importSettings": "設定をインポート",
@@ -710,6 +712,7 @@
       "separator": "、",
       "feature": {
         "mermaid": "Mermaid",
+        "plantuml": "PlantUML",
         "marp": "Marp",
         "katex": "KaTeX"
       }

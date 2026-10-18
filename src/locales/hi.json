@@ -450,6 +450,8 @@
       "enableKatexDescription": "$...$ (इनलाइन) और $$...$$ (ब्लॉक) सिंटैक्स का उपयोग करके गणितीय अभिव्यक्तियाँ रेंडर करें।",
       "enableMermaid": "Mermaid (आरेख)",
       "enableMermaidDescription": "```mermaid कोड ब्लॉक से आरेख रेंडर करें (फ्लोचार्ट, अनुक्रम आरेख, आदि)।",
+      "enablePlantUml": "PlantUML (आरेख)",
+      "enablePlantUmlDescription": "```plantuml, ```puml और ```uml कोड ब्लॉक से आरेख रेंडर करें। ऑफ़लाइन चलता है, Java की आवश्यकता नहीं।",
       "importExport": "आयात/निर्यात सेटिंग्स",
       "exportSettings": "सेटिंग्स निर्यात करें",
       "importSettings": "सेटिंग्स आयात करें",

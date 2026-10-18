@@ -113,6 +113,13 @@ describe('renderCode', () => {
     expect(result).toBe('<pre><code class="language-mermaid">graph TD</code></pre>');
   });
 
+  it('returns escaped, unhighlighted output for PlantUML languages (post-processed, #539)', () => {
+    for (const lang of ['plantuml', 'puml', 'uml']) {
+      const result = renderCode({ text: 'A -> B', lang });
+      expect(result).toBe(`<pre><code class="language-${lang}">A -&gt; B</code></pre>`);
+    }
+  });
+
   it('returns escaped output for mermaid language', () => {
     const result = renderCode({ text: 'graph TD\nA-->B', lang: 'mermaid' });
     expect(result).toContain('class="language-mermaid"');

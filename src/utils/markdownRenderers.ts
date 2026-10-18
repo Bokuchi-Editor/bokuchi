@@ -1,9 +1,10 @@
 import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
 import { maskCodeRegions, stripCodeRegions } from './codeRegions';
+import { PLANTUML_LANGS } from './plantumlRenderer';
 
 /** Languages handled by post-processors — skip syntax highlighting */
-const POST_PROCESSED_LANGS = new Set(['mermaid']);
+const POST_PROCESSED_LANGS = new Set<string>(['mermaid', ...PLANTUML_LANGS]);
 
 /**
  * Escape HTML-significant characters in untrusted text. Used for content that is

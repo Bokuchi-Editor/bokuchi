@@ -27,6 +27,7 @@ vi.mock('highlight.js/styles/github-dark.css', () => ({}));
 const renderingSettings: RenderingSettings = {
   enableKatex: false,
   enableMermaid: false,
+  enablePlantUml: false,
   enableMarp: false,
   enableEmoji: false,
 };

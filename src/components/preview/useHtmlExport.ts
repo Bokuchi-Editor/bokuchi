@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import { desktopApi } from '../../api/desktopApi';
 import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
+import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
@@ -89,6 +90,11 @@ export function useHtmlExport({
     // Process Mermaid diagrams for export (renders as inline SVG)
     if (renderingSettings.enableMermaid && contentHasMermaid(processedContent)) {
       html = await processMermaidBlocks(html, mermaidDark);
+    }
+
+    // PlantUML follows the same light/dark rule as Mermaid (inline SVG).
+    if (renderingSettings.enablePlantUml && contentHasPlantUml(processedContent)) {
+      html = await processPlantUmlBlocks(html, mermaidDark);
     }
 
     // Inline KaTeX's CSS + fonts only when the output actually contains a

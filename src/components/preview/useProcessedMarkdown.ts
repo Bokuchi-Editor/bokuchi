@@ -11,6 +11,7 @@ import {
   contentHasMermaid,
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
+import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
@@ -133,6 +134,16 @@ export function useProcessedMarkdown({
             processedHtml = await processMermaidBlocks(processedHtml, darkMode);
           } catch (err) {
             console.warn('Mermaid processing failed, showing raw code blocks:', err);
+          }
+          if (stale) return;
+        }
+
+        // Process PlantUML diagrams (lazy-loaded engine, same splice point as Mermaid)
+        if (renderingSettings.enablePlantUml && contentHasPlantUml(processedMarkdown)) {
+          try {
+            processedHtml = await processPlantUmlBlocks(processedHtml, darkMode);
+          } catch (err) {
+            console.warn('PlantUML processing failed, showing raw code blocks:', err);
           }
           if (stale) return;
         }

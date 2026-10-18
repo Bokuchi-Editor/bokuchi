@@ -450,6 +450,8 @@
       "enableKatexDescription": "$...$ (인라인) 및 $$...$$ (블록) 구문을 사용하여 수학 표현식을 렌더링합니다.",
       "enableMermaid": "Mermaid (다이어그램)",
       "enableMermaidDescription": "```mermaid 코드 블록에서 다이어그램을 렌더링합니다 (플로차트, 시퀀스 다이어그램 등).",
+      "enablePlantUml": "PlantUML (다이어그램)",
+      "enablePlantUmlDescription": "```plantuml, ```puml, ```uml 코드 블록에서 다이어그램을 렌더링합니다. Java 없이 오프라인으로 동작합니다.",
       "importExport": "설정 가져오기/내보내기",
       "exportSettings": "설정 내보내기",
       "importSettings": "설정 가져오기",

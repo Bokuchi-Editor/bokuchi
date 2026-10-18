@@ -408,7 +408,7 @@ const PRINT_CSS = `
             }
             body { max-width: none; margin: 0; padding: 0; }
             pre, blockquote, table, figure, img,
-            .markdown-alert, .mermaid-diagram, .katex-display {
+            .markdown-alert, .mermaid-diagram, .plantuml-diagram, .katex-display {
                 break-inside: avoid;
             }
             tr, td, th { break-inside: avoid; }

@@ -450,6 +450,8 @@
       "enableKatexDescription": "عرض التعبيرات الرياضية باستخدام صيغة $...$ (سطري) و $$...$$ (كتلة).",
       "enableMermaid": "Mermaid (المخططات)",
       "enableMermaidDescription": "عرض المخططات من كتل التعليمات البرمجية ```mermaid (مخططات انسيابية، مخططات تسلسلية، إلخ).",
+      "enablePlantUml": "PlantUML (المخططات)",
+      "enablePlantUmlDescription": "عرض المخططات من كتل التعليمات البرمجية ```plantuml و ```puml و ```uml. يعمل دون اتصال ولا يحتاج إلى Java.",
       "importExport": "استيراد/تصدير الإعدادات",
       "exportSettings": "تصدير الإعدادات",
       "importSettings": "استيراد الإعدادات",

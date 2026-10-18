@@ -450,6 +450,8 @@
       "enableKatexDescription": "Kết xuất biểu thức toán học sử dụng cú pháp $...$ (nội tuyến) và $$...$$ (khối).",
       "enableMermaid": "Mermaid (Sơ đồ)",
       "enableMermaidDescription": "Kết xuất sơ đồ từ các khối mã ```mermaid (lưu đồ, sơ đồ tuần tự, v.v.).",
+      "enablePlantUml": "PlantUML (Sơ đồ)",
+      "enablePlantUmlDescription": "Hiển thị sơ đồ từ các khối mã ```plantuml, ```puml và ```uml. Hoạt động ngoại tuyến, không cần Java.",
       "importExport": "Nhập/Xuất cài đặt",
       "exportSettings": "Xuất cài đặt",
       "importSettings": "Nhập cài đặt",
