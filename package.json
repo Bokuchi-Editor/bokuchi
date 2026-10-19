@@ -62,8 +62,8 @@
     "marked": "^16.4.2",
     "mermaid": "^11.17.2",
     "monaco-editor": "^0.57.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "react-i18next": "^15.7.4"
   },
   "devDependencies": {
