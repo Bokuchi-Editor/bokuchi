@@ -12,8 +12,10 @@
 // the woff/ttf fallbacks (every browser we target supports woff2). The result is
 // one large but fully offline CSS string injected into the export `<head>`.
 //
-// The font set is tied to the pinned KaTeX version (see CLAUDE.md — katex is
-// pinned to ^0.16.x). If KaTeX changes its font list this map must be updated;
+// The font set is tied to the pinned KaTeX version (see package.json — katex is
+// pinned to ^0.18.x and the `overrides` entry keeps the nested copies used by
+// mermaid and marp-core on the same line). If KaTeX changes its font list this
+// map must be updated;
 // any @font-face whose woff2 isn't mapped here simply keeps its original
 // (now-dangling) relative url() and that glyph family won't render.
 import katexCssRaw from 'katex/dist/katex.min.css?raw';
