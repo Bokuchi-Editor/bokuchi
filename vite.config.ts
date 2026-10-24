@@ -89,7 +89,12 @@ export default defineConfig(async () => {
     server: {
       port: port,
       strictPort: false, // ポートが使用中の場合は別のポートを試す
-      watch: false  // ファイル監視を完全に無効化
+      // src-tauri 配下（特に target/debug/deps の dll）は cargo ビルド中に
+      // ロックされるため vite のファイル監視が EBUSY でクラッシュする。
+      // Tauri 公式テンプレートと同様に src-tauri を監視対象から除外する。
+      watch: {
+        ignored: ['**/src-tauri/**'],
+      },
     },
     clearScreen: false,
     envPrefix: ['VITE_', 'TAURI_'],
