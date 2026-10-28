@@ -2,19 +2,11 @@ import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
 import { maskCodeRegions, stripCodeRegions } from './codeRegions';
 import { PLANTUML_LANGS } from './plantumlRenderer';
+import { decodeCodeBlockEntities, escapeHtml, replaceFirst } from './htmlText';
+import { buildDiagramErrorHtml, createSerialLock } from './diagramCommon';
 
-/** Languages handled by post-processors — skip syntax highlighting */
-const POST_PROCESSED_LANGS = new Set<string>(['mermaid', ...PLANTUML_LANGS]);
-
-/**
- * Escape HTML-significant characters in untrusted text. Used for content that is
- * spliced into the preview HTML *after* DOMPurify has run (code blocks, and the
- * KaTeX/Mermaid error branches that echo raw user input), so it can never inject
- * live markup that bypasses sanitization.
- */
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+/** Languages always handled by a post-processor — skip syntax highlighting. */
+const ALWAYS_POST_PROCESSED_LANGS = ['mermaid'];
 
 /**
  * Build a custom `marked` table renderer that tags every cell with its source
@@ -105,38 +97,60 @@ function renderFilenameLabel(filename?: string): string {
   return filename ? `<span class="code-filename">${escapeHtml(filename)}</span>` : '';
 }
 
+export interface CodeRendererOptions {
+  /**
+   * Treat PlantUML fences as post-processed blocks. When the PlantUML setting
+   * is off the blocks are never replaced by a diagram, so they must stay
+   * ordinary code blocks (hljs styling, copy button, filename label) exactly
+   * as before the feature existed.
+   */
+  enablePlantUml?: boolean;
+}
+
+type CodeToken = { text: string; lang?: string; escaped?: boolean };
+
 /**
- * Custom code renderer for marked that applies syntax highlighting
- * and preserves post-processed language blocks (e.g. mermaid).
+ * Build the custom code renderer for marked: applies syntax highlighting and
+ * preserves post-processed language blocks (mermaid, and PlantUML when
+ * enabled) as bare `<pre><code class="language-…">` for the diagram engines.
  *
  * Supports the `language:filename` info-string syntax (#534): only the
  * language half reaches highlight.js, and the filename is emitted as a label
  * inside the `<pre>` (see {@link parseCodeFenceInfo}).
  */
-export function renderCode({ text, lang: info }: { text: string; lang?: string; escaped?: boolean }): string {
-  const { lang, filename } = parseCodeFenceInfo(info);
-  // Post-processed languages: output raw text with language class preserved.
-  // A filename is dropped here — the block is replaced by a rendered diagram.
-  if (lang && POST_PROCESSED_LANGS.has(lang)) {
-    const escaped = escapeHtml(text);
-    return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
-  }
-  const label = renderFilenameLabel(filename);
-  if (lang && hljs.getLanguage(lang)) {
-    try {
-      const highlighted = hljs.highlight(text, { language: lang }).value;
-      return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
-    } catch (err) {
-      console.warn('Highlight.js error:', err);
+export function createCodeRenderer({ enablePlantUml = false }: CodeRendererOptions = {}): (token: CodeToken) => string {
+  const postProcessedLangs = new Set<string>(
+    enablePlantUml ? [...ALWAYS_POST_PROCESSED_LANGS, ...PLANTUML_LANGS] : ALWAYS_POST_PROCESSED_LANGS,
+  );
+
+  return function renderCode({ text, lang: info }: CodeToken): string {
+    const { lang, filename } = parseCodeFenceInfo(info);
+    // Post-processed languages: output raw text with language class preserved.
+    // A filename is dropped here — the block is replaced by a rendered diagram.
+    if (lang && postProcessedLangs.has(lang)) {
+      const escaped = escapeHtml(text);
+      return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
     }
-  }
-  // No language (or unknown language): do not auto-detect. Emit plain,
-  // HTML-escaped code so the user's intent (unspecified = no highlighting)
-  // is respected.
-  const escaped = escapeHtml(text);
-  const langClass = lang ? ` language-${lang}` : '';
-  return `<pre>${label}<code class="hljs${langClass}">${escaped}</code></pre>`;
+    const label = renderFilenameLabel(filename);
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        const highlighted = hljs.highlight(text, { language: lang }).value;
+        return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
+      } catch (err) {
+        console.warn('Highlight.js error:', err);
+      }
+    }
+    // No language (or unknown language): do not auto-detect. Emit plain,
+    // HTML-escaped code so the user's intent (unspecified = no highlighting)
+    // is respected.
+    const escaped = escapeHtml(text);
+    const langClass = lang ? ` language-${lang}` : '';
+    return `<pre>${label}<code class="hljs${langClass}">${escaped}</code></pre>`;
+  };
 }
+
+/** Code renderer with every diagram post-processor enabled. */
+export const renderCode = createCodeRenderer({ enablePlantUml: true });
 
 // Lazy-loaded module caches
 let katexModule: typeof import('katex') | null = null;
@@ -272,7 +286,7 @@ export async function processKatex(markdown: string): Promise<ProcessedKatex> {
 let mermaidCounter = 0;
 
 // Serialize mermaid renders to prevent concurrent DOM manipulation
-let mermaidLock: Promise<void> = Promise.resolve();
+const mermaidLock = createSerialLock();
 
 /**
  * Remove DOM elements that mermaid leaks into <body>.
@@ -306,19 +320,14 @@ function cleanupMermaidArtifacts(): void {
  * Replaces ```mermaid blocks with rendered SVG.
  * Serialized to prevent concurrent mermaid.render() calls which conflict.
  */
-export async function processMermaidBlocks(html: string, dark?: boolean): Promise<string> {
-  // Wait for any in-flight mermaid render to complete
-  const previousLock = mermaidLock;
-  let releaseLock: () => void;
-  mermaidLock = new Promise<void>((resolve) => { releaseLock = resolve; });
-  await previousLock;
-
-  try {
-    return await processMermaidBlocksInternal(html, dark);
-  } finally {
-    cleanupMermaidArtifacts();
-    releaseLock!();
-  }
+export function processMermaidBlocks(html: string, dark?: boolean): Promise<string> {
+  return mermaidLock.run(async () => {
+    try {
+      return await processMermaidBlocksInternal(html, dark);
+    } finally {
+      cleanupMermaidArtifacts();
+    }
+  });
 }
 
 async function processMermaidBlocksInternal(html: string, dark?: boolean): Promise<string> {
@@ -340,28 +349,18 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
 
   let result = html;
   for (const m of matches) {
-    // Decode HTML entities that marked may have introduced
-    const decoded = m.code
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
+    const decoded = decodeCodeBlockEntities(m.code);
 
     try {
       const id = `mermaid-${Date.now()}-${mermaidCounter++}`;
       const { svg } = await mermaid.render(id, decoded);
-      result = result.replace(m.full, `<div class="mermaid-diagram">${svg}</div>`);
+      result = replaceFirst(result, m.full, `<div class="mermaid-diagram">${svg}</div>`);
     } catch (err) {
       // Mermaid's parse-error message echoes the offending source line verbatim,
       // so it can carry attacker-controlled markup (e.g. `<img onerror>`). This
-      // HTML is spliced in AFTER DOMPurify has run, so escape it to prevent an
-      // XSS that bypasses sanitization.
-      const errorMsg = escapeHtml(err instanceof Error ? err.message : String(err));
-      result = result.replace(
-        m.full,
-        `<div class="mermaid-error" style="color:red;border:1px solid red;padding:8px;border-radius:4px;"><strong>Mermaid Error:</strong> ${errorMsg}</div>`
-      );
+      // HTML is spliced in AFTER DOMPurify has run; buildDiagramErrorHtml
+      // escapes it to prevent an XSS that bypasses sanitization.
+      result = replaceFirst(result, m.full, buildDiagramErrorHtml('mermaid-error', 'Mermaid Error', err));
     }
   }
 

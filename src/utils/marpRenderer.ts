@@ -1,5 +1,26 @@
 import type Marp from '@marp-team/marp-core';
 
+/**
+ * Styles for the diagram SVGs (Mermaid, PlantUML) that MarpPreview splices
+ * into the slide HTML. Shared by every slide document builder below.
+ */
+const SLIDE_DIAGRAM_CSS = `
+/* Diagrams rendered inside slides */
+.mermaid-diagram, .plantuml-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
+  max-width: 100%;
+}
+.mermaid-diagram svg, .plantuml-diagram svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+.mermaid-error, .plantuml-error {
+  margin: 0.5em 0;
+}`;
+
 // Lazy-loaded module cache
 let marpModule: typeof import('@marp-team/marp-core') | null = null;
 
@@ -239,21 +260,7 @@ div.marpit {
   }
 }
 
-/* Mermaid diagrams rendered inside slides */
-.mermaid-diagram {
-  display: flex;
-  justify-content: center;
-  margin: 0.5em 0;
-  max-width: 100%;
-}
-.mermaid-diagram svg {
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
-}
-.mermaid-error {
-  margin: 0.5em 0;
-}
+${SLIDE_DIAGRAM_CSS}
 </style>
 </head>
 <body>${html}
@@ -354,21 +361,7 @@ div.marpit {
   height: auto;
 }
 
-/* Mermaid diagrams rendered inside slides */
-.mermaid-diagram {
-  display: flex;
-  justify-content: center;
-  margin: 0.5em 0;
-  max-width: 100%;
-}
-.mermaid-diagram svg {
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
-}
-.mermaid-error {
-  margin: 0.5em 0;
-}
+${SLIDE_DIAGRAM_CSS}
 
 .slide-number {
   position: absolute;
@@ -475,21 +468,7 @@ div.marpit {
   box-sizing: border-box;
 }
 
-/* Mermaid diagrams rendered inside slides */
-.mermaid-diagram {
-  display: flex;
-  justify-content: center;
-  margin: 0.5em 0;
-  max-width: 100%;
-}
-.mermaid-diagram svg {
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
-}
-.mermaid-error {
-  margin: 0.5em 0;
-}`;
+${SLIDE_DIAGRAM_CSS}`;
 
 /**
  * Compose the full stylesheet text used inside the continuous-mode iframe.
@@ -615,10 +594,7 @@ div.marpit > svg[data-marpit-svg]:last-child { break-after: auto; }
   }
 }
 
-/* Mermaid diagrams rendered inside slides */
-.mermaid-diagram { display: flex; justify-content: center; margin: 0.5em 0; max-width: 100%; }
-.mermaid-diagram svg { max-width: 100%; max-height: 100%; height: auto; }
-.mermaid-error { margin: 0.5em 0; }
+${SLIDE_DIAGRAM_CSS}
 
 @media print {
   @page { size: ${slideWidth}px ${slideHeight}px; margin: 0; }

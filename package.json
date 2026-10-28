@@ -46,7 +46,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^7.3.11",
     "@mui/material": "^7.3.9",
-    "@plantuml/core": "1.2026.8",
+    "@plantuml/core": "^1.2026.8",
     "@tauri-apps/api": "^2.12.1",
     "@tauri-apps/plugin-clipboard-manager": "^2.4.1",
     "@tauri-apps/plugin-dialog": "^2.8.1",

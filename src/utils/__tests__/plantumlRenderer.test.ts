@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock the TeaVM-compiled engine: it is ~4 MB, DOM-bound and callback-based.
 vi.mock('@plantuml/core', () => ({
@@ -9,6 +9,8 @@ vi.mock('@plantuml/core', () => ({
 import { renderToString } from '@plantuml/core';
 import {
   PLANTUML_LANGS,
+  RENDER_TIMEOUT_MS,
+  clearPlantUmlCache,
   contentHasPlantUml,
   ensureStartDirective,
   processPlantUmlBlocks,
@@ -70,6 +72,11 @@ describe('ensureStartDirective', () => {
 describe('processPlantUmlBlocks', () => {
   beforeEach(() => {
     mockRenderToString.mockReset();
+    clearPlantUmlCache();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('replaces a ```plantuml block with the rendered SVG', async () => {
@@ -180,5 +187,99 @@ describe('processPlantUmlBlocks', () => {
     console.log('[     1 ms] [after]');
     expect(logSpy).toHaveBeenCalledTimes(2);
     logSpy.mockRestore();
+  });
+
+  it('restores console.log when the engine reports an error', async () => {
+    const before = console.log;
+    failWith('boom');
+    await processPlantUmlBlocks('<pre><code class="language-plantuml">a</code></pre>');
+    expect(console.log).toBe(before);
+  });
+
+  it('splices SVG and error text literally even when they contain `$` patterns', async () => {
+    // String.prototype.replace expands `$&` / `$'` / `` $` `` in a string
+    // replacement; a label like "cost $& fee" must not duplicate the document.
+    succeedWith('<svg>cost $& fee $\' $` $$</svg>');
+    const html = '<p>before</p><pre><code class="language-plantuml">A -&gt; B</code></pre><p>after</p>';
+    const result = await processPlantUmlBlocks(html);
+    expect(result).toBe('<p>before</p><div class="plantuml-diagram"><svg>cost $& fee $\' $` $$</svg></div><p>after</p>');
+
+    clearPlantUmlCache();
+    failWith('bad $& token');
+    const errResult = await processPlantUmlBlocks(html);
+    expect(errResult).toContain('PlantUML Error:</strong> bad $&amp; token');
+    expect(errResult).not.toContain('language-plantuml');
+  });
+
+  it('renders duplicate identical blocks in order', async () => {
+    succeedWith('<svg>same</svg>');
+    const block = '<pre><code class="language-plantuml">A -&gt; B</code></pre>';
+    const result = await processPlantUmlBlocks(`${block}<p>mid</p>${block}`);
+    expect(result).toBe('<div class="plantuml-diagram"><svg>same</svg></div><p>mid</p><div class="plantuml-diagram"><svg>same</svg></div>');
+  });
+
+  it('memoizes rendered SVGs per source and dark flag', async () => {
+    succeedWith('<svg>cached</svg>');
+    const html = '<pre><code class="language-plantuml">A -&gt; B</code></pre>';
+    await processPlantUmlBlocks(html);
+    await processPlantUmlBlocks(html);
+    expect(mockRenderToString).toHaveBeenCalledTimes(1);
+    // Different palette → separate entry.
+    await processPlantUmlBlocks(html, true);
+    expect(mockRenderToString).toHaveBeenCalledTimes(2);
+    // Failures are not cached: the next attempt renders again.
+    clearPlantUmlCache();
+    failWith('nope');
+    await processPlantUmlBlocks(html);
+    succeedWith('<svg>ok</svg>');
+    const result = await processPlantUmlBlocks(html);
+    expect(result).toContain('<svg>ok</svg>');
+    expect(mockRenderToString).toHaveBeenCalledTimes(4);
+  });
+
+  it('stops rendering the remaining blocks when shouldAbort returns true', async () => {
+    succeedWith('<svg>one</svg>');
+    let aborted = false;
+    mockRenderToString.mockImplementation((lines, onSuccess) => {
+      aborted = true; // the run is superseded while the first diagram renders
+      setTimeout(() => onSuccess(`<svg>${lines[1]}</svg>`), 0);
+    });
+    const html =
+      '<pre><code class="language-plantuml">one</code></pre>' +
+      '<pre><code class="language-plantuml">two</code></pre>';
+    const result = await processPlantUmlBlocks(html, false, { shouldAbort: () => aborted });
+    expect(mockRenderToString).toHaveBeenCalledTimes(1);
+    expect(result).toBe('<div class="plantuml-diagram"><svg>one</svg></div><pre><code class="language-plantuml">two</code></pre>');
+  });
+
+  it('fails a render whose callbacks never fire after the timeout, then releases the lock', async () => {
+    vi.useFakeTimers();
+    const before = console.log;
+    mockRenderToString.mockImplementation(() => { /* never calls back */ });
+    const pending = processPlantUmlBlocks('<pre><code class="language-plantuml">hang</code></pre>');
+    await vi.advanceTimersByTimeAsync(RENDER_TIMEOUT_MS);
+    const result = await pending;
+    expect(result).toContain('PlantUML Error:');
+    expect(result).toContain(`timed out after ${RENDER_TIMEOUT_MS / 1000}s`);
+    expect(console.log).toBe(before);
+
+    // The lock is free again: a following render goes through immediately.
+    succeedWith('<svg>next</svg>');
+    const next = processPlantUmlBlocks('<pre><code class="language-plantuml">next</code></pre>');
+    await vi.advanceTimersByTimeAsync(1);
+    expect(await next).toContain('<svg>next</svg>');
+  });
+
+  it('installs a stdlib loader hook that fails fast instead of injecting <script> tags', async () => {
+    succeedWith('<svg/>');
+    await processPlantUmlBlocks('<pre><code class="language-plantuml">a</code></pre>');
+    const loader = globalThis.PLANTUML_STDLIB_LOADER;
+    expect(typeof loader).toBe('function');
+    const onLoad = vi.fn();
+    const onError = vi.fn();
+    const handled = loader!('themes.js', onLoad, onError);
+    expect(handled).not.toBe(false);
+    expect(onLoad).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledWith(expect.stringContaining('themes.js'));
   });
 });

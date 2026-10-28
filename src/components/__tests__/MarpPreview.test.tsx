@@ -35,6 +35,12 @@ vi.mock('../../api/desktopApi', () => ({
   },
 }));
 
+vi.mock('../../utils/plantumlRenderer', () => ({
+  PLANTUML_LANGS: ['plantuml', 'puml', 'uml'],
+  contentHasPlantUml: vi.fn().mockImplementation((content: string) => /```plantuml/.test(content)),
+  processPlantUmlBlocks: vi.fn().mockImplementation(async (html: string) => html.replace('<svg data-marpit-svg="">1</svg>', '<svg data-marpit-svg=""><div class="plantuml-diagram">uml</div></svg>')),
+}));
+
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -45,6 +51,7 @@ vi.mock('react-i18next', () => ({
 import MarpPreview from '../MarpPreview';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { desktopApi } from '../../api/desktopApi';
+import { processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 
 const defaultProps = {
   content: '---\nmarp: true\n---\n# Slide 1\n---\n# Slide 2\n---\n# Slide 3',
@@ -249,5 +256,35 @@ describe('MarpPreview - openExternalUrl postMessage handling', () => {
     }
 
     expect(openUrl).not.toHaveBeenCalled();
+  });
+});
+
+describe('MarpPreview - PlantUML', () => {
+  const umlContent = '---\nmarp: true\n---\n# Slide 1\n\n```plantuml\nA -> B\n```\n---\n# Slide 2\n---\n# Slide 3';
+
+  beforeEach(() => {
+    vi.mocked(processPlantUmlBlocks).mockClear();
+  });
+
+  // T-MP-UML-01: slides get the same PlantUML post-processing as the normal preview.
+  it('T-MP-UML-01: renders PlantUML blocks into the slide HTML when enabled', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} content={umlContent} viewMode="preview" enablePlantUml />);
+    await waitFor(() => {
+      expect(getByText('1 / 3')).toBeTruthy();
+    });
+    expect(processPlantUmlBlocks).toHaveBeenCalledTimes(1);
+    const [html, dark, options] = vi.mocked(processPlantUmlBlocks).mock.calls[0];
+    expect(html).toContain('data-marpit-svg');
+    expect(dark).toBe(false);
+    expect(typeof options?.shouldAbort).toBe('function');
+  });
+
+  // T-MP-UML-02: the 4 MB engine is never touched while the setting is off.
+  it('T-MP-UML-02: leaves PlantUML blocks alone when the setting is off', async () => {
+    const { getByText } = render(<MarpPreview {...defaultProps} content={umlContent} viewMode="preview" />);
+    await waitFor(() => {
+      expect(getByText('1 / 3')).toBeTruthy();
+    });
+    expect(processPlantUmlBlocks).not.toHaveBeenCalled();
   });
 });

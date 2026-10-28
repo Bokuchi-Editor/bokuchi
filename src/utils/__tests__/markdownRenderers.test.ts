@@ -32,6 +32,7 @@ vi.mock('mermaid', () => ({
 }));
 
 import {
+  createCodeRenderer,
   renderCode,
   parseCodeFenceInfo,
   createTableRenderer,
@@ -118,6 +119,22 @@ describe('renderCode', () => {
       const result = renderCode({ text: 'A -> B', lang });
       expect(result).toBe(`<pre><code class="language-${lang}">A -&gt; B</code></pre>`);
     }
+  });
+
+  it('keeps PlantUML fences as ordinary code blocks while the PlantUML setting is off', () => {
+    // No diagram will replace them, so they must keep the hljs class (copy
+    // button, theme styling) and the filename label exactly as on a build
+    // without the feature.
+    const off = createCodeRenderer({ enablePlantUml: false });
+    for (const lang of ['plantuml', 'puml', 'uml']) {
+      expect(off({ text: 'A -> B', lang: `${lang}:flow.puml` })).toBe(
+        `<pre><span class="code-filename">flow.puml</span><code class="hljs language-${lang}">A -&gt; B</code></pre>`,
+      );
+    }
+    // Mermaid stays post-processed regardless (unchanged behaviour).
+    expect(off({ text: 'graph TD', lang: 'mermaid' })).toBe('<pre><code class="language-mermaid">graph TD</code></pre>');
+    const on = createCodeRenderer({ enablePlantUml: true });
+    expect(on({ text: 'A -> B', lang: 'uml:flow.puml' })).toBe('<pre><code class="language-uml">A -&gt; B</code></pre>');
   });
 
   it('returns escaped output for mermaid language', () => {
@@ -369,6 +386,20 @@ describe('processMermaidBlocks', () => {
     expect(result).toContain('<div class="mermaid-diagram"><svg>slide-diagram</svg></div>');
     expect(result).not.toContain('marp-pre');
     expect(mockRender).toHaveBeenCalledWith(expect.any(String), 'graph TD\nA-->B');
+  });
+
+  it('splices SVG and error text literally even when they contain `$` patterns', async () => {
+    // String.prototype.replace expands `$&` / `$'` / `` $` `` in a string
+    // replacement; a label like "cost $& fee" must not duplicate the document.
+    mockRender.mockResolvedValue({ svg: '<svg>cost $& fee $\' $` $$</svg>', diagramType: 'flowchart' });
+    const html = '<p>before</p><pre><code class="language-mermaid">graph TD</code></pre><p>after</p>';
+    const result = await processMermaidBlocks(html);
+    expect(result).toBe('<p>before</p><div class="mermaid-diagram"><svg>cost $& fee $\' $` $$</svg></div><p>after</p>');
+
+    mockRender.mockRejectedValue(new Error('bad $& token'));
+    const errResult = await processMermaidBlocks(html);
+    expect(errResult).toContain('Mermaid Error:</strong> bad $&amp; token');
+    expect(errResult).not.toContain('language-mermaid');
   });
 
   it('returns html unchanged when no mermaid blocks', async () => {

@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import { variableApi } from '../../api/variableApi';
 import type { RenderingSettings } from '../../types/settings';
 import {
-  renderCode,
+  createCodeRenderer,
   createTableRenderer,
   processKatex,
   contentHasKatex,
@@ -72,7 +72,7 @@ export function useProcessedMarkdown({
 
     // Set up custom renderer for syntax highlighting
     const renderer = new marked.Renderer();
-    renderer.code = renderCode;
+    renderer.code = createCodeRenderer({ enablePlantUml: renderingSettings.enablePlantUml });
     // Tag table cells with their source coordinates for inline editing.
     renderer.table = createTableRenderer();
 
@@ -138,10 +138,11 @@ export function useProcessedMarkdown({
           if (stale) return;
         }
 
-        // Process PlantUML diagrams (lazy-loaded engine, same splice point as Mermaid)
+        // Process PlantUML diagrams (lazy-loaded engine, same splice point as
+        // Mermaid). A superseded run stops rendering the remaining diagrams.
         if (renderingSettings.enablePlantUml && contentHasPlantUml(processedMarkdown)) {
           try {
-            processedHtml = await processPlantUmlBlocks(processedHtml, darkMode);
+            processedHtml = await processPlantUmlBlocks(processedHtml, darkMode, { shouldAbort: () => stale });
           } catch (err) {
             console.warn('PlantUML processing failed, showing raw code blocks:', err);
           }

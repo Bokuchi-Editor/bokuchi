@@ -2,7 +2,7 @@ import { useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
 import { desktopApi } from '../../api/desktopApi';
 import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../../types/settings';
-import { renderCode, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
+import { createCodeRenderer, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
@@ -67,7 +67,7 @@ export function useHtmlExport({
   // diagram colors match the rest of the white-background PDF.
   const buildBody = async (mermaidDark: boolean): Promise<{ html: string; katexCss?: string }> => {
     const renderer = new marked.Renderer();
-    renderer.code = renderCode;
+    renderer.code = createCodeRenderer({ enablePlantUml: renderingSettings.enablePlantUml });
 
     // Emoji shortcodes match the preview path (#488): same setting gate, same
     // lazily-loaded gemoji map.

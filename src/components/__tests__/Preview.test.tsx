@@ -46,8 +46,8 @@ vi.mock('marked', () => {
     const fence = src.match(/^```(\w*)\n([\s\S]*?)\n?```\s*$/);
     if (fence) {
       const lang = fence[1];
-      if (lang === 'mermaid') {
-        return `<pre><code class="language-mermaid">${fence[2]}</code></pre>\n`;
+      if (lang === 'mermaid' || lang === 'plantuml') {
+        return `<pre><code class="language-${lang}">${fence[2]}</code></pre>\n`;
       }
       return `<pre><code class="hljs${lang ? ` language-${lang}` : ''}">${fence[2]}</code></pre>\n`;
     }
@@ -100,6 +100,7 @@ vi.mock('marked', () => {
 // Mock markdownRenderers for verifying render pipeline calls
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
+  createCodeRenderer: vi.fn(() => vi.fn()),
   // Returns a marked table renderer; tables aren't exercised here, so a no-op
   // that yields empty output is sufficient.
   createTableRenderer: vi.fn(() => () => ''),
@@ -122,6 +123,12 @@ vi.mock('../../utils/markdownRenderers', () => ({
   reinitializeMermaid: vi.fn(),
 }));
 
+vi.mock('../../utils/plantumlRenderer', () => ({
+  PLANTUML_LANGS: ['plantuml', 'puml', 'uml'],
+  processPlantUmlBlocks: vi.fn().mockImplementation(async (html: string) => html),
+  contentHasPlantUml: vi.fn().mockImplementation((content: string) => /plantuml/.test(content)),
+}));
+
 // Mock MarpPreview component
 vi.mock('../MarpPreview', () => ({
   default: (props: Record<string, unknown>) => <div data-testid="marp-preview" data-content={props.content}>MarpPreview</div>,
@@ -137,6 +144,7 @@ import { variableApi } from '../../api/variableApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid } from '../../utils/markdownRenderers';
+import { processPlantUmlBlocks, contentHasPlantUml } from '../../utils/plantumlRenderer';
 import { contentIsMarp } from '../../utils/marpRenderer';
 import { DEFAULT_RENDERING_SETTINGS } from '../../types/settings';
 
@@ -596,6 +604,27 @@ describe('MarkdownPreview – Mermaid', () => {
 
     expect(processMermaidBlocks).not.toHaveBeenCalled();
   });
+
+  // T-PV-19b: PlantUML enabled triggers processPlantUmlBlocks
+  it('T-PV-19b: calls processPlantUmlBlocks when enablePlantUml is true and content has plantuml', async () => {
+    await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: true, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(contentHasPlantUml).toHaveBeenCalled();
+    expect(processPlantUmlBlocks).toHaveBeenCalled();
+  });
+
+  // T-PV-20b: PlantUML disabled does not call processPlantUmlBlocks
+  it('T-PV-20b: does not call processPlantUmlBlocks when enablePlantUml is false', async () => {
+    await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(processPlantUmlBlocks).not.toHaveBeenCalled();
+  });
 });
 
 // =========================================================================
@@ -662,6 +691,18 @@ describe('MarkdownPreview – code copy button', () => {
     });
 
     expect(container.querySelector('pre code.language-mermaid')).not.toBeNull();
+    expect(container.querySelector('.code-copy-button')).toBeNull();
+  });
+
+  // T-PV-27b: same for PlantUML blocks while the post-processor is enabled
+  // (with PlantUML off they are ordinary hljs code blocks, see renderCode tests).
+  it('T-PV-27b: plantuml blocks get no copy button', async () => {
+    const { container } = await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: true, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(container.querySelector('pre code.language-plantuml')).not.toBeNull();
     expect(container.querySelector('.code-copy-button')).toBeNull();
   });
 });
