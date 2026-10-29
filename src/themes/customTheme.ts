@@ -104,6 +104,10 @@ const LIGHT_MODE_DERIVED = {
   searchCurrentHighlight: '#ff9800',
   searchCurrentHighlightText: '#000000',
   codeBackgroundAlpha: 0.08,
+  scrollbarThumb: 'rgba(0, 0, 0, 0.18)',
+  scrollbarThumbHover: 'rgba(0, 0, 0, 0.35)',
+  scrollbarTrack: 'transparent',
+  scrollbarWidth: '10px',
 };
 
 const DARK_MODE_DERIVED = {
@@ -118,6 +122,10 @@ const DARK_MODE_DERIVED = {
   searchCurrentHighlight: '#ff9800',
   searchCurrentHighlightText: '#000000',
   codeBackgroundAlpha: 0.1,
+  scrollbarThumb: 'rgba(255, 255, 255, 0.18)',
+  scrollbarThumbHover: 'rgba(255, 255, 255, 0.35)',
+  scrollbarTrack: 'transparent',
+  scrollbarWidth: '10px',
 };
 
 /**
@@ -159,6 +167,11 @@ export function deriveCssVariablesFromCustom(custom: CustomTheme): Record<string
 
     '--color-status-background': colors.backgroundPaper,
     '--color-status-text': colors.textSecondary,
+
+    '--scrollbar-thumb': derived.scrollbarThumb,
+    '--scrollbar-thumb-hover': derived.scrollbarThumbHover,
+    '--scrollbar-track': derived.scrollbarTrack,
+    '--scrollbar-width': derived.scrollbarWidth,
   };
 }
 

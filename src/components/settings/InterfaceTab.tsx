@@ -118,6 +118,19 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange, 
     },
   ];
 
+  const outlinePositionOptions: RadioSettingOption[] = [
+    {
+      value: 'left',
+      label: t('settings.interface.outlinePositionLeft'),
+      description: t('settings.interface.outlinePositionLeftDescription'),
+    },
+    {
+      value: 'right',
+      label: t('settings.interface.outlinePositionRight'),
+      description: t('settings.interface.outlinePositionRightDescription'),
+    },
+  ];
+
   const folderTreeOptions: RadioSettingOption[] = [
     {
       value: 'persistent',
@@ -239,6 +252,18 @@ const InterfaceTab: React.FC<InterfaceTabProps> = ({ settings, onSettingChange, 
         onChange={handleOutlineChange}
         options={outlineOptions}
       />
+
+      {ui.outlineEnabled && (
+        <RadioSettingCard
+          sx={{ mt: 3 }}
+          title={t('settings.interface.outlinePosition')}
+          titleSx={{ mb: 1 }}
+          description={t('settings.interface.outlinePositionDescription')}
+          value={ui.outlinePosition}
+          onChange={(value) => onSettingChange('interface', 'outlinePosition', value)}
+          options={outlinePositionOptions}
+        />
+      )}
 
       <RadioSettingCard
         sx={{ mt: 3 }}
