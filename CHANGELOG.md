@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A small, non-modal card asking for a GitHub star. It appears at the bottom-right shortly after a manual save, and only once the app has clearly been in use (manual saves on at least 5 different days and at least 30 manual saves). "Later" or closing it backs off for 30 days and doubles the required saves, the third decline retires it for good, and "Don't show again" is offered from the second time. It stays out of the way in 臨 (Rin) focus mode, while a dialog or menu is open, and during the first session after an update. Opening GitHub counts as done. Nothing is tracked or sent anywhere; the state lives in the local app store.
 - Help now has a permanent "Star Bokuchi on GitHub" link at the bottom of its page list.
 
+### Fixed
+
+- Pressing `Ctrl/Cmd+F` while the search panel was already open did nothing when focus had returned to the editor, leaving the panel stuck (neither `Ctrl/Cmd+F` nor `Esc` reached it). The shortcut now always moves focus to the search input and selects the current query; `Ctrl/Cmd+H` on an open panel likewise expands the replace row.
+
 ## [1.2.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.2...v1.2.0) - 2026-09-18
 
 ### Added
