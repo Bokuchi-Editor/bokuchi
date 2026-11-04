@@ -213,6 +213,27 @@ describe('MarkdownEditor', () => {
       deleteWindowMonaco();
     });
 
+    // T-ED-12b: Ctrl+F while the panel is already open must re-request focus
+    // (the panel re-focuses its input on every focusRequest change) instead of
+    // being a no-op that leaves focus in Monaco
+    it('T-ED-12b: repeated Ctrl+F keeps the panel open and bumps focusRequest', () => {
+      setWindowMonaco();
+
+      render(<MarkdownEditor {...defaultProps()} />);
+      const mockEditor = createMockMonacoEditor();
+      captured.onMount!(mockEditor);
+
+      const ctrlFHandler = (mockEditor.addCommand as ReturnType<typeof vi.fn>).mock.calls[0][1];
+      act(() => { ctrlFHandler(); });
+      expect(screen.getByTestId('search-panel').dataset.focusRequest).toBe('1');
+
+      act(() => { ctrlFHandler(); });
+      expect(screen.getByTestId('search-panel')).toBeInTheDocument();
+      expect(screen.getByTestId('search-panel').dataset.focusRequest).toBe('2');
+
+      deleteWindowMonaco();
+    });
+
     // T-ED-13: Ctrl+Shift+F opens search in all-tabs mode
     it('T-ED-13: Ctrl+Shift+F opens search in all-tabs mode', () => {
       setWindowMonaco();

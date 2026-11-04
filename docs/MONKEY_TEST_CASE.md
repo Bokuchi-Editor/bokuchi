@@ -84,6 +84,7 @@ Ideally these would be implemented as E2E tests, but that is currently not possi
 | M-48 | Navigate cross-tab results             | In cross-tab results, press `Enter` or click a match in another tab | The corresponding tab is activated and the cursor jumps to the match        |
 | M-49 | Search options (case / word / regex)   | Toggle case-sensitive, whole-word, or regex, then search            | Search results respect the selected options in both single and cross-tab mode |
 | M-50 | Replace in current tab                 | Open replace, type replacement text, click replace / replace all   | Text is replaced in the current tab only                                     |
+| M-233 | `Ctrl+F` always lands in the search input *(verify in app)* | Press `Ctrl/Cmd+F`, click back into the editor text (or jump to a match), then press `Ctrl/Cmd+F` again. Also try `Ctrl/Cmd+H` while the panel is already open with the replace row collapsed | The second `Ctrl/Cmd+F` moves focus back to the search input with its text selected, so typing replaces the query and `Esc` closes the panel. `Ctrl/Cmd+H` on an open panel expands the replace row and focuses the search input |
 
 ## 6. View Modes
 
