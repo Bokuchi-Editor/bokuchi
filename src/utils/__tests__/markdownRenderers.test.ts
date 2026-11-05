@@ -43,6 +43,7 @@ import {
 } from '../markdownRenderers';
 
 import { marked } from 'marked';
+import { displayWidth } from '../tableCompactColumns';
 import mermaid from 'mermaid';
 
 const mockRender = vi.mocked(mermaid.render);
@@ -438,6 +439,54 @@ describe('createTableRenderer', () => {
     const html = render('| a | b |\n| :--- | ---: |\n| 1 | 2 |');
     expect(html).toContain('align="left"');
     expect(html).toContain('align="right"');
+  });
+
+  describe('compact columns (#575)', () => {
+    const LONG = 'This description is long enough to count as a wide column for sure.';
+    const cellClasses = (html: string): string[] =>
+      [...html.matchAll(/<(?:th|td)([^>]*)data-bk-row="0" data-bk-col="(\d+)"/g)].map(
+        ([, attrs, col]) => `${col}:${attrs.includes('table-col-compact') ? 'compact' : 'normal'}`,
+      );
+
+    it('tags short columns next to a long column, header cells included', () => {
+      const html = render(`| 優先度 | 対象 | 区分 | 詳細 |\n| :---: | :---: | :---: | :--- |\n| P2 | #322 | Tooling / Build | ${LONG} |`);
+      expect(cellClasses(html)).toEqual(['0:compact', '1:compact', '2:compact', '3:normal']);
+      expect(html).toContain('<th align="center" class="table-col-compact" data-bk-table="0" data-bk-row="-1" data-bk-col="0">優先度</th>');
+    });
+
+    it('tags nothing when every column is short (nowrap could only cause overflow)', () => {
+      const html = render('| a | b |\n| --- | --- |\n| P2 | #322 |');
+      expect(html).not.toContain('table-col-compact');
+    });
+
+    it('measures the widest cell of the column, with CJK characters counting double', () => {
+      // 8 CJK characters = 16 half-width units (compact), 9 = 18 (not compact).
+      const html = render(`| a | b | c |\n| --- | --- | --- |\n| ちょうど八文字だ | ちょうど九文字です | ${LONG} |`);
+      expect(cellClasses(html)).toEqual(['0:compact', '1:normal', '2:normal']);
+    });
+
+    it('measures <br>-separated content line by line and never compacts an image column', () => {
+      const html = render(`| a | b | c |\n| --- | --- | --- |\n| first line<br>second line | ![x](i.png) | ${LONG} |`);
+      expect(cellClasses(html)).toEqual(['0:compact', '1:normal', '2:normal']);
+    });
+
+    it('stops tagging, narrowest first, once the compact total would exceed the cap', () => {
+      // Five 14-unit columns = 70 > 60: only the first four (narrowest, in
+      // column order on ties) fit under the cap.
+      const cells = Array.from({ length: 5 }, () => 'fourteen chars').join(' | ');
+      const html = render(`| 1 | 2 | 3 | 4 | 5 | 6 |\n| --- | --- | --- | --- | --- | --- |\n| ${cells} | ${LONG} |`);
+      expect(cellClasses(html)).toEqual(['0:compact', '1:compact', '2:compact', '3:compact', '4:normal', '5:normal']);
+    });
+  });
+});
+
+describe('displayWidth', () => {
+  it('counts ASCII as 1, CJK / fullwidth / emoji as 2', () => {
+    expect(displayWidth('#322')).toBe(4);
+    expect(displayWidth('優先度')).toBe(6);
+    expect(displayWidth('ＡＢ')).toBe(4);
+    expect(displayWidth('😀')).toBe(2);
+    expect(displayWidth('')).toBe(0);
   });
 });
 
