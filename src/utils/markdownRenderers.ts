@@ -1,6 +1,7 @@
 import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
 import { maskCodeRegions, stripCodeRegions } from './codeRegions';
+import { COMPACT_COLUMN_CLASS, selectCompactColumns } from './tableCompactColumns';
 
 /** Languages handled by post-processors — skip syntax highlighting */
 const POST_PROCESSED_LANGS = new Set(['mermaid']);
@@ -20,6 +21,7 @@ function escapeHtml(text: string): string {
  * coordinates (`data-bk-table` = Nth table in the document, `data-bk-row` =
  * -1 for the header / 0-based for body rows, `data-bk-col`). These let the
  * preview map a clicked cell back to the Markdown source for inline editing.
+ * Cells of compact columns also get COMPACT_COLUMN_CLASS (#575).
  *
  * A fresh renderer is created per parse so the table counter resets. Assign the
  * returned function to `renderer.table`; marked binds `this` to the renderer
@@ -31,12 +33,14 @@ export function createTableRenderer() {
     const ti = tableIndex++;
     const parser = this.parser;
     const aligns = token.align || [];
+    const compactColumns = selectCompactColumns(token);
 
     const renderCell = (cell: Tokens.TableCell, tag: 'th' | 'td', row: number, col: number): string => {
       const align = aligns[col];
       const alignAttr = align ? ` align="${align}"` : '';
+      const classAttr = compactColumns.has(col) ? ` class="${COMPACT_COLUMN_CLASS}"` : '';
       const content = parser.parseInline(cell.tokens);
-      return `<${tag}${alignAttr} data-bk-table="${ti}" data-bk-row="${row}" data-bk-col="${col}">${content}</${tag}>`;
+      return `<${tag}${alignAttr}${classAttr} data-bk-table="${ti}" data-bk-row="${row}" data-bk-col="${col}">${content}</${tag}>`;
     };
 
     let header = '';
