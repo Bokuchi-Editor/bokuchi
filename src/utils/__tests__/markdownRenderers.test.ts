@@ -447,6 +447,18 @@ describe('reinitializeMermaid', () => {
       expect.objectContaining({ theme: 'default' }),
     );
   });
+
+  it('processMermaidBlocks(html, dark) re-applies the theme when it differs from the current one', async () => {
+    // Preview rendered in dark mode, then the PDF export asks for light.
+    mockRender.mockResolvedValue({ svg: '<svg></svg>', diagramType: 'flowchart' });
+    await processMermaidBlocks('<pre><code class="language-mermaid">graph TD</code></pre>', true);
+    vi.mocked(mermaid.initialize).mockClear();
+
+    await processMermaidBlocks('<pre><code class="language-mermaid">graph TD</code></pre>', false);
+    expect(mermaid.initialize).toHaveBeenLastCalledWith(
+      expect.objectContaining({ theme: 'default' }),
+    );
+  });
 });
 
 describe('createTableRenderer', () => {

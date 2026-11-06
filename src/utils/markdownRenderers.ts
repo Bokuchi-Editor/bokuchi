@@ -159,7 +159,11 @@ export const renderCode = createCodeRenderer({ enablePlantUml: true });
 // Lazy-loaded module caches
 let katexModule: typeof import('katex') | null = null;
 let mermaidModule: typeof import('mermaid') | null = null;
-let mermaidInitialized = false;
+// Theme mermaid is currently initialized with (null = never initialized).
+// Mermaid's theme is global state, so a caller that needs a specific theme
+// (the preview follows the app, the PDF export is always light) must be able
+// to switch it even when a previous caller left the other theme active.
+let mermaidDark: boolean | null = null;
 
 async function getKatex() {
   if (!katexModule) {
@@ -169,34 +173,38 @@ async function getKatex() {
   return katexModule.default;
 }
 
+function initializeMermaid(mermaid: typeof import('mermaid')['default'], dark: boolean) {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    securityLevel: 'strict',
+    // Mermaid 11.14.0 leaks the bomb-icon SVG into document.body on parse
+    // failure (throw happens before removeTempElements). We render our own
+    // error UI in processMermaidBlocks, so suppress Mermaid's built-in one.
+    suppressErrorRendering: true,
+  });
+  mermaidDark = dark;
+}
+
+/**
+ * Lazy-load mermaid and make sure it is initialized with the requested theme.
+ * `dark` undefined keeps whatever theme is active (light on first load).
+ */
 async function getMermaid(dark?: boolean) {
   if (!mermaidModule) {
     mermaidModule = await import('mermaid');
-    if (!mermaidInitialized) {
-      mermaidModule.default.initialize({
-        startOnLoad: false,
-        theme: dark ? 'dark' : 'default',
-        securityLevel: 'strict',
-        // Mermaid 11.14.0 leaks the bomb-icon SVG into document.body on parse
-        // failure (throw happens before removeTempElements). We render our own
-        // error UI in processMermaidBlocks, so suppress Mermaid's built-in one.
-        suppressErrorRendering: true,
-      });
-      mermaidInitialized = true;
-    }
+  }
+  const wanted = dark ?? mermaidDark ?? false;
+  if (wanted !== mermaidDark) {
+    initializeMermaid(mermaidModule.default, wanted);
   }
   return mermaidModule.default;
 }
 
 /** Re-initialize mermaid with the given theme (call when dark mode changes) */
 export function reinitializeMermaid(dark: boolean) {
-  if (mermaidModule && mermaidInitialized) {
-    mermaidModule.default.initialize({
-      startOnLoad: false,
-      theme: dark ? 'dark' : 'default',
-      securityLevel: 'strict',
-      suppressErrorRendering: true,
-    });
+  if (mermaidModule && mermaidDark !== null) {
+    initializeMermaid(mermaidModule.default, dark);
   }
 }
 
