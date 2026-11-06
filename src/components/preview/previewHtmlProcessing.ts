@@ -21,29 +21,77 @@ export function processEasterEggBlocks(markdown: string): string {
 }
 
 /**
- * Rewrite the checkbox markup emitted by marked: strip the `disabled` attribute,
- * make the inputs clickable, and tag each item with a stable index so a toggle
- * can be mapped back to the matching source line.
+ * Rewrite the task-list markup emitted by marked so the preview's checkboxes
+ * are clickable and mapped back to their source line:
+ *
+ *   <li><input disabled="" type="checkbox"> text<ul>…</ul></li>
+ *   → <li class="checkbox-item" data-checkbox-index="n">
+ *       <input type="checkbox" class="markdown-checkbox" data-checkbox-index="n">
+ *       <div class="checkbox-text">text<ul>…</ul></div>
+ *     </li>
+ *
+ * Every task item is tagged with its document-order index, which is the same
+ * order findTaskLineIndices (taskListLines.ts) yields on the source side.
+ *
+ * This works on the DOM rather than a regex: a task item that holds a nested
+ * list (or, for loose lists, `<p>` blocks) closes its `</li>` only after the
+ * children, several lines later, which a line-bound regex never matched. That
+ * left parent items as disabled native inputs and numbered only the leaves,
+ * so a click toggled the wrong source line. Call this on marked's raw output,
+ * before sanitizing, so the sanitizer sees the final markup (and no rendered
+ * KaTeX / Mermaid content is round-tripped through the parser).
  */
 export function transformCheckboxes(html: string): string {
-  // Counter to track checkbox positions
-  let checkboxIndex = 0;
+  if (!/type="checkbox"/.test(html)) return html;
 
-  // Remove disabled attribute and make checkboxes clickable
-  const checkboxPattern = /<li[^>]*>(\s*)<input\s+([^>]*?)(?:disabled="[^"]*")?\s*([^>]*?)type="checkbox"([^>]*?)>(\s*)(.*?)<\/li>/g;
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const inputs = doc.body.querySelectorAll<HTMLInputElement>(
+    'li > input[type="checkbox"], li > p:first-child > input[type="checkbox"]',
+  );
 
-  return html.replace(checkboxPattern, (_match: string, indent: string, beforeType: string, between: string, afterType: string, _afterInput: string, text: string) => {
-    // Check if checked attribute exists
-    const isChecked = /checked(?:="[^"]*")?/.test(beforeType + between + afterType);
-    const checkboxId = `checkbox-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  let index = 0;
+  for (const input of Array.from(inputs)) {
+    const holder = input.parentElement; // the <li>, or its first <p> for loose items
+    const li = holder?.closest('li');
+    if (!holder || !li || !isLeadingChild(input)) continue;
 
-    const result = `<li class="checkbox-item ${isChecked ? 'checked' : ''}" data-checkbox-id="${checkboxId}" data-checked="${isChecked}" data-indent="${indent.length}" data-checkbox-index="${checkboxIndex}">
-            ${indent}<input type="checkbox" ${isChecked ? 'checked' : ''} class="markdown-checkbox" data-checkbox-id="${checkboxId}" data-checkbox-index="${checkboxIndex}">
-            <span class="checkbox-text">${text}</span>
-          </li>`;
-    checkboxIndex++;
-    return result;
-  });
+    const checked = input.hasAttribute('checked');
+    input.removeAttribute('disabled');
+    input.classList.add('markdown-checkbox');
+    input.setAttribute('data-checkbox-index', String(index));
+
+    li.classList.add('checkbox-item');
+    li.classList.toggle('checked', checked);
+    li.setAttribute('data-checkbox-index', String(index));
+
+    // Hoist the input to the front of the <li> and drop the whitespace marked
+    // leaves between the input and the text.
+    li.insertBefore(input, li.firstChild);
+    const lead = holder === li ? input.nextSibling : holder.firstChild;
+    if (lead?.nodeType === Node.TEXT_NODE) {
+      lead.textContent = (lead.textContent ?? '').replace(/^\s+/, '');
+      if (!lead.textContent) lead.remove();
+    }
+
+    // Everything else in the item (text, nested lists, paragraphs) becomes the
+    // label block, so a nested list stays under its parent's text.
+    const text = doc.createElement('div');
+    text.className = 'checkbox-text';
+    while (input.nextSibling) text.appendChild(input.nextSibling);
+    li.appendChild(text);
+
+    index++;
+  }
+
+  return doc.body.innerHTML;
+}
+
+/** True when only whitespace precedes the node inside its parent. */
+function isLeadingChild(node: Node): boolean {
+  for (let prev = node.previousSibling; prev; prev = prev.previousSibling) {
+    if (prev.nodeType !== Node.TEXT_NODE || (prev.textContent ?? '').trim() !== '') return false;
+  }
+  return true;
 }
 
 // Feather icons (MIT): "copy" and "check". Inlined SVG so the button needs no

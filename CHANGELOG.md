@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Nested task lists in the preview: items that had sub-items were drawn as greyed-out, non-clickable boxes, and clicking a deeper item toggled the wrong line in the editor. Every level now renders as the same clickable checkbox, sub-lists sit under their parent's text, and a click flips exactly the line it belongs to. Task items separated by blank lines, ordered (`1. [ ]`) and `+` bullets, items inside blockquotes, and `- [ ]`-looking lines inside code blocks are handled the same way the preview renders them.
 - Pressing `Ctrl/Cmd+F` while the search panel was already open did nothing when focus had returned to the editor, leaving the panel stuck (neither `Ctrl/Cmd+F` nor `Esc` reached it). The shortcut now always moves focus to the search input and selects the current query; `Ctrl/Cmd+H` on an open panel likewise expands the replace row.
 
 ## [1.2.0](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.1.2...v1.2.0) - 2026-09-18

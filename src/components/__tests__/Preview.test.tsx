@@ -35,7 +35,13 @@ vi.mock('highlight.js/styles/github-dark.css', () => ({}));
 
 // Mock marked with a lightweight synchronous implementation that produces
 // the same checkbox HTML structure as the real marked library with GFM.
-vi.mock('marked', () => {
+// NOTE: it flattens nested lists (one <li> per line, no nested <ul>), so it
+// cannot exercise nesting — see previewHtmlProcessing.test.ts and
+// checkboxTogglePropagation.test.tsx, which run against the real marked.
+// The real lexer is kept so the checkbox→line mapping (taskListLines.ts) runs
+// its production path instead of its fallback.
+vi.mock('marked', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('marked')>();
   class Renderer {
     code: unknown;
   }
@@ -82,6 +88,7 @@ vi.mock('marked', () => {
 
   simpleMarked.Renderer = Renderer;
   simpleMarked.use = vi.fn();
+  simpleMarked.lexer = actual.marked.lexer;
 
   // Instance API used by parseMarkdownToHtml (extensions are not exercised
   // here — Preview tests assert the pipeline around marked, not marked itself).
@@ -94,7 +101,7 @@ vi.mock('marked', () => {
     }
   }
 
-  return { marked: simpleMarked, Marked, Lexer: class {} };
+  return { marked: simpleMarked, Marked, Lexer: actual.Lexer };
 });
 
 // Mock markdownRenderers for verifying render pipeline calls
