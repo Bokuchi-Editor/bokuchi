@@ -116,6 +116,11 @@ export function useProcessedMarkdown({
         let processedHtml = await parseMarkdownToHtml(processedMarkdown, { renderer, emojiMap });
         if (stale) return;
 
+        // Make task-list checkboxes clickable and index them for source mapping
+        // (DOM pass on marked's raw output — before the sanitizer so no rendered
+        // KaTeX / Mermaid content goes through the parser again).
+        processedHtml = transformCheckboxes(processedHtml);
+
         // Sanitize the user-authored HTML BEFORE splicing in trusted content.
         // KaTeX is still an inert placeholder token, Mermaid is still a code
         // block, and images still hold their original relative src here, so the
@@ -136,9 +141,6 @@ export function useProcessedMarkdown({
           }
           if (stale) return;
         }
-
-        // Make checkboxes clickable and index them for source mapping.
-        processedHtml = transformCheckboxes(processedHtml);
 
         // Add a copy button to each highlighted code block (preview only —
         // the export path builds its HTML separately and stays button-free).
