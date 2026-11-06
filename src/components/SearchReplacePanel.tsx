@@ -38,6 +38,12 @@ interface SearchReplacePanelProps {
   onTabSwitch?: (tabId: string) => void;
   searchAllTabsDefault?: boolean;
   showReplaceDefault?: boolean;
+  /**
+   * Incremented by the parent on every search shortcut / button press. Any
+   * change re-focuses the search input, so Ctrl/Cmd+F always lands in the
+   * input even when the panel is already open and focus went back to Monaco.
+   */
+  focusRequest?: number;
   onHeightChange?: (height: number) => void;
 }
 
@@ -51,6 +57,7 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
   onTabSwitch,
   searchAllTabsDefault = false,
   showReplaceDefault = false,
+  focusRequest = 0,
   onHeightChange,
 }) => {
   const { t } = useTranslation();
@@ -94,19 +101,32 @@ const SearchReplacePanel: React.FC<SearchReplacePanelProps> = ({
     return () => ro.disconnect();
   }, [open, onHeightChange, showReplace, searchAllTabs, tabs?.length]);
 
-  // Sync searchAllTabs and showReplace with defaults when panel opens
+  // Sync searchAllTabs and showReplace with defaults when the panel opens, and
+  // re-apply them on every shortcut re-issue (focusRequest) so e.g. Ctrl/Cmd+H
+  // expands the replace row even if the panel is already open.
   useEffect(() => {
     if (open) {
       setSearchAllTabs(searchAllTabsDefault);
       setShowReplace(showReplaceDefault);
     }
-  }, [open, searchAllTabsDefault, showReplaceDefault]);
+  }, [open, searchAllTabsDefault, showReplaceDefault, focusRequest]);
 
-  // Focus search input when panel opens
+  // Focus the search input when the panel opens, and again whenever the parent
+  // re-issues the shortcut while it is already open (focusRequest changes).
+  // Select the existing text so typing replaces the previous query.
   useEffect(() => {
-    if (open && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), FOCUS_DELAY_MS);
-    }
+    if (!open) return;
+    const timer = setTimeout(() => {
+      const input = searchInputRef.current;
+      if (!input) return;
+      input.focus();
+      input.select();
+    }, FOCUS_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [open, focusRequest]);
+
+  // Reset search state when the panel closes
+  useEffect(() => {
     if (!open) {
       clearDecorations();
       setMatches([]);

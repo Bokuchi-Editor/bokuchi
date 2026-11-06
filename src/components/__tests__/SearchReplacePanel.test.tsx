@@ -371,6 +371,35 @@ describe('SearchReplacePanel', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  // T-SR-19: a focusRequest bump re-focuses the search input while the panel is
+  // already open (Ctrl+F pressed again after focus went back to the editor)
+  it('T-SR-19: focusRequest change re-focuses the search input of an open panel', () => {
+    const editor = createMockEditor('hello world');
+    const editorRef = { current: editor } as React.RefObject<never>;
+    const props = { editorRef, open: true, onClose: vi.fn(), onChange: vi.fn() };
+
+    const { rerender } = render(<SearchReplacePanel {...props} focusRequest={1} />);
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    const searchInput = screen.getByPlaceholderText('Search') as HTMLInputElement;
+    expect(document.activeElement).toBe(searchInput);
+    fireEvent.change(searchInput, { target: { value: 'hello' } });
+
+    // Focus leaves the panel (user clicked back into the editor)
+    searchInput.blur();
+    expect(document.activeElement).not.toBe(searchInput);
+
+    // Same `open`, new request → focus returns and the query is selected
+    rerender(<SearchReplacePanel {...props} focusRequest={2} />);
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(document.activeElement).toBe(searchInput);
+    expect(searchInput.selectionStart).toBe(0);
+    expect(searchInput.selectionEnd).toBe('hello'.length);
+  });
+
   // -------------------------------------------------------------------------
   // Cross-tab search tests
   // -------------------------------------------------------------------------

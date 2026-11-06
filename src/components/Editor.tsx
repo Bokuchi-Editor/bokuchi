@@ -115,6 +115,10 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchAllTabsDefault, setSearchAllTabsDefault] = useState(false);
   const [showReplaceDefault, setShowReplaceDefault] = useState(false);
+  // Bumped on every search shortcut / button press. `searchOpen` is a boolean,
+  // so a second Ctrl+F while the panel is already showing would otherwise be a
+  // no-op and leave focus in Monaco (Esc then cannot close the panel either).
+  const [searchFocusRequest, setSearchFocusRequest] = useState(0);
   const [searchPanelHeight, setSearchPanelHeight] = useState(0);
   const [isImageDragOver, setIsImageDragOver] = useState(false);
   const [tableConversionDialog, setTableConversionDialog] = useState<{
@@ -600,16 +604,19 @@ const MarkdownEditor: React.FC<EditorProps> = ({
               setSearchAllTabsDefault(false);
               setShowReplaceDefault(false);
               setSearchOpen(true);
+              setSearchFocusRequest((n) => n + 1);
             },
             openReplace: () => {
               setSearchAllTabsDefault(false);
               setShowReplaceDefault(true);
               setSearchOpen(true);
+              setSearchFocusRequest((n) => n + 1);
             },
             openSearchAllTabs: () => {
               setSearchAllTabsDefault(true);
               setShowReplaceDefault(false);
               setSearchOpen(true);
+              setSearchFocusRequest((n) => n + 1);
             },
           }),
         );
@@ -718,7 +725,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
         </Typography>
         <Box>
           <Tooltip title="Search (Ctrl+F / Ctrl+Shift+F)">
-            <IconButton size="small" onClick={() => { setSearchAllTabsDefault(false); setSearchOpen(true); }}>
+            <IconButton size="small" onClick={() => { setSearchAllTabsDefault(false); setSearchOpen(true); setSearchFocusRequest((n) => n + 1); }}>
               <Search />
             </IconButton>
           </Tooltip>
@@ -738,6 +745,7 @@ const MarkdownEditor: React.FC<EditorProps> = ({
           onTabSwitch={onTabSwitch}
           searchAllTabsDefault={searchAllTabsDefault}
           showReplaceDefault={showReplaceDefault}
+          focusRequest={searchFocusRequest}
           onHeightChange={setSearchPanelHeight}
         />
         {isImageDragOver && (
