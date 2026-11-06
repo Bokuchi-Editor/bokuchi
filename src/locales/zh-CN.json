@@ -560,6 +560,29 @@
     "formatTable": "格式化表格",
     "strikethrough": "删除线"
   },
+  "tableEditor": {
+    "title": "编辑表格",
+    "apply": "应用",
+    "cancel": "取消",
+    "addRow": "添加行",
+    "addColumn": "添加列",
+    "rowActions": "行操作",
+    "columnActions": "列操作",
+    "insertRowAbove": "在上方插入行",
+    "insertRowBelow": "在下方插入行",
+    "deleteRow": "删除行",
+    "moveRowUp": "上移行",
+    "moveRowDown": "下移行",
+    "insertColumnLeft": "在左侧插入列",
+    "insertColumnRight": "在右侧插入列",
+    "deleteColumn": "删除列",
+    "moveColumnLeft": "左移列",
+    "moveColumnRight": "右移列",
+    "alignLeft": "左对齐",
+    "alignCenter": "居中对齐",
+    "alignRight": "右对齐",
+    "editTableTooltip": "编辑表格"
+  },
   "outline": {
     "title": "大纲",
     "noHeadings": "未找到标题",
@@ -663,6 +686,23 @@
     }
   },
   "preview": {
+    "export": "导出",
+    "exportAsHtml": "导出为 HTML",
+    "exportAsPdf": "导出为 PDF",
+    "exportingPdf": "正在生成 PDF…",
+    "pdfExported": "PDF 已导出",
+    "pdfExportFailed": "导出 PDF 文件失败",
+    "featureNotice": {
+      "message": "此文件使用了 {{features}}。请在设置中启用相应功能以显示渲染结果。",
+      "openSettings": "打开设置",
+      "dismiss": "关闭",
+      "separator": "、",
+      "feature": {
+        "mermaid": "Mermaid",
+        "marp": "Marp",
+        "katex": "KaTeX"
+      }
+    },
     "presentation": "演示文稿",
     "previousSlide": "上一张幻灯片",
     "nextSlide": "下一张幻灯片",
