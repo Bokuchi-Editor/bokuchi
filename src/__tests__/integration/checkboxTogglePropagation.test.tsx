@@ -91,6 +91,7 @@ vi.mock('highlight.js/styles/github-dark.css', () => ({}));
 
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
+  createCodeRenderer: vi.fn(() => vi.fn()),
   createTableRenderer: vi.fn(() => () => ''),
   processKatex: vi.fn().mockImplementation(async (md: string) => md),
   contentHasKatex: vi.fn().mockReturnValue(false),

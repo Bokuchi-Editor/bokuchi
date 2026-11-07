@@ -450,6 +450,8 @@
       "enableKatexDescription": "Отображать математические выражения с использованием синтаксиса $...$ (встроенный) и $$...$$ (блочный).",
       "enableMermaid": "Mermaid (Диаграммы)",
       "enableMermaidDescription": "Отображать диаграммы из блоков кода ```mermaid (блок-схемы, диаграммы последовательностей и т.д.).",
+      "enablePlantUml": "PlantUML (Диаграммы)",
+      "enablePlantUmlDescription": "Отображать диаграммы из блоков кода ```plantuml, ```puml и ```uml. Работает офлайн, Java не требуется.",
       "importExport": "Импорт/Экспорт настроек",
       "exportSettings": "Экспорт настроек",
       "importSettings": "Импорт настроек",

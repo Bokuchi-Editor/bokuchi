@@ -1,5 +1,6 @@
 import { readFile } from '@tauri-apps/plugin-fs';
 import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc } from '../../utils/imagePathResolver';
+import { escapeHtml } from '../../utils/htmlText';
 
 /**
  * Convert easter-egg fence blocks (`:::shake … :::`) into animated `<div>`s.
@@ -9,11 +10,7 @@ export function processEasterEggBlocks(markdown: string): string {
   const easterEggPattern = /^:::(shake|rainbow|glow|bounce|blink)\s*\n([\s\S]*?)^:::[ \t]*$/gm;
   return markdown.replace(easterEggPattern, (_match, effect: string, innerContent: string) => {
     // Convert inner content to simple HTML (escape HTML entities, preserve line breaks)
-    const escapedContent = innerContent
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\n/g, '<br>');
+    const escapedContent = escapeHtml(innerContent).replace(/\n/g, '<br>');
     // Ensure trailing newline so subsequent markdown is not consumed
     // by the HTML block (CommonMark: <div> swallows until blank line).
     return `<div class="ee-block ee-${effect}" data-effect="${effect}">${escapedContent}</div>\n`;

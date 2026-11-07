@@ -180,6 +180,15 @@ const AdvancedTab: React.FC<AdvancedTabProps> = ({
             sx={{ mb: 1 }}
           />
           <RenderingToggleRow
+            target="rendering.enablePlantUml"
+            highlighted={highlightedTarget === 'rendering.enablePlantUml'}
+            checked={settings.rendering?.enablePlantUml ?? false}
+            onChange={(checked) => onSettingChange('rendering', 'enablePlantUml', checked)}
+            label={t('settings.advanced.enablePlantUml')}
+            description={t('settings.advanced.enablePlantUmlDescription')}
+            sx={{ mb: 1 }}
+          />
+          <RenderingToggleRow
             target="rendering.enableMarp"
             highlighted={highlightedTarget === 'rendering.enableMarp'}
             checked={settings.rendering?.enableMarp ?? false}

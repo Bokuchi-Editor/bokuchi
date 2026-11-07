@@ -450,6 +450,8 @@
       "enableKatexDescription": "使用 $...$（行内）和 $$...$$（块级）语法渲染数学表达式。",
       "enableMermaid": "Mermaid（图表）",
       "enableMermaidDescription": "从 ```mermaid 代码块渲染图表（流程图、时序图等）。",
+      "enablePlantUml": "PlantUML（图表）",
+      "enablePlantUmlDescription": "从 ```plantuml、```puml 和 ```uml 代码块渲染图表。无需 Java，可离线运行。",
       "importExport": "导入/导出设置",
       "exportSettings": "导出设置",
       "importSettings": "导入设置",

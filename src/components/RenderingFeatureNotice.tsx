@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { RenderingSettings } from '../types/settings';
 import { SettingsFocusTarget } from '../types/settingsFocus';
 import { contentHasKatex, contentHasMermaid } from '../utils/markdownRenderers';
+import { contentHasPlantUml } from '../utils/plantumlRenderer';
 import { contentIsMarp } from '../utils/marpRenderer';
 
-type RenderingFeature = 'mermaid' | 'marp' | 'katex';
+type RenderingFeature = 'mermaid' | 'plantuml' | 'marp' | 'katex';
 
 interface RenderingFeatureNoticeProps {
   content: string;
@@ -20,6 +21,7 @@ const STORAGE_KEY = 'bokuchi:renderingNotice:dismissed';
 
 const FEATURE_TO_TARGET: Record<RenderingFeature, SettingsFocusTarget> = {
   mermaid: 'rendering.enableMermaid',
+  plantuml: 'rendering.enablePlantUml',
   marp: 'rendering.enableMarp',
   katex: 'rendering.enableKatex',
 };
@@ -55,6 +57,7 @@ const RenderingFeatureNotice: React.FC<RenderingFeatureNoticeProps> = ({
     const result: RenderingFeature[] = [];
     if (!content) return result;
     if (!renderingSettings.enableMermaid && contentHasMermaid(content)) result.push('mermaid');
+    if (!renderingSettings.enablePlantUml && contentHasPlantUml(content)) result.push('plantuml');
     if (!renderingSettings.enableMarp && contentIsMarp(content)) result.push('marp');
     if (!renderingSettings.enableKatex && contentHasKatex(content)) result.push('katex');
     return result;

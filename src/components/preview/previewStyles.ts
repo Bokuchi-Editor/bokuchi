@@ -231,6 +231,23 @@ export function buildPreviewStyles(
               margin: 1em 0;
             }
 
+            /* PlantUML diagrams */
+            .plantuml-diagram {
+              display: flex;
+              justify-content: center;
+              margin: 1em 0;
+              overflow-x: auto;
+            }
+
+            .plantuml-diagram svg {
+              max-width: 100%;
+              height: auto;
+            }
+
+            .plantuml-error {
+              margin: 1em 0;
+            }
+
             /* Easter egg blocks */
             .ee-block {
               padding: 1em;
