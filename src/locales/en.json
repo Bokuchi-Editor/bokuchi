@@ -663,16 +663,12 @@
         "description": "Checkboxes with sub-items were greyed out and not clickable, and clicking a nested item could toggle the wrong line. Every level is now a clickable checkbox that toggles exactly its own line."
       },
       "pdfDiagramTheme": {
-        "title": "Light Diagrams in PDF Exports",
-        "description": "Mermaid diagrams in PDF exports no longer use the dark theme when the app is in dark mode. PDFs always get light diagrams to match their white background."
+        "title": "Fixed Dark Mermaid Diagrams in PDF Exports",
+        "description": "Fixed a bug where Mermaid diagrams were exported to PDF with the dark theme when the app was in dark mode, even though the PDF background is white. Diagrams in PDFs are now always rendered with the light theme."
       },
       "searchShortcutFocus": {
         "title": "Search Shortcut Refocuses the Panel",
         "description": "Pressing Ctrl/Cmd+F while the search panel is already open now moves focus back to the search field and selects the current query. Ctrl/Cmd+H expands the replace row."
-      },
-      "starOnGitHub": {
-        "title": "Star Bokuchi on GitHub",
-        "description": "Help now has a link to star Bokuchi on GitHub. After you have used Bokuchi for a while, a small card may also ask once. Nothing is tracked or sent anywhere."
       },
       "libraryUpdates": {
         "title": "Library Updates",

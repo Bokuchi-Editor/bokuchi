@@ -640,16 +640,12 @@
         "description": "Las casillas con subelementos aparecían en gris y no se podían marcar, y al pulsar un elemento anidado podía cambiarse la línea equivocada. Ahora cada nivel es una casilla que se puede marcar y que cambia exactamente su propia línea."
       },
       "pdfDiagramTheme": {
-        "title": "Diagramas claros en la exportación a PDF",
-        "description": "Los diagramas Mermaid de la exportación a PDF ya no usan el tema oscuro cuando la aplicación está en modo oscuro. Los PDF siempre obtienen diagramas claros, a tono con su fondo blanco."
+        "title": "Corregidos los diagramas Mermaid oscuros en la exportación a PDF",
+        "description": "Se corrigió un error por el que, con la aplicación en modo oscuro, los diagramas Mermaid se exportaban al PDF con el tema oscuro aunque el fondo del PDF es blanco. Ahora los diagramas del PDF se renderizan siempre con el tema claro."
       },
       "searchShortcutFocus": {
         "title": "El atajo de búsqueda vuelve a enfocar el panel",
         "description": "Pulsar Ctrl/Cmd+F con el panel de búsqueda ya abierto devuelve el foco al campo de búsqueda y selecciona el término actual. Ctrl/Cmd+H despliega la fila de reemplazo."
-      },
-      "starOnGitHub": {
-        "title": "Dar una estrella a Bokuchi en GitHub",
-        "description": "La ayuda ahora incluye un enlace para dar una estrella a Bokuchi en GitHub. Tras usar Bokuchi durante un tiempo, una pequeña tarjeta también puede pedírtelo una vez. No se rastrea ni se envía nada."
       },
       "libraryUpdates": {
         "title": "Actualización de bibliotecas",

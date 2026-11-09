@@ -640,16 +640,12 @@
         "description": "Caixas de seleção com subitens apareciam acinzentadas e não podiam ser marcadas, e clicar em um item aninhado podia alternar a linha errada. Agora cada nível é uma caixa clicável que alterna exatamente a sua própria linha."
       },
       "pdfDiagramTheme": {
-        "title": "Diagramas claros na exportação em PDF",
-        "description": "Os diagramas Mermaid da exportação em PDF não usam mais o tema escuro quando o aplicativo está no modo escuro. Os PDFs sempre recebem diagramas claros, combinando com o fundo branco."
+        "title": "Corrigidos os diagramas Mermaid escuros na exportação em PDF",
+        "description": "Corrigido um bug em que, com o aplicativo no modo escuro, os diagramas Mermaid eram exportados para o PDF com o tema escuro, embora o fundo do PDF seja branco. Agora os diagramas no PDF são sempre renderizados com o tema claro."
       },
       "searchShortcutFocus": {
         "title": "O atalho de pesquisa devolve o foco ao painel",
         "description": "Pressionar Ctrl/Cmd+F com o painel de pesquisa já aberto agora devolve o foco ao campo de pesquisa e seleciona o termo atual. Ctrl/Cmd+H expande a linha de substituição."
-      },
-      "starOnGitHub": {
-        "title": "Dar uma estrela ao Bokuchi no GitHub",
-        "description": "A ajuda agora tem um link para dar uma estrela ao Bokuchi no GitHub. Depois de algum tempo de uso, um pequeno cartão também pode pedir isso uma vez. Nada é rastreado nem enviado."
       },
       "libraryUpdates": {
         "title": "Atualizações de bibliotecas",

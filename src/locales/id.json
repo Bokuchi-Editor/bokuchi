@@ -640,16 +640,12 @@
         "description": "Kotak centang yang memiliki sub-item tampil abu-abu dan tidak bisa diklik, dan mengklik item bersarang bisa mengubah baris yang salah. Kini setiap tingkat adalah kotak centang yang bisa diklik dan hanya mengubah barisnya sendiri."
       },
       "pdfDiagramTheme": {
-        "title": "Diagram Terang pada Ekspor PDF",
-        "description": "Diagram Mermaid pada ekspor PDF tidak lagi memakai tema gelap saat aplikasi dalam mode gelap. PDF selalu mendapat diagram terang agar sesuai dengan latar putihnya."
+        "title": "Perbaikan Diagram Mermaid Gelap pada Ekspor PDF",
+        "description": "Memperbaiki bug saat aplikasi dalam mode gelap: diagram Mermaid diekspor ke PDF dengan tema gelap meskipun latar PDF berwarna putih. Kini diagram di PDF selalu dirender dengan tema terang."
       },
       "searchShortcutFocus": {
         "title": "Pintasan Pencarian Memfokuskan Ulang Panel",
         "description": "Menekan Ctrl/Cmd+F saat panel pencarian sudah terbuka kini mengembalikan fokus ke kolom pencarian dan memilih kata kunci saat ini. Ctrl/Cmd+H membuka baris ganti."
-      },
-      "starOnGitHub": {
-        "title": "Beri Bokuchi Bintang di GitHub",
-        "description": "Bantuan kini memiliki tautan untuk memberi Bokuchi bintang di GitHub. Setelah Bokuchi dipakai beberapa waktu, sebuah kartu kecil juga bisa memintanya sekali. Tidak ada yang dilacak atau dikirim ke mana pun."
       },
       "libraryUpdates": {
         "title": "Pembaruan Pustaka",

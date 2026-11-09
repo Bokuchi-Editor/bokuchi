@@ -640,16 +640,12 @@
         "description": "Les cases à cocher ayant des sous-éléments apparaissaient grisées et non cliquables, et cliquer sur un élément imbriqué pouvait basculer la mauvaise ligne. Chaque niveau est désormais une case cliquable qui bascule exactement sa propre ligne."
       },
       "pdfDiagramTheme": {
-        "title": "Diagrammes clairs dans l'export PDF",
-        "description": "Les diagrammes Mermaid de l'export PDF n'utilisent plus le thème sombre lorsque l'application est en mode sombre. Les PDF obtiennent toujours des diagrammes clairs, en accord avec leur fond blanc."
+        "title": "Correction des diagrammes Mermaid sombres dans l'export PDF",
+        "description": "Correction d'un bug : lorsque l'application était en mode sombre, les diagrammes Mermaid étaient exportés en PDF avec le thème sombre alors que le fond du PDF est blanc. Les diagrammes des PDF sont désormais toujours rendus avec le thème clair."
       },
       "searchShortcutFocus": {
         "title": "Le raccourci de recherche redonne le focus au panneau",
         "description": "Appuyer sur Ctrl/Cmd+F alors que le panneau de recherche est déjà ouvert ramène désormais le focus dans le champ de recherche et sélectionne le terme actuel. Ctrl/Cmd+H déplie la ligne de remplacement."
-      },
-      "starOnGitHub": {
-        "title": "Ajouter une étoile à Bokuchi sur GitHub",
-        "description": "L'aide propose désormais un lien pour ajouter une étoile à Bokuchi sur GitHub. Après un certain temps d'utilisation, une petite carte peut aussi vous le demander une fois. Rien n'est suivi ni envoyé."
       },
       "libraryUpdates": {
         "title": "Mises à jour des bibliothèques",

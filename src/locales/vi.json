@@ -640,16 +640,12 @@
         "description": "Hộp kiểm có mục con từng bị mờ và không bấm được, và bấm vào mục lồng nhau có thể chuyển nhầm dòng. Nay mọi cấp đều là hộp kiểm bấm được và chỉ chuyển đúng dòng của nó."
       },
       "pdfDiagramTheme": {
-        "title": "Sơ đồ sáng khi xuất PDF",
-        "description": "Sơ đồ Mermaid khi xuất PDF không còn dùng chủ đề tối khi ứng dụng ở chế độ tối. PDF luôn nhận sơ đồ sáng để khớp với nền trắng."
+        "title": "Sửa lỗi sơ đồ Mermaid bị tối khi xuất PDF",
+        "description": "Đã sửa lỗi khi ứng dụng ở chế độ tối, sơ đồ Mermaid được xuất ra PDF với chủ đề tối dù nền PDF là màu trắng. Nay sơ đồ trong PDF luôn được kết xuất với chủ đề sáng."
       },
       "searchShortcutFocus": {
         "title": "Phím tắt tìm kiếm đưa tiêu điểm về bảng tìm kiếm",
         "description": "Nhấn Ctrl/Cmd+F khi bảng tìm kiếm đã mở nay đưa tiêu điểm về ô tìm kiếm và chọn từ khóa hiện tại. Ctrl/Cmd+H mở rộng hàng thay thế."
-      },
-      "starOnGitHub": {
-        "title": "Gắn sao cho Bokuchi trên GitHub",
-        "description": "Trợ giúp nay có liên kết để gắn sao cho Bokuchi trên GitHub. Sau một thời gian sử dụng, một thẻ nhỏ cũng có thể nhắc một lần. Không theo dõi hay gửi đi bất kỳ dữ liệu nào."
       },
       "libraryUpdates": {
         "title": "Cập nhật thư viện",

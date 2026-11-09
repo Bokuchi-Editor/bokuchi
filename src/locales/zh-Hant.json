@@ -640,16 +640,12 @@
         "description": "含有子項目的核取方塊先前會顯示為灰色且無法點選，點選巢狀項目時也可能切換到錯誤的行。現在每一層都是可點選的核取方塊，且只會切換對應的那一行。"
       },
       "pdfDiagramTheme": {
-        "title": "PDF 匯出中的圖表使用淺色主題",
-        "description": "應用程式處於深色模式時，PDF 匯出中的 Mermaid 圖表不再使用深色主題。為配合 PDF 的白色背景，圖表一律以淺色主題輸出。"
+        "title": "修正 PDF 匯出中 Mermaid 圖表顯示為深色的問題",
+        "description": "修正了應用程式處於深色模式時，匯出的 PDF 背景為白色、Mermaid 圖表卻使用深色主題的問題。現在 PDF 中的圖表一律以淺色主題渲染。"
       },
       "searchShortcutFocus": {
         "title": "搜尋快速鍵重新聚焦面板",
         "description": "搜尋面板已開啟時按下 Ctrl/Cmd+F，焦點會回到搜尋欄並選取目前的搜尋字串。Ctrl/Cmd+H 則會展開取代列。"
-      },
-      "starOnGitHub": {
-        "title": "在 GitHub 上為 Bokuchi 給星",
-        "description": "說明中新增了在 GitHub 上為 Bokuchi 給星的連結。使用一段時間後，也可能會有一張小卡片提醒一次。不會追蹤或傳送任何資料。"
       },
       "libraryUpdates": {
         "title": "函式庫更新",

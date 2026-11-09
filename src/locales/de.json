@@ -640,16 +640,12 @@
         "description": "Kontrollkästchen mit Unterpunkten waren ausgegraut und nicht anklickbar, und ein Klick auf einen verschachtelten Punkt konnte die falsche Zeile umschalten. Jetzt ist jede Ebene ein anklickbares Kontrollkästchen, das genau seine eigene Zeile umschaltet."
       },
       "pdfDiagramTheme": {
-        "title": "Helle Diagramme im PDF-Export",
-        "description": "Mermaid-Diagramme im PDF-Export verwenden im dunklen Modus der App nicht mehr das dunkle Design. PDFs erhalten immer helle Diagramme, passend zum weißen Hintergrund."
+        "title": "Dunkle Mermaid-Diagramme im PDF-Export behoben",
+        "description": "Ein Fehler wurde behoben, durch den Mermaid-Diagramme im dunklen Modus der App mit dem dunklen Design in die PDF exportiert wurden, obwohl der PDF-Hintergrund weiß ist. Diagramme in PDFs werden jetzt immer im hellen Design gerendert."
       },
       "searchShortcutFocus": {
         "title": "Suchkürzel fokussiert das Panel erneut",
         "description": "Strg/Cmd+F bei bereits geöffnetem Suchpanel setzt den Fokus jetzt zurück ins Suchfeld und markiert den aktuellen Suchbegriff. Strg/Cmd+H klappt die Ersetzen-Zeile auf."
-      },
-      "starOnGitHub": {
-        "title": "Bokuchi auf GitHub einen Stern geben",
-        "description": "Die Hilfe enthält jetzt einen Link, um Bokuchi auf GitHub einen Stern zu geben. Nach einiger Zeit der Nutzung kann außerdem einmalig eine kleine Karte danach fragen. Es wird nichts erfasst oder gesendet."
       },
       "libraryUpdates": {
         "title": "Bibliotheks-Updates",

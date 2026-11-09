@@ -54,11 +54,6 @@ export const whatsNewContent: WhatsNewContent = {
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.starOnGitHub.title',
-      descriptionKey: 'whatsNew.changes.starOnGitHub.description',
-    },
-    {
-      type: 'improvement',
       titleKey: 'whatsNew.changes.libraryUpdates.title',
       descriptionKey: 'whatsNew.changes.libraryUpdates.description',
     },

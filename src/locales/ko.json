@@ -640,16 +640,12 @@
         "description": "하위 항목이 있는 체크박스가 회색으로 표시되어 클릭할 수 없었고, 중첩 항목을 클릭하면 다른 줄이 토글되는 경우가 있었습니다. 이제 모든 단계가 클릭 가능한 체크박스이며 해당 줄만 정확히 토글합니다."
       },
       "pdfDiagramTheme": {
-        "title": "PDF 내보내기의 다이어그램은 라이트 테마로",
-        "description": "앱이 다크 모드일 때 PDF 내보내기의 Mermaid 다이어그램이 더 이상 다크 테마로 그려지지 않습니다. PDF의 흰 배경에 맞춰 다이어그램은 항상 라이트 테마로 출력됩니다."
+        "title": "PDF 내보내기에서 Mermaid 다이어그램이 다크로 표시되는 문제 수정",
+        "description": "앱이 다크 모드일 때 PDF로 내보내면 배경은 흰색인데 Mermaid 다이어그램은 다크 테마로 출력되는 버그를 수정했습니다. 이제 PDF의 다이어그램은 항상 라이트 테마로 렌더링됩니다."
       },
       "searchShortcutFocus": {
         "title": "검색 단축키로 패널에 다시 포커스",
         "description": "검색 패널이 이미 열려 있을 때 Ctrl/Cmd+F를 누르면 검색 입력란으로 포커스가 돌아가고 현재 검색어가 선택됩니다. Ctrl/Cmd+H는 바꾸기 행을 펼칩니다."
-      },
-      "starOnGitHub": {
-        "title": "GitHub에서 Bokuchi에 스타 주기",
-        "description": "도움말에 GitHub에서 Bokuchi에 스타를 주는 링크가 추가되었습니다. Bokuchi를 한동안 사용한 뒤에는 작은 카드가 한 번 요청할 수도 있습니다. 어떤 데이터도 추적하거나 전송하지 않습니다."
       },
       "libraryUpdates": {
         "title": "라이브러리 업데이트",

@@ -663,16 +663,12 @@
         "description": "带有子项的复选框此前显示为灰色且无法点击，点击嵌套项还可能切换到错误的行。现在每一层都是可点击的复选框，并且只切换其对应的那一行。"
       },
       "pdfDiagramTheme": {
-        "title": "PDF 导出中的图表使用浅色主题",
-        "description": "应用处于深色模式时，PDF 导出中的 Mermaid 图表不再使用深色主题。为匹配 PDF 的白色背景，图表始终以浅色主题输出。"
+        "title": "修复 PDF 导出中 Mermaid 图表显示为深色的问题",
+        "description": "修复了应用处于深色模式时，导出的 PDF 背景为白色、Mermaid 图表却使用深色主题的问题。现在 PDF 中的图表始终以浅色主题渲染。"
       },
       "searchShortcutFocus": {
         "title": "搜索快捷键重新聚焦面板",
         "description": "搜索面板已打开时按 Ctrl/Cmd+F，焦点会回到搜索框并选中当前搜索词。Ctrl/Cmd+H 会展开替换行。"
-      },
-      "starOnGitHub": {
-        "title": "在 GitHub 上为 Bokuchi 点星",
-        "description": "帮助中新增了在 GitHub 上为 Bokuchi 点星的链接。在使用一段时间后，也可能有一张小卡片提醒一次。不会跟踪或发送任何数据。"
       },
       "libraryUpdates": {
         "title": "库更新",
