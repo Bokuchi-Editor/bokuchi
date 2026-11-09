@@ -136,6 +136,7 @@ export function searchReplacePanelMock() {
       open: boolean;
       searchAllTabsDefault?: boolean;
       showReplaceDefault?: boolean;
+      focusRequest?: number;
       onClose: () => void;
     }) =>
       props.open ? (
@@ -143,6 +144,7 @@ export function searchReplacePanelMock() {
           data-testid="search-panel"
           data-all-tabs={String(!!props.searchAllTabsDefault)}
           data-show-replace={String(!!props.showReplaceDefault)}
+          data-focus-request={String(props.focusRequest ?? 0)}
         >
           <button data-testid="close-search" onClick={props.onClose}>
             Close

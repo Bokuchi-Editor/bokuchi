@@ -1,4 +1,5 @@
 import { useEffect, type RefObject, type MutableRefObject } from 'react';
+import { findTaskLineIndices, setTaskLineChecked } from '../../utils/taskListLines';
 
 interface UsePreviewCheckboxToggleParams {
   previewRef: RefObject<HTMLDivElement | null>;
@@ -12,9 +13,11 @@ interface UsePreviewCheckboxToggleParams {
  * The container persists across dangerouslySetInnerHTML updates, so a single
  * listener reliably catches events from dynamically replaced children.
  *
- * On change it flips the matching `- [ ]` / `- [x]` source line — located by
- * the checkbox's index among *valid* task lines (malformed task lines are not
- * rendered as checkboxes by GFM and so must be skipped here too).
+ * On change it flips the matching `- [ ]` / `- [x]` source line, located by
+ * the checkbox's document-order index among the task items marked's lexer
+ * finds in the source (findTaskLineIndices). Both sides therefore agree on
+ * what counts as a task — nested items, `+`/ordered bullets, blockquotes,
+ * malformed lines and tasks inside code fences included.
  *
  * See {@link usePreviewLinkClicks} for why this depends on `isMarp`.
  */
@@ -43,22 +46,16 @@ export function usePreviewCheckboxToggle({
       const currentOnContentChange = onContentChangeRef.current;
       if (!currentOnContentChange) return;
 
-      const checkboxIndex = parseInt(target.getAttribute('data-checkbox-index') || '0');
-      const lines = contentRef.current.split(/\r?\n/);
-      let currentIndex = 0;
+      const checkboxIndex = parseInt(target.getAttribute('data-checkbox-index') || '0', 10);
+      const content = contentRef.current;
+      const lineIndex = findTaskLineIndices(content)[checkboxIndex];
+      if (lineIndex === undefined || lineIndex < 0) return;
 
-      for (let i = 0; i < lines.length; i++) {
-        const match = lines[i].match(/^(\s*)([-*]\s+)\[([ x])\]\s+(.*)$/);
-        if (match) {
-          if (currentIndex === checkboxIndex) {
-            const [, indent, listMarker, , rest] = match;
-            lines[i] = `${indent}${listMarker}[${isChecked ? 'x' : ' '}] ${rest}`;
-            currentOnContentChange(lines.join('\n'));
-            return;
-          }
-          currentIndex++;
-        }
-      }
+      const lines = content.split(/\r?\n/);
+      const updated = setTaskLineChecked(lines[lineIndex], isChecked);
+      if (updated === null) return;
+      lines[lineIndex] = updated;
+      currentOnContentChange(lines.join('\n'));
     };
 
     container.addEventListener('change', handleCheckboxChange);

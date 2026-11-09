@@ -5,6 +5,7 @@
  */
 export type SettingsFocusTarget =
   | 'rendering.enableMermaid'
+  | 'rendering.enablePlantUml'
   | 'rendering.enableMarp'
   | 'rendering.enableKatex'
   | 'rendering.enableEmoji';
@@ -12,6 +13,7 @@ export type SettingsFocusTarget =
 /** Tab index inside the Settings dialog for each focus target. */
 export const SETTINGS_FOCUS_TAB_INDEX: Record<SettingsFocusTarget, number> = {
   'rendering.enableMermaid': 4,
+  'rendering.enablePlantUml': 4,
   'rendering.enableMarp': 4,
   'rendering.enableKatex': 4,
   'rendering.enableEmoji': 4,
@@ -20,6 +22,7 @@ export const SETTINGS_FOCUS_TAB_INDEX: Record<SettingsFocusTarget, number> = {
 /** DOM element id wrapping each focus target's setting row. */
 export const SETTINGS_FOCUS_ELEMENT_ID: Record<SettingsFocusTarget, string> = {
   'rendering.enableMermaid': 'setting-rendering-enableMermaid',
+  'rendering.enablePlantUml': 'setting-rendering-enablePlantUml',
   'rendering.enableMarp': 'setting-rendering-enableMarp',
   'rendering.enableKatex': 'setting-rendering-enableKatex',
   'rendering.enableEmoji': 'setting-rendering-enableEmoji',

@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import { variableApi } from '../../api/variableApi';
 import type { RenderingSettings } from '../../types/settings';
 import {
-  renderCode,
+  createCodeRenderer,
   createTableRenderer,
   processKatex,
   contentHasKatex,
@@ -11,6 +11,7 @@ import {
   contentHasMermaid,
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
+import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
@@ -71,7 +72,7 @@ export function useProcessedMarkdown({
 
     // Set up custom renderer for syntax highlighting
     const renderer = new marked.Renderer();
-    renderer.code = renderCode;
+    renderer.code = createCodeRenderer({ enablePlantUml: renderingSettings.enablePlantUml });
     // Tag table cells with their source coordinates for inline editing.
     renderer.table = createTableRenderer();
 
@@ -116,6 +117,11 @@ export function useProcessedMarkdown({
         let processedHtml = await parseMarkdownToHtml(processedMarkdown, { renderer, emojiMap });
         if (stale) return;
 
+        // Make task-list checkboxes clickable and index them for source mapping
+        // (DOM pass on marked's raw output — before the sanitizer so no rendered
+        // KaTeX / Mermaid content goes through the parser again).
+        processedHtml = transformCheckboxes(processedHtml);
+
         // Sanitize the user-authored HTML BEFORE splicing in trusted content.
         // KaTeX is still an inert placeholder token, Mermaid is still a code
         // block, and images still hold their original relative src here, so the
@@ -137,8 +143,16 @@ export function useProcessedMarkdown({
           if (stale) return;
         }
 
-        // Make checkboxes clickable and index them for source mapping.
-        processedHtml = transformCheckboxes(processedHtml);
+        // Process PlantUML diagrams (lazy-loaded engine, same splice point as
+        // Mermaid). A superseded run stops rendering the remaining diagrams.
+        if (renderingSettings.enablePlantUml && contentHasPlantUml(processedMarkdown)) {
+          try {
+            processedHtml = await processPlantUmlBlocks(processedHtml, darkMode, { shouldAbort: () => stale });
+          } catch (err) {
+            console.warn('PlantUML processing failed, showing raw code blocks:', err);
+          }
+          if (stale) return;
+        }
 
         // Add a copy button to each highlighted code block (preview only —
         // the export path builds its HTML separately and stays button-free).

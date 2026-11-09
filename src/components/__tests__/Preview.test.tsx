@@ -35,7 +35,13 @@ vi.mock('highlight.js/styles/github-dark.css', () => ({}));
 
 // Mock marked with a lightweight synchronous implementation that produces
 // the same checkbox HTML structure as the real marked library with GFM.
-vi.mock('marked', () => {
+// NOTE: it flattens nested lists (one <li> per line, no nested <ul>), so it
+// cannot exercise nesting — see previewHtmlProcessing.test.ts and
+// checkboxTogglePropagation.test.tsx, which run against the real marked.
+// The real lexer is kept so the checkbox→line mapping (taskListLines.ts) runs
+// its production path instead of its fallback.
+vi.mock('marked', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('marked')>();
   class Renderer {
     code: unknown;
   }
@@ -46,8 +52,8 @@ vi.mock('marked', () => {
     const fence = src.match(/^```(\w*)\n([\s\S]*?)\n?```\s*$/);
     if (fence) {
       const lang = fence[1];
-      if (lang === 'mermaid') {
-        return `<pre><code class="language-mermaid">${fence[2]}</code></pre>\n`;
+      if (lang === 'mermaid' || lang === 'plantuml') {
+        return `<pre><code class="language-${lang}">${fence[2]}</code></pre>\n`;
       }
       return `<pre><code class="hljs${lang ? ` language-${lang}` : ''}">${fence[2]}</code></pre>\n`;
     }
@@ -82,6 +88,7 @@ vi.mock('marked', () => {
 
   simpleMarked.Renderer = Renderer;
   simpleMarked.use = vi.fn();
+  simpleMarked.lexer = actual.marked.lexer;
 
   // Instance API used by parseMarkdownToHtml (extensions are not exercised
   // here — Preview tests assert the pipeline around marked, not marked itself).
@@ -94,12 +101,13 @@ vi.mock('marked', () => {
     }
   }
 
-  return { marked: simpleMarked, Marked, Lexer: class {} };
+  return { marked: simpleMarked, Marked, Lexer: actual.Lexer };
 });
 
 // Mock markdownRenderers for verifying render pipeline calls
 vi.mock('../../utils/markdownRenderers', () => ({
   renderCode: vi.fn(),
+  createCodeRenderer: vi.fn(() => vi.fn()),
   // Returns a marked table renderer; tables aren't exercised here, so a no-op
   // that yields empty output is sufficient.
   createTableRenderer: vi.fn(() => () => ''),
@@ -122,6 +130,12 @@ vi.mock('../../utils/markdownRenderers', () => ({
   reinitializeMermaid: vi.fn(),
 }));
 
+vi.mock('../../utils/plantumlRenderer', () => ({
+  PLANTUML_LANGS: ['plantuml', 'puml', 'uml'],
+  processPlantUmlBlocks: vi.fn().mockImplementation(async (html: string) => html),
+  contentHasPlantUml: vi.fn().mockImplementation((content: string) => /plantuml/.test(content)),
+}));
+
 // Mock MarpPreview component
 vi.mock('../MarpPreview', () => ({
   default: (props: Record<string, unknown>) => <div data-testid="marp-preview" data-content={props.content}>MarpPreview</div>,
@@ -137,6 +151,7 @@ import { variableApi } from '../../api/variableApi';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { processKatex, contentHasKatex, processMermaidBlocks, contentHasMermaid } from '../../utils/markdownRenderers';
+import { processPlantUmlBlocks, contentHasPlantUml } from '../../utils/plantumlRenderer';
 import { contentIsMarp } from '../../utils/marpRenderer';
 import { DEFAULT_RENDERING_SETTINGS } from '../../types/settings';
 
@@ -548,7 +563,7 @@ describe('MarkdownPreview – KaTeX', () => {
   it('T-PV-17: calls processKatex when enableKatex is true and content has math', async () => {
     await renderPreviewContent({
       content: 'Math: $E=mc^2$',
-      renderingSettings: { enableKatex: true, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: true, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(contentHasKatex).toHaveBeenCalled();
@@ -559,7 +574,7 @@ describe('MarkdownPreview – KaTeX', () => {
   it('T-PV-18: does not call processKatex when enableKatex is false', async () => {
     await renderPreviewContent({
       content: 'Math: $E=mc^2$',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(processKatex).not.toHaveBeenCalled();
@@ -580,7 +595,7 @@ describe('MarkdownPreview – Mermaid', () => {
   it('T-PV-19: calls processMermaidBlocks when enableMermaid is true and content has mermaid', async () => {
     await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: true, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: true, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(contentHasMermaid).toHaveBeenCalled();
@@ -591,10 +606,31 @@ describe('MarkdownPreview – Mermaid', () => {
   it('T-PV-20: does not call processMermaidBlocks when enableMermaid is false', async () => {
     await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(processMermaidBlocks).not.toHaveBeenCalled();
+  });
+
+  // T-PV-19b: PlantUML enabled triggers processPlantUmlBlocks
+  it('T-PV-19b: calls processPlantUmlBlocks when enablePlantUml is true and content has plantuml', async () => {
+    await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: true, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(contentHasPlantUml).toHaveBeenCalled();
+    expect(processPlantUmlBlocks).toHaveBeenCalled();
+  });
+
+  // T-PV-20b: PlantUML disabled does not call processPlantUmlBlocks
+  it('T-PV-20b: does not call processPlantUmlBlocks when enablePlantUml is false', async () => {
+    await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(processPlantUmlBlocks).not.toHaveBeenCalled();
   });
 });
 
@@ -658,10 +694,22 @@ describe('MarkdownPreview – code copy button', () => {
   it('T-PV-27: mermaid blocks get no copy button', async () => {
     const { container } = await renderPreviewContent({
       content: '```mermaid\ngraph TD\n```',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(container.querySelector('pre code.language-mermaid')).not.toBeNull();
+    expect(container.querySelector('.code-copy-button')).toBeNull();
+  });
+
+  // T-PV-27b: same for PlantUML blocks while the post-processor is enabled
+  // (with PlantUML off they are ordinary hljs code blocks, see renderCode tests).
+  it('T-PV-27b: plantuml blocks get no copy button', async () => {
+    const { container } = await renderPreviewContent({
+      content: '```plantuml\nA -> B\n```',
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: true, enableMarp: false, enableEmoji: false },
+    });
+
+    expect(container.querySelector('pre code.language-plantuml')).not.toBeNull();
     expect(container.querySelector('.code-copy-button')).toBeNull();
   });
 });
@@ -683,7 +731,7 @@ describe('MarkdownPreview – Marp detection', () => {
       <MarkdownPreview
         content="---\nmarp: true\n---\n# Slide"
         darkMode={false}
-        renderingSettings={{ enableKatex: false, enableMermaid: false, enableMarp: true, enableEmoji: false }}
+        renderingSettings={{ enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: true, enableEmoji: false }}
       />,
     );
 
@@ -696,7 +744,7 @@ describe('MarkdownPreview – Marp detection', () => {
 
     const { container, queryByTestId } = await renderPreviewContent({
       content: '---\nmarp: true\n---\n# Slide',
-      renderingSettings: { enableKatex: false, enableMermaid: false, enableMarp: false, enableEmoji: false },
+      renderingSettings: { enableKatex: false, enableMermaid: false, enablePlantUml: false, enableMarp: false, enableEmoji: false },
     });
 
     expect(queryByTestId('marp-preview')).toBeNull();

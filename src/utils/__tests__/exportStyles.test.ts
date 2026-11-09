@@ -139,8 +139,35 @@ describe('generateTableLayoutCSS', () => {
     const css = generateTableLayoutCSS('auto-wrap', '', '#ccc', '#fff');
     expect(css).toContain('table-layout: auto');
     expect(css).toContain('width: 100%');
-    expect(css).toContain('word-break: break-word');
     expect(css).not.toContain('max-width: 0');
+  });
+
+  it('keeps whole words as the column minimum and never wraps headers for "auto-wrap" (#575)', () => {
+    // `word-break: break-word` would let a column holding only `#322` / `P2`
+    // shrink to one character per line next to a long-text column. Cells (and
+    // everything inside them, to beat the preview wildcard) must use
+    // `word-break: normal` + `overflow-wrap: break-word`, and headers must not
+    // wrap so a short CJK header still reserves width for short CJK cells.
+    const css = generateTableLayoutCSS('auto-wrap', '.markdown-preview ', '#ccc', '#fff');
+    expect(css).not.toContain('word-break: break-word');
+    expect(css).toContain('.markdown-preview th, .markdown-preview td, .markdown-preview table *');
+    expect(css).toContain('word-break: normal');
+    expect(css).toContain('overflow-wrap: break-word');
+    expect(css).toMatch(/\.markdown-preview th \{\s*white-space: nowrap;/);
+    expect(css).not.toContain('td {\n            white-space: nowrap');
+    // Hyphenation points count toward the minimum width, so `Module` would
+    // still collapse to `Mod-` / `ule` under the document's `hyphens: auto`.
+    expect(css).toContain('hyphens: manual');
+  });
+
+  it('pins compact columns to their one-line width only for "auto-wrap" (#575)', () => {
+    const css = generateTableLayoutCSS('auto-wrap', '.markdown-preview ', '#ccc', '#fff');
+    expect(css).toMatch(
+      /\.markdown-preview th\.table-col-compact, \.markdown-preview td\.table-col-compact \{\s*white-space: nowrap;\s*width: 1%;/,
+    );
+    for (const mode of ['equal', 'auto-scroll'] as const) {
+      expect(generateTableLayoutCSS(mode, '', '#ccc', '#fff')).not.toContain('table-col-compact');
+    }
   });
 
   it('emits display:block + overflow-x:auto + white-space:nowrap for "auto-scroll"', () => {

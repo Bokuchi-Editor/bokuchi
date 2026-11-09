@@ -1,25 +1,20 @@
 import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
 import { maskCodeRegions, stripCodeRegions } from './codeRegions';
+import { PLANTUML_LANGS } from './plantumlRenderer';
+import { decodeCodeBlockEntities, escapeHtml, replaceFirst } from './htmlText';
+import { buildDiagramErrorHtml, createSerialLock } from './diagramCommon';
+import { COMPACT_COLUMN_CLASS, selectCompactColumns } from './tableCompactColumns';
 
-/** Languages handled by post-processors — skip syntax highlighting */
-const POST_PROCESSED_LANGS = new Set(['mermaid']);
-
-/**
- * Escape HTML-significant characters in untrusted text. Used for content that is
- * spliced into the preview HTML *after* DOMPurify has run (code blocks, and the
- * KaTeX/Mermaid error branches that echo raw user input), so it can never inject
- * live markup that bypasses sanitization.
- */
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+/** Languages always handled by a post-processor — skip syntax highlighting. */
+const ALWAYS_POST_PROCESSED_LANGS = ['mermaid'];
 
 /**
  * Build a custom `marked` table renderer that tags every cell with its source
  * coordinates (`data-bk-table` = Nth table in the document, `data-bk-row` =
  * -1 for the header / 0-based for body rows, `data-bk-col`). These let the
  * preview map a clicked cell back to the Markdown source for inline editing.
+ * Cells of compact columns also get COMPACT_COLUMN_CLASS (#575).
  *
  * A fresh renderer is created per parse so the table counter resets. Assign the
  * returned function to `renderer.table`; marked binds `this` to the renderer
@@ -31,12 +26,14 @@ export function createTableRenderer() {
     const ti = tableIndex++;
     const parser = this.parser;
     const aligns = token.align || [];
+    const compactColumns = selectCompactColumns(token);
 
     const renderCell = (cell: Tokens.TableCell, tag: 'th' | 'td', row: number, col: number): string => {
       const align = aligns[col];
       const alignAttr = align ? ` align="${align}"` : '';
+      const classAttr = compactColumns.has(col) ? ` class="${COMPACT_COLUMN_CLASS}"` : '';
       const content = parser.parseInline(cell.tokens);
-      return `<${tag}${alignAttr} data-bk-table="${ti}" data-bk-row="${row}" data-bk-col="${col}">${content}</${tag}>`;
+      return `<${tag}${alignAttr}${classAttr} data-bk-table="${ti}" data-bk-row="${row}" data-bk-col="${col}">${content}</${tag}>`;
     };
 
     let header = '';
@@ -104,43 +101,69 @@ function renderFilenameLabel(filename?: string): string {
   return filename ? `<span class="code-filename">${escapeHtml(filename)}</span>` : '';
 }
 
+export interface CodeRendererOptions {
+  /**
+   * Treat PlantUML fences as post-processed blocks. When the PlantUML setting
+   * is off the blocks are never replaced by a diagram, so they must stay
+   * ordinary code blocks (hljs styling, copy button, filename label) exactly
+   * as before the feature existed.
+   */
+  enablePlantUml?: boolean;
+}
+
+type CodeToken = { text: string; lang?: string; escaped?: boolean };
+
 /**
- * Custom code renderer for marked that applies syntax highlighting
- * and preserves post-processed language blocks (e.g. mermaid).
+ * Build the custom code renderer for marked: applies syntax highlighting and
+ * preserves post-processed language blocks (mermaid, and PlantUML when
+ * enabled) as bare `<pre><code class="language-…">` for the diagram engines.
  *
  * Supports the `language:filename` info-string syntax (#534): only the
  * language half reaches highlight.js, and the filename is emitted as a label
  * inside the `<pre>` (see {@link parseCodeFenceInfo}).
  */
-export function renderCode({ text, lang: info }: { text: string; lang?: string; escaped?: boolean }): string {
-  const { lang, filename } = parseCodeFenceInfo(info);
-  // Post-processed languages: output raw text with language class preserved.
-  // A filename is dropped here — the block is replaced by a rendered diagram.
-  if (lang && POST_PROCESSED_LANGS.has(lang)) {
-    const escaped = escapeHtml(text);
-    return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
-  }
-  const label = renderFilenameLabel(filename);
-  if (lang && hljs.getLanguage(lang)) {
-    try {
-      const highlighted = hljs.highlight(text, { language: lang }).value;
-      return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
-    } catch (err) {
-      console.warn('Highlight.js error:', err);
+export function createCodeRenderer({ enablePlantUml = false }: CodeRendererOptions = {}): (token: CodeToken) => string {
+  const postProcessedLangs = new Set<string>(
+    enablePlantUml ? [...ALWAYS_POST_PROCESSED_LANGS, ...PLANTUML_LANGS] : ALWAYS_POST_PROCESSED_LANGS,
+  );
+
+  return function renderCode({ text, lang: info }: CodeToken): string {
+    const { lang, filename } = parseCodeFenceInfo(info);
+    // Post-processed languages: output raw text with language class preserved.
+    // A filename is dropped here — the block is replaced by a rendered diagram.
+    if (lang && postProcessedLangs.has(lang)) {
+      const escaped = escapeHtml(text);
+      return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
     }
-  }
-  // No language (or unknown language): do not auto-detect. Emit plain,
-  // HTML-escaped code so the user's intent (unspecified = no highlighting)
-  // is respected.
-  const escaped = escapeHtml(text);
-  const langClass = lang ? ` language-${lang}` : '';
-  return `<pre>${label}<code class="hljs${langClass}">${escaped}</code></pre>`;
+    const label = renderFilenameLabel(filename);
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        const highlighted = hljs.highlight(text, { language: lang }).value;
+        return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
+      } catch (err) {
+        console.warn('Highlight.js error:', err);
+      }
+    }
+    // No language (or unknown language): do not auto-detect. Emit plain,
+    // HTML-escaped code so the user's intent (unspecified = no highlighting)
+    // is respected.
+    const escaped = escapeHtml(text);
+    const langClass = lang ? ` language-${lang}` : '';
+    return `<pre>${label}<code class="hljs${langClass}">${escaped}</code></pre>`;
+  };
 }
+
+/** Code renderer with every diagram post-processor enabled. */
+export const renderCode = createCodeRenderer({ enablePlantUml: true });
 
 // Lazy-loaded module caches
 let katexModule: typeof import('katex') | null = null;
 let mermaidModule: typeof import('mermaid') | null = null;
-let mermaidInitialized = false;
+// Theme mermaid is currently initialized with (null = never initialized).
+// Mermaid's theme is global state, so a caller that needs a specific theme
+// (the preview follows the app, the PDF export is always light) must be able
+// to switch it even when a previous caller left the other theme active.
+let mermaidDark: boolean | null = null;
 
 async function getKatex() {
   if (!katexModule) {
@@ -150,34 +173,38 @@ async function getKatex() {
   return katexModule.default;
 }
 
+function initializeMermaid(mermaid: typeof import('mermaid')['default'], dark: boolean) {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    securityLevel: 'strict',
+    // Mermaid 11.14.0 leaks the bomb-icon SVG into document.body on parse
+    // failure (throw happens before removeTempElements). We render our own
+    // error UI in processMermaidBlocks, so suppress Mermaid's built-in one.
+    suppressErrorRendering: true,
+  });
+  mermaidDark = dark;
+}
+
+/**
+ * Lazy-load mermaid and make sure it is initialized with the requested theme.
+ * `dark` undefined keeps whatever theme is active (light on first load).
+ */
 async function getMermaid(dark?: boolean) {
   if (!mermaidModule) {
     mermaidModule = await import('mermaid');
-    if (!mermaidInitialized) {
-      mermaidModule.default.initialize({
-        startOnLoad: false,
-        theme: dark ? 'dark' : 'default',
-        securityLevel: 'strict',
-        // Mermaid 11.14.0 leaks the bomb-icon SVG into document.body on parse
-        // failure (throw happens before removeTempElements). We render our own
-        // error UI in processMermaidBlocks, so suppress Mermaid's built-in one.
-        suppressErrorRendering: true,
-      });
-      mermaidInitialized = true;
-    }
+  }
+  const wanted = dark ?? mermaidDark ?? false;
+  if (wanted !== mermaidDark) {
+    initializeMermaid(mermaidModule.default, wanted);
   }
   return mermaidModule.default;
 }
 
 /** Re-initialize mermaid with the given theme (call when dark mode changes) */
 export function reinitializeMermaid(dark: boolean) {
-  if (mermaidModule && mermaidInitialized) {
-    mermaidModule.default.initialize({
-      startOnLoad: false,
-      theme: dark ? 'dark' : 'default',
-      securityLevel: 'strict',
-      suppressErrorRendering: true,
-    });
+  if (mermaidModule && mermaidDark !== null) {
+    initializeMermaid(mermaidModule.default, dark);
   }
 }
 
@@ -271,7 +298,7 @@ export async function processKatex(markdown: string): Promise<ProcessedKatex> {
 let mermaidCounter = 0;
 
 // Serialize mermaid renders to prevent concurrent DOM manipulation
-let mermaidLock: Promise<void> = Promise.resolve();
+const mermaidLock = createSerialLock();
 
 /**
  * Remove DOM elements that mermaid leaks into <body>.
@@ -305,19 +332,14 @@ function cleanupMermaidArtifacts(): void {
  * Replaces ```mermaid blocks with rendered SVG.
  * Serialized to prevent concurrent mermaid.render() calls which conflict.
  */
-export async function processMermaidBlocks(html: string, dark?: boolean): Promise<string> {
-  // Wait for any in-flight mermaid render to complete
-  const previousLock = mermaidLock;
-  let releaseLock: () => void;
-  mermaidLock = new Promise<void>((resolve) => { releaseLock = resolve; });
-  await previousLock;
-
-  try {
-    return await processMermaidBlocksInternal(html, dark);
-  } finally {
-    cleanupMermaidArtifacts();
-    releaseLock!();
-  }
+export function processMermaidBlocks(html: string, dark?: boolean): Promise<string> {
+  return mermaidLock.run(async () => {
+    try {
+      return await processMermaidBlocksInternal(html, dark);
+    } finally {
+      cleanupMermaidArtifacts();
+    }
+  });
 }
 
 async function processMermaidBlocksInternal(html: string, dark?: boolean): Promise<string> {
@@ -339,28 +361,18 @@ async function processMermaidBlocksInternal(html: string, dark?: boolean): Promi
 
   let result = html;
   for (const m of matches) {
-    // Decode HTML entities that marked may have introduced
-    const decoded = m.code
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
+    const decoded = decodeCodeBlockEntities(m.code);
 
     try {
       const id = `mermaid-${Date.now()}-${mermaidCounter++}`;
       const { svg } = await mermaid.render(id, decoded);
-      result = result.replace(m.full, `<div class="mermaid-diagram">${svg}</div>`);
+      result = replaceFirst(result, m.full, `<div class="mermaid-diagram">${svg}</div>`);
     } catch (err) {
       // Mermaid's parse-error message echoes the offending source line verbatim,
       // so it can carry attacker-controlled markup (e.g. `<img onerror>`). This
-      // HTML is spliced in AFTER DOMPurify has run, so escape it to prevent an
-      // XSS that bypasses sanitization.
-      const errorMsg = escapeHtml(err instanceof Error ? err.message : String(err));
-      result = result.replace(
-        m.full,
-        `<div class="mermaid-error" style="color:red;border:1px solid red;padding:8px;border-radius:4px;"><strong>Mermaid Error:</strong> ${errorMsg}</div>`
-      );
+      // HTML is spliced in AFTER DOMPurify has run; buildDiagramErrorHtml
+      // escapes it to prevent an XSS that bypasses sanitization.
+      result = replaceFirst(result, m.full, buildDiagramErrorHtml('mermaid-error', 'Mermaid Error', err));
     }
   }
 

@@ -450,6 +450,8 @@
       "enableKatexDescription": "Render math expressions using $...$ (inline) and $$...$$ (display) syntax.",
       "enableMermaid": "Mermaid (Diagrams)",
       "enableMermaidDescription": "Render diagrams from ```mermaid fenced code blocks (flowcharts, sequence diagrams, etc.).",
+      "enablePlantUml": "PlantUML (Diagrams)",
+      "enablePlantUmlDescription": "Render diagrams from ```plantuml, ```puml and ```uml fenced code blocks. Runs offline — no Java required.",
       "importExport": "Import/Export Settings",
       "exportSettings": "Export Settings",
       "importSettings": "Import Settings",
@@ -710,6 +712,7 @@
       "separator": ", ",
       "feature": {
         "mermaid": "Mermaid",
+        "plantuml": "PlantUML",
         "marp": "Marp",
         "katex": "KaTeX"
       }

@@ -450,6 +450,8 @@
       "enableKatexDescription": "Render ekspresi matematika menggunakan sintaks $...$ (sebaris) dan $$...$$ (blok).",
       "enableMermaid": "Mermaid (Diagram)",
       "enableMermaidDescription": "Render diagram dari blok kode ```mermaid (diagram alur, diagram urutan, dll.).",
+      "enablePlantUml": "PlantUML (Diagram)",
+      "enablePlantUmlDescription": "Merender diagram dari blok kode ```plantuml, ```puml, dan ```uml. Berjalan offline, tanpa Java.",
       "importExport": "Impor/Ekspor Pengaturan",
       "exportSettings": "Ekspor Pengaturan",
       "importSettings": "Impor Pengaturan",

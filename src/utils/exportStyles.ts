@@ -2,6 +2,7 @@ import { alpha } from '@mui/material/styles';
 import { TableLayoutMode, PreviewDirection, DEFAULT_PREVIEW_SETTINGS } from '../types/settings';
 import { getThemeByName, getPreviewTableHeaderStyle, ThemeName, type TableHeaderStyle } from '../themes';
 import { buildFontFamilyCss, DEFAULT_PREVIEW_FONT_STACK } from './fontFamily';
+import { COMPACT_COLUMN_CLASS } from './tableCompactColumns';
 
 /** Theme color palette for HTML export */
 export interface ExportThemeColors {
@@ -171,6 +172,24 @@ ${headerRule}`;
   }
 
   if (mode === 'auto-wrap') {
+    // Cells use `word-break: normal` + `overflow-wrap: break-word` (#575).
+    // `word-break: break-word` lets the layout engine break between ANY two
+    // characters when it computes a column's minimum width, so a column that
+    // only holds `#322` / `P2` collapses to one character per line as soon as a
+    // long-text column competes for space. `overflow-wrap: break-word` keeps
+    // whole words as the minimum and only splits a token that cannot fit the
+    // column at all. Headers never wrap, so a short CJK header (優先度) still
+    // reserves its width for short CJK body cells (小 / 中), which CSS may
+    // otherwise break anywhere. The `table *` rule defeats the preview-scope
+    // `.markdown-preview *` wildcard, which would re-enable per-character
+    // breaking inside <code> / <strong> within a cell. `hyphens: manual`
+    // overrides the document-level `hyphens: auto`: hyphenation points count
+    // as break opportunities for the minimum width, so `Module` would
+    // otherwise shrink to `Mod-` / `ule`.
+    //
+    // Compact columns (short content next to a long column, tagged by the
+    // table renderer) never wrap; `width: 1%` keeps them at exactly their
+    // one-line width so the remaining space flows to the long columns.
     return `
         ${tableSelector} {
             border-collapse: collapse;
@@ -178,15 +197,26 @@ ${headerRule}`;
             max-width: 100%;
             margin: 1em 0;
             table-layout: auto;
-            word-break: break-word;
+        }
+
+        ${cellSelector}, ${tableSelector} * {
+            word-break: normal;
             overflow-wrap: break-word;
+            hyphens: manual;
         }
 
         ${cellSelector} {
             border: 1px solid ${borderColor};
             padding: 6px 13px;
-            word-break: break-word;
-            overflow-wrap: break-word;
+        }
+
+        ${headerSelector} {
+            white-space: nowrap;
+        }
+
+        ${prefix}th.${COMPACT_COLUMN_CLASS}, ${prefix}td.${COMPACT_COLUMN_CLASS} {
+            white-space: nowrap;
+            width: 1%;
         }
 ${headerRule}`;
   }
@@ -408,7 +438,7 @@ const PRINT_CSS = `
             }
             body { max-width: none; margin: 0; padding: 0; }
             pre, blockquote, table, figure, img,
-            .markdown-alert, .mermaid-diagram, .katex-display {
+            .markdown-alert, .mermaid-diagram, .plantuml-diagram, .katex-display {
                 break-inside: avoid;
             }
             tr, td, th { break-inside: avoid; }

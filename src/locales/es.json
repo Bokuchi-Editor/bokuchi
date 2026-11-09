@@ -450,6 +450,8 @@
       "enableKatexDescription": "Renderizar expresiones matemáticas usando la sintaxis $...$ (en línea) y $$...$$ (bloque).",
       "enableMermaid": "Mermaid (Diagramas)",
       "enableMermaidDescription": "Renderizar diagramas desde bloques de código ```mermaid (diagramas de flujo, diagramas de secuencia, etc.).",
+      "enablePlantUml": "PlantUML (Diagramas)",
+      "enablePlantUmlDescription": "Renderiza diagramas desde bloques de código ```plantuml, ```puml y ```uml. Funciona sin conexión, no requiere Java.",
       "importExport": "Importar/Exportar configuración",
       "exportSettings": "Exportar configuración",
       "importSettings": "Importar configuración",

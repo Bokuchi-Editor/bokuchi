@@ -37,7 +37,7 @@ There are plenty of Markdown editors out there. Bokuchi exists because:
 - **Live preview** with synchronized scrolling, interactive checkboxes, and a Markdown toolbar
 - **Variable system**: define `{{variables}}` per file or globally and reuse them across documents
 - **Marp presentations**: preview slide decks with `marp: true` front-matter, including custom themes
-- **Math & diagrams**: KaTeX expressions and Mermaid diagrams out of the box
+- **Math & diagrams**: KaTeX expressions, Mermaid and PlantUML diagrams out of the box (PlantUML runs offline, no Java required)
 - **Lightweight**: small download size and instant startup — no bundled browser engine, thanks to Tauri
 - **Tabs** with session restore and external file-change detection
 - **9 built-in themes** (light and dark) — or create your own custom theme
