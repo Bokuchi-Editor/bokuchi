@@ -650,21 +650,33 @@
       "improvement": "改善"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "プレビューの右から左への表示",
-        "description": "プレビューと HTML/PDF エクスポートが、アラビア語などの右から左へ書く文字に対応しました。プレビューのヘッダーまたは「設定 > エディター」から「自動」「左から右」「右から左」を選べます。"
+      "plantuml": {
+        "title": "PlantUML 図の表示",
+        "description": "```plantuml・```puml・```uml のコードブロックを、プレビュー、Marp スライド、HTML/PDF エクスポートで図として表示します。完全にオフラインで動作します。初期状態ではオフなので、「設定 > 高度な設定 > レンダリング拡張」で有効にしてください。"
       },
-      "codeBlockFilename": {
-        "title": "コードブロックのファイル名表示",
-        "description": "```ts:src/index.ts のように書くと、プレビューと HTML/PDF エクスポートでコードブロックにファイル名のラベルを表示します。"
+      "tableColumnWrapping": {
+        "title": "テーブルの列の折り返しを改善",
+        "description": "長い文章の列があるテーブルで、Issue 番号や優先度のような短い列が 1 文字ずつ折り返されなくなりました。プレビューと HTML/PDF エクスポートで、短い列は 1 行の幅を保ちます。"
       },
-      "editorThemeSync": {
-        "title": "エディターの配色がテーマに追従",
-        "description": "エディターの背景色と文字色が、カスタムテーマを含む選択中のテーマに合うようになりました。Default・Pastel・Vivid ではプレビューのテーブルヘッダーにもテーマの色が反映されます。"
+      "nestedTaskLists": {
+        "title": "入れ子のタスクリスト",
+        "description": "子項目を持つチェックボックスがグレーアウトしてクリックできず、入れ子の項目をクリックすると別の行が切り替わることがありました。すべての階層がクリック可能なチェックボックスになり、対応する行だけを切り替えます。"
+      },
+      "pdfDiagramTheme": {
+        "title": "PDF エクスポートの図はライト表示に",
+        "description": "ダークモード時に PDF エクスポートの Mermaid 図がダークテーマで描かれなくなりました。PDF の白い背景に合わせて、図は常にライトテーマで出力されます。"
+      },
+      "searchShortcutFocus": {
+        "title": "検索ショートカットでパネルに再フォーカス",
+        "description": "検索パネルが開いた状態で Ctrl/Cmd+F を押すと、検索欄にフォーカスが戻り、現在の検索語が選択されます。Ctrl/Cmd+H では置換の行が開きます。"
+      },
+      "starOnGitHub": {
+        "title": "GitHub で Bokuchi にスターする",
+        "description": "ヘルプに GitHub で Bokuchi にスターするリンクを追加しました。しばらく使い込んだあとに、小さなカードが一度だけお願いすることもあります。利用状況の追跡や送信は行いません。"
       },
       "libraryUpdates": {
         "title": "ライブラリの更新",
-        "description": "React、Tauri、DOMPurify を含む内部ライブラリを更新し、安定性とセキュリティを向上させました。"
+        "description": "KaTeX、React、Tauri、DOMPurify を含む内部ライブラリを更新し、安定性とセキュリティを向上させました。"
       }
     }
   },

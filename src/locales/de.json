@@ -627,21 +627,33 @@
       "improvement": "Verbesserung"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Vorschau von rechts nach links",
-        "description": "Die Vorschau und der HTML/PDF-Export unterstützen jetzt Text von rechts nach links, etwa Arabisch. Wählen Sie „Automatisch“, „Links nach rechts“ oder „Rechts nach links“ in der Kopfzeile der Vorschau oder unter Einstellungen > Editor."
+      "plantuml": {
+        "title": "PlantUML-Diagramme",
+        "description": "Codeblöcke mit ```plantuml, ```puml und ```uml werden jetzt in der Vorschau, in Marp-Folien und im HTML/PDF-Export als Diagramme dargestellt – vollständig offline. Standardmäßig deaktiviert; einschalten unter Einstellungen > Erweitert > Rendering-Erweiterungen."
       },
-      "codeBlockFilename": {
-        "title": "Dateinamen an Codeblöcken",
-        "description": "Mit ```ts:src/index.ts wird in der Vorschau und im HTML/PDF-Export ein Dateiname über dem Codeblock angezeigt."
+      "tableColumnWrapping": {
+        "title": "Besserer Zeilenumbruch in Tabellenspalten",
+        "description": "In Tabellen mit einer langen Textspalte werden kurze Spalten wie Issue-Nummern oder Prioritäten nicht mehr zeichenweise umbrochen. Sie behalten ihre einzeilige Breite, in der Vorschau und im HTML/PDF-Export."
       },
-      "editorThemeSync": {
-        "title": "Editorfarben folgen dem Design",
-        "description": "Hintergrund und Textfarben des Editors passen sich jetzt dem gewählten Design an, auch bei benutzerdefinierten Designs. Tabellenköpfe in der Vorschau übernehmen in Default, Pastel und Vivid ebenfalls die Designfarbe."
+      "nestedTaskLists": {
+        "title": "Verschachtelte Aufgabenlisten",
+        "description": "Kontrollkästchen mit Unterpunkten waren ausgegraut und nicht anklickbar, und ein Klick auf einen verschachtelten Punkt konnte die falsche Zeile umschalten. Jetzt ist jede Ebene ein anklickbares Kontrollkästchen, das genau seine eigene Zeile umschaltet."
+      },
+      "pdfDiagramTheme": {
+        "title": "Helle Diagramme im PDF-Export",
+        "description": "Mermaid-Diagramme im PDF-Export verwenden im dunklen Modus der App nicht mehr das dunkle Design. PDFs erhalten immer helle Diagramme, passend zum weißen Hintergrund."
+      },
+      "searchShortcutFocus": {
+        "title": "Suchkürzel fokussiert das Panel erneut",
+        "description": "Strg/Cmd+F bei bereits geöffnetem Suchpanel setzt den Fokus jetzt zurück ins Suchfeld und markiert den aktuellen Suchbegriff. Strg/Cmd+H klappt die Ersetzen-Zeile auf."
+      },
+      "starOnGitHub": {
+        "title": "Bokuchi auf GitHub einen Stern geben",
+        "description": "Die Hilfe enthält jetzt einen Link, um Bokuchi auf GitHub einen Stern zu geben. Nach einiger Zeit der Nutzung kann außerdem einmalig eine kleine Karte danach fragen. Es wird nichts erfasst oder gesendet."
       },
       "libraryUpdates": {
         "title": "Bibliotheks-Updates",
-        "description": "Interne Bibliotheken, darunter React, Tauri und DOMPurify, wurden für mehr Stabilität und Sicherheit aktualisiert."
+        "description": "Interne Bibliotheken, darunter KaTeX, React, Tauri und DOMPurify, wurden für mehr Stabilität und Sicherheit aktualisiert."
       }
     }
   },

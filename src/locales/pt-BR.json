@@ -627,21 +627,33 @@
       "improvement": "Melhoria"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Visualização da direita para a esquerda",
-        "description": "A visualização e a exportação em HTML/PDF agora aceitam texto da direita para a esquerda, como o árabe. Escolha Automática, Da esquerda para a direita ou Da direita para a esquerda no cabeçalho da visualização ou em Configurações > Editor."
+      "plantuml": {
+        "title": "Diagramas PlantUML",
+        "description": "Os blocos de código ```plantuml, ```puml e ```uml agora são exibidos como diagramas na visualização, nos slides Marp e na exportação em HTML/PDF, totalmente offline. Desativado por padrão; ative em Configurações > Avançado > Extensões de renderização."
       },
-      "codeBlockFilename": {
-        "title": "Nomes de arquivo em blocos de código",
-        "description": "Escreva ```ts:src/index.ts para exibir um rótulo com o nome do arquivo no bloco de código, na visualização e na exportação em HTML/PDF."
+      "tableColumnWrapping": {
+        "title": "Melhor quebra de linha nas colunas de tabela",
+        "description": "Em tabelas com uma coluna de texto longo, colunas curtas como números de issue ou prioridades não são mais quebradas em um caractere por linha. Elas mantêm a largura de uma linha, na visualização e na exportação em HTML/PDF."
       },
-      "editorThemeSync": {
-        "title": "As cores do editor seguem o tema",
-        "description": "O fundo e as cores do texto do editor agora acompanham o tema selecionado, incluindo temas personalizados. Os cabeçalhos de tabela da visualização também adotam a cor do tema em Default, Pastel e Vivid."
+      "nestedTaskLists": {
+        "title": "Listas de tarefas aninhadas",
+        "description": "Caixas de seleção com subitens apareciam acinzentadas e não podiam ser marcadas, e clicar em um item aninhado podia alternar a linha errada. Agora cada nível é uma caixa clicável que alterna exatamente a sua própria linha."
+      },
+      "pdfDiagramTheme": {
+        "title": "Diagramas claros na exportação em PDF",
+        "description": "Os diagramas Mermaid da exportação em PDF não usam mais o tema escuro quando o aplicativo está no modo escuro. Os PDFs sempre recebem diagramas claros, combinando com o fundo branco."
+      },
+      "searchShortcutFocus": {
+        "title": "O atalho de pesquisa devolve o foco ao painel",
+        "description": "Pressionar Ctrl/Cmd+F com o painel de pesquisa já aberto agora devolve o foco ao campo de pesquisa e seleciona o termo atual. Ctrl/Cmd+H expande a linha de substituição."
+      },
+      "starOnGitHub": {
+        "title": "Dar uma estrela ao Bokuchi no GitHub",
+        "description": "A ajuda agora tem um link para dar uma estrela ao Bokuchi no GitHub. Depois de algum tempo de uso, um pequeno cartão também pode pedir isso uma vez. Nada é rastreado nem enviado."
       },
       "libraryUpdates": {
         "title": "Atualizações de bibliotecas",
-        "description": "Bibliotecas internas, incluindo React, Tauri e DOMPurify, foram atualizadas para maior estabilidade e segurança."
+        "description": "Bibliotecas internas, incluindo KaTeX, React, Tauri e DOMPurify, foram atualizadas para maior estabilidade e segurança."
       }
     }
   },

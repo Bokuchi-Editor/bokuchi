@@ -627,21 +627,33 @@
       "improvement": "Peningkatan"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Pratinjau Kanan ke Kiri",
-        "description": "Pratinjau dan ekspor HTML/PDF kini mendukung teks kanan ke kiri seperti bahasa Arab. Pilih Otomatis, Kiri ke Kanan, atau Kanan ke Kiri dari header pratinjau atau Pengaturan > Editor."
+      "plantuml": {
+        "title": "Diagram PlantUML",
+        "description": "Blok kode ```plantuml, ```puml, dan ```uml kini dirender sebagai diagram di pratinjau, slide Marp, dan ekspor HTML/PDF, sepenuhnya offline. Nonaktif secara default; aktifkan di Pengaturan > Lanjutan > Ekstensi Rendering."
       },
-      "codeBlockFilename": {
-        "title": "Nama File pada Blok Kode",
-        "description": "Tulis ```ts:src/index.ts untuk menampilkan label nama file pada blok kode, di pratinjau maupun ekspor HTML/PDF."
+      "tableColumnWrapping": {
+        "title": "Pemenggalan Kolom Tabel yang Lebih Baik",
+        "description": "Pada tabel dengan kolom teks panjang, kolom pendek seperti nomor issue atau prioritas tidak lagi terpenggal menjadi satu karakter per baris. Kolom tersebut tetap selebar satu baris, di pratinjau maupun ekspor HTML/PDF."
       },
-      "editorThemeSync": {
-        "title": "Warna Editor Mengikuti Tema",
-        "description": "Latar belakang dan warna teks editor kini menyesuaikan tema yang dipilih, termasuk tema kustom. Header tabel di pratinjau juga mengikuti warna tema pada Default, Pastel, dan Vivid."
+      "nestedTaskLists": {
+        "title": "Daftar Tugas Bersarang",
+        "description": "Kotak centang yang memiliki sub-item tampil abu-abu dan tidak bisa diklik, dan mengklik item bersarang bisa mengubah baris yang salah. Kini setiap tingkat adalah kotak centang yang bisa diklik dan hanya mengubah barisnya sendiri."
+      },
+      "pdfDiagramTheme": {
+        "title": "Diagram Terang pada Ekspor PDF",
+        "description": "Diagram Mermaid pada ekspor PDF tidak lagi memakai tema gelap saat aplikasi dalam mode gelap. PDF selalu mendapat diagram terang agar sesuai dengan latar putihnya."
+      },
+      "searchShortcutFocus": {
+        "title": "Pintasan Pencarian Memfokuskan Ulang Panel",
+        "description": "Menekan Ctrl/Cmd+F saat panel pencarian sudah terbuka kini mengembalikan fokus ke kolom pencarian dan memilih kata kunci saat ini. Ctrl/Cmd+H membuka baris ganti."
+      },
+      "starOnGitHub": {
+        "title": "Beri Bokuchi Bintang di GitHub",
+        "description": "Bantuan kini memiliki tautan untuk memberi Bokuchi bintang di GitHub. Setelah Bokuchi dipakai beberapa waktu, sebuah kartu kecil juga bisa memintanya sekali. Tidak ada yang dilacak atau dikirim ke mana pun."
       },
       "libraryUpdates": {
         "title": "Pembaruan Pustaka",
-        "description": "Memperbarui pustaka internal, termasuk React, Tauri, dan DOMPurify, demi stabilitas dan keamanan."
+        "description": "Memperbarui pustaka internal, termasuk KaTeX, React, Tauri, dan DOMPurify, demi stabilitas dan keamanan."
       }
     }
   },

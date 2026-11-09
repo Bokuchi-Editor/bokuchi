@@ -25,22 +25,37 @@ export interface WhatsNewContent {
 // Edit this object for each release
 // ============================================================
 export const whatsNewContent: WhatsNewContent = {
-  version: '1.2.0',
+  version: '1.2.1',
   changes: [
     {
       type: 'feature',
-      titleKey: 'whatsNew.changes.rtlPreview.title',
-      descriptionKey: 'whatsNew.changes.rtlPreview.description',
-    },
-    {
-      type: 'feature',
-      titleKey: 'whatsNew.changes.codeBlockFilename.title',
-      descriptionKey: 'whatsNew.changes.codeBlockFilename.description',
+      titleKey: 'whatsNew.changes.plantuml.title',
+      descriptionKey: 'whatsNew.changes.plantuml.description',
     },
     {
       type: 'improvement',
-      titleKey: 'whatsNew.changes.editorThemeSync.title',
-      descriptionKey: 'whatsNew.changes.editorThemeSync.description',
+      titleKey: 'whatsNew.changes.tableColumnWrapping.title',
+      descriptionKey: 'whatsNew.changes.tableColumnWrapping.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.nestedTaskLists.title',
+      descriptionKey: 'whatsNew.changes.nestedTaskLists.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.pdfDiagramTheme.title',
+      descriptionKey: 'whatsNew.changes.pdfDiagramTheme.description',
+    },
+    {
+      type: 'fix',
+      titleKey: 'whatsNew.changes.searchShortcutFocus.title',
+      descriptionKey: 'whatsNew.changes.searchShortcutFocus.description',
+    },
+    {
+      type: 'improvement',
+      titleKey: 'whatsNew.changes.starOnGitHub.title',
+      descriptionKey: 'whatsNew.changes.starOnGitHub.description',
     },
     {
       type: 'improvement',

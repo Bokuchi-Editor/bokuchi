@@ -627,21 +627,33 @@
       "improvement": "Mejora"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Vista previa de derecha a izquierda",
-        "description": "La vista previa y la exportación a HTML/PDF ahora admiten texto de derecha a izquierda, como el árabe. Elige «Automática», «De izquierda a derecha» o «De derecha a izquierda» en el encabezado de la vista previa o en Configuración > Editor."
+      "plantuml": {
+        "title": "Diagramas PlantUML",
+        "description": "Los bloques de código ```plantuml, ```puml y ```uml ahora se muestran como diagramas en la vista previa, en las diapositivas Marp y en la exportación a HTML/PDF, totalmente sin conexión. Desactivado por defecto; actívalo en Configuración > Avanzado > Extensiones de renderizado."
       },
-      "codeBlockFilename": {
-        "title": "Nombres de archivo en bloques de código",
-        "description": "Escribe ```ts:src/index.ts para mostrar una etiqueta con el nombre del archivo en el bloque de código, en la vista previa y en la exportación a HTML/PDF."
+      "tableColumnWrapping": {
+        "title": "Mejor ajuste de columnas en tablas",
+        "description": "En tablas con una columna de texto largo, las columnas cortas, como números de issue o prioridades, ya no se parten en un carácter por línea. Conservan su ancho de una sola línea, en la vista previa y en la exportación a HTML/PDF."
       },
-      "editorThemeSync": {
-        "title": "Los colores del editor siguen el tema",
-        "description": "El fondo y los colores del texto del editor ahora coinciden con el tema seleccionado, incluidos los temas personalizados. Los encabezados de tabla de la vista previa también adoptan el color del tema en Default, Pastel y Vivid."
+      "nestedTaskLists": {
+        "title": "Listas de tareas anidadas",
+        "description": "Las casillas con subelementos aparecían en gris y no se podían marcar, y al pulsar un elemento anidado podía cambiarse la línea equivocada. Ahora cada nivel es una casilla que se puede marcar y que cambia exactamente su propia línea."
+      },
+      "pdfDiagramTheme": {
+        "title": "Diagramas claros en la exportación a PDF",
+        "description": "Los diagramas Mermaid de la exportación a PDF ya no usan el tema oscuro cuando la aplicación está en modo oscuro. Los PDF siempre obtienen diagramas claros, a tono con su fondo blanco."
+      },
+      "searchShortcutFocus": {
+        "title": "El atajo de búsqueda vuelve a enfocar el panel",
+        "description": "Pulsar Ctrl/Cmd+F con el panel de búsqueda ya abierto devuelve el foco al campo de búsqueda y selecciona el término actual. Ctrl/Cmd+H despliega la fila de reemplazo."
+      },
+      "starOnGitHub": {
+        "title": "Dar una estrella a Bokuchi en GitHub",
+        "description": "La ayuda ahora incluye un enlace para dar una estrella a Bokuchi en GitHub. Tras usar Bokuchi durante un tiempo, una pequeña tarjeta también puede pedírtelo una vez. No se rastrea ni se envía nada."
       },
       "libraryUpdates": {
         "title": "Actualización de bibliotecas",
-        "description": "Se actualizaron bibliotecas internas, incluidas React, Tauri y DOMPurify, para mejorar la estabilidad y la seguridad."
+        "description": "Se actualizaron bibliotecas internas, incluidas KaTeX, React, Tauri y DOMPurify, para mejorar la estabilidad y la seguridad."
       }
     }
   },

@@ -650,21 +650,33 @@
       "improvement": "改进"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "从右到左预览",
-        "description": "预览及 HTML/PDF 导出现已支持阿拉伯语等从右到左书写的文字。可在预览标题栏或“设置 > 编辑器”中选择“自动”“从左到右”或“从右到左”。"
+      "plantuml": {
+        "title": "PlantUML 图表",
+        "description": "```plantuml、```puml 和 ```uml 代码块现在可在预览、Marp 幻灯片及 HTML/PDF 导出中渲染为图表，完全离线运行。默认关闭，可在“设置 > 高级 > 渲染扩展”中启用。"
       },
-      "codeBlockFilename": {
-        "title": "代码块文件名",
-        "description": "写成 ```ts:src/index.ts，即可在预览及 HTML/PDF 导出中为代码块显示文件名标签。"
+      "tableColumnWrapping": {
+        "title": "改进表格列的换行",
+        "description": "在含有长文本列的表格中，Issue 编号、优先级等短列不再被压成每行一个字符。在预览及 HTML/PDF 导出中，短列会保持单行宽度。"
       },
-      "editorThemeSync": {
-        "title": "编辑器配色跟随主题",
-        "description": "编辑器的背景色和文字颜色现在会与所选主题保持一致，包括自定义主题。在 Default、Pastel 和 Vivid 中，预览的表头也会采用主题颜色。"
+      "nestedTaskLists": {
+        "title": "嵌套任务列表",
+        "description": "带有子项的复选框此前显示为灰色且无法点击，点击嵌套项还可能切换到错误的行。现在每一层都是可点击的复选框，并且只切换其对应的那一行。"
+      },
+      "pdfDiagramTheme": {
+        "title": "PDF 导出中的图表使用浅色主题",
+        "description": "应用处于深色模式时，PDF 导出中的 Mermaid 图表不再使用深色主题。为匹配 PDF 的白色背景，图表始终以浅色主题输出。"
+      },
+      "searchShortcutFocus": {
+        "title": "搜索快捷键重新聚焦面板",
+        "description": "搜索面板已打开时按 Ctrl/Cmd+F，焦点会回到搜索框并选中当前搜索词。Ctrl/Cmd+H 会展开替换行。"
+      },
+      "starOnGitHub": {
+        "title": "在 GitHub 上为 Bokuchi 点星",
+        "description": "帮助中新增了在 GitHub 上为 Bokuchi 点星的链接。在使用一段时间后，也可能有一张小卡片提醒一次。不会跟踪或发送任何数据。"
       },
       "libraryUpdates": {
         "title": "库更新",
-        "description": "更新了包括 React、Tauri 和 DOMPurify 在内的内部库，以提升稳定性和安全性。"
+        "description": "更新了包括 KaTeX、React、Tauri 和 DOMPurify 在内的内部库，以提升稳定性和安全性。"
       }
     }
   },

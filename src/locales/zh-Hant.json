@@ -627,21 +627,33 @@
       "improvement": "改進"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "由右至左預覽",
-        "description": "預覽與 HTML/PDF 匯出現已支援阿拉伯文等由右至左書寫的文字。可在預覽標題列或「設定 > 編輯器」中選擇「自動」、「由左至右」或「由右至左」。"
+      "plantuml": {
+        "title": "PlantUML 圖表",
+        "description": "```plantuml、```puml 與 ```uml 程式碼區塊現在可在預覽、Marp 投影片與 HTML/PDF 匯出中渲染為圖表，完全離線運作。預設為關閉，可在「設定 > 進階 > 渲染擴充」中啟用。"
       },
-      "codeBlockFilename": {
-        "title": "程式碼區塊檔名",
-        "description": "寫成 ```ts:src/index.ts，即可在預覽與 HTML/PDF 匯出中為程式碼區塊顯示檔名標籤。"
+      "tableColumnWrapping": {
+        "title": "改善表格欄位的換行",
+        "description": "在含有長文字欄位的表格中，Issue 編號、優先度等較短的欄位不再被壓成每行一個字。在預覽與 HTML/PDF 匯出中，短欄位會保持單行寬度。"
       },
-      "editorThemeSync": {
-        "title": "編輯器配色跟隨主題",
-        "description": "編輯器的背景色與文字顏色現在會與所選主題一致，包括自訂主題。在 Default、Pastel 和 Vivid 中，預覽的表格標題也會套用主題顏色。"
+      "nestedTaskLists": {
+        "title": "巢狀任務清單",
+        "description": "含有子項目的核取方塊先前會顯示為灰色且無法點選，點選巢狀項目時也可能切換到錯誤的行。現在每一層都是可點選的核取方塊，且只會切換對應的那一行。"
+      },
+      "pdfDiagramTheme": {
+        "title": "PDF 匯出中的圖表使用淺色主題",
+        "description": "應用程式處於深色模式時，PDF 匯出中的 Mermaid 圖表不再使用深色主題。為配合 PDF 的白色背景，圖表一律以淺色主題輸出。"
+      },
+      "searchShortcutFocus": {
+        "title": "搜尋快速鍵重新聚焦面板",
+        "description": "搜尋面板已開啟時按下 Ctrl/Cmd+F，焦點會回到搜尋欄並選取目前的搜尋字串。Ctrl/Cmd+H 則會展開取代列。"
+      },
+      "starOnGitHub": {
+        "title": "在 GitHub 上為 Bokuchi 給星",
+        "description": "說明中新增了在 GitHub 上為 Bokuchi 給星的連結。使用一段時間後，也可能會有一張小卡片提醒一次。不會追蹤或傳送任何資料。"
       },
       "libraryUpdates": {
         "title": "函式庫更新",
-        "description": "更新了包括 React、Tauri 和 DOMPurify 在內的內部函式庫，以提升穩定性與安全性。"
+        "description": "更新了包括 KaTeX、React、Tauri 和 DOMPurify 在內的內部函式庫，以提升穩定性與安全性。"
       }
     }
   },

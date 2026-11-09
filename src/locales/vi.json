@@ -627,21 +627,33 @@
       "improvement": "Cải tiến"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Xem trước từ phải sang trái",
-        "description": "Phần xem trước và xuất HTML/PDF nay hỗ trợ văn bản từ phải sang trái như tiếng Ả Rập. Chọn Tự động, Trái sang phải hoặc Phải sang trái ở tiêu đề phần xem trước hoặc trong Cài đặt > Trình soạn thảo."
+      "plantuml": {
+        "title": "Sơ đồ PlantUML",
+        "description": "Các khối mã ```plantuml, ```puml và ```uml nay được hiển thị dưới dạng sơ đồ trong phần xem trước, trang chiếu Marp và khi xuất HTML/PDF, hoàn toàn ngoại tuyến. Mặc định tắt; bật trong Cài đặt > Nâng cao > Tiện ích mở rộng kết xuất."
       },
-      "codeBlockFilename": {
-        "title": "Tên tệp trên khối mã",
-        "description": "Viết ```ts:src/index.ts để hiển thị nhãn tên tệp trên khối mã, trong phần xem trước và khi xuất HTML/PDF."
+      "tableColumnWrapping": {
+        "title": "Cải thiện ngắt dòng cột trong bảng",
+        "description": "Trong bảng có một cột văn bản dài, các cột ngắn như số issue hay mức ưu tiên không còn bị ngắt thành mỗi dòng một ký tự. Chúng giữ nguyên độ rộng một dòng, trong phần xem trước và khi xuất HTML/PDF."
       },
-      "editorThemeSync": {
-        "title": "Màu trình soạn thảo theo chủ đề",
-        "description": "Màu nền và màu chữ của trình soạn thảo nay khớp với chủ đề đã chọn, kể cả chủ đề tùy chỉnh. Tiêu đề bảng trong phần xem trước cũng nhận màu chủ đề với Default, Pastel và Vivid."
+      "nestedTaskLists": {
+        "title": "Danh sách công việc lồng nhau",
+        "description": "Hộp kiểm có mục con từng bị mờ và không bấm được, và bấm vào mục lồng nhau có thể chuyển nhầm dòng. Nay mọi cấp đều là hộp kiểm bấm được và chỉ chuyển đúng dòng của nó."
+      },
+      "pdfDiagramTheme": {
+        "title": "Sơ đồ sáng khi xuất PDF",
+        "description": "Sơ đồ Mermaid khi xuất PDF không còn dùng chủ đề tối khi ứng dụng ở chế độ tối. PDF luôn nhận sơ đồ sáng để khớp với nền trắng."
+      },
+      "searchShortcutFocus": {
+        "title": "Phím tắt tìm kiếm đưa tiêu điểm về bảng tìm kiếm",
+        "description": "Nhấn Ctrl/Cmd+F khi bảng tìm kiếm đã mở nay đưa tiêu điểm về ô tìm kiếm và chọn từ khóa hiện tại. Ctrl/Cmd+H mở rộng hàng thay thế."
+      },
+      "starOnGitHub": {
+        "title": "Gắn sao cho Bokuchi trên GitHub",
+        "description": "Trợ giúp nay có liên kết để gắn sao cho Bokuchi trên GitHub. Sau một thời gian sử dụng, một thẻ nhỏ cũng có thể nhắc một lần. Không theo dõi hay gửi đi bất kỳ dữ liệu nào."
       },
       "libraryUpdates": {
         "title": "Cập nhật thư viện",
-        "description": "Đã cập nhật các thư viện bên trong, bao gồm React, Tauri và DOMPurify, để tăng độ ổn định và bảo mật."
+        "description": "Đã cập nhật các thư viện bên trong, bao gồm KaTeX, React, Tauri và DOMPurify, để tăng độ ổn định và bảo mật."
       }
     }
   },

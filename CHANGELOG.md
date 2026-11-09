@@ -5,13 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.0...HEAD)
+## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.1...HEAD)
+
+## [1.2.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.0...v1.2.1) - 2026-11-10
 
 ### Added
 
 - PlantUML diagrams: ```` ```plantuml ````, ```` ```puml ```` and ```` ```uml ```` fenced blocks render as inline SVG in the preview, in Marp slides, and in HTML/PDF exports, following the light/dark mode like Mermaid. The engine is the official PlantUML compiled to JavaScript (`@plantuml/core`), so it runs offline with no Java and no server. Off by default; enable it in Settings > Advanced > Rendering Extensions (the preview shows a hint when a document uses it). `!theme` and stdlib includes (`!include <C4/...>`) are not bundled. (#539)
 - A small, non-modal card asking for a GitHub star. It appears at the bottom-right shortly after a manual save, and only once the app has clearly been in use (manual saves on at least 5 different days and at least 30 manual saves). "Later" or closing it backs off for 30 days and doubles the required saves, the third decline retires it for good, and "Don't show again" is offered from the second time. It stays out of the way in 臨 (Rin) focus mode, while a dialog or menu is open, and during the first session after an update. Opening GitHub counts as done. Nothing is tracked or sent anywhere; the state lives in the local app store.
 - Help now has a permanent "Star Bokuchi on GitHub" link at the bottom of its page list.
+
+### Changed
+
+- Tables in auto-wrap mode: cells now break between words only (`word-break: normal` + `overflow-wrap: break-word`, manual hyphenation), headers never wrap, and columns whose content is short (issue numbers, priorities, 2–4 character labels) are tagged as compact and pinned to their one-line width, so a long-text column no longer squeezes them to one character per line. Applies to the preview and HTML/PDF exports. (#575)
+- Simplified Chinese: added the missing table editor and export strings.
+- Updated dependencies, including `katex` (0.16.22 → 0.19.1, with an `overrides` entry so the copies nested in Mermaid and Marp follow), the `react` group (19.3.0 → 19.3.1), `dompurify` (3.4.16 → 3.4.17), `@tauri-apps/api` and the Tauri plugins, the Rust crates `tauri` (2.12.2 → 2.12.5), `tauri-build`, `tauri-plugin-dialog`, `tauri-plugin-single-instance` and `lopdf` (0.36 → 0.42), plus `vite`, `eslint`, the `typescript-eslint` group and the `vitest` group.
 
 ### Fixed
 

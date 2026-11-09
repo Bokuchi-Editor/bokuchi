@@ -650,21 +650,33 @@
       "improvement": "Improvement"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "Right-to-Left Preview",
-        "description": "The preview and HTML/PDF exports now support right-to-left text such as Arabic. Choose Auto, Left to Right, or Right to Left from the preview header or Settings > Editor."
+      "plantuml": {
+        "title": "PlantUML Diagrams",
+        "description": "```plantuml, ```puml, and ```uml code blocks now render as diagrams in the preview, Marp slides, and HTML/PDF exports, fully offline. Off by default; turn it on in Settings > Advanced > Rendering Extensions."
       },
-      "codeBlockFilename": {
-        "title": "File Names on Code Blocks",
-        "description": "Write ```ts:src/index.ts to show a file name label on a code block, in the preview and in HTML/PDF exports."
+      "tableColumnWrapping": {
+        "title": "Better Table Column Wrapping",
+        "description": "In tables with a long-text column, short columns such as issue numbers or priorities no longer break into one character per line. They keep their one-line width, in the preview and in HTML/PDF exports."
       },
-      "editorThemeSync": {
-        "title": "Editor Colors Follow the Theme",
-        "description": "The editor background and text colors now match the selected theme, including custom themes. Preview table headers also pick up the theme color in Default, Pastel, and Vivid."
+      "nestedTaskLists": {
+        "title": "Nested Task Lists",
+        "description": "Checkboxes with sub-items were greyed out and not clickable, and clicking a nested item could toggle the wrong line. Every level is now a clickable checkbox that toggles exactly its own line."
+      },
+      "pdfDiagramTheme": {
+        "title": "Light Diagrams in PDF Exports",
+        "description": "Mermaid diagrams in PDF exports no longer use the dark theme when the app is in dark mode. PDFs always get light diagrams to match their white background."
+      },
+      "searchShortcutFocus": {
+        "title": "Search Shortcut Refocuses the Panel",
+        "description": "Pressing Ctrl/Cmd+F while the search panel is already open now moves focus back to the search field and selects the current query. Ctrl/Cmd+H expands the replace row."
+      },
+      "starOnGitHub": {
+        "title": "Star Bokuchi on GitHub",
+        "description": "Help now has a link to star Bokuchi on GitHub. After you have used Bokuchi for a while, a small card may also ask once. Nothing is tracked or sent anywhere."
       },
       "libraryUpdates": {
         "title": "Library Updates",
-        "description": "Updated internal libraries, including React, Tauri, and DOMPurify, for stability and security."
+        "description": "Updated internal libraries, including KaTeX, React, Tauri, and DOMPurify, for stability and security."
       }
     }
   },

@@ -627,21 +627,33 @@
       "improvement": "개선"
     },
     "changes": {
-      "rtlPreview": {
-        "title": "오른쪽에서 왼쪽 미리보기",
-        "description": "미리보기와 HTML/PDF 내보내기가 아랍어처럼 오른쪽에서 왼쪽으로 쓰는 텍스트를 지원합니다. 미리보기 헤더 또는 설정 > 편집기에서 자동, 왼쪽에서 오른쪽, 오른쪽에서 왼쪽 중 선택할 수 있습니다."
+      "plantuml": {
+        "title": "PlantUML 다이어그램",
+        "description": "```plantuml, ```puml, ```uml 코드 블록이 미리보기, Marp 슬라이드, HTML/PDF 내보내기에서 다이어그램으로 렌더링됩니다. 완전히 오프라인으로 동작합니다. 기본적으로 꺼져 있으며, 설정 > 고급 > 렌더링 확장에서 켤 수 있습니다."
       },
-      "codeBlockFilename": {
-        "title": "코드 블록 파일 이름 표시",
-        "description": "```ts:src/index.ts 처럼 작성하면 미리보기와 HTML/PDF 내보내기에서 코드 블록에 파일 이름 라벨이 표시됩니다."
+      "tableColumnWrapping": {
+        "title": "표 열 줄바꿈 개선",
+        "description": "긴 텍스트 열이 있는 표에서 이슈 번호나 우선순위처럼 짧은 열이 한 글자씩 줄바꿈되지 않습니다. 미리보기와 HTML/PDF 내보내기에서 짧은 열은 한 줄 너비를 유지합니다."
       },
-      "editorThemeSync": {
-        "title": "테마를 따르는 편집기 색상",
-        "description": "편집기의 배경색과 글자색이 사용자 지정 테마를 포함해 선택한 테마에 맞춰집니다. Default, Pastel, Vivid에서는 미리보기의 표 머리글에도 테마 색상이 적용됩니다."
+      "nestedTaskLists": {
+        "title": "중첩 작업 목록",
+        "description": "하위 항목이 있는 체크박스가 회색으로 표시되어 클릭할 수 없었고, 중첩 항목을 클릭하면 다른 줄이 토글되는 경우가 있었습니다. 이제 모든 단계가 클릭 가능한 체크박스이며 해당 줄만 정확히 토글합니다."
+      },
+      "pdfDiagramTheme": {
+        "title": "PDF 내보내기의 다이어그램은 라이트 테마로",
+        "description": "앱이 다크 모드일 때 PDF 내보내기의 Mermaid 다이어그램이 더 이상 다크 테마로 그려지지 않습니다. PDF의 흰 배경에 맞춰 다이어그램은 항상 라이트 테마로 출력됩니다."
+      },
+      "searchShortcutFocus": {
+        "title": "검색 단축키로 패널에 다시 포커스",
+        "description": "검색 패널이 이미 열려 있을 때 Ctrl/Cmd+F를 누르면 검색 입력란으로 포커스가 돌아가고 현재 검색어가 선택됩니다. Ctrl/Cmd+H는 바꾸기 행을 펼칩니다."
+      },
+      "starOnGitHub": {
+        "title": "GitHub에서 Bokuchi에 스타 주기",
+        "description": "도움말에 GitHub에서 Bokuchi에 스타를 주는 링크가 추가되었습니다. Bokuchi를 한동안 사용한 뒤에는 작은 카드가 한 번 요청할 수도 있습니다. 어떤 데이터도 추적하거나 전송하지 않습니다."
       },
       "libraryUpdates": {
         "title": "라이브러리 업데이트",
-        "description": "안정성과 보안을 위해 React, Tauri, DOMPurify를 포함한 내부 라이브러리를 업데이트했습니다."
+        "description": "안정성과 보안을 위해 KaTeX, React, Tauri, DOMPurify를 포함한 내부 라이브러리를 업데이트했습니다."
       }
     }
   },
