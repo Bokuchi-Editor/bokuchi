@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tables in auto-wrap mode: cells now break between words only (`word-break: normal` + `overflow-wrap: break-word`, manual hyphenation), headers never wrap, and columns whose content is short (issue numbers, priorities, 2–4 character labels) are tagged as compact and pinned to their one-line width, so a long-text column no longer squeezes them to one character per line. Applies to the preview and HTML/PDF exports. (#575)
 - Simplified Chinese: added the missing table editor and export strings.
-- Updated dependencies, including `katex` (0.16.22 → 0.19.1, with an `overrides` entry so the copies nested in Mermaid and Marp follow), the `react` group (19.3.0 → 19.3.1), `dompurify` (3.4.16 → 3.4.17), `@tauri-apps/api` and the Tauri plugins, the Rust crates `tauri` (2.12.2 → 2.12.5), `tauri-build`, `tauri-plugin-dialog`, `tauri-plugin-single-instance` and `lopdf` (0.36 → 0.42), plus `vite`, `eslint`, the `typescript-eslint` group and the `vitest` group.
+- Updated dependencies, including `katex` (0.16.22 → 0.19.1, with an `overrides` entry so the copies nested in Mermaid and Marp follow), the `react` group (19.3.0 → 19.3.1), `dompurify` (3.4.16 → 3.4.17), `@tauri-apps/api` and the Tauri plugins, the Rust crates `tauri` (2.12.2 → 2.12.5), `tauri-build`, `tauri-plugin-dialog`, `tauri-plugin-single-instance` and `lopdf` (0.36 → 0.42), plus `vite`, `eslint`, the `typescript-eslint` group and the `vitest` group. The Windows-only `webview2-com` (0.38 → 0.39) and `windows` (0.61 → 0.62) crates follow Tauri 2.12 so the PDF export code shares one `windows-core` with it.
 
 ### Fixed
 
