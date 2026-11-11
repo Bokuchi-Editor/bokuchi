@@ -12,7 +12,7 @@ import {
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
-import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
+import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, tagScrollableRegions, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
 import { contentHasEmojiShortcode, loadEmojiShortcodeMap, type EmojiShortcodeMap } from '../../utils/emojiShortcodes';
@@ -157,6 +157,13 @@ export function useProcessedMarkdown({
         // Add a copy button to each highlighted code block (preview only —
         // the export path builds its HTML separately and stays button-free).
         processedHtml = injectCodeCopyButtons(processedHtml);
+
+        // Tag scrollable code/diagram regions with a document-order index so
+        // the preview can restore their scroll offset across the
+        // dangerouslySetInnerHTML swap this run ends with (see
+        // usePreviewScrollRegionState). Must run after Mermaid/PlantUML above,
+        // whose wrapper classes this pass targets.
+        processedHtml = tagScrollableRegions(processedHtml);
 
         // Resolve relative image paths to blob URLs
         if (filePath) {

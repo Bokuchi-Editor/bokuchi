@@ -5,7 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@tauri-apps/plugin-fs');
 
 import { marked } from 'marked';
-import { injectCodeCopyButtons, transformCheckboxes } from '../previewHtmlProcessing';
+import { injectCodeCopyButtons, transformCheckboxes, tagScrollableRegions } from '../previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../../utils/sanitizeHtml';
 
 describe('injectCodeCopyButtons', () => {
@@ -157,5 +157,26 @@ describe('transformCheckboxes', () => {
     expect(inputs[1].hasAttribute('checked')).toBe(true);
     expect(inputs.every((i) => !i.hasAttribute('disabled'))).toBe(true);
     expect(body.querySelectorAll('li.checkbox-item > .checkbox-text')).toHaveLength(2);
+  });
+});
+
+describe('tagScrollableRegions', () => {
+  const dom = (html: string) => new DOMParser().parseFromString(html, 'text/html').body;
+
+  it('numbers <pre> blocks and diagram wrappers together in document order', () => {
+    const html = '<pre>one</pre><div class="mermaid-diagram">two</div><pre>three</pre><div class="plantuml-diagram">four</div>';
+    const body = dom(tagScrollableRegions(html));
+    const indices = Array.from(body.querySelectorAll('[data-bk-scroll-index]')).map((el) => el.getAttribute('data-bk-scroll-index'));
+    expect(indices).toEqual(['0', '1', '2', '3']);
+  });
+
+  it('returns html unchanged when there is no scrollable region', () => {
+    const html = '<p>hello &amp; <code>x</code></p>\n';
+    expect(tagScrollableRegions(html)).toBe(html);
+  });
+
+  it('markup survives sanitizeUserHtml', () => {
+    const body = dom(sanitizeUserHtml(tagScrollableRegions('<pre>code</pre>')));
+    expect(body.querySelector('pre')!.getAttribute('data-bk-scroll-index')).toBe('0');
   });
 });
