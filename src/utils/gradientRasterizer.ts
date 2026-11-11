@@ -498,6 +498,11 @@ function rasterizeElementGradient(win: Window, el: HTMLElement, scale: number): 
  */
 export async function rasterizeCssGradients(html: string, viewport: { widthPx: number; heightPx: number }, scale = 2): Promise<string> {
   if (typeof document === 'undefined') return html;
+  // Cheap bail-out: the overwhelming majority of exports have no gradient at
+  // all, and this is a plain text search, not a parse — skip the iframe
+  // round-trip entirely rather than taxing every PDF export for a feature
+  // most documents never use.
+  if (!/(linear|radial)-gradient\(/i.test(html)) return html;
 
   let iframe: HTMLIFrameElement | null = null;
   try {
