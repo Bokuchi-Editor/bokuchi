@@ -91,6 +91,25 @@ function isLeadingChild(node: Node): boolean {
   return true;
 }
 
+/**
+ * Tag every independently-scrollable content region — a `<pre>` code block or
+ * a Mermaid/PlantUML diagram wrapper — with a stable document-order index, so
+ * the preview can restore its scroll offset after the next
+ * dangerouslySetInnerHTML swap (editing anywhere resets nested scroll
+ * positions to 0 otherwise). Must run after Mermaid/PlantUML processing above
+ * — their wrapper classes don't exist before that.
+ */
+export function tagScrollableRegions(html: string): string {
+  if (!/<pre[\s>]|mermaid-diagram|plantuml-diagram/i.test(html)) return html;
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.body.querySelectorAll('pre, .mermaid-diagram, .plantuml-diagram').forEach((el, index) => {
+    el.setAttribute('data-bk-scroll-index', String(index));
+  });
+
+  return doc.body.innerHTML;
+}
+
 // Feather icons (MIT): "copy" and "check". Inlined SVG so the button needs no
 // image assets; aria-hidden because the <button> itself carries the label.
 const COPY_BUTTON_HTML =
