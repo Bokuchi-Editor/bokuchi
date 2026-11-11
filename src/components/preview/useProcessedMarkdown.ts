@@ -12,7 +12,7 @@ import {
   reinitializeMermaid,
 } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
-import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
+import { processEasterEggBlocks, transformCheckboxes, tagDetailsElements, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
 import { contentHasEmojiShortcode, loadEmojiShortcodeMap, type EmojiShortcodeMap } from '../../utils/emojiShortcodes';
@@ -121,6 +121,11 @@ export function useProcessedMarkdown({
         // (DOM pass on marked's raw output — before the sanitizer so no rendered
         // KaTeX / Mermaid content goes through the parser again).
         processedHtml = transformCheckboxes(processedHtml);
+
+        // Tag <details> elements with a document-order index so the preview
+        // can restore open/closed state across the dangerouslySetInnerHTML
+        // swap this run ends with (see usePreviewDetailsState).
+        processedHtml = tagDetailsElements(processedHtml);
 
         // Sanitize the user-authored HTML BEFORE splicing in trusted content.
         // KaTeX is still an inert placeholder token, Mermaid is still a code
