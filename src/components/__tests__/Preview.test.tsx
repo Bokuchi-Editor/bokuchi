@@ -128,6 +128,8 @@ vi.mock('../../utils/markdownRenderers', () => ({
   processMermaidBlocks: vi.fn().mockImplementation(async (html: string) => html.replace(/mermaid-placeholder/g, '<div class="mermaid-rendered">diagram</div>')),
   contentHasMermaid: vi.fn().mockImplementation((content: string) => /mermaid/.test(content)),
   reinitializeMermaid: vi.fn(),
+  ensureHljsLoaded: vi.fn().mockResolvedValue(undefined),
+  contentHasCodeFence: vi.fn().mockReturnValue(false),
 }));
 
 vi.mock('../../utils/plantumlRenderer', () => ({
