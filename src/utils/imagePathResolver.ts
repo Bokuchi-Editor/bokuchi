@@ -3,6 +3,8 @@
  * Used by both MarpPreview (iframe data URLs) and Preview (blob URLs).
  */
 
+import { homeDir, desktopDir, documentDir, downloadDir } from '@tauri-apps/api/path';
+
 /** MIME types for supported image extensions. */
 export const IMAGE_MIME_MAP: Record<string, string> = {
   png: 'image/png',
@@ -91,4 +93,46 @@ export function resolveRelativePath(baseDirPath: string, relativePath: string): 
 export function dirnameOf(filePath: string): string {
   const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
   return filePath.substring(0, lastSep);
+}
+
+let scopeDirsPromise: Promise<string[]> | null = null;
+
+async function loadDefaultScopeDirs(): Promise<string[]> {
+  if (!scopeDirsPromise) {
+    scopeDirsPromise = Promise.all([homeDir(), desktopDir(), documentDir(), downloadDir()]).then(
+      (dirs) => dirs.map((dir) => dir.replace(/\\/g, '/').toLowerCase().replace(/\/+$/, '')),
+    );
+  }
+  return scopeDirsPromise;
+}
+
+/**
+ * True when `absolutePath` falls under one of the Tauri capability roots
+ * ($HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD) that both the fs plugin's `fs:scope`
+ * and the asset protocol's `assetProtocol.scope` are restricted to. Callers
+ * use this to pick between the cheap, scope-gated API (plugin-fs `readFile`,
+ * `convertFileSrc`) and a slower but unrestricted fallback (reading bytes via
+ * a custom Tauri command) for paths outside those roots (#623). Resolves to
+ * `false` (prefer the unrestricted fallback) if the scope directories
+ * themselves can't be resolved, since that's always safe.
+ */
+export async function isPathInDefaultFsScope(absolutePath: string): Promise<boolean> {
+  let scopeDirs: string[];
+  try {
+    scopeDirs = await loadDefaultScopeDirs();
+  } catch {
+    return false;
+  }
+  const normalizedPath = absolutePath.replace(/\\/g, '/').toLowerCase();
+  return scopeDirs.some((dir) => normalizedPath === dir || normalizedPath.startsWith(`${dir}/`));
+}
+
+/** Base64-encode bytes and wrap as a `data:` URI (chunked to avoid call-stack overflow on large arrays). */
+export function bytesToDataUri(bytes: Uint8Array<ArrayBuffer>, mimeType: string): string {
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return `data:${mimeType};base64,${btoa(binary)}`;
 }

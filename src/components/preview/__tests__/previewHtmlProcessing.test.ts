@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('../../../api/desktopApi', () => ({
   desktopApi: {
-    readImageBytes: vi.fn(),
+    readFileBytes: vi.fn(),
   },
 }));
 
@@ -164,35 +164,35 @@ describe('transformCheckboxes', () => {
 });
 
 describe('resolveImagePaths / resolveImagePathsToDataUris (#623)', () => {
-  const readImageBytes = vi.mocked(desktopApi.readImageBytes);
+  const readFileBytes = vi.mocked(desktopApi.readFileBytes);
 
   beforeEach(() => {
-    readImageBytes.mockReset();
-    readImageBytes.mockResolvedValue(new Uint8Array([1, 2, 3]));
+    readFileBytes.mockReset();
+    readFileBytes.mockResolvedValue(new Uint8Array([1, 2, 3]));
     globalThis.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
   });
 
-  it('reads a relative <img src> through desktopApi.readImageBytes, resolved against the document directory', async () => {
+  it('reads a relative <img src> through desktopApi.readFileBytes, resolved against the document directory', async () => {
     const { html } = await resolveImagePaths('<img src="images/pic.png">', '/docs/note.md');
-    expect(readImageBytes).toHaveBeenCalledWith('/docs/images/pic.png');
+    expect(readFileBytes).toHaveBeenCalledWith('/docs/images/pic.png');
     expect(html).toBe('<img src="blob:mock-url">');
   });
 
-  it('leaves an absolute URL untouched and never calls readImageBytes', async () => {
+  it('leaves an absolute URL untouched and never calls readFileBytes', async () => {
     const html = '<img src="https://example.com/a.png">';
     const result = await resolveImagePaths(html, '/docs/note.md');
-    expect(readImageBytes).not.toHaveBeenCalled();
+    expect(readFileBytes).not.toHaveBeenCalled();
     expect(result.html).toBe(html);
   });
 
   it('resolves the on-disk path without a trailing ?query/#fragment, but keeps the original src in the HTML', async () => {
     const { html } = await resolveImagePaths('<img src="icon.svg?v=1">', '/docs/note.md');
-    expect(readImageBytes).toHaveBeenCalledWith('/docs/icon.svg');
+    expect(readFileBytes).toHaveBeenCalledWith('/docs/icon.svg');
     expect(html).toBe('<img src="blob:mock-url">');
   });
 
   it('leaves the original src and warns when the read fails', async () => {
-    readImageBytes.mockRejectedValueOnce(new Error('not found'));
+    readFileBytes.mockRejectedValueOnce(new Error('not found'));
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const html = '<img src="missing.png">';
     const result = await resolveImagePaths(html, '/docs/note.md');

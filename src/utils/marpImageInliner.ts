@@ -1,5 +1,15 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
-import { dirnameOf, isAbsoluteUrl, resolveRelativePath, decodeImageSrc, stripQueryAndFragment } from './imagePathResolver';
+import { desktopApi } from '../api/desktopApi';
+import {
+  dirnameOf,
+  isAbsoluteUrl,
+  resolveRelativePath,
+  decodeImageSrc,
+  stripQueryAndFragment,
+  isPathInDefaultFsScope,
+  mimeTypeFromPath,
+  bytesToDataUri,
+} from './imagePathResolver';
 
 /**
  * Rewrite relative image references in Marp HTML to Tauri asset-protocol URLs
@@ -17,6 +27,12 @@ import { dirnameOf, isAbsoluteUrl, resolveRelativePath, decodeImageSrc, stripQue
  * Requires `app.security.assetProtocol.enable` + a path scope in tauri.conf.json, and
  * the asset origin in the CSP `img-src` (`asset: http://asset.localhost`).
  *
+ * The asset protocol's scope is the same four roots ($HOME/$DESKTOP/$DOCUMENT/
+ * $DOWNLOAD) as the fs plugin's, so an image outside them would silently fail
+ * to load. For that (rare) case, bytes are read server-side via a Tauri
+ * command that bypasses the scope and inlined as a `data:` URI instead,
+ * trading the memory cost above for correctness only where it's needed (#623).
+ *
  * Handles:
  * - <img src="..."> tags
  * - CSS url("...") patterns (Marp background images)
@@ -24,17 +40,13 @@ import { dirnameOf, isAbsoluteUrl, resolveRelativePath, decodeImageSrc, stripQue
  *
  * Absolute / remote URLs (http:, data:, blob:, asset:) are left untouched.
  */
-export function rewriteMarpRelativeImages(html: string, filePath: string): string {
+export async function rewriteMarpRelativeImages(html: string, filePath: string): Promise<string> {
   const baseDir = dirnameOf(filePath);
-  const replacements = new Map<string, string>();
+  const sources: string[] = [];
 
   function collectSrc(src: string) {
-    if (isAbsoluteUrl(src) || replacements.has(src)) return;
-    // Decode percent-encoding (spaces / non-ASCII) so files resolve on disk;
-    // a trailing ?query/#fragment isn't part of the real file name either
-    // (#623); the map key stays the raw src for the literal replacement below.
-    const absolutePath = resolveRelativePath(baseDir, stripQueryAndFragment(decodeImageSrc(src)));
-    replacements.set(src, convertFileSrc(absolutePath));
+    if (isAbsoluteUrl(src) || sources.includes(src)) return;
+    sources.push(src);
   }
 
   collectMatches(html, /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g, collectSrc);
@@ -43,6 +55,26 @@ export function rewriteMarpRelativeImages(html: string, filePath: string): strin
   // Fallback for unencoded quotes
   collectMatches(html, /url\("([^"]+)"\)/g, collectSrc);
   collectMatches(html, /<image\s+[^>]*?(?:xlink:)?href="([^"]+)"[^>]*?>/g, collectSrc);
+
+  const replacements = new Map<string, string>();
+  await Promise.all(
+    sources.map(async (src) => {
+      // Decode percent-encoding (spaces / non-ASCII) so files resolve on disk;
+      // a trailing ?query/#fragment isn't part of the real file name either
+      // (#623); the map key stays the raw src for the literal replacement below.
+      const absolutePath = resolveRelativePath(baseDir, stripQueryAndFragment(decodeImageSrc(src)));
+      if (await isPathInDefaultFsScope(absolutePath)) {
+        replacements.set(src, convertFileSrc(absolutePath));
+        return;
+      }
+      try {
+        const bytes = await desktopApi.readFileBytes(absolutePath);
+        replacements.set(src, bytesToDataUri(bytes, mimeTypeFromPath(absolutePath)));
+      } catch (err) {
+        console.warn('[MarpPreview] Failed to load out-of-scope image:', absolutePath, err);
+      }
+    }),
+  );
 
   let result = html;
   for (const [original, assetUrl] of replacements) {

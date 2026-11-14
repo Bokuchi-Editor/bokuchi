@@ -242,19 +242,20 @@ pub async fn copy_image_asset(
     Ok(format!("{}/{}", subdir.replace('\\', "/"), name))
 }
 
-// Tauri command: Read an image file's raw bytes for preview/export rendering.
-// Mirrors copy_image_asset's rationale: a Markdown-referenced image can live
-// anywhere on disk (dragged in from outside the document's folder, or the
-// document itself sits outside the fs plugin's static scope), so this reads
-// server-side rather than through the scoped fs plugin (#623).
+// Tauri command: Read a file's raw bytes for preview/export rendering
+// (images, Marp theme CSS). Mirrors copy_image_asset's rationale: a
+// Markdown-referenced asset can live anywhere on disk (dragged in from
+// outside the document's folder, or the document itself sits outside the
+// fs plugin's static scope), so this reads server-side rather than through
+// the scoped fs plugin or the asset protocol's scope (#623).
 #[tauri::command]
-pub async fn read_image_bytes(path: String) -> Result<Vec<u8>, String> {
+pub async fn read_file_bytes(path: String) -> Result<Vec<u8>, String> {
     let metadata =
         fs::metadata(&path).map_err(|e| format!("File not found: {} ({:?})", e, e.kind()))?;
     if metadata.len() > 20 * 1024 * 1024 {
-        return Err("Image too large (max 20MB)".to_string());
+        return Err("File too large (max 20MB)".to_string());
     }
-    fs::read(&path).map_err(|e| format!("Failed to read image: {} ({:?})", e, e.kind()))
+    fs::read(&path).map_err(|e| format!("Failed to read file: {} ({:?})", e, e.kind()))
 }
 
 // The image commands join `subdir` onto the caller-chosen `dest_dir`.

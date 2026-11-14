@@ -123,7 +123,7 @@ pub fn run() {
             save_file,
             save_image_bytes,
             copy_image_asset,
-            read_image_bytes,
+            read_file_bytes,
             get_file_hash,
             get_pending_file_paths_command,
             log_from_frontend,

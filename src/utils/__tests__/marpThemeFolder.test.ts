@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const readFileMock = vi.fn();
 const readDirectoryMock = vi.fn();
+const readFileBytesMock = vi.fn();
 
 vi.mock('@tauri-apps/plugin-fs', () => ({
   readFile: (path: string) => readFileMock(path),
@@ -9,7 +10,17 @@ vi.mock('@tauri-apps/plugin-fs', () => ({
 vi.mock('../../api/desktopApi', () => ({
   desktopApi: {
     readDirectory: (path: string, showAll: boolean) => readDirectoryMock(path, showAll),
+    readFileBytes: (path: string) => readFileBytesMock(path),
   },
+}));
+// Fixed scope root so the "/themes" fixture paths used below resolve as
+// in-scope (exercising the default plugin-fs readFile path). A path outside
+// this root exercises the out-of-scope fallback (#623).
+vi.mock('@tauri-apps/api/path', () => ({
+  homeDir: vi.fn().mockResolvedValue('/themes'),
+  desktopDir: vi.fn().mockResolvedValue('/themes/Desktop'),
+  documentDir: vi.fn().mockResolvedValue('/themes/Documents'),
+  downloadDir: vi.fn().mockResolvedValue('/themes/Downloads'),
 }));
 
 import { extractThemeName, scanThemeFolder, loadRegisterableThemeCss } from '../marpThemeFolder';
@@ -39,6 +50,7 @@ describe('scanThemeFolder', () => {
   beforeEach(() => {
     readFileMock.mockReset();
     readDirectoryMock.mockReset();
+    readFileBytesMock.mockReset();
   });
 
   it('returns an empty array for an empty folder path without touching the fs', async () => {
@@ -93,6 +105,19 @@ describe('scanThemeFolder', () => {
     const result = await scanThemeFolder('/themes');
     expect(result).toHaveLength(1);
     expect(result[0].file).toBe('ok.css');
+  });
+
+  // #623: a theme folder outside $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD is outside
+  // the fs plugin's static scope too — fall back to the scope-bypassing
+  // command instead of plugin-fs's readFile.
+  it('falls back to desktopApi.readFileBytes for a theme folder outside the default fs scope', async () => {
+    readDirectoryMock.mockResolvedValue([{ name: 'out.css', path: '/mnt/external/out.css', is_directory: false }]);
+    readFileBytesMock.mockResolvedValue(encode('/* @theme outside */'));
+
+    const result = await scanThemeFolder('/mnt/external');
+    expect(result).toEqual([{ file: 'out.css', name: 'outside', css: '/* @theme outside */' }]);
+    expect(readFileBytesMock).toHaveBeenCalledWith('/mnt/external/out.css');
+    expect(readFileMock).not.toHaveBeenCalled();
   });
 });
 

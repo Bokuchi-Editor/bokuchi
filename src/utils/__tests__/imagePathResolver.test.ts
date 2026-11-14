@@ -1,4 +1,16 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const homeDirMock = vi.fn();
+const desktopDirMock = vi.fn();
+const documentDirMock = vi.fn();
+const downloadDirMock = vi.fn();
+vi.mock('@tauri-apps/api/path', () => ({
+  homeDir: () => homeDirMock(),
+  desktopDir: () => desktopDirMock(),
+  documentDir: () => documentDirMock(),
+  downloadDir: () => downloadDirMock(),
+}));
+
 import {
   IMAGE_MIME_MAP,
   isAbsoluteUrl,
@@ -7,6 +19,7 @@ import {
   dirnameOf,
   decodeImageSrc,
   stripQueryAndFragment,
+  bytesToDataUri,
 } from '../imagePathResolver';
 
 describe('isAbsoluteUrl', () => {
@@ -138,5 +151,62 @@ describe('decodeImageSrc', () => {
 
   it('falls back to the raw string on malformed encoding', () => {
     expect(decodeImageSrc('images/50%off.png')).toBe('images/50%off.png');
+  });
+});
+
+describe('bytesToDataUri', () => {
+  it('base64-encodes bytes and wraps them in a data: URI with the given MIME type', () => {
+    const bytes = new TextEncoder().encode('abc') as Uint8Array<ArrayBuffer>;
+    expect(bytesToDataUri(bytes, 'image/svg+xml')).toBe(`data:image/svg+xml;base64,${btoa('abc')}`);
+  });
+});
+
+// isPathInDefaultFsScope caches the resolved scope directories at module
+// scope (loaded once, reused for the module's lifetime), so each test here
+// resets the module registry and re-imports to get an isolated cache.
+describe('isPathInDefaultFsScope', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    homeDirMock.mockReset();
+    desktopDirMock.mockReset();
+    documentDirMock.mockReset();
+    downloadDirMock.mockReset();
+  });
+
+  const mockScopeDirs = () => {
+    homeDirMock.mockResolvedValue('/Users/me');
+    desktopDirMock.mockResolvedValue('/Users/me/Desktop');
+    documentDirMock.mockResolvedValue('/Users/me/Documents');
+    downloadDirMock.mockResolvedValue('/Users/me/Downloads');
+  };
+
+  it('resolves true for a path under the home directory', async () => {
+    mockScopeDirs();
+    const { isPathInDefaultFsScope: check } = await import('../imagePathResolver');
+    expect(await check('/Users/me/deck/pic.png')).toBe(true);
+  });
+
+  it('resolves false for a path outside all four scope roots', async () => {
+    mockScopeDirs();
+    const { isPathInDefaultFsScope: check } = await import('../imagePathResolver');
+    expect(await check('/Volumes/external/pic.png')).toBe(false);
+  });
+
+  it('is case-insensitive and tolerates backslashes (Windows)', async () => {
+    homeDirMock.mockResolvedValue('C:/Users/me');
+    desktopDirMock.mockResolvedValue('C:/Users/me/Desktop');
+    documentDirMock.mockResolvedValue('C:/Users/me/Documents');
+    downloadDirMock.mockResolvedValue('C:/Users/me/Downloads');
+    const { isPathInDefaultFsScope: check } = await import('../imagePathResolver');
+    expect(await check('C:\\Users\\ME\\deck\\pic.png')).toBe(true);
+  });
+
+  it('resolves false (prefer the fallback) when the scope dirs cannot be resolved', async () => {
+    homeDirMock.mockRejectedValue(new Error('unavailable'));
+    desktopDirMock.mockResolvedValue('/Users/me/Desktop');
+    documentDirMock.mockResolvedValue('/Users/me/Documents');
+    downloadDirMock.mockResolvedValue('/Users/me/Downloads');
+    const { isPathInDefaultFsScope: check } = await import('../imagePathResolver');
+    expect(await check('/Users/me/deck/pic.png')).toBe(false);
   });
 });

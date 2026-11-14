@@ -1,5 +1,5 @@
 import { desktopApi } from '../../api/desktopApi';
-import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc, stripQueryAndFragment } from '../../utils/imagePathResolver';
+import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc, stripQueryAndFragment, bytesToDataUri } from '../../utils/imagePathResolver';
 import { escapeHtml } from '../../utils/htmlText';
 
 /**
@@ -125,7 +125,7 @@ const IMG_SRC_RE = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
 
 /**
  * Find every relative `<img src>` in `html` and read its bytes through
- * `desktopApi.readImageBytes` — a Rust command, not the scoped fs plugin, so
+ * `desktopApi.readFileBytes` — a Rust command, not the scoped fs plugin, so
  * an image (or the document itself) outside $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD
  * still loads (#623). `toUrl` turns the bytes into whatever URL form the
  * caller's output needs (blob: for the live preview, data: for a standalone
@@ -151,7 +151,7 @@ async function collectLocalImageUrls(
     const decodedSrc = decodeImageSrc(src);
     const absolutePath = resolveRelativePath(baseDir, stripQueryAndFragment(decodedSrc));
     imgPromises.push(
-      desktopApi.readImageBytes(absolutePath).then(bytes => {
+      desktopApi.readFileBytes(absolutePath).then(bytes => {
         replacements.set(src, toUrl(bytes, mimeTypeFromPath(decodedSrc)));
       }).catch(err => {
         console.warn('Failed to load image:', absolutePath, err);
@@ -188,15 +188,6 @@ export async function resolveImagePaths(
   return { html: applyImageUrlReplacements(html, replacements), blobUrls: Array.from(replacements.values()) };
 }
 
-function bytesToBase64(bytes: Uint8Array<ArrayBuffer>): string {
-  let binary = '';
-  const chunkSize = 0x8000;
-  for (let i = 0; i < bytes.length; i += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-  }
-  return btoa(binary);
-}
-
 /**
  * Resolve relative `<img src>` paths to inlined `data:` URIs instead of blob
  * URLs. Used by the HTML/PDF export path (useHtmlExport.ts): a blob: URL only
@@ -206,9 +197,7 @@ function bytesToBase64(bytes: Uint8Array<ArrayBuffer>): string {
  * separate context with no access to the original blob (#623).
  */
 export async function resolveImagePathsToDataUris(html: string, filePath: string): Promise<string> {
-  const replacements = await collectLocalImageUrls(html, filePath, (bytes, mimeType) => {
-    return `data:${mimeType};base64,${bytesToBase64(bytes)}`;
-  });
+  const replacements = await collectLocalImageUrls(html, filePath, bytesToDataUri);
 
   return applyImageUrlReplacements(html, replacements);
 }

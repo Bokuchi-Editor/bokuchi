@@ -6,6 +6,21 @@ vi.mock('@tauri-apps/plugin-fs', () => ({
   readFile: (path: string) => readFileMock(path),
 }));
 
+const readFileBytesMock = vi.fn();
+vi.mock('../../api/desktopApi', () => ({
+  desktopApi: { readFileBytes: (path: string) => readFileBytesMock(path) },
+}));
+
+// Fixed scope root so the "/Users/me" fixture paths used below resolve as
+// in-scope (exercising the default plugin-fs readFile path). A path outside
+// this root exercises the out-of-scope fallback (#623).
+vi.mock('@tauri-apps/api/path', () => ({
+  homeDir: vi.fn().mockResolvedValue('/Users/me'),
+  desktopDir: vi.fn().mockResolvedValue('/Users/me/Desktop'),
+  documentDir: vi.fn().mockResolvedValue('/Users/me/Documents'),
+  downloadDir: vi.fn().mockResolvedValue('/Users/me/Downloads'),
+}));
+
 import { extractThemeSrc, loadThemeSrcCss } from '../marpThemeLoader';
 
 const encode = (s: string) => new TextEncoder().encode(s);
@@ -57,6 +72,7 @@ theme: default
 describe('loadThemeSrcCss', () => {
   beforeEach(() => {
     readFileMock.mockReset();
+    readFileBytesMock.mockReset();
   });
 
   it('reads the CSS file resolved relative to the markdown file', async () => {
@@ -109,5 +125,21 @@ theme-src: ./missing.css
 `;
     const css = await loadThemeSrcCss(content, '/Users/me/deck.md');
     expect(css).toBe('');
+  });
+
+  // #623: a markdown document outside $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD is
+  // outside the fs plugin's static scope too — fall back to the
+  // scope-bypassing command instead of plugin-fs's readFile.
+  it('falls back to desktopApi.readFileBytes for a document outside the default fs scope', async () => {
+    readFileBytesMock.mockResolvedValue(encode('section { color: coral; }'));
+    const content = `---
+marp: true
+theme-src: ./common.css
+---
+`;
+    const css = await loadThemeSrcCss(content, '/Volumes/external/deck.md');
+    expect(css).toBe('section { color: coral; }');
+    expect(readFileBytesMock).toHaveBeenCalledWith('/Volumes/external/common.css');
+    expect(readFileMock).not.toHaveBeenCalled();
   });
 });

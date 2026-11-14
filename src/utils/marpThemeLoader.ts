@@ -1,5 +1,6 @@
 import { readFile } from '@tauri-apps/plugin-fs';
-import { dirnameOf, isAbsoluteUrl, resolveRelativePath } from './imagePathResolver';
+import { desktopApi } from '../api/desktopApi';
+import { dirnameOf, isAbsoluteUrl, isPathInDefaultFsScope, resolveRelativePath } from './imagePathResolver';
 import { MARP_FRONTMATTER_RE } from './marpRenderer';
 
 /**
@@ -57,7 +58,12 @@ export async function loadThemeSrcCss(content: string, filePath: string): Promis
 
   const absolutePath = resolveRelativePath(dirnameOf(filePath), themeSrc);
   try {
-    const data = await readFile(absolutePath);
+    // The markdown document (and so this relative theme-src path) can live
+    // outside the fs plugin's static scope; fall back to the scope-bypassing
+    // command in that case (#623).
+    const data = (await isPathInDefaultFsScope(absolutePath))
+      ? await readFile(absolutePath)
+      : await desktopApi.readFileBytes(absolutePath);
     return new TextDecoder('utf-8').decode(data);
   } catch (err) {
     console.error('[MarpPreview] Failed to load theme-src CSS:', absolutePath, err);
