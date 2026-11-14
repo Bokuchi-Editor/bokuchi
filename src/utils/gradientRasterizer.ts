@@ -451,6 +451,40 @@ function paintGradientToCanvas(ctx: CanvasRenderingContext2D, gradient: ParsedGr
   ctx.restore();
 }
 
+/**
+ * True for a `transparent`/alpha-0 computed color. `getComputedStyle` always
+ * resolves to `rgb(...)`/`rgba(...)` (never the literal `transparent`
+ * keyword), but the literal is also checked defensively.
+ */
+export function isTransparentColor(color: string): boolean {
+  if (!color || color === 'transparent') return true;
+  const m = /rgba?\(\s*[\d.]+[,\s]+[\d.]+[,\s]+[\d.]+(?:\s*[,/]\s*([\d.]+))?\s*\)/i.exec(color);
+  if (!m) return false;
+  return m[1] !== undefined && parseFloat(m[1]) === 0;
+}
+
+/**
+ * Walks from `el` up through its ancestors for the nearest non-transparent
+ * `background-color`, defaulting to white. Used to pre-fill the rasterized
+ * canvas before painting a gradient that has a transparent stop (e.g. a
+ * `background:` shorthand — which also resets `background-color` to
+ * `transparent` — fading to `rgba(..., 0)`): baking the true backdrop into
+ * the canvas ourselves means the exported PNG is fully opaque, so correctly
+ * showing it never depends on the native print backend alpha-compositing a
+ * translucent image — a CGPDFContext limitation that plausibly isn't
+ * confined to the pure-CSS-gradient case this module's own file-level
+ * comment documents.
+ */
+function resolveEffectiveBackdropColor(win: Window, el: HTMLElement): string {
+  let node: HTMLElement | null = el;
+  while (node) {
+    const bg = win.getComputedStyle(node).backgroundColor;
+    if (!isTransparentColor(bg)) return bg;
+    node = node.parentElement;
+  }
+  return '#fff';
+}
+
 /** Rasterizes one element's gradient background in place, if it has exactly one and it parses. */
 function rasterizeElementGradient(win: Window, el: HTMLElement, scale: number): void {
   const bgImage = win.getComputedStyle(el).backgroundImage;
@@ -477,6 +511,10 @@ function rasterizeElementGradient(win: Window, el: HTMLElement, scale: number): 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   ctx.scale(scale, scale);
+  // Fill the true backdrop first so a gradient with any transparent stop
+  // rasterizes to a fully opaque PNG (see resolveEffectiveBackdropColor).
+  ctx.fillStyle = resolveEffectiveBackdropColor(win, el);
+  ctx.fillRect(0, 0, w, h);
   paintGradientToCanvas(ctx, parsed, w, h);
 
   const dataUrl = canvas.toDataURL('image/png');

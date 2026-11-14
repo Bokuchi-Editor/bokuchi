@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseCssGradient } from '../gradientRasterizer';
+import { parseCssGradient, isTransparentColor } from '../gradientRasterizer';
 
 describe('parseCssGradient', () => {
   it('parses "to right" as a horizontal line across the box', () => {
@@ -115,5 +115,25 @@ describe('parseCssGradient', () => {
 
   it('returns null for a plain color (not a gradient function)', () => {
     expect(parseCssGradient('rgb(255, 0, 0)', 100, 50)).toBeNull();
+  });
+});
+
+describe('isTransparentColor', () => {
+  it('treats the literal "transparent" keyword as transparent', () => {
+    expect(isTransparentColor('transparent')).toBe(true);
+  });
+
+  it('treats an alpha-0 rgba() as transparent (the getComputedStyle shape for a `background:` shorthand reset)', () => {
+    expect(isTransparentColor('rgba(0, 0, 0, 0)')).toBe(true);
+  });
+
+  it('treats an opaque rgb()/rgba() as not transparent', () => {
+    expect(isTransparentColor('rgb(255, 255, 255)')).toBe(false);
+    expect(isTransparentColor('rgba(0, 200, 255, 0.9)')).toBe(false);
+  });
+
+  it('treats modern space-separated rgb(r g b / a) syntax the same way', () => {
+    expect(isTransparentColor('rgba(0 0 0 / 0)')).toBe(true);
+    expect(isTransparentColor('rgb(0 0 0 / 1)')).toBe(false);
   });
 });
