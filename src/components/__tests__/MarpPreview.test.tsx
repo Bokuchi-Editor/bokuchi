@@ -35,6 +35,13 @@ vi.mock('../../api/desktopApi', () => ({
   },
 }));
 
+// Pass-through: the real implementation loads an iframe and waits for its
+// `load` event, which jsdom never fires, so it would hang until its own
+// internal timeout on every PDF export test.
+vi.mock('../../utils/gradientRasterizer', () => ({
+  rasterizeCssGradients: vi.fn().mockImplementation(async (html: string) => html),
+}));
+
 vi.mock('../../utils/plantumlRenderer', () => ({
   PLANTUML_LANGS: ['plantuml', 'puml', 'uml'],
   contentHasPlantUml: vi.fn().mockImplementation((content: string) => /```plantuml/.test(content)),
