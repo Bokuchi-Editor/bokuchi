@@ -19,6 +19,7 @@ vi.mock('../../api/variableApi', () => ({
 vi.mock('../../api/desktopApi', () => ({
   desktopApi: {
     saveHtmlFile: vi.fn().mockResolvedValue({ success: true }),
+    readImageBytes: vi.fn().mockResolvedValue(new Uint8Array()),
   },
 }));
 

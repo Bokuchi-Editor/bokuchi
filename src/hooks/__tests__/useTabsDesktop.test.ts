@@ -355,4 +355,62 @@ describe('useTabsDesktop – file lifecycle', () => {
     expect(result.current.tabs[0].isNew).toBe(true);
     expect(result.current.tabs[0].filePath).toBeUndefined();
   });
+
+  // #623: a fresh Save dialog result on Windows is backslash-separated
+  // (e.g. "C:\Users\me\note.md"). The preview's image path resolution
+  // (dirnameOf) assumes forward slashes, so the tab's filePath must be
+  // normalized immediately — same as openFile already does — instead of only
+  // on the next app restart (when restoreState's openFile path normalizes it).
+  it('#623: saveTab normalizes a backslash-separated path from a new Save dialog', async () => {
+    const { result } = await renderInitialized();
+
+    let tabId: string;
+    act(() => {
+      tabId = result.current.addTab({
+        title: 'Untitled',
+        content: 'draft',
+        isModified: true,
+        isNew: true,
+      });
+    });
+
+    vi.mocked(desktopApi.saveFile).mockResolvedValueOnce({
+      success: true,
+      filePath: 'C:\\Users\\me\\note.md',
+    });
+
+    await act(async () => {
+      await result.current.saveTab(tabId!);
+    });
+
+    expect(result.current.tabs[0].filePath).toBe('C:/Users/me/note.md');
+    expect(desktopApi.getFileHash).toHaveBeenCalledWith('C:/Users/me/note.md');
+  });
+
+  // #623: same normalization for Save As.
+  it('#623: saveTabAs normalizes a backslash-separated path from the Save dialog', async () => {
+    const { result } = await renderInitialized();
+
+    let tabId: string;
+    act(() => {
+      tabId = result.current.addTab({
+        title: 'a.md',
+        content: 'content',
+        filePath: '/path/a.md',
+        isModified: false,
+        isNew: false,
+      });
+    });
+
+    vi.mocked(desktopApi.saveFileAs).mockResolvedValueOnce({
+      success: true,
+      filePath: 'C:\\Users\\me\\copy.md',
+    });
+
+    await act(async () => {
+      await result.current.saveTabAs(tabId!);
+    });
+
+    expect(result.current.tabs[0].filePath).toBe('C:/Users/me/copy.md');
+  });
 });

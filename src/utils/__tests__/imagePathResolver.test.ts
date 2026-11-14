@@ -6,6 +6,7 @@ import {
   resolveRelativePath,
   dirnameOf,
   decodeImageSrc,
+  stripQueryAndFragment,
 } from '../imagePathResolver';
 
 describe('isAbsoluteUrl', () => {
@@ -44,6 +45,32 @@ describe('mimeTypeFromPath', () => {
     expect(IMAGE_MIME_MAP.webp).toBe('image/webp');
     expect(IMAGE_MIME_MAP.avif).toBe('image/avif');
   });
+
+  // #623: a query string must not defeat SVG's strict image/svg+xml MIME
+  // requirement (unlike raster formats, it fails to render as octet-stream).
+  it('strips a trailing ?query or #fragment before resolving the extension', () => {
+    expect(mimeTypeFromPath('diagram.svg?v=1')).toBe('image/svg+xml');
+    expect(mimeTypeFromPath('sprite.svg#icon')).toBe('image/svg+xml');
+    expect(mimeTypeFromPath('pic.png?x=1#y')).toBe('image/png');
+  });
+});
+
+describe('stripQueryAndFragment', () => {
+  it('removes a trailing ?query', () => {
+    expect(stripQueryAndFragment('icon.svg?v=1')).toBe('icon.svg');
+  });
+
+  it('removes a trailing #fragment', () => {
+    expect(stripQueryAndFragment('sprite.svg#layer')).toBe('sprite.svg');
+  });
+
+  it('removes both when a query precedes a fragment', () => {
+    expect(stripQueryAndFragment('icon.svg?v=1#layer')).toBe('icon.svg');
+  });
+
+  it('leaves a path without either unchanged', () => {
+    expect(stripQueryAndFragment('images/pic.png')).toBe('images/pic.png');
+  });
 });
 
 describe('resolveRelativePath', () => {
@@ -62,6 +89,17 @@ describe('resolveRelativePath', () => {
   it('handles plain relative paths without prefix', () => {
     expect(resolveRelativePath('/a/b', 'img.png')).toBe('/a/b/img.png');
   });
+
+  // #623: a leading "/" before a Windows drive letter (e.g. "/C:/Users/...")
+  // is not a valid Windows path and fails file reads with OS error 123.
+  it('does not prepend a leading slash for a Windows drive-letter base path', () => {
+    expect(resolveRelativePath('C:/Users/me/docs', './img.png')).toBe('C:/Users/me/docs/img.png');
+    expect(resolveRelativePath('C:/Users/me/docs', '../img.png')).toBe('C:/Users/me/img.png');
+  });
+
+  it('recognizes a Windows drive-letter base path given with backslashes', () => {
+    expect(resolveRelativePath('C:\\Users\\me\\docs', 'img.png')).toBe('C:/Users/me/docs/img.png');
+  });
 });
 
 describe('dirnameOf', () => {
@@ -71,6 +109,16 @@ describe('dirnameOf', () => {
 
   it('returns empty string for a path without slashes', () => {
     expect(dirnameOf('file.md')).toBe('');
+  });
+
+  // #623: a Windows path that reached this function before normalization
+  // (backslash-separated) must still resolve its directory.
+  it('recognizes a backslash-separated Windows path', () => {
+    expect(dirnameOf('C:\\Users\\me\\docs\\file.md')).toBe('C:\\Users\\me\\docs');
+  });
+
+  it('picks the later separator in a mixed-separator path', () => {
+    expect(dirnameOf('C:/Users\\me/docs\\file.md')).toBe('C:/Users\\me/docs');
   });
 });
 

@@ -1,5 +1,5 @@
-import { readFile } from '@tauri-apps/plugin-fs';
-import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc } from '../../utils/imagePathResolver';
+import { desktopApi } from '../../api/desktopApi';
+import { dirnameOf, isAbsoluteUrl, mimeTypeFromPath, resolveRelativePath, decodeImageSrc, stripQueryAndFragment } from '../../utils/imagePathResolver';
 import { escapeHtml } from '../../utils/htmlText';
 
 /**
@@ -121,47 +121,94 @@ export function injectCodeCopyButtons(html: string): string {
   );
 }
 
+const IMG_SRC_RE = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
+
+/**
+ * Find every relative `<img src>` in `html` and read its bytes through
+ * `desktopApi.readImageBytes` — a Rust command, not the scoped fs plugin, so
+ * an image (or the document itself) outside $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD
+ * still loads (#623). `toUrl` turns the bytes into whatever URL form the
+ * caller's output needs (blob: for the live preview, data: for a standalone
+ * export). Absolute URLs are left untouched.
+ */
+async function collectLocalImageUrls(
+  html: string,
+  filePath: string,
+  toUrl: (bytes: Uint8Array<ArrayBuffer>, mimeType: string) => string,
+): Promise<Map<string, string>> {
+  const baseDir = dirnameOf(filePath);
+  const replacements = new Map<string, string>();
+  const imgPromises: Promise<void>[] = [];
+
+  let imgMatch;
+  while ((imgMatch = IMG_SRC_RE.exec(html)) !== null) {
+    const src = imgMatch[1];
+    if (isAbsoluteUrl(src)) continue;
+    // marked percent-encodes spaces / non-ASCII in the src; decode before
+    // touching the filesystem so files like "my photo.png" resolve. A
+    // trailing ?query/#fragment (e.g. "icon.svg?v=1") isn't part of the real
+    // file name, so it's stripped before resolving the on-disk path (#623).
+    const decodedSrc = decodeImageSrc(src);
+    const absolutePath = resolveRelativePath(baseDir, stripQueryAndFragment(decodedSrc));
+    imgPromises.push(
+      desktopApi.readImageBytes(absolutePath).then(bytes => {
+        replacements.set(src, toUrl(bytes, mimeTypeFromPath(decodedSrc)));
+      }).catch(err => {
+        console.warn('Failed to load image:', absolutePath, err);
+      })
+    );
+  }
+
+  await Promise.all(imgPromises);
+  return replacements;
+}
+
+function applyImageUrlReplacements(html: string, replacements: Map<string, string>): string {
+  let result = html;
+  for (const [original, url] of replacements) {
+    result = result.split(`src="${original}"`).join(`src="${url}"`);
+  }
+  return result;
+}
+
 /**
  * Resolve relative `<img src>` paths (relative to the document's directory) to
- * blob URLs by reading the files through the Tauri FS plugin. Absolute URLs are
- * left untouched. Returns the rewritten HTML plus the blob URLs that were
- * created, so the caller can revoke them when they are no longer needed.
+ * blob URLs. Returns the rewritten HTML plus the blob URLs that were created,
+ * so the caller can revoke them when they are no longer needed.
  */
 export async function resolveImagePaths(
   html: string,
   filePath: string,
 ): Promise<{ html: string; blobUrls: string[] }> {
-  const baseDir = dirnameOf(filePath);
-  const imgRegex = /<img\s+[^>]*?src="([^"]+)"[^>]*?>/g;
-  let imgMatch;
-  const replacements = new Map<string, string>();
+  const replacements = await collectLocalImageUrls(html, filePath, (bytes, mimeType) => {
+    const blob = new Blob([bytes], { type: mimeType });
+    return URL.createObjectURL(blob);
+  });
 
-  const imgPromises: Promise<void>[] = [];
-  while ((imgMatch = imgRegex.exec(html)) !== null) {
-    const src = imgMatch[1];
-    if (!isAbsoluteUrl(src)) {
-      // marked percent-encodes spaces / non-ASCII in the src; decode before
-      // touching the filesystem so files like "my photo.png" resolve.
-      const decodedSrc = decodeImageSrc(src);
-      const absolutePath = resolveRelativePath(baseDir, decodedSrc);
-      imgPromises.push(
-        readFile(absolutePath).then(data => {
-          const blob = new Blob([data], { type: mimeTypeFromPath(decodedSrc) });
-          const blobUrl = URL.createObjectURL(blob);
-          replacements.set(src, blobUrl);
-        }).catch(err => {
-          console.warn('Failed to load image:', absolutePath, err);
-        })
-      );
-    }
+  return { html: applyImageUrlReplacements(html, replacements), blobUrls: Array.from(replacements.values()) };
+}
+
+function bytesToBase64(bytes: Uint8Array<ArrayBuffer>): string {
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
   }
+  return btoa(binary);
+}
 
-  await Promise.all(imgPromises);
+/**
+ * Resolve relative `<img src>` paths to inlined `data:` URIs instead of blob
+ * URLs. Used by the HTML/PDF export path (useHtmlExport.ts): a blob: URL only
+ * resolves inside the document that created it, but the exported HTML is
+ * either written to an arbitrary folder (HTML export) or rendered from a temp
+ * directory by the native PDF pipeline (PDF export) — in both cases a
+ * separate context with no access to the original blob (#623).
+ */
+export async function resolveImagePathsToDataUris(html: string, filePath: string): Promise<string> {
+  const replacements = await collectLocalImageUrls(html, filePath, (bytes, mimeType) => {
+    return `data:${mimeType};base64,${bytesToBase64(bytes)}`;
+  });
 
-  let resolvedHtml = html;
-  for (const [original, blobUrl] of replacements) {
-    resolvedHtml = resolvedHtml.split(`src="${original}"`).join(`src="${blobUrl}"`);
-  }
-
-  return { html: resolvedHtml, blobUrls: Array.from(replacements.values()) };
+  return applyImageUrlReplacements(html, replacements);
 }

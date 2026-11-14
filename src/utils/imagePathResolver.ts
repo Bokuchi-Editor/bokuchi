@@ -29,9 +29,14 @@ export function isAbsoluteUrl(src: string): boolean {
   );
 }
 
-/** Look up the MIME type for a file path's extension. */
+/** Strip a trailing `?query` and/or `#fragment` from a path (#623). */
+export function stripQueryAndFragment(path: string): string {
+  return path.split(/[?#]/)[0];
+}
+
+/** Look up the MIME type for a file path's extension (query/fragment-aware, #623). */
 export function mimeTypeFromPath(src: string): string {
-  const ext = src.split('.').pop()?.toLowerCase() || '';
+  const ext = stripQueryAndFragment(src).split('.').pop()?.toLowerCase() || '';
   return IMAGE_MIME_MAP[ext] || DEFAULT_MIME;
 }
 
@@ -51,9 +56,20 @@ export function decodeImageSrc(src: string): string {
   }
 }
 
-/** Resolve a relative path against a base directory path, collapsing . and .. segments. */
+/** True for a Windows drive-letter path (`C:/...` or `C:\...`), forward-slashed or not. */
+function isWindowsDrivePath(path: string): boolean {
+  return /^[A-Za-z]:[/\\]/.test(path);
+}
+
+/**
+ * Resolve a relative path against a base directory path, collapsing . and ..
+ * segments (either separator is accepted and normalized to `/`). A POSIX base
+ * gets a leading `/`; a Windows drive-letter base (`C:/Users/...`) does not,
+ * since `/C:/Users/...` is not a valid Windows path and fails file reads with
+ * OS error 123 (#623).
+ */
 export function resolveRelativePath(baseDirPath: string, relativePath: string): string {
-  const parts = (baseDirPath + '/' + relativePath).split('/').filter(Boolean);
+  const parts = (baseDirPath + '/' + relativePath).replace(/\\/g, '/').split('/').filter(Boolean);
   const resolved: string[] = [];
   for (const part of parts) {
     if (part === '.') continue;
@@ -63,10 +79,16 @@ export function resolveRelativePath(baseDirPath: string, relativePath: string): 
       resolved.push(part);
     }
   }
-  return '/' + resolved.join('/');
+  const root = isWindowsDrivePath(baseDirPath) ? '' : '/';
+  return root + resolved.join('/');
 }
 
-/** Extract the directory portion of a file path (no trailing slash). */
+/**
+ * Extract the directory portion of a file path (no trailing slash). Callers
+ * normalize `\` to `/` first, but this also recognizes a literal backslash as
+ * a defense-in-depth fallback for an un-normalized Windows path (#623).
+ */
 export function dirnameOf(filePath: string): string {
-  return filePath.substring(0, filePath.lastIndexOf('/'));
+  const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+  return filePath.substring(0, lastSep);
 }

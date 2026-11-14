@@ -68,4 +68,14 @@ describe('rewriteMarpRelativeImages', () => {
     expect(convertFileSrc).toHaveBeenCalledWith(`/Users/me/deck/images/${name}`);
     expect(out).toBe(`<img src="${asset(`/Users/me/deck/images/${name}`)}">`);
   });
+
+  // #623: a trailing ?query/#fragment isn't part of the real file name, so it
+  // must not reach the filesystem path — but the HTML replacement key (the
+  // raw src) still carries it, same split as the percent-decoding case above.
+  it('strips a trailing ?query/#fragment before resolving the fs path (#623)', () => {
+    vi.mocked(convertFileSrc).mockClear();
+    const out = rewriteMarpRelativeImages('<img src="icon.svg?v=1">', FILE);
+    expect(convertFileSrc).toHaveBeenCalledWith('/Users/me/deck/icon.svg');
+    expect(out).toBe(`<img src="${asset('/Users/me/deck/icon.svg')}">`);
+  });
 });

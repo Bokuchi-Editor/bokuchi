@@ -521,4 +521,13 @@ export const desktopApi = {
   async copyImageAsset(srcPath: string, destDir: string, subdir: string): Promise<string> {
     return invoke<string>('copy_image_asset', { srcPath, destDir, subdir });
   },
+
+  // Read an image file's raw bytes server-side (via Rust command), bypassing
+  // the fs plugin's static scope — same rationale as copyImageAsset: a
+  // Markdown-referenced image, or the document itself, can live outside
+  // $HOME/$DESKTOP/$DOCUMENT/$DOWNLOAD (#623).
+  async readImageBytes(path: string): Promise<Uint8Array<ArrayBuffer>> {
+    const bytes = await invoke<number[]>('read_image_bytes', { path });
+    return new Uint8Array(bytes);
+  },
 };

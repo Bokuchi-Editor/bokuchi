@@ -4,6 +4,7 @@ import { desktopApi } from '../../api/desktopApi';
 import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../../types/settings';
 import { createCodeRenderer, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
+import { resolveImagePathsToDataUris } from './previewHtmlProcessing';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
@@ -95,6 +96,15 @@ export function useHtmlExport({
     // PlantUML follows the same light/dark rule as Mermaid (inline SVG).
     if (renderingSettings.enablePlantUml && contentHasPlantUml(processedContent)) {
       html = await processPlantUmlBlocks(html, mermaidDark);
+    }
+
+    // Inline relative local images as data: URIs (#623): unlike the preview's
+    // blob: URLs, the exported HTML is either saved to an arbitrary folder or
+    // rendered from a temp directory by the native PDF pipeline — neither can
+    // resolve a path relative to the source document, or reach a blob: URL
+    // scoped to this document's own webview.
+    if (filePath) {
+      html = await resolveImagePathsToDataUris(html, filePath);
     }
 
     // Inline KaTeX's CSS + fonts only when the output actually contains a

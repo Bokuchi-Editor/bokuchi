@@ -1,12 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// previewHtmlProcessing imports the Tauri fs plugin at module level
-// (auto-resolved from src/__mocks__).
-vi.mock('@tauri-apps/plugin-fs');
+vi.mock('../../../api/desktopApi', () => ({
+  desktopApi: {
+    readImageBytes: vi.fn(),
+  },
+}));
 
 import { marked } from 'marked';
-import { injectCodeCopyButtons, transformCheckboxes } from '../previewHtmlProcessing';
+import { injectCodeCopyButtons, transformCheckboxes, resolveImagePaths, resolveImagePathsToDataUris } from '../previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../../utils/sanitizeHtml';
+import { desktopApi } from '../../../api/desktopApi';
 
 describe('injectCodeCopyButtons', () => {
   it('wraps a highlighted code block with a container and copy button', () => {
@@ -157,5 +160,49 @@ describe('transformCheckboxes', () => {
     expect(inputs[1].hasAttribute('checked')).toBe(true);
     expect(inputs.every((i) => !i.hasAttribute('disabled'))).toBe(true);
     expect(body.querySelectorAll('li.checkbox-item > .checkbox-text')).toHaveLength(2);
+  });
+});
+
+describe('resolveImagePaths / resolveImagePathsToDataUris (#623)', () => {
+  const readImageBytes = vi.mocked(desktopApi.readImageBytes);
+
+  beforeEach(() => {
+    readImageBytes.mockReset();
+    readImageBytes.mockResolvedValue(new Uint8Array([1, 2, 3]));
+    globalThis.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
+  });
+
+  it('reads a relative <img src> through desktopApi.readImageBytes, resolved against the document directory', async () => {
+    const { html } = await resolveImagePaths('<img src="images/pic.png">', '/docs/note.md');
+    expect(readImageBytes).toHaveBeenCalledWith('/docs/images/pic.png');
+    expect(html).toBe('<img src="blob:mock-url">');
+  });
+
+  it('leaves an absolute URL untouched and never calls readImageBytes', async () => {
+    const html = '<img src="https://example.com/a.png">';
+    const result = await resolveImagePaths(html, '/docs/note.md');
+    expect(readImageBytes).not.toHaveBeenCalled();
+    expect(result.html).toBe(html);
+  });
+
+  it('resolves the on-disk path without a trailing ?query/#fragment, but keeps the original src in the HTML', async () => {
+    const { html } = await resolveImagePaths('<img src="icon.svg?v=1">', '/docs/note.md');
+    expect(readImageBytes).toHaveBeenCalledWith('/docs/icon.svg');
+    expect(html).toBe('<img src="blob:mock-url">');
+  });
+
+  it('leaves the original src and warns when the read fails', async () => {
+    readImageBytes.mockRejectedValueOnce(new Error('not found'));
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const html = '<img src="missing.png">';
+    const result = await resolveImagePaths(html, '/docs/note.md');
+    expect(result.html).toBe(html);
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it('resolveImagePathsToDataUris inlines the bytes as a base64 data URI with the correct MIME type', async () => {
+    const html = await resolveImagePathsToDataUris('<img src="diagram.svg">', '/docs/note.md');
+    expect(html).toBe('<img src="data:image/svg+xml;base64,AQID">');
   });
 });
