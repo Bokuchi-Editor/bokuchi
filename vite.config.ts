@@ -82,7 +82,14 @@ export default defineConfig(async () => {
         output: {
           entryFileNames: 'assets/[name]-[hash].js',
           chunkFileNames: 'assets/[name]-[hash].js',
-          assetFileNames: 'assets/[name]-[hash].[ext]'
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+          // Split the two heaviest always-loaded dependencies out of the main
+          // entry chunk so the webview can parse them as separate chunks
+          // instead of one multi-MB blocking bundle.
+          manualChunks(id: string) {
+            if (id.includes('node_modules/monaco-editor')) return 'monaco';
+            if (id.includes('node_modules/@mui')) return 'mui';
+          }
         }
       }
     },

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { loadLanguage } from '../i18n';
 import { ThemeId, getThemeByName, applyThemeToDocument, registerCustomThemes } from '../themes';
 import { CustomTheme, isCustomThemeId } from '../themes/customTheme';
 import { storeApi } from '../api/storeApi';
@@ -79,7 +80,7 @@ export const useSettings = ({
         const settings = await storeApi.loadAppSettings();
 
         setLanguage(settings.interface.language);
-        i18n.changeLanguage(settings.interface.language);
+        await loadLanguage(settings.interface.language);
 
         // Custom themes must be registered before the saved theme is resolved.
         // If the saved theme is a custom id whose definition is gone (corrupt
@@ -220,7 +221,7 @@ export const useSettings = ({
 
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    i18n.changeLanguage(newLanguage);
+    loadLanguage(newLanguage);
   };
 
   const handleThemeChange = (newTheme: ThemeId) => {
@@ -272,7 +273,7 @@ export const useSettings = ({
     setAppSettings(newSettings);
 
     setLanguage(newSettings.interface.language);
-    i18n.changeLanguage(newSettings.interface.language);
+    await loadLanguage(newSettings.interface.language);
 
     setTheme(newSettings.appearance.theme);
     applyThemeToDocument(newSettings.appearance.theme);

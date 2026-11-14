@@ -9,6 +9,10 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+vi.mock('../../i18n', () => ({
+  loadLanguage: vi.fn(),
+}));
+
 vi.mock('../../themes', () => ({
   getThemeByName: vi.fn().mockReturnValue({ palette: { mode: 'light' } }),
   applyThemeToDocument: vi.fn(),
