@@ -355,4 +355,51 @@ describe('useTabsDesktop – file lifecycle', () => {
     expect(result.current.tabs[0].isNew).toBe(true);
     expect(result.current.tabs[0].filePath).toBeUndefined();
   });
+
+  // T-UTD-09: renameFile must normalize a backslash-separated oldPath (as
+  // delivered by the folder tree on Windows, never run through
+  // normalizeFilePath the way an open tab's filePath is) before deriving the
+  // renamed file's directory — otherwise lastIndexOf('/') finds nothing and
+  // the rename targets a bogus root-level path.
+  it('T-UTD-09: renameFile normalizes a backslash-separated path before computing the new path', async () => {
+    const { result } = await renderInitialized();
+    vi.mocked(desktopApi.renameFile).mockResolvedValue({ success: true });
+
+    let newPath: string | undefined;
+    await act(async () => {
+      newPath = await result.current.renameFile('C:\\Users\\me\\docs\\old.md', 'new.md');
+    });
+
+    expect(newPath).toBe('C:/Users/me/docs/new.md');
+    expect(desktopApi.renameFile).toHaveBeenCalledWith(
+      'C:/Users/me/docs/old.md',
+      'C:/Users/me/docs/new.md',
+    );
+  });
+
+  // T-UTD-10: an open tab's filePath is always normalized (openFile/saveTab),
+  // so renameFile must normalize the folder tree's raw oldPath before
+  // matching against it — otherwise a Windows backslash path would never
+  // match and the open tab would silently keep pointing at the renamed file.
+  it('T-UTD-10: renameFile updates an open tab even when called with a backslash-separated oldPath', async () => {
+    const { result } = await renderInitialized();
+    vi.mocked(desktopApi.renameFile).mockResolvedValue({ success: true });
+
+    act(() => {
+      result.current.addTab({
+        title: 'old.md',
+        content: '# doc',
+        filePath: 'C:/Users/me/docs/old.md', // already normalized, as openFile/saveTab store it
+        isModified: false,
+        isNew: false,
+      });
+    });
+
+    await act(async () => {
+      await result.current.renameFile('C:\\Users\\me\\docs\\old.md', 'new.md');
+    });
+
+    expect(result.current.tabs[0].filePath).toBe('C:/Users/me/docs/new.md');
+    expect(result.current.tabs[0].title).toBe('new.md');
+  });
 });
