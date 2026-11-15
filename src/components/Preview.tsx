@@ -19,6 +19,7 @@ import { useProcessedMarkdown } from './preview/useProcessedMarkdown';
 import { usePreviewScrollSync } from './preview/usePreviewScrollSync';
 import { usePreviewLinkClicks } from './preview/usePreviewLinkClicks';
 import { usePreviewCheckboxToggle } from './preview/usePreviewCheckboxToggle';
+import { usePreviewScrollRegionState } from './preview/usePreviewScrollRegionState';
 import { usePreviewCodeCopy } from './preview/usePreviewCodeCopy';
 import { useTablePreviewEditing } from './preview/useTablePreviewEditing';
 import { useHtmlExport } from './preview/useHtmlExport';
@@ -82,6 +83,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
   const setScrollContainer = usePreviewScrollSync(scrollContainerRef, scrollFraction, onScrollChange);
   usePreviewLinkClicks(previewRef, isMarp);
   usePreviewCheckboxToggle({ previewRef, isMarp, contentRef, onContentChangeRef });
+  usePreviewScrollRegionState({ previewRef, htmlContent });
   usePreviewCodeCopy(previewRef, isMarp, htmlContent);
 
   const {
