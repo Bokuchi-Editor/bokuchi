@@ -5,6 +5,7 @@ import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../..
 import { createCodeRenderer, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { buildExportHTML } from '../../utils/exportStyles';
+import { rasterizeCssGradients } from '../../utils/gradientRasterizer';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
 import { parseMarkdownToHtml } from '../../utils/parseMarkdown';
 import { contentHasEmojiShortcode, loadEmojiShortcodeMap, type EmojiShortcodeMap } from '../../utils/emojiShortcodes';
@@ -14,6 +15,9 @@ import { deriveExportFileName } from '../../utils/pathUtils';
 // @page box (WebKit honours those for the page margin), so the native margin
 // is kept at 0 to avoid doubling them.
 const A4_PAGE = { widthInch: 8.27, heightInch: 11.69, marginInch: 0 };
+
+/** CSS pixels per inch, matching the native print window's sizing convention (pdf_export.rs). */
+const CSS_DPI = 96;
 
 interface UseHtmlExportParams {
   /** Processed markdown (with KaTeX placeholders) — same input the preview rendered. */
@@ -137,11 +141,20 @@ export function useHtmlExport({
         fontFamily,
         direction,
       });
+      // Flatten CSS gradient backgrounds to PNG before handing off to the
+      // native print pipeline: macOS's CGPDFContext (driving NSPrintOperation
+      // on WKWebView) drops a gradient's alpha/transition and paints an
+      // opaque solid shape instead (long-standing WebKit bugs 19942, 261255).
+      // A rasterized image prints fine since it's just an embedded bitmap.
+      const printReadyHTML = await rasterizeCssGradients(fullHTML, {
+        widthPx: Math.round(A4_PAGE.widthInch * CSS_DPI),
+        heightPx: 1400,
+      });
       // Render + print to PDF natively (Rust side); the page is saved to the
       // location chosen in the file dialog. The native pipeline (render, print,
       // image recompression) takes a few seconds, so surface its progress.
       const result = await desktopApi.exportPdfFile(
-        fullHTML,
+        printReadyHTML,
         A4_PAGE,
         deriveExportFileName(filePath, 'pdf'),
         () => setIsExportingPdf(true),
