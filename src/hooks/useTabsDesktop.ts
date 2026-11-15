@@ -331,17 +331,25 @@ export const useTabsDesktop = () => {
   }, [state.tabs, setTabFilePath, updateTabTitle, setTabModified]);
 
   const renameFile = useCallback(async (oldPath: string, newName: string) => {
-    // Build new path from old path's directory + new name
-    const dir = oldPath.substring(0, oldPath.lastIndexOf('/'));
+    // Normalize first: a path from the folder tree (as opposed to an open
+    // tab) is the raw backslash-separated path Rust's read_directory
+    // returns on Windows, never run through normalizeFilePath. Splitting
+    // on '/' without normalizing first finds no separator, so `dir` becomes
+    // '' and the rename targets a bogus root-level path (#623-style bug).
+    const normalizedOldPath = normalizeFilePath(oldPath);
+    const dir = normalizedOldPath.substring(0, normalizedOldPath.lastIndexOf('/'));
     const newPath = `${dir}/${newName}`;
 
-    const result = await desktopApi.renameFile(oldPath, newPath);
+    const result = await desktopApi.renameFile(normalizedOldPath, newPath);
     if (!result.success) {
       throw new Error(result.error || 'Failed to rename file');
     }
 
-    // Update any open tab that references this file
-    const tab = state.tabs.find(t => t.filePath === oldPath);
+    // Update any open tab that references this file. Compare against the
+    // normalized path too: an open tab's filePath is always normalized
+    // (see openFile/saveTab/saveTabAs), so comparing the raw folder-tree
+    // path would miss it on Windows.
+    const tab = state.tabs.find(t => t.filePath === normalizedOldPath);
     if (tab) {
       setTabFilePath(tab.id, newPath);
       updateTabTitle(tab.id, newName);
