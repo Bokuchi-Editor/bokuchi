@@ -5,7 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@tauri-apps/plugin-fs');
 
 import { marked } from 'marked';
-import { injectCodeCopyButtons, transformCheckboxes } from '../previewHtmlProcessing';
+import { injectCodeCopyButtons, transformCheckboxes, tagDetailsElements } from '../previewHtmlProcessing';
 import { sanitizeUserHtml } from '../../../utils/sanitizeHtml';
 
 describe('injectCodeCopyButtons', () => {
@@ -157,5 +157,34 @@ describe('transformCheckboxes', () => {
     expect(inputs[1].hasAttribute('checked')).toBe(true);
     expect(inputs.every((i) => !i.hasAttribute('disabled'))).toBe(true);
     expect(body.querySelectorAll('li.checkbox-item > .checkbox-text')).toHaveLength(2);
+  });
+});
+
+describe('tagDetailsElements', () => {
+  const dom = (html: string) => new DOMParser().parseFromString(html, 'text/html').body;
+
+  it('numbers <details> elements in document order', () => {
+    const html = '<details><summary>a</summary>one</details><p>mid</p><details><summary>b</summary>two</details>';
+    const body = dom(tagDetailsElements(html));
+    const els = Array.from(body.querySelectorAll('details'));
+    expect(els.map((el) => el.getAttribute('data-bk-details-index'))).toEqual(['0', '1']);
+  });
+
+  it('numbers nested <details> in document order, parent before child', () => {
+    const html = '<details><summary>outer</summary><details><summary>inner</summary>x</details></details>';
+    const body = dom(tagDetailsElements(html));
+    const els = Array.from(body.querySelectorAll('details'));
+    expect(els.map((el) => el.getAttribute('data-bk-details-index'))).toEqual(['0', '1']);
+  });
+
+  it('returns html unchanged when there is no <details>', () => {
+    const html = '<p>hello &amp; <code>x</code></p>\n';
+    expect(tagDetailsElements(html)).toBe(html);
+  });
+
+  it('markup survives sanitizeUserHtml', () => {
+    const body = dom(sanitizeUserHtml(tagDetailsElements('<details><summary>a</summary>one</details>')));
+    const el = body.querySelector('details');
+    expect(el?.getAttribute('data-bk-details-index')).toBe('0');
   });
 });

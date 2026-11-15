@@ -91,6 +91,30 @@ function isLeadingChild(node: Node): boolean {
   return true;
 }
 
+/**
+ * Tag every `<details>` element with a stable document-order index.
+ *
+ * Every content edit re-runs the whole markdown → HTML pipeline and replaces
+ * the preview's DOM subtree via dangerouslySetInnerHTML, which resets any
+ * `<details open>` the reader had toggled open back to closed (the open/closed
+ * state lives only on the live DOM node, never in the HTML string). Tagging
+ * each element with its document-order index lets usePreviewDetailsState
+ * (event delegation on the persistent preview container, same technique as
+ * usePreviewCheckboxToggle above) reapply the open state by index after each
+ * swap. Call this on marked's raw output, before sanitizing — DOMPurify's
+ * default profile keeps data-* attributes, so the index survives untouched.
+ */
+export function tagDetailsElements(html: string): string {
+  if (!/<details/i.test(html)) return html;
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.body.querySelectorAll('details').forEach((el, index) => {
+    el.setAttribute('data-bk-details-index', String(index));
+  });
+
+  return doc.body.innerHTML;
+}
+
 // Feather icons (MIT): "copy" and "check". Inlined SVG so the button needs no
 // image assets; aria-hidden because the <button> itself carries the label.
 const COPY_BUTTON_HTML =
