@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 
 // Mock highlight.js
 vi.mock('highlight.js', () => ({
@@ -41,6 +41,7 @@ import {
   processKatex,
   processMermaidBlocks,
   reinitializeMermaid,
+  ensureHljsLoaded,
 } from '../markdownRenderers';
 
 import { marked } from 'marked';
@@ -48,6 +49,10 @@ import { displayWidth } from '../tableCompactColumns';
 import mermaid from 'mermaid';
 
 const mockRender = vi.mocked(mermaid.render);
+
+// renderCode reads the lazy-loaded (mocked) highlight.js module, so it must
+// be loaded once before any test that exercises highlighting.
+beforeAll(() => ensureHljsLoaded());
 
 describe('parseCodeFenceInfo (language:filename, #534)', () => {
   it('returns nothing for an empty or missing info string', () => {

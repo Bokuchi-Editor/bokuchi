@@ -98,6 +98,8 @@ vi.mock('../../utils/markdownRenderers', () => ({
   processMermaidBlocks: vi.fn().mockImplementation(async (html: string) => html),
   contentHasMermaid: vi.fn().mockReturnValue(false),
   reinitializeMermaid: vi.fn(),
+  ensureHljsLoaded: vi.fn().mockResolvedValue(undefined),
+  contentHasCodeFence: vi.fn().mockReturnValue(false),
 }));
 
 vi.mock('../../components/MarpPreview', () => ({

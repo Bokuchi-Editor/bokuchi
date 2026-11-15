@@ -2,7 +2,7 @@ import { useState, type MutableRefObject } from 'react';
 import { marked } from 'marked';
 import { desktopApi } from '../../api/desktopApi';
 import type { PreviewDirection, RenderingSettings, TableLayoutMode } from '../../types/settings';
-import { createCodeRenderer, contentHasMermaid, processMermaidBlocks } from '../../utils/markdownRenderers';
+import { createCodeRenderer, contentHasMermaid, processMermaidBlocks, ensureHljsLoaded, contentHasCodeFence } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { buildExportHTML } from '../../utils/exportStyles';
 import { sanitizeUserHtml } from '../../utils/sanitizeHtml';
@@ -74,6 +74,12 @@ export function useHtmlExport({
     let emojiMap: EmojiShortcodeMap | null = null;
     if ((renderingSettings.enableEmoji ?? true) && contentHasEmojiShortcode(processedContent)) {
       emojiMap = await loadEmojiShortcodeMap();
+    }
+
+    // highlight.js (lazy-loaded, same as the preview path): only needed when
+    // a fenced block declares a language.
+    if (contentHasCodeFence(processedContent)) {
+      await ensureHljsLoaded();
     }
 
     // Same shared pipeline as the preview (GFM + Alerts + emoji + CJK #400).

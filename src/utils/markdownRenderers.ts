@@ -1,4 +1,3 @@
-import hljs from 'highlight.js';
 import type { Token, Tokens } from 'marked';
 import { maskCodeRegions, stripCodeRegions } from './codeRegions';
 import { PLANTUML_LANGS } from './plantumlRenderer';
@@ -8,6 +7,24 @@ import { COMPACT_COLUMN_CLASS, selectCompactColumns } from './tableCompactColumn
 
 /** Languages always handled by a post-processor — skip syntax highlighting. */
 const ALWAYS_POST_PROCESSED_LANGS = ['mermaid'];
+
+// highlight.js is only needed when a fenced block declares a language, so it
+// is lazy-loaded like katex/mermaid below instead of a static top-level
+// import (it, plus its two theme stylesheets, would otherwise load on every
+// startup even for a plain-text document).
+let hljsModule: typeof import('highlight.js')['default'] | null = null;
+
+/** Loads highlight.js on first use; subsequent calls reuse the cached module. */
+export async function ensureHljsLoaded(): Promise<void> {
+  if (!hljsModule) {
+    hljsModule = (await import('highlight.js')).default;
+  }
+}
+
+/** Check whether content has a fenced code block with a language tag. */
+export function contentHasCodeFence(content: string): boolean {
+  return /^(?:```|~~~)[ \t]*[^\s`]/m.test(content);
+}
 
 /**
  * Build a custom `marked` table renderer that tags every cell with its source
@@ -136,9 +153,9 @@ export function createCodeRenderer({ enablePlantUml = false }: CodeRendererOptio
       return `<pre><code class="language-${lang}">${escaped}</code></pre>`;
     }
     const label = renderFilenameLabel(filename);
-    if (lang && hljs.getLanguage(lang)) {
+    if (lang && hljsModule?.getLanguage(lang)) {
       try {
-        const highlighted = hljs.highlight(text, { language: lang }).value;
+        const highlighted = hljsModule.highlight(text, { language: lang }).value;
         return `<pre>${label}<code class="hljs language-${lang}">${highlighted}</code></pre>`;
       } catch (err) {
         console.warn('Highlight.js error:', err);

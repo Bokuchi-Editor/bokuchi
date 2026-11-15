@@ -10,6 +10,8 @@ import {
   processMermaidBlocks,
   contentHasMermaid,
   reinitializeMermaid,
+  ensureHljsLoaded,
+  contentHasCodeFence,
 } from '../../utils/markdownRenderers';
 import { contentHasPlantUml, processPlantUmlBlocks } from '../../utils/plantumlRenderer';
 import { processEasterEggBlocks, transformCheckboxes, injectCodeCopyButtons, resolveImagePaths } from './previewHtmlProcessing';
@@ -109,6 +111,14 @@ export function useProcessedMarkdown({
         let emojiMap: EmojiShortcodeMap | null = null;
         if ((renderingSettings.enableEmoji ?? true) && contentHasEmojiShortcode(processedMarkdown)) {
           emojiMap = await loadEmojiShortcodeMap();
+          if (stale) return;
+        }
+
+        // highlight.js (lazy-loaded, like katex/mermaid above) is only needed
+        // when a fenced block declares a language; renderer.code reads the
+        // cached module at call time, so it just needs to be ready first.
+        if (contentHasCodeFence(processedMarkdown)) {
+          await ensureHljsLoaded();
           if (stale) return;
         }
 
