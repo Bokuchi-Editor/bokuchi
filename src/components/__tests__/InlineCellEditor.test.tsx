@@ -41,7 +41,8 @@ describe('InlineCellEditor', () => {
   ] as const)('T-ICE-01: %s commits and moves %s', (key, dir) => {
     renderEditor();
     fireEvent.change(textarea(), { target: { value: 'edited' } });
-    fireEvent.keyDown(textarea(), { key });
+    // fireEvent returns false when the handler cancelled the caret movement.
+    expect(fireEvent.keyDown(textarea(), { key })).toBe(false);
     expect(onCommit).toHaveBeenCalledWith('edited', dir);
   });
 
@@ -49,12 +50,13 @@ describe('InlineCellEditor', () => {
   it('T-ICE-02: ArrowLeft / ArrowRight move cells only from the caret at the text edge', () => {
     renderEditor();
     placeCaret(1);
-    fireEvent.keyDown(textarea(), { key: 'ArrowLeft' });
-    fireEvent.keyDown(textarea(), { key: 'ArrowRight' });
+    // Not cancelled: the textarea moves the caret as usual.
+    expect(fireEvent.keyDown(textarea(), { key: 'ArrowLeft' })).toBe(true);
+    expect(fireEvent.keyDown(textarea(), { key: 'ArrowRight' })).toBe(true);
     expect(onCommit).not.toHaveBeenCalled();
 
     placeCaret(3);
-    fireEvent.keyDown(textarea(), { key: 'ArrowRight' });
+    expect(fireEvent.keyDown(textarea(), { key: 'ArrowRight' })).toBe(false);
     expect(onCommit).toHaveBeenCalledWith('abc', 'right');
   });
 
@@ -79,7 +81,7 @@ describe('InlineCellEditor', () => {
   it('T-ICE-05: does not commit when there is no cell in that direction', () => {
     const canNavigate = vi.fn((dir: NavDir) => dir !== 'up');
     renderEditor(canNavigate);
-    fireEvent.keyDown(textarea(), { key: 'ArrowUp' });
+    expect(fireEvent.keyDown(textarea(), { key: 'ArrowUp' })).toBe(true);
     expect(canNavigate).toHaveBeenCalledWith('up');
     expect(onCommit).not.toHaveBeenCalled();
     expect(onCancel).not.toHaveBeenCalled();
