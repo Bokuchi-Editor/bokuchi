@@ -852,6 +852,40 @@ fn test_copy_image_asset_name_collision() {
     assert_eq!(std::fs::read(assets.join("photo.png")).unwrap(), b"old-content");
 }
 
+// R-CMD-36: read_file_bytes returns the raw bytes of a file anywhere on
+// disk — including outside the fs plugin's static scope (#623).
+#[test]
+fn test_read_file_bytes_success() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join("icon.svg");
+    std::fs::write(&path, b"<svg></svg>").unwrap();
+
+    let result = pollster::block_on(read_file_bytes(path.to_string_lossy().to_string()));
+    assert_eq!(result.unwrap(), b"<svg></svg>");
+}
+
+// R-CMD-37: a missing file yields a "File not found" error.
+#[test]
+fn test_read_file_bytes_missing() {
+    let result = pollster::block_on(read_file_bytes("/nonexistent/icon.svg".to_string()));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
+}
+
+// R-CMD-38: a file over the 20MB cap is rejected before being read into memory.
+#[test]
+fn test_read_file_bytes_too_large() {
+    let dir = TempDir::new().unwrap();
+    let path = dir.path().join("huge.png");
+    let file = std::fs::File::create(&path).unwrap();
+    file.set_len(21 * 1024 * 1024).unwrap();
+    drop(file);
+
+    let result = pollster::block_on(read_file_bytes(path.to_string_lossy().to_string()));
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("too large"));
+}
+
 // R-CMD-34: save_image_bytes writes the bytes and returns a forward-slashed
 // path relative to dest_dir.
 #[test]

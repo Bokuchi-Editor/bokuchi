@@ -265,8 +265,12 @@ export const useTabsDesktop = () => {
         // Save as new file (with dialog)
         const result = await desktopApi.saveFile(tab.content, tab.filePath);
         if (result.success && result.filePath) {
-          setTabFilePath(id, result.filePath);
-          const displayName = extractFileNameFromPath(result.filePath);
+          // Normalize immediately (like openFile): a fresh Save dialog result
+          // on Windows is still backslash-separated, and the preview's image
+          // path resolution (dirnameOf) assumes forward slashes (#623).
+          const normalizedFilePath = normalizeFilePath(result.filePath);
+          setTabFilePath(id, normalizedFilePath);
+          const displayName = extractFileNameFromPath(normalizedFilePath);
           updateTabTitle(id, displayName);
           setTabModified(id, false);
           // Set isNew flag to false since file was saved as new
@@ -274,12 +278,12 @@ export const useTabsDesktop = () => {
 
           // Update file hash info after save
           try {
-            const newHashInfo = await desktopApi.getFileHash(result.filePath);
+            const newHashInfo = await desktopApi.getFileHash(normalizedFilePath);
             updateTabFileHash(id, newHashInfo);
 
             // Add to recent files
             await storeApi.addRecentFile(
-              result.filePath,
+              normalizedFilePath,
               displayName,
               tab.content,
               newHashInfo.file_size,
@@ -313,8 +317,11 @@ export const useTabsDesktop = () => {
       const result = await desktopApi.saveFileAs(tab.content);
 
       if (result.success && result.filePath) {
-        setTabFilePath(id, result.filePath);
-        const displayName = extractFileNameFromPath(result.filePath);
+        // See saveTab: normalize immediately so later path math (image
+        // resolution's dirnameOf) always sees forward slashes (#623).
+        const normalizedFilePath = normalizeFilePath(result.filePath);
+        setTabFilePath(id, normalizedFilePath);
+        const displayName = extractFileNameFromPath(normalizedFilePath);
         updateTabTitle(id, displayName);
         setTabModified(id, false);
         // Set isNew flag to false since file was saved via Save As

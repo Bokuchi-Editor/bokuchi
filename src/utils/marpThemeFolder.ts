@@ -1,5 +1,6 @@
 import { readFile } from '@tauri-apps/plugin-fs';
 import { desktopApi } from '../api/desktopApi';
+import { isPathInDefaultFsScope } from './imagePathResolver';
 
 /**
  * Custom Marp theme folder support.
@@ -54,7 +55,13 @@ export async function scanThemeFolder(folderPath: string): Promise<LoadedTheme[]
   const themes = await Promise.all(
     cssFiles.map(async (entry): Promise<LoadedTheme | null> => {
       try {
-        const css = new TextDecoder('utf-8').decode(await readFile(entry.path));
+        // The theme folder (a free-form user setting) can live outside the fs
+        // plugin's static scope; fall back to the scope-bypassing command in
+        // that case (#623), same rationale as the image resolution above.
+        const bytes = (await isPathInDefaultFsScope(entry.path))
+          ? await readFile(entry.path)
+          : await desktopApi.readFileBytes(entry.path);
+        const css = new TextDecoder('utf-8').decode(bytes);
         return { file: entry.name, name: extractThemeName(css), css };
       } catch (err) {
         console.error('[MarpPreview] Failed to read theme CSS:', entry.path, err);
