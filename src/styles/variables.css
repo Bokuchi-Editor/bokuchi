@@ -25,6 +25,12 @@
   --color-syntax-variable: #e36209;
   --color-syntax-type: #005cc5;
 
+  /* Diff (+/-) lines in ```diff code blocks */
+  --color-diff-addition-text: #116329;
+  --color-diff-addition-background: #dafbe1;
+  --color-diff-deletion-text: #82071e;
+  --color-diff-deletion-background: #ffebe9;
+
   /* Search highlight */
   --color-search-highlight: #ffeb3b;
   --color-search-highlight-text: #000000;
@@ -57,6 +63,11 @@
   --color-syntax-function: #d2a8ff;
   --color-syntax-variable: #ffa657;
   --color-syntax-type: #79c0ff;
+
+  --color-diff-addition-text: #aff5b4;
+  --color-diff-addition-background: #033a16;
+  --color-diff-deletion-text: #ffdcd7;
+  --color-diff-deletion-background: #67060c;
 
   --color-search-highlight: #ffd54f;
   --color-search-highlight-text: #000000;
@@ -217,6 +228,11 @@
   --color-syntax-variable: #ffa657;
   --color-syntax-type: #79c0ff;
 
+  --color-diff-addition-text: #aff5b4;
+  --color-diff-addition-background: #033a16;
+  --color-diff-deletion-text: #ffdcd7;
+  --color-diff-deletion-background: #67060c;
+
   --color-search-highlight: #ffd54f;
   --color-search-highlight-text: #000000;
   --color-search-current-highlight: #ff9800;
@@ -283,6 +299,11 @@
   --color-syntax-variable: #ffa657;
   --color-syntax-type: #79c0ff;
 
+  --color-diff-addition-text: #aff5b4;
+  --color-diff-addition-background: #033a16;
+  --color-diff-deletion-text: #ffdcd7;
+  --color-diff-deletion-background: #67060c;
+
   --color-search-highlight: #ffd54f;
   --color-search-highlight-text: #000000;
   --color-search-current-highlight: #ff9800;
@@ -313,6 +334,11 @@
   --color-syntax-function: #00ff00;
   --color-syntax-variable: #33ff33;
   --color-syntax-type: #66ff66;
+
+  --color-diff-addition-text: #33ff33;
+  --color-diff-addition-background: #003300;
+  --color-diff-deletion-text: #ff6666;
+  --color-diff-deletion-background: #330000;
 
   --color-search-highlight: #004d00;
   --color-search-highlight-text: #00ff00;

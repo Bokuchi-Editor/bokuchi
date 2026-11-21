@@ -67,12 +67,16 @@
   color: var(--color-syntax-comment) !important;
 }
 
+/* Set text and background as a pair: highlight.js's github(-dark).css would
+   otherwise supply the text color, which has no contrast guarantee here. */
 .hljs-deletion {
-  background: var(--color-syntax-keyword) !important;
+  color: var(--color-diff-deletion-text) !important;
+  background: var(--color-diff-deletion-background) !important;
 }
 
 .hljs-addition {
-  background: var(--color-syntax-string) !important;
+  color: var(--color-diff-addition-text) !important;
+  background: var(--color-diff-addition-background) !important;
 }
 
 .hljs-emphasis {
