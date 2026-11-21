@@ -580,8 +580,9 @@ export type NavDir = 'right' | 'left' | 'down' | 'up';
 
 /**
  * Next cell coordinate when navigating a table grid. `row === -1` is the header.
- * Tab wraps to the next/previous row; Enter/arrows stay in the column. Returns
- * null when navigation would leave the table.
+ * Tab wraps to the next/previous row; Enter/arrows stay in the column. Pass
+ * `wrap: false` for the left/right arrow keys, which stop at the row's edge.
+ * Returns null when navigation would leave the table (or the row, unwrapped).
  */
 export function nextCell(
   row: number,
@@ -589,15 +590,18 @@ export function nextCell(
   rows: number,
   cols: number,
   dir: NavDir,
+  { wrap = true }: { wrap?: boolean } = {},
 ): { row: number; col: number } | null {
   switch (dir) {
     case 'right': {
       if (col < cols - 1) return { row, col: col + 1 };
+      if (!wrap) return null;
       const nr = row + 1;
       return nr <= rows - 1 ? { row: nr, col: 0 } : null;
     }
     case 'left': {
       if (col > 0) return { row, col: col - 1 };
+      if (!wrap) return null;
       const pr = row - 1;
       return pr >= -1 ? { row: pr, col: cols - 1 } : null;
     }

@@ -30,6 +30,29 @@ interface InlineCellEditorProps {
   /** Commit the value. `dir` requests navigation to an adjacent cell. */
   onCommit: (value: string, dir: NavDir | null) => void;
   onCancel: () => void;
+  /** Whether an arrow key in `dir` has a cell to move to (no row wrap). */
+  canNavigate?: (dir: NavDir) => boolean;
+}
+
+/**
+ * The cell an arrow key should move to, or null when it should move the caret.
+ * Left/Right only leave the cell from a collapsed caret at the text's start/end.
+ */
+function arrowNavDir(el: HTMLTextAreaElement, key: string): NavDir | null {
+  const { selectionStart, selectionEnd, value } = el;
+  const collapsed = selectionStart === selectionEnd;
+  switch (key) {
+    case 'ArrowUp':
+      return 'up';
+    case 'ArrowDown':
+      return 'down';
+    case 'ArrowLeft':
+      return collapsed && selectionStart === 0 ? 'left' : null;
+    case 'ArrowRight':
+      return collapsed && selectionEnd === value.length ? 'right' : null;
+    default:
+      return null;
+  }
 }
 
 /** Cap on the editor's auto-grown height; it scrolls internally beyond this. */
@@ -39,6 +62,10 @@ const MAX_EDITOR_HEIGHT = 320;
  * A word-wrapping textarea floated over a preview table cell for inline editing
  * (#1). It edits the raw Markdown cell text; the parent maps it back to source.
  * Enter commits and moves down, Tab/Shift+Tab move right/left, Esc cancels.
+ * The arrow keys move between cells too (#639): Up/Down always, Left/Right only
+ * once the caret sits at the start/end of the text, so they still move the
+ * caret within it. At the table's (or, for Left/Right, the row's) edge they
+ * fall back to plain caret movement and the editor stays open.
  *
  * A textarea (not an <input>) is used so long cell text wraps the same way the
  * rendered table wraps it, instead of scrolling out of view on a single line.
@@ -67,6 +94,7 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
   color,
   onCommit,
   onCancel,
+  canNavigate,
 }) => {
   const [value, setValue] = useState(initialValue);
   const [trackedKey, setTrackedKey] = useState(cellKey);
@@ -177,6 +205,14 @@ const InlineCellEditor: React.FC<InlineCellEditorProps> = ({
       e.preventDefault();
       doneRef.current = true;
       onCancel();
+    } else {
+      // Modified arrows keep their text meaning (extend the selection, jump words).
+      if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+      const dir = arrowNavDir(e.currentTarget, e.key);
+      if (dir && canNavigate?.(dir)) {
+        e.preventDefault();
+        commit(dir);
+      }
     }
   };
 

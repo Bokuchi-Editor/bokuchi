@@ -44,6 +44,7 @@ interface UseTablePreviewEditingResult {
   openTableEditor: (ti: number) => void;
   handleCellCommit: (value: string, dir: NavDir | null) => void;
   handleCellCancel: () => void;
+  canNavigateCell: (dir: NavDir) => boolean;
   handleTableApply: (newTable: ParsedTable) => void;
   closeTableEditor: () => void;
 }
@@ -173,6 +174,16 @@ export function useTablePreviewEditing({
     }
   }, [focusPendingCell, preserveScrollAcrossClose, contentRef, onContentChangeRef]);
 
+  // Whether an arrow key has a cell to move to. Unlike Tab, left/right stop at
+  // the row's edge; at any edge the editor stays open instead of committing.
+  const canNavigateCell = useCallback((dir: NavDir) => {
+    const cur = editingRef.current;
+    if (!cur) return false;
+    const dims = getTableDimensions(contentRef.current, cur.ti);
+    if (!dims) return false;
+    return nextCell(cur.row, cur.col, dims.rows, dims.cols, dir, { wrap: false }) !== null;
+  }, [contentRef]);
+
   const handleCellCancel = useCallback(() => {
     pendingFocusCellRef.current = null;
     preserveScrollAcrossClose();
@@ -283,6 +294,7 @@ export function useTablePreviewEditing({
     openTableEditor,
     handleCellCommit,
     handleCellCancel,
+    canNavigateCell,
     handleTableApply,
     closeTableEditor,
   };

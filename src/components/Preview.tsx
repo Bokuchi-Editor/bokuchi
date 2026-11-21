@@ -93,6 +93,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
     openTableEditor,
     handleCellCommit,
     handleCellCancel,
+    canNavigateCell,
     handleTableApply,
     closeTableEditor,
   } = useTablePreviewEditing({
@@ -263,6 +264,7 @@ const MarkdownPreview: React.FC<PreviewProps> = ({ content, darkMode, theme, glo
             color={palette.text.primary}
             onCommit={handleCellCommit}
             onCancel={handleCellCancel}
+            canNavigate={canNavigateCell}
           />
         )}
 
