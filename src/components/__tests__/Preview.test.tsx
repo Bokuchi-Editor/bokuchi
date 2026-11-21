@@ -740,7 +740,8 @@ describe('MarkdownPreview – Marp detection', () => {
 
   // T-PV-23: Marp disabled renders normal preview even for marp content
   it('T-PV-23: renders normal preview when enableMarp is false', async () => {
-    vi.mocked(contentIsMarp).mockReturnValue(false);
+    // The content is Marp, so only the enableMarp gate keeps MarpPreview away.
+    vi.mocked(contentIsMarp).mockReturnValue(true);
 
     const { container, queryByTestId } = await renderPreviewContent({
       content: '---\nmarp: true\n---\n# Slide',
