@@ -91,6 +91,8 @@ describe('deriveCssVariablesFromCustom', () => {
     expect(dark['--color-syntax-keyword']).toBe('#ff7b72');
     expect(light['--color-search-highlight']).toBe('#ffeb3b');
     expect(dark['--color-search-highlight']).toBe('#ffd54f');
+    expect(light['--color-diff-addition-text']).toBe('#116329');
+    expect(dark['--color-diff-addition-background']).toBe('#033a16');
     // Comment adapts to the theme's own secondary text (like Dawn/Ink presets)
     expect(light['--color-syntax-comment']).toBe(sampleCustomTheme().colors.textSecondary);
   });
