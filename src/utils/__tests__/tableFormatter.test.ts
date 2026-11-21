@@ -464,5 +464,14 @@ describe('tableFormatter', () => {
       expect(nextCell(0, 1, 2, 2, 'up')).toEqual({ row: -1, col: 1 });
       expect(nextCell(-1, 0, 2, 2, 'up')).toBeNull();
     });
+
+    // T-TF-43: wrap:false (arrow keys) stops left/right at the row's edge
+    it('T-TF-43: does not wrap left/right when wrap is false', () => {
+      expect(nextCell(0, 0, 2, 2, 'right', { wrap: false })).toEqual({ row: 0, col: 1 });
+      expect(nextCell(0, 1, 2, 2, 'right', { wrap: false })).toBeNull();
+      expect(nextCell(0, 1, 2, 2, 'left', { wrap: false })).toEqual({ row: 0, col: 0 });
+      expect(nextCell(0, 0, 2, 2, 'left', { wrap: false })).toBeNull();
+      expect(nextCell(0, 0, 2, 2, 'up', { wrap: false })).toEqual({ row: -1, col: 0 });
+    });
   });
 });

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.1...HEAD)
 
+### Added
+
+- Arrow keys move between cells in the preview's inline table cell editor: `↑` / `↓` go to the cell above / below, and `←` / `→` go to the cell on the left / right once the caret is at the start / end of the text (they do not wrap to another row). At the table's edge the editor stays open. (#639)
+
 ## [1.2.1](https://github.com/Bokuchi-Editor/bokuchi/compare/v1.2.0...v1.2.1) - 2026-11-10
 
 ### Added
