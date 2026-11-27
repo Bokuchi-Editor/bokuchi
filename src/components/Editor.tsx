@@ -83,6 +83,29 @@ function getClipboardImageFile(dt: DataTransfer | null): File | null {
   return null;
 }
 
+/** Return a clipboard string when it contains a standalone HTTP(S) URL. */
+function getPastedHttpUrl(text: string): string | null {
+  const candidate = text.trim();
+  if (!candidate || /\s/.test(candidate)) return null;
+
+  try {
+    const url = new URL(candidate);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname
+      ? candidate
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function escapeMarkdownLinkLabel(text: string): string {
+  return text.replace(/\\/g, '\\\\').replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+}
+
+function escapeMarkdownLinkDestination(url: string): string {
+  return url.replace(/[\\()]/g, '\\$&');
+}
+
 const MarkdownEditor: React.FC<EditorProps> = ({
   content,
   onChange,
@@ -336,6 +359,22 @@ const MarkdownEditor: React.FC<EditorProps> = ({
   const handlePasteWithData = useCallback(async (htmlData: string, plainText: string) => {
 
     try {
+      const ed = editorRef.current;
+      const selection = ed?.getSelection();
+      const hasSelection = selection && (
+        selection.startLineNumber !== selection.endLineNumber ||
+        selection.startColumn !== selection.endColumn
+      );
+      const selectedText = hasSelection
+        ? ed?.getModel()?.getValueInRange(selection)
+        : undefined;
+      const pastedUrl = getPastedHttpUrl(plainText);
+
+      if (selectedText && pastedUrl) {
+        insertPlainText(`[${escapeMarkdownLinkLabel(selectedText)}](${escapeMarkdownLinkDestination(pastedUrl)})`);
+        return;
+      }
+
       // If table conversion is disabled, perform normal paste
       if (tableConversion === 'off') {
         insertPlainText(plainText);
