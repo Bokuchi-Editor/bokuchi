@@ -361,7 +361,11 @@ const MarkdownEditor: React.FC<EditorProps> = ({
     try {
       const ed = editorRef.current;
       const selection = ed?.getSelection();
-      const selectedText = selection && !selection.isEmpty()
+      const hasSelection = selection && (
+        selection.startLineNumber !== selection.endLineNumber ||
+        selection.startColumn !== selection.endColumn
+      );
+      const selectedText = hasSelection
         ? ed?.getModel()?.getValueInRange(selection)
         : undefined;
       const pastedUrl = getPastedHttpUrl(plainText);

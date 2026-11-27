@@ -77,6 +77,34 @@ describe('MarkdownEditor paste handling', () => {
     vi.clearAllMocks();
   });
 
+  it('T-ED-LINK-01: pasting a URL over selected text inserts a Markdown link', async () => {
+    setWindowMonaco();
+
+    const { mockEditor, domNode } = mountFocusedEditor();
+    (mockEditor.getSelection as ReturnType<typeof vi.fn>).mockReturnValue({
+      startLineNumber: 1,
+      startColumn: 1,
+      endLineNumber: 1,
+      endColumn: 9,
+    });
+    const model = mockEditor.getModel()!;
+    (model.getValueInRange as ReturnType<typeof vi.fn>).mockReturnValue('Bokuchi');
+
+    render(<MarkdownEditor {...defaultProps()} tableConversion="off" />);
+    captured.onMount!(mockEditor);
+
+    dispatchPaste({ plain: 'https://example.com' });
+
+    await waitFor(() => {
+      expect(mockEditor.executeEdits).toHaveBeenCalledWith('paste', expect.arrayContaining([
+        expect.objectContaining({ text: '[Bokuchi](https://example.com)' }),
+      ]));
+    });
+
+    document.body.removeChild(domNode);
+    deleteWindowMonaco();
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
   });
